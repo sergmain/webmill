@@ -21,45 +21,35 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.cms.news.bean;
+package org.riverock.portlet.cms.dao;
 
-import java.io.Serializable;
+import java.util.List;
 
-import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.portlet.cms.article.bean.ArticleBean;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 23.08.2006
- *         Time: 16:03:41
+ *         Date: 25.08.2006
+ *         Time: 21:47:40
  */
-public class SiteExtended implements Serializable {
-    private static final long serialVersionUID = 2058005301L;
-
-    private SiteBean site = null;
-    private CompanyBean company = null;
-
-    public SiteExtended(){
+public class CmsArticleDaoImpl implements CmsArticleDao {
+    public List<ArticleBean> getArticleList(Long siteLanguageId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public SiteExtended(SiteBean siteBean, CompanyBean company){
-        this.site=siteBean;
-        this.company=company;
+    public ArticleBean getArticle(Long articleId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Company getCompany() {
-        return company;
+    public Long createArticle(ArticleBean article) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void setCompany(Company company) {
-        this.company = new CompanyBean(company);
+    public void updateArticle(ArticleBean articleBean) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Site getSite() {
-        return site;
-    }
-
-    public void setSite(Site site) {
-        this.site = new SiteBean(site);
+    public void deleteArticle(Long articleId) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -21,59 +21,59 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.cms.news.action;
+package org.riverock.portlet.cms.article.action;
 
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
-import org.riverock.portlet.cms.news.NewsSessionBean;
-import org.riverock.portlet.cms.news.NewsDataProvider;
+import org.riverock.portlet.cms.article.ArticleSessionBean;
+import org.riverock.portlet.cms.article.ArticleDataProvider;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 23.08.2006
- *         Time: 15:47:16
+ *         Date: 25.08.2006
+ *         Time: 21:05:40
  */
-public class NewsSiteAction implements Serializable {
-    private final static Logger log = Logger.getLogger( NewsSiteAction.class );
+public class ArticleSiteAction  implements Serializable {
+    private final static Logger log = Logger.getLogger( ArticleSiteAction.class );
     private static final long serialVersionUID = 2057005511L;
 
-    private NewsSessionBean newsSessionBean = null;
+    private ArticleSessionBean articleSessionBean = null;
     private AuthSessionBean authSessionBean = null;
-    private NewsDataProvider newsDataProvider = null;
+    private ArticleDataProvider articleDataProvider = null;
 
-    public NewsSiteAction() {
+    public ArticleSiteAction() {
     }
 
-    public void setNewsDataProvider(NewsDataProvider newsDataProvider) {
-        this.newsDataProvider = newsDataProvider;
+    public void setArticleSessionBean(ArticleSessionBean articleSessionBean) {
+        this.articleSessionBean = articleSessionBean;
     }
 
-    public void setNewsSessionBean( NewsSessionBean siteSessionBean) {
-        this.newsSessionBean = siteSessionBean;
+    public void setArticleDataProvider(ArticleDataProvider articleDataProvider) {
+        this.articleDataProvider = articleDataProvider;
     }
 
     public AuthSessionBean getAuthSessionBean() {
         return authSessionBean;
     }
 
-    public void setAuthSessionBean( AuthSessionBean authSessionBean) {
+    public void setAuthSessionBean(AuthSessionBean authSessionBean) {
         this.authSessionBean = authSessionBean;
     }
 
     public String selectSite() {
         if (log.isDebugEnabled()) {
             log.debug( "Select site action." );
-            log.debug( "newsSessionBean type: " +newsSessionBean.getObjectType() );
+            log.debug( "articleSessionBean type: " +articleSessionBean.getObjectType() );
         }
-        newsSessionBean.setSiteExtended( newsDataProvider.getSiteExtended() );
-        return "news";
+        articleSessionBean.setSiteExtended( articleDataProvider.getSiteExtended() );
+        return "article";
     }
 
     public String changeSite() {
         log.info( "Change site action." );
-        return "news";
+        return "article";
     }
 }
