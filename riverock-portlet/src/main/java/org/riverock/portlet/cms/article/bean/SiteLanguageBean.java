@@ -21,7 +21,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.cms.news.bean;
+package org.riverock.portlet.cms.article.bean;
 
 import java.io.Serializable;
 
@@ -29,8 +29,8 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 23.08.2006
- *         Time: 15:48:41
+ *         Date: 25.08.2006
+ *         Time: 21:07:12
  */
 public class SiteLanguageBean implements Serializable, SiteLanguage {
     private static final long serialVersionUID = 2057775504L;

@@ -43,7 +43,8 @@
             /WEB-INF/faces-site-config.xml,
             /WEB-INF/faces-menu-config.xml,
             /WEB-INF/faces-common-config.xml,
-            /WEB-INF/faces-news-config.xml 
+            /WEB-INF/faces-news-config.xml,
+            /WEB-INF/faces-article-config.xml 
         </param-value>
 	</context-param>
 	<context-param>

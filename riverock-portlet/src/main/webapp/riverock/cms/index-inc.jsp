@@ -23,13 +23,20 @@
     }
 </style>
 
-<h:panelGrid columns="8">
+<h:panelGrid columns="2">
 
     <h:panelGroup>
-        <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.cms-manager']}">
-            <h:commandButton id="news-list-action" action="news" value="#{manager.auth_button}"
+        <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.cms-manager,webmill.news-manager']}">
+            <h:commandButton id="news-list-action" action="news" value="#{manager.news_button}"
                              styleClass="top-button-action"/>
             <h:outputText value="#{manager.news_info}" style="font-size:10px"/>
+        </h:panelGrid>
+    </h:panelGroup>
+    <h:panelGroup>
+        <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.cms-manager,webmill.article-manager']}">
+            <h:commandButton id="article-list-action" action="article" value="#{manager.article_button}"
+                             styleClass="top-button-action"/>
+            <h:outputText value="#{manager.article_info}" style="font-size:10px"/>
         </h:panelGrid>
     </h:panelGroup>
 

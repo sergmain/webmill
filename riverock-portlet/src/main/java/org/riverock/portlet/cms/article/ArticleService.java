@@ -21,37 +21,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.cms.news;
+package org.riverock.portlet.cms.article;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.portlet.cms.dao.CmsDaoFactory;
-import org.riverock.portlet.cms.news.bean.NewsBean;
-import org.riverock.portlet.cms.news.bean.NewsGroupBean;
-import org.riverock.portlet.cms.news.bean.SiteBean;
-import org.riverock.portlet.cms.news.bean.SiteExtended;
-import org.riverock.portlet.cms.news.bean.SiteLanguageBean;
+import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.cms.dao.CmsDaoFactory;
+import org.riverock.portlet.cms.article.bean.SiteBean;
+import org.riverock.portlet.cms.article.bean.ArticleBean;
+import org.riverock.portlet.cms.article.bean.SiteLanguageBean;
+import org.riverock.portlet.cms.article.bean.SiteExtended;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 23.08.2006
- *         Time: 15:18:46
+ *         Date: 25.08.2006
+ *         Time: 21:07:45
  */
-public class NewsService implements Serializable {
-    private final static Logger log = Logger.getLogger(NewsService.class);
+public class ArticleService implements Serializable {
+    private final static Logger log = Logger.getLogger(ArticleService.class);
 
-    public NewsService() {
+    public ArticleService() {
     }
 
     public List<SelectItem> getSiteList() {
@@ -96,8 +95,8 @@ public class NewsService implements Serializable {
         return new SiteBean(site);
     }
 
-    public List<NewsGroupBean> getNewsGroupList(Long siteLanguageId) {
-        return CmsDaoFactory.getCmsNewsDao().getNewsGroupList(siteLanguageId);
+    public List<ArticleBean> getArticleList(Long siteLanguageId) {
+        return CmsDaoFactory.getCmsArticleDao().getArticleList(siteLanguageId);
     }
 
     public List<SiteLanguageBean> getSiteLanguageList(Long siteId) {
@@ -131,11 +130,8 @@ public class NewsService implements Serializable {
         }
     }
 
-    public List<NewsBean> getNewsList(Long newsGroupId) {
-        return CmsDaoFactory.getCmsNewsDao().getNewsList(newsGroupId);
-    }
-
-    public NewsGroupBean getNewsGroup(Long newsGroupId) {
-        return CmsDaoFactory.getCmsNewsDao().getNewsGroup(newsGroupId);
+    public ArticleBean getArticle(Long articleId) {
+        return CmsDaoFactory.getCmsArticleDao().getArticle(articleId);
     }
 }
+

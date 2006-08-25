@@ -21,7 +21,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.cms.news;
+package org.riverock.portlet.cms.article;
 
 import java.io.Serializable;
 
@@ -35,67 +35,66 @@ import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.portlet.cms.news.bean.NewsGroupBean;
-import org.riverock.portlet.cms.news.bean.NewsBean;
+import org.riverock.portlet.cms.article.bean.ArticleBean;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 23.08.2006
- *         Time: 15:15:31
+ *         Date: 25.08.2006
+ *         Time: 21:09:08
  */
-public class NewsTree implements Serializable {
-    private final static Logger log = Logger.getLogger(NewsTree.class);
+public class ArticleTree implements Serializable {
+    private final static Logger log = Logger.getLogger(ArticleTree.class);
     private static final long serialVersionUID = 2057005500L;
 
-    private NewsService newsService = null;
+    private ArticleService articleService = null;
     private TreeState treeState=null;
 
-    private NewsSessionBean newsSessionBean = null;
+    private ArticleSessionBean articleSessionBean = null;
 
-    public NewsTree() {
+    public ArticleTree() {
         treeState = new TreeStateBase();
         treeState.setTransient(true);
     }
 
-    public NewsService getNewsService() {
-        return newsService;
+    public ArticleService getArticleService() {
+        return articleService;
     }
 
-    public void setNewsService(NewsService newsService) {
-        this.newsService = newsService;
+    public void setArticleService(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
-    public NewsSessionBean getNewsSessionBean() {
-        return newsSessionBean;
+    public ArticleSessionBean getArticleSessionBean() {
+        return articleSessionBean;
     }
 
-    public void setNewsSessionBean(NewsSessionBean newsSessionBean) {
-        this.newsSessionBean = newsSessionBean;
+    public void setArticleSessionBean(ArticleSessionBean articleSessionBean) {
+        this.articleSessionBean = articleSessionBean;
     }
 
-    public TreeModel getNewsTree() {
-        log.info("Invoke getNewsTree()");
+    public TreeModel getArticleTree() {
+        log.info("Invoke getArticleTree()");
 
-        TreeNode rootNode = getPrepareNewsTree();
+        TreeNode rootNode = getPrepareArticleTree();
         TreeModel treeModel = new TreeModelBase(rootNode);
         treeModel.setTreeState(treeState);
 
         return treeModel;
     }
 
-    private TreeNode getPrepareNewsTree() {
+    private TreeNode getPrepareArticleTree() {
 
-        log.info("Invoke getPrepareNewsTree()");
+        log.info("Invoke getPrepareArticleTree()");
 
         TreeNode treeRoot = new TreeNodeBase("tree-root", "tree-root", false);
-        if (newsSessionBean.getCurrentSiteId()!=null) {
+        if (articleSessionBean.getCurrentSiteId()!=null) {
 
-            Site site = newsService.getSite(newsSessionBean.getCurrentSiteId());
+            Site site = articleService.getSite(articleSessionBean.getCurrentSiteId());
 
             TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
             treeRoot.getChildren().add(siteNode);
 
-            for (SiteLanguage siteLanguage : newsService.getSiteLanguageList(site.getSiteId())) {
+            for (SiteLanguage siteLanguage : articleService.getSiteLanguageList(site.getSiteId())) {
                 TreeNodeBase siteLanguageNode = new TreeNodeBase(
                     "site-language",
                     siteLanguage.getNameCustomLanguage() + " (" + siteLanguage.getCustomLanguage() + ")",
@@ -103,25 +102,16 @@ public class NewsTree implements Serializable {
                     false);
                 treeRoot.getChildren().add(siteLanguageNode);
 
-                TreeNodeBase newsGroupListNode = new TreeNodeBase("news-group-list", "News group list", siteLanguage.getSiteLanguageId().toString(), false);
-                siteLanguageNode.getChildren().add(newsGroupListNode);
+                TreeNodeBase articleListNode = new TreeNodeBase("article-list", "Article list", siteLanguage.getSiteLanguageId().toString(), false);
+                siteLanguageNode.getChildren().add(articleListNode);
 
-                for (NewsGroupBean newsGroupBean : newsService.getNewsGroupList(siteLanguage.getSiteLanguageId())) {
-                    TreeNodeBase newsGroupNode = new TreeNodeBase(
-                        "news-group",
-                        newsGroupBean.getNewsGroupName(),
-                        newsGroupBean.getNewsGroupId().toString(),
+                for (ArticleBean articleBean : articleService.getArticleList(siteLanguage.getSiteLanguageId())) {
+                    TreeNodeBase articleNode = new TreeNodeBase(
+                        "article",
+                        articleBean.getArticleName(),
+                        articleBean.getArticleId().toString(),
                         false);
-                    newsGroupListNode.getChildren().add(newsGroupNode);
-
-                    for (NewsBean news : newsService.getNewsList(newsGroupBean.getNewsGroupId())) {
-                        TreeNodeBase newsNode = new TreeNodeBase(
-                            "news",
-                            news.getNewsHeader(),
-                            news.getNewsId().toString(),
-                            false);
-                        newsGroupNode.getChildren().add(newsNode);
-                    }
+                    articleListNode.getChildren().add(articleNode);
                 }
 
             }

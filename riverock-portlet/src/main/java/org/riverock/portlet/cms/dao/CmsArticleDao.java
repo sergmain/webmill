@@ -21,45 +21,25 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.cms.news.bean;
+package org.riverock.portlet.cms.dao;
 
-import java.io.Serializable;
+import java.util.List;
 
-import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.portlet.cms.article.bean.ArticleBean;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 23.08.2006
- *         Time: 16:03:41
+ *         Date: 25.08.2006
+ *         Time: 21:47:35
  */
-public class SiteExtended implements Serializable {
-    private static final long serialVersionUID = 2058005301L;
+public interface CmsArticleDao {
+    List<ArticleBean> getArticleList(Long siteLanguageId);
 
-    private SiteBean site = null;
-    private CompanyBean company = null;
+    ArticleBean getArticle(Long articleId);
 
-    public SiteExtended(){
-    }
+    Long createArticle(ArticleBean article);
 
-    public SiteExtended(SiteBean siteBean, CompanyBean company){
-        this.site=siteBean;
-        this.company=company;
-    }
+    void updateArticle(ArticleBean articleBean);
 
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = new CompanyBean(company);
-    }
-
-    public Site getSite() {
-        return site;
-    }
-
-    public void setSite(Site site) {
-        this.site = new SiteBean(site);
-    }
+    void deleteArticle(Long articleId);
 }

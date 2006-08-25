@@ -96,13 +96,6 @@
                     <t:updateActionListener property="#{newsSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{newsSessionBean.objectType}" value="#{newsSessionBean.newsType}"/>
                 </h:commandLink>
-                <h:commandButton id="add-news-action-id" action="#{newsAction.addNewsAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_news_button_alt}">
-
-                    <t:updateActionListener property="#{newsSessionBean.id}" value="#{node.identifier}" />
-                    <t:updateActionListener property="#{newsSessionBean.objectType}" value="#{newsSessionBean.newsType}"/>
-                    <t:updateActionListener property="#{newsSessionBean.currentNewsId}" value="#{node.identifier}" />
-                </h:commandButton>
             </h:panelGroup>
         </f:facet>
 
