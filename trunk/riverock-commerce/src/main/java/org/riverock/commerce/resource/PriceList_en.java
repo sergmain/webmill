@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.portlet.resource;
+package org.riverock.commerce.resource;
 
 import org.apache.log4j.Logger;
 
@@ -31,8 +31,8 @@ import org.riverock.webmill.container.resource.CustomXmlResourceBundle;
 /**
  * @author Serge Maslyukov
  */
-public class PriceList_ru extends CustomXmlResourceBundle {
-    private final static Logger log = Logger.getLogger( PriceList_ru.class );
+public class PriceList_en extends CustomXmlResourceBundle {
+    private final static Logger log = Logger.getLogger( PriceList_en.class );
 
     public void logError( String msg, Throwable th ) {
         log.error( msg, th );

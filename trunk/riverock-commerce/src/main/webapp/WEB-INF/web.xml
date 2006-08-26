@@ -30,31 +30,21 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
 
-	<context-param>
-		<param-name>javax.faces.CONFIG_FILES</param-name>
-		<param-value>/WEB-INF/faces-common-config.xml,
-            /WEB-INF/faces-manager-config.xml,
-            /WEB-INF/faces-auth-config.xml,
-            /WEB-INF/faces-holding-config.xml,
-            /WEB-INF/faces-company-config.xml,
-            /WEB-INF/faces-portlet-name-config.xml,
-            /WEB-INF/faces-users-config.xml,
-            /WEB-INF/faces-shop-manager-config.xm,
-            /WEB-INF/faces-site-config.xml,
-            /WEB-INF/faces-menu-config.xml,/WEB-INF/faces-common-config.xml, faces-manager-config.xml,
-            faces-auth-config.xml, faces-holding-config.xml, faces-company-config.xml,
-            faces-portlet-name-config.xml,faces-users-config.xml, faces-shop-manager-config.xm, faces-site-config.xml,
-            faces-menu-config.xml
+    <context-param>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>
+            /WEB-INF/faces-common-config.xml,
+            /WEB-INF/faces-menu-config.xml
         </param-value>
-	</context-param>
-	<context-param>
-		<description>
+    </context-param>
+    <context-param>
+        <description>
             State saving method: "client" or "server" (= default)
             See JSF Specification 2.5.2
         </description>
-		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-		<param-value>server</param-value>
-	</context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
 	<context-param>
 		<description>
             Only applicable if state saving method is "server" (= default).
@@ -212,16 +202,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-    <servlet>
-        <servlet-name>jcaptcha</servlet-name>
-        <servlet-class>org.riverock.portlet.captcha.ImageCaptchaServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>jcaptcha</servlet-name>
-        <url-pattern>/jcaptcha</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>

@@ -58,52 +58,52 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</init-param>
 		<init-param>
 			<name>name-portlet-id</name>
-            <value>mill.id_shop</value>
-        </init-param>
-        <init-param>
-            <name>locale-name-package</name>
-            <value>mill.locale._price_list</value>
-        </init-param>
-        <init-param>
-            <name>name-portlet-code-string</name>
-            <value>mill.shop_code</value>
-        </init-param>
-        <init-param>
-            <name>class-name-get-list</name>
-            <value>org.riverock.commerce.price.ShopListProvider</value>
-        </init-param>
-        <supports>
-            <mime-type>text/html</mime-type>
-        </supports>
-        <resource-bundle>org.riverock.commerce.resource.PriceList</resource-bundle>
-        <portlet-info>
-            <title>Portlet title</title>
-        </portlet-info>
-    </portlet>
-    <portlet>
-        <portlet-name>mill.upload_price</portlet-name>
-        <portlet-class>org.riverock.commerce.shop.upload.UploadPricePortlet</portlet-class>
-        <supports>
-            <mime-type>text/html</mime-type>
-        </supports>
-        <portlet-info>
-            <title>Portlet title</title>
-        </portlet-info>
+			<value>mill.id_shop</value>
+		</init-param>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale._price_list</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.shop_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.commerce.price.ShopListProvider</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.commerce.resource.PriceList</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.upload_price</portlet-name>
+		<portlet-class>org.riverock.commerce.shop.upload.UploadPricePortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
         <security-role-ref><role-name>webmill.upload_price_list</role-name></security-role-ref>
     </portlet>
-    <portlet>
-        <portlet-name>mill.invoice</portlet-name>
-        <portlet-class>org.riverock.commerce.invoice.InvoicePortlet</portlet-class>
-        <init-param>
-            <name>locale-name-package</name>
-            <value>mill.locale._price_list</value>
-        </init-param>
-        <supports>
-            <mime-type>text/html</mime-type>
-        </supports>
-        <resource-bundle>org.riverock.commerce.resource.PriceList</resource-bundle>
-        <portlet-info>
-            <title>Portlet title</title>
-        </portlet-info>
-    </portlet>
+	<portlet>
+		<portlet-name>mill.invoice</portlet-name>
+		<portlet-class>org.riverock.commerce.invoice.InvoicePortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale._price_list</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.commerce.resource.PriceList</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
 </portlet-app>
