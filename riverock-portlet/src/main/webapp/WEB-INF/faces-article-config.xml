@@ -118,7 +118,7 @@
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>article-edit</from-outcome>
-            <to-view-id>/riverock/cms/article/article-.jsp</to-view-id>
+            <to-view-id>/riverock/cms/article/article-edit.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>

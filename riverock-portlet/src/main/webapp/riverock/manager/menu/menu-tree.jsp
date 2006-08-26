@@ -86,7 +86,7 @@
         <f:facet name="menu-item">
             <h:panelGroup id="menu-tree-menu-item-group">
                 <h:commandLink id="select-menu-item-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               action="#{menuAction.selectNews}"
+                               action="#{menuAction.selectMenuItem}"
                     >
 
                     <t:graphicImage id="menu-tree-menu-item-image" value="/images/user.png" border="0"/>

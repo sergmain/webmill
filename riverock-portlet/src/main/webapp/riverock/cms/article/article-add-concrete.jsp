@@ -34,9 +34,7 @@
     <h:inputText id="article-name-field" value="#{articleSessionBean.article.articleName}" size="50"/>
 
     <h:outputText value="#{msg.article_code}"/>
-    <h:inputTextarea id="article-code-field" value="#{articleSessionBean.article.articleCode}"
-                     rows="8" cols="70"
-        />
+    <h:inputText id="article-code-field" value="#{articleSessionBean.article.articleCode}" size="50"/>
 
     <h:outputText value="#{msg.article_text}"/>
     <h:inputTextarea id="article-text-field" value="#{articleSessionBean.article.articleText}"

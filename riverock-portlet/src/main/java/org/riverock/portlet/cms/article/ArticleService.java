@@ -95,8 +95,8 @@ public class ArticleService implements Serializable {
         return new SiteBean(site);
     }
 
-    public List<ArticleBean> getArticleList(Long siteLanguageId) {
-        return CmsDaoFactory.getCmsArticleDao().getArticleList(siteLanguageId);
+    public List<ArticleBean> getArticleList(Long siteLanguageId, boolean isXml) {
+        return CmsDaoFactory.getCmsArticleDao().getArticleList(siteLanguageId, isXml);
     }
 
     public List<SiteLanguageBean> getSiteLanguageList(Long siteId) {

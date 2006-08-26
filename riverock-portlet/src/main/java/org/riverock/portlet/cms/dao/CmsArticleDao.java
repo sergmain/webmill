@@ -26,6 +26,7 @@ package org.riverock.portlet.cms.dao;
 import java.util.List;
 
 import org.riverock.portlet.cms.article.bean.ArticleBean;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * @author Sergei Maslyukov
@@ -33,13 +34,13 @@ import org.riverock.portlet.cms.article.bean.ArticleBean;
  *         Time: 21:47:35
  */
 public interface CmsArticleDao {
-    List<ArticleBean> getArticleList(Long siteLanguageId);
+    List<ArticleBean> getArticleList(Long siteLanguageId, boolean isXml);
 
     ArticleBean getArticle(Long articleId);
 
-    Long createArticle(ArticleBean article);
+    Long createArticle(ArticleBean article, AuthSession authSession);
 
-    void updateArticle(ArticleBean articleBean);
+    void updateArticle(ArticleBean articleBean, AuthSession authSession);
 
     void deleteArticle(Long articleId);
 }

@@ -80,7 +80,7 @@ public class NewsAction implements Serializable {
         log.info("Add news item action.");
 
         NewsBean news = new NewsBean();
-        news.setNewsId(newsSessionBean.getId());
+        news.setNewsGroupId(newsSessionBean.getId());
         setSessionObject(news);
 
         return "news-add";
@@ -99,12 +99,14 @@ public class NewsAction implements Serializable {
             }
 
             NewsBean news = getSessionObject();
+/*
             if (newsSessionBean.getCurrentNewsGroupId() != null) {
                 news.setNewsGroupId( newsSessionBean.getCurrentNewsGroupId() );
             } else {
                 NewsBean newsItem = CmsDaoFactory.getCmsNewsDao().getNews(newsSessionBean.getCurrentNewsId());
                 news.setNewsGroupId( newsItem.getNewsGroupId() );
             }
+*/
 
             Long newsId = CmsDaoFactory.getCmsNewsDao().createNews(news);
             setSessionObject(null);
