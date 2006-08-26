@@ -1,9 +1,9 @@
 /*
- * org.riverock.portlet -- Portlet Library
+ * org.riverock.portlet - Portlet Library
  *
  * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -44,6 +44,7 @@ public class ArticleSessionBean implements Serializable {
 
     private Long id = null;
     private int objectType=0;
+    private boolean isXml=false;
 
     private Long currentArticleId =null;
     private Long currentSiteId=null;
@@ -51,6 +52,14 @@ public class ArticleSessionBean implements Serializable {
     private SiteExtended siteExtended = null;
     private SiteLanguageBean siteLanguage = null;
     private ArticleBean article = null;
+
+    public boolean isXml() {
+        return isXml;
+    }
+
+    public void setXml(boolean xml) {
+        isXml = xml;
+    }
 
     public Long getCurrentSiteId() {
         return currentSiteId;

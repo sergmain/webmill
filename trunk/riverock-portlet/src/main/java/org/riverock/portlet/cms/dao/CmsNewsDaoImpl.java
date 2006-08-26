@@ -80,7 +80,6 @@ public class CmsNewsDaoImpl implements CmsNewsDao {
                 newsGroup.setNewsGroupId( RsetTools.getLong(rs, "ID_NEWS") );
                 newsGroup.setNewsGroupName( RsetTools.getString(rs, "NAME_NEWS") );
                 newsGroup.setOrderValue( RsetTools.getInt(rs, "ORDER_FIELD") );
-                newsGroup.setOrderValue( RsetTools.getInt(rs, "ORDER_FIELD") );
 
                 list.add(newsGroup);
             }
@@ -490,7 +489,7 @@ public class CmsNewsDaoImpl implements CmsNewsDao {
             catch( Exception e001 ) {
                 //catch rollback error
             }
-            String es = "Error delete site";
+            String es = "Error delete news";
             log.error( es, e );
             throw new IllegalStateException( es, e );
         }

@@ -67,7 +67,7 @@ public class ArticleAction implements Serializable {
         this.authSessionBean = authSessionBean;
     }
 
-// main select action
+    // main select action
     public String selectArticle() {
         log.info("Select article action.");
         loadCurrentObject();
@@ -75,12 +75,13 @@ public class ArticleAction implements Serializable {
         return "article";
     }
 
-// Add actions
+    // Add actions
     public String addArticleAction() {
         log.info("Add article action.");
 
         ArticleBean article = new ArticleBean();
-        article.setArticleId(articleSessionBean.getId());
+        article.setSiteLanguageId(articleSessionBean.getId());
+        article.setXml(articleSessionBean.isXml());
         setSessionObject(article);
 
         return "article-add";
@@ -90,12 +91,8 @@ public class ArticleAction implements Serializable {
         log.info("Procss add article action.");
         if (getSessionObject() != null) {
 
-            if (articleSessionBean.getCurrentArticleId() == null) {
-                throw new IllegalStateException("currentArticleId is null");
-            }
-
             ArticleBean article = getSessionObject();
-            Long articleId = CmsDaoFactory.getCmsArticleDao().createArticle(article);
+            Long articleId = CmsDaoFactory.getCmsArticleDao().createArticle(article, authSessionBean.getAuthSession());
             setSessionObject(null);
             articleSessionBean.setId(articleId);
             cleadDataProviderObject();
@@ -125,7 +122,7 @@ public class ArticleAction implements Serializable {
         log.info("Save changes article action.");
 
         if (getSessionObject() != null) {
-            CmsDaoFactory.getCmsArticleDao().updateArticle(getSessionObject());
+            CmsDaoFactory.getCmsArticleDao().updateArticle(getSessionObject(), authSessionBean.getAuthSession());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -151,7 +148,7 @@ public class ArticleAction implements Serializable {
     public String cancelDeleteArticleAction() {
         log.info("Cancel delete article action.");
 
-        return "Article";
+        return "article";
     }
 
     public String processDeleteArticleAction() {

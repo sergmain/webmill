@@ -49,15 +49,31 @@
             <h:panelGroup id="article-tree-tree-root-group">
             </h:panelGroup>
         </f:facet>
-        <f:facet name="article-list">
-            <h:panelGroup id="article-tree-article-group-group">
-                <t:graphicImage id="article-tree-article-group-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage id="article-tree-article-group-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
-                <h:outputText id="article-tree-article-group-list-name" value="#{node.description}" styleClass="nodeFolder"/>
-                <h:outputText id="article-tree-article-group-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+        <f:facet name="plain-article-list">
+            <h:panelGroup id="article-tree-plain-article-list-group">
+                <t:graphicImage id="article-tree-plain-article-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="article-tree-plain-article-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:outputText id="article-tree-plain-article-list-name" value="#{node.description}" styleClass="nodeFolder"/>
+                <h:outputText id="article-tree-plain-article-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-article-group-action-id" action="#{articleAction.addArticleAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_article_list_button_alt}">
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_plain_article_button_alt}">
 
+                    <t:updateActionListener property="#{articleSessionBean.xml}" value="false" />
+                    <t:updateActionListener property="#{articleSessionBean.id}" value="#{node.identifier}" />
+                    <t:updateActionListener property="#{articleSessionBean.objectType}" value="#{articleSessionBean.articleType}"/>
+                </h:commandButton>
+            </h:panelGroup>
+        </f:facet>
+        <f:facet name="xml-article-list">
+            <h:panelGroup id="article-tree-xml-article-list-group">
+                <t:graphicImage id="article-tree-xml-article-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="article-tree-xml-article-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:outputText id="article-tree-xml-article-list-name" value="#{node.description}" styleClass="nodeFolder"/>
+                <h:outputText id="article-tree-xml-article-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+                <h:commandButton id="add-article-group-action-id" action="#{articleAction.addArticleAction}"
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_xml_article_button_alt}">
+
+                    <t:updateActionListener property="#{articleSessionBean.xml}" value="true" />
                     <t:updateActionListener property="#{articleSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{articleSessionBean.objectType}" value="#{articleSessionBean.articleType}"/>
                 </h:commandButton>
@@ -85,15 +101,30 @@
                 <h:outputText id="article-tree-site-language-name" value="#{node.description}"/>
             </h:panelGroup>
         </f:facet>
-        <f:facet name="article">
-            <h:panelGroup id="article-tree-article-group">
+        <f:facet name="plain-article">
+            <h:panelGroup id="article-tree-plain-article-group">
                 <h:commandLink id="select-article-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
                                action="#{articleAction.selectArticle}"
                     >
 
-                    <t:graphicImage id="article-tree-article-image" value="/images/user.png" border="0"/>
-                    <h:outputText id="article-tree-article-name" value="#{node.description}"/>
-                    <h:outputText id="article-tree-article-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+                    <t:graphicImage id="article-tree-plain-article-image" value="/images/user.png" border="0"/>
+                    <h:outputText id="article-tree-plain-article-name" value="#{node.description}"/>
+                    <h:outputText id="article-tree-plain-article-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+
+                    <t:updateActionListener property="#{articleSessionBean.id}" value="#{node.identifier}"/>
+                    <t:updateActionListener property="#{articleSessionBean.objectType}" value="#{articleSessionBean.articleType}"/>
+                </h:commandLink>
+            </h:panelGroup>
+        </f:facet>
+        <f:facet name="xml-article">
+            <h:panelGroup id="article-tree-xml-article-group">
+                <h:commandLink id="select-xml-article-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
+                               action="#{articleAction.selectArticle}"
+                    >
+
+                    <t:graphicImage id="article-tree-xml-article-image" value="/images/user.png" border="0"/>
+                    <h:outputText id="article-tree-xml-article-name" value="#{node.description}"/>
+                    <h:outputText id="article-tree-xml-article-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
 
                     <t:updateActionListener property="#{articleSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{articleSessionBean.objectType}" value="#{articleSessionBean.articleType}"/>

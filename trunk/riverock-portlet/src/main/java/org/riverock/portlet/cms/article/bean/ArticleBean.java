@@ -24,6 +24,7 @@
 package org.riverock.portlet.cms.article.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Sergei Maslyukov
@@ -38,6 +39,8 @@ public class ArticleBean implements Serializable {
     private String articleCode=null;
     private String articleText=null;
     private boolean isXml=false;
+    private Long siteLanguageId=null;
+    private Date created=null;
 
     public ArticleBean() {
     }
@@ -88,5 +91,21 @@ public class ArticleBean implements Serializable {
 
     public void setXml(boolean xml) {
         isXml = xml;
+    }
+
+    public Long getSiteLanguageId() {
+        return siteLanguageId;
+    }
+
+    public void setSiteLanguageId(Long siteLanguageId) {
+        this.siteLanguageId=siteLanguageId;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

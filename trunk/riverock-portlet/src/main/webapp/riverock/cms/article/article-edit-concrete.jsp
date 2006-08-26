@@ -31,16 +31,15 @@
 <h:outputText value="#{msg.article_info}"/>
 <h:panelGrid columns="1">
 
-    <h:outputText value="#{msg.news_header}"/>
-    <h:inputText id="news-header-field" value="#{articleSessionBean.article.newsHeader}" size="50"/>
+    <h:outputText value="#{msg.article_name}"/>
+    <h:inputText id="article-name-field" value="#{articleSessionBean.article.articleName}" size="50"/>
 
-    <h:outputText value="#{msg.news_anons}"/>
-    <h:inputTextarea id="news-anons-field" value="#{articleSessionBean.article.newsAnons}"
-                     rows="8" cols="70"
-        />
+    <h:outputText value="#{msg.article_code}"/>
+    <h:inputText id="article-code-field" value="#{articleSessionBean.article.articleCode}" size="50"/>
 
-    <h:outputText value="#{msg.news_text}"/>
-    <h:inputTextarea id="news-text-field" value="#{articleSessionBean.article.newsText}"
+    <h:outputText value="#{msg.article_text}"/>
+    <h:inputTextarea id="article-text-field" value="#{articleSessionBean.article.articleText}"
                      rows="12" cols="70"
         />
+
 </h:panelGrid>

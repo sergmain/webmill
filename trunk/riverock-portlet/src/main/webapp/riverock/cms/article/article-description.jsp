@@ -33,14 +33,17 @@
 <h:panelGroup rendered="#{isUserInRole['webmill.portal-manager,webmill.cms-manager,webmill.article-manager']}">
     <h:panelGrid columns="1">
 
-        <h:outputText value="#{msg.article_header}"/>
-        <h:outputText value="#{articleSessionBean.article.articleHeader}"/>
+        <h:outputText value="#{msg.article_is_xml}"/>
+        <h:outputText value="#{articleSessionBean.article.xml}"/>
 
-        <h:outputText value="#{msg.news_anons}"/>
-        <h:outputText value="#{articleSessionBean.article.newsAnons}"/>
+        <h:outputText value="#{msg.article_name}"/>
+        <h:outputText value="#{articleSessionBean.article.articleName}"/>
 
-        <h:outputText value="#{msg.news_text}"/>
-        <h:outputText value="#{articleSessionBean.article.newsText}"/>
+        <h:outputText value="#{msg.article_code}"/>
+        <h:outputText value="#{articleSessionBean.article.articleCode}"/>
+
+        <h:outputText value="#{msg.article_text}"/>
+        <h:outputText value="#{articleSessionBean.article.articleText}"/>
 
     </h:panelGrid>
 </h:panelGroup>

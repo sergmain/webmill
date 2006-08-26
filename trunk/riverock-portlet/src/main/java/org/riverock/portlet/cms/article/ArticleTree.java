@@ -102,16 +102,28 @@ public class ArticleTree implements Serializable {
                     false);
                 treeRoot.getChildren().add(siteLanguageNode);
 
-                TreeNodeBase articleListNode = new TreeNodeBase("article-list", "Article list", siteLanguage.getSiteLanguageId().toString(), false);
-                siteLanguageNode.getChildren().add(articleListNode);
+                TreeNodeBase plainArticleListNode = new TreeNodeBase("plain-article-list", "Plain article list", siteLanguage.getSiteLanguageId().toString(), false);
+                siteLanguageNode.getChildren().add(plainArticleListNode);
 
-                for (ArticleBean articleBean : articleService.getArticleList(siteLanguage.getSiteLanguageId())) {
+                for (ArticleBean articleBean : articleService.getArticleList(siteLanguage.getSiteLanguageId(), false)) {
                     TreeNodeBase articleNode = new TreeNodeBase(
-                        "article",
+                        "plain-article",
                         articleBean.getArticleName(),
                         articleBean.getArticleId().toString(),
                         false);
-                    articleListNode.getChildren().add(articleNode);
+                    plainArticleListNode.getChildren().add(articleNode);
+                }
+
+                TreeNodeBase xmlArticleListNode = new TreeNodeBase("xml-article-list", "XML article list", siteLanguage.getSiteLanguageId().toString(), false);
+                siteLanguageNode.getChildren().add(xmlArticleListNode);
+
+                for (ArticleBean articleBean : articleService.getArticleList(siteLanguage.getSiteLanguageId(), true)) {
+                    TreeNodeBase articleNode = new TreeNodeBase(
+                        "xml-article",
+                        articleBean.getArticleName(),
+                        articleBean.getArticleId().toString(),
+                        false);
+                    xmlArticleListNode.getChildren().add(articleNode);
                 }
 
             }
