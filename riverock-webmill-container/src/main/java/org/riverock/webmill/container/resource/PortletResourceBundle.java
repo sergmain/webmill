@@ -59,14 +59,13 @@ public final class PortletResourceBundle {
             return null;
         }
 
-        ResourceBundle resourceBundle = null;
-        resourceBundle = (ResourceBundle)portletLocales.get( locale.toString() );
+        ResourceBundle resourceBundle = portletLocales.get( locale.toString() );
 
         if (resourceBundle!=null) {
             return resourceBundle;
         }
         synchronized(PortletResourceBundle.class) {
-            resourceBundle = (ResourceBundle)portletLocales.get( locale.toString() );
+            resourceBundle = portletLocales.get( locale.toString() );
             if (resourceBundle!=null) {
                 return resourceBundle;
             }

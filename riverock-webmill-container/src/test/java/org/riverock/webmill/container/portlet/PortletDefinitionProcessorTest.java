@@ -42,7 +42,7 @@ public class PortletDefinitionProcessorTest {
         PortletDefinitionProcessor processor = new PortletDefinitionProcessorImpl();
 
 //        File file = new File("portlet.2.xml");
-        File file = new File("doc/xml/portlet.2.xml");
+        File file = new File("doc/xml/portlet.6.xml");
 
         PortletApplication application = processor.digest( file );
 
