@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.startup.StartupApplication;
 import org.riverock.portlet.core.GetWmPriceListWithIdShopList;
-import org.riverock.portlet.price.ShopPageParam;
+import org.riverock.commerce.price.ShopPageParam;
 import org.riverock.portlet.schema.import_price.PriceListItemType;
 import org.riverock.portlet.schema.import_price.PriceListType;
 import org.riverock.portlet.schema.import_price.PricesType;

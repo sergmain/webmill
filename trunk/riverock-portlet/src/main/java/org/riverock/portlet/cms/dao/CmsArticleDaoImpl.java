@@ -306,7 +306,7 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
             catch( Exception e001 ) {
                 //catch rollback error
             }
-            String es = "Error delete article";
+            String es = "Error update article";
             log.error( es, e );
             throw new IllegalStateException( es, e );
        }
