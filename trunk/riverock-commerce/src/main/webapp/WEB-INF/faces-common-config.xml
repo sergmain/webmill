@@ -1,4 +1,4 @@
-<%--
+<!--
   ~ org.riverock.commerce - Commerce application
   ~
   ~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
@@ -20,24 +20,27 @@
   ~ You should have received a copy of the GNU General Public
   ~ License along with this library; if not, write to the Free Software
   ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-  --%>
-<%@ page session="false" contentType="text/html;charset=utf-8"%>
+  -->
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+    "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
-<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
-<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<faces-config>
 
-<f:loadBundle basename="org.riverock.commerce.resource.StandardCurrency" var="msg"/>
+    <!-- Common part -->
 
- <h:outputText value="#{msg.standard_currency_info}"/>
- <h:panelGrid columns="2">
- 		<h:outputText value="#{msg.standard_currency_id}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyId}"/>
+<!--
+    <managed-bean>
+        <managed-bean-name>authSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.main.AuthSessionBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+-->
 
- 		<h:outputText value="#{msg.standard_currency_name}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyName}"/>
+    <managed-bean>
+        <managed-bean-name>isUserInRole</managed-bean-name>
+        <managed-bean-class>org.riverock.commerce.jsf.UserInRoleChecker</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
 
- 		<h:outputText value="#{msg.standard_currency_code}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyCode}"/>
- </h:panelGrid>
 
- 	
+</faces-config>

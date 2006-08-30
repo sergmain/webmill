@@ -29,10 +29,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.sql.Timestamp;
+import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
+import org.riverock.commerce.manager.std_currency.StandardCurrencyCurs;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -46,6 +49,11 @@ import org.riverock.common.tools.RsetTools;
 public class CommerceDaoImpl implements CommerceDao {
     private final static Logger log = Logger.getLogger( CommerceDaoImpl.class );
 
+    /**
+     * list of curs for currency not initialized
+     *
+     * @return List<StandardCurrencyBean>
+     */
     public List<StandardCurrencyBean> getStandardCurrencyList() {
         List<StandardCurrencyBean> list = new ArrayList<StandardCurrencyBean>();
 
@@ -180,6 +188,12 @@ public class CommerceDaoImpl implements CommerceDao {
 
             DatabaseManager.runSQL(
                 dbDyn,
+                "delete from WM_CASH_CURS_STD where ID_STD_CURS=?",
+                new Object[]{standardCurrencyId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                dbDyn,
                 "update WM_CASH_CURRENCY_STD set IS_DELETED=1 where ID_STD_CURR=?",
                 new Object[]{standardCurrencyId}, new int[]{Types.DECIMAL}
             );
@@ -225,7 +239,9 @@ public class CommerceDaoImpl implements CommerceDao {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return initStandardCurrencyBean(rs);
+                StandardCurrencyBean standardCurrencyBean = initStandardCurrencyBean(rs);
+                standardCurrencyBean.setCurses( getStandardCountryCurses(db_, standardCurrencyId) );
+                return standardCurrencyBean;
             }
             return null;
         }
@@ -237,6 +253,98 @@ public class CommerceDaoImpl implements CommerceDao {
         finally {
             DatabaseManager.close(db_, rs, ps);
         }
+    }
+
+    public void addStandardCurrencyCurs(Long standardCurrencyId, BigDecimal currentCurs) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_CASH_CURS_STD" );
+            seq.setTableName( "WM_CASH_CURS_STD" );
+            seq.setColumnName( "ID_STD_CURS" );
+            Long id = adapter.getSequenceNextValue( seq );
+
+            String sql_ =
+                "insert into WM_CASH_CURS_STD"+
+                "(ID_STD_CURS, DATE_CHANGE, VALUE_CURS, IS_DELETED, ID_STD_CURR)"+
+                "values"+
+                "( ?,  ?,  ?,  ?, ?)";
+
+            ps = adapter.prepareStatement(sql_);
+
+            ps.setLong(1, id );
+            ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()) );
+            ps.setBigDecimal(3, currentCurs );
+            ps.setInt(4, 0 );
+            ps.setLong(5, standardCurrencyId );
+
+            ps.executeUpdate();
+
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error add standard currency curs";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter, rs, ps);
+        }
+    }
+
+    private List<StandardCurrencyCurs> getStandardCountryCurses(DatabaseAdapter db_, Long standardCurrencyId) {
+        List<StandardCurrencyCurs> list = new ArrayList<StandardCurrencyCurs>();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+
+            ps = db_.prepareStatement(
+                "select ID_STD_CURS, DATE_CHANGE, VALUE_CURS, IS_DELETED, ID_STD_CURR " +
+                "from   WM_CASH_CURS_STD " +
+                "where ID_STD_CURR=? and IS_DELETED=0 " +
+                "order by DATE_CHANGE DESC "
+            );
+
+            ps.setLong(1, standardCurrencyId);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                StandardCurrencyCurs curs = initStandardCurrencyCurs(rs);
+                list.add(curs);
+            }
+            return list;
+        }
+        catch (Throwable e) {
+            final String es = "Error create list of standard currencies";
+            log.error(es, e);
+            throw new RuntimeException( es, e );
+        }
+        finally {
+            DatabaseManager.close( rs, ps);
+        }
+    }
+
+    private StandardCurrencyCurs initStandardCurrencyCurs(ResultSet rs) throws SQLException {
+        StandardCurrencyCurs curs = new StandardCurrencyCurs();
+
+        curs.setCurs( rs.getBigDecimal("VALUE_CURS") );
+        if (rs.wasNull()) {
+            return null;
+        }
+        curs.setCreated( RsetTools.getTimestamp(rs, "DATE_CHANGE") );
+
+        return curs;
     }
 
     private StandardCurrencyBean initStandardCurrencyBean(ResultSet rs) throws SQLException {

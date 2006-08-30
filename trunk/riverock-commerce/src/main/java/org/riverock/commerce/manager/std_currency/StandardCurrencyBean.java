@@ -23,16 +23,24 @@
  */
 package org.riverock.commerce.manager.std_currency;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 29.08.2006
  *         Time: 20:41:33
  */
-public class StandardCurrencyBean {
+public class StandardCurrencyBean implements Serializable {
+
+    private static final long serialVersionUID = 77657005501L;
+
     private Long standardCurrencyId=null;
     private String standardCurrencyName = null;
     private String standardCurrencyCode = null;
     private boolean isDeleted=false;
+    private List<StandardCurrencyCurs> curses = new ArrayList<StandardCurrencyCurs>();
 
     public StandardCurrencyBean() {
     }
@@ -42,6 +50,15 @@ public class StandardCurrencyBean {
         this.standardCurrencyName = standardCurrencyBean.getStandardCurrencyName();
         this.standardCurrencyCode = standardCurrencyBean.getStandardCurrencyCode();
         this.isDeleted = standardCurrencyBean.isDeleted();
+        this.curses = standardCurrencyBean.getCurses();
+    }
+
+    public List<StandardCurrencyCurs> getCurses() {
+        return curses;
+    }
+
+    public void setCurses(List<StandardCurrencyCurs> curses) {
+        this.curses = curses;
     }
 
     public boolean isDeleted() {

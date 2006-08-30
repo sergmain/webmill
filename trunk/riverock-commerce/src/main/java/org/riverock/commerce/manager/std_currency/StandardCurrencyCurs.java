@@ -23,46 +23,44 @@
  */
 package org.riverock.commerce.manager.std_currency;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.io.Serializable;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 29.08.2006
- *         Time: 20:41:33
+ *         Date: 30.08.2006
+ *         Time: 20:02:15
+ *         <p/>
+ *         $Id$
  */
-public class StandardCurrencySessionBean implements Serializable {
-    private static final long serialVersionUID = 7767005504L;
+public class StandardCurrencyCurs implements Serializable {
+    private static final long serialVersionUID = 77657005419L;
 
-    private StandardCurrencyBean standardCurrencyBean = null;
-    private Long currentStandardCurrencyId = null;
-    private BigDecimal currentCurs =null;
+    private BigDecimal curs= null;
+    private Date created = null;
 
-    public StandardCurrencySessionBean() {
+    public StandardCurrencyCurs() {
     }
 
-    public BigDecimal getCurrentCurs() {
-        return currentCurs;
+    public StandardCurrencyCurs(StandardCurrencyCurs bean) {
+        this.curs = bean.getCurs();
+        this.created = bean.getCreated();
     }
 
-    public void setCurrentCurs(BigDecimal currentCurs) {
-        this.currentCurs = currentCurs;
+    public BigDecimal getCurs() {
+        return curs;
     }
 
-    public StandardCurrencyBean getStandardCurrencyBean() {
-        return standardCurrencyBean;
+    public void setCurs(BigDecimal curs) {
+        this.curs = curs;
     }
 
-    public void setStandardCurrencyBean(StandardCurrencyBean standardCurrencyBean) {
-        this.standardCurrencyBean = standardCurrencyBean;
+    public Date getCreated() {
+        return created;
     }
 
-    public Long getCurrentStandardCurrencyId() {
-        return currentStandardCurrencyId;
-    }
-
-    public void setCurrentStandardCurrencyId(Long currentStandardCurrencyId) {
-        this.currentStandardCurrencyId = currentStandardCurrencyId;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }
-
