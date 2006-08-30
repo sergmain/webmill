@@ -62,7 +62,7 @@
     <target name="reload_with_new_jar">
         <antcall target="stop"/>
         <antcall target="jar"/>
-        <copy file="${build.dir}\${main.lib}" todir="C:\opt2\_www\_me.askmore.info\riverock-portlets\WEB-INF\lib"
+        <copy file="${build.dir}\${main.lib}" todir="C:\opt2\_www\_me.askmore.info\${portlet-context-name}\WEB-INF\lib"
               overwrite="true"/>
         <antcall target="start"/>
     </target>

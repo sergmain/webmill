@@ -21,30 +21,31 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.manager.std_currency;
+package org.riverock.commerce.jsf;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.StringTokenizer;
 
-import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.apache.myfaces.shared_tomahawk.util.el.TestsMap;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 29.08.2006
- *         Time: 20:41:33
+ *         Date: 30.08.2006
+ *         Time: 17:39:48
+ *         <p/>
+ *         $Id$
  */
-public class StandardCurrencyService implements Serializable {
-    private static final long serialVersionUID = 7765005515L;
+public class UserInRoleChecker  extends TestsMap {
 
-    public StandardCurrencyService() {
-    }
-
-    public List<StandardCurrencyBean> getStandardCurrencyList() {
-        List<StandardCurrencyBean> list = CommerceDaoFactory.getCommerceDao().getStandardCurrencyList();
-        if (list==null) {
-            return new ArrayList<StandardCurrencyBean>();
+    public boolean getTest(String role) {
+        if (role==null) {
+            return false;
         }
-        return list;
+        StringTokenizer st =  new StringTokenizer(role, ", ",false);
+        while (st.hasMoreTokens()) {
+            if (FacesTools.isUserInRole(st.nextToken()) ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

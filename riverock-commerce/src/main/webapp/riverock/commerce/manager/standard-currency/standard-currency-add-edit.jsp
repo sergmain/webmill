@@ -31,6 +31,9 @@
  <h:outputText value="Standard currency info"/>
  <h:panelGrid columns="2">
  		<h:outputText value="#{msg.standard_currency_name}"/>
- 		<h:inputText id="standard-currency-name-field" value="#{standardCurrencySessionBean.standardCurrencyName}" size="30"/>
+ 		<h:inputText id="standard-currency-name-field" value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyName}" size="30"/>
+
+ 		<h:outputText value="#{msg.standard_currency_code}"/>
+ 		<h:inputText id="standard-currency-code-field" value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyCode}" size="30"/>
  </h:panelGrid>
  	

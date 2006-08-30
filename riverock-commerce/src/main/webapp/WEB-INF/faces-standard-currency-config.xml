@@ -49,6 +49,13 @@
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
+            <from-outcome>standard-currency-curs-add</from-outcome>
+            <to-view-id>/riverock/commerce/manager/standard-currency/standard-currency-curs-add.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
             <from-outcome>standard-currency-add</from-outcome>
             <to-view-id>/riverock/commerce/manager/standard-currency/standard-currency-add.jsp</to-view-id>
         </navigation-case>
@@ -57,21 +64,21 @@
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>standard-currency-edit</from-outcome>
-            <to-view-id>/riverock/manager/standard-currency/standard-currency-edit.jsp</to-view-id>
+            <to-view-id>/riverock/commerce/manager/standard-currency/standard-currency-edit.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>standard-currency-delete</from-outcome>
-            <to-view-id>/riverock/manager/standard-currency/standard-currency-delete.jsp</to-view-id>
+            <to-view-id>/riverock/commerce/manager/standard-currency/standard-currency-delete.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>standard-currency</from-outcome>
-            <to-view-id>/riverock/manager/standard-currency/standard-currency.jsp</to-view-id>
+            <to-view-id>/riverock/commerce/manager/standard-currency/standard-currency.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

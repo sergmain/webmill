@@ -25,19 +25,33 @@
 
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:loadBundle basename="org.riverock.commerce.resource.StandardCurrency" var="msg"/>
 
- <h:outputText value="#{msg.standard_currency_info}"/>
- <h:panelGrid columns="2">
- 		<h:outputText value="#{msg.standard_currency_id}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyId}"/>
+<t:dataTable id="standardCurrencyCursDataTable"
+        var="standardCurrencyCurs"
+        value="#{standardCurrencySessionBean.standardCurrencyBean.curses}"
+        rows="15"
+    >
 
- 		<h:outputText value="#{msg.standard_currency_name}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyName}"/>
+   <h:column>
+       <f:facet name="header">
+          <h:outputText value="#{msg.table_curs_created}" />
+       </f:facet>
+       <h:outputText value="#{standardCurrencyCurs.created}">
+           <f:convertDateTime type="both" dateStyle="short" timeStyle="short"/>
+       </h:outputText>
+   </h:column>
+   <h:column>
+       <f:facet name="header">
+          <h:outputText value="#{msg.table_curs_value}" />
+       </f:facet>
+       <h:outputText value="#{standardCurrencyCurs.curs}">
+           <f:convertNumber type="number" minIntegerDigits="1" minFractionDigits="2" maxFractionDigits="5"/>
+       </h:outputText>
+   </h:column>
 
- 		<h:outputText value="#{msg.standard_currency_code}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyCode}"/>
- </h:panelGrid>
+</t:dataTable>
 
- 	
+

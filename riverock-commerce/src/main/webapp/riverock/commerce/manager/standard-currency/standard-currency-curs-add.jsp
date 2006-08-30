@@ -27,9 +27,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.commerce.resource.StandardCurrency" var="msg"/>
-<f:loadBundle basename="org.riverock.commerce.resource.Manager" var="manager"/>
-
 <style type="text/css">
     TD {
         vertical-align: top;
@@ -47,22 +44,27 @@
 </style>
 
 
+<f:loadBundle basename="org.riverock.commerce.resource.StandardCurrency" var="msg"/>
+<f:loadBundle basename="org.riverock.commerce.resource.Manager" var="manager"/>
+
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="delete_standard_currency_form" rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form id="add_standard_currency_form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:panelGrid columns="1" rendered="#{!empty standardCurrencySessionBean.standardCurrencyBean.standardCurrencyName and isUserInRole['webmill.portal-manager']}">
+        <h:panelGrid columns="1" rendered="#{!empty standardCurrencySessionBean.standardCurrencyBean and isUserInRole['webmill.portal-manager']}">
 
-            <f:subview id="subviewStandardCurrencyInfo">
-                <jsp:include page="standard-currency-info.jsp"/>
-            </f:subview>
+            <h:panelGrid columns="2">
+                <h:outputText value="#{msg.new_curs}"/>
+                <h:inputText id="curs-field" value="#{standardCurrencySessionBean.currentCurs}" size="20"/>
+            </h:panelGrid>
 
-            <h:panelGroup id="editDeleteControls">
-                <h:commandButton value="#{msg.delete_confirm_action}"
-                                 action="#{standardCurrencyAction.processDeleteStandardCurrency}"
+            <h:panelGroup>
+                <h:commandButton value="#{msg.add_curs_process_action}" action="#{standardCurrencyAction.processAddCurs}"
                                  styleClass="sub-top-button-action"/>
-                <h:commandButton value="#{msg.delete_cancel_action}" action="standard-currency"
-                                 styleClass="sub-top-button-action"/>
+                <h:commandButton value="#{msg.add_curs_cancel_action}" action="#{standardCurrencyAction.cancelAddCurs}"
+                                 styleClass="sub-top-button-action"
+                                 immediate="true"
+                    />
             </h:panelGroup>
 
         </h:panelGrid>

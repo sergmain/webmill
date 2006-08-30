@@ -25,6 +25,8 @@ package org.riverock.commerce.manager.std_currency;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 import org.riverock.commerce.dao.CommerceDaoFactory;
 
 /**
@@ -33,6 +35,7 @@ import org.riverock.commerce.dao.CommerceDaoFactory;
  *         Time: 20:41:33
  */
 public class StandardCurrencyAction implements Serializable {
+    private final static Logger log = Logger.getLogger( StandardCurrencyAction.class );
 
     private static final long serialVersionUID = 2057005501L;
 
@@ -49,7 +52,11 @@ public class StandardCurrencyAction implements Serializable {
         this.standardCurrencySessionBean = standardCurrencySessionBean;
     }
 
+    // Add standard currency
+
     public String addStandardCurrency() {
+        log.debug("Start addStandardCurrency()");
+
         standardCurrencySessionBean.setStandardCurrencyBean( new StandardCurrencyBean() );
 
         return "standard-currency-add";
@@ -57,15 +64,40 @@ public class StandardCurrencyAction implements Serializable {
 
     public String processAddStandardCurrency() {
         Long id = CommerceDaoFactory.getCommerceDao().createStandardCurrency( standardCurrencySessionBean.getStandardCurrencyBean() );
-        standardCurrencySessionBean.setCurrentstandardCurrencyId( id );
+        standardCurrencySessionBean.setCurrentStandardCurrencyId( id );
         loadCurrentStandardCurrency();
         return "standard-currency";
     }
 
     public String cancelAddStandardCurrency() {
+        setSessionBean(null);
+        return "standard-currency";
+    }
+
+    // Add standard currency curs
+
+    public String addCurs() {
+        log.debug("Start addCurs()");
+
+        standardCurrencySessionBean.setCurrentCurs( null );
+
+        return "standard-currency-curs-add";
+    }
+
+    public String processAddCurs() {
+        CommerceDaoFactory.getCommerceDao().addStandardCurrencyCurs(
+            standardCurrencySessionBean.getCurrentStandardCurrencyId(), standardCurrencySessionBean.getCurrentCurs()
+        );
         loadCurrentStandardCurrency();
         return "standard-currency";
     }
+
+    public String cancelAddCurs() {
+        standardCurrencySessionBean.setCurrentCurs( null );
+        return "standard-currency";
+    }
+
+    // Edit standard currency
 
     public String processEditStandardCurrency() {
         CommerceDaoFactory.getCommerceDao().updateStandardCurrency( standardCurrencySessionBean.getStandardCurrencyBean() );
@@ -78,8 +110,8 @@ public class StandardCurrencyAction implements Serializable {
     }
 
     public String processDeleteStandardCurrency() {
-        CommerceDaoFactory.getCommerceDao().deleteStandardCurrency( standardCurrencySessionBean.getCurrentstandardCurrencyId() );
-        standardCurrencySessionBean.setStandardCurrencyBean( null );
+        CommerceDaoFactory.getCommerceDao().deleteStandardCurrency( standardCurrencySessionBean.getCurrentStandardCurrencyId() );
+        setSessionBean(null);
         return "standard-currency";
     }
 
@@ -89,7 +121,11 @@ public class StandardCurrencyAction implements Serializable {
     }
 
     private void loadCurrentStandardCurrency() {
-        StandardCurrencyBean bean = CommerceDaoFactory.getCommerceDao().getStandardCurrency( standardCurrencySessionBean.getCurrentstandardCurrencyId() );
-        standardCurrencySessionBean.setStandardCurrencyBean( new StandardCurrencyBean(bean) );
+        StandardCurrencyBean bean = CommerceDaoFactory.getCommerceDao().getStandardCurrency( standardCurrencySessionBean.getCurrentStandardCurrencyId() );
+        setSessionBean( new StandardCurrencyBean(bean) );
+    }
+
+    private void setSessionBean(StandardCurrencyBean bean) {
+        standardCurrencySessionBean.setStandardCurrencyBean(bean);
     }
 }

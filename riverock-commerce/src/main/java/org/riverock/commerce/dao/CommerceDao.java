@@ -24,6 +24,7 @@
 package org.riverock.commerce.dao;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
 
@@ -42,4 +43,6 @@ public interface CommerceDao {
     void deleteStandardCurrency(Long standardCurrencyId);
 
     StandardCurrencyBean getStandardCurrency(Long standardCurrencyId);
+
+    void addStandardCurrencyCurs(Long standardCurrencyId, BigDecimal currentCurs);
 }
