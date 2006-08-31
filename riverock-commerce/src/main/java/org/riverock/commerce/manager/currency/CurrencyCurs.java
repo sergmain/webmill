@@ -21,30 +21,46 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.manager.std_currency;
+package org.riverock.commerce.manager.currency;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.riverock.commerce.dao.CommerceDaoFactory;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 29.08.2006
- *         Time: 20:41:33
+ *         Date: 31.08.2006
+ *         Time: 20:41:42
+ *         <p/>
+ *         $Id$
  */
-public class StandardCurrencyService implements Serializable {
-    private static final long serialVersionUID = 7765005515L;
+public class CurrencyCurs implements Serializable {
+    private static final long serialVersionUID = 55957005419L;
 
-    public StandardCurrencyService() {
+    private BigDecimal curs= null;
+    private Date created = null;
+
+    public CurrencyCurs() {
     }
 
-    public List<StandardCurrencyBean> getStandardCurrencyList() {
-        List<StandardCurrencyBean> list = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrencyList();
-        if (list==null) {
-            return new ArrayList<StandardCurrencyBean>();
-        }
-        return list;
+    public CurrencyCurs(CurrencyCurs bean) {
+        this.curs = bean.getCurs();
+        this.created = bean.getCreated();
+    }
+
+    public BigDecimal getCurs() {
+        return curs;
+    }
+
+    public void setCurs(BigDecimal curs) {
+        this.curs = curs;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

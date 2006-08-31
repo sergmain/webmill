@@ -29,9 +29,14 @@ package org.riverock.commerce.dao;
  *         Time: 20:45:31
  */
 public class CommerceDaoFactory {
-    private final static CommerceDao COMMERCE_DAO = new CommerceDaoImpl();
+    private final static StandardCurrencyDao STANDARD_CURRENCY_DAO = new StandardCurrencyDaoImpl();
+    private final static CurrencyDao CURRENCY_DAO = new CurrencyDaoImpl();
 
-    public static CommerceDao getCommerceDao() {
-        return COMMERCE_DAO;
+    public static StandardCurrencyDao getStandardCurrencyDao() {
+        return STANDARD_CURRENCY_DAO;
+    }
+
+    public static CurrencyDao getCurrencyDao() {
+        return CURRENCY_DAO;
     }
 }
