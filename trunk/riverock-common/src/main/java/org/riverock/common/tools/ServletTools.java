@@ -1,12 +1,12 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock -- The Open-source Java Development Community
+ * org.riverock.common - Supporting classes, interfaces, and utilities
+ *
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,9 +20,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
-
 package org.riverock.common.tools;
 
 import java.lang.reflect.Method;
@@ -37,13 +35,21 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 /**
+ * Tool class for wotk with Servlet's objects
+ *
  * $Id$
  */
 public final class ServletTools {
     private final static Logger log = Logger.getLogger(ServletTools.class);
 
-    public static void cleanSession(final HttpSession session)
-        throws Exception {
+    /**
+     * Remove all attributes in session context. We try 3 times remove all attributes.
+     * In 1st and 2nd loops ConcurrentModificationException ignored.
+     *
+     * @param session HttpSession session
+     * @throws Exception
+     */
+    public static void cleanSession(final HttpSession session) throws Exception {
         if (session == null)
             return;
 
@@ -90,8 +96,14 @@ public final class ServletTools {
         return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value != null ? value : 0) + "\">\n");
     }
 
-    public static void immediateRemoveAttribute(final HttpSession session,
-        final String attr) {
+    /**
+     * Remove attribete from session and invoke before 'clearObject' method
+     *
+     * @param session HttpSession session
+     * @param attr String name of attribute for remove
+     */
+    public static void immediateRemoveAttribute(final HttpSession session, final String attr) {
+
         Object obj = session.getAttribute(attr);
         try {
             if (log.isDebugEnabled())
@@ -111,7 +123,7 @@ public final class ServletTools {
         }
         catch (Exception e) {
             if (log.isInfoEnabled())
-                log.info("#12.12.003  method 'clearObject' not found. Error " + e.toString());
+                log.info("#12.12.003  method 'clearObject' not found.",  e);
         }
 
         session.removeAttribute(attr);
@@ -119,26 +131,28 @@ public final class ServletTools {
     }
 
     /**
-     * Возвращает текстовое значение переменной. Если переменная не инициализирована, возвращает пустую строку
-     * Параметры:
-     * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * String f - имя переменной для получения значения<br>
-     * String def  - строка по умолчанию<br>
-     * </blockquote>
+     * Return text value of parameter. If parameter not exist, return default value.
+     * Before return string value converter from 'fromCharset' charset to 'toCharset' charset
+     *
+     * @param request HttpServletRequest request
+     * @param parameterName String name of parameter
+     * @param defaultValue String default value
+     * @param fromCharset String convert from charset
+     * @param toCharset String convert to charset
+     * @return String parameter value
      */
-    public static String getString(final HttpServletRequest request, final String f, final String def, final String fromCharset, final String toCharset) {
-        String s_ = def;
-        if (request.getParameter(f) != null) {
+    public static String getString(final HttpServletRequest request, final String parameterName, final String defaultValue, final String fromCharset, final String toCharset) {
+        String s_ = defaultValue;
+        if (request.getParameter(parameterName) != null) {
             try {
-                s_ = StringTools.convertString(request.getParameter(f), fromCharset, toCharset);
+                s_ = StringTools.convertString(request.getParameter(parameterName), fromCharset, toCharset);
             }
             catch (Exception e) {
+                // return defaultValue value
             }
         }
         return s_;
     }
-
 
     /**
      * Возвращает int значение переменной. Если переменная не инициализирована, возвращает 0
@@ -286,7 +300,7 @@ public final class ServletTools {
 
         Map<String, Object> map = new HashMap<String, Object>();
 
-        String s = parameter;
+        String s;
         if (parameter.indexOf('?') != -1)
             s = parameter.substring(parameter.indexOf('?') + 1);
         else

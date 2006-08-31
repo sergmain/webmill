@@ -63,7 +63,7 @@ public class StandardCurrencyAction implements Serializable {
     }
 
     public String processAddStandardCurrency() {
-        Long id = CommerceDaoFactory.getCommerceDao().createStandardCurrency( standardCurrencySessionBean.getStandardCurrencyBean() );
+        Long id = CommerceDaoFactory.getStandardCurrencyDao().createStandardCurrency( standardCurrencySessionBean.getStandardCurrencyBean() );
         standardCurrencySessionBean.setCurrentStandardCurrencyId( id );
         loadCurrentStandardCurrency();
         return "standard-currency";
@@ -85,7 +85,7 @@ public class StandardCurrencyAction implements Serializable {
     }
 
     public String processAddCurs() {
-        CommerceDaoFactory.getCommerceDao().addStandardCurrencyCurs(
+        CommerceDaoFactory.getStandardCurrencyDao().addStandardCurrencyCurs(
             standardCurrencySessionBean.getCurrentStandardCurrencyId(), standardCurrencySessionBean.getCurrentCurs()
         );
         loadCurrentStandardCurrency();
@@ -100,7 +100,7 @@ public class StandardCurrencyAction implements Serializable {
     // Edit standard currency
 
     public String processEditStandardCurrency() {
-        CommerceDaoFactory.getCommerceDao().updateStandardCurrency( standardCurrencySessionBean.getStandardCurrencyBean() );
+        CommerceDaoFactory.getStandardCurrencyDao().updateStandardCurrency( standardCurrencySessionBean.getStandardCurrencyBean() );
         return "standard-currency";
     }
 
@@ -110,7 +110,7 @@ public class StandardCurrencyAction implements Serializable {
     }
 
     public String processDeleteStandardCurrency() {
-        CommerceDaoFactory.getCommerceDao().deleteStandardCurrency( standardCurrencySessionBean.getCurrentStandardCurrencyId() );
+        CommerceDaoFactory.getStandardCurrencyDao().deleteStandardCurrency( standardCurrencySessionBean.getCurrentStandardCurrencyId() );
         setSessionBean(null);
         return "standard-currency";
     }
@@ -121,7 +121,7 @@ public class StandardCurrencyAction implements Serializable {
     }
 
     private void loadCurrentStandardCurrency() {
-        StandardCurrencyBean bean = CommerceDaoFactory.getCommerceDao().getStandardCurrency( standardCurrencySessionBean.getCurrentStandardCurrencyId() );
+        StandardCurrencyBean bean = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency( standardCurrencySessionBean.getCurrentStandardCurrencyId() );
         setSessionBean( new StandardCurrencyBean(bean) );
     }
 

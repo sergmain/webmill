@@ -21,30 +21,29 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.manager.std_currency;
+package org.riverock.commerce.dao;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
-import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
+import org.riverock.commerce.manager.currency.CurrencyBean;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 29.08.2006
- *         Time: 20:41:33
+ *         Time: 20:45:20
  */
-public class StandardCurrencyService implements Serializable {
-    private static final long serialVersionUID = 7765005515L;
+public interface StandardCurrencyDao {
+    List<StandardCurrencyBean> getStandardCurrencyList();
 
-    public StandardCurrencyService() {
-    }
+    Long createStandardCurrency(StandardCurrencyBean standardCurrencyBean);
 
-    public List<StandardCurrencyBean> getStandardCurrencyList() {
-        List<StandardCurrencyBean> list = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrencyList();
-        if (list==null) {
-            return new ArrayList<StandardCurrencyBean>();
-        }
-        return list;
-    }
+    void updateStandardCurrency(StandardCurrencyBean standardCurrencyBean);
+
+    void deleteStandardCurrency(Long standardCurrencyId);
+
+    StandardCurrencyBean getStandardCurrency(Long standardCurrencyId);
+
+    void addStandardCurrencyCurs(Long standardCurrencyId, BigDecimal currentCurs);
 }

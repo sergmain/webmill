@@ -23,19 +23,19 @@
  */
 package org.riverock.commerce.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.sql.Timestamp;
-import java.math.BigDecimal;
+import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
-import org.riverock.commerce.manager.std_currency.StandardCurrencyCurs;
+import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.CurrencyCurs;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -43,19 +43,21 @@ import org.riverock.common.tools.RsetTools;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 29.08.2006
- *         Time: 20:45:52
+ *         Date: 31.08.2006
+ *         Time: 21:53:14
+ *         <p/>
+ *         $Id$
  */
-public class CommerceDaoImpl implements CommerceDao {
-    private final static Logger log = Logger.getLogger( CommerceDaoImpl.class );
+public class CurrencyDaoImpl implements CurrencyDao {
+    private final static Logger log = Logger.getLogger( CurrencyDaoImpl.class );
 
     /**
      * list of curs for currency not initialized
      *
-     * @return List<StandardCurrencyBean>
+     * @return List<CurrencyBean>
      */
-    public List<StandardCurrencyBean> getStandardCurrencyList() {
-        List<StandardCurrencyBean> list = new ArrayList<StandardCurrencyBean>();
+    public List<CurrencyBean> getCurrencyList() {
+        List<CurrencyBean> list = new ArrayList<CurrencyBean>();
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -73,13 +75,13 @@ public class CommerceDaoImpl implements CommerceDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                StandardCurrencyBean article = initStandardCurrencyBean(rs);
+                CurrencyBean article = initCurrencyBean(rs);
                 list.add(article);
             }
             return list;
         }
         catch (Throwable e) {
-            final String es = "Error create list of standard currencies";
+            final String es = "Error create list of currencies";
             log.error(es, e);
             throw new RuntimeException( es, e );
         }
@@ -88,7 +90,7 @@ public class CommerceDaoImpl implements CommerceDao {
         }
     }
 
-    public Long createStandardCurrency(StandardCurrencyBean standardCurrencyBean) {
+    public Long createCurrency(CurrencyBean currencyBean) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
@@ -110,8 +112,8 @@ public class CommerceDaoImpl implements CommerceDao {
             ps = adapter.prepareStatement(sql_);
 
             ps.setLong(1, id );
-            ps.setString(2, standardCurrencyBean.getStandardCurrencyName() );
-            ps.setString(3, standardCurrencyBean.getStandardCurrencyCode() );
+            ps.setString(2, currencyBean.getCurrencyName() );
+            ps.setString(3, currencyBean.getCurrencyCode() );
             ps.setInt(4, 0 );
 
             ps.executeUpdate();
@@ -126,7 +128,7 @@ public class CommerceDaoImpl implements CommerceDao {
             catch(Throwable th) {
                 // catch rollback error
             }
-            String es = "Error create standard currency";
+            String es = "Error create currency";
             log.error(es, e);
             throw new IllegalStateException( es, e);
         } finally {
@@ -134,7 +136,7 @@ public class CommerceDaoImpl implements CommerceDao {
         }
     }
 
-    public void updateStandardCurrency(StandardCurrencyBean standardCurrencyBean) {
+    public void updateCurrency(CurrencyBean currencyBean) {
         String sql_ =
             "update WM_CASH_CURRENCY_STD "+
             "set"+
@@ -150,11 +152,11 @@ public class CommerceDaoImpl implements CommerceDao {
 
             ps = adapter.prepareStatement(sql_);
 
-            ps.setString(1, standardCurrencyBean.getStandardCurrencyName() );
-            ps.setString(2, standardCurrencyBean.getStandardCurrencyCode() );
-            ps.setInt(3, standardCurrencyBean.isDeleted()?1:0 );
+            ps.setString(1, currencyBean.getCurrencyName() );
+            ps.setString(2, currencyBean.getCurrencyCode() );
+            ps.setInt(3, currencyBean.isDeleted()?1:0 );
             // prepare PK
-            ps.setLong(4, standardCurrencyBean.getStandardCurrencyId() );
+            ps.setLong(4, currencyBean.getCurrencyId() );
 
             ps.executeUpdate();
 
@@ -168,7 +170,7 @@ public class CommerceDaoImpl implements CommerceDao {
             catch( Exception e001 ) {
                 //catch rollback error
             }
-            String es = "Error update standard currency";
+            String es = "Error update currency";
             log.error( es, e );
             throw new IllegalStateException( es, e );
        }
@@ -177,8 +179,8 @@ public class CommerceDaoImpl implements CommerceDao {
        }
     }
 
-    public void deleteStandardCurrency(Long standardCurrencyId) {
-        if (standardCurrencyId==null) {
+    public void deleteCurrency(Long currencyId) {
+        if (currencyId==null) {
             return;
         }
 
@@ -189,13 +191,13 @@ public class CommerceDaoImpl implements CommerceDao {
             DatabaseManager.runSQL(
                 dbDyn,
                 "delete from WM_CASH_CURS_STD where ID_STD_CURS=?",
-                new Object[]{standardCurrencyId}, new int[]{Types.DECIMAL}
+                new Object[]{currencyId}, new int[]{Types.DECIMAL}
             );
 
             DatabaseManager.runSQL(
                 dbDyn,
                 "update WM_CASH_CURRENCY_STD set IS_DELETED=1 where ID_STD_CURR=?",
-                new Object[]{standardCurrencyId}, new int[]{Types.DECIMAL}
+                new Object[]{currencyId}, new int[]{Types.DECIMAL}
             );
 
             dbDyn.commit();
@@ -208,7 +210,7 @@ public class CommerceDaoImpl implements CommerceDao {
             catch( Exception e001 ) {
                 //catch rollback error
             }
-            String es = "Error delete standard currency";
+            String es = "Error delete currency";
             log.error( es, e );
             throw new IllegalStateException( es, e );
         }
@@ -217,8 +219,8 @@ public class CommerceDaoImpl implements CommerceDao {
         }
     }
 
-    public StandardCurrencyBean getStandardCurrency(Long standardCurrencyId) {
-        if (standardCurrencyId==null) {
+    public CurrencyBean getCurrency(Long currencyId) {
+        if (currencyId==null) {
             return null;
         }
 
@@ -234,19 +236,19 @@ public class CommerceDaoImpl implements CommerceDao {
                 "from   WM_CASH_CURRENCY_STD " +
                 "where  IS_DELETED=0 and ID_STD_CURR=? "
             );
-            RsetTools.setLong(ps, 1, standardCurrencyId );
+            RsetTools.setLong(ps, 1, currencyId );
 
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                StandardCurrencyBean standardCurrencyBean = initStandardCurrencyBean(rs);
-                standardCurrencyBean.setCurses( getStandardCountryCurses(db_, standardCurrencyId) );
-                return standardCurrencyBean;
+                CurrencyBean currencyBean = initCurrencyBean(rs);
+                currencyBean.setCurses( getCurrencyCurses(db_, currencyId) );
+                return currencyBean;
             }
             return null;
         }
         catch (Throwable e) {
-            final String es = "Error get standard currency";
+            final String es = "Error get currency";
             log.error(es, e);
             throw new RuntimeException( es, e );
         }
@@ -255,7 +257,7 @@ public class CommerceDaoImpl implements CommerceDao {
         }
     }
 
-    public void addStandardCurrencyCurs(Long standardCurrencyId, BigDecimal currentCurs) {
+    public void addCurrencyCurs(Long currencyId, BigDecimal currentCurs) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
@@ -280,7 +282,7 @@ public class CommerceDaoImpl implements CommerceDao {
             ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()) );
             ps.setBigDecimal(3, currentCurs );
             ps.setInt(4, 0 );
-            ps.setLong(5, standardCurrencyId );
+            ps.setLong(5, currencyId );
 
             ps.executeUpdate();
 
@@ -293,7 +295,7 @@ public class CommerceDaoImpl implements CommerceDao {
             catch(Throwable th) {
                 // catch rollback error
             }
-            String es = "Error add standard currency curs";
+            String es = "Error add currency curs";
             log.error(es, e);
             throw new IllegalStateException( es, e);
         } finally {
@@ -301,8 +303,8 @@ public class CommerceDaoImpl implements CommerceDao {
         }
     }
 
-    private List<StandardCurrencyCurs> getStandardCountryCurses(DatabaseAdapter db_, Long standardCurrencyId) {
-        List<StandardCurrencyCurs> list = new ArrayList<StandardCurrencyCurs>();
+    private List<CurrencyCurs> getCurrencyCurses(DatabaseAdapter db_, Long currencyId) {
+        List<CurrencyCurs> list = new ArrayList<CurrencyCurs>();
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -316,17 +318,17 @@ public class CommerceDaoImpl implements CommerceDao {
                 "order by DATE_CHANGE DESC "
             );
 
-            ps.setLong(1, standardCurrencyId);
+            ps.setLong(1, currencyId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                StandardCurrencyCurs curs = initStandardCurrencyCurs(rs);
+                CurrencyCurs curs = initCurrencyCurs(rs);
                 list.add(curs);
             }
             return list;
         }
         catch (Throwable e) {
-            final String es = "Error create list of standard currencies";
+            final String es = "Error create list of currencies";
             log.error(es, e);
             throw new RuntimeException( es, e );
         }
@@ -335,8 +337,8 @@ public class CommerceDaoImpl implements CommerceDao {
         }
     }
 
-    private StandardCurrencyCurs initStandardCurrencyCurs(ResultSet rs) throws SQLException {
-        StandardCurrencyCurs curs = new StandardCurrencyCurs();
+    private CurrencyCurs initCurrencyCurs(ResultSet rs) throws SQLException {
+        CurrencyCurs curs = new CurrencyCurs();
 
         curs.setCurs( rs.getBigDecimal("VALUE_CURS") );
         if (rs.wasNull()) {
@@ -347,12 +349,12 @@ public class CommerceDaoImpl implements CommerceDao {
         return curs;
     }
 
-    private StandardCurrencyBean initStandardCurrencyBean(ResultSet rs) throws SQLException {
-        StandardCurrencyBean article = new StandardCurrencyBean();
+    private CurrencyBean initCurrencyBean(ResultSet rs) throws SQLException {
+        CurrencyBean article = new CurrencyBean();
 
-        article.setStandardCurrencyId( RsetTools.getLong(rs, "ID_STD_CURR"));
-        article.setStandardCurrencyName( RsetTools.getString(rs, "NAME_STD_CURR") );
-        article.setStandardCurrencyCode( RsetTools.getString(rs, "CONVERT_CURRENCY") );
+        article.setCurrencyId( RsetTools.getLong(rs, "ID_STD_CURR"));
+        article.setCurrencyName( RsetTools.getString(rs, "NAME_STD_CURR") );
+        article.setCurrencyCode( RsetTools.getString(rs, "CONVERT_CURRENCY") );
         return article;
     }
 }

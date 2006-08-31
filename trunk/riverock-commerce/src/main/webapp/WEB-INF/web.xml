@@ -34,7 +34,8 @@
         <param-name>javax.faces.CONFIG_FILES</param-name>
         <param-value>
             /WEB-INF/faces-common-config.xml,
-            /WEB-INF/faces-standard-currency-config.xml
+            /WEB-INF/faces-standard-currency-config.xml,
+            /WEB-INF/faces-currency-config.xml
         </param-value>
     </context-param>
     <context-param>
