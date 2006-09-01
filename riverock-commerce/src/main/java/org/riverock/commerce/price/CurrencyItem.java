@@ -79,7 +79,7 @@ public class CurrencyItem extends CustomCurrencyItemType {
     public CurrencyItem() {
     }
 
-    public CurrencyItem(DatabaseAdapter db_, WmCashCurrencyItemType item) throws PriceException {
+    public CurrencyItem(DatabaseAdapter db_, WmCashCurrencyItemType item) {
         this.setCurrencyCode(item.getCurrency());
         this.setCurrencyName(item.getNameCurrency());
         this.setIdCurrency(item.getIdCurrency());

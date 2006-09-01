@@ -33,7 +33,7 @@
 
                 <t:dataTable id="currencyDataTable"
                         var="currencyBean"
-                        value="#{currencyService.currencyList}"
+                        value="#{currencyDataProvider.currencyList}"
                         preserveDataModel="true" >
                    <h:column>
                        <f:facet name="header">

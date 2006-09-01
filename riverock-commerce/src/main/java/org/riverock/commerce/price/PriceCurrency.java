@@ -83,10 +83,8 @@ public class PriceCurrency {
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam_.sortBy));
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam_.sortDirect));
 
-        CustomCurrencyType list = null;
-
         Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        list = CurrencyManager.getInstance(siteId ).getCurrencyList();
+        CustomCurrencyType list = CurrencyManager.getInstance(siteId).getCurrencyList();
 
         for (int i = 0; i < list.getCurrencyListCount(); i++) {
             CustomCurrencyItemType item = list.getCurrencyList(i);

@@ -36,11 +36,19 @@ import java.math.BigDecimal;
 public class CurrencySessionBean implements Serializable {
     private static final long serialVersionUID = 5597005504L;
 
-    private CurrencyBean currencyBean = null;
+    private CurrencyExtendedBean currencyExtendedBean = null;
     private Long currentCurrencyId = null;
     private BigDecimal currentCurs =null;
 
     public CurrencySessionBean() {
+    }
+
+    public CurrencyExtendedBean getCurrencyExtendedBean() {
+        return currencyExtendedBean;
+    }
+
+    public void setCurrencyExtendedBean(CurrencyExtendedBean currencyExtendedBean) {
+        this.currencyExtendedBean = currencyExtendedBean;
     }
 
     public BigDecimal getCurrentCurs() {
@@ -49,14 +57,6 @@ public class CurrencySessionBean implements Serializable {
 
     public void setCurrentCurs(BigDecimal currentCurs) {
         this.currentCurs = currentCurs;
-    }
-
-    public CurrencyBean getCurrencyBean() {
-        return currencyBean;
-    }
-
-    public void setCurrencyBean(CurrencyBean currencyBean) {
-        this.currencyBean = currencyBean;
     }
 
     public Long getCurrentCurrencyId() {

@@ -56,7 +56,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
      *
      * @return List<CurrencyBean>
      */
-    public List<CurrencyBean> getCurrencyList() {
+    public List<CurrencyBean> getCurrencyList(Long siteId) {
         List<CurrencyBean> list = new ArrayList<CurrencyBean>();
 
         PreparedStatement ps = null;
@@ -67,16 +67,17 @@ public class CurrencyDaoImpl implements CurrencyDao {
             db_ = DatabaseAdapter.getInstance();
 
             ps = db_.prepareStatement(
-                "select ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED " +
-                "from   WM_CASH_CURRENCY_STD " +
-                "where  IS_DELETED=0 "
+                "select ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE " +
+                "from   WM_CASH_CURRENCY " +
+                "where  ID_SITE=? "
             );
+            ps.setLong(1, siteId);
 
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                CurrencyBean article = initCurrencyBean(rs);
-                list.add(article);
+                CurrencyBean bean = initCurrencyBean(rs);
+                list.add(bean);
             }
             return list;
         }
@@ -98,23 +99,27 @@ public class CurrencyDaoImpl implements CurrencyDao {
             adapter = DatabaseAdapter.getInstance();
 
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_WM_CASH_CURRENCY_STD" );
-            seq.setTableName( "WM_CASH_CURRENCY_STD" );
-            seq.setColumnName( "ID_STD_CURR" );
+            seq.setSequenceName( "seq_WM_CASH_CURRENCY" );
+            seq.setTableName( "WM_CASH_CURRENCY" );
+            seq.setColumnName( "ID_CURRENCY" );
             Long id = adapter.getSequenceNextValue( seq );
 
             String sql_ =
-                "insert into WM_CASH_CURRENCY_STD"+
-                "(ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED)"+
-                "values"+
-                "( ?,  ?,  ?,  ?)";
+                "insert into WM_CASH_CURRENCY"+
+                "(ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE) "+
+                "values "+
+                "( ?, ?, ?, ?, ?, ?, ?, ?)";
 
             ps = adapter.prepareStatement(sql_);
 
             ps.setLong(1, id );
-            ps.setString(2, currencyBean.getCurrencyName() );
-            ps.setString(3, currencyBean.getCurrencyCode() );
-            ps.setInt(4, 0 );
+            ps.setString(2, currencyBean.getCurrencyCode() );
+            ps.setInt(3, currencyBean.isUsed()?1:0 );
+            ps.setString(4, currencyBean.getCurrencyName() );
+            ps.setInt(5, currencyBean.isUseStandard()?1:0 );
+            ps.setLong(6, currencyBean.getStandardCurrencyId() );
+            ps.setLong(7, currencyBean.getSiteId() );
+            ps.setBigDecimal(8, currencyBean.getPercent() );
 
             ps.executeUpdate();
 
@@ -138,12 +143,16 @@ public class CurrencyDaoImpl implements CurrencyDao {
 
     public void updateCurrency(CurrencyBean currencyBean) {
         String sql_ =
-            "update WM_CASH_CURRENCY_STD "+
-            "set"+
-            "    NAME_STD_CURR=?, " +
-            "    CONVERT_CURRENCY=?, " +
-            "    IS_DELETED=? "+
-            "where ID_STD_CURR=?";
+            "update WM_CASH_CURRENCY "+
+            "set "+
+            "    NAME_CURRENCY=?, " +
+            "    CURRENCY=?, " +
+            "    IS_USED=?, " +
+            "    IS_USE_STANDART=?, " +
+            "    ID_STANDART_CURS=?, " +
+            "    ID_SITE=?, " +
+            "    PERCENT_VALUE=? "+
+            "where ID_CURRENCY=?";
 
         PreparedStatement ps = null;
         DatabaseAdapter adapter = null;
@@ -154,9 +163,14 @@ public class CurrencyDaoImpl implements CurrencyDao {
 
             ps.setString(1, currencyBean.getCurrencyName() );
             ps.setString(2, currencyBean.getCurrencyCode() );
-            ps.setInt(3, currencyBean.isDeleted()?1:0 );
+            ps.setInt(3, currencyBean.isUsed()?1:0 );
+            ps.setInt(4, currencyBean.isUseStandard()?1:0 );
+            ps.setLong(5, currencyBean.getStandardCurrencyId() );
+            ps.setLong(6, currencyBean.getSiteId() );
+            ps.setBigDecimal(7, currencyBean.getPercent() );
+
             // prepare PK
-            ps.setLong(4, currencyBean.getCurrencyId() );
+            ps.setLong(8, currencyBean.getCurrencyId() );
 
             ps.executeUpdate();
 
@@ -190,13 +204,13 @@ public class CurrencyDaoImpl implements CurrencyDao {
 
             DatabaseManager.runSQL(
                 dbDyn,
-                "delete from WM_CASH_CURS_STD where ID_STD_CURS=?",
+                "delete from WM_CASH_CURR_VALUE where ID_CURRENCY=?",
                 new Object[]{currencyId}, new int[]{Types.DECIMAL}
             );
 
             DatabaseManager.runSQL(
                 dbDyn,
-                "update WM_CASH_CURRENCY_STD set IS_DELETED=1 where ID_STD_CURR=?",
+                "delete from WM_CASH_CURRENCY where ID_CURRENCY=?",
                 new Object[]{currencyId}, new int[]{Types.DECIMAL}
             );
 
@@ -232,9 +246,9 @@ public class CurrencyDaoImpl implements CurrencyDao {
             db_ = DatabaseAdapter.getInstance();
 
             ps = db_.prepareStatement(
-                "select ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED " +
-                "from   WM_CASH_CURRENCY_STD " +
-                "where  IS_DELETED=0 and ID_STD_CURR=? "
+                "select ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE " +
+                "from   WM_CASH_CURRENCY " +
+                "where  ID_CURRENCY=? "
             );
             RsetTools.setLong(ps, 1, currencyId );
 
@@ -265,24 +279,23 @@ public class CurrencyDaoImpl implements CurrencyDao {
             adapter = DatabaseAdapter.getInstance();
 
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_WM_CASH_CURS_STD" );
-            seq.setTableName( "WM_CASH_CURS_STD" );
-            seq.setColumnName( "ID_STD_CURS" );
+            seq.setSequenceName( "seq_WM_CASH_CURR_VALUE" );
+            seq.setTableName( "WM_CASH_CURR_VALUE" );
+            seq.setColumnName( "ID_CURVAL" );
             Long id = adapter.getSequenceNextValue( seq );
 
             String sql_ =
-                "insert into WM_CASH_CURS_STD"+
-                "(ID_STD_CURS, DATE_CHANGE, VALUE_CURS, IS_DELETED, ID_STD_CURR)"+
+                "insert into WM_CASH_CURR_VALUE"+
+                "(ID_CURVAL, DATE_CHANGE, CURS, ID_CURRENCY)"+
                 "values"+
-                "( ?,  ?,  ?,  ?, ?)";
+                "( ?, ?, ?, ?)";
 
             ps = adapter.prepareStatement(sql_);
 
             ps.setLong(1, id );
             ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()) );
             ps.setBigDecimal(3, currentCurs );
-            ps.setInt(4, 0 );
-            ps.setLong(5, currencyId );
+            ps.setLong(4, currencyId );
 
             ps.executeUpdate();
 
@@ -312,9 +325,9 @@ public class CurrencyDaoImpl implements CurrencyDao {
         try {
 
             ps = db_.prepareStatement(
-                "select ID_STD_CURS, DATE_CHANGE, VALUE_CURS, IS_DELETED, ID_STD_CURR " +
-                "from   WM_CASH_CURS_STD " +
-                "where ID_STD_CURR=? and IS_DELETED=0 " +
+                "select ID_CURRENCY, DATE_CHANGE, CURS, ID_CURVAL " +
+                "from   WM_CASH_CURR_VALUE " +
+                "where  ID_CURRENCY=? " +
                 "order by DATE_CHANGE DESC "
             );
 
@@ -340,7 +353,8 @@ public class CurrencyDaoImpl implements CurrencyDao {
     private CurrencyCurs initCurrencyCurs(ResultSet rs) throws SQLException {
         CurrencyCurs curs = new CurrencyCurs();
 
-        curs.setCurs( rs.getBigDecimal("VALUE_CURS") );
+        // ID_CURRENCY, DATE_CHANGE, CURS, ID_CURVAL
+        curs.setCurs( rs.getBigDecimal("CURS") );
         if (rs.wasNull()) {
             return null;
         }
@@ -350,11 +364,18 @@ public class CurrencyDaoImpl implements CurrencyDao {
     }
 
     private CurrencyBean initCurrencyBean(ResultSet rs) throws SQLException {
-        CurrencyBean article = new CurrencyBean();
+        CurrencyBean bean = new CurrencyBean();
 
-        article.setCurrencyId( RsetTools.getLong(rs, "ID_STD_CURR"));
-        article.setCurrencyName( RsetTools.getString(rs, "NAME_STD_CURR") );
-        article.setCurrencyCode( RsetTools.getString(rs, "CONVERT_CURRENCY") );
-        return article;
+        // ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE
+        bean.setCurrencyId( RsetTools.getLong(rs, "ID_CURRENCY"));
+        bean.setCurrencyName( RsetTools.getString(rs, "NAME_CURRENCY") );
+        bean.setCurrencyCode( RsetTools.getString(rs, "CURRENCY") );
+        bean.setUsed( RsetTools.getInt(rs, "IS_USED", 0)==1);
+        bean.setUsed( RsetTools.getInt(rs, "IS_USE_STANDART", 0)==1);
+        bean.setStandardCurrencyId( RsetTools.getLong(rs, "ID_STANDART_CURS"));
+        bean.setSiteId( RsetTools.getLong(rs, "ID_SITE"));
+        bean.setPercent( RsetTools.getBigDecimal(rs, "PERCENT_VALUE", new BigDecimal(0.0)) );
+
+        return bean;
     }
 }

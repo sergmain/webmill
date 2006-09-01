@@ -288,7 +288,7 @@ public final class PriceListItemList {
     }
 
     private static int getPrecisionValue( Shop shop, Long idCurrency ) {
-        CurrencyPrecisionType prec = shop.precisionList.getCurrencyPrecision( idCurrency );
+        CurrencyPrecisionType prec = shop.getShopBean().precisionList.getCurrencyPrecision( idCurrency );
         if (prec==null)
             return 2;
 

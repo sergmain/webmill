@@ -21,31 +21,48 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.dao;
+package org.riverock.commerce.bean;
 
 import java.math.BigDecimal;
-import java.util.List;
-
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import java.util.Date;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 31.08.2006
- *         Time: 21:53:06
+ *         Date: 01.09.2006
+ *         Time: 19:12:14
  *         <p/>
  *         $Id$
  */
-public interface CurrencyDao {
+public class CurrencyCurrentCurs {
 
-    void addCurrencyCurs(Long currencyId, BigDecimal curs);
+    private Long currencyId;
+    private java.util.Date date;
+    private BigDecimal curs;
 
-    void updateCurrency(CurrencyBean currencyBean);
+    public CurrencyCurrentCurs() {
+    }
 
-    void deleteCurrency(Long currencyId);
+    public Long getCurrencyId() {
+        return currencyId;
+    }
 
-    CurrencyBean getCurrency(Long currencyId);
+    public void setCurrencyId(Long currencyId) {
+        this.currencyId = currencyId;
+    }
 
-    Long createCurrency(CurrencyBean currencyBean);
+    public Date getDate() {
+        return date;
+    }
 
-    List<CurrencyBean> getCurrencyList(Long siteId);
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public BigDecimal getCurs() {
+        return curs;
+    }
+
+    public void setCurs(BigDecimal curs) {
+        this.curs = curs;
+    }
 }

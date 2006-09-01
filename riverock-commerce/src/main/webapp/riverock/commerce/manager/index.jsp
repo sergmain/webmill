@@ -49,15 +49,23 @@
         }
     </style>
 
-    <h:panelGrid columns="1">
+    <h:panelGrid columns="2">
 
         <h:panelGroup>
             <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}">
                 <h:commandButton id="statdard-currency-action" action="standard-currency" value="#{manager.standard_currency_button}"
                                  styleClass="top-button-action"/>
-                <h:outputText value="#{manager.standard_currency_button_info}" style="font-size:10px"/>
+                <h:outputText value="#{manager.standard_currency_button_info}" styleClass="top-button-action"/>
             </h:panelGrid>
         </h:panelGroup>
+        <h:panelGroup>
+            <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}">
+                <h:commandButton id="currency-action" action="currency" value="#{manager.currency_button}"
+                                 styleClass="top-button-action"/>
+                <h:outputText value="#{manager.currency_button_info}" styleClass="top-button-action"/>
+            </h:panelGrid>
+        </h:panelGroup>
+
     </h:panelGrid>
 
 

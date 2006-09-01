@@ -21,31 +21,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.dao;
+package org.riverock.commerce.bean;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 31.08.2006
- *         Time: 21:53:06
+ *         Date: 01.09.2006
+ *         Time: 21:20:16
  *         <p/>
  *         $Id$
  */
-public interface CurrencyDao {
+public class CustomCurrency {
+    private List<CurrencyBean> currencies = null;
+    private List<StandardCurrencyBean> standardCurrencies = null;
 
-    void addCurrencyCurs(Long currencyId, BigDecimal curs);
+    public List<CurrencyBean> getCurrencies() {
+        return currencies;
+    }
 
-    void updateCurrency(CurrencyBean currencyBean);
+    public void setCurrencies(List<CurrencyBean> currencies) {
+        this.currencies = currencies;
+    }
 
-    void deleteCurrency(Long currencyId);
+    public List<StandardCurrencyBean> getStandardCurrencies() {
+        return standardCurrencies;
+    }
 
-    CurrencyBean getCurrency(Long currencyId);
-
-    Long createCurrency(CurrencyBean currencyBean);
-
-    List<CurrencyBean> getCurrencyList(Long siteId);
+    public void setStandardCurrencies(List<StandardCurrencyBean> standardCurrencies) {
+        this.standardCurrencies = standardCurrencies;
+    }
 }

@@ -62,36 +62,24 @@ public final class PriceGroup {
             log.debug( "move to GroupListType" );
 
         GroupListType group = new GroupListType();
-        for( int i = 0; i < groupVector.size(); i++ ) {
-            PriceGroupItem item = ( PriceGroupItem ) groupVector.get( i );
-
+        for (PriceGroupItem item : groupVector) {
             GroupItemType groupItem = new GroupItemType();
-            groupItem.setGroupName( item.name );
-            groupItem.setIdGroup( item.id_group );
+            groupItem.setGroupName(item.name);
+            groupItem.setIdGroup(item.id_group);
 
             PortletURL portletURL = renderResponse.createRenderURL();
-            portletURL.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP );
-            portletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, item.id_group.toString() );
-            portletURL.setParameters( shopParam.currencyURL );
-            portletURL.setParameter( ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
+            portletURL.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
+            portletURL.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP, item.id_group.toString());
+            portletURL.setParameters(shopParam.currencyURL);
+            portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString());
 
-//            String url = PortletService.url(
-//                Constants.CTX_TYPE_SHOP, shopParam.nameTemplate) + '&' +
-//                Constants.NAME_ID_GROUP_SHOP + '=' + item.id_group + '&' +
-//                shopParam.currencyURL + '&' +
-//                Constants.NAME_ID_SHOP_PARAM + '=' + shopParam.id_shop + '&' +
-//                Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_SHOP;
-
-            if( shopParam.sortBy != null ) {
-//                url += ("&" + Constants.NAME_SHOP_SORT_BY + '=' + shopParam.sortBy +
-//                    '&' + Constants.NAME_SHOP_SORT_DIRECT + '=' + shopParam.sortDirect
-//                    );
-                portletURL.setParameter( ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy );
-                portletURL.setParameter( ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect );
+            if (shopParam.sortBy != null) {
+                portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy);
+                portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect);
             }
-            groupItem.setGroupUrl( portletURL.toString() );
+            groupItem.setGroupUrl(portletURL.toString());
 
-            group.addGroupItem( groupItem );
+            group.addGroupItem(groupItem);
         }
 
         return group;
@@ -100,7 +88,6 @@ public final class PriceGroup {
     public static List<PriceGroupItem> getInstance( DatabaseAdapter db_, Long idGroup, Long idShop, Long idSite )
         throws PriceException {
 
-        String sql_ = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -109,7 +96,7 @@ public final class PriceGroup {
 
         List<PriceGroupItem> v = new ArrayList<PriceGroupItem>( 15 );
         try {
-            sql_ =
+            String sql_ =
                 "select a.ITEM, a.ID " +
                 "from   WM_PRICE_LIST a, WM_PRICE_SHOP_LIST b " +
                 "where  a.ID_SHOP=b.ID_SHOP and a.ABSOLETE=0 and " +

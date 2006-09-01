@@ -60,7 +60,7 @@
                 <jsp:include page="currency-list.jsp"/>
             </f:subview>
 
-            <h:panelGrid columns="1" rendered="#{!empty currencySessionBean.currencyBean.currencyName}">
+            <h:panelGrid columns="1" rendered="#{!empty currencySessionBean.currencyExtendedBean}">
 
                 <f:subview id="subviewCurrencyInfo">
                     <jsp:include page="currency-info.jsp"/>

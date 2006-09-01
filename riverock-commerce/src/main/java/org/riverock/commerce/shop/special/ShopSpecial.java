@@ -106,11 +106,11 @@ public class ShopSpecial extends HttpServlet
                 String currencyForm = "<input type=\"hidden\" name=\"c\" value=\"" + currencyID + "\">";
                 String currencyURL = "&c=" + currencyID;
 
-                if (shop.is_default_currency == 1)
+                if (shop.getShopBean().is_default_currency == 1)
                 {
                     currencyForm = "";
                     currencyURL = "";
-                    currencyID = shop.currencyID;
+                    currencyID = shop.getShopBean().currencyID;
                 }
 
 // !!!!!!!

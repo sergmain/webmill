@@ -26,6 +26,7 @@ package org.riverock.commerce.manager.currency;
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 
 /**
  * @author Sergei Maslyukov
@@ -39,9 +40,13 @@ public class CurrencyBean implements Serializable {
     private static final long serialVersionUID = 55957005501L;
 
     private Long currencyId =null;
+    private Long standardCurrencyId =null;
+    private Long siteId =null;
+    private BigDecimal percent =null;
     private String currencyName = null;
     private String currencyCode = null;
-    private boolean isDeleted=false;
+    private boolean isUsed=false;
+    private boolean isUseStandard=false;
     private List<CurrencyCurs> curses = new ArrayList<CurrencyCurs>();
 
     public CurrencyBean() {
@@ -51,8 +56,52 @@ public class CurrencyBean implements Serializable {
         this.currencyId = currencyBean.getCurrencyId();
         this.currencyName = currencyBean.getCurrencyName();
         this.currencyCode = currencyBean.getCurrencyCode();
-        this.isDeleted = currencyBean.isDeleted();
+        this.isUsed = currencyBean.isUsed();
+        this.isUseStandard = currencyBean.isUseStandard();
         this.curses = currencyBean.getCurses();
+        this.standardCurrencyId = currencyBean.getStandardCurrencyId();
+        this.siteId = currencyBean.getSiteId();
+        this.percent = currencyBean.getPercent();
+    }
+
+    public BigDecimal getPercent() {
+        return percent;
+    }
+
+    public void setPercent(BigDecimal percent) {
+        this.percent = percent;
+    }
+
+    public Long getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
+    }
+
+    public Long getStandardCurrencyId() {
+        return standardCurrencyId;
+    }
+
+    public void setStandardCurrencyId(Long standardCurrencyId) {
+        this.standardCurrencyId = standardCurrencyId;
+    }
+
+    public boolean isUseStandard() {
+        return isUseStandard;
+    }
+
+    public void setUseStandard(boolean useStandard) {
+        isUseStandard = useStandard;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    public void setUsed(boolean used) {
+        isUsed = used;
     }
 
     public List<CurrencyCurs> getCurses() {
@@ -61,14 +110,6 @@ public class CurrencyBean implements Serializable {
 
     public void setCurses(List<CurrencyCurs> curses) {
         this.curses = curses;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 
     public Long getCurrencyId() {

@@ -262,6 +262,12 @@ public final class PortletService {
         session.removeAttribute(attr);
     }
 
+    /**
+     * @deprecated use org.riverock.webmill.container.tools.PortletService.getLong()
+     * @param namePortletID
+     * @param request
+     * @return Long
+     */
     public static Long getIdPortlet( final String namePortletID, final PortletRequest request ) {
         return getLong(request, namePortletID);
     }

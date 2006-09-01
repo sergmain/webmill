@@ -24,20 +24,14 @@
  */
 package org.riverock.commerce.price;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Calendar;
 import java.io.Serializable;
-
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
+import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.sql.cache.SqlStatement;
 
 /**
  * $Id$
@@ -47,6 +41,9 @@ public class Shop implements Serializable {
     private final static Logger log = Logger.getLogger( Shop.class );
 
     private transient static CacheFactory cache = new CacheFactory( Shop.class);
+
+    private ShopBean shopBean = null;
+/*
 
     public Long id_shop = null;
     public int is_close;
@@ -76,6 +73,11 @@ public class Shop implements Serializable {
 
     public Long id_type_shop_1 = null;
     public Long id_type_shop_2 = null;
+*/
+
+    public ShopBean getShopBean() {
+        return shopBean;
+    }
 
     public static void reinit() {
         if (log.isDebugEnabled()) {
@@ -85,6 +87,9 @@ public class Shop implements Serializable {
     }
 
     protected void finalize() throws Throwable {
+        shopBean=null;
+/*
+
         name_shop = null;
         footer = null;
         header = null;
@@ -92,6 +97,7 @@ public class Shop implements Serializable {
         name_shop_for_price_list = null;
         dateUpload = null;
         dateCalcQuantity = null;
+*/
 
         super.finalize();
     }
@@ -109,24 +115,10 @@ public class Shop implements Serializable {
         }
     }
 
-    static String sql_ = null;
+    public Shop( Long id_shop_ ) {
+        this.shopBean = CommerceDaoFactory.getShopDao().getShop(id_shop_);
+/*
 
-    static {
-        sql_ =
-            "select * from WM_PRICE_SHOP_LIST where ID_SHOP = ?";
-
-        try {
-            SqlStatement.registerSql( sql_, Shop.class );
-        }
-        catch( Exception e ) {
-            log.error( "Exception in registerSql, sql\n" + sql_, e );
-        }
-        catch( Error e ) {
-            log.error( "Error in registerSql, sql\n" + sql_, e );
-        }
-    }
-
-    public Shop( Long id_shop_ ) throws PriceException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
@@ -182,5 +174,6 @@ public class Shop implements Serializable {
             ps = null;
             db_ = null;
         }
+*/
     }
 }
