@@ -25,9 +25,9 @@ package org.riverock.commerce.manager.currency;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
+import org.riverock.commerce.bean.CurrencyCurrentCurs;
 
 /**
  * @author Sergei Maslyukov
@@ -40,28 +40,21 @@ public class CurrencyExtendedBean implements Serializable {
     private static final long serialVersionUID = 55957005701L;
 
     private CurrencyBean currencyBean  = null;
-    private BigDecimal realCurs=null;
-    private BigDecimal currentCurs=null;
-    private BigDecimal standardCurrencyCurrentCurs=null;
-    private Date cursChangeDate=null;
-    private Date statndardCurrencyCursChangeDate=null;
-    private boolean isCurrencyUsed=false;
     private StandardCurrencyBean standardCurrencyBean=null;
-    private BigDecimal percent=null;
+    private BigDecimal realCurs=null;
+
+    private CurrencyCurrentCurs currentCurs=null;
+    private CurrencyCurrentCurs currentStandardCurs=null;
 
     public CurrencyExtendedBean() {
     }
 
-    public CurrencyExtendedBean(CurrencyExtendedBean bean) {
-        this.currencyBean = bean.getCurrencyBean();
-        this.realCurs = bean.getRealCurs();
-        this.currentCurs = bean.getCurrentCurs();
-        this.standardCurrencyCurrentCurs = bean.getStandardCurrencyCurrentCurs();
-        this.cursChangeDate = bean.getCursChangeDate();
-        this.statndardCurrencyCursChangeDate = bean.getStatndardCurrencyCursChangeDate();
-        isCurrencyUsed = bean.isCurrencyUsed();
-        this.standardCurrencyBean = bean.getStandardCurrencyBean();
-        this.percent = bean.getPercent();
+    public CurrencyExtendedBean(CurrencyBean currencyBean, StandardCurrencyBean standardCurrencyBean, BigDecimal realCurs, CurrencyCurrentCurs currentCurs, CurrencyCurrentCurs currentStandardCurs) {
+        this.currencyBean = currencyBean;
+        this.standardCurrencyBean = standardCurrencyBean;
+        this.realCurs = realCurs;
+        this.currentCurs = currentCurs;
+        this.currentStandardCurs = currentStandardCurs;
     }
 
     public CurrencyBean getCurrencyBean() {
@@ -80,59 +73,15 @@ public class CurrencyExtendedBean implements Serializable {
         this.realCurs = realCurs;
     }
 
-    public BigDecimal getCurrentCurs() {
-        return currentCurs;
-    }
-
-    public void setCurrentCurs(BigDecimal currentCurs) {
-        this.currentCurs = currentCurs;
-    }
-
-    public BigDecimal getStandardCurrencyCurrentCurs() {
-        return standardCurrencyCurrentCurs;
-    }
-
-    public void setStandardCurrencyCurrentCurs(BigDecimal standardCurrencyCurrentCurs) {
-        this.standardCurrencyCurrentCurs = standardCurrencyCurrentCurs;
-    }
-
-    public Date getCursChangeDate() {
-        return cursChangeDate;
-    }
-
-    public void setCursChangeDate(Date cursChangeDate) {
-        this.cursChangeDate = cursChangeDate;
-    }
-
-    public Date getStatndardCurrencyCursChangeDate() {
-        return statndardCurrencyCursChangeDate;
-    }
-
-    public void setStatndardCurrencyCursChangeDate(Date statndardCurrencyCursChangeDate) {
-        this.statndardCurrencyCursChangeDate = statndardCurrencyCursChangeDate;
-    }
-
-    public boolean isCurrencyUsed() {
-        return isCurrencyUsed;
-    }
-
-    public void setCurrencyUsed(boolean currencyUsed) {
-        isCurrencyUsed = currencyUsed;
-    }
-
     public StandardCurrencyBean getStandardCurrencyBean() {
         return standardCurrencyBean;
     }
 
-    public void setStandardCurrencyBean(StandardCurrencyBean standardCurrencyBean) {
-        this.standardCurrencyBean = standardCurrencyBean;
+    public CurrencyCurrentCurs getCurrentCurs() {
+        return currentCurs;
     }
 
-    public BigDecimal getPercent() {
-        return percent;
-    }
-
-    public void setPercent(BigDecimal percent) {
-        this.percent = percent;
+    public CurrencyCurrentCurs getCurrentStandardCurs() {
+        return currentStandardCurs;
     }
 }

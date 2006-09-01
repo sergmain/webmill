@@ -109,7 +109,6 @@ public class CurrencyList {
         }
         finally {
             DatabaseManager.close(db_);
-            db_ = null;
         }
         fillRealCurrencyData( list );
     }

@@ -24,6 +24,8 @@
 package org.riverock.commerce.jsf;
 
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Sergei Maslyukov
@@ -33,12 +35,33 @@ import javax.faces.context.FacesContext;
  *         $Id$
  */
 public class FacesTools {
-    
+
     public static boolean isUserInRole(String role) {
          return getFacesContext().getExternalContext().isUserInRole(role);
     }
 
     public static FacesContext getFacesContext() {
         return FacesContext.getCurrentInstance();
+    }
+
+    public static Object getAttribute(String name) {
+        Object obj = getFacesContext().getExternalContext().getRequest();
+        if (obj instanceof PortletRequest) {
+            return ((PortletRequest)obj).getAttribute( name );
+        }
+        else if (obj instanceof HttpServletRequest) {
+            return ((HttpServletRequest)obj).getAttribute( name );
+        }
+
+        throw new IllegalStateException("request type is not HttpServletRequest and not PortletRequest. Type: " + obj.getClass().getName() );
+    }
+
+    public static PortletRequest getPortletRequest() {
+        Object obj = getFacesContext().getExternalContext().getRequest();
+        if (obj instanceof PortletRequest) {
+            return (PortletRequest)obj;
+        }
+
+        throw new IllegalStateException("request type is not PortletRequest");
     }
 }

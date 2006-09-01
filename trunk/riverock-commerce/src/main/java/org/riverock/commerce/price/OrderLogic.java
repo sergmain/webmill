@@ -75,7 +75,7 @@ public final class OrderLogic {
             dbDyn = DatabaseAdapter.getInstance();
 
             PortletSession session = renderRequest.getPortletSession( true );
-            Long idShop = PortletService.getIdPortlet( ShopPortlet.NAME_ID_SHOP_PARAM, renderRequest );
+            Long idShop = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM );
             Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
 
@@ -99,7 +99,7 @@ public final class OrderLogic {
             if( log.isDebugEnabled() ) {
                 log.debug( "tempShop " + tempShop );
                 if( tempShop != null )
-                    log.debug( "tempShop.idShop - " + tempShop.id_shop );
+                    log.debug( "tempShop.idShop - " + tempShop.getShopBean().id_shop );
             }
 
             Shop shop = null;
@@ -116,16 +116,16 @@ public final class OrderLogic {
             // код вызванного магазина совпадает с кодом мкгаза в сессии,
             // юзаем его (тот, который в сессии)
             else if( tempShop != null &&
-                ( idShop == null || idShop.equals( tempShop.id_shop ) ) ) {
+                ( idShop == null || idShop.equals( tempShop.getShopBean().id_shop ) ) ) {
                 if( log.isDebugEnabled() )
                     log.debug( "tempShop is not null and tempShop.idShop == idShop " );
 
                 shop = tempShop;
             }
-// если в сессии есть текущий магазин и
-// код вызванного магазина не совпадает с кодом магаза в сессии,
-// заменяем магаз в сессии на магаз с вызываемым кодом
-            else if( tempShop != null && idShop != null && !idShop.equals( tempShop.id_shop ) ) {
+            // если в сессии есть текущий магазин и
+            // код вызванного магазина не совпадает с кодом магаза в сессии,
+            // заменяем магаз в сессии на магаз с вызываемым кодом
+            else if( tempShop != null && idShop != null && !idShop.equals( tempShop.getShopBean().id_shop ) ) {
                 if( log.isDebugEnabled() ) {
                     log.debug( "#11.22.09 create shop instance with idShop - " + idShop );
                 }
@@ -133,25 +133,25 @@ public final class OrderLogic {
                 shop = Shop.getInstance( idShop );
 
                 if( log.isDebugEnabled() )
-                    log.debug( "idShop of created shop - " + shop.id_shop );
+                    log.debug( "idShop of created shop - " + shop.getShopBean().id_shop );
 
                 removeFromSession(session, ShopPortlet.CURRENT_SHOP);
                 setInSession(session, ShopPortlet.CURRENT_SHOP, shop);
             }
-// теперь в shop находится текущий магаз ( тот который в сессии )
-// если его создание прошло успешно - магаз с вызываемым кодом действительно есть,
-// иначе shop == null
+            // теперь в shop находится текущий магаз ( тот который в сессии )
+            // если его создание прошло успешно - магаз с вызываемым кодом действительно есть,
+            // иначе shop == null
 
             if( log.isDebugEnabled() ) {
                 log.debug( "shop object " + shop );
                 if( shop != null )
-                    log.debug( "shop.id_shop " + shop.id_shop );
+                    log.debug( "shop.id_shop " + shop.getShopBean().id_shop );
             }
 
             ShopOrder order = null;
-// если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
-// если заказа в сессии нет, то создаем
-            if( shop != null && shop.id_shop != null ) {
+            // если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
+            // если заказа в сессии нет, то создаем
+            if( shop != null && shop.getShopBean().id_shop != null ) {
                 order = ( ShopOrder ) getFromSession(session, ShopPortlet.ORDER_SESSION);
 
                 if( log.isDebugEnabled() )
@@ -165,7 +165,7 @@ public final class OrderLogic {
                     order.setServerName( renderRequest.getServerName() );
 
                     ShopOrderType shopOrder = new ShopOrderType();
-                    shopOrder.setIdShop( shop.id_shop );
+                    shopOrder.setIdShop( shop.getShopBean().id_shop );
 
                     order.addShopOrdertList( shopOrder );
                     initAuthSession( dbDyn, order, ( AuthSession ) renderRequest.getUserPrincipal() );
@@ -186,8 +186,8 @@ public final class OrderLogic {
                 Long id_item = PortletService.getLong( renderRequest, ShopPortlet.NAME_ADD_ID_ITEM );
                 int count = PortletService.getInt( renderRequest, ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP, 0 );
 
-// если при вызове было указано какое либо количество определенного наименования,
-// то помещаем это наименование в заказ
+                // если при вызове было указано какое либо количество определенного наименования,
+                // то помещаем это наименование в заказ
                 if( log.isDebugEnabled() )
                     log.debug( "set new count of item. id_item - " + id_item + " count - " + count );
 
@@ -295,48 +295,21 @@ public final class OrderLogic {
         PreparedStatement ps = null;
         try {
             if( authSession != null ) {
-//                switch( dbDyn.getFamily() ) {
-//                    case DatabaseManager.MYSQL_FAMALY:
-/*
-		                // Todo remove usage of WM_AUTH_USER table
-                        Long userId = DatabaseManager.getLongValue(
-                            dbDyn,
-                            "select ID_USER from WM_AUTH_USER where USER_LOGIN=? ",
-                            new Object[]{authSession.getUserLogin()},
-                            new int[]{Types.VARCHAR}
-                        );
-*/
-                        Long userId = authSession.getUserInfo().getUserId();
-                        if( userId != null ) {
-                            sql_ =
-                                "update WM_PRICE_RELATE_USER_ORDER " +
-                                "set    ID_USER = ? " +
-                                "where  ID_ORDER_V2 = ? ";
+                Long userId = authSession.getUserInfo().getUserId();
+                if( userId != null ) {
+                    sql_ =
+                        "update WM_PRICE_RELATE_USER_ORDER " +
+                            "set    ID_USER = ? " +
+                            "where  ID_ORDER_V2 = ? ";
 
-                            ps = dbDyn.prepareStatement( sql_ );
+                    ps = dbDyn.prepareStatement( sql_ );
 
-                            RsetTools.setLong( ps, 1, userId );
-                            RsetTools.setLong( ps, 2, order.getIdOrder() );
-                        }
-                        else {
-                            throw new IllegalStateException("userId not found for user login: " +authSession.getUserLogin());
-                        }
-/*
-                        break;
-                    default:
-                        sql_ =
-                            "update WM_PRICE_RELATE_USER_ORDER " +
-                            "set ID_USER = " +
-                            "(select ID_USER from WM_AUTH_USER where USER_LOGIN = ?) " +
-                            "where ID_ORDER_V2 = ? ";
-
-                        ps = dbDyn.prepareStatement( sql_ );
-
-                        ps.setString( 1, authSession.getUserLogin() );
-                        RsetTools.setLong( ps, 2, order.getIdOrder() );
-                        break;
+                    RsetTools.setLong( ps, 1, userId );
+                    RsetTools.setLong( ps, 2, order.getIdOrder() );
                 }
-*/
+                else {
+                    throw new IllegalStateException("userId not found for user login: " +authSession.getUserLogin());
+                }
 
                 int i = ps.executeUpdate();
 
@@ -410,13 +383,14 @@ public final class OrderLogic {
         try {
             ShopOrderType shopOrder = null;
 
-// в методе initItem выводится дополнительная информация в DEBUG
+            // в методе initItem выводится дополнительная информация в DEBUG
             OrderItemType item = initItem( dbDyn, idItem, siteId );
             if( log.isDebugEnabled() )
                 log.debug( "idShop of created item - " + item.getIdShop() );
 
             item.setCountItem( count );
             boolean isNotInOrder = true;
+
             // если в заказе есть магазин и наименование, то изменяем количество
             for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
                 ShopOrderType shopOrderTemp = order.getShopOrdertList( i );
@@ -553,10 +527,6 @@ public final class OrderLogic {
             ps.setString( 9, item.getResultCurrency().getCurrencyCode() );
             ps.setString( 10, item.getResultCurrency().getCurrencyName() );
             RsetTools.setInt( ps, 11, item.getPrecisionResult() );
-
-// where
-//            RsetTools.setLong(ps, 9, item.getIdItem());
-//            RsetTools.setLong(ps, 10, item.getIdShop());
 
             int update = ps.executeUpdate();
 
@@ -744,20 +714,20 @@ public final class OrderLogic {
 
                     if( log.isDebugEnabled() ) {
                         log.debug( "item idShop - " + item.getIdShop() );
-                        log.debug( "shop idShop - " + shop.id_shop );
+                        log.debug( "shop idShop - " + shop.getShopBean().id_shop );
                         log.debug( "item idCurrency - " + item.getCurrencyItem().getIdCurrency() );
-                        log.debug( "shop idOrderCurrency - " + shop.idOrderCurrency );
+                        log.debug( "shop idOrderCurrency - " + shop.getShopBean().idOrderCurrency );
                         log.debug( "код валюты наименования совпадает с валютой в которой выводить заказ - " +
-                            ( item.getCurrencyItem().getIdCurrency() == shop.idOrderCurrency ) );
+                            ( item.getCurrencyItem().getIdCurrency() == shop.getShopBean().idOrderCurrency ) );
                     }
 
                     // если код валюты наименования совпадает с валютой в которой выводить заказ
                     int precisionValue = 2;
                     CurrencyPrecisionType precision = null;
-                    if( item.getCurrencyItem().getIdCurrency().equals( shop.idOrderCurrency ) ) {
+                    if( item.getCurrencyItem().getIdCurrency().equals( shop.getShopBean().idOrderCurrency ) ) {
                         item.setResultCurrency( item.getCurrencyItem() );
 
-                        precision = getPrecisionValue( shop.precisionList, currencyItem.getIdCurrency() );
+                        precision = getPrecisionValue( shop.getShopBean().precisionList, currencyItem.getIdCurrency() );
                         if( precision != null && precision.getPrecision() != null )
                             precisionValue = precision.getPrecision();
 
@@ -770,12 +740,12 @@ public final class OrderLogic {
                         }
                     }
                     else {
-                        precision = getPrecisionValue( shop.precisionList, shop.idOrderCurrency );
+                        precision = getPrecisionValue( shop.getShopBean().precisionList, shop.getShopBean().idOrderCurrency );
                         if( precision != null && precision.getPrecision() != null )
                             precisionValue = precision.getPrecision();
 
                         CustomCurrencyItemType defaultCurrency =
-                            CurrencyService.getCurrencyItem( currencyManager.getCurrencyList(), shop.idOrderCurrency );
+                            CurrencyService.getCurrencyItem( currencyManager.getCurrencyList(), shop.getShopBean().idOrderCurrency );
 
                         item.setResultCurrency( defaultCurrency );
 

@@ -24,10 +24,17 @@
 package org.riverock.commerce.manager.currency;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
+import org.riverock.commerce.bean.CurrencyCurrentCurs;
+import org.riverock.commerce.jsf.FacesTools;
+import org.riverock.commerce.price.CurrencyManager;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 
 /**
  * @author Sergei Maslyukov
@@ -59,13 +66,13 @@ public class CurrencyAction implements Serializable {
     public String addCurrency() {
         log.debug("Start addCurrency()");
 
-        currencySessionBean.setCurrencyBean( new CurrencyBean() );
+        currencySessionBean.setCurrencyExtendedBean( new CurrencyExtendedBean() );
 
         return "currency-add";
     }
 
     public String processAddCurrency() {
-        Long id = CommerceDaoFactory.getCurrencyDao().createCurrency( currencySessionBean.getCurrencyBean() );
+        Long id = CommerceDaoFactory.getCurrencyDao().createCurrency( currencySessionBean.getCurrencyExtendedBean().getCurrencyBean() );
         currencySessionBean.setCurrentCurrencyId( id );
         loadCurrentCurrency();
         return "currency";
@@ -102,7 +109,7 @@ public class CurrencyAction implements Serializable {
     // Edit currency
 
     public String processEditCurrency() {
-        CommerceDaoFactory.getCurrencyDao().updateCurrency( currencySessionBean.getCurrencyBean() );
+        CommerceDaoFactory.getCurrencyDao().updateCurrency( currencySessionBean.getCurrencyExtendedBean().getCurrencyBean() );
         return "currency";
     }
 
@@ -124,10 +131,35 @@ public class CurrencyAction implements Serializable {
 
     private void loadCurrentCurrency() {
         CurrencyBean bean = CommerceDaoFactory.getCurrencyDao().getCurrency( currencySessionBean.getCurrentCurrencyId() );
-        setSessionBean( new CurrencyBean(bean) );
+        if (bean==null) {
+            setSessionBean( new CurrencyExtendedBean() );
+            return;
+        }
+        Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        CurrencyCurrentCurs currentCurs = CommerceDaoFactory.getCommonCurrencyDao().getCurrentCurs(bean.getCurrencyId(), siteId);
+
+        StandardCurrencyBean standardCurrencyBean=null;
+        if (bean.isUseStandard() && bean.getStandardCurrencyId()!=null) {
+            standardCurrencyBean=CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency(bean.getStandardCurrencyId());
+        }
+
+        CurrencyCurrentCurs currentStandardCurs=null;
+        if (standardCurrencyBean!=null) {
+            currentStandardCurs=CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(standardCurrencyBean.getStandardCurrencyId());
+        }
+
+        BigDecimal realCurs;
+        if (bean.isUseStandard()) {
+            realCurs=(currentStandardCurs!=null?currentStandardCurs.getCurs():null);
+        }
+        else {
+            realCurs=(currentCurs!=null?currentCurs.getCurs():null);
+        }
+
+        setSessionBean( new CurrencyExtendedBean(bean,standardCurrencyBean, realCurs, currentCurs, currentStandardCurs ) );
     }
 
-    private void setSessionBean(CurrencyBean bean) {
-        currencySessionBean.setCurrencyBean(bean);
+    private void setSessionBean(CurrencyExtendedBean currencyExtendedBean) {
+        currencySessionBean.setCurrencyExtendedBean(currencyExtendedBean);
     }
 }

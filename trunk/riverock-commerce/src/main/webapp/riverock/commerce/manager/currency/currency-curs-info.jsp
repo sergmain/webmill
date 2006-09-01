@@ -31,7 +31,7 @@
 
 <t:dataTable id="currencyCursDataTable"
         var="currencyCurs"
-        value="#{currencySessionBean.currencyBean.curses}"
+        value="#{currencySessionBean.currencyExtendedBean.currencyBean.curses}"
         rows="15"
     >
 

@@ -31,6 +31,11 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
     <managed-bean>
+        <managed-bean-name>currencyDataProvider</managed-bean-name>
+        <managed-bean-class>org.riverock.commerce.manager.currency.CurrencyDataProvider</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>currencySessionBean</managed-bean-name>
         <managed-bean-class>org.riverock.commerce.manager.currency.CurrencySessionBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>

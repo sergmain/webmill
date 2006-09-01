@@ -21,31 +21,34 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.dao;
+package org.riverock.commerce.manager.currency;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.ArrayList;
+import java.io.Serializable;
 
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.commerce.jsf.FacesTools;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 31.08.2006
- *         Time: 21:53:06
+ *         Date: 01.09.2006
+ *         Time: 19:16:48
  *         <p/>
  *         $Id$
  */
-public interface CurrencyDao {
+public class CurrencyDataProvider implements Serializable {
+    private static final long serialVersionUID = 5595005509L;
 
-    void addCurrencyCurs(Long currencyId, BigDecimal curs);
+    public List<CurrencyBean> getCurrencyList() {
+        Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
-    void updateCurrency(CurrencyBean currencyBean);
+        List<CurrencyBean> list = CommerceDaoFactory.getCurrencyDao().getCurrencyList(siteId);
+        if (list==null) {
+            return new ArrayList<CurrencyBean>();
+        }
+        return list;
+    }
 
-    void deleteCurrency(Long currencyId);
-
-    CurrencyBean getCurrency(Long currencyId);
-
-    Long createCurrency(CurrencyBean currencyBean);
-
-    List<CurrencyBean> getCurrencyList(Long siteId);
 }

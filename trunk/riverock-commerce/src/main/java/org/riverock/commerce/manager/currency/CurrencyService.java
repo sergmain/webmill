@@ -24,10 +24,6 @@
 package org.riverock.commerce.manager.currency;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.riverock.commerce.dao.CommerceDaoFactory;
 
 /**
  * @author Sergei Maslyukov
@@ -40,13 +36,5 @@ public class CurrencyService implements Serializable {
     private static final long serialVersionUID = 5595005515L;
 
     public CurrencyService() {
-    }
-
-    public List<CurrencyBean> getCurrencyList() {
-        List<CurrencyBean> list = CommerceDaoFactory.getCurrencyDao().getCurrencyList();
-        if (list==null) {
-            return new ArrayList<CurrencyBean>();
-        }
-        return list;
     }
 }

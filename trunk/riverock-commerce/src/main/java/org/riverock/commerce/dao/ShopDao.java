@@ -23,29 +23,15 @@
  */
 package org.riverock.commerce.dao;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.bean.ShopBean;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 31.08.2006
- *         Time: 21:53:06
+ *         Date: 01.09.2006
+ *         Time: 21:44:58
  *         <p/>
  *         $Id$
  */
-public interface CurrencyDao {
-
-    void addCurrencyCurs(Long currencyId, BigDecimal curs);
-
-    void updateCurrency(CurrencyBean currencyBean);
-
-    void deleteCurrency(Long currencyId);
-
-    CurrencyBean getCurrency(Long currencyId);
-
-    Long createCurrency(CurrencyBean currencyBean);
-
-    List<CurrencyBean> getCurrencyList(Long siteId);
+public interface ShopDao {
+    ShopBean getShop(Long shopId);
 }

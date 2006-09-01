@@ -31,6 +31,8 @@ package org.riverock.commerce.dao;
 public class CommerceDaoFactory {
     private final static StandardCurrencyDao STANDARD_CURRENCY_DAO = new StandardCurrencyDaoImpl();
     private final static CurrencyDao CURRENCY_DAO = new CurrencyDaoImpl();
+    private final static CommonCurrencyDao COMMON_CURRENCY_DAO = new CommonCurrencyDaoImpl();
+    private final static ShopDao SHOP_DAO = new ShopDaoImpl();
 
     public static StandardCurrencyDao getStandardCurrencyDao() {
         return STANDARD_CURRENCY_DAO;
@@ -38,5 +40,13 @@ public class CommerceDaoFactory {
 
     public static CurrencyDao getCurrencyDao() {
         return CURRENCY_DAO;
+    }
+
+    public static CommonCurrencyDao getCommonCurrencyDao() {
+        return COMMON_CURRENCY_DAO;
+    }
+
+    public static ShopDao getShopDao() {
+        return SHOP_DAO;
     }
 }

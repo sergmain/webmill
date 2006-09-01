@@ -167,13 +167,13 @@ public final class InvoicePortlet implements Portlet {
                 ServletTools.getHiddenItem( ShopPortlet.NAME_ID_CURRENCY_SHOP, currencyID ) +
                 ServletTools.getHiddenItem( ShopPortlet.NAME_ID_GROUP_SHOP,
                     PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ) ) +
-                ServletTools.getHiddenItem( ShopPortlet.NAME_ID_SHOP_PARAM, shop.id_shop );
+                ServletTools.getHiddenItem( ShopPortlet.NAME_ID_SHOP_PARAM, shop.getShopBean().id_shop );
 
             String addUrl =
                 ShopPortlet.NAME_ID_CURRENCY_SHOP + '=' + currencyID + '&' +
                 ShopPortlet.NAME_ID_GROUP_SHOP + '=' +
                 PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ) + '&' +
-                ShopPortlet.NAME_ID_SHOP_PARAM + '=' + shop.id_shop;
+                ShopPortlet.NAME_ID_SHOP_PARAM + '=' + shop.getShopBean().id_shop;
 
             String action = PortletService.getString(renderRequest, "action", null);
 
@@ -277,7 +277,7 @@ public final class InvoicePortlet implements Portlet {
 
                 String s = bundle.getString( "reg.send_order.1" );
                 String orderCustomString =
-                    MessageFormat.format( s, new Object[]{"" + order.getIdOrder()} );
+                    MessageFormat.format( s, "" + order.getIdOrder());
 
                 UserInfo ui = authSession.getUserInfo();
                 String orderAdminString =
@@ -295,13 +295,10 @@ public final class InvoicePortlet implements Portlet {
                         s = bundle.getString( "reg.send_order.shop-header" );
                         orderCustomString +=
                             MessageFormat.format( s,
-                                new Object[]
-                                {
-                                    "" + shopOrder.getIdShop(),
-                                    shopTemp.name_shop,
-                                    shopTemp.code_shop,
-                                    itemTemp.getResultCurrency().getCurrencyName()
-                                } );
+                                "" + shopOrder.getIdShop(),
+                                shopTemp.getShopBean().name_shop,
+                                shopTemp.getShopBean().code_shop,
+                                itemTemp.getResultCurrency().getCurrencyName());
 
                         for( int i = 0; i<shopOrder.getOrderItemListCount(); i++ ) {
                             OrderItemType item = shopOrder.getOrderItemList( i );
@@ -314,18 +311,15 @@ public final class InvoicePortlet implements Portlet {
                             s = bundle.getString( "reg.send_order.2" );
                             orderCustomString +=
                                 MessageFormat.format( s,
-                                    new Object[]
-                                    {
-                                        "" + ( i + 1 ),
-                                        item.getItem(),
-                                        NumberTools.toString( item.getWmPriceItemResult(), item.getPrecisionResult() ),
-                                        item.getResultCurrency().getCurrencyName(),
-                                        "" + item.getCountItem(),
-                                        NumberTools.toString( itemFullPrice, item.getPrecisionResult() ),
-                                        "",
-                                        "" + shopOrder.getIdShop(),
-                                        "" + item.getIdOrigin()
-                                    } );
+                                    "" + ( i + 1 ),
+                                    item.getItem(),
+                                    NumberTools.toString( item.getWmPriceItemResult(), item.getPrecisionResult() ),
+                                    item.getResultCurrency().getCurrencyName(),
+                                    "" + item.getCountItem(),
+                                    NumberTools.toString( itemFullPrice, item.getPrecisionResult() ),
+                                    "",
+                                    "" + shopOrder.getIdShop(),
+                                    "" + item.getIdOrigin());
                         }
                     }
                 }
@@ -349,13 +343,10 @@ public final class InvoicePortlet implements Portlet {
                         s = bundle.getString( "reg.send_order.shop-header" );
                         orderAdminString +=
                             MessageFormat.format( s,
-                                new Object[]
-                                {
-                                    "" + shopOrder.getIdShop(),
-                                    shopTemp.name_shop,
-                                    shopTemp.code_shop,
-                                    itemTemp.getResultCurrency().getCurrencyName()
-                                } );
+                                "" + shopOrder.getIdShop(),
+                                shopTemp.getShopBean().name_shop,
+                                shopTemp.getShopBean().code_shop,
+                                itemTemp.getResultCurrency().getCurrencyName());
 
                         double orderSumm = 0;
                         for( int i = 0; i<shopOrder.getOrderItemListCount(); i++ ) {
@@ -377,18 +368,15 @@ public final class InvoicePortlet implements Portlet {
                             s = bundle.getString( "reg.send_order.2" );
                             orderAdminString +=
                                 MessageFormat.format( s,
-                                    new Object[]
-                                    {
-                                        "" + ( i + 1 ),
-                                        item.getItem(),
-                                        NumberTools.toString( item.getWmPriceItemResult(), currentPrecision ),
-                                        item.getResultCurrency().getCurrencyName(),
-                                        "" + item.getCountItem(),
-                                        NumberTools.toString( itemFullPrice, currentPrecision ),
-                                        "",
-                                        "" + shopOrder.getIdShop(),
-                                        "" + item.getIdOrigin()
-                                    } );
+                                    "" + ( i + 1 ),
+                                    item.getItem(),
+                                    NumberTools.toString( item.getWmPriceItemResult(), currentPrecision ),
+                                    item.getResultCurrency().getCurrencyName(),
+                                    "" + item.getCountItem(),
+                                    NumberTools.toString( itemFullPrice, currentPrecision ),
+                                    "",
+                                    "" + shopOrder.getIdShop(),
+                                    "" + item.getIdOrigin());
                         }
                         orderAdminString +=
                             "Итого на сумму: " +
@@ -505,7 +493,7 @@ public final class InvoicePortlet implements Portlet {
                 if ( shopOrder.getOrderItemListCount()>0 ) {
                     Shop tempShop = Shop.getInstance( shopOrder.getIdShop() );
                     out.write( "<tr>\n<td colspan=\"6\" align=\"left\" border=\"0\">\n" );
-                    out.write( tempShop.name_shop_for_price_list );
+                    out.write( tempShop.getShopBean().name_shop_for_price_list );
                     out.write( "</td>\n<tr>\n" );
 
                     out.write( "<tr>\n" );

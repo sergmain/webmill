@@ -99,11 +99,11 @@ public class PriceList {
         if( shop != null ) {
             if( log.isDebugEnabled() ) {
                 log.debug( "calc price: shop comma=" + precision );
-                log.debug( "calc price. shop.discount - " + shop.discount );
+                log.debug( "calc price. shop.discount - " + shop.getShopBean().discount );
 
             }
 
-            price = price * ( 100 - shop.discount ) / 100;
+            price = price * ( 100 - shop.getShopBean().discount ) / 100;
             if( log.isDebugEnabled() )
                 log.debug( "calc price. price - " + price + " shop.commas - " + precision );
 
@@ -159,7 +159,7 @@ public class PriceList {
 
         double discountShop = 0;
         if( shop != null ) {
-            discountShop = shop.discount;
+            discountShop = shop.getShopBean().discount;
         }
 
         // производим округление
