@@ -1,0 +1,21 @@
+[Jar files]
+C:\sandbox\riverock\trunk\riverock-generic\build\riverock-generic-4.0.4.jar
+[Source dirs]
+C:\sandbox\riverock\trunk\riverock-generic\src\main\java
+C:\sandbox\riverock\trunk\riverock-generic\src-schema\java
+[Aux classpath entries]
+C:\sandbox\riverock\trunk\riverock-lib\lib\castor-0.9.9.1-xml.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\commons-lang-2.1.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\commons-logging-1.1.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\log4j-1.2.13.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\mail-1.4.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\riverock-interfaces-1.0.3.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\servlet-2.4.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\riverock-common-1.2.1.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\db2java-8.1.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\hsqldb-1.8.0.4.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\ojdbc14-10g.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\riverock-sql-parser-1.1.6.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\ehcache-1.2.1.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\bcprov-jdk14-122.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\commons-codec-1.3.jar

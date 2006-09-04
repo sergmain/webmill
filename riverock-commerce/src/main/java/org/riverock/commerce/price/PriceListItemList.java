@@ -49,6 +49,8 @@ import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
+import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -128,7 +130,7 @@ public final class PriceListItemList {
 
             PortletSession session = renderRequest.getPortletSession();
             ShopOrder order = (ShopOrder) session.getAttribute(ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE);
-            Shop shop = Shop.getInstance(shopParam.id_shop);
+            ShopBean shop = CommerceDaoFactory.getShopDao().getShop(shopParam.id_shop);
             while (rs.next()) {
                 Long idPk = RsetTools.getLong(rs, "ID_ITEM");
 
@@ -287,8 +289,8 @@ public final class PriceListItemList {
         return items;
     }
 
-    private static int getPrecisionValue( Shop shop, Long idCurrency ) {
-        CurrencyPrecisionType prec = shop.getShopBean().precisionList.getCurrencyPrecision( idCurrency );
+    private static int getPrecisionValue( ShopBean shopBean, Long idCurrency ) {
+        CurrencyPrecisionType prec = shopBean.getPrecisionList().getCurrencyPrecision( idCurrency );
         if (prec==null)
             return 2;
 

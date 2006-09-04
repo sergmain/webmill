@@ -21,46 +21,51 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.manager.std_currency;
+package org.riverock.commerce.manager.shop;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.io.Serializable;
+
+import org.riverock.commerce.bean.ShopBean;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 30.08.2006
- *         Time: 20:02:15
+ *         Date: 04.09.2006
+ *         Time: 17:04:07
  *         <p/>
  *         $Id$
  */
-public class StandardCurrencyCurs implements Serializable {
-    private static final long serialVersionUID = 7767005419L;
+public class ShopSessionBean implements Serializable {
+    private static final long serialVersionUID = 3817005504L;
 
-    private BigDecimal curs= null;
-    private Date created = null;
+    private ShopExtendedBean shopExtendedBean = null;
+    private Long currentShopId = null;
+    private ShopBean shopBean = null;
 
-    public StandardCurrencyCurs() {
+    public ShopSessionBean() {
     }
 
-    public StandardCurrencyCurs(StandardCurrencyCurs bean) {
-        this.curs = bean.getCurs();
-        this.created = bean.getCreated();
+    public ShopExtendedBean getShopExtendedBean() {
+        return shopExtendedBean;
     }
 
-    public BigDecimal getCurs() {
-        return curs;
+    public void setShopExtendedBean(ShopExtendedBean shopExtendedBean) {
+        this.shopExtendedBean = shopExtendedBean;
     }
 
-    public void setCurs(BigDecimal curs) {
-        this.curs = curs;
+    public Long getCurrentShopId() {
+        return currentShopId;
     }
 
-    public Date getCreated() {
-        return created;
+    public void setCurrentShopId(Long currentShopId) {
+        this.currentShopId = currentShopId;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public ShopBean getShopBean() {
+        return shopBean;
+    }
+
+    public void setShopBean(ShopBean shopBean) {
+        this.shopBean = shopBean;
     }
 }
+

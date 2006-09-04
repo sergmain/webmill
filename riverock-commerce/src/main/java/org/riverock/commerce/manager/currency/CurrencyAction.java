@@ -44,7 +44,7 @@ import org.riverock.webmill.container.ContainerConstants;
 public class CurrencyAction implements Serializable {
     private final static Logger log = Logger.getLogger( CurrencyAction.class );
 
-    private static final long serialVersionUID = 2057005501L;
+    private static final long serialVersionUID = 55957005571L;
 
     private CurrencySessionBean currencySessionBean = null;
 

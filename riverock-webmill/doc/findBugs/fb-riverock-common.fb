@@ -1,0 +1,12 @@
+[Jar files]
+C:\sandbox\riverock\trunk\riverock-common\build\riverock-common-1.2.1.jar
+[Source dirs]
+C:\sandbox\riverock\trunk\riverock-common\src\main\java
+[Aux classpath entries]
+C:\sandbox\riverock\trunk\riverock-lib\lib\castor-0.9.9.1-xml.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\commons-lang-2.1.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\commons-logging-1.1.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\log4j-1.2.13.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\mail-1.4.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\riverock-interfaces-1.0.3.jar
+C:\sandbox\riverock\trunk\riverock-lib\lib\servlet-2.4.jar

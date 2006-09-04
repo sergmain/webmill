@@ -46,6 +46,7 @@ import org.riverock.portlet.schema.portlet.shop.ShopPageType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
+import org.riverock.commerce.bean.ShopBean;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -62,7 +63,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
     private final static Logger log = Logger.getLogger( ShopPage.class );
 
     private ShopPageType shopPage = new ShopPageType();
-    private Shop shop = null;
+    private ShopBean shopBean = null;
     private String itemDirect = "ASC";
     private String priceDirect = "ASC";
     private RenderRequest renderRequest = null;
@@ -125,29 +126,29 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             PortletSession session = renderRequest.getPortletSession();
             ShopOrder order = (ShopOrder) session.getAttribute( ShopPortlet.ORDER_SESSION , PortletSession.APPLICATION_SCOPE);
 
-            shop = (Shop) session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
+            shopBean = (ShopBean) session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
 
-            if (shop == null) {
+            if (shopBean == null) {
                 throw new PortletException("shop session not initialized");
             }
 
-            if (shop.getShopBean().currencyID == null) {
+            if (shopBean.getDefaultCurrencyId() == null) {
                 throw new PortletException("Default currency not defined.<br>Login and configure shop.");
             }
 
-            shopPage.setPriceHeader( shop.getShopBean().header );
-            shopPage.setPriceFooter( shop.getShopBean().footer );
+            shopPage.setPriceHeader( shopBean.getHeader() );
+            shopPage.setPriceFooter( shopBean.getFooter() );
 
-            shopPage.setDateUploadPrice( DateTools.getStringDate(shop.getShopBean().dateUpload, "dd MMM yyyy", renderRequest.getLocale()) );
-            shopPage.setTimeUploadPrice( DateTools.getStringDate(shop.getShopBean().dateUpload, "HH:mm", renderRequest.getLocale()) );
+            shopPage.setDateUploadPrice( DateTools.getStringDate(shopBean.getDateUpload(), "dd MMM yyyy", renderRequest.getLocale()) );
+            shopPage.setTimeUploadPrice( DateTools.getStringDate(shopBean.getDateUpload(), "HH:mm", renderRequest.getLocale()) );
 
 
             ShopPageParam shopParam = new ShopPageParam();
 
-            shopParam.id_shop = shop.getShopBean().id_shop;
-            shopParam.isProcessInvoice = shop.getShopBean().isProcessInvoice;
+            shopParam.id_shop = shopBean.getShopId();
+            shopParam.isProcessInvoice = shopBean.isProcessInvoice();
 
-            shopPage.setIsProcessInvoice( shop.getShopBean().isProcessInvoice ? "true" : "false" );
+            shopPage.setIsProcessInvoice( shopBean.isProcessInvoice() ? "true" : "false" );
 
 
             shopParam.id_group = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0L );
@@ -158,17 +159,19 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             // If current currency not defined( page requested without concrete currency),
             // we will use default currency
             if (shopParam.id_currency == null)
-                shopParam.id_currency = shop.getShopBean().currencyID;
+            {
+                shopParam.id_currency = shopBean.getDefaultCurrencyId();
+            }
 
             shopParam.currencyURL.put( ShopPortlet.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
 
-            if ((shopParam.id_currency == null) && (shop.getShopBean().is_default_currency == 1)){
+            if ((shopParam.id_currency == null) && (shopBean.isDefaultCurrency())){
                 shopParam.currencyURL.clear();
-                shopParam.id_currency = shop.getShopBean().currencyID;
+                shopParam.id_currency = shopBean.getDefaultCurrencyId();
             }
 
-            if (shop.getShopBean().precisionList != null) {
-                CurrencyPrecisionType item = shop.getShopBean().precisionList.getCurrencyPrecision(shopParam.id_currency);
+            if (shopBean.getPrecisionList() != null) {
+                CurrencyPrecisionType item = shopBean.getPrecisionList().getCurrencyPrecision(shopParam.id_currency);
                 if (item != null)
                     shopParam.precision = item;
             }
@@ -214,7 +217,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             shopPage.setSortItemUrl( itemPortletURL.toString() );
             shopPage.setSortPriceUrl( pricePortletURL.toString() );
 
-            if (shop.getShopBean().isNeedRecalc) {
+            if (shopBean.isNeedRecalc()) {
                 shopPage.setCurrencyList(
                     PriceCurrency.getCurrencyList(
                         shopParam,

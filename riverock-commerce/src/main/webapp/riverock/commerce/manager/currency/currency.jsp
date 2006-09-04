@@ -53,6 +53,8 @@
         <h:commandButton id="standard-currency-list-action" action="standard-currency" value="#{manager.standard_currency_button}"
                          styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}"/>
 
+        <h:commandButton id="shop-list-action" action="shop" value="#{manager.shop_button}"
+                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}"/>
 
         <h:panelGrid columns="2" rendered="#{isUserInRole['webmill.portal-manager']}">
 
