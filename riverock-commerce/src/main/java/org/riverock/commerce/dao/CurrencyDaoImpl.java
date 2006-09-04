@@ -142,6 +142,10 @@ public class CurrencyDaoImpl implements CurrencyDao {
     }
 
     public void updateCurrency(CurrencyBean currencyBean) {
+        if (currencyBean==null) {
+            return;
+        }
+        
         String sql_ =
             "update WM_CASH_CURRENCY "+
             "set "+
@@ -172,7 +176,10 @@ public class CurrencyDaoImpl implements CurrencyDao {
             // prepare PK
             ps.setLong(8, currencyBean.getCurrencyId() );
 
-            ps.executeUpdate();
+            int i = ps.executeUpdate();
+            if (log.isDebugEnabled()) {
+                log.debug("count of updated records; " + i+", PK: " +currencyBean.getCurrencyId());
+            }
 
             adapter.commit();
         }
@@ -371,7 +378,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
         bean.setCurrencyName( RsetTools.getString(rs, "NAME_CURRENCY") );
         bean.setCurrencyCode( RsetTools.getString(rs, "CURRENCY") );
         bean.setUsed( RsetTools.getInt(rs, "IS_USED", 0)==1);
-        bean.setUsed( RsetTools.getInt(rs, "IS_USE_STANDART", 0)==1);
+        bean.setUseStandard( RsetTools.getInt(rs, "IS_USE_STANDART", 0)==1);
         bean.setStandardCurrencyId( RsetTools.getLong(rs, "ID_STANDART_CURS"));
         bean.setSiteId( RsetTools.getLong(rs, "ID_SITE"));
         bean.setPercent( RsetTools.getBigDecimal(rs, "PERCENT_VALUE", new BigDecimal(0.0)) );

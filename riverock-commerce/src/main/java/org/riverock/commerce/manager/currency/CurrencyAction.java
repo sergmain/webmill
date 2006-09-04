@@ -32,9 +32,7 @@ import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
 import org.riverock.commerce.bean.CurrencyCurrentCurs;
 import org.riverock.commerce.jsf.FacesTools;
-import org.riverock.commerce.price.CurrencyManager;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 
 /**
  * @author Sergei Maslyukov
@@ -66,20 +64,24 @@ public class CurrencyAction implements Serializable {
     public String addCurrency() {
         log.debug("Start addCurrency()");
 
-        currencySessionBean.setCurrencyExtendedBean( new CurrencyExtendedBean() );
+        CurrencyBean currencyBean = new CurrencyBean();
+        currencyBean.setUsed(true);
+        Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        currencyBean.setSiteId(siteId);
+        currencySessionBean.setCurrencyBean( currencyBean );
 
         return "currency-add";
     }
 
     public String processAddCurrency() {
-        Long id = CommerceDaoFactory.getCurrencyDao().createCurrency( currencySessionBean.getCurrencyExtendedBean().getCurrencyBean() );
+        Long id = CommerceDaoFactory.getCurrencyDao().createCurrency( currencySessionBean.getCurrencyBean() );
         currencySessionBean.setCurrentCurrencyId( id );
         loadCurrentCurrency();
         return "currency";
     }
 
     public String cancelAddCurrency() {
-        setSessionBean(null);
+        currencySessionBean.setCurrencyBean( null );
         return "currency";
     }
 
@@ -108,8 +110,21 @@ public class CurrencyAction implements Serializable {
 
     // Edit currency
 
+    public String editCurrency() {
+        log.debug("Start editCurrency()");
+
+        CurrencyBean currencyBean = CommerceDaoFactory.getCurrencyDao().getCurrency( currencySessionBean.getCurrentCurrencyId() );
+        if (currencyBean==null) {
+            return "currency";
+        }
+
+        currencySessionBean.setCurrencyBean( currencyBean );
+        return "currency-edit";
+    }
+
     public String processEditCurrency() {
-        CommerceDaoFactory.getCurrencyDao().updateCurrency( currencySessionBean.getCurrencyExtendedBean().getCurrencyBean() );
+        CommerceDaoFactory.getCurrencyDao().updateCurrency( currencySessionBean.getCurrencyBean() );
+        loadCurrentCurrency();
         return "currency";
     }
 
@@ -155,6 +170,11 @@ public class CurrencyAction implements Serializable {
         else {
             realCurs=(currentCurs!=null?currentCurs.getCurs():null);
         }
+/*
+        if (realCurs==null) {
+            realCurs=new BigDecimal(1);
+        }
+*/
 
         setSessionBean( new CurrencyExtendedBean(bean,standardCurrencyBean, realCurs, currentCurs, currentStandardCurs ) );
     }
