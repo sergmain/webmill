@@ -50,7 +50,6 @@ import org.xml.sax.InputSource;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.commerce.price.ImportPriceList;
-import org.riverock.commerce.price.Shop;
 import org.riverock.portlet.schema.import_price.PricesType;
 import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.webmill.container.ContainerConstants;
@@ -140,8 +139,6 @@ public final class UploadPricePortlet implements Portlet {
                 }
 
                 ImportPriceList.process(prices, siteId, db_);
-                // reinit Shop in cache. need for correct output date/time of upload price
-                Shop.reinit();
             }
             catch (Exception e) {
                 log.error("Exception store price data in DB", e);

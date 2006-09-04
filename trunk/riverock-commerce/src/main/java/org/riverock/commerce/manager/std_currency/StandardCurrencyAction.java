@@ -37,7 +37,7 @@ import org.riverock.commerce.dao.CommerceDaoFactory;
 public class StandardCurrencyAction implements Serializable {
     private final static Logger log = Logger.getLogger( StandardCurrencyAction.class );
 
-    private static final long serialVersionUID = 2057005501L;
+    private static final long serialVersionUID = 7767005319L;
 
     private StandardCurrencySessionBean standardCurrencySessionBean = null;
 

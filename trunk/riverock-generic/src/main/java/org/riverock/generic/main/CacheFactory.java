@@ -42,18 +42,9 @@ import org.riverock.common.tools.MainTools;
 public class CacheFactory {
     private static Logger log = Logger.getLogger( CacheFactory.class );
 
-//    protected static Integer CountClassInCache = 20;
-
-//    private SimpleCacheFactory cache = null;
     private Cache cache = null;
     private Class clazz=null;
 
-/*
-    public CacheFactory(String className) {
-        log.info("create constructor: "+className);
-        cache = new SimpleCacheFactory(className);
-    }
-*/
     public CacheFactory(Class clazz) {
         if (log.isInfoEnabled()) {
             log.info("create constructor with class: " + clazz.getName());
@@ -62,26 +53,13 @@ public class CacheFactory {
         CacheManager singletonManager = CacheManager.create();
         singletonManager.addCache(clazz.getName());
         cache = singletonManager.getCache(clazz.getName());
-
-//        cache = new SimpleCacheFactory(className);
     }
 
-/*
     public void reinit() {
-        cache.reinit();
-    }
-
-    public synchronized void terminate(Long id) throws CacheException {
-        cache.terminate(id);
-    }
-*/
-    public void reinit() {
-//        cache.reinit();
         cache.removeAll();
     }
 
     public void terminate(Long id) {
-//        cache.terminate(id);
         cache.remove(id);
     }
 

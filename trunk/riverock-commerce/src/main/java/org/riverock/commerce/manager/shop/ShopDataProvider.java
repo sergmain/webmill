@@ -21,46 +21,35 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.manager.std_currency;
+package org.riverock.commerce.manager.shop;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.riverock.commerce.jsf.FacesTools;
+import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.commerce.bean.ShopBean;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 30.08.2006
- *         Time: 20:02:15
+ *         Date: 04.09.2006
+ *         Time: 17:03:55
  *         <p/>
  *         $Id$
  */
-public class StandardCurrencyCurs implements Serializable {
-    private static final long serialVersionUID = 7767005419L;
+public class ShopDataProvider implements Serializable {
+    private static final long serialVersionUID = 3815005509L;
 
-    private BigDecimal curs= null;
-    private Date created = null;
+    public List<ShopBean> getShopList() {
+        Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
-    public StandardCurrencyCurs() {
+        List<ShopBean> list = CommerceDaoFactory.getShopDao().getShopList(siteId);
+        if (list==null) {
+            return new ArrayList<ShopBean>();
+        }
+        return list;
     }
 
-    public StandardCurrencyCurs(StandardCurrencyCurs bean) {
-        this.curs = bean.getCurs();
-        this.created = bean.getCreated();
-    }
-
-    public BigDecimal getCurs() {
-        return curs;
-    }
-
-    public void setCurs(BigDecimal curs) {
-        this.curs = curs;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
 }

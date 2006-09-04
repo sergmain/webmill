@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 public class StandardCurrencyBean implements Serializable {
 
-    private static final long serialVersionUID = 77657005501L;
+    private static final long serialVersionUID = 7767005501L;
 
     private Long standardCurrencyId=null;
     private String standardCurrencyName = null;

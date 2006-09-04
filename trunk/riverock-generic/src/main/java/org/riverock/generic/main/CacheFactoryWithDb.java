@@ -41,8 +41,6 @@ import org.riverock.generic.exception.GenericException;
 public class CacheFactoryWithDb {
     private static Logger log = Logger.getLogger(CacheFactoryWithDb.class);
 
-//    protected static Integer CountClassInCache = 20;
-
     private Cache cache = null;
     private Class clazz=null;
 
@@ -54,17 +52,13 @@ public class CacheFactoryWithDb {
         CacheManager singletonManager = CacheManager.create();
         singletonManager.addCache(clazz.getName());
         cache = singletonManager.getCache(clazz.getName());
-
-//        cache = new SimpleCacheFactory(className);
     }
 
     public void reinit() {
-//        cache.reinit();
         cache.removeAll();
     }
 
     public void terminate(Long id) {
-//        cache.terminate(id);
         cache.remove(id);
     }
 
@@ -146,64 +140,4 @@ public class CacheFactoryWithDb {
             throw new GenericException(e.toString(), e);
         }
     }
-
-/*
-    public synchronized static void terminate(String className, Long id, boolean isFullReinit)
-    {
-        if (className == null){
-            if (log.isInfoEnabled())
-                log.info("#12.12.000 param className is null");
-
-            return;
-        }
-
-        try{
-            if (log.isDebugEnabled())
-                log.debug("#12.12.001 ClassName: " + className + ", id: " + id + ", isFull: " + isFullReinit);
-
-            Object obj = MainTools.createCustomObject( className );
-
-            if (isFullReinit)
-            {
-                Method method1 = obj.getClass().getMethod("reinit", (Class[])null);
-
-                if (log.isDebugEnabled())
-                    log.debug("#12.12.009  method1 is " + method1);
-
-                if (method1 != null)
-                {
-                    method1.invoke(obj, (Object[])null);
-
-                    if (log.isDebugEnabled())
-                        log.debug("#12.12.010 ");
-                }
-            }
-            else
-            {
-                Class[] cl1 = {Class.forName("java.lang.Long")};
-                Method method1 = obj.getClass().getMethod("terminate", cl1);
-
-                if (method1 == null)
-                {
-                    log.error("#12.12.020 error create method terminate{} for class  " + className);
-                    return;
-                }
-
-                if (log.isDebugEnabled())
-                    log.debug("#12.12.013  method1 is " + method1);
-
-                Object objArgs1[] = { id };
-                method1.invoke(obj, objArgs1);
-                objArgs1 = null;
-
-                if (log.isDebugEnabled())
-                    log.debug("#12.12.017 ");
-            }
-        }
-        catch (Exception e)
-        {
-            log.error("Method invocation error . ClassName: " + className + ", id: " + id + ", isFull: " + isFullReinit, e);
-        }
-    }
-*/
 }

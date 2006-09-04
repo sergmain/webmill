@@ -52,6 +52,8 @@ import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.schema.price.ShopOrderType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
+import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -94,64 +96,74 @@ public final class OrderLogic {
                     log.debug("fromSession class name: " + fromSession.getClass().getName());
                 }
             }
-            Shop tempShop = ( Shop ) fromSession;
+            ShopBean tempShop = ( ShopBean ) fromSession;
 
             if( log.isDebugEnabled() ) {
                 log.debug( "tempShop " + tempShop );
                 if( tempShop != null )
-                    log.debug( "tempShop.idShop - " + tempShop.getShopBean().id_shop );
+                {
+                    log.debug( "tempShop.idShop - " + tempShop.getShopId() );
+                }
             }
 
-            Shop shop = null;
+            ShopBean shopBean = null;
             // если в сессии текущего магазина нет, но вызван какой-то конкретный магазин
             // создаем новый магазин и помещаем в сессию
             if( tempShop == null && idShop != null ) {
                 if( log.isDebugEnabled() )
                     log.debug( "tempShop is null and idShop is not null " );
 
-                shop = Shop.getInstance( idShop );
-                setInSession(session, ShopPortlet.CURRENT_SHOP, shop);
+                shopBean = CommerceDaoFactory.getShopDao().getShop(idShop);
+                setInSession(session, ShopPortlet.CURRENT_SHOP, shopBean);
             }
             // если в сессии есть текущий магазин и
             // код вызванного магазина совпадает с кодом мкгаза в сессии,
             // юзаем его (тот, который в сессии)
-            else if( tempShop != null &&
-                ( idShop == null || idShop.equals( tempShop.getShopBean().id_shop ) ) ) {
-                if( log.isDebugEnabled() )
-                    log.debug( "tempShop is not null and tempShop.idShop == idShop " );
+            else {
+                if( tempShop != null &&
+                    ( idShop == null || idShop.equals( shopBean.getShopId() ) ) ) {
+                    if( log.isDebugEnabled() )
+                        log.debug( "tempShop is not null and tempShop.idShop == idShop " );
 
-                shop = tempShop;
-            }
-            // если в сессии есть текущий магазин и
-            // код вызванного магазина не совпадает с кодом магаза в сессии,
-            // заменяем магаз в сессии на магаз с вызываемым кодом
-            else if( tempShop != null && idShop != null && !idShop.equals( tempShop.getShopBean().id_shop ) ) {
-                if( log.isDebugEnabled() ) {
-                    log.debug( "#11.22.09 create shop instance with idShop - " + idShop );
+                    shopBean = tempShop;
                 }
+// если в сессии есть текущий магазин и
+// код вызванного магазина не совпадает с кодом магаза в сессии,
+// заменяем магаз в сессии на магаз с вызываемым кодом
+                else {
+                    if( tempShop != null && idShop != null && !idShop.equals( tempShop.getShopId() ) ) {
+                        if( log.isDebugEnabled() ) {
+                            log.debug( "#11.22.09 create shop instance with idShop - " + idShop );
+                        }
 
-                shop = Shop.getInstance( idShop );
+                        shopBean = CommerceDaoFactory.getShopDao().getShop(idShop);
 
-                if( log.isDebugEnabled() )
-                    log.debug( "idShop of created shop - " + shop.getShopBean().id_shop );
+                        if( log.isDebugEnabled() )
+                        {
+                            log.debug( "idShop of created shop - " + shopBean.getShopId() );
+                        }
 
-                removeFromSession(session, ShopPortlet.CURRENT_SHOP);
-                setInSession(session, ShopPortlet.CURRENT_SHOP, shop);
+                        removeFromSession(session, ShopPortlet.CURRENT_SHOP);
+                        setInSession(session, ShopPortlet.CURRENT_SHOP, shopBean);
+                    }
+                }
             }
             // теперь в shop находится текущий магаз ( тот который в сессии )
             // если его создание прошло успешно - магаз с вызываемым кодом действительно есть,
             // иначе shop == null
 
             if( log.isDebugEnabled() ) {
-                log.debug( "shop object " + shop );
-                if( shop != null )
-                    log.debug( "shop.id_shop " + shop.getShopBean().id_shop );
+                log.debug( "shop object " + shopBean );
+                if( shopBean != null )
+                {
+                    log.debug( "shop.id_shop " + shopBean.getShopId() );
+                }
             }
 
             ShopOrder order = null;
             // если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
             // если заказа в сессии нет, то создаем
-            if( shop != null && shop.getShopBean().id_shop != null ) {
+            if( shopBean != null && shopBean.getShopId() != null ) {
                 order = ( ShopOrder ) getFromSession(session, ShopPortlet.ORDER_SESSION);
 
                 if( log.isDebugEnabled() )
@@ -165,7 +177,7 @@ public final class OrderLogic {
                     order.setServerName( renderRequest.getServerName() );
 
                     ShopOrderType shopOrder = new ShopOrderType();
-                    shopOrder.setIdShop( shop.getShopBean().id_shop );
+                    shopOrder.setIdShop( shopBean.getShopId() );
 
                     order.addShopOrdertList( shopOrder );
                     initAuthSession( dbDyn, order, ( AuthSession ) renderRequest.getUserPrincipal() );
@@ -693,7 +705,7 @@ public final class OrderLogic {
 
                 item.setCurrencyItem( currencyItem );
 
-                Shop shop = Shop.getInstance( item.getIdShop() );
+                ShopBean shopBean = CommerceDaoFactory.getShopDao().getShop(item.getIdShop());
 
                 if( log.isDebugEnabled() ) {
                     log.debug( "currencyCode " + item.getCurrency() );
@@ -714,20 +726,20 @@ public final class OrderLogic {
 
                     if( log.isDebugEnabled() ) {
                         log.debug( "item idShop - " + item.getIdShop() );
-                        log.debug( "shop idShop - " + shop.getShopBean().id_shop );
+                        log.debug( "shop idShop - " + shopBean.getShopId() );
                         log.debug( "item idCurrency - " + item.getCurrencyItem().getIdCurrency() );
-                        log.debug( "shop idOrderCurrency - " + shop.getShopBean().idOrderCurrency );
+                        log.debug( "shop idOrderCurrency - " + shopBean.getInvoiceCurrencyId() );
                         log.debug( "код валюты наименования совпадает с валютой в которой выводить заказ - " +
-                            ( item.getCurrencyItem().getIdCurrency() == shop.getShopBean().idOrderCurrency ) );
+                            ( item.getCurrencyItem().getIdCurrency() == shopBean.getInvoiceCurrencyId() ) );
                     }
 
                     // если код валюты наименования совпадает с валютой в которой выводить заказ
                     int precisionValue = 2;
                     CurrencyPrecisionType precision = null;
-                    if( item.getCurrencyItem().getIdCurrency().equals( shop.getShopBean().idOrderCurrency ) ) {
+                    if( item.getCurrencyItem().getIdCurrency().equals( shopBean.getInvoiceCurrencyId() ) ) {
                         item.setResultCurrency( item.getCurrencyItem() );
 
-                        precision = getPrecisionValue( shop.getShopBean().precisionList, currencyItem.getIdCurrency() );
+                        precision = getPrecisionValue( shopBean.getPrecisionList(), currencyItem.getIdCurrency() );
                         if( precision != null && precision.getPrecision() != null )
                             precisionValue = precision.getPrecision();
 
@@ -740,12 +752,12 @@ public final class OrderLogic {
                         }
                     }
                     else {
-                        precision = getPrecisionValue( shop.getShopBean().precisionList, shop.getShopBean().idOrderCurrency );
+                        precision = getPrecisionValue( shopBean.getPrecisionList(), shopBean.getInvoiceCurrencyId() );
                         if( precision != null && precision.getPrecision() != null )
                             precisionValue = precision.getPrecision();
 
                         CustomCurrencyItemType defaultCurrency =
-                            CurrencyService.getCurrencyItem( currencyManager.getCurrencyList(), shop.getShopBean().idOrderCurrency );
+                            CurrencyService.getCurrencyItem( currencyManager.getCurrencyList(), shopBean.getInvoiceCurrencyId() );
 
                         item.setResultCurrency( defaultCurrency );
 

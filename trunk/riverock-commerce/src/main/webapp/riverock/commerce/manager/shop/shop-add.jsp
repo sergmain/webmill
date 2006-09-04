@@ -27,9 +27,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.commerce.resource.Currency" var="msg"/>
-<f:loadBundle basename="org.riverock.commerce.resource.Manager" var="manager"/>
-
 <style type="text/css">
     TD {
         vertical-align: top;
@@ -46,22 +43,27 @@
     }
 </style>
 
+
+<f:loadBundle basename="org.riverock.commerce.resource.Shop" var="msg"/>
+<f:loadBundle basename="org.riverock.commerce.resource.Manager" var="manager"/>
+
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="delete_currency_form" rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form id="add_shop_form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:panelGrid columns="1" rendered="#{!empty currencySessionBean.currencyExtendedBean.currencyBean and isUserInRole['webmill.portal-manager']}">
+        <h:panelGrid columns="1" rendered="#{!empty shopSessionBean.shopBean and isUserInRole['webmill.portal-manager']}">
 
-            <f:subview id="subviewCurrencyInfo">
-                <jsp:include page="currency-info.jsp"/>
+            <f:subview id="subviewShopInfo">
+                <jsp:include page="shop-add-edit.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="editDeleteControls">
-                <h:commandButton value="#{msg.delete_confirm_action}"
-                                 action="#{currencyAction.processDeleteCurrency}"
+            <h:panelGroup>
+                <h:commandButton value="#{msg.add_process_action}" action="#{shopAction.processAddShop}"
                                  styleClass="sub-top-button-action"/>
-                <h:commandButton value="#{msg.delete_cancel_action}" action="currency"
-                                 styleClass="sub-top-button-action"/>
+                <h:commandButton value="#{msg.add_cancel_action}" action="#{shopAction.cancelAddShop}"
+                                 styleClass="sub-top-button-action"
+                                 immediate="true"
+                    />
             </h:panelGroup>
 
         </h:panelGrid>

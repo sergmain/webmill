@@ -24,6 +24,7 @@
 package org.riverock.commerce.bean;
 
 import java.util.Calendar;
+import java.io.Serializable;
 
 import org.riverock.commerce.price.CurrencyPrecisionList;
 
@@ -34,59 +35,78 @@ import org.riverock.commerce.price.CurrencyPrecisionList;
  *         <p/>
  *         $Id$
  */
-public class ShopBean {
+public class ShopBean  implements Serializable {
+    private static final long serialVersionUID = 2625005509L;
 
-    public Long id_shop = null;
-    public int is_close;
-    public String name_shop;
-    public String footer;
-    public String header;
-    public String code_shop = "";
-    public String name_shop_for_price_list = "";
-    public Calendar dateUpload;
-    public Calendar dateCalcQuantity;
-    public int newItemDays;
+    private Long shopId = null;
+    private Long siteId = null;
+    private boolean isOpened;
+    private String shopName;
+    private String footer;
+    private String header;
+    private String shopCode = "";
+    private String shopNameForPriceList = "";
+    private Calendar dateUpload;
+    private Calendar dateCalcQuantity;
+    private int newItemDays;
 
     // Валюта по умолчанию для отображения прайса
-    public Long currencyID = null;
+    private Long defaultCurrencyId = null;
     // Валюта по умолчанию для отображения заказа
-    public Long idOrderCurrency = null;
+    private Long invoiceCurrencyId = null;
 
-    public int is_default_currency = 1;
+    private boolean isDefaultCurrency = true;
 
-    public boolean isNeedProcessing = false;  // Нужен ли интерфейс для проведения финансовых транзакций
-    public boolean isProcessInvoice = false; //  Нужен ли интерфейс для выписки счетов
-    public boolean isNeedRecalc = false;//  Нужен ли интерфейс для пересчета из одной валюты в другую
+    private boolean isNeedProcessing = false;  // Нужен ли интерфейс для проведения финансовых транзакций
+    private boolean isProcessInvoice = false; //  Нужен ли интерфейс для выписки счетов
+    private boolean isNeedRecalc = false; //  Нужен ли интерфейс для пересчета из одной валюты в другую
 
-    public CurrencyPrecisionList precisionList = new CurrencyPrecisionList();
+    private CurrencyPrecisionList precisionList = new CurrencyPrecisionList();
 
-    public double discount = 0;
+    private double discount = 0;
 
-    public Long id_type_shop_1 = null;
-    public Long id_type_shop_2 = null;
+    private Long id_type_shop_1 = null;
+    private Long id_type_shop_2 = null;
+    private int digitsAfterComma;
 
-    public Long getId_shop() {
-        return id_shop;
+    public int getDigitsAfterComma() {
+        return digitsAfterComma;
     }
 
-    public void setId_shop(Long id_shop) {
-        this.id_shop = id_shop;
+    public void setDigitsAfterComma(int digitsAfterComma) {
+        this.digitsAfterComma = digitsAfterComma;
     }
 
-    public int getIs_close() {
-        return is_close;
+    public Long getShopId() {
+        return shopId;
     }
 
-    public void setIs_close(int is_close) {
-        this.is_close = is_close;
+    public void setShopId(Long id_shop) {
+        this.shopId = id_shop;
     }
 
-    public String getName_shop() {
-        return name_shop;
+    public Long getSiteId() {
+        return siteId;
     }
 
-    public void setName_shop(String name_shop) {
-        this.name_shop = name_shop;
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
+    }
+
+    public boolean isOpened() {
+        return isOpened;
+    }
+
+    public void setOpened(boolean opened) {
+        this.isOpened = opened;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
     public String getFooter() {
@@ -105,20 +125,20 @@ public class ShopBean {
         this.header = header;
     }
 
-    public String getCode_shop() {
-        return code_shop;
+    public String getShopCode() {
+        return shopCode;
     }
 
-    public void setCode_shop(String code_shop) {
-        this.code_shop = code_shop;
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode;
     }
 
-    public String getName_shop_for_price_list() {
-        return name_shop_for_price_list;
+    public String getShopNameForPriceList() {
+        return shopNameForPriceList;
     }
 
-    public void setName_shop_for_price_list(String name_shop_for_price_list) {
-        this.name_shop_for_price_list = name_shop_for_price_list;
+    public void setShopNameForPriceList(String shopNameForPriceList) {
+        this.shopNameForPriceList = shopNameForPriceList;
     }
 
     public Calendar getDateUpload() {
@@ -145,28 +165,28 @@ public class ShopBean {
         this.newItemDays = newItemDays;
     }
 
-    public Long getCurrencyID() {
-        return currencyID;
+    public Long getDefaultCurrencyId() {
+        return defaultCurrencyId;
     }
 
-    public void setCurrencyID(Long currencyID) {
-        this.currencyID = currencyID;
+    public void setDefaultCurrencyId(Long defaultCurrencyId) {
+        this.defaultCurrencyId = defaultCurrencyId;
     }
 
-    public Long getIdOrderCurrency() {
-        return idOrderCurrency;
+    public Long getInvoiceCurrencyId() {
+        return invoiceCurrencyId;
     }
 
-    public void setIdOrderCurrency(Long idOrderCurrency) {
-        this.idOrderCurrency = idOrderCurrency;
+    public void setInvoiceCurrencyId(Long invoiceCurrencyId) {
+        this.invoiceCurrencyId = invoiceCurrencyId;
     }
 
-    public int getIs_default_currency() {
-        return is_default_currency;
+    public boolean isDefaultCurrency() {
+        return isDefaultCurrency;
     }
 
-    public void setIs_default_currency(int is_default_currency) {
-        this.is_default_currency = is_default_currency;
+    public void setDefaultCurrency(boolean defaultCurrency) {
+        this.isDefaultCurrency = defaultCurrency;
     }
 
     public boolean isNeedProcessing() {

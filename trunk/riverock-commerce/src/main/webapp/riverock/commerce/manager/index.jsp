@@ -49,7 +49,7 @@
         }
     </style>
 
-    <h:panelGrid columns="2">
+    <h:panelGrid columns="3">
 
         <h:panelGroup>
             <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}">
@@ -63,6 +63,13 @@
                 <h:commandButton id="currency-action" action="currency" value="#{manager.currency_button}"
                                  styleClass="top-button-action"/>
                 <h:outputText value="#{manager.currency_button_info}" styleClass="top-button-action"/>
+            </h:panelGrid>
+        </h:panelGroup>
+        <h:panelGroup>
+            <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}">
+                <h:commandButton id="shop-action" action="shop" value="#{manager.shop_button}"
+                                 styleClass="top-button-action"/>
+                <h:outputText value="#{manager.shop_button_info}" styleClass="top-button-action"/>
             </h:panelGrid>
         </h:panelGroup>
 

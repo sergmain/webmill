@@ -40,9 +40,9 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.commerce.price.PriceSpecialItems;
-import org.riverock.commerce.price.Shop;
 import org.riverock.commerce.price.ShopPortlet;
 import org.riverock.commerce.tools.ContentTypeTools;
+import org.riverock.commerce.bean.ShopBean;
 import org.riverock.portlet.schema.price.OrderType;
 
 /**
@@ -98,7 +98,7 @@ public class ShopSpecial extends HttpServlet
                 if (true) throw new IllegalStateException("not implemented");
 
                 Long currencyID = null;
-                Shop shop = null;
+                ShopBean shop = null;
 // !!!!!!!
 // Этот кусок надо. Закоментарен для текущей компиляции
 //                Shop shop = Shop.getInstance(db_, b.id_shop);
@@ -106,11 +106,11 @@ public class ShopSpecial extends HttpServlet
                 String currencyForm = "<input type=\"hidden\" name=\"c\" value=\"" + currencyID + "\">";
                 String currencyURL = "&c=" + currencyID;
 
-                if (shop.getShopBean().is_default_currency == 1)
+                if (shop.isDefaultCurrency())
                 {
                     currencyForm = "";
                     currencyURL = "";
-                    currencyID = shop.getShopBean().currencyID;
+                    currencyID = shop.getDefaultCurrencyId();
                 }
 
 // !!!!!!!

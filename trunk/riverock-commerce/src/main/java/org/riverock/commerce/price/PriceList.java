@@ -41,6 +41,7 @@ import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.schema.price.ShopOrderType;
+import org.riverock.commerce.bean.ShopBean;
 
 /**
  * $Id$
@@ -61,13 +62,12 @@ public class PriceList {
         // search object of AuthSession for calculate discount
         double price = priceItem;
 
-        Object obj = null;
         AuthSession auth = null;
-        Shop shop = null;
+        ShopBean shop = null;
         int precision = 2;
 
         for( int i = 0; i < object.length; i++ ) {
-            obj = object[i];
+            Object obj = object[i];
 
             if( log.isDebugEnabled() )
                 log.debug( "calc price #1: obj[" + i + "]=" + obj );
@@ -76,8 +76,8 @@ public class PriceList {
                 auth = ( AuthSession ) obj;
 
             }
-            else if( ( obj != null ) && ( obj instanceof Shop ) ) {
-                shop = ( Shop ) obj;
+            else if( ( obj != null ) && ( obj instanceof ShopBean ) ) {
+                shop = ( ShopBean ) obj;
             }
             else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionType ) ) {
                 if( log.isDebugEnabled() )
@@ -99,11 +99,11 @@ public class PriceList {
         if( shop != null ) {
             if( log.isDebugEnabled() ) {
                 log.debug( "calc price: shop comma=" + precision );
-                log.debug( "calc price. shop.discount - " + shop.getShopBean().discount );
+                log.debug( "calc price. shop.discount - " + shop.getDiscount() );
 
             }
 
-            price = price * ( 100 - shop.getShopBean().discount ) / 100;
+            price = price * ( 100 - shop.getDiscount() ) / 100;
             if( log.isDebugEnabled() )
                 log.debug( "calc price. price - " + price + " shop.commas - " + precision );
 
@@ -122,15 +122,14 @@ public class PriceList {
         if( log.isDebugEnabled() )
             log.debug( "calc price: len=" + object.length );
 
-        // search object of AuthSession for calculate discount
-        Object obj = null;
         double discountUser = 0;
         AuthSession auth = null;
-        Shop shop = null;
+        ShopBean shop = null;
         int precision = 2;
 
+        // search object of AuthSession for calculate discount
         for( int i = 0; i < object.length; i++ ) {
-            obj = object[i];
+            Object obj = object[i];
 
             if( log.isDebugEnabled() )
                 log.debug( "calc price #1: obj[" + i + "]=" + obj );
@@ -138,8 +137,8 @@ public class PriceList {
             if( ( obj != null ) && ( obj instanceof AuthSession ) ) {
                 auth = ( AuthSession ) obj;
             }
-            else if( ( obj != null ) && ( obj instanceof Shop ) ) {
-                shop = ( Shop ) obj;
+            else if( ( obj != null ) && ( obj instanceof ShopBean ) ) {
+                shop = ( ShopBean ) obj;
             }
             else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionType ) ) {
                 if( log.isDebugEnabled() )
@@ -159,13 +158,13 @@ public class PriceList {
 
         double discountShop = 0;
         if( shop != null ) {
-            discountShop = shop.getShopBean().discount;
+            discountShop = shop.getDiscount();
         }
 
         // производим округление
         double summOrder = 0;
         for( int i = 0; i < v.size(); i++ ) {
-            obj = v.elementAt( i );
+            Object obj = v.elementAt( i );
 
             if( log.isDebugEnabled() )
                 log.debug( "calc price #2: obj[" + i + "]=" + obj );
@@ -445,7 +444,6 @@ public class PriceList {
                                 }
                                 finally {
                                     DatabaseManager.close( ps1 );
-                                    ps1 = null;
                                 }
 
                                 if( log.isDebugEnabled() )
@@ -509,8 +507,6 @@ public class PriceList {
         }
         finally {
             DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
         }
     }
 }

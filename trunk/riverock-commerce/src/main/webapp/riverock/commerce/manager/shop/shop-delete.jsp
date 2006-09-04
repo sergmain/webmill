@@ -27,7 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.commerce.resource.Currency" var="msg"/>
+<f:loadBundle basename="org.riverock.commerce.resource.Shop" var="msg"/>
 <f:loadBundle basename="org.riverock.commerce.resource.Manager" var="manager"/>
 
 <style type="text/css">
@@ -46,21 +46,22 @@
     }
 </style>
 
+
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="delete_currency_form" rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form id="delete_shop_form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:panelGrid columns="1" rendered="#{!empty currencySessionBean.currencyExtendedBean.currencyBean and isUserInRole['webmill.portal-manager']}">
+        <h:panelGrid columns="1" rendered="#{!empty shopSessionBean.shopExtendedBean.shopBean and isUserInRole['webmill.portal-manager']}">
 
-            <f:subview id="subviewCurrencyInfo">
-                <jsp:include page="currency-info.jsp"/>
+            <f:subview id="subviewShopInfo">
+                <jsp:include page="shop-info.jsp"/>
             </f:subview>
 
             <h:panelGroup id="editDeleteControls">
                 <h:commandButton value="#{msg.delete_confirm_action}"
-                                 action="#{currencyAction.processDeleteCurrency}"
+                                 action="#{shopAction.processDeleteShop}"
                                  styleClass="sub-top-button-action"/>
-                <h:commandButton value="#{msg.delete_cancel_action}" action="currency"
+                <h:commandButton value="#{msg.delete_cancel_action}" action="shop"
                                  styleClass="sub-top-button-action"/>
             </h:panelGroup>
 
