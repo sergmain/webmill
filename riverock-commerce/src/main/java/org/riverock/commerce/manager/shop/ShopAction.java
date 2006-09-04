@@ -106,11 +106,18 @@ public class ShopAction implements Serializable {
         return "shop";
     }
 
+    // Delete shop
+
     public String processDeleteShop() {
         CommerceDaoFactory.getShopDao().deleteShop( shopSessionBean.getCurrentShopId() );
-        setSessionBean(null);
+        // For virtual delete
+        loadCurrentShop();
+        // for perm delete
+//        setSessionBean(null);
         return "shop";
     }
+
+    // common
 
     public String selectShop() {
         loadCurrentShop();

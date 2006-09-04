@@ -28,6 +28,10 @@
 <!--$Id$-->
 <project name="Main build of all riverock modules" default="full_build_module" basedir=".">
 
+    <target name="full">
+        <antcall target="full_build_module"/>
+    </target>
+
     <target name="full_build_module">
         <ant antfile="riverock-interfaces/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-common/build.xml" target="full_build_module"  inheritall="false" />
