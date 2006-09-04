@@ -24,6 +24,13 @@
 package org.riverock.commerce.manager.currency;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
+
+import javax.faces.model.SelectItem;
+
+import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 
 /**
  * @author Sergei Maslyukov
@@ -36,5 +43,18 @@ public class CurrencyService implements Serializable {
     private static final long serialVersionUID = 5595005515L;
 
     public CurrencyService() {
+    }
+
+    public List<SelectItem> getStandardCurrencyList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        List<StandardCurrencyBean> beans = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrencyList();
+        for (StandardCurrencyBean standardCurrencyBean : beans) {
+            if (standardCurrencyBean.getStandardCurrencyId()==null) {
+                throw new IllegalStateException("standardCurrencyId is null, currency name: " + standardCurrencyBean.getStandardCurrencyName());
+            }
+
+            list.add(new SelectItem(standardCurrencyBean.getStandardCurrencyId(), standardCurrencyBean.getStandardCurrencyName()));
+        }
+        return list;
     }
 }

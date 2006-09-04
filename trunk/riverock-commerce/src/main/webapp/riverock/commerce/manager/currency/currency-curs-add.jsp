@@ -51,7 +51,7 @@
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
     <h:form id="add_currency_form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:panelGrid columns="1" rendered="#{!empty currencySessionBean.currencyBean and isUserInRole['webmill.portal-manager']}">
+        <h:panelGrid columns="1" rendered="#{!empty currencySessionBean.currencyExtendedBean and isUserInRole['webmill.portal-manager']}">
 
             <h:panelGrid columns="2">
                 <h:outputText value="#{msg.new_curs}"/>

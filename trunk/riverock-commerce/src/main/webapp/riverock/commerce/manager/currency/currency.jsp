@@ -50,8 +50,8 @@
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
     <h:form id="currency_form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:commandButton id="auth-list-action" action="auth" value="#{manager.auth_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.auth']}"/>
+        <h:commandButton id="standard-currency-list-action" action="standard-currency" value="#{manager.standard_currency_button}"
+                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}"/>
 
 
         <h:panelGrid columns="2" rendered="#{isUserInRole['webmill.portal-manager']}">
@@ -67,12 +67,14 @@
                 </f:subview>
 
                 <h:panelGroup id="editDeleteControls">
-                    <h:commandButton value="#{msg.edit_currency_action}" action="currency-edit" styleClass="sub-top-button-action"/>
+                    <h:commandButton value="#{msg.edit_currency_action}" action="#{currencyAction.editCurrency}" styleClass="sub-top-button-action"/>
                     <h:commandButton value="#{msg.delete_currency_action}" action="currency-delete" styleClass="sub-top-button-action"/>
-                    <h:commandButton value="#{msg.add_curs_action}" action="#{currencyAction.addCurs}" styleClass="sub-top-button-action"/>
+                    <h:commandButton value="#{msg.add_curs_action}" action="#{currencyAction.addCurs}" styleClass="sub-top-button-action"
+                                     rendered="#{!currencySessionBean.currencyExtendedBean.currencyBean.useStandard}"
+                        />
                 </h:panelGroup>
 
-                <f:subview id="subviewCurrencyCursInfo">
+                <f:subview id="subviewCurrencyCursInfo" rendered="#{!currencySessionBean.currencyExtendedBean.currencyBean.useStandard}">
                     <jsp:include page="currency-curs-info.jsp"/>
                 </f:subview>
 

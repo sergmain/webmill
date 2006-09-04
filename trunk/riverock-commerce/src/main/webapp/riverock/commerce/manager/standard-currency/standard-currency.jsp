@@ -50,9 +50,8 @@
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
     <h:form id="standard_currency_form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:commandButton id="auth-list-action" action="auth" value="#{manager.auth_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.auth']}"/>
-
+        <h:commandButton id="currency-list-action" action="currency" value="#{manager.currency_button}"
+                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}"/>
 
         <h:panelGrid columns="2" rendered="#{isUserInRole['webmill.portal-manager']}">
 

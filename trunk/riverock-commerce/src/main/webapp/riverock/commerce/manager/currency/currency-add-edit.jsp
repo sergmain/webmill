@@ -30,10 +30,27 @@
 
  <h:outputText value="Currency info"/>
  <h:panelGrid columns="2">
- 		<h:outputText value="#{msg.currency_name}"/>
- 		<h:inputText id="currency-name-field" value="#{currencySessionBean.currencyBean.currencyName}" size="30"/>
+     <h:outputText value="#{msg.currency_name}"/>
+     <h:inputText id="currency-name-field" value="#{currencySessionBean.currencyBean.currencyName}" size="30"/>
 
- 		<h:outputText value="#{msg.currency_code}"/>
- 		<h:inputText id="currency-code-field" value="#{currencySessionBean.currencyBean.currencyCode}" size="30"/>
+     <h:outputText value="#{msg.currency_code}"/>
+     <h:inputText id="currency-code-field" value="#{currencySessionBean.currencyBean.currencyCode}" size="30"/>
+
+     <h:outputText value="#{msg.is_used}"/>
+     <h:selectBooleanCheckbox id="select_is_used_checkbox" value="#{currencySessionBean.currencyBean.used}"/>
+
+     <h:outputText value="#{msg.use_standard_currency}"/>
+     <h:panelGroup id="select-standard-currency-group">
+         <h:selectBooleanCheckbox id="select_standard_currency_checkbox"
+                                  value="#{currencySessionBean.currencyBean.useStandard}"/>
+
+         <h:selectOneMenu id="select-one-standard-currency" value="#{currencySessionBean.currencyBean.standardCurrencyId}"
+                          styleClass="selectOneMenu" required="true"
+             >
+             <f:selectItems value="#{currencyService.standardCurrencyList}"/>
+         </h:selectOneMenu>
+     </h:panelGroup>
+
+
  </h:panelGrid>
  	

@@ -57,6 +57,13 @@ public class CurrencyExtendedBean implements Serializable {
         this.currentStandardCurs = currentStandardCurs;
     }
 
+    public String getStandardCurrencyName() {
+        if (standardCurrencyBean==null) {
+            return "";
+        }
+        return standardCurrencyBean.getStandardCurrencyName();
+    }
+
     public CurrencyBean getCurrencyBean() {
         return currencyBean;
     }
