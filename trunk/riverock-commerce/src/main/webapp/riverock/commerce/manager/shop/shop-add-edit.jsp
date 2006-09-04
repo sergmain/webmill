@@ -39,14 +39,14 @@
      <h:outputText value="#{msg.is_opened}"/>
      <h:selectBooleanCheckbox id="select_is_used_checkbox" value="#{shopSessionBean.shopBean.opened}"/>
 
-     <h:outputText value="#{msg.new_curs}"/>
+     <h:outputText value="#{msg.digit_after_comma}"/>
      <h:inputText id="digit-after-comma-field" value="#{shopSessionBean.shopBean.digitsAfterComma}" size="10"/>
 
      <h:outputText value="#{msg.shop_discount}"/>
      <h:inputText id="shop-discount-field" value="#{shopSessionBean.shopBean.discount}" size="10"/>
 
      <h:outputText value="#{msg.is_need_recalc}"/>
-     <h:selectBooleanCheckbox id="select_is_need_recalc" value="#{shopSessionBean.shopBean.isNeedRecalc}"/>
+     <h:selectBooleanCheckbox id="select_is_need_recalc" value="#{shopSessionBean.shopBean.needRecalc}"/>
 
      <h:outputText value="#{msg.default_currency}"/>
      <h:selectOneMenu id="select-one-default-currency" value="#{shopSessionBean.shopBean.defaultCurrencyId}"

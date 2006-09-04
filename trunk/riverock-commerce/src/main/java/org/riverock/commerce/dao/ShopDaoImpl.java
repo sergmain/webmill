@@ -166,7 +166,7 @@ public class ShopDaoImpl implements ShopDao {
             ps.setInt(11, shopBean.getDigitsAfterComma() );
             ps.setBigDecimal(12, new BigDecimal(shopBean.getDiscount()) );
             ps.setString(13, shopBean.getShopCode() );
-            ps.setString(15, shopBean.getShopCode() );
+            ps.setString(14, shopBean.getShopCode() );
             ps.setLong(15, shopBean.getDefaultCurrencyId() );
             ps.setString(16, shopBean.getShopName() );
 
@@ -191,8 +191,81 @@ public class ShopDaoImpl implements ShopDao {
     }
 
     public void updateShop(ShopBean shopBean) {
-        // TODO is_closed=!isOpened
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (shopBean==null) {
+            return;
+        }
+
+        String sql_ =
+            "update WM_PRICE_SHOP_LIST "+
+            "set "+
+            "    IS_CLOSE=? , " +
+                "IS_PROCESS_INVOICE=? , " +
+            "    NAME_SHOP_FOR_PRICE_LIST=? , " +
+                "IS_NEED_RECALC=? , " +
+                "ID_SITE=? , " +
+                "CODE_SHOP=? , " +
+            "    ID_CURRENCY=? , " +
+                "IS_DEFAULT_CURRENCY=? , " +
+                "IS_NEED_PROCESSING=? , " +
+                "COMMAS_COUNT=? , " +
+                "DISCOUNT=? , " +
+            "    HEADER_STRING=? , " +
+                "FOOTER_STRING=? , " +
+                "ID_ORDER_CURRENCY=? , " +
+                "NAME_SHOP=? "+
+            "where ID_SHOP=?";
+
+        PreparedStatement ps = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            ps = adapter.prepareStatement(sql_);
+
+            ps = adapter.prepareStatement(sql_);
+
+            // TODO is_closed == (!isOpened)
+            ps.setInt(1, shopBean.isOpened()?0:1 );
+            ps.setInt(2, shopBean.isProcessInvoice()?1:0 );
+            ps.setString(3, shopBean.getShopNameForPriceList() );
+            ps.setInt(4, shopBean.isNeedRecalc()?1:0 );
+            ps.setLong(5, shopBean.getSiteId() );
+            ps.setString(6, shopBean.getShopCode() );
+            ps.setLong(7, shopBean.getDefaultCurrencyId() );
+            ps.setInt(8, shopBean.isDefaultCurrency()?1:0 );
+            ps.setInt(9, shopBean.isNeedProcessing()?1:0 );
+            ps.setInt(10, shopBean.getDigitsAfterComma() );
+            ps.setBigDecimal(11, new BigDecimal(shopBean.getDiscount()) );
+            ps.setString(12, shopBean.getShopCode() );
+            ps.setString(13, shopBean.getShopCode() );
+            ps.setLong(14, shopBean.getDefaultCurrencyId() );
+            ps.setString(15, shopBean.getShopName() );
+
+            // prepare PK
+            ps.setLong(16, shopBean.getShopId() );
+
+            int i = ps.executeUpdate();
+            if (log.isDebugEnabled()) {
+                log.debug("count of updated records; " + i+", PK: " +shopBean.getShopId());
+            }
+
+            adapter.commit();
+        }
+        catch (Exception e) {
+            try {
+                if( adapter != null )
+                    adapter.rollback();
+            }
+            catch( Exception e001 ) {
+                //catch rollback error
+            }
+            String es = "Error update shop";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+       }
+       finally {
+            DatabaseManager.close(adapter, ps);
+       }
     }
 
     public void deleteShop(Long shopId) {
@@ -206,7 +279,7 @@ public class ShopDaoImpl implements ShopDao {
 
             DatabaseManager.runSQL(
                 dbDyn,
-                "update WM_PRICE_SHOP_LIST set IS_CLOSE where ID_SHOP=?",
+                "update WM_PRICE_SHOP_LIST set IS_CLOSE=1 where ID_SHOP=?",
                 new Object[]{shopId}, new int[]{Types.DECIMAL}
             );
 
