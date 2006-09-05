@@ -23,25 +23,39 @@
  */
 package org.riverock.commerce.bean;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.io.Serializable;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 01.09.2006
- *         Time: 19:12:14
- *         <p/>
- *         $Id$
+ * User: SergeMaslyukov
+ * Date: 06.09.2006
+ * Time: 0:07:34
+ * <p/>
+ * $Id$
  */
-public class CurrencyCurrentCurs implements Serializable {
-    private static final long serialVersionUID = 2625005437L;
-
+public class CurrencyPrecisionBean implements Serializable {
+    private static final long serialVersionUID = 2625005325L;
+    
+    private Long currencyPrecisionId;
     private Long currencyId;
-    private java.util.Date date;
-    private BigDecimal curs;
+    private Long shopId;
+    private Integer precision;
 
-    public CurrencyCurrentCurs() {
+    public CurrencyPrecisionBean() {
+    }
+
+    public CurrencyPrecisionBean(CurrencyPrecisionBean bean) {
+        this.currencyPrecisionId = bean.getCurrencyPrecisionId();
+        this.currencyId = bean.getCurrencyId();
+        this.shopId = bean.getShopId();
+        this.precision = bean.getPrecision();
+    }
+
+    public Long getCurrencyPrecisionId() {
+        return currencyPrecisionId;
+    }
+
+    public void setCurrencyPrecisionId(Long currencyPrecisionId) {
+        this.currencyPrecisionId = currencyPrecisionId;
     }
 
     public Long getCurrencyId() {
@@ -52,19 +66,19 @@ public class CurrencyCurrentCurs implements Serializable {
         this.currencyId = currencyId;
     }
 
-    public Date getDate() {
-        return date;
+    public Long getShopId() {
+        return shopId;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 
-    public BigDecimal getCurs() {
-        return curs;
+    public Integer getPrecision() {
+        return precision;
     }
 
-    public void setCurs(BigDecimal curs) {
-        this.curs = curs;
+    public void setPrecision(Integer precision) {
+        this.precision = precision;
     }
 }

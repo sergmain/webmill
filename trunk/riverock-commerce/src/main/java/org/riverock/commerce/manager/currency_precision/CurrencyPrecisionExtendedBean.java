@@ -21,50 +21,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.bean;
+package org.riverock.commerce.manager.currency_precision;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.io.Serializable;
+import org.riverock.commerce.bean.CurrencyPrecisionBean;
+import org.riverock.commerce.manager.currency.CurrencyBean;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 01.09.2006
- *         Time: 19:12:14
- *         <p/>
- *         $Id$
+ * User: SergeMaslyukov
+ * Date: 06.09.2006
+ * Time: 1:50:44
+ * <p/>
+ * $Id$
  */
-public class CurrencyCurrentCurs implements Serializable {
-    private static final long serialVersionUID = 2625005437L;
+public class CurrencyPrecisionExtendedBean {
+    private CurrencyPrecisionBean currencyPrecisionBean=null;
+    private CurrencyBean currencyBean=null;
 
-    private Long currencyId;
-    private java.util.Date date;
-    private BigDecimal curs;
-
-    public CurrencyCurrentCurs() {
+    public CurrencyPrecisionExtendedBean() {
     }
 
-    public Long getCurrencyId() {
-        return currencyId;
+    public CurrencyPrecisionExtendedBean(CurrencyPrecisionBean currencyPrecisionBean, CurrencyBean currencyBean) {
+        this.currencyPrecisionBean = currencyPrecisionBean;
+        this.currencyBean = currencyBean;
     }
 
-    public void setCurrencyId(Long currencyId) {
-        this.currencyId = currencyId;
+    public CurrencyPrecisionBean getCurrencyPrecisionBean() {
+        return currencyPrecisionBean;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public BigDecimal getCurs() {
-        return curs;
-    }
-
-    public void setCurs(BigDecimal curs) {
-        this.curs = curs;
+    public CurrencyBean getCurrencyBean() {
+        return currencyBean;
     }
 }
+

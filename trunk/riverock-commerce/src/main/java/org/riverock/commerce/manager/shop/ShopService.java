@@ -39,9 +39,9 @@ import org.riverock.webmill.container.ContainerConstants;
  *         Date: 04.09.2006
  *         Time: 17:03:41
  *         <p/>
- *         $Id$
+ *         $Id: PriceCurrency.java 950 2006-09-01 18:11:51Z serg_main $
  */
-public class ShopService  implements Serializable {
+public class ShopService implements Serializable {
     private static final long serialVersionUID = 3815005515L;
 
     public ShopService() {

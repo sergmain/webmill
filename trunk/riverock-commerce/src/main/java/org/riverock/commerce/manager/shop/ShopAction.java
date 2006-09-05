@@ -38,7 +38,7 @@ import org.riverock.webmill.container.ContainerConstants;
  *         Date: 04.09.2006
  *         Time: 17:03:05
  *         <p/>
- *         $Id$
+ *         $Id: PriceCurrency.java 950 2006-09-01 18:11:51Z serg_main $
  */
 public class ShopAction implements Serializable {
     private final static Logger log = Logger.getLogger( ShopAction.class );

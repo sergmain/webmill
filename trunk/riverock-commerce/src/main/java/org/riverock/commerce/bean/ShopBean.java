@@ -35,8 +35,8 @@ import org.riverock.commerce.price.CurrencyPrecisionList;
  *         <p/>
  *         $Id$
  */
-public class ShopBean  implements Serializable {
-    private static final long serialVersionUID = 2625005509L;
+public class ShopBean implements Serializable {
+    private static final long serialVersionUID = 2625005780L;
 
     private Long shopId = null;
     private Long siteId = null;

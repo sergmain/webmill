@@ -21,50 +21,23 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.bean;
+package org.riverock.commerce.dao;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.io.Serializable;
+import org.riverock.commerce.bean.CurrencyPrecisionBean;
+
+import java.util.List;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 01.09.2006
- *         Time: 19:12:14
- *         <p/>
- *         $Id$
+ * User: SergeMaslyukov
+ * Date: 06.09.2006
+ * Time: 0:14:34
+ * <p/>
+ * $Id: PriceCurrency.java 950 2006-09-01 18:11:51Z serg_main $
  */
-public class CurrencyCurrentCurs implements Serializable {
-    private static final long serialVersionUID = 2625005437L;
+public interface CurrencyPrecisionDao {
+    CurrencyPrecisionBean getCurrencyPrecision(Long currencyPrecisionId);
 
-    private Long currencyId;
-    private java.util.Date date;
-    private BigDecimal curs;
+    List<CurrencyPrecisionBean> getCurrencyPrecisionList(Long shopId);
 
-    public CurrencyCurrentCurs() {
-    }
-
-    public Long getCurrencyId() {
-        return currencyId;
-    }
-
-    public void setCurrencyId(Long currencyId) {
-        this.currencyId = currencyId;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public BigDecimal getCurs() {
-        return curs;
-    }
-
-    public void setCurs(BigDecimal curs) {
-        this.curs = curs;
-    }
+    void updateCurrencyPrecision(Long currencyPrecisionId, Integer currencyPrecision);
 }
