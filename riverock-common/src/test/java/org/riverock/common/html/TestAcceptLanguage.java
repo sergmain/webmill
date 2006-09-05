@@ -1,12 +1,12 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock -- The Open-source Java Development Community
+ * org.riverock.common - Supporting classes, interfaces, and utilities
+ *
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.common.html;
 
@@ -70,7 +69,7 @@ public class TestAcceptLanguage extends TestCase
                     "ru,en;q=0.8,en-gb;q=0.5,ja;q=0.33,de;q=0.8",
                     new AcceptLanguageWithLevel[]
                     {
-                        new AcceptLanguageWithLevel("ru", 1f),
+                        new AcceptLanguageWithLevel("ru"),
                         new AcceptLanguageWithLevel("en", 0.8f),
                         new AcceptLanguageWithLevel("en-gb", 0.5f),
                         new AcceptLanguageWithLevel("ja", 0.33f),
@@ -83,7 +82,14 @@ public class TestAcceptLanguage extends TestCase
                         StringTools.getLocale("en-gb"),
                         StringTools.getLocale("ja"),
                     },
-                    false, false),
+                    false, false
+                ),
+                new ITAL(
+                    "en;q=1a",
+                    null,
+                    null,
+                    true, false
+                )
             };
 
 
@@ -108,14 +114,14 @@ public class TestAcceptLanguage extends TestCase
 
                         assertEquals(a.locale, r1.locale);
                         assertEquals(true, a.level==r1.level);
+                        assertNotNull(a.toString());
                     }
 
                     Locale locale[] = Header.getAcceptLanguageAsLocaleListSorted(testAcceptLanguageArray[i].s);
                     assertEquals(true, locale.length==testAcceptLanguageArray[i].locales.length);
 
-                    for (int l=0; l<locale.length; l++)
-                    {
-                        System.out.println("locale[l] = " + locale[l]);
+                    for (Locale aLocale : locale) {
+                        System.out.println("locale[l] = " + aLocale);
                     }
 
                     for (int l=0; l<locale.length; l++)
@@ -140,5 +146,7 @@ public class TestAcceptLanguage extends TestCase
                 }
             }
         }
+
+        assertNotNull(new AcceptLanguageWithLevel(null).toString());
     }
 }

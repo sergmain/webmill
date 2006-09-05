@@ -36,6 +36,10 @@ import junit.framework.TestCase;
  * $Id$
  */
 public class TestCaseStringTools extends TestCase {
+    public TestCaseStringTools() {
+        super();
+    }
+
     public TestCaseStringTools(String testName) {
         super(testName);
     }

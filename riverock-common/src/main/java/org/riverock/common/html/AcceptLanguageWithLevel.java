@@ -1,12 +1,12 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock -- The Open-source Java Development Community
+ * org.riverock.common - Supporting classes, interfaces, and utilities
+ *
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.common.html;
 
@@ -40,8 +39,8 @@ public class AcceptLanguageWithLevel
 {
     private static Logger log = Logger.getLogger( AcceptLanguageWithLevel.class );
 
-    public Locale locale = null;
-    public float level=1;
+    public Locale locale;
+    public float level;
 
     public AcceptLanguageWithLevel(String locale_)
     {
@@ -80,7 +79,7 @@ public class AcceptLanguageWithLevel
     public static AcceptLanguageWithLevel getInstance(String acceptLanguage)
         throws IllegalArgumentException
     {
-        Locale localeTemp = null;
+        Locale localeTemp;
         float levelTemp = 1;
         int idx = acceptLanguage.indexOf(';');
         if (idx==-1)

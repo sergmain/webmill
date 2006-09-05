@@ -40,6 +40,10 @@ import junit.framework.TestCase;
  */
 public class TestDateTools extends TestCase {
 
+    public TestDateTools() {
+        super();
+    }
+
     public TestDateTools(String msg) {
         super(msg);
     }
