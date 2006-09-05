@@ -1,9 +1,9 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
+ * org.riverock.common - Supporting classes, interfaces, and utilities
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,14 +20,13 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.common.collections;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Comparator;
 
 import junit.framework.TestCase;
 
@@ -95,6 +94,64 @@ public class TestTreeUtils extends TestCase {
         public void setSubTree(List<TreeItem> list) {
             this.subTree = list;
         }
+    }
+
+    public void testConstructor() throws Exception {
+        new TreeUtils.TreeItemComparator();
+        new TreeUtils();
+    }
+
+    private static class Item implements TreeItem {
+        private Long topId;
+        private Long id;
+        private List<TreeItem> subTree;
+
+        public Item() {
+        }
+
+        public Item(int id, int topId) {
+            this.id = (long)id;
+            this.topId = (long)topId;
+        }
+
+        public Item(Long id, Long topId) {
+            this.id = id;
+            this.topId = topId;
+        }
+
+        public Long getTopId() {
+            return topId;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public List<TreeItem> getSubTree() {
+            return subTree;
+        }
+
+        public void setSubTree(List<TreeItem> list) {
+            this.subTree=list;
+        }
+    }
+
+    public void testCompare() throws Exception {
+        Comparator<TreeItem> comparator = new TreeUtils.TreeItemComparator();
+        assertEquals(comparator.compare(null, null), 0);
+        assertEquals(comparator.compare(null, new Item()), 1);
+        assertEquals(comparator.compare(new Item(), null ), -1);
+
+        assertEquals(comparator.compare(new Item(5, 0), new Item(3, 0) ), 1);
+        assertEquals(comparator.compare(new Item(5, 0), new Item(13, 0) ), -1);
+
+        assertEquals(comparator.compare(new Item(5L, 5L), new Item(5L, null) ), -1);
+        assertEquals(comparator.compare(new Item(5L, null), new Item(5L, null) ), 0);
+        assertEquals(comparator.compare(new Item(5L, null), new Item(5L, 5L) ), 1);
+        
+        assertEquals(comparator.compare(new Item(5L, 5L), new Item(5L, 5L) ), 0);
+        assertEquals(comparator.compare(new Item(5L, 15L), new Item(5L, 5L) ), 1);
+        assertEquals(comparator.compare(new Item(5L, 5L), new Item(5L, 15L) ), -1);
     }
 
     public void testRebuildTree() throws Exception {

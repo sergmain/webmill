@@ -1,9 +1,9 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
+ * org.riverock.common - Supporting classes, interfaces, and utilities
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 
 /**
@@ -46,7 +45,7 @@ public final class TreeUtils {
     private final static Logger log = Logger.getLogger( TreeUtils.class );
     private final static TreeItemComparator comparator = new TreeItemComparator();
 
-    private static class TreeItemComparator implements Comparator<TreeItem>, Serializable {
+    static class TreeItemComparator implements Comparator<TreeItem>, Serializable {
         public int compare(TreeItem item1, TreeItem item2) {
 
             if (item1 ==null && item2 ==null)
@@ -63,30 +62,25 @@ public final class TreeUtils {
             else if ( item1.getId() < item2.getId())
                 return -1;
 
-            if ( item1.getId().equals(item2.getId()) ) {
+            // Here item1.getId().equals(item2.getId())
 
-                if ( item1.getTopId()!=null && item2.getTopId()==null )
-                    return -1;
+            if ( item1.getTopId()==null && item2.getTopId()==null)
+                return 0;
 
-                if ( item1.getTopId()==null && item2.getTopId()==null)
-                    return 0;
+            if ( item1.getTopId()!=null && item2.getTopId()==null )
+                return -1;
 
-                if ( item1.getTopId()!=null && item2.getTopId()==null )
-                    return -1;
-
-                if ( item1.getTopId()==null && item2.getTopId()!=null)
-                    return 1;
+            if ( item1.getTopId()==null && item2.getTopId()!=null)
+                return 1;
 
 
-                if ( item1.getTopId().equals( item2.getTopId()))
-                    return 1;
+            if ( item1.getTopId().equals( item2.getTopId()))
+                return 0;
 
-                if ( item1.getTopId() > item2.getTopId())
-                    return 1;
-                else
-                    return -1;
-            }
-            return 0;
+            if ( item1.getTopId() > item2.getTopId())
+                return 1;
+            else
+                return -1;
         }
     }
 

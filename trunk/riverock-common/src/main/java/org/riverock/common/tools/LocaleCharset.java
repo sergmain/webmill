@@ -1,12 +1,12 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock -- The Open-source Java Development Community
+ * org.riverock.common - Supporting classes, interfaces, and utilities
+ *
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,9 +20,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
-
 package org.riverock.common.tools;
 
 import java.util.Locale;
@@ -104,12 +102,12 @@ public class LocaleCharset
         String charset;
 
         // Try for an full name match (may include country)
-        charset = (String) map.get(loc.toString());
+        charset = map.get(loc.toString());
         if (charset != null)
             return charset;
 
         // If a full name didn't match, try just the language
-        charset = (String) map.get(loc.getLanguage());
+        charset = map.get(loc.getLanguage());
         if (charset != null)
             return charset;
 

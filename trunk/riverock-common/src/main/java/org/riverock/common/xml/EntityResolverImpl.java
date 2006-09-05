@@ -1,9 +1,9 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
+ * org.riverock.common - Supporting classes, interfaces, and utilities
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.common.xml;
 
@@ -57,6 +56,10 @@ public class EntityResolverImpl implements EntityResolver {
     }
 
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+        if (publicId==null) {
+            return null;
+        }
+        
         String url = entityMap.get( publicId );
         if (url==null) {
             return null;

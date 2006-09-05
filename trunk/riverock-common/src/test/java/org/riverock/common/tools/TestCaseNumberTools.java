@@ -1,12 +1,12 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock -- The Open-source Java Development Community
+ * org.riverock.common - Supporting classes, interfaces, and utilities
+ *
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.common.tools;
 
@@ -35,8 +34,11 @@ import junit.framework.TestCase;
  */
 public class TestCaseNumberTools extends TestCase
 {
-    public TestCaseNumberTools(String testName)
-    {
+    public TestCaseNumberTools() {
+        super();
+    }
+
+    public TestCaseNumberTools(String testName) {
         super(testName);
     }
 
@@ -146,23 +148,33 @@ public class TestCaseNumberTools extends TestCase
         }
     }
 
-    public void testTruncate()
-     throws Throwable
-    {
+    public void testTruncate() throws Throwable {
+        
         InternalNumberToolsTruncate[] testDateWithMaskArray =
             {
                 new InternalNumberToolsTruncate(198.123, 198.123, 4, false),
                 new InternalNumberToolsTruncate(0.1234, 0.12, 2, false),
                 new InternalNumberToolsTruncate(198.432, 198.4, 1, false),
                 new InternalNumberToolsTruncate(198.12, 198, 0, false),
-//                new InternalNumberToolsTruncate(1234, 1200, -2, false),
-                new InternalNumberToolsTruncate(12, 0, -3, false)
+                new InternalNumberToolsTruncate(12, 0, -3, false),
+                new InternalNumberToolsTruncate(198.12, 198, 0, false)
             };
 
+        assertEquals("0", NumberTools.toString(198.12, -3));
+        assertEquals("100", NumberTools.toString(198.12, -2));
+        assertEquals("190", NumberTools.toString(198.12, -1));
+        assertEquals("198", NumberTools.toString(198.12, 0));
+        assertEquals("198.1", NumberTools.toString(198.12, 1));
+        assertEquals("198.12", NumberTools.toString(198.12, 2));
+        assertEquals("198.120", NumberTools.toString(198.12, 3));
 
+        assertEquals("198", NumberTools.toString(198, 0));
+        assertEquals("198.0", NumberTools.toString(198, 1));
+        assertEquals("198.00", NumberTools.toString(198, 2));
 
-        for (int i=0; i<testDateWithMaskArray.length; i++)
-        {
+        NumberTools numberTools = new NumberTools();
+
+        for (int i=0; i<testDateWithMaskArray.length; i++) {
             double d = 0;
             try
             {
@@ -171,19 +183,9 @@ public class TestCaseNumberTools extends TestCase
                     testDateWithMaskArray[i].c
                 );
 
-//                if (testDateWithMaskArray[i].isResultNull)
-//                    assertEquals(true, d==null);
-//                else
-                {
-//                    assertEquals(true, d!=null);
-
-                    assertEquals(true, testDateWithMaskArray[i].out==d);
-                }
+                assertEquals(true, testDateWithMaskArray[i].out==d);
             }
-            catch(Throwable exc)
-            {
-//                assertEquals(true, testDateWithMaskArray[i].isException);
-
+            catch(Throwable exc) {
                 if (!testDateWithMaskArray[i].isException)
                 {
                     System.out.println(
@@ -197,6 +199,7 @@ public class TestCaseNumberTools extends TestCase
                 }
             }
         }
+
     }
 
 
