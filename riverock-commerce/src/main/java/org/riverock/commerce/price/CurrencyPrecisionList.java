@@ -24,17 +24,15 @@
  */
 package org.riverock.commerce.price;
 
-import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import org.apache.log4j.Logger;
-
-import org.riverock.common.tools.RsetTools;
+import org.riverock.commerce.bean.CurrencyPrecisionBean;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.schema.price.CurrencyPrecisionListType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: Admin
@@ -48,6 +46,18 @@ public class CurrencyPrecisionList extends CurrencyPrecisionListType implements 
     private static Logger log = Logger.getLogger( CurrencyPrecisionList.class );
 
     public void initCurrencyPrecision(DatabaseAdapter db_, Long idShop) {
+        List<CurrencyPrecisionBean> list = CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(idShop);
+        for (CurrencyPrecisionBean bean : list) {
+            CurrencyPrecisionType prec = new CurrencyPrecisionType();
+
+            prec.setIdShopPrecision( bean.getCurrencyPrecisionId() );
+            prec.setIdCurrency( bean.getCurrencyId());
+            prec.setIdShop( bean.getShopId() );
+            prec.setPrecision( bean.getPrecision() );
+
+            this.addPrecisions( prec );
+        }
+/*
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -81,6 +91,7 @@ public class CurrencyPrecisionList extends CurrencyPrecisionListType implements 
             rs = null;
             ps = null;
         }
+*/
     }
 
     public CurrencyPrecisionType getCurrencyPrecision( Long idCurrency ) {
@@ -96,5 +107,4 @@ public class CurrencyPrecisionList extends CurrencyPrecisionListType implements 
         }
         return null;
     }
-
 }

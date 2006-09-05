@@ -37,7 +37,6 @@
             /WEB-INF/faces-company-config.xml,
             /WEB-INF/faces-portlet-name-config.xml,
             /WEB-INF/faces-users-config.xml,
-            /WEB-INF/faces-shop-manager-config.xm,
             /WEB-INF/faces-site-config.xml,
             /WEB-INF/faces-menu-config.xml,
             /WEB-INF/faces-news-config.xml,

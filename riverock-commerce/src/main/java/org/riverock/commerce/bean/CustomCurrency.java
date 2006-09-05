@@ -24,6 +24,7 @@
 package org.riverock.commerce.bean;
 
 import java.util.List;
+import java.io.Serializable;
 
 import org.riverock.commerce.manager.currency.CurrencyBean;
 import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
@@ -35,7 +36,9 @@ import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
  *         <p/>
  *         $Id$
  */
-public class CustomCurrency {
+public class CustomCurrency implements Serializable {
+    private static final long serialVersionUID = 2625005163L;
+    
     private List<CurrencyBean> currencies = null;
     private List<StandardCurrencyBean> standardCurrencies = null;
 

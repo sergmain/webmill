@@ -44,7 +44,7 @@ import org.riverock.common.tools.RsetTools;
  *         Date: 01.09.2006
  *         Time: 21:45:03
  *         <p/>
- *         $Id$
+ *         $Id: PriceCurrency.java 950 2006-09-01 18:11:51Z serg_main $
  */
 public class ShopDaoImpl implements ShopDao {
     private final static Logger log = Logger.getLogger( ShopDaoImpl.class );

@@ -36,7 +36,8 @@
             /WEB-INF/faces-common-config.xml,
             /WEB-INF/faces-standard-currency-config.xml,
             /WEB-INF/faces-currency-config.xml,
-            /WEB-INF/faces-shop-config.xml
+            /WEB-INF/faces-shop-config.xml,
+            /WEB-INF/faces-currency-precision-config.xml
         </param-value>
     </context-param>
     <context-param>
