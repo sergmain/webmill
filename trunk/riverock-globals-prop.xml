@@ -30,7 +30,7 @@
     <property name="java.class.target" value="1.5"/>
     <property name="java.class.source" value="1.5"/>
 
-    <property name="webmill-portal-release-version" value="5.5.2"/>
+    <property name="webmill-portal-release-version" value="5.5.3"/>
 
     <property name="local-lib.dir" value="lib"/>
     <property name="lib.dir" value="../riverock-lib/lib"/>
