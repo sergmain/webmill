@@ -48,6 +48,14 @@ public class CurrencyPrecisionAction implements Serializable {
     public CurrencyPrecisionAction() {
     }
 
+    public CurrencyPrecisionDataProvider getCurrencyPrecisionDataProvider() {
+        return currencyPrecisionDataProvider;
+    }
+
+    public void setCurrencyPrecisionDataProvider(CurrencyPrecisionDataProvider currencyPrecisionDataProvider) {
+        this.currencyPrecisionDataProvider = currencyPrecisionDataProvider;
+    }
+
     public CurrencyPrecisionSessionBean getCurrencyPrecisionSessionBean() {
         return currencyPrecisionSessionBean;
     }
@@ -90,23 +98,27 @@ public class CurrencyPrecisionAction implements Serializable {
     }
 
     private void loadCurrentCurrencyPrecision() {
-        CurrencyPrecisionBean bean = CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecision( currencyPrecisionSessionBean.getCurrentCurrencyPrecisionId() );
+        CurrencyPrecisionBean bean = CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecision(
+            currencyPrecisionSessionBean.getCurrentCurrencyPrecisionId() 
+        );
+        if (log.isDebugEnabled()) {
+            log.debug("CurrencyPrecisionBean; " + bean);
+        }
         if (bean==null) {
-            log.debug("CurrencyPrecisionBean is null");
-            setSessionBean( null );
+            currencyPrecisionSessionBean.setCurrencyPrecisionBean(null);
             return;
         }
+
         CurrencyBean currencyBean = CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getCurrencyId());
         if (currencyBean==null) {
             log.debug("CurrencyBean is null");
-            setSessionBean( null );
+            currencyPrecisionSessionBean.setCurrencyPrecisionBean(null);
             return;
         }
 
-        setSessionBean( new CurrencyPrecisionExtendedBean(bean, currencyBean) );
-    }
-
-    private void setSessionBean(CurrencyPrecisionExtendedBean currencyPrecisionExtendedBean) {
+        CurrencyPrecisionExtendedBean currencyPrecisionExtendedBean = new CurrencyPrecisionExtendedBean(bean, currencyBean);
+        log.debug("Set currencyPrecisionSessionBean.setCurrencyPrecisionBean to "+currencyPrecisionExtendedBean);
+        currencyPrecisionSessionBean.setCurrentCurrencyPrecision(bean.getPrecision());
         currencyPrecisionSessionBean.setCurrencyPrecisionBean(currencyPrecisionExtendedBean);
     }
 

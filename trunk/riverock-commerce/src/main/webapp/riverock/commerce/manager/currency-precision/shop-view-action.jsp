@@ -32,28 +32,28 @@
  <h:outputText value="#{msg.shop_info}"/>
  <h:panelGrid columns="2" border="0">
      <h:outputText value="#{msg.shop_id}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.shopBean.shopId}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopId}"/>
 
      <h:outputText value="#{msg.shop_name}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.shopBean.shopName}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopName}"/>
 
      <h:outputText value="#{msg.shop_code}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.shopBean.shopCode}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopCode}"/>
 
      <h:outputText value="#{msg.is_opened}"/>
      <h:panelGroup>
-         <t:graphicImage value="/images/yes.gif" rendered="#{shopSessionBean.shopExtendedBean.shopBean.opened}" border="0"/>
-         <t:graphicImage value="/images/no.gif" rendered="#{!shopSessionBean.shopExtendedBean.shopBean.opened}" border="0"/>
+         <t:graphicImage value="/images/yes.gif" rendered="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.opened}" border="0"/>
+         <t:graphicImage value="/images/no.gif" rendered="#{!currencyPrecisionSessionBean.shopExtendedBean.shopBean.opened}" border="0"/>
      </h:panelGroup>
 
      <h:outputText value="#{msg.shop_name_for_price_list}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.shopBean.shopNameForPriceList}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopNameForPriceList}"/>
 
      <h:outputText value="#{msg.default_currency}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.defaultCurrencyName}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.defaultCurrencyName}"/>
 
      <h:outputText value="#{msg.invoice_currency}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.invoiceCurrencyName}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.invoiceCurrencyName}"/>
 
  </h:panelGrid>
 

@@ -25,18 +25,20 @@
 
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 
 <f:loadBundle basename="org.riverock.commerce.resource.CurrencyPrecision" var="msg"/>
 
-<h:panelGroup rendered="#{isUserInRole['webmill.portal-manager,webmill.cms-manager,webmill.article-manager']}">
-    <h:panelGrid columns="1">
+<h:panelGroup rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}">
+    <h:panelGrid columns="2">
 
         <h:outputText value="#{msg.currency_precision_currency_name}"/>
         <h:outputText value="#{currencyPrecisionSessionBean.currencyPrecisionBean.currencyBean.currencyName}"/>
 
-        <h:outputText value="#{msg.currency_precision_precision_name}"/>
+        <h:outputText value="#{msg.currency_precision_currency_code}"/>
+        <h:outputText value="#{currencyPrecisionSessionBean.currencyPrecisionBean.currencyBean.currencyCode}"/>
+
+        <h:outputText value="#{msg.currency_precision_count_digits}"/>
         <h:outputText value="#{currencyPrecisionSessionBean.currencyPrecisionBean.currencyPrecisionBean.precision}"/>
 
     </h:panelGrid>

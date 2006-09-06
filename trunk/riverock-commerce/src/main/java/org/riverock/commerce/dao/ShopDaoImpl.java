@@ -126,7 +126,11 @@ public class ShopDaoImpl implements ShopDao {
         return bean;
     }
 
-
+    /**
+     *
+     * @param shopBean
+     * @return
+     */
     public Long createShop(ShopBean shopBean) {
         PreparedStatement ps = null;
         ResultSet rs = null;

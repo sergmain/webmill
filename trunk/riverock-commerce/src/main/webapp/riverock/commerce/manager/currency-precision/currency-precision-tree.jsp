@@ -49,7 +49,7 @@
 
                     <h:outputText id="currency-precision-tree-shop-name" value="#{node.description}"/>
 
-                    <t:updateActionListener property="#{currencyPrecisionSessionBean.id}" value="#{node.identifier}" />
+                    <t:updateActionListener property="#{currencyPrecisionSessionBean.currentShopId}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{currencyPrecisionSessionBean.objectType}" value="#{currencyPrecisionSessionBean.shopType}"/>
                 </h:commandLink>
             </h:panelGroup>
@@ -64,7 +64,7 @@
                     <h:outputText id="currency-precision-tree-currency-precision-name" value="#{node.description}"/>
                     <h:outputText id="currency-precision-tree-currency-precision-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
 
-                    <t:updateActionListener property="#{currencyPrecisionSessionBean.id}" value="#{node.identifier}"/>
+                    <t:updateActionListener property="#{currencyPrecisionSessionBean.currentCurrencyPrecisionId}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{currencyPrecisionSessionBean.objectType}" value="#{currencyPrecisionSessionBean.currencyPrecisionType}"/>
                 </h:commandLink>
             </h:panelGroup>

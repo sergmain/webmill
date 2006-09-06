@@ -93,20 +93,18 @@ public class CurrencyPrecisionTree implements Serializable {
         List<ShopBean> shops = CommerceDaoFactory.getShopDao().getShopList(siteId);
 
         for (ShopBean shop : shops) {
-            TreeNodeBase siteNode = new TreeNodeBase("shop", shop.getShopName(), shop.getShopId().toString(), false);
-            treeRoot.getChildren().add(siteNode);
+            TreeNodeBase shopNode = new TreeNodeBase("shop", shop.getShopName(), shop.getShopId().toString(), false);
+            treeRoot.getChildren().add(shopNode);
 
-
-                for (CurrencyPrecisionBean currencyPrecisionBean : CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(shop.getShopId())) {
-                    CurrencyBean currencyBean =CommerceDaoFactory.getCurrencyDao().getCurrency(currencyPrecisionBean.getCurrencyId());
-                    TreeNodeBase articleNode = new TreeNodeBase(
-                        "currency-precision",
-                        currencyBean.getCurrencyName() + " ["+ currencyPrecisionBean.getPrecision()+" digits]",
-                        currencyPrecisionBean.getCurrencyPrecisionId().toString(),
-                        false);
-                    treeRoot.getChildren().add(articleNode);
-                }
-
+            for (CurrencyPrecisionBean currencyPrecisionBean : CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(shop.getShopId())) {
+                CurrencyBean currencyBean =CommerceDaoFactory.getCurrencyDao().getCurrency(currencyPrecisionBean.getCurrencyId());
+                TreeNodeBase currencyPrecisionNode = new TreeNodeBase(
+                    "currency-precision",
+                    currencyBean.getCurrencyName()+", " +currencyBean.getCurrencyCode() + " ["+ currencyPrecisionBean.getPrecision()+" digits]",
+                    currencyPrecisionBean.getCurrencyPrecisionId().toString(),
+                    false);
+                shopNode.getChildren().add(currencyPrecisionNode);
+            }
         }
 
         return treeRoot;

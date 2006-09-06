@@ -112,6 +112,7 @@ public class CurrencyPrecisionDaoImpl implements CurrencyPrecisionDao {
 
     public void updateCurrencyPrecision(Long currencyPrecisionId, Integer currencyPrecision) {
         if (currencyPrecisionId==null || currencyPrecision==null) {
+            log.info("currencyPrecisionId: "+currencyPrecisionId+", currencyPrecision: " + currencyPrecision);
             return;
         }
 

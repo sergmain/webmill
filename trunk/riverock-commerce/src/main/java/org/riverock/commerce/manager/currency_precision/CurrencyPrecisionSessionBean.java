@@ -41,7 +41,7 @@ public class CurrencyPrecisionSessionBean implements Serializable {
     public static final int SHOP_TYPE = 1;
     public static final int CURRENCY_PRECISION_TYPE = 2;
 
-    private Long id = null;
+//    private Long id = null;
     private int objectType=0;
 
     private ShopExtendedBean shopExtendedBean = null;
@@ -69,6 +69,7 @@ public class CurrencyPrecisionSessionBean implements Serializable {
         this.currentCurrencyPrecision = currentCurrencyPrecision;
     }
 
+/*
     public Long getId() {
         return id;
     }
@@ -77,6 +78,7 @@ public class CurrencyPrecisionSessionBean implements Serializable {
         this.id = id;
     }
 
+*/
     public int getObjectType() {
         return objectType;
     }

@@ -30,6 +30,8 @@ import org.riverock.commerce.dao.CommerceDaoFactory;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 /**
  * User: SergeMaslyukov
  * Date: 06.09.2006
@@ -38,6 +40,8 @@ import java.io.Serializable;
  * $Id: PriceCurrency.java 950 2006-09-01 18:11:51Z serg_main $
  */
 public class CurrencyPrecisionService implements Serializable {
+    private final static Logger log = Logger.getLogger(CurrencyPrecisionDataProvider.class);
+
     private static final long serialVersionUID = 3815005515L;
 
     public CurrencyPrecisionService() {
@@ -45,6 +49,9 @@ public class CurrencyPrecisionService implements Serializable {
 
     public ShopExtendedBean getShopExtended(Long shopId) {
         ShopBean bean = CommerceDaoFactory.getShopDao().getShop( shopId );
+        if (log.isDebugEnabled()) {
+            log.debug("ShopBean: " + bean);
+        }
         if (bean==null) {
             return null;
         }
