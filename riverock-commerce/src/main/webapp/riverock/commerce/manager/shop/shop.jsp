@@ -56,6 +56,8 @@
         <h:commandButton id="currency-list-action" action="currency" value="#{manager.currency_button}"
                          styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.commerce-manager']}"/>
 
+        <h:commandButton id="currency-precision-action" action="currency-precision" value="#{manager.currency_precision_button}"
+                         styleClass="top-button-action"/>
 
         <h:panelGrid columns="2" rendered="#{isUserInRole['webmill.portal-manager']}">
 
