@@ -27,10 +27,11 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.commerce.resource.Shop" var="msg"/>
+<f:loadBundle basename="org.riverock.commerce.resource.CurrencyPrecision" var="msg"/>
 
  <h:outputText value="#{msg.shop_info}"/>
  <h:panelGrid columns="2" border="0">
+     
      <h:outputText value="#{msg.shop_id}"/>
      <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopId}"/>
 
