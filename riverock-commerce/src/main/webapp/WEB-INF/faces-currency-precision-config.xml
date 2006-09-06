@@ -31,17 +31,11 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>currencyPrecisionDataProvider</managed-bean-name>
-        <managed-bean-class>org.riverock.commerce.manager.currency_precision.CurrencyPrecisionDataProvider</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>currencyPrecisionTree</managed-bean-name>
         <managed-bean-class>org.riverock.commerce.manager.currency_precision.CurrencyPrecisionTree</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
         <managed-property>
             <property-name>currencyPrecisionService</property-name>
-            <!--<property-class>org.riverock.commerce.manager.currency_precision.CurrencyPrecisionService</property-class>-->
             <value>#{articleService}</value>
         </managed-property>
         <managed-property>
@@ -55,6 +49,19 @@
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
+        <managed-bean-name>currencyPrecisionDataProvider</managed-bean-name>
+        <managed-bean-class>org.riverock.commerce.manager.currency_precision.CurrencyPrecisionDataProvider</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>currencyPrecisionSessionBean</property-name>
+            <value>#{currencyPrecisionSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>currencyPrecisionService</property-name>
+            <value>#{currencyPrecisionService}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>currencyPrecisionAction</managed-bean-name>
         <managed-bean-class>org.riverock.commerce.manager.currency_precision.CurrencyPrecisionAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -62,28 +69,18 @@
             <property-name>currencyPrecisionSessionBean</property-name>
             <value>#{currencyPrecisionSessionBean}</value>
         </managed-property>
+        <managed-property>
+            <property-name>currencyPrecisionDataProvider</property-name>
+            <value>#{currencyPrecisionDataProvider}</value>
+        </managed-property>
     </managed-bean>
 
     <!-- navigation rules -->
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
-            <from-outcome>currency-precision-add</from-outcome>
-            <to-view-id>/riverock/commerce/manager/currency-precision/currency-precision-add.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>*</from-view-id>
-        <navigation-case>
             <from-outcome>currency-precision-edit</from-outcome>
             <to-view-id>/riverock/commerce/manager/currency-precision/currency-precision-edit.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>*</from-view-id>
-        <navigation-case>
-            <from-outcome>currency-precision-delete</from-outcome>
-            <to-view-id>/riverock/commerce/manager/currency-precision/currency-precision-delete.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>

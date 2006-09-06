@@ -80,7 +80,10 @@ public class CurrencyPrecisionDataProvider implements Serializable {
         if (currencyPrecisionSessionBean.getObjectType()!=currencyPrecisionSessionBean.getShopType()) {
             throw new IllegalStateException("Query shop info with not shop type, current type: " + currencyPrecisionSessionBean.getObjectType());
         }
-        Long shopId = currencyPrecisionSessionBean.getId();
+        Long shopId = currencyPrecisionSessionBean.getCurrentShopId();
+        if (log.isDebugEnabled()) {
+            log.debug("get extended info for shopId " + shopId);
+        }
         if (shopExtendedBean==null) {
             shopExtendedBean=currencyPrecisionService.getShopExtended(shopId);
         }

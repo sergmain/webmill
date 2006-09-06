@@ -29,12 +29,15 @@
 <f:loadBundle basename="org.riverock.commerce.resource.CurrencyPrecision" var="msg"/>
 
 <h:outputText value="#{msg.currency_precision_info}"/>
-<h:panelGrid columns="1">
+<h:panelGrid columns="2">
 
     <h:outputText value="#{msg.currency_precision_currency_name}"/>
     <h:outputText value="#{currencyPrecisionSessionBean.currencyPrecisionBean.currencyBean.currencyName}"/>
 
-    <h:outputText value="#{msg.currency_precision_precision_name}"/>
-    <h:inputText id="currency-precision-name-field" value="#{currencyPrecisionSessionBean.currencyPrecisionBean.currencyPrecisionBean.precision}" size="10"/>
+    <h:outputText value="#{msg.currency_precision_currency_code}"/>
+    <h:outputText value="#{currencyPrecisionSessionBean.currencyPrecisionBean.currencyBean.currencyCode}"/>
+
+    <h:outputText value="#{msg.currency_precision_count_digits}"/>
+    <h:inputText id="currency-precision-name-field" value="#{currencyPrecisionSessionBean.currentCurrencyPrecision}" size="10"/>
 
 </h:panelGrid>
