@@ -121,7 +121,7 @@ public final class OrderLogic {
             // юзаем его (тот, который в сессии)
             else {
                 if( tempShop != null &&
-                    ( idShop == null || idShop.equals( shopBean.getShopId() ) ) ) {
+                    ( idShop == null || idShop.equals( tempShop.getShopId() ) ) ) {
                     if( log.isDebugEnabled() )
                         log.debug( "tempShop is not null and tempShop.idShop == idShop " );
 
