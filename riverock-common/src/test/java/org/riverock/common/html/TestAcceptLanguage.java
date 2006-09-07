@@ -89,6 +89,18 @@ public class TestAcceptLanguage extends TestCase
                     null,
                     null,
                     true, false
+                ),
+                new ITAL(
+                    null,
+                    new AcceptLanguageWithLevel[]{},
+                    new Locale[]{},
+                    false, false
+                ),
+                new ITAL(
+                    "",
+                    new AcceptLanguageWithLevel[]{},
+                    new Locale[]{},
+                    false, false
                 )
             };
 

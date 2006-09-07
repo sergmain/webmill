@@ -85,7 +85,7 @@ public final class Header {
 
         List<AcceptLanguageWithLevel> list = getAcceptLanguageAsList( headerLocale );
 
-        Object array[] = list.toArray();
+        AcceptLanguageWithLevel array[] = list.toArray(new AcceptLanguageWithLevel[0]);
         if ( array.length == 0 )
             return new Locale[]{};
 
@@ -95,17 +95,17 @@ public final class Header {
         for( int i = 0; i<array.length - 1; i++ ) {
             min = i;
             for( int j = i + 1; j<array.length; j++ ) {
-                if ( ( (AcceptLanguageWithLevel)array[j] ).level>( (AcceptLanguageWithLevel)array[min] ).level )
+                if ( ( array[j] ).level>( array[min] ).level )
                     min = j;
 
-                t = (AcceptLanguageWithLevel)array[min];
+                t = array[min];
                 array[min] = array[i];
                 array[i] = t;
             }
         }
         Locale[] temp = new Locale[array.length];
         for( int i = 0; i<array.length; i++ ) {
-            temp[i] = ( (AcceptLanguageWithLevel)array[i] ).locale;
+            temp[i] = ( array[i] ).locale;
         }
 
         return temp;
