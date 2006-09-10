@@ -69,6 +69,27 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</portlet-preferences>
 	</portlet>
 	<portlet>
+        <description>Webmill webclip portlet</description>
+        <portlet-name>webmill.webclip</portlet-name>
+        <display-name>Webmill webclip portlet</display-name>
+        <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+        <init-param>
+            <name>default-view</name>
+            <value>/riverock/webclip/webclip.jsp</value>
+        </init-param>
+
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+		<portlet-info>
+			<title>Webmill webclip portlet</title>
+			<short-title>Webmil webclip portlet</short-title>
+			<keywords>webmill, webclip</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
         <description>Webmill portal manager</description>
         <portlet-name>webmill.portal-manager</portlet-name>
         <display-name>Webmill portal manager</display-name>

@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DbSchemaType xmlns="http://generic.riverock.org/xsd/riverock-database-structure.xsd">
+
+	<Tables schema="TEST" name="WM_PORTLET_WEBCLIP" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTLET_ARTICLE" columnName="ID_WEBCLIP" keySeq="1" pkName="ID_WEBCLIP_WPW_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_WEBCLIP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="WEBCLIP_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTLET_WEBCLIP" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_WPW_FK" pkName="ID_SITE_SLS_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTLET_WEBCLIP_DATA" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTLET_WEBCLIP_DATA" columnName="ID_WEBCLIP_DATA" keySeq="1" pkName="ID_WEBCLIP_DATA_WPWD_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_WEBCLIP_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_WEBCLIP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+		<Fields name="WEBCLIP_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTLET_WEBCLIP" pkColumnName="ID_WEBCLIP" fkSchemaName="TEST" fkTableName="WM_PORTLET_WEBCLIP_DATA" fkColumnName="ID_WEBCLIP" keySeq="1" fkName="ID_WEBCLIP_WPWD_FK" pkName="ID_WEBCLIP_WPW_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+
+
 	<Tables schema="TEST" name="WM_AUTH_ACCESS_GROUP" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_AUTH_ACCESS_GROUP" columnName="ID_ACCESS_GROUP" keySeq="1" pkName="ID_AG_AAG_PK"/>
@@ -1300,5 +1328,14 @@ where   a04.is_root = 1
 		<SlaveFkField xmlns="">ID_SITE_XSLT</SlaveFkField>
 		<StorageField xmlns="">XSLT</StorageField>
 		<SequenceName xmlns="">SEQ_WM_PORTAL_XSLT_DATA</SequenceName>
+	</BigTextTable>
+	<BigTextTable>
+		<MasterTable>WM_PORTLET_WEBCLIP</MasterTable>
+		<SlaveTable>WM_PORTLET_WEBCLIP_DATA</SlaveTable>
+		<MasterPkField>ID_WEBLIP</MasterPkField>
+		<SlavePkField>ID_WEBCLIP_DATA</SlavePkField>
+		<SlaveFkField>ID_WEBCLIP</SlaveFkField>
+		<StorageField>WEBCLIP_DATA</StorageField>
+		<SequenceName>SEQ_WM_PORTLET_WEBCLIP_DATA</SequenceName>
 	</BigTextTable>
 </DbSchemaType>

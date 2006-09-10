@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
  *         Date: 25.08.2006
  *         Time: 21:47:40
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class CmsArticleDaoImpl implements CmsArticleDao {
     private final static Logger log = Logger.getLogger( CmsArticleDaoImpl.class );
 
@@ -79,7 +80,7 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
                 article.setCreated( RsetTools.getTimestamp(rs, "DATE_POST") );
                 article.setXml(isXml);
 
-                article.setArticleText( initArticleText(article.getArticleId()) );
+                article.setArticleText( initArticleText(db_, article.getArticleId()) );
 
                 list.add(article);
             }
@@ -92,6 +93,9 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
         }
         finally {
             DatabaseManager.close(db_, rs, ps);
+            rs=null;
+            ps=null;
+            db_=null;
         }
     }
 
@@ -128,7 +132,7 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
                 article.setCreated( RsetTools.getTimestamp(rs, "DATE_POST") );
                 article.setXml( RsetTools.getInt(rs, "ID_SITE_CTX_ARTICLE", 0)==0 );
 
-                article.setArticleText( initArticleText(article.getArticleId()) );
+                article.setArticleText( initArticleText(db_, article.getArticleId()) );
 
                 return article;
             }
@@ -141,6 +145,9 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
         }
         finally {
             DatabaseManager.close(db_, rs, ps);
+            rs=null;
+            ps=null;
+            db_=null;
         }
     }
 
@@ -229,6 +236,9 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
             throw new IllegalStateException( es, e);
         } finally {
             DatabaseManager.close(adapter, rs, ps);
+            rs=null;
+            ps=null;
+            adapter=null;
         }
     }
 
@@ -312,6 +322,8 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
        }
        finally {
             DatabaseManager.close(adapter, ps);
+            ps=null;
+            adapter=null;
        }
     }
 
@@ -346,22 +358,19 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
             throw new IllegalStateException( es, e );
         }
         finally {
-            DatabaseManager.close( dbDyn);
+            DatabaseManager.close(dbDyn);
+            dbDyn=null;
         }
     }
 
-    private String initArticleText(Long articleId) {
+    private String initArticleText(DatabaseAdapter db_, Long articleId) {
         if (articleId==null) {
             return "";
         }
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
-
             ps = db_.prepareStatement(
                 "select  ARTICLE_DATA " +
                 "from    WM_PORTLET_ARTICLE_DATA " +
@@ -384,7 +393,9 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
             throw new RuntimeException( es, e );
         }
         finally {
-            DatabaseManager.close(db_, rs, ps);
+            DatabaseManager.close(rs, ps);
+            rs=null;
+            ps=null;
         }
     }
 }

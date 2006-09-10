@@ -1,15 +1,15 @@
 /*
- * org.riverock.common -- Supporting classes, interfaces, and utilities
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ * org.riverock.common - Supporting classes and utilities
+ *
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
+ * License as StringBuilderpublished by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.common.tools;
 
@@ -46,7 +45,7 @@ public class StringTools {
      * @return a string representing the values in the string array.
      */
     public static String arrayToString(String[] values) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		if (values == null) {
 			buffer.append("null");
 		} else {
@@ -96,7 +95,7 @@ public class StringTools {
 
     /**
      * @deprecated use org.apache.commons.lang.StringUtils.isEmpty()
-     * @param s
+     * @param s String
      * @return boolean
      */
     public static boolean isEmpty( final String s) {
@@ -105,7 +104,7 @@ public class StringTools {
 
     /**
      * преобразует строку вида 'SITE_LIST_SITE' -> 'SiteListSite'
-     * @param f
+     * @param f String
      * @return результирующая строка
      */
     public static String capitalizeString( final String f) {
@@ -191,7 +190,7 @@ public class StringTools {
 
     /**
      * @deprecated use decodeXml
-     * @param s
+     * @param s String
      * @return String
      */
     public static String toOrigin( final String s) {
@@ -201,7 +200,7 @@ public class StringTools {
 
     /**
      * @deprecated use StringEscapeUtils.escapeXml( s )
-     * @param s
+     * @param s String
      * @return String
      */
     public static String encodeXml( final String s ) {
@@ -210,7 +209,7 @@ public class StringTools {
 
     /**
      * @deprecated use StringEscapeUtils.unescapeXml( s )
-     * @param s
+     * @param s String
      * @return String
      */
     public static String decodeXml( final String s ) {
@@ -219,7 +218,7 @@ public class StringTools {
 
     /**
      * @deprecated use encodeXml
-     * @param s
+     * @param s String
      * @return String
      */
     public static String prepareEditForm( final String s) {
@@ -334,17 +333,6 @@ public class StringTools {
         }
     }
 
-/*
-	public static String parseUTFString(String s, int start, int end, int maxDBfieldLength)
-	{
-		if ((s==null) || s.length() <= start)
-			return "";
-
-		byte[] b = getBytesUTF(s);
-		int pos = getStartUTF(byte[] b, maxDBfieldLength);
-		String(b, int offset, int length, "utf-8")
-	}
-*/
     public static int getStartUTF( final String s, final int maxByte) {
         return getStartUTF(getBytesUTF(s), maxByte);
     }
@@ -373,8 +361,7 @@ public class StringTools {
         return -1;
     }
 
-    public static int lengthUTF(String s)
-    {
+    public static int lengthUTF(String s) {
         return getBytesUTF(s).length;
     }
 
@@ -392,14 +379,6 @@ public class StringTools {
     }
 
     /**
-     * Заменяет один фрагмент строки другим во всей строке.
-     * @param str_ - String. Строка в которой производится замена
-     * @param search_ - String. Подстрока для поиска
-     * @param ins - String. Подстрока для замены.
-     * @return - String. Результирующая строка. Если один из параметров равен null, возвращается null
-     */
-
-    /**
      * Заменяет один фрагмент строки другим во всей строке. Строки для поиска и замены передаются
      * в виде 2-ух мерного массива.
      *
@@ -409,8 +388,7 @@ public class StringTools {
      * repl[][1] - строка для замены
      * @return - String. Новая строка
      */
-    public static String replaceStringArray( final String str_, final String repl[][])
-    {
+    public static String replaceStringArray( final String str_, final String repl[][]) {
         String qqq = str_;
         for (final String[] newVar : repl) {
             qqq = StringUtils.replace(qqq, newVar[0], newVar[1]);
@@ -428,8 +406,7 @@ public class StringTools {
      * @throws java.io.UnsupportedEncodingException
      */
     public static String convertString( final String s, final String fromCharset, final String toCharset)
-            throws java.io.UnsupportedEncodingException
-    {
+            throws java.io.UnsupportedEncodingException {
         if (s == null)
             return null;
 
@@ -445,8 +422,7 @@ public class StringTools {
      * @param isLeft - boolean. Дополнение слева или справа
      * @return  -  String.
      */
-    public static String addString( final String s, final char ch, final int countAddChar, final boolean isLeft)
-    {
+    public static String addString( final String s, final char ch, final int countAddChar, final boolean isLeft) {
         if (s == null)
             return null;
 
@@ -542,6 +518,7 @@ public class StringTools {
      * String of hexadecimal digit characters (two per byte).
      *
      * @param bytes - byte[] array representation
+     * @return String
      */
     public static String convertByte( final byte bytes[]) {
 

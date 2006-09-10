@@ -47,6 +47,14 @@ import org.riverock.generic.startup.StartupApplication;
  * import data from XML file to DB
  */
 public class DbStructureCreateTable {
+
+    /**
+     * origin xml DB file:
+     * ../riverock-webmill-db/xml/webmill-schema.xml
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String args[]) throws Exception {
         if (args.length < 3) {
             System.out.println("Command line format: <DB_ALIAS> <IMPORT_FILE> <TABLE_NAME>");
