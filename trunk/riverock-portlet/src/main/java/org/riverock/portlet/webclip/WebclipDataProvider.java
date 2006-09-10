@@ -33,7 +33,6 @@ import org.apache.log4j.Logger;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletPreferences;
 import javax.portlet.ReadOnlyException;
-import javax.portlet.ValidatorException;
 import java.net.URLConnection;
 import java.net.URL;
 import java.net.MalformedURLException;
