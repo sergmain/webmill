@@ -916,7 +916,6 @@ public class TestMemberServiceClass extends TestCase {
         throws Exception {
         StartupApplication.init();
 
-        System.out.println( "info Xalan version - " + org.apache.xalan.Version.getVersion() );
         System.out.println( "info Xerces version - " + org.apache.xerces.impl.Version.getVersion() );
         System.out.println( "info Castor version - " + org.exolab.castor.util.Version.getBuildVersion() );
 

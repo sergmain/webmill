@@ -36,8 +36,6 @@ import java.util.Map;
 import javax.portlet.*;
 import javax.servlet.ServletConfig;
 
-import org.apache.commons.lang.StringUtils;
-
 import org.riverock.webmill.container.bean.PortletWebApplication;
 import org.riverock.webmill.container.impl.PortletConfigImpl;
 import org.riverock.webmill.container.impl.PortletContextImpl;
@@ -45,6 +43,9 @@ import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Preferences;
 import org.riverock.webmill.container.resource.PortletResourceBundle;
+import org.riverock.webmill.container.portlet_definition.PortletDefinitionProcessor;
+import org.riverock.webmill.container.portlet_definition.JaxbPortletDefinitionProcessorImpl;
+import org.riverock.webmill.container.tools.ContainertStringUtils;
 
 /**
  * User: serg_main
@@ -69,7 +70,8 @@ public final class PortletContainer implements Serializable {
     private static Map<String, PortletContainer> portletContainers = new HashMap<String, PortletContainer>();
 
     //
-    private static PortletDefinitionProcessor portletDefinitionProcessor = new PortletDefinitionProcessorImpl();
+//    private static PortletDefinitionProcessor portletDefinitionProcessor = new PortletDefinitionProcessorWithDigisterImpl();
+    private static PortletDefinitionProcessor portletDefinitionProcessor = new JaxbPortletDefinitionProcessorImpl();
 
     // in this map as key used unique name of web-application
     // unique name initialized in PortletRegisterServlet.init() method
@@ -224,12 +226,14 @@ public final class PortletContainer implements Serializable {
         if (portletFile.exists()) {
             try {
 
-                PortletApplication portletApp = portletDefinitionProcessor.digest(portletFile);
-
-                for (int i = 0; i < portletApp.getPortletCount(); i++) {
-                    PortletDefinition portletDefinition = portletApp.getPortlet(i);
+                PortletApplication portletApp = portletDefinitionProcessor.process(portletFile);
+                System.out.println("portletApp: " + portletApp);
+                if (portletApp!=null) {
+                    System.out.println("Count of portlets: : " + portletApp.getPortlet().size());
+                }
+                for (PortletDefinition portletDefinition : portletApp.getPortlet()) {
                     portletDefinition.setApplicationName(
-                        StringUtils.isBlank(portletApp.getId()) ?"":portletApp.getId()
+                        ContainertStringUtils.isBlank(portletApp.getId()) ?"":portletApp.getId()
                     );
                     if (portletDefinition.getPreferences()==null) {
                         portletDefinition.setPreferences( new Preferences() );
@@ -240,8 +244,9 @@ public final class PortletContainer implements Serializable {
                 }
 
             }
-            catch (Exception e) {
+            catch (Throwable e) {
                 String errorString = "Error processing portlet file " + portletFile.getName();
+                e.printStackTrace();
                 throw new PortletContainerException(errorString, e);
             }
         }

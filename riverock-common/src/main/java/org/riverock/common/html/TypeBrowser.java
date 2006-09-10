@@ -262,15 +262,18 @@ public class TypeBrowser {
             type = JAVA_RUNTIME;
             return;
         }
-
         else if ((idx = ua.indexOf("MSIE")) != -1) {
-            String ver = ua.substring(idx + 5, ua.indexOf(";", idx));
-            version = ver;
-            type = IE;
-            return;
+            int index = ua.indexOf(";", idx);
+            if (index!=-1) {
+                String ver = ua.substring(idx + 5, index);
+                version = ver;
+                type = IE;
+                return;
+            }
         }
 
-        else if ((idx = ua.indexOf("Sun")) != -1) {
+        
+        if ((idx = ua.indexOf("Sun")) != -1) {
 
             idx = ua.indexOf(Mozilla) + Mozilla_len;
             if (idx == -1)
@@ -298,19 +301,34 @@ public class TypeBrowser {
         }
 
         idx = ua.indexOf(Mozilla);
-        if (idx == -1)
-            return;
+        if (idx != -1) {
+            type = TypeBrowser.MOZILLA_TYPE;
+            idx +=  Mozilla_len;
+            int index1 = ua.indexOf(" ", idx);
+            if (index1!=-1) {
+                version = ua.substring(idx, index1);
+                type = NN;
+                // work around NN7+
+                if ((idx = ua.indexOf(NETSCAPE)) != -1) {
+                    version = ua.substring(idx + NETSCAPE_LEN);
+                    if (version.charAt(0) == '/')
+                        version = version.substring(1);
+                    return;
+                }
+            }
+            else {
+                version = ua.substring(idx).trim();
+                if (version.charAt(0) == '/' || version.charAt(0) == ' ')
+                    version = version.substring(1);
 
-        idx +=  Mozilla_len;
-        version = ua.substring(idx, ua.indexOf(" ", idx));
-        type = NN;
-        // work around NN7+
-        if ((idx = ua.indexOf(NETSCAPE)) != -1) {
-            version = ua.substring(idx + NETSCAPE_LEN);
-            if (version.charAt(0) == '/')
-                version = version.substring(1);
-            return;
+                if ((idx = version.indexOf(" ")) != -1)
+                    version = version.substring(0, idx);
+
+                if ((idx = version.indexOf(";")) != -1)
+                    version = version.substring(0, idx);
+            }
         }
+
 
     }
 }

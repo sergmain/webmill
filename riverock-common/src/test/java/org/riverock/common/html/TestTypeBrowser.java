@@ -80,7 +80,11 @@ public class TestTypeBrowser extends TestCase {
                 new TypeBrowserItem("", TypeBrowser.UNKNOWN, ""),
 
                 // Unknown famaly
+                new TypeBrowserItem("StackRambler/2.0 (MSIE incompatible)", TypeBrowser.UNKNOWN, ""),
+
+                // IBrowse ???
                 new TypeBrowserItem("IBrowse/1.22 (AmigaOS 3.0)", TypeBrowser.IBROWSE_TYPE, "1.22"),
+
 
                 // IE famaly
                 new TypeBrowserItem("Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)", TypeBrowser.IE, "6.0"),
@@ -107,6 +111,7 @@ public class TestTypeBrowser extends TestCase {
 
                 // Mozilla famaly
                 new TypeBrowserItem("Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.1) Gecko/20020826", TypeBrowser.MOZILLA_TYPE, "1.1"),
+                new TypeBrowserItem("Mozilla/5.0", TypeBrowser.MOZILLA_TYPE, "5.0"),
 
                 // AOL famaly
                 new TypeBrowserItem("Mozilla/4.0  (compatible;  MSIE  6.0;  AOL  7.0;  Windows  NT  5.1)", TypeBrowser.AOL_TYPE, "7.0"),

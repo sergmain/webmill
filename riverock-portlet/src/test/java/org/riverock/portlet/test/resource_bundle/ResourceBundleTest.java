@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
 
-import org.riverock.webmill.container.resource.CustomXmlResourceBundle;
+import org.riverock.common.resource.CustomXmlResourceBundle;
 
 /**
  * @author smaslyukov

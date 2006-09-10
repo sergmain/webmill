@@ -28,7 +28,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Company;
-//import org.riverock.interfaces.portal.bean.GroupCompany;
 import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthProvider;

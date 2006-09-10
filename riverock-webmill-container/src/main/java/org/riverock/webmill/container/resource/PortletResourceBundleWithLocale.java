@@ -26,10 +26,9 @@ package org.riverock.webmill.container.resource;
 
 import java.util.*;
 
-import org.apache.commons.lang.StringUtils;
-
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.PortletInfo;
+import org.riverock.webmill.container.tools.ContainertStringUtils;
 
 /**
  * User: SergeMaslyukov
@@ -59,8 +58,7 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
     protected static PortletResourceBundleWithLocale getInstance(
         final PortletDefinition portletDefinition, final Locale locale, final ClassLoader classLoader  ) {
 
-        PortletResourceBundleWithLocale a = new PortletResourceBundleWithLocale( portletDefinition, locale, classLoader );
-        return a;
+        return new PortletResourceBundleWithLocale( portletDefinition, locale, classLoader );
     }
 
     private PortletResourceBundleWithLocale( final PortletDefinition portletDefinition, final Locale locale, final ClassLoader classLoader ) {
@@ -77,7 +75,7 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
     }
 
     private void initPropertiesFromResourceBundle( final String resourceBundleClass, final ClassLoader classLoader ) {
-        if (StringUtils.isBlank(resourceBundleClass)) {
+        if (ContainertStringUtils.isBlank(resourceBundleClass)) {
             return;
         }
         try {
@@ -123,7 +121,7 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
         if ( portletInfo != null ) {
 
             if ( portletInfo.getKeywords() != null ) {
-                Iterator<String> iterator = portletInfo.getKeywords();
+                Iterator<String> iterator = portletInfo.getKeywords().iterator();
                 StringBuilder keywords = new StringBuilder();
                 boolean isFirst = true;
                 while (iterator.hasNext()) {

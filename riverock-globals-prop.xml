@@ -72,6 +72,10 @@
     <property name="bcel.lib" value="BCEL.jar"/>
     <property name="jdom.lib" value="jdom-1.0.jar"/>
 
+    <property name="jaxb-api.lib" value="jaxb-api-2.0.2.jar"/>
+    <property name="jaxb-impl.lib" value="jaxb-impl-2.0.2.jar"/>
+    <property name="jaxb-xjc.lib" value="jaxb-xjc-2.0.2.jar"/>
+
     <property name="mail.lib" value="mail-1.4.jar"/>
     <property name="activation.lib" value="activation-1.1.jar"/>
 

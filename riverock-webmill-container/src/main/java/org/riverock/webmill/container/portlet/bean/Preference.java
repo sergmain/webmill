@@ -26,7 +26,7 @@ package org.riverock.webmill.container.portlet.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Persistent preference values that may be used for customization
@@ -39,67 +39,69 @@ public class Preference implements Serializable {
 
 
     /**
-     * Field _id
+     * Field id
      */
-    private java.lang.String _id;
+    private java.lang.String id;
 
     /**
-     * Field _name
+     * Field name
      */
-    private String _name;
+    private String name;
 
     /**
-     * Field _valueList
+     * Field value
      */
-    private Collection<String> _valueList = null;
+    private List<String> value = null;
 
     /**
-     * Field _readOnly
+     * Field readOnly
      */
-    private Boolean _readOnly = null;
+    private Boolean readOnly = null;
 
 
     public Preference() {
     }
 
+/*
     public void setModifiable(String value) {
         if (value.equalsIgnoreCase("true") || value.equals("1") ) {
-            _readOnly = Boolean.FALSE;
+            readOnly = Boolean.FALSE;
         }
         else {
-            _readOnly = Boolean.TRUE;
+            readOnly = Boolean.TRUE;
         }
     }
+*/
 
-    public void setValue(Collection<String> values) {
-        this._valueList = values;
+    public void setValue(List<String> values) {
+        this.value = values;
     }
 
 /*
     public Iterator<String> getValue() {
-        if (_valueList == null) {
+        if (value == null) {
             setValue(new ArrayList<String>());
         }
 
-        return _valueList.iterator();
+        return value.iterator();
     }
 */
 
-    public Collection<String> getValue() {
-        return _valueList;
+    public List<String> getValue() {
+        return value;
     }
 
     /**
      * Method addValue
      *
-     * @param vValue
+     * @param vValue String
      */
     public void addValue(String vValue) {
-        if (_valueList == null) {
+        if (value == null) {
             setValue(new ArrayList<String>());
         }
 
-        _valueList.add(vValue);
+        value.add(vValue);
     }
 
     /**
@@ -108,7 +110,7 @@ public class Preference implements Serializable {
      * @return the value of field 'id'.
      */
     public java.lang.String getId() {
-        return this._id;
+        return this.id;
     }
 
     /**
@@ -117,7 +119,7 @@ public class Preference implements Serializable {
      * @return the value of field 'name'.
      */
     public String getName() {
-        return this._name;
+        return this.name;
     }
 
     /**
@@ -126,7 +128,7 @@ public class Preference implements Serializable {
      * @return the value of field 'readOnly'.
      */
     public Boolean getReadOnly() {
-        return this._readOnly;
+        return this.readOnly;
     }
 
     /**
@@ -135,7 +137,7 @@ public class Preference implements Serializable {
      * @param id the value of field 'id'.
      */
     public void setId(java.lang.String id) {
-        this._id = id;
+        this.id = id;
     }
 
     /**
@@ -144,7 +146,7 @@ public class Preference implements Serializable {
      * @param name the value of field 'name'.
      */
     public void setName(String name) {
-        this._name = name;
+        this.name = name;
     }
 
     /**
@@ -153,6 +155,6 @@ public class Preference implements Serializable {
      * @param readOnly the value of field 'readOnly'.
      */
     public void setReadOnly(Boolean readOnly) {
-        this._readOnly = readOnly;
+        this.readOnly = readOnly;
     }
 }

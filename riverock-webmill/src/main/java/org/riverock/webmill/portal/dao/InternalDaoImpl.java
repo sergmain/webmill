@@ -26,11 +26,8 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.sql.Types;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -50,11 +47,7 @@ import org.riverock.webmill.portal.menu.PortalMenu;
 import org.riverock.webmill.portal.menu.PortalMenuLanguage;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.utils.SiteList;
-import org.riverock.webmill.schema.core.WmPortalAccessStatItemType;
-import org.riverock.webmill.schema.core.WmPortalAccessUrlItemType;
-import org.riverock.webmill.schema.core.WmPortalAccessUrlListType;
-import org.riverock.webmill.schema.core.WmPortalAccessUseragentItemType;
-import org.riverock.webmill.schema.core.WmPortalAccessUseragentListType;
+
 import org.riverock.webmill.site.PortalTemplateManagerImpl;
 
 /**
@@ -99,40 +92,44 @@ public class InternalDaoImpl implements InternalDao {
 
     public ConcurrentMap<String, Long> getUserAgentList() {
         DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            WmPortalAccessUseragentListType userAgentList =
-                GetWmPortalAccessUseragentFullList.getInstance(adapter, 0L).item;
+            ConcurrentMap<String, Long> userAgent = new ConcurrentHashMap<String, Long>();
 
-            ConcurrentMap<String, Long> userAgent = new ConcurrentHashMap<String, Long>(userAgentList.getWmPortalAccessUseragentCount() + 10);
+            ps = adapter.prepareStatement("select ID_SITE_USER_AGENT, USER_AGENT from WM_PORTAL_ACCESS_USERAGENT ");
+            rs = ps.executeQuery();
 
-            for (int i = 0; i < userAgentList.getWmPortalAccessUseragentCount(); i++) {
-                WmPortalAccessUseragentItemType userAgentItem = userAgentList.getWmPortalAccessUseragent(i);
-                userAgent.put( userAgentItem.getUserAgent(), userAgentItem.getIdSiteUserAgent() );
+            while(rs.next()){
+                userAgent.put(RsetTools.getString(rs, "USER_AGENT"), RsetTools.getLong(rs, "ID_SITE_USER_AGENT") );
             }
             return userAgent;
         }
         catch (Exception e) {
-            String es = "Error get getSupportedLocales()";
+            String es = "Error get getUserAgentList()";
             log.error(es, e);
             throw new IllegalStateException(es,e );
         }
         finally{
-            DatabaseManager.close(adapter);
+            DatabaseManager.close(adapter, rs, ps);
             adapter = null;
         }
     }
 
     public ConcurrentMap<String, Long> getUrlList() {
         DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            WmPortalAccessUrlListType urlList =
-                GetWmPortalAccessUrlFullList.getInstance(adapter, 0L).item;
-            ConcurrentMap<String, Long> url = new ConcurrentHashMap<String, Long>(urlList.getWmPortalAccessUrlCount() + 10);
-            for (int i = 0; i < urlList.getWmPortalAccessUrlCount(); i++) {
-                WmPortalAccessUrlItemType urlItem = urlList.getWmPortalAccessUrl(i);
-                url.put(urlItem.getUrl(), urlItem.getIdSiteAccessUrl());
+            ConcurrentMap<String, Long> url = new ConcurrentHashMap<String, Long>();
+
+            ps = adapter.prepareStatement("select ID_SITE_ACCESS_URL, URL from WM_PORTAL_ACCESS_URL ");
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                url.put(RsetTools.getString(rs, "URL"), RsetTools.getLong(rs, "ID_SITE_ACCESS_URL") );
             }
             return url;
         }
@@ -142,7 +139,9 @@ public class InternalDaoImpl implements InternalDao {
             throw new IllegalStateException(es,e );
         }
         finally{
-            DatabaseManager.close(adapter);
+            DatabaseManager.close(adapter, rs, ps);
+            rs = null;
+            ps = null;
             adapter = null;
         }
     }
@@ -198,7 +197,6 @@ public class InternalDaoImpl implements InternalDao {
             adapter = DatabaseAdapter.getInstance();
 
             CustomSequenceType seq = new CustomSequenceType();
-            WmPortalAccessStatItemType stat = new WmPortalAccessStatItemType();
 
             Long userAgentId = userAgentList.get(bean.getUserAgent());
             if (userAgentId == null) {
@@ -207,10 +205,15 @@ public class InternalDaoImpl implements InternalDao {
                 seq.setColumnName("ID_SITE_USER_AGENT");
                 userAgentId = adapter.getSequenceNextValue(seq);
 
-                WmPortalAccessUseragentItemType item = new WmPortalAccessUseragentItemType();
-                item.setIdSiteUserAgent(userAgentId);
-                item.setUserAgent(bean.getUserAgent());
-                InsertWmPortalAccessUseragentItem.process(adapter, item);
+                DatabaseManager.runSQL(
+                    adapter,
+                     "insert into WM_PORTAL_ACCESS_USERAGENT"+
+                         "(ID_SITE_USER_AGENT, USER_AGENT)"+
+                         "values"+
+                         "( ?,  ?)",
+                    new Object[]{userAgentId, bean.getUserAgent()},
+                    new int[]{Types.DECIMAL, Types.VARCHAR}
+                );
             }
 
             Long urlId = urlList.get( bean.getUrl() );
@@ -219,37 +222,42 @@ public class InternalDaoImpl implements InternalDao {
                 seq.setTableName("WM_PORTAL_ACCESS_URL");
                 seq.setColumnName("ID_SITE_ACCESS_URL");
                 urlId = adapter.getSequenceNextValue(seq);
-                WmPortalAccessUrlItemType item = new WmPortalAccessUrlItemType();
-                item.setIdSiteAccessUrl(urlId);
-                item.setUrl(bean.getUrl());
-                InsertWmPortalAccessUrlItem.process(adapter, item);
+
+                DatabaseManager.runSQL(
+                    adapter,
+                    "insert into WM_PORTAL_ACCESS_URL"+
+                        "(ID_SITE_ACCESS_URL, URL)"+
+                        "values"+
+                        "( ?,  ?)",
+                    new Object[]{urlId, bean.getUrl()},
+                    new int[]{Types.DECIMAL, Types.VARCHAR}
+                );
             }
 
-            stat.setIdSiteAccessUserAgent(userAgentId);
-            stat.setIdSiteAccessUrl(urlId);
-            stat.setIsReferTooBig( bean.isReferTooBig() );
-            stat.setRefer( bean.getRefer() );
-            stat.setAccessDate( bean.getAccessDate() );
             Long idSite = SiteList.getSiteId(bean.getServerName());
-
-            if (idSite == null) {
-                stat.setServerName( bean.getServerName() );
-            }
-
-            stat.setIdSite(idSite);
 
             seq.setSequenceName("SEQ_WM_PORTAL_ACCESS_STAT");
             seq.setTableName("WM_PORTAL_ACCESS_STAT");
             seq.setColumnName("ID_SITE_ACCESS_STAT");
-            stat.setIdSiteAccessStat(adapter.getSequenceNextValue(seq));
+            long accessStatId = adapter.getSequenceNextValue(seq);
 
-            stat.setIp(bean.getRemoteAddr());
-            stat.setIsParamTooBig( bean.isParamTooBig() );
-            stat.setIsReferTooBig( bean.isReferTooBig() );
-            stat.setParameters( bean.getParameters() );
-            stat.setRefer( bean.getRefer() );
-
-            InsertWmPortalAccessStatItem.process(adapter, stat);
+            DatabaseManager.runSQL(
+                adapter,
+                "insert into WM_PORTAL_ACCESS_STAT"+
+                    "(ID_SITE_ACCESS_STAT, IP, ID_SITE, IS_REFER_TOO_BIG, ACCESS_DATE, "+
+                    "REFER, ID_SITE_ACCESS_USER_AGENT, PARAMETERS, ID_SITE_ACCESS_URL, "+
+                    "IS_PARAM_TOO_BIG, SERVER_NAME)"+
+                    "values"+
+                    "( ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?)",
+                new Object[]{
+                    accessStatId, bean.getRemoteAddr(), idSite, bean.isReferTooBig()?1:0, bean.getAccessDate(), bean.getRefer(), userAgentId, bean.getParameters(),
+                    urlId, bean.isParamTooBig()?1:0, idSite==null?bean.getServerName():null
+                },
+                new int[] {
+                    Types.DECIMAL, Types.DECIMAL, Types.DECIMAL, Types.DECIMAL, Types.TIMESTAMP, Types.VARCHAR, Types.DECIMAL, Types.VARCHAR,
+                    Types.DECIMAL, Types.DECIMAL, Types.VARCHAR
+                }
+            );
 
             userAgentList.putIfAbsent(bean.getUserAgent(), userAgentId);
             urlList.putIfAbsent(bean.getUrl(), urlId);
@@ -264,9 +272,7 @@ public class InternalDaoImpl implements InternalDao {
             DatabaseManager.close(adapter);
             adapter = null;
         }
-
     }
-
 
     static {
         try {

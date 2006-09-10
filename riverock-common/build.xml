@@ -36,6 +36,7 @@
     <import file="../riverock-include.xml"/>
 
     <path id="classpath-base">
+        <pathelement location="${lib.dir}/${commons-digester.lib}"/>
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
