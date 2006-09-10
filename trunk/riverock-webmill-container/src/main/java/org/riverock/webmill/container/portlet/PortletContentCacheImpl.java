@@ -76,20 +76,17 @@ portlet.
     */
 
     public SitePortletData getContent( final PortletDefinition portletDefinition ) {
-        String exp = portletDefinition.getExpirationCache();
+        Integer exp = portletDefinition.getExpirationCache();
         // don't cache content
-        if (exp==null )
+        if (exp==null || exp==0) {
             return null;
+        }
 
-        int expire = Integer.parseInt(exp);
-        if (expire==0)
-            return null;
-
-        CacheEntry entry = (CacheEntry)contentCache.get( portletDefinition.getFullPortletName() );
+        CacheEntry entry = contentCache.get( portletDefinition.getFullPortletName() );
         if (entry==null)
             return null;
 
-        if (expire<((System.currentTimeMillis()-entry.lastInitTime)/1000) )  {
+        if (exp <((System.currentTimeMillis()-entry.lastInitTime)/1000) )  {
             contentCache.remove( portletDefinition.getFullPortletName() );
             return null;
         }
@@ -100,7 +97,7 @@ portlet.
         if (data==null || portletDefinition.getExpirationCache()==null)
             return;
 
-        int expirationTime = Integer.parseInt( portletDefinition.getExpirationCache() );
+        int expirationTime = portletDefinition.getExpirationCache();
 
         String exp = renderRequest.getProperty( RenderResponse.EXPIRATION_CACHE );
         try {

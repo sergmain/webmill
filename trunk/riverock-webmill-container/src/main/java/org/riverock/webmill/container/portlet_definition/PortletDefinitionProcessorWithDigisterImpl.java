@@ -1,9 +1,9 @@
 /*
- * org.riverock.webmill.container -- Webmill portlet container implementation
+ * org.riverock.webmill.container - Webmill portlet container implementation
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,9 +20,8 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
-package org.riverock.webmill.container.portlet;
+package org.riverock.webmill.container.portlet_definition;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +30,8 @@ import java.io.Serializable;
 import org.apache.commons.digester.Digester;
 
 import org.riverock.webmill.container.portlet.bean.*;
+import org.riverock.webmill.container.portlet_definition.PortletDefinitionProcessor;
+import org.riverock.webmill.container.portlet.PortletContainerException;
 
 /**
  * @author smaslyukov
@@ -38,10 +39,10 @@ import org.riverock.webmill.container.portlet.bean.*;
  *         Time: 15:25:46
  *         $Id$
  */
-public class PortletDefinitionProcessorImpl implements PortletDefinitionProcessor, Serializable {
+public class PortletDefinitionProcessorWithDigisterImpl implements PortletDefinitionProcessor, Serializable {
     private static final long serialVersionUID = 50434672384237827L;
 
-    public PortletApplication digest(File portletFile) throws PortletContainerException {
+    public PortletApplication process(File portletFile) throws PortletContainerException {
 
         if (portletFile==null || !portletFile.exists()) {
             throw new PortletContainerException( "File "+portletFile.getName()+" not found");
@@ -53,7 +54,6 @@ public class PortletDefinitionProcessorImpl implements PortletDefinitionProcesso
             System.out.println("Digest file: " + portletFile.getName());
 
             Digester digester = new Digester();
-//            digester.setLogger( null );
             digester.setValidating(false);
 
             digester.addObjectCreate("portlet-app", PortletApplication.class);

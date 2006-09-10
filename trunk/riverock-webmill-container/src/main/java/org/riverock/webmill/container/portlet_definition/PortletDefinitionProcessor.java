@@ -22,11 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.container.portlet;
+package org.riverock.webmill.container.portlet_definition;
 
 import java.io.File;
 
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
+import org.riverock.webmill.container.portlet.PortletContainerException;
 
 /**
  * @author smaslyukov
@@ -35,5 +36,5 @@ import org.riverock.webmill.container.portlet.bean.PortletApplication;
  *         $Id$
  */
 public interface PortletDefinitionProcessor {
-    public PortletApplication digest( File portletFile ) throws PortletContainerException;
+    public PortletApplication process( File portletFile ) throws PortletContainerException;
 }

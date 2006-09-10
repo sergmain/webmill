@@ -36,8 +36,6 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 
-import org.apache.commons.lang.StringUtils;
-
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.bean.InitParam;
@@ -54,7 +52,7 @@ public final class PortletService {
     }
 
     public synchronized static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
-        if ( templateParameters == null || StringUtils.isBlank(nameParam) )
+        if ( templateParameters == null || ContainertStringUtils.isBlank(nameParam) )
             return defValue;
 
         for (PortalTemplateParameter portalTemplateParameter : templateParameters) {
@@ -202,7 +200,7 @@ public final class PortletService {
         if (v == null || name_ == null || name_.trim().length() == 0)
             return defaultValue;
 
-        for (InitParam init : v.getInitParamList()) {
+        for (InitParam init : v.getInitParam()) {
             if (name_.equals(init.getName())) {
                 return init.getValue() != null ? init.getValue() : defaultValue;
             }
@@ -218,7 +216,7 @@ public final class PortletService {
         if (v == null || name_ == null)
             return defaultvalue;
 
-        for (InitParam init : v.getInitParamList()) {
+        for (InitParam init : v.getInitParam()) {
             if (name_.equals(init.getName()))
                 return Boolean.valueOf(init.getValue());
         }

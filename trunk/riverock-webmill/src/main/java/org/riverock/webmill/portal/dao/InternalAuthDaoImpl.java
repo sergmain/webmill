@@ -49,8 +49,6 @@ import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.sso.a3.AuthInfoImpl;
 import org.riverock.webmill.a3.bean.RoleBeanImpl;
 import org.riverock.webmill.a3.bean.UserInfoImpl;
-import org.riverock.webmill.core.DeleteWmAuthRelateAccgroupWithIdAuthUser;
-import org.riverock.webmill.core.DeleteWmAuthUserWithIdAuthUser;
 import org.riverock.webmill.core.GetWmAuthUserItem;
 import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.schema.core.WmAuthUserItemType;
@@ -1814,8 +1812,19 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
-            DeleteWmAuthRelateAccgroupWithIdAuthUser.process( db, infoAuth.getAuthInfo().getAuthUserId() );
-	    DeleteWmAuthUserWithIdAuthUser.process( db, infoAuth.getAuthInfo().getAuthUserId() );
+//            DeleteWmAuthRelateAccgroupWithIdAuthUser.process( db, infoAuth.getAuthInfo().getAuthUserId() );
+//            DeleteWmAuthUserWithIdAuthUser.process( db, infoAuth.getAuthInfo().getAuthUserId() );
+            DatabaseManager.runSQL(
+                db, "delete from WM_AUTH_RELATE_ACCGROUP where ID_AUTH_USER=?",
+                new Object[]{infoAuth.getAuthInfo().getAuthUserId()},
+                new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                db, "delete from WM_AUTH_USER where ID_AUTH_USER=?",
+                new Object[]{infoAuth.getAuthInfo().getAuthUserId()},
+                new int[]{Types.DECIMAL}
+            );
 
             db.commit();
         }

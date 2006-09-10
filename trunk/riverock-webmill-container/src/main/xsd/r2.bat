@@ -1,0 +1,1 @@
+C:\opt2\jaxb-ri-20060801\bin\xjc.bat aa.xsd -p org.riverock.webmill.container.portlet_definition.portlet_api_tmp -d ../java

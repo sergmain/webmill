@@ -49,29 +49,29 @@ public class SecurityRoleRef implements Serializable {
 
 
     /**
-     * Field _id
+     * Field id
      */
-    private java.lang.String _id;
+    private java.lang.String id;
 
     /**
-     * Field _descriptionList
+     * Field description
      */
-    private List<Description> _descriptionList;
+    private List<Description> description;
 
     /**
-     * Field _roleName
+     * Field roleName
      */
-    private java.lang.String _roleName;
+    private java.lang.String roleName;
 
     /**
-     * Field _roleLink
+     * Field roleLink
      */
-    private String _roleLink;
+    private String roleLink;
 
 
     public SecurityRoleRef() {
         super();
-        _descriptionList = new ArrayList<Description>();
+        description = new ArrayList<Description>();
     }
 
 
@@ -81,57 +81,14 @@ public class SecurityRoleRef implements Serializable {
      * @param vDescription
      */
     public void addDescription(Description vDescription) {
-        _descriptionList.add(vDescription);
-    }
-
-    /**
-     * Method addDescription
-     *
-     * @param index
-     * @param vDescription
-     */
-    public void addDescription(int index, Description vDescription) {
-        _descriptionList.add(index, vDescription);
-    }
-
-    /**
-     * Method clearDescription
-     */
-    public void clearDescription() {
-        _descriptionList.clear();
-    }
-
-    /**
-     * Method getDescription
-     *
-     * @param index
-     */
-    public Description getDescription(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _descriptionList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return (Description) _descriptionList.get(index);
+        description.add(vDescription);
     }
 
     /**
      * Method getDescription
      */
-    public Description[] getDescription() {
-        int size = _descriptionList.size();
-        Description[] mArray = new Description[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (Description) _descriptionList.get(index);
-        }
-        return mArray;
-    }
-
-    /**
-     * Method getDescriptionCount
-     */
-    public int getDescriptionCount() {
-        return _descriptionList.size();
+    public List<Description> getDescription() {
+        return description;
     }
 
     /**
@@ -140,7 +97,7 @@ public class SecurityRoleRef implements Serializable {
      * @return the value of field 'id'.
      */
     public java.lang.String getId() {
-        return this._id;
+        return this.id;
     }
 
     /**
@@ -149,7 +106,7 @@ public class SecurityRoleRef implements Serializable {
      * @return the value of field 'roleLink'.
      */
     public String getRoleLink() {
-        return this._roleLink;
+        return this.roleLink;
     }
 
     /**
@@ -158,44 +115,16 @@ public class SecurityRoleRef implements Serializable {
      * @return the value of field 'roleName'.
      */
     public java.lang.String getRoleName() {
-        return this._roleName;
-    }
-
-    /**
-     * Method removeDescription
-     *
-     * @param vDescription
-     */
-    public boolean removeDescription(Description vDescription) {
-        boolean removed = _descriptionList.remove(vDescription);
-        return removed;
+        return this.roleName;
     }
 
     /**
      * Method setDescription
      *
-     * @param index
-     * @param vDescription
+     * @param description
      */
-    public void setDescription(int index, Description vDescription) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _descriptionList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        _descriptionList.set(index, vDescription);
-    }
-
-    /**
-     * Method setDescription
-     *
-     * @param descriptionArray
-     */
-    public void setDescription(Description[] descriptionArray) {
-        //-- copy array
-        _descriptionList.clear();
-        for (final Description newVar : descriptionArray) {
-            _descriptionList.add(newVar);
-        }
+    public void setDescription(List<Description> description) {
+        this.description=description;
     }
 
     /**
@@ -204,7 +133,7 @@ public class SecurityRoleRef implements Serializable {
      * @param id the value of field 'id'.
      */
     public void setId(java.lang.String id) {
-        this._id = id;
+        this.id = id;
     }
 
     /**
@@ -213,7 +142,7 @@ public class SecurityRoleRef implements Serializable {
      * @param roleLink the value of field 'roleLink'.
      */
     public void setRoleLink(String roleLink) {
-        this._roleLink = roleLink;
+        this.roleLink = roleLink;
     }
 
     /**
@@ -222,6 +151,6 @@ public class SecurityRoleRef implements Serializable {
      * @param roleName the value of field 'roleName'.
      */
     public void setRoleName(java.lang.String roleName) {
-        this._roleName = roleName;
+        this.roleName = roleName;
     }
 }

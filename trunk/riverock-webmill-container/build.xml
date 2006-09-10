@@ -43,20 +43,17 @@
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
-        <pathelement location="${lib.dir}/${log4j.lib}"/>
 
-        <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${commons-digester.lib}"/>
         <pathelement location="${lib.dir}/${commons-beanutils.lib}"/>
-        <pathelement location="${lib.dir}/${commons-lang.lib}"/>
 
         <pathelement location="${lib.dir}/${jsp-api.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
         <pathelement location="${lib.dir}/${jdom.lib}"/>
+
+        <pathelement location="${lib.dir}/${jaxb-api.lib}"/>
+        <pathelement location="${lib.dir}/${jaxb-impl.lib}"/>
     </path>
 
     <target name="full_build_module">

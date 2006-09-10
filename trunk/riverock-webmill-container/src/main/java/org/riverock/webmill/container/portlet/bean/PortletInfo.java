@@ -24,10 +24,7 @@
  */
 package org.riverock.webmill.container.portlet.bean;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.io.Serializable;
 
 /**
@@ -40,25 +37,25 @@ public class PortletInfo implements Serializable {
 
 
     /**
-     * Field _id
+     * Field id
      */
-    private java.lang.String _id;
+    private java.lang.String id;
 
     /**
-     * Field _title
+     * Field title
      */
-    private String _title;
+    private String title;
 
     /**
-     * Field _shortTitle
+     * Field shortTitle
      */
-    private String _shortTitle;
+    private String shortTitle;
 
     /**
      * Field _keywords
      */
 //    private String _keywords;
-    private Collection<String> keywords;
+    private List<String> keywords;
 
 
     public PortletInfo() {
@@ -72,7 +69,7 @@ public class PortletInfo implements Serializable {
      * @return the value of field 'id'.
      */
     public java.lang.String getId() {
-        return this._id;
+        return this.id;
     }
 
     /**
@@ -80,12 +77,12 @@ public class PortletInfo implements Serializable {
      *
      * @return the value of field 'keywords'.
      */
-    public Iterator<String> getKeywords() {
+    public List<String> getKeywords() {
         if (keywords == null) {
             setKeywords(new ArrayList<String>());
         }
 
-        return keywords.iterator();
+        return keywords;
     }
 
     /**
@@ -94,7 +91,7 @@ public class PortletInfo implements Serializable {
      * @return the value of field 'shortTitle'.
      */
     public String getShortTitle() {
-        return this._shortTitle;
+        return this.shortTitle;
     }
 
     /**
@@ -103,7 +100,7 @@ public class PortletInfo implements Serializable {
      * @return the value of field 'title'.
      */
     public String getTitle() {
-        return this._title;
+        return this.title;
     }
 
     /**
@@ -112,7 +109,7 @@ public class PortletInfo implements Serializable {
      * @param id the value of field 'id'.
      */
     public void setId(java.lang.String id) {
-        this._id = id;
+        this.id = id;
     }
 
     /**
@@ -120,7 +117,7 @@ public class PortletInfo implements Serializable {
      *
      * @param keywords the value of field 'keywords'.
      */
-    public void setKeywords(Collection<String> keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 
@@ -131,7 +128,7 @@ public class PortletInfo implements Serializable {
      * <p/>
      * A comma delimited list of keywords
      *
-     * @param keywordStr
+     * @param keywordStr String
      */
     public void setKeywords(String keywordStr) {
         if (keywords == null) {
@@ -149,7 +146,7 @@ public class PortletInfo implements Serializable {
      * @param shortTitle the value of field 'shortTitle'.
      */
     public void setShortTitle(String shortTitle) {
-        this._shortTitle = shortTitle;
+        this.shortTitle = shortTitle;
     }
 
     /**
@@ -158,6 +155,6 @@ public class PortletInfo implements Serializable {
      * @param title the value of field 'title'.
      */
     public void setTitle(String title) {
-        this._title = title;
+        this.title = title;
     }
 }

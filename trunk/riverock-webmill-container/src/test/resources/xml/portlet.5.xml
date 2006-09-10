@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ org.riverock.webmill.container - Webmill portlet container implementation
+  ~
+  ~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
+  ~
+  ~ Riverock - The Open-source Java Development Community
+  ~ http://www.riverock.org
+  ~
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public
+  ~ License as published by the Free Software Foundation; either
+  ~ version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This library is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public
+  ~ License along with this library; if not, write to the Free Software
+  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+  -->
+<portlet-app version="webmill portlet's deployment descriptor" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
+	<portlet>
+        <description>Webmill shop manager</description>
+        <portlet-name>webmill.shop-manager</portlet-name>
+        <display-name>Webmill shop manager</display-name>
+        <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+        <init-param>
+            <name>default-view</name>
+            <value>/riverock/shop/manager/index.jsp</value>
+        </init-param>
+
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Webmill shop manager</title>
+            <short-title>Webmil shop manager</short-title>
+            <keywords>webmill, shop, manager</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
+        <description>Webmill portal manager</description>
+        <portlet-name>webmill.portal-manager</portlet-name>
+        <display-name>Webmill portal manager</display-name>
+        <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+        <init-param>
+            <name>default-view</name>
+            <value>/riverock/manager/index.jsp</value>
+        </init-param>
+
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+		<portlet-info>
+			<title>Webmill portal manager</title>
+			<short-title>Webmil portal manager</short-title>
+			<keywords>webmill, portal, manager</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.index</portlet-name>
+		<portlet-class>org.riverock.portlet.index.IndexPageStubPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.menu</portlet-name>
+		<portlet-class>org.riverock.portlet.menu.MenuPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.site_hamradio</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.menu_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.menu.MenuSimple</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.job_block</portlet-name>
+		<portlet-class>org.riverock.portlet.job.JobBlockPortlet</portlet-class>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.job_block_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.job.JobBlock</value>
+		</init-param>
+		<supports>
+			<mime-type>text/xml</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.job</portlet-name>
+		<portlet-class>org.riverock.portlet.job.JobItemPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-id</name>
+			<value>mill.id_job</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.job_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.job.JobItemSimple</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.article_plain</portlet-name>
+		<portlet-class>org.riverock.portlet.article.ArticlePlainPortlet</portlet-class>
+		<init-param>
+			<name>name-portlet-id</name>
+			<value>mill.id_article</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.article_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.article.ArticlePlain</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.article_xml</portlet-name>
+		<portlet-class>org.riverock.portlet.article.ArticleXmlPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-id</name>
+			<value>mill.id_article</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.article_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.article.ArticleXml</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.faq</portlet-name>
+		<portlet-class>org.riverock.portlet.faq.FaqItemPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-id</name>
+			<value>mill.id_faq</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.faq_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.job.FaqItem</value>
+		</init-param>
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.faq_block</portlet-name>
+		<portlet-class>org.riverock.portlet.faq.FaqBlockPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.faq_block_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.faq.FaqBlock</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.shop</portlet-name>
+		<portlet-class>org.riverock.portlet.price.ShopPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-id</name>
+			<value>mill.id_shop</value>
+		</init-param>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale._price_list</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.shop_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.price.ShopListProvider</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.news_block</portlet-name>
+		<portlet-class>org.riverock.portlet.news.NewsPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.news_block_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.news.NewsSite</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.SiteHamradio</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.news_plain</portlet-name>
+		<portlet-class>org.riverock.portlet.news.NewsPortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.site_hamradio</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.news_block_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.news.NewsSite</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.SiteHamradio</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.news_subscribe</portlet-name>
+		<portlet-class>org.riverock.portlet.news.NewsSubscribePortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.site_hamradio</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.SiteHamradio</resource-bundle>
+		<portlet-info>
+			<title>News subscribe status change</title>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>webmill.news-subscribe</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>webmill.root</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.upload_price</portlet-name>
+		<portlet-class>org.riverock.portlet.shop.upload.UploadPricePortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+        <security-role-ref><role-name>webmill.upload_price_list</role-name></security-role-ref>
+    </portlet>
+	<portlet>
+		<portlet-name>mill.menu_member</portlet-name>
+		<portlet-class>org.riverock.portlet.member.MenuMemberPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.site_hamradio</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.menu_member_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.member.MenuMember</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.SiteHamradio</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.member</portlet-name>
+		<portlet-class>org.riverock.portlet.member.MemberPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.login</portlet-name>
+		<portlet-class>org.riverock.portlet.login.LoginPlainPortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.auth</value>
+		</init-param>
+		<expiration-cache>-1</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.Auth</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.login_plain</portlet-name>
+		<portlet-class>org.riverock.portlet.login.LoginPlainPortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.auth</value>
+		</init-param>
+		<expiration-cache>-1</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.Auth</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.login_xml</portlet-name>
+		<portlet-class>org.riverock.portlet.login.LoginXmlPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.auth</value>
+		</init-param>
+		<expiration-cache>-1</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.Auth</resource-bundle>
+		<portlet-info>
+			<title>Login portlet</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.logout</portlet-name>
+		<portlet-class>org.riverock.portlet.login.LogoutPortlet</portlet-class>
+        <init-param>
+            <name>always-process-as-action</name>
+            <value>true</value>
+        </init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.language</portlet-name>
+		<portlet-class>org.riverock.portlet.language.SwitchLanguagePortlet</portlet-class>
+		<init-param>
+			<name>always-process-as-action</name>
+			<value>true</value>
+		</init-param>
+        <init-param>
+            <name>name-portlet-id</name>
+            <value>mill.id_language</value>
+        </init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.member.context.LanguagePerSite</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.register</portlet-name>
+		<portlet-class>org.riverock.portlet.register.RegisterPortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale._price_list</value>
+		</init-param>
+		<init-param>
+			<name>action-config</name>
+			<value>/WEB-INF/action/register-action.xml</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.register.i18n.Register</resource-bundle>
+		<portlet-info>
+			<title>Registration portlet</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.invoice</portlet-name>
+		<portlet-class>org.riverock.portlet.invoice.InvoicePortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale._price_list</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.image.upload_image</portlet-name>
+		<portlet-class>org.riverock.portlet.image.ImageUploadPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.image.upload_from_url</portlet-name>
+		<portlet-class>org.riverock.portlet.image.ImageUploadFromUrlPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+<!--
+	<portlet>
+		<portlet-name>mill.image.step_file</portlet-name>
+		<portlet-class>/mill.image_select_file</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+<!--
+	<portlet>
+		<portlet-name>mill.image.select_url</portlet-name>
+		<portlet-class>/mill.image_select_url</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+<!--
+	<portlet>
+		<portlet-name>mill.image.desc</portlet-name>
+		<portlet-class>/mill.image_description</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+<!--
+	<portlet>
+		<portlet-name>mill.image.list</portlet-name>
+		<portlet-class>/mill.image_list</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+<!--
+	<portlet>
+		<portlet-name>mill.image.index</portlet-name>
+		<portlet-class>/mill.image_index</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+<!--
+	<portlet>
+		<portlet-name>mill.price.index</portlet-name>
+		<portlet-class>/mill.price_edit_index</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+<!--
+	<portlet>
+		<portlet-name>mill.price.description</portlet-name>
+		<portlet-class>/mill.price_edit_description</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+<!--
+	<portlet>
+		<portlet-name>mill.price.shop</portlet-name>
+		<portlet-class>/mill.price_edit_shop</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+<!--
+	<portlet>
+		<portlet-name>mill.price.image</portlet-name>
+		<portlet-class>/mill.price_edit_image</portlet-class>
+		<init-param>
+			<name>is-url</name>
+			<value>true</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+-->
+</portlet-app>

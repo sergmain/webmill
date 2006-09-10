@@ -446,7 +446,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         PortletDefinition def = portletDefinition;
 
         SecurityRoleRef ref = null;
-        for (SecurityRoleRef r : def.getSecurityRoleRefList()){
+        for (SecurityRoleRef r : def.getSecurityRoleRef()){
             if (r.getRoleName().equals(role)) {
                 ref = r;
                 break;

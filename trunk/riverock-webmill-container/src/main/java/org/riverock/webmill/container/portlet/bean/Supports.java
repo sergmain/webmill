@@ -41,9 +41,9 @@ public class Supports implements Serializable {
     private static final long serialVersionUID = 30434672384237169L;
 
     /**
-     * Field _id
+     * Field id
      */
-    private java.lang.String _id;
+    private java.lang.String id;
 
     /**
      * Field mimeType
@@ -51,14 +51,14 @@ public class Supports implements Serializable {
     private String mimeType;
 
     /**
-     * Field _portletModeList
+     * Field portletMode
      */
-    private List<String> _portletModeList;
+    private List<String> portletMode;
 
 
     public Supports() {
         super();
-        _portletModeList = new ArrayList<String>();
+        portletMode = new ArrayList<String>();
     }
 
 
@@ -68,24 +68,7 @@ public class Supports implements Serializable {
      * @param vPortletMode
      */
     public void addPortletMode(String vPortletMode) {
-        _portletModeList.add(vPortletMode);
-    }
-
-    /**
-     * Method addPortletMode
-     *
-     * @param index
-     * @param vPortletMode
-     */
-    public void addPortletMode(int index, String vPortletMode) {
-        _portletModeList.add(index, vPortletMode);
-    }
-
-    /**
-     * Method clearPortletMode
-     */
-    public void clearPortletMode() {
-        _portletModeList.clear();
+        portletMode.add(vPortletMode);
     }
 
     /**
@@ -94,7 +77,7 @@ public class Supports implements Serializable {
      * @return the value of field 'id'.
      */
     public java.lang.String getId() {
-        return this._id;
+        return this.id;
     }
 
     /**
@@ -108,52 +91,9 @@ public class Supports implements Serializable {
 
     /**
      * Method getPortletMode
-     *
-     * @param index
-     */
-/*
-    public String getPortletMode(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _portletModeList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return _portletModeList.get(index);
-    }
-*/
-
-    /**
-     * Method getPortletMode
      */
     public List<String> getPortletMode() {
-        return _portletModeList;
-    }
-/*
-    public String[] getPortletMode() {
-        int size = _portletModeList.size();
-        String[] mArray = new String[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = _portletModeList.get(index);
-        }
-        return mArray;
-    }
-*/
-
-    /**
-     * Method getPortletModeCount
-     */
-//    public int getPortletModeCount() {
-//        return _portletModeList.size();
-//    }
-
-    /**
-     * Method removePortletMode
-     *
-     * @param vPortletMode
-     */
-    public boolean removePortletMode(String vPortletMode) {
-        boolean removed = _portletModeList.remove(vPortletMode);
-        return removed;
+        return portletMode;
     }
 
     /**
@@ -162,7 +102,7 @@ public class Supports implements Serializable {
      * @param id the value of field 'id'.
      */
     public void setId(java.lang.String id) {
-        this._id = id;
+        this.id = id;
     }
 
     /**
@@ -177,27 +117,9 @@ public class Supports implements Serializable {
     /**
      * Method setPortletMode
      *
-     * @param index
-     * @param vPortletMode
+     * @param portletMode
      */
-    public void setPortletMode(int index, String vPortletMode) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _portletModeList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        _portletModeList.set(index, vPortletMode);
-    }
-
-    /**
-     * Method setPortletMode
-     *
-     * @param portletModeArray
-     */
-    public void setPortletMode(String[] portletModeArray) {
-        //-- copy array
-        _portletModeList.clear();
-        for (final String newVar : portletModeArray) {
-            _portletModeList.add(newVar);
-        }
+    public void setPortletMode(List<String> portletMode) {
+        this.portletMode=portletMode;
     }
 }

@@ -30,6 +30,10 @@ import java.io.Serializable;
 
 import org.riverock.webmill.container.portlet.PortletContainer;
 
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlType;
+
 /**
  * @author Serge Maslyukov
  *         Created 06.08.2005
@@ -45,9 +49,9 @@ public class PortletDefinition implements Serializable {
     private java.lang.String id;
 
     /**
-     * Field descriptionList
+     * Field description
      */
-    private List<Description> descriptionList;
+    private List<Description> description;
 
     /**
      * Field _portletName
@@ -55,9 +59,9 @@ public class PortletDefinition implements Serializable {
     private String portletName;
 
     /**
-     * Field displayNameList
+     * Field displayName
      */
-    private List<DisplayName> displayNameList;
+    private List<DisplayName> displayName;
 
     /**
      * Field _portletClass
@@ -65,24 +69,24 @@ public class PortletDefinition implements Serializable {
     private java.lang.String portletClass;
 
     /**
-     * Field initParamList
+     * Field initParam
      */
-    private List<InitParam> initParamList;
+    private List<InitParam> initParam;
 
     /**
      * Field _expirationCache
      */
-    private String expirationCache;
+    private Integer expirationCache=null;
 
     /**
-     * Field supportsList
+     * Field supports
      */
-    private List<Supports> supportsList;
+    private List<Supports> supports;
 
     /**
      * Field _supportedLocaleList
      */
-    private List<String> supportedLocaleList;
+    private List<String> supportedLocale;
 
     private String resourceBundle = null;
     private PortletInfo portletInfo = null;
@@ -103,29 +107,29 @@ public class PortletDefinition implements Serializable {
 
     public PortletDefinition() {
         super();
-        descriptionList = new ArrayList<Description>();
-        displayNameList = new ArrayList<DisplayName>();
-        initParamList = new ArrayList<InitParam>();
-        supportsList = new ArrayList<Supports>();
-        supportedLocaleList = new ArrayList<String>();
+        description = new ArrayList<Description>();
+        displayName = new ArrayList<DisplayName>();
+        initParam = new ArrayList<InitParam>();
+        supports = new ArrayList<Supports>();
+        supportedLocale = new ArrayList<String>();
         securityRoleRefList = new ArrayList<SecurityRoleRef>();
     }
 
     public void destroy() {
-        if (descriptionList !=null) {
-            descriptionList.clear();
+        if (description !=null) {
+            description.clear();
         }
-        if (displayNameList !=null) {
-            displayNameList.clear();
+        if (displayName !=null) {
+            displayName.clear();
         }
-        if (initParamList !=null) {
-            initParamList.clear();
+        if (initParam !=null) {
+            initParam.clear();
         }
-        if (supportsList !=null) {
-            supportsList.clear();
+        if (supports !=null) {
+            supports.clear();
         }
-        if (supportedLocaleList!=null) {
-            supportedLocaleList.clear();
+        if (supportedLocale !=null) {
+            supportedLocale.clear();
         }
         if (securityRoleRefList !=null) {
             securityRoleRefList.clear();
@@ -158,19 +162,11 @@ public class PortletDefinition implements Serializable {
     }
 
     public void addDescription(Description vDescription) {
-        descriptionList.add(vDescription);
-    }
-
-    public void addDescription(int index, Description vDescription) {
-        descriptionList.add(index, vDescription);
+        description.add(vDescription);
     }
 
     public void addDisplayName(DisplayName vDisplayName) {
-        displayNameList.add(vDisplayName);
-    }
-
-    public void addDisplayName(int index, DisplayName vDisplayName) {
-        displayNameList.add(index, vDisplayName);
+        displayName.add(vDisplayName);
     }
 
     /**
@@ -179,17 +175,7 @@ public class PortletDefinition implements Serializable {
      * @param vInitParam
      */
     public void addInitParam(InitParam vInitParam) {
-        initParamList.add(vInitParam);
-    }
-
-    /**
-     * Method addInitParam
-     *
-     * @param index
-     * @param vInitParam
-     */
-    public void addInitParam(int index, InitParam vInitParam) {
-        initParamList.add(index, vInitParam);
+        initParam.add(vInitParam);
     }
 
     /**
@@ -202,32 +188,12 @@ public class PortletDefinition implements Serializable {
     }
 
     /**
-     * Method addSecurityRoleRef
-     *
-     * @param index
-     * @param vSecurityRoleRef
-     */
-    public void addSecurityRoleRef(int index, SecurityRoleRef vSecurityRoleRef) {
-        securityRoleRefList.add(index, vSecurityRoleRef);
-    }
-
-    /**
      * Method addSupportedLocale
      *
      * @param vSupportedLocale
      */
     public void addSupportedLocale(String vSupportedLocale) {
-        supportedLocaleList.add(vSupportedLocale);
-    }
-
-    /**
-     * Method addSupportedLocale
-     *
-     * @param index
-     * @param vSupportedLocale
-     */
-    public void addSupportedLocale(int index, String vSupportedLocale) {
-        supportedLocaleList.add(index, vSupportedLocale);
+        supportedLocale.add(vSupportedLocale);
     }
 
     /**
@@ -236,125 +202,21 @@ public class PortletDefinition implements Serializable {
      * @param vSupports
      */
     public void addSupports(Supports vSupports) {
-        supportsList.add(vSupports);
-    }
-
-    /**
-     * Method addSupports
-     *
-     * @param index
-     * @param vSupports
-     */
-    public void addSupports(int index, Supports vSupports) {
-        supportsList.add(index, vSupports);
-    }
-
-    /**
-     * Method clearDescription
-     */
-    public void clearDescription() {
-        descriptionList.clear();
-    }
-
-    /**
-     * Method clearDisplayName
-     */
-    public void clearDisplayName() {
-        displayNameList.clear();
-    }
-
-    /**
-     * Method clearInitParam
-     */
-    public void clearInitParam() {
-        initParamList.clear();
-    }
-
-    /**
-     * Method clearSecurityRoleRef
-     */
-    public void clearSecurityRoleRef() {
-        securityRoleRefList.clear();
-    }
-
-    /**
-     * Method clearSupportedLocale
-     */
-    public void clearSupportedLocale() {
-        supportedLocaleList.clear();
-    }
-
-    /**
-     * Method clearSupports
-     */
-    public void clearSupports() {
-        supportsList.clear();
-    }
-
-    /**
-     * Method getDescription
-     *
-     * @param index
-     */
-    public Description getDescription(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > descriptionList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return descriptionList.get(index);
+        supports.add(vSupports);
     }
 
     /**
      * Method getDescription
      */
-    public Description[] getDescription() {
-        int size = descriptionList.size();
-        Description[] mArray = new Description[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = descriptionList.get(index);
-        }
-        return mArray;
-    }
-
-    /**
-     * Method getDescriptionCount
-     */
-    public int getDescriptionCount() {
-        return descriptionList.size();
-    }
-
-    /**
-     * Method getDisplayName
-     *
-     * @param index
-     */
-    public DisplayName getDisplayName(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > displayNameList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return displayNameList.get(index);
+    public List<Description> getDescription() {
+        return description;
     }
 
     /**
      * Method getDisplayName
      */
-    public DisplayName[] getDisplayName() {
-        int size = displayNameList.size();
-        DisplayName[] mArray = new DisplayName[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = displayNameList.get(index);
-        }
-        return mArray;
-    }
-
-    /**
-     * Method getDisplayNameCount
-     */
-    public int getDisplayNameCount() {
-        return displayNameList.size();
+    public List<DisplayName> getDisplayName() {
+        return displayName;
     }
 
     /**
@@ -362,7 +224,7 @@ public class PortletDefinition implements Serializable {
      *
      * @return the value of field 'expirationCache'.
      */
-    public String getExpirationCache() {
+    public Integer getExpirationCache() {
         return this.expirationCache;
     }
 
@@ -372,45 +234,12 @@ public class PortletDefinition implements Serializable {
 
     /**
      * Method getInitParam
-     *
-     * @param index
      */
-    public InitParam getInitParam(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > initParamList.size())) {
-            throw new IndexOutOfBoundsException();
+    public List<InitParam> getInitParam() {
+        if (initParam ==null) {
+             initParam =new ArrayList<InitParam>();
         }
-
-        return initParamList.get(index);
-    }
-
-    /**
-     * Method getInitParam
-     */
-    public InitParam[] getInitParam() {
-        int size = initParamList.size();
-        InitParam[] mArray = new InitParam[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = initParamList.get(index);
-        }
-        return mArray;
-    }
-
-    /**
-     * Method getInitParam
-     */
-    public List<InitParam> getInitParamList() {
-        if (initParamList==null) {
-             initParamList=new ArrayList<InitParam>();
-        }
-        return initParamList;
-    }
-
-    /**
-     * Method getInitParamCount
-     */
-    public int getInitParamCount() {
-        return initParamList.size();
+        return initParam;
     }
 
     /**
@@ -431,7 +260,7 @@ public class PortletDefinition implements Serializable {
         return this.portletName;
     }
 
-    public List<SecurityRoleRef> getSecurityRoleRefList() {
+    public List<SecurityRoleRef> getSecurityRoleRef() {
         if (securityRoleRefList==null)
             return new ArrayList<SecurityRoleRef>();
 
@@ -441,132 +270,36 @@ public class PortletDefinition implements Serializable {
     /**
      * Method getSupportedLocaleCount
      */
-    public List<String> getSupportedLocaleList() {
-        if (supportedLocaleList==null)
+    public List<String> getSupportedLocale() {
+        if (supportedLocale ==null)
             return new ArrayList<String>();
 
-        return supportedLocaleList;
+        return supportedLocale;
     }
 
     public List<Supports> getSupports() {
-        if (supportsList ==null)
+        if (supports ==null)
             return new ArrayList<Supports>();
 
-        return supportsList;
-    }
-
-    /**
-     * Method removeDescription
-     *
-     * @param vDescription
-     */
-    public boolean removeDescription(Description vDescription) {
-        boolean removed = descriptionList.remove(vDescription);
-        return removed;
-    }
-
-    /**
-     * Method removeDisplayName
-     *
-     * @param vDisplayName
-     */
-    public boolean removeDisplayName(DisplayName vDisplayName) {
-        boolean removed = displayNameList.remove(vDisplayName);
-        return removed;
-    }
-
-    /**
-     * Method removeInitParam
-     *
-     * @param vInitParam
-     */
-    public boolean removeInitParam(InitParam vInitParam) {
-        boolean removed = initParamList.remove(vInitParam);
-        return removed;
-    }
-
-    /**
-     * Method removeSecurityRoleRef
-     *
-     * @param vSecurityRoleRef
-     */
-    public boolean removeSecurityRoleRef(SecurityRoleRef vSecurityRoleRef) {
-        boolean removed = securityRoleRefList.remove(vSecurityRoleRef);
-        return removed;
-    }
-
-    /**
-     * Method removeSupportedLocale
-     *
-     * @param vSupportedLocale
-     */
-    public boolean removeSupportedLocale(String vSupportedLocale) {
-        boolean removed = supportedLocaleList.remove(vSupportedLocale);
-        return removed;
-    }
-
-    /**
-     * Method removeSupports
-     *
-     * @param vSupports
-     */
-    public boolean removeSupports(Supports vSupports) {
-        boolean removed = supportsList.remove(vSupports);
-        return removed;
+        return supports;
     }
 
     /**
      * Method setDescription
      *
-     * @param index
-     * @param vDescription
+     * @param description
      */
-    public void setDescription(int index, Description vDescription) {
-        //-- check bounds for index
-        if ((index < 0) || (index > descriptionList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        descriptionList.set(index, vDescription);
-    }
-
-    /**
-     * Method setDescription
-     *
-     * @param descriptionArray
-     */
-    public void setDescription(Description[] descriptionArray) {
-        //-- copy array
-        descriptionList.clear();
-        for (final Description newVar : descriptionArray) {
-            descriptionList.add(newVar);
-        }
+    public void setDescription(List<Description> description) {
+        this.description=description;
     }
 
     /**
      * Method setDisplayName
      *
-     * @param index
-     * @param vDisplayName
+     * @param displayName
      */
-    public void setDisplayName(int index, DisplayName vDisplayName) {
-        //-- check bounds for index
-        if ((index < 0) || (index > displayNameList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        displayNameList.set(index, vDisplayName);
-    }
-
-    /**
-     * Method setDisplayName
-     *
-     * @param displayNameArray
-     */
-    public void setDisplayName(DisplayName[] displayNameArray) {
-        //-- copy array
-        displayNameList.clear();
-        for (final DisplayName newVar : displayNameArray) {
-            displayNameList.add(newVar);
-        }
+    public void setDisplayName(List<DisplayName> displayName) {
+        this.displayName=displayName;
     }
 
     /**
@@ -574,7 +307,7 @@ public class PortletDefinition implements Serializable {
      *
      * @param expirationCache the value of field 'expirationCache'.
      */
-    public void setExpirationCache(String expirationCache) {
+    public void setExpirationCache(Integer expirationCache) {
         this.expirationCache = expirationCache;
     }
 
@@ -591,28 +324,10 @@ public class PortletDefinition implements Serializable {
     /**
      * Method setInitParam
      *
-     * @param index
-     * @param vInitParam
+     * @param initParam
      */
-    public void setInitParam(int index, InitParam vInitParam) {
-        //-- check bounds for index
-        if ((index < 0) || (index > initParamList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        initParamList.set(index, vInitParam);
-    }
-
-    /**
-     * Method setInitParam
-     *
-     * @param initParamArray
-     */
-    public void setInitParam(InitParam[] initParamArray) {
-        //-- copy array
-        initParamList.clear();
-        for (final InitParam newVar : initParamArray) {
-            initParamList.add(newVar);
-        }
+    public void setInitParam(List<InitParam> initParam) {
+        this.initParam=initParam;
     }
 
     /**
@@ -637,71 +352,23 @@ public class PortletDefinition implements Serializable {
     /**
      * Method setSecurityRoleRef
      *
-     * @param index
-     * @param vSecurityRoleRef
+     * @param securityRoleRef
      */
-    public void setSecurityRoleRef(int index, SecurityRoleRef vSecurityRoleRef) {
-        //-- check bounds for index
-        if ((index < 0) || (index > securityRoleRefList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        securityRoleRefList.set(index, vSecurityRoleRef);
+    public void setSecurityRoleRef(List<SecurityRoleRef> securityRoleRef) {
+        this.securityRoleRefList=securityRoleRef;
     }
 
-    /**
-     * Method setSecurityRoleRef
-     *
-     * @param securityRoleRefArray
-     */
-    public void setSecurityRoleRef(SecurityRoleRef[] securityRoleRefArray) {
-        //-- copy array
-        securityRoleRefList.clear();
-        for (final SecurityRoleRef newVar : securityRoleRefArray) {
-            securityRoleRefList.add(newVar);
-        }
-    }
-
-    /**
-     * Method setSupportedLocale
-     *
-     * @param index
-     * @param vSupportedLocale
-     */
-    public void setSupportedLocale(int index, String vSupportedLocale) {
-        //-- check bounds for index
-        if ((index < 0) || (index > supportedLocaleList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        supportedLocaleList.set(index, vSupportedLocale);
-    }
-
-    public void setSupportedLocale(String[] supportedLocaleArray) {
-        supportedLocaleList.clear();
-        for (final String newVar : supportedLocaleArray) {
-            supportedLocaleList.add(newVar);
-        }
-    }
-
-    public void setSupports(int index, Supports vSupports) {
-        //-- check bounds for index
-        if ((index < 0) || (index > supportsList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        supportsList.set(index, vSupports);
+    public void setSupportedLocale(List<String> supportedLocale) {
+        this.supportedLocale=supportedLocale;
     }
 
     /**
      * Method setSupports
      *
-     * @param supportsArray
+     * @param supports
      */
-    public void setSupports(Supports[] supportsArray) {
-        //-- copy array
-        supportsList.clear();
-        for (final Supports newVar : supportsArray) {
-            supportsList.add(newVar);
-        }
-    }
+    public void setSupports(List<Supports> supports) {
+        this.supports=supports;    }
 
     public String getApplicationName() {
         return applicationName;
@@ -747,4 +414,6 @@ public class PortletDefinition implements Serializable {
             portletName + PortletContainer.PORTLET_ID_NAME_SEPARATOR +
             id;
     }
+
+    
 }

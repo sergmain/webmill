@@ -82,7 +82,7 @@ public final class PortletConfigImpl implements PortletConfig {
     }
 
     public java.util.Enumeration getInitParameterNames(){
-        Iterator<InitParam> iterator = portletDefinition.getInitParamList().iterator();
+        Iterator<InitParam> iterator = portletDefinition.getInitParam().iterator();
         Set<String> names = new HashSet<String>();
         while(iterator.hasNext()) {
             names.add( iterator.next().getName() );

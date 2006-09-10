@@ -41,29 +41,29 @@ public class SecurityConstraint implements Serializable {
 
 
     /**
-     * Field _id
+     * Field id
      */
-    private java.lang.String _id;
+    private java.lang.String id;
 
     /**
-     * Field _displayNameList
+     * Field displayName
      */
-    private List<DisplayName> _displayNameList;
+    private List<DisplayName> displayName;
 
     /**
-     * Field _portletCollection
+     * Field portletCollection
      */
-    private PortletCollection _portletCollection;
+    private PortletCollection portletCollection;
 
     /**
-     * Field _userDataConstraint
+     * Field userDataConstraint
      */
-    private UserDataConstraint _userDataConstraint;
+    private UserDataConstraint userDataConstraint;
 
 
     public SecurityConstraint() {
         super();
-        _displayNameList = new ArrayList<DisplayName>();
+        displayName = new ArrayList<DisplayName>();
     }
 
     /**
@@ -72,57 +72,14 @@ public class SecurityConstraint implements Serializable {
      * @param vDisplayName
      */
     public void addDisplayName(DisplayName vDisplayName) {
-        _displayNameList.add(vDisplayName);
-    }
-
-    /**
-     * Method addDisplayName
-     *
-     * @param index
-     * @param vDisplayName
-     */
-    public void addDisplayName(int index, DisplayName vDisplayName) {
-        _displayNameList.add(index, vDisplayName);
-    }
-
-    /**
-     * Method clearDisplayName
-     */
-    public void clearDisplayName() {
-        _displayNameList.clear();
-    }
-
-    /**
-     * Method getDisplayName
-     *
-     * @param index
-     */
-    public DisplayName getDisplayName(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _displayNameList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return (DisplayName) _displayNameList.get(index);
+        displayName.add(vDisplayName);
     }
 
     /**
      * Method getDisplayName
      */
-    public DisplayName[] getDisplayName() {
-        int size = _displayNameList.size();
-        DisplayName[] mArray = new DisplayName[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (DisplayName) _displayNameList.get(index);
-        }
-        return mArray;
-    }
-
-    /**
-     * Method getDisplayNameCount
-     */
-    public int getDisplayNameCount() {
-        return _displayNameList.size();
+    public List<DisplayName> getDisplayName() {
+        return displayName;
     }
 
     /**
@@ -131,7 +88,7 @@ public class SecurityConstraint implements Serializable {
      * @return the value of field 'id'.
      */
     public java.lang.String getId() {
-        return this._id;
+        return this.id;
     }
 
     /**
@@ -140,7 +97,7 @@ public class SecurityConstraint implements Serializable {
      * @return the value of field 'portletCollection'.
      */
     public PortletCollection getPortletCollection() {
-        return this._portletCollection;
+        return this.portletCollection;
     }
 
     /**
@@ -149,44 +106,16 @@ public class SecurityConstraint implements Serializable {
      * @return the value of field 'userDataConstraint'.
      */
     public UserDataConstraint getUserDataConstraint() {
-        return this._userDataConstraint;
-    }
-
-    /**
-     * Method removeDisplayName
-     *
-     * @param vDisplayName
-     */
-    public boolean removeDisplayName(DisplayName vDisplayName) {
-        boolean removed = _displayNameList.remove(vDisplayName);
-        return removed;
+        return this.userDataConstraint;
     }
 
     /**
      * Method setDisplayName
      *
-     * @param index
-     * @param vDisplayName
+     * @param displayName
      */
-    public void setDisplayName(int index, DisplayName vDisplayName) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _displayNameList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        _displayNameList.set(index, vDisplayName);
-    }
-
-    /**
-     * Method setDisplayName
-     *
-     * @param displayNameArray
-     */
-    public void setDisplayName(DisplayName[] displayNameArray) {
-        //-- copy array
-        _displayNameList.clear();
-        for (final DisplayName newVar : displayNameArray) {
-            _displayNameList.add(newVar);
-        }
+    public void setDisplayName(List<DisplayName> displayName) {
+        this.displayName=displayName;
     }
 
     /**
@@ -195,7 +124,7 @@ public class SecurityConstraint implements Serializable {
      * @param id the value of field 'id'.
      */
     public void setId(java.lang.String id) {
-        this._id = id;
+        this.id = id;
     }
 
     /**
@@ -205,7 +134,7 @@ public class SecurityConstraint implements Serializable {
      *                          'portletCollection'.
      */
     public void setPortletCollection(PortletCollection portletCollection) {
-        this._portletCollection = portletCollection;
+        this.portletCollection = portletCollection;
     }
 
     /**
@@ -215,6 +144,6 @@ public class SecurityConstraint implements Serializable {
      *                           'userDataConstraint'.
      */
     public void setUserDataConstraint(UserDataConstraint userDataConstraint) {
-        this._userDataConstraint = userDataConstraint;
+        this.userDataConstraint = userDataConstraint;
     }
 }

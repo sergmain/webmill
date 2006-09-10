@@ -495,10 +495,10 @@ public final class PageElement {
                 if (log.isDebugEnabled()) {
                     log.debug("check security for portlet: " + portletEntry.getPortletDefinition().getPortletName());
                 }
-                if (!portletEntry.getPortletDefinition().getSecurityRoleRefList().isEmpty()) {
+                if (!portletEntry.getPortletDefinition().getSecurityRoleRef().isEmpty()) {
                     isAccessPermit = false;
                     errorString = ACCESS_DISABLED_FOR_PORTLET;
-                    for (SecurityRoleRef roleRef : portletEntry.getPortletDefinition().getSecurityRoleRefList()) {
+                    for (SecurityRoleRef roleRef : portletEntry.getPortletDefinition().getSecurityRoleRef()) {
 
                         if (log.isDebugEnabled()) {
                             log.debug("SecurityRoleRef.roleName: " + roleRef.getRoleName() + ", SecurityRoleRef.roleLink: " + roleRef.getRoleLink());

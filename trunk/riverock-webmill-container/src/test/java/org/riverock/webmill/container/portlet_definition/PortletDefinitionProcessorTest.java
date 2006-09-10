@@ -22,14 +22,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.container.portlet;
+package org.riverock.webmill.container.portlet_definition;
 
 import java.io.File;
 
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Preferences;
-import org.riverock.webmill.container.test.Simple1_2ClassLoader;
+import org.riverock.webmill.container.portlet_definition.PortletDefinitionProcessor;
+import org.riverock.webmill.container.portlet_definition.PortletDefinitionProcessorWithDigisterImpl;
+import org.riverock.webmill.container.portlet_definition.JaxbPortletDefinitionProcessorImpl;
 
 /**
  * @author smaslyukov
@@ -40,27 +42,31 @@ import org.riverock.webmill.container.test.Simple1_2ClassLoader;
 public class PortletDefinitionProcessorTest {
 
     public static void main(String[] args) throws Exception {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            final ClassLoader classLoader = new Simple1_2ClassLoader(oldLoader, "webmill/lib");
-            Thread.currentThread().setContextClassLoader( classLoader );
+//        PortletDefinitionProcessor processor = new PortletDefinitionProcessorWithDigisterImpl();
+        PortletDefinitionProcessor processor = new JaxbPortletDefinitionProcessorImpl();
 
-            PortletDefinitionProcessor processor = new PortletDefinitionProcessorImpl();
+        String[] files = {
+            "doc/xml/portlet.1.xml",
+            "doc/xml/portlet.2.xml",
+            "doc/xml/portlet.3.xml",
+            "doc/xml/portlet.4.xml",
+            "doc/xml/portlet.5.xml",
+            "doc/xml/portlet.6.xml"
+        };
+
+        for (String file : files) {
+            System.out.println("file = " + file);
+            processor.process( new File(file) );
+        }
 
 //        File file = new File("portlet.2.xml");
-            File file = new File("doc/xml/portlet.6.xml");
+        File file = new File("doc/xml/portlet.6.xml");
 
-            PortletApplication application = processor.digest( file );
+        PortletApplication application = processor.process( file );
 
-            PortletDefinition definition = application.getPortlet(0);
-            Preferences portletPreferences = definition.getPreferences();
-            int i = 0;
-
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-
+        PortletDefinition definition = application.getPortlet().get(0);
+        Preferences portletPreferences = definition.getPreferences();
+        int i = 0;
 
     }
 }
