@@ -1,8 +1,9 @@
 riverock-webmill-container-1.0.0.jar:
 
-	riverock-interfaces-1.0.3.jar 
-	portlet-1.0.jar 
-	commons-digester-1.7.jar 
-	commons-beanutils-1.7.0.jar 
-	commons-logging-1.1.jar 
-	commons-lang-2.1.jar 
+	activation-1.1.jar
+	jaxb-api-2.0.2.jar
+	jaxb-impl-2.0.2.jar
+	jsr173_1.0_api.jar
+	portlet-1.0.jar
+	riverock-interfaces-1.0.3.jar
+	riverock-webmill-container-1.0.0.jar
