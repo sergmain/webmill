@@ -787,7 +787,7 @@ public final class DatabaseManager {
             log.debug("SQL: " + sql_);
         }
 
-        String text = "";
+        StringBuilder text = new StringBuilder();
         try {
             ps = db_.prepareStatement(sql_);
 
@@ -797,24 +797,18 @@ public final class DatabaseManager {
             RsetTools.setLong(ps, 1, id_);
             rset = ps.executeQuery();
 
-            if (log.isDebugEnabled())
-                log.debug("11.03.01");
-
             while (rset.next()) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("11.03.01 " + text);
-
-                text += RsetTools.getString(rset, field_);
-
-                if (log.isDebugEnabled())
-                    log.debug("11.03.01");
+                }
+                text.append(RsetTools.getString(rset, field_));
             }
         } finally {
             DatabaseManager.close(rset, ps);
             rset = null;
             ps = null;
         }
-        return text;
+        return text.toString();
     }
 
     public static String getRelateString(final DbImportedPKColumnType column) {

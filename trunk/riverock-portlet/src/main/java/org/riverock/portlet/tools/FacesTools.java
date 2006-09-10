@@ -98,6 +98,15 @@ public class FacesTools {
         throw new IllegalStateException("request type is not HttpServletRequest and not PortletRequest. Type: " + obj.getClass().getName() );
     }
 
+    public static PortletRequest getPortletRequest() {
+        Object obj = getFacesContext().getExternalContext().getRequest();
+        if (obj instanceof PortletRequest) {
+            return (PortletRequest)obj;
+        }
+
+        throw new IllegalStateException("request type is not PortletRequest");
+    }
+
     public static HttpServletRequest getRequest() {
         Object obj = getFacesContext().getExternalContext().getRequest();
         if (obj instanceof HttpServletRequest) {

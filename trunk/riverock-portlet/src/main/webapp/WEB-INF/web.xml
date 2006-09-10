@@ -29,8 +29,7 @@
 
 	<context-param>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
-		<param-value>
-            /WEB-INF/faces-common-config.xml,
+		<param-value>/WEB-INF/faces-common-config.xml,
             /WEB-INF/faces-manager-config.xml,
             /WEB-INF/faces-auth-config.xml,
             /WEB-INF/faces-holding-config.xml,
@@ -40,7 +39,7 @@
             /WEB-INF/faces-site-config.xml,
             /WEB-INF/faces-menu-config.xml,
             /WEB-INF/faces-news-config.xml,
-            /WEB-INF/faces-article-config.xml 
+            /WEB-INF/faces-article-config.xml,/WEB-INF/faces-webclip-config.xml
         </param-value>
 	</context-param>
 	<context-param>
