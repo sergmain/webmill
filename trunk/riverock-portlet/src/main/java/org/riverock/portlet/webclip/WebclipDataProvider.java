@@ -66,7 +66,7 @@ public class WebclipDataProvider {
         Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         boolean isNew=false;
         if (StringUtils.isBlank(id)) {
-            webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId, null);
+            webclipId = PortletDaoFactory.getWebClipDao().createWebclip(siteId, null);
             isNew=true;
         }
         else {
@@ -74,7 +74,7 @@ public class WebclipDataProvider {
                 webclipId = Long.parseLong(id);
             } catch (NumberFormatException e) {
                 log.warn("Error parse webclipId: " + id+", will be created new WebclipBean");
-                webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId, null);
+                webclipId = PortletDaoFactory.getWebClipDao().createWebclip(siteId, null);
                 isNew=true;
             }
         }
@@ -84,13 +84,13 @@ public class WebclipDataProvider {
         }
 
         if (!isNew) {
-            WebclipBean bean = PortletDaoFactory.getWebclipDao().getWebclip(siteId, webclipId);
+            WebclipBean bean = PortletDaoFactory.getWebClipDao().getWebclip(siteId, webclipId);
             if(log.isDebugEnabled()) {
                 log.debug("    WebclipBean: "+bean);
             }
             if (bean==null) {
                 // create new webclip bean
-                webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId, null);
+                webclipId = PortletDaoFactory.getWebClipDao().createWebclip(siteId, null);
                 isNew=true;
             }
         }
@@ -157,7 +157,7 @@ public class WebclipDataProvider {
         Long webclipId = getWebclipId();
         PortletRequest request = FacesTools.getPortletRequest();
         Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        WebclipBean bean = PortletDaoFactory.getWebclipDao().getWebclip(siteId, webclipId);
+        WebclipBean bean = PortletDaoFactory.getWebClipDao().getWebclip(siteId, webclipId);
         if (bean==null) {
             throw new IllegalStateException("webclip not found, webclipId: " + webclipId);
         }
@@ -186,7 +186,7 @@ public class WebclipDataProvider {
             is.close();
             WebclipBean bean = getWebclip();
             bean.setWebclipData(os.toString(CharEncoding.ISO_8859_1));
-            PortletDaoFactory.getWebclipDao().updateWebclip(bean);
+            PortletDaoFactory.getWebClipDao().updateWebclip(bean);
         } catch (MalformedURLException me) {
             log.error("Error get content from URL: " + url);
         } catch (IOException ioe) {
