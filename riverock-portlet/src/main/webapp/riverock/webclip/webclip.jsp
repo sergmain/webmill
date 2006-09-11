@@ -1,26 +1,26 @@
 <%--
-  ~ org.riverock.portlet - Portlet Library
-  ~
-  ~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
-  ~
-  ~ Riverock - The Open-source Java Development Community
-  ~ http://www.riverock.org
-  ~
-  ~
-  ~ This program is free software; you can redistribute it and/or
-  ~ modify it under the terms of the GNU General Public
-  ~ License as published by the Free Software Foundation; either
-  ~ version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This library is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public
-  ~ License along with this library; if not, write to the Free Software
-  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-  --%>
+~ org.riverock.portlet - Portlet Library
+~
+~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
+~
+~ Riverock - The Open-source Java Development Community
+~ http://www.riverock.org
+~
+~
+~ This program is free software; you can redistribute it and/or
+~ modify it under the terms of the GNU General Public
+~ License as published by the Free Software Foundation; either
+~ version 2 of the License, or (at your option) any later version.
+~
+~ This library is distributed in the hope that it will be useful,
+~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+~ General Public License for more details.
+~
+~ You should have received a copy of the GNU General Public
+~ License along with this library; if not, write to the Free Software
+~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+--%>
 <%--
   User: SergeMaslyukov
   Date: 10.09.2006
@@ -28,57 +28,101 @@
   $Id$
 --%>
 <%@ page session="false" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="org.apache.commons.lang.StringUtils" %>
 
-<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
-<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib prefix="c" uri="jstl/core" %>
+<%@ taglib prefix="fmt" uri="jstl/format" %>
+<%@ taglib prefix="request" uri="/tld/jakarta-request" %>
 
-<f:loadBundle basename="org.riverock.portlet.resource.Webclip" var="msg"/>
+<%
+    Object locale = request.getAttribute("request-locale");
 
-<style type="text/css">
-    TD {
-        vertical-align: top;
+    if (!(locale instanceof String) || StringUtils.isBlank((String)locale)) {
+        locale = "en";
     }
+    pageContext.setAttribute("locale", locale);
+%>
 
-    .top-button-action {
-        width: 120px;
-        height: 20px;
-    }
-
-    .weblip-button-action {
-        width: 150px;
-        height: 22px;
-    }
-
-    .site-sub-button-action {
-        width: 80px;
-        height: 22px;
-    }
-</style>
-
-<f:view>
-    <h:form rendered="#{isUserInRole['webmill.webclip-manager']}">
-
-        <h:panelGrid columns="1">
-            <h:panelGroup>
-                <h:commandButton id="save_webclip-action" action="#{webclipDataProvider.saveWebclipData}"
-                                 value="#{msg.save_webclip_action}"
-                                 styleClass="weblip-button-action"
-                    />
-
-                <h:commandButton id="article-add-cancel-action" action="#{webclipDataProvider.refreshWebclipData}"
-                                 value="#{msg.refresh_webclip_data_action}"
-                                 styleClass="weblip-button-action"
-                    />
-            </h:panelGroup>
-
-            <h:outputText value="#{msg.webclip_url}"/>
-            <h:inputText id="url-name-field" value="#{webclipDataProvider.url}" size="50"/>
-        </h:panelGrid>
-
-    </h:form>
-
-    <h:outputText value="#{webclipDataProvider.webclip.webclipData}" />
+<fmt:setLocale value="${locale}" scope="request"/>
+<fmt:setBundle basename="org.riverock.portlet.resource.Webclip" scope="request"/>
 
 
-</f:view>
+<table border="0">
+    <tr>
+        <td width="25%"></td><td></td>
+    </tr>
+    <td colspan="2"><fmt:message key="reg.forgot_password"/></td>
+
+    <form method="POST" action="<c:out value='${registerBean.baseModuleUrl}'/>">
+        <input type="hidden" name="action" value="send-password">
+        <tr>
+            <td><fmt:message key="reg.email"/></td>
+            <td><input type="text" name="email" size="12"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="<fmt:message key='reg.send_password'/>"></td>
+        </tr>
+    </form>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="2"><fmt:message key="reg.need_register"/></td>
+    </tr>
+
+    <form name="FormPost" method="POST" action="<c:out value='${registerBean.baseModuleUrl}'/>">
+        <input type="hidden" name="action" value="create-account">
+        <input type="hidden" name="captchaId" value="<c:out value='${captchaId}'/>">
+        <tr>
+            <td><span style="color:red">*</span><fmt:message key="reg.login"/></td>
+            <td><input type="text" name="username" size="20" maxlength="20"></td>
+        </tr>
+        <tr>
+            <td><span style="color:red">*</span><fmt:message key="reg.password"/></td>
+            <td>
+                <input type="password" name="password1" size="20" maxlength="20">
+            </td>
+        </tr>
+        <tr>
+            <td><span style="color:red">*</span><fmt:message key="reg.password_repeat"/></td>
+            <td><input type="password" name="password2" size="20" maxlength="20"></td>
+        </tr>
+        <tr>
+            <td><fmt:message key="reg.first_name"/></td>
+            <td><input type="text" name="first_name" size="50" maxlength="50"></td>
+        </tr>
+        <tr>
+            <td><fmt:message key="reg.last_name"/></td>
+            <td><input type="text" name="last_name" size="50" maxlength="50"></td>
+        </tr>
+        <tr>
+            <td><fmt:message key="reg.telephone"/></td>
+            <td><input type="text" name="phone" size="25" maxlength="25"></td>
+        </tr>
+        <tr>
+            <td><fmt:message key="reg.address"/></td>
+            <td><input type="text" name="addr" size="50" maxlength="50"></td>
+        </tr>
+        <tr>
+            <td><span style="color:red">*</span><fmt:message key="reg.email"/></td>
+            <td><input type="text" name="email" size="30" maxlength="30"></td>
+        </tr>
+        <tr>
+            <td><span style="color:red">*</span><fmt:message key="reg.captcha"/></td>
+            <td>
+                <img src="<%= request.getContextPath() %>/jcaptcha?id=<c:out value='${captchaId}'/>" alt="captcha"><br/>
+                <input type="text" name="j_captcha_response" value="">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="<fmt:message key='reg.register'/>"></td>
+        </tr>
+    </form>
+</table>
+
+
+
+
