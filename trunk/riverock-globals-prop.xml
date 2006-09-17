@@ -71,6 +71,7 @@
     <property name="secure.lib" value="bcprov-jdk14-122.jar"/>
     <property name="bcel.lib" value="BCEL.jar"/>
     <property name="jdom.lib" value="jdom-1.0.jar"/>
+    <property name="nekohtml.lib" value="nekohtml-0.9.5.jar"/>
 
     <property name="jaxb-api.lib" value="jaxb-api-2.0.2.jar"/>
     <property name="jaxb-impl.lib" value="jaxb-impl-2.0.2.jar"/>

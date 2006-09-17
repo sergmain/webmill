@@ -29,7 +29,8 @@
 
 	<context-param>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
-		<param-value>/WEB-INF/faces-common-config.xml,
+		<param-value>
+            /WEB-INF/faces-common-config.xml,
             /WEB-INF/faces-manager-config.xml,
             /WEB-INF/faces-auth-config.xml,
             /WEB-INF/faces-holding-config.xml,
@@ -593,6 +594,10 @@
 		<taglib>
 			<taglib-uri>/tld/jakarta-session</taglib-uri>
 			<taglib-location>/WEB-INF/tld/jakarta/taglibs-session.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/portlet</taglib-uri>
+			<taglib-location>/WEB-INF/tld/portlet.tld</taglib-location>
 		</taglib>
 	</jsp-config>
 	<!-- JNDI Db resource -->

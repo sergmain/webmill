@@ -54,30 +54,82 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     private WebclipUrlProducer urlProducer = null;
     
     // document's fragment
-    private DocumentFragment fragment = null;
+    private Node fragmentNode = null;
 
     /**
      *
      * @param urlProducer UrlProducer url producer
      * @param bytes контент для модификации урлов
+     * @param elementType int 1- table element, 2 - div element
+     * @param elementId String
      */
-    public WebclipDataProcessorImpl(WebclipUrlProducer urlProducer, byte[] bytes) {
+    public WebclipDataProcessorImpl(WebclipUrlProducer urlProducer, byte[] bytes, int elementType, String elementId) {
         this.urlProducer = urlProducer;
 
         DOMFragmentParser parser = new DOMFragmentParser();
 
         HTMLDocument document = new HTMLDocumentImpl();
+        DocumentFragment fragment;
         fragment = document.createDocumentFragment();
 
         try {
             InputSource inputSource = new InputSource(new ByteArrayInputStream(bytes));
             inputSource.setEncoding(CharEncoding.UTF_8);
             parser.parse(inputSource, fragment);
+            fragmentNode = searchNode(fragment, elementType, elementId);
         } catch (Exception e) {
             String es="Error parse HTML fragment.";
             log.error(es, e);
             throw new IllegalStateException(es +' ' + e.getMessage());
         }
+    }
+
+    /**
+     *
+     * @param node Node
+     * @param elementType int 1- table element, 2 - div element
+     * @param elementId String
+     * @return Node
+     */
+    private Node searchNode(Node node, int elementType, String elementId) {
+        if (node == null) {
+            return null;
+        }
+
+        if ( node.getNodeType() == Node.ELEMENT_NODE) {
+                switch (elementType) {
+                    case 1:
+                        if (node.getNodeName().equalsIgnoreCase("table") && getIdAttr(node).equals(elementId)) {
+                            return node;
+                        }
+                        break;
+                    case 2:
+                        if (node.getNodeName().equalsIgnoreCase("div") && getIdAttr(node).equals(elementId)) {
+                            return node;
+                        }
+                        break;
+                }
+        }
+
+        NodeList childNodes = node.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            node = childNodes.item(i);
+            Node result = searchNode(node, elementType, elementId);
+            if (result!=null) {
+                return result;
+            }
+        }
+        return null;
+    }
+
+    private String getIdAttr(Node node) {
+        Attr attrs[] = sortAttributes(node.getAttributes());
+        for (Attr attr : attrs) {
+            if (attr.getName().equalsIgnoreCase("id")) {
+                return attr.getValue();
+            }
+        }
+        return "";
     }
 
     /**
@@ -88,7 +140,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
      */
     public void modify(OutputStream out) throws IOException {
-        print(fragment, out);
+        print(fragmentNode, out);
     }
 
     /**
