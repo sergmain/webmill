@@ -43,8 +43,8 @@ public class Preferences implements Serializable {
 
     public void setPreferenceList(List<Preference> preferenceList) {
         List<Preference> list = new ArrayList<Preference>(preferenceList.size());
-        for (Preference preference : list) {
-            Collection<String> values = preference.getValue();
+        for (Preference preference : preferenceList) {
+            List<String> values = preference.getValue();
             if (values==null || values.isEmpty()) {
                 continue;
             }
