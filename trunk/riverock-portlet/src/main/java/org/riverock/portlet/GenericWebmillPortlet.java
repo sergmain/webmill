@@ -71,9 +71,7 @@ public abstract class GenericWebmillPortlet implements Portlet {
 
     public boolean isXml() {
         String s = portletConfig.getInitParameter( ContainerConstants.is_xml );
-        if (s==null)
-            return false;
-        return Boolean.parseBoolean(s);
+        return s != null && Boolean.parseBoolean(s);
     }
 
     public void doRender(RenderRequest renderRequest, RenderResponse renderResponse, PortletResultObject beanObject) throws PortletException, IOException
