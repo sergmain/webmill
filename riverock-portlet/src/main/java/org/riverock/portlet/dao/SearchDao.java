@@ -25,21 +25,16 @@ package org.riverock.portlet.dao;
 
 /**
  * User: SergeMaslyukov
- * Date: 10.09.2006
- * Time: 17:32:04
+ * Date: 17.09.2006
+ * Time: 23:42:11
  * <p/>
  * $Id$
  */
-public class PortletDaoFactory {
-    private final static WebclipDao WEBCLIP_DAO = new WebclipDaoImpl();
-    private final static SearchDao SEARCH_DAO = new SearchDaoImpl();
-
-    public static SearchDao getSearchDao() {
-        return SEARCH_DAO;
-    }
-
-    public static WebclipDao getWebclipDao() {
-        return WEBCLIP_DAO;
-    }
+public interface SearchDao {
+    /**
+     * Store search request in DB
+     * @param siteId Long
+     * @param searchString String
+     */
+    void storeRequest(Long siteId, String searchString);
 }
-

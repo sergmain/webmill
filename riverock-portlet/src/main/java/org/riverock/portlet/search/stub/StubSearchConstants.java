@@ -21,25 +21,19 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.dao;
+package org.riverock.portlet.search.stub;
 
 /**
  * User: SergeMaslyukov
- * Date: 10.09.2006
- * Time: 17:32:04
+ * Date: 18.09.2006
+ * Time: 0:10:46
  * <p/>
  * $Id$
  */
-public class PortletDaoFactory {
-    private final static WebclipDao WEBCLIP_DAO = new WebclipDaoImpl();
-    private final static SearchDao SEARCH_DAO = new SearchDaoImpl();
-
-    public static SearchDao getSearchDao() {
-        return SEARCH_DAO;
-    }
-
-    public static WebclipDao getWebclipDao() {
-        return WEBCLIP_DAO;
-    }
+public class StubSearchConstants {
+    static final String RIVEROCK_SEARCH_STUB_INDEX_JSP = "/riverock/search/stub/index.jsp";
+    static final String RIVEROCK_SEARCH_STUB_RESULT_SEARCH_JSP = "/riverock/search/stub/search_result.jsp";
+    
+    static final String SEARCH_WORD = "searchWord";
+    static final String SEARCH_RESULT = "SEARCH_RESULT";
 }
-
