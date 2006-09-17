@@ -159,7 +159,7 @@ public class WebclipDaoImpl implements WebclipDao {
         String sql_ =
             "update WM_PORTLET_WEBCLIP "+
             "set    DATE_POST=? "+
-            "where  ID_SITE_CTX_ARTICLE=?";
+            "where  ID_WEBCLIP=?";
 
         PreparedStatement ps = null;
         DatabaseAdapter adapter = null;

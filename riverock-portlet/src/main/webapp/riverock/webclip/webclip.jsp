@@ -33,6 +33,9 @@
 <%@ taglib prefix="c" uri="jstl/core" %>
 <%@ taglib prefix="fmt" uri="jstl/format" %>
 <%@ taglib prefix="request" uri="/tld/jakarta-request" %>
+<%@ taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
+
+<portlet:defineObjects/>
 
 <%
     Object locale = request.getAttribute("request-locale");
@@ -48,81 +51,38 @@
 
 
 <table border="0">
-    <tr>
-        <td width="25%"></td><td></td>
-    </tr>
-    <td colspan="2"><fmt:message key="reg.forgot_password"/></td>
-
-    <form method="POST" action="<c:out value='${registerBean.baseModuleUrl}'/>">
-        <input type="hidden" name="action" value="send-password">
+    <%
+        if (request.isUserInRole("webmill.webclip-manager") ||
+            request.isUserInRole("webmill.portal-manager")) {
+    %>
+    <portlet:actionURL var="portletUrl"/>
+    <form method="POST" action="<c:out value='${portletUrl}'/>">
         <tr>
-            <td><fmt:message key="reg.email"/></td>
-            <td><input type="text" name="email" size="12"></td>
+            <td width="25%"><fmt:message key="webclip_url"/></td>
+            <td colspan="3" width="50%"><input type="text" name="sourceUrl" size="100" value="<c:out value='${sourceUrl}'/>"></td>
+        </tr>
+        <tr>                              
+            <td width="25%"><fmt:message key="webclip_href_start_page"/></td>
+            <td width="25%"><input type="text" name="hrefStartPart" size="30" value="<c:out value='${hrefStartPart}'/>"></td>
+            <td width="25%"><fmt:message key="webclip_new_href_prefix"/></td>
+            <td width="25%"><input type="text" name="newHrefPrefix" size="30" value="<c:out value='${newHrefPrefix}'/>"></td>
         </tr>
         <tr>
-            <td colspan="2"><input type="submit" value="<fmt:message key='reg.send_password'/>"></td>
-        </tr>
-    </form>
-    <tr>
-        <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-        <td colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-        <td colspan="2"><fmt:message key="reg.need_register"/></td>
-    </tr>
-
-    <form name="FormPost" method="POST" action="<c:out value='${registerBean.baseModuleUrl}'/>">
-        <input type="hidden" name="action" value="create-account">
-        <input type="hidden" name="captchaId" value="<c:out value='${captchaId}'/>">
-        <tr>
-            <td><span style="color:red">*</span><fmt:message key="reg.login"/></td>
-            <td><input type="text" name="username" size="20" maxlength="20"></td>
+            <td colspan="4"><input style="width:150px;" type="submit" name="save" value="<fmt:message key='save_webclip_action'/>"></td>
         </tr>
         <tr>
-            <td><span style="color:red">*</span><fmt:message key="reg.password"/></td>
-            <td>
-                <input type="password" name="password1" size="20" maxlength="20">
-            </td>
+            <td colspan="4">&nbsp;</td>
         </tr>
         <tr>
-            <td><span style="color:red">*</span><fmt:message key="reg.password_repeat"/></td>
-            <td><input type="password" name="password2" size="20" maxlength="20"></td>
-        </tr>
-        <tr>
-            <td><fmt:message key="reg.first_name"/></td>
-            <td><input type="text" name="first_name" size="50" maxlength="50"></td>
-        </tr>
-        <tr>
-            <td><fmt:message key="reg.last_name"/></td>
-            <td><input type="text" name="last_name" size="50" maxlength="50"></td>
-        </tr>
-        <tr>
-            <td><fmt:message key="reg.telephone"/></td>
-            <td><input type="text" name="phone" size="25" maxlength="25"></td>
-        </tr>
-        <tr>
-            <td><fmt:message key="reg.address"/></td>
-            <td><input type="text" name="addr" size="50" maxlength="50"></td>
-        </tr>
-        <tr>
-            <td><span style="color:red">*</span><fmt:message key="reg.email"/></td>
-            <td><input type="text" name="email" size="30" maxlength="30"></td>
-        </tr>
-        <tr>
-            <td><span style="color:red">*</span><fmt:message key="reg.captcha"/></td>
-            <td>
-                <img src="<%= request.getContextPath() %>/jcaptcha?id=<c:out value='${captchaId}'/>" alt="captcha"><br/>
-                <input type="text" name="j_captcha_response" value="">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" value="<fmt:message key='reg.register'/>"></td>
+            <td colspan="4"><input style="width:150px;" type="submit" name="refresh" value="<fmt:message key='refresh_webclip_data_action'/>" ></td>
         </tr>
     </form>
+    <%
+        }
+    %>
 </table>
 
+<c:out value="${webclipBean.webclipData}" escapeXml="false"/>
 
 
 

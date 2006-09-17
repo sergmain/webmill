@@ -24,20 +24,31 @@
 package org.riverock.portlet.webclip;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 11.09.2006
- *         Time: 22:07:04
- *         <p/>
- *         $Id$
+ * User: SergeMaslyukov
+ * Date: 17.09.2006
+ * Time: 20:40:49
+ * <p/>
+ * $Id$
  */
-public interface WebclipUrlProducer {
-    
+public class WebclipUrlProducerImpl implements WebclipUrlProducer {
+
+    private String newHrefPrefix=null;
+    private String hrefStartPart=null;
+    private String href;
+
+    public WebclipUrlProducerImpl(String newHrefPrefix, String hrefStartPart) {
+        this.newHrefPrefix = newHrefPrefix;
+        this.hrefStartPart = hrefStartPart;
+    }
+
     /**
      * set current href
      *
      * @param value current href
      */
-    void setCurrentHrefValue(String value);
+    public void setCurrentHrefValue(String value) {
+        this.href=value;
+    }
 
     /**
      * set new parameter
@@ -45,17 +56,29 @@ public interface WebclipUrlProducer {
      * @param name  String paramete name r
      * @param value String parameter value
      */
-    void setParameter(String name, String value);
+    public void setParameter(String name, String value) {
+    }
 
     /**
      * get new url
      *
      * @return String
      */
-    String getUrl();
+    public String getUrl() {
+        if (href==null) {
+            return "";
+        }
+
+        if (hrefStartPart!=null && newHrefPrefix!=null && href.startsWith(hrefStartPart)) {
+            return newHrefPrefix + href.substring(hrefStartPart.length());
+        }
+        return href;
+    }
 
     /**
      * init mwethod
      */
-    void init();
+    public void init() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

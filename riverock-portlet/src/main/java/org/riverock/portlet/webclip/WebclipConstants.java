@@ -24,38 +24,22 @@
 package org.riverock.portlet.webclip;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 11.09.2006
- *         Time: 22:07:04
- *         <p/>
- *         $Id$
+ * User: SergeMaslyukov
+ * Date: 17.09.2006
+ * Time: 17:28:27
+ * <p/>                                  newHrefPrefix, String hrefStartPart
+ * $Id$
  */
-public interface WebclipUrlProducer {
-    
-    /**
-     * set current href
-     *
-     * @param value current href
-     */
-    void setCurrentHrefValue(String value);
-
-    /**
-     * set new parameter
-     *
-     * @param name  String paramete name r
-     * @param value String parameter value
-     */
-    void setParameter(String name, String value);
-
-    /**
-     * get new url
-     *
-     * @return String
-     */
-    String getUrl();
-
-    /**
-     * init mwethod
-     */
-    void init();
+public class WebclipConstants {
+    static final String WEBCLIP_ID_PREF = "webclip.webclip_id";
+    static final String URL_SOURCE_PREF = "webclip.url";
+    static final String NEW_HREF_PREFIX_PREF = "webclip.new_prefix";
+    static final String HREF_START_PAGE_PREF = "webclip.href_start_page";
+    static final String RIVEROCK_WEBLICP_INDEX_JSP = "/riverock/webclip/webclip.jsp";
+    static final String WEBCLIP_BEAN = "webclipBean";
+    static final String SAVE_ACTION = "save";
+    static final String REFRESH_ACTION = "refresh";
+    static final String SOURCE_URL_PARAM = "sourceUrl";
+    static final String NEW_HREF_PREFIX_PARAM = "newHrefPrefix";
+    static final String HREF_START_PAGE_PARAM = "hrefStartPart";
 }

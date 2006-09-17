@@ -73,6 +73,7 @@
         <pathelement location="${lib.dir}/${jcaptcha.lib}"/>
         <pathelement location="${lib.dir}/${ehcache.lib}"/>
 
+        <pathelement location="${lib.dir}/${nekohtml.lib}"/>
     </path>
 
     <property name="build_context" value="${build.dir}/mill_context"/>
@@ -188,6 +189,8 @@
 
         <include name="${jcaptcha.lib}"/>
         <include name="${ehcache.lib}"/>
+
+        <include name="${nekohtml.lib}"/>
 
     </patternset>
 

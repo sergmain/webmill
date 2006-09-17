@@ -80,11 +80,11 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
 
     /**
      *
-     * @param portletMetadata
-     * @param persistencer
-     * @param preferences
+     * @param portletMetadata Map<String, List<String>>
+     * @param persistencer PortletPreferencePersistencer
+     * @param preferences Preferences
      * @param isStandardPortletMode boolean if Portlet mode of request is EDIT, HELP or VIEW, return true, otherwise false
-     * @param isRenderRequest
+     * @param isRenderRequest boolean
      */
     public PortletPreferencesImpl(Map<String, List<String>> portletMetadata, PortletPreferencePersistencer persistencer, Preferences preferences, boolean isStandardPortletMode, boolean isRenderRequest) {
         this.portletMetadata = portletMetadata;
