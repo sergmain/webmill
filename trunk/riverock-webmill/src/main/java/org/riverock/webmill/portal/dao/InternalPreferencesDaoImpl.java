@@ -33,7 +33,9 @@ public class InternalPreferencesDaoImpl implements InternalPreferencesDao {
             StringWriter out = new StringWriter();
 
             for (Map.Entry<String, List<String>> entry : preferences.entrySet()) {
-                out.write(entry.getKey()+'='+entry.getValue()+'\n');
+                for (String s : entry.getValue()) {
+                    out.write(entry.getKey()+'='+s+'\n');
+                }
             }
             String s = out.toString();
 
