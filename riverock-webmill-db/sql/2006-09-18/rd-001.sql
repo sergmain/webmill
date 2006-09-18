@@ -4,3 +4,10 @@ CREATE TABLE wm_portlet_search (
   WORD varchar2(50) default NULL
 ) 
 /
+
+ALTER TABLE WM_PORTAL_LIST_SITE 
+ MODIFY (
+  DEF_COUNTRY DEFAULT NULL NULL
+
+ )
+/
