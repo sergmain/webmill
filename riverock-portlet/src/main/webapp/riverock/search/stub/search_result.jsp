@@ -48,42 +48,24 @@
 %>
 
 <fmt:setLocale value="${locale}" scope="request"/>
-<fmt:setBundle basename="org.riverock.portlet.resource.Webclip" scope="request"/>
+<fmt:setBundle basename="org.riverock.portlet.resource.Search" scope="request"/>
 
 
 <table border="0">
-    <%
-        if (request.isUserInRole("webmill.webclip-manager") ||
-            request.isUserInRole("webmill.portal-manager")) {
-    %>
+    <tr>
+            <fmt:message key="search_result_empty" >
+                <fmt:param value="${searchWord}"/>
+            </fmt:message>
+        </td>
+    </tr>
     <portlet:actionURL var="portletUrl"/>
     <form method="POST" action="<c:out value='${portletUrl}'/>">
         <tr>
-            <td width="25%"><fmt:message key="webclip_url"/></td>
-            <td colspan="3" width="50%"><input type="text" name="sourceUrl" size="100" value="<c:out value='${sourceUrl}'/>"></td>
-        </tr>
-        <tr>
-            <td width="25%"><fmt:message key="webclip_href_start_page"/></td>
-            <td width="25%"><input type="text" name="hrefStartPart" size="30" value="<c:out value='${hrefStartPart}'/>"></td>
-            <td width="25%"><fmt:message key="webclip_new_href_prefix"/></td>
-            <td width="25%"><input type="text" name="newHrefPrefix" size="30" value="<c:out value='${newHrefPrefix}'/>"></td>
-        </tr>
-        <tr>
-            <td colspan="4"><input style="width:150px;" type="submit" name="save" value="<fmt:message key='save_webclip_action'/>"></td>
-        </tr>
-        <tr>
-            <td colspan="4">&nbsp;</td>
-        </tr>
-        <tr>
-            <td colspan="4"><input style="width:150px;" type="submit" name="refresh" value="<fmt:message key='refresh_webclip_data_action'/>" ></td>
+            <td width="50%"><input type="text" name="searchWord" size="50" value="<c:out value='${searchWord}'/>"></td>
+            <td><input style="width:150px;" type="submit" name="search" value="<fmt:message key='search_button'/>" ></td>
         </tr>
     </form>
-    <%
-        }
-    %>
 </table>
-
-<c:out value="${webclipBean.webclipData}" escapeXml="false"/>
 
 
 

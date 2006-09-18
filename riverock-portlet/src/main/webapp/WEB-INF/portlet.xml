@@ -28,6 +28,23 @@
 <portlet-app version="webmill portlet's deployment descriptor" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
 c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
+        <description>Webmill search stub</description>
+        <portlet-name>webmill.search-stub</portlet-name>
+        <display-name>Webmill search</display-name>
+		<portlet-class>org.riverock.portlet.search.stub.StubSearchPortlet</portlet-class>
+		<expiration-cache>-1</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>Webmill search</title>
+			<short-title>Search</short-title>
+			<keywords>Webmill search</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
 		<portlet-name>webmill.rss</portlet-name>
 		<portlet-class>org.riverock.portlet.rss.RssPortlet</portlet-class>
 		<!-- a xsl file for the rss version 1.0 -->
