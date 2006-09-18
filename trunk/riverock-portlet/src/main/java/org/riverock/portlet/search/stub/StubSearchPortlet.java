@@ -56,7 +56,10 @@ public class StubSearchPortlet implements Portlet {
 
         String searchWord = request.getParameter(StubSearchConstants.SEARCH_WORD);
         PortletSession portletSession = request.getPortletSession(true);
+        portletSession.setAttribute(StubSearchConstants.SEARCH_WORD, searchWord);
+
         if (StringUtils.isNotBlank(searchWord)) {
+            searchWord = searchWord.trim();
             if (searchWord.length()>3) {
                 PortletDaoFactory.getSearchDao().storeRequest(siteId, searchWord );
                 portletSession.setAttribute(StubSearchConstants.SEARCH_RESULT, "Content for '"+searchWord+"' not found.");
@@ -68,10 +71,13 @@ public class StubSearchPortlet implements Portlet {
 
     public void render(RenderRequest request, RenderResponse response) throws PortletException, IOException {
         PortletSession portletSession = request.getPortletSession(true);
-        if (portletSession.getAttribute(StubSearchConstants.SEARCH_RESULT)==null) {
+        Object word = portletSession.getAttribute(StubSearchConstants.SEARCH_WORD);
+        if (word ==null) {
             portletConfig.getPortletContext().getRequestDispatcher(StubSearchConstants.RIVEROCK_SEARCH_STUB_INDEX_JSP).include(request, response);
         }
         else {
+            request.setAttribute(StubSearchConstants.SEARCH_WORD, word);
+            portletSession.removeAttribute(StubSearchConstants.SEARCH_WORD);
             portletConfig.getPortletContext().getRequestDispatcher(StubSearchConstants.RIVEROCK_SEARCH_STUB_RESULT_SEARCH_JSP).include(request, response);
         }
     }

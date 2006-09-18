@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DbSchemaType xmlns="http://generic.riverock.org/xsd/riverock-database-structure.xsd">
 
+	<Tables schema="TEST" name="WM_PORTLET_SEARCH" type="TABLE">
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="SEARCH_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="WORD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+	</Tables>
 	<Tables schema="TEST" name="WM_PORTLET_WEBCLIP" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_PORTLET_ARTICLE" columnName="ID_WEBCLIP" keySeq="1" pkName="ID_WEBCLIP_WPW_PK"/>
