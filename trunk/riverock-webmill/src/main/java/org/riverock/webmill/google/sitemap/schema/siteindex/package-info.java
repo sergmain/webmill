@@ -6,4 +6,4 @@
 //
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://www.google.com/schemas/sitemap/0.84", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package org.riverock.portlet.google.sitemap.schema.siteindex;
+package org.riverock.webmill.google.sitemap.schema.siteindex;

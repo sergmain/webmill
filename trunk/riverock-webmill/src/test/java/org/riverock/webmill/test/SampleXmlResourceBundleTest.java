@@ -2,7 +2,7 @@ package org.riverock.webmill.test;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.resource.CustomXmlResourceBundle;
+import org.riverock.common.resource.CustomXmlResourceBundle;
 
 /**
  * @author smaslyukov

@@ -1,12 +1,13 @@
 /*
- * org.riverock.webmill -- Portal framework implementation
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock -- The Open-source Java Development Community
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
+ *
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
@@ -20,7 +21,6 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.webmill.portal.menu;
 
@@ -107,13 +107,10 @@ public final class PortalMenuItem implements MenuItem{
         }
 
         if (log.isDebugEnabled()){
-            log.debug("ctxItem: "+ctx);
-            if (ctx!=null){
-                log.debug("ctxItem.getCatalogItemId(): "+ctx.getCatalogId());
-                log.debug("ctxItem.getCatalogLanguageId(): "+ctx.getCatalogLanguageId() );
-                log.debug("ctxItem.getIdSiteTemplate(): "+ctx.getTemplateId() );
-                log.debug("ctxItem.getIdSiteCtxType(): "+ctx.getPortletId() );
-            }
+            log.debug("ctxItem.getCatalogItemId(): "+ctx.getCatalogId());
+            log.debug("ctxItem.getCatalogLanguageId(): "+ctx.getCatalogLanguageId() );
+            log.debug("ctxItem.getIdSiteTemplate(): "+ctx.getTemplateId() );
+            log.debug("ctxItem.getIdSiteCtxType(): "+ctx.getPortletId() );
         }
 
         this.menuName = ctx.getKeyMessage();
