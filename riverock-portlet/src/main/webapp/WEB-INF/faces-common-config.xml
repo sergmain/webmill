@@ -44,5 +44,18 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
+    <managed-bean>
+        <managed-bean-name>portalActionExecutor</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.main.PortalActionExecutorService</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>manager-index</from-outcome>
+            <to-view-id>/riverock/manager/index.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 
 </faces-config>

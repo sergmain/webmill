@@ -83,3 +83,14 @@
 
 </h:panelGrid>
 
+<h:panelGrid columns="1">
+
+    <h:panelGroup>
+        <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
+            <h:commandButton id="create-google-sitemap-action" action="#{portalActionExecutor.createGoogleSitemap}" value="Create Google sitemap" styleClass="top-button-action"/>
+            <h:outputText value="Create Google sitemap" style="font-size:10px"/>
+        </h:panelGrid>
+    </h:panelGroup>
+
+</h:panelGrid>
+

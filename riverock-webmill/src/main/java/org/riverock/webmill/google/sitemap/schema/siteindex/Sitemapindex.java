@@ -6,7 +6,7 @@
 //
 
 
-package org.riverock.portlet.google.sitemap.schema.siteindex;
+package org.riverock.webmill.google.sitemap.schema.siteindex;
 
 import java.util.ArrayList;
 import java.util.List;

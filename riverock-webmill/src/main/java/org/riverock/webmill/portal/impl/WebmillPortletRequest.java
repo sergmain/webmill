@@ -46,6 +46,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
+import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
@@ -54,6 +55,7 @@ import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.portlet.bean.Supports;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.action.PortalActionExecutorImpl;
 import org.riverock.webmill.portal.mail.PortalMailServiceProviderImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
@@ -917,6 +919,27 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
                 classLoader
             )
         );
+//        public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId,
+// String applicationPath, String virtualHostUrl, String portalContext) {
+        this.setAttribute(
+            ContainerConstants.PORTAL_PORTAL_ACTION_EXECUTOR,
+            new PortalActionExecutorImpl(
+                classLoader,
+                portalRequestInstance.getPortalInfo().getSite().getSiteId(),
+                PropertiesProvider.getApplicationPath(),
+                buildVirtualHostUrl(httpRequest),
+                portalContext.getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH )
+            )
+        );
+    }
+
+    private String buildVirtualHostUrl(HttpServletRequest req) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(req.getScheme()).append("://").append(req.getServerName());
+        if (req.getServerPort()!=80) {
+            sb.append(req.getServerPort());
+        }
+        return sb.toString();
     }
 
     // Private methods

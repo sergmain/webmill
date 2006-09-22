@@ -30,7 +30,7 @@ import java.util.HashMap;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.action.PortalActionExecutor;
-import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.google.sitemap.GoogleSitemapService;
 
 /**
  * @author Sergei Maslyukov
@@ -44,22 +44,29 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
 
     private static Map<String, Integer> action = new HashMap<String, Integer>();
 
-    private static final int CREATE_SITEMAP_TYPE = 1;
-    private static final String CREATE_SITEMAP_ACTION = "create-sitemap";
+    private static final int CREATE_GOOGLE_SITEMAP_TYPE = 1;
+    private static final String CREATE_GOOGLE_SITEMAP_ACTION = "create-google-sitemap";
 
     static {
-        action.put(CREATE_SITEMAP_ACTION, CREATE_SITEMAP_TYPE);
+        action.put(CREATE_GOOGLE_SITEMAP_ACTION, CREATE_GOOGLE_SITEMAP_TYPE);
     }
 
     private ClassLoader portalClassLoader;
     private Long siteId;
+    private String virtualHostUrl;
+    private String applicationPath;
+    private String portalContext;
 
-    public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId) {
+    public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId, String applicationPath, String virtualHostUrl, String portalContext) {
         this.portalClassLoader=portalClassLoader;
         this.siteId=siteId;
+        this.virtualHostUrl=virtualHostUrl;
+        this.applicationPath=applicationPath;
+        this.portalContext=portalContext;
     }
     
     public Map<String, Object> execute(String command, Map<String, Object> parameters) {
+        log.debug("Start PortalActionExecutorImpl.execute()");
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( portalClassLoader );
@@ -72,11 +79,11 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
                 return result;
             }
             switch (idx) {
-                case CREATE_SITEMAP_TYPE:
-                    CreateSitemapAction.create(siteId);
+                case CREATE_GOOGLE_SITEMAP_TYPE:
+                    GoogleSitemapService.createSitemap(siteId, virtualHostUrl, portalContext, applicationPath);
                     return result;
                 default:
-
+                    log.warn("Unknown value of actionIndex: " + idx);
                     return result;
 
             }

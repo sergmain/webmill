@@ -98,12 +98,26 @@ public final class PortletService {
         return path + ContainerConstants.PAGEID_SERVLET_NAME ;
     }
 
+    public static String pageid( final String portalContext ) {
+        if (portalContext.equals("/") || portalContext.equals("") )
+            return ContainerConstants.PAGEID_SERVLET_NAME ;
+
+        return portalContext + ContainerConstants.PAGEID_SERVLET_NAME ;
+    }
+
     public static String page( final PortletRequest renderRequest ) {
         String path = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
         if (path.equals("/") || path.equals("") )
             return ContainerConstants.PAGE_SERVLET_NAME ;
 
         return path + ContainerConstants.PAGE_SERVLET_NAME ;
+    }
+
+    public static String page( final String portalContext ) {
+        if (portalContext.equals("/") || portalContext.equals("") )
+            return ContainerConstants.PAGE_SERVLET_NAME ;
+
+        return portalContext + ContainerConstants.PAGE_SERVLET_NAME ;
     }
 
     public static String url( final String portletName, final PortletRequest renderRequest, final PortletResponse renderResponse ) {

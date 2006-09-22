@@ -22,17 +22,44 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.action;
+package org.riverock.webmill.google.sitemap;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import javax.xml.bind.JAXBException;
+
+import org.riverock.webmill.google.sitemap.schema.sitemap.Urlset;
+import org.riverock.webmill.google.sitemap.schema.sitemap.Url;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 22.09.2006
- *         Time: 18:01:41
+ *         Time: 19:38:56
  *         <p/>
  *         $Id$
  */
-public class CreateSitemapAction {
-    public static void create(Long siteId) {
-        
+public class SitemapMarshalTest {
+    public static void main(String[] args) throws JAXBException {
+        long sm = System.currentTimeMillis();
+        for (int i=0; i<1; i++)
+            marshal();
+
+        System.out.println("sm = " + (System.currentTimeMillis()-sm));
+    }
+
+    private static void marshal() throws JAXBException {
+        List<Url> urls = new ArrayList<Url>();
+        Url url;
+
+        url = new Url();
+        url.setLoc("http://askmore.info/page/about/Paris_hilton");
+        urls.add(url);
+
+        url = new Url();
+        url.setLoc("http://askmore.info/page/about/Christina_Aguilera");
+        urls.add(url);
+
+        GoogleSitemapService.marshall(urls, System.out);
     }
 }

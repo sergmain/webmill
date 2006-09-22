@@ -6,7 +6,7 @@
 //
 
 
-package org.riverock.portlet.google.sitemap.schema.siteindex;
+package org.riverock.webmill.google.sitemap.schema.siteindex;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

@@ -75,6 +75,11 @@
 		<servlet-class>org.riverock.webmill.main.ServletCSS</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>GooleSitemapServlet</servlet-name>
+		<servlet-class>org.riverock.webmill.google.sitemap.GoogleSitemapServlet</servlet-class>
+		<load-on-startup>6</load-on-startup>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>ContextNavigator</servlet-name>
@@ -91,6 +96,10 @@
 	<servlet-mapping>
 		<servlet-name>ServletCSS</servlet-name>
 		<url-pattern>/css</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>GooleSitemapServlet</servlet-name>
+		<url-pattern>/sitemap.xml.gz</url-pattern>
 	</servlet-mapping>
 
 	<!-- Set the default session timeout (in minutes) -->
