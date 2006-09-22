@@ -21,24 +21,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.google.sitemap;
+package org.riverock.webmill.google.sitemap;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 
-import org.apache.myfaces.custom.tree2.TreeNodeBase;
+import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
-import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.manager.menu.bean.SiteLanguageBean;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * @author Sergei Maslyukov
@@ -47,7 +45,14 @@ import org.riverock.webmill.container.ContainerConstants;
  *         <p/>
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class GoogleSitemapServlet extends HttpServlet {
+    private final static Logger log = Logger.getLogger( GoogleSitemapServlet.class );
+
+    private static final String SITEMAP_XML = "sitemap.xml.gz";
+    private static final String SITEMAP_DIR = "WEB-INF" + File.separatorChar+ "sitemap" + File.separatorChar;
+    private static final int BUFFER_SIZE = 1024;
+    private static final String APPLICATION_X_GZIP_CONTENT_TYPE = "application/x-gzip";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -55,33 +60,42 @@ public class GoogleSitemapServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
 
-        FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
-        for (SiteLanguage siteLanguage : menuService.getSiteLanguageList(site.getSiteId())) {
-            TreeNodeBase siteLanguageNode = new TreeNodeBase(
-                "site-language",
-                siteLanguage.getNameCustomLanguage() + " (" + siteLanguage.getCustomLanguage() + ")",
-                siteLanguage.getSiteLanguageId().toString(),
-                false);
-            treeRoot.getChildren().add(siteLanguageNode);
-
-            TreeNodeBase menuCatalogListNode = new TreeNodeBase("menu-catalog-list", "Menu catalog list", siteLanguage.getSiteLanguageId().toString(), false);
-            siteLanguageNode.getChildren().add(menuCatalogListNode);
-
-            for (CatalogLanguageItem catalogLanguageItem : menuService.getMenuCatalogList(siteLanguage.getSiteLanguageId())) {
-                TreeNodeBase menuCatalogNode = new TreeNodeBase(
-                    "menu-catalog",
-                    catalogLanguageItem.getCatalogCode(),
-                    catalogLanguageItem.getCatalogLanguageId().toString(),
-                    false);
-                menuCatalogListNode.getChildren().add(menuCatalogNode);
-
-                processMenuItem(menuCatalogNode, menuService.getMenuItemList(catalogLanguageItem.getCatalogLanguageId()));
-            }
-
+        if ( log.isDebugEnabled() ) {
+            log.debug( "Dynamic status " + p.getSite().getCssDynamic() );
         }
 
-    }
+        String sitemapPath = getServletContext().getRealPath("/") + SITEMAP_DIR + p.getSiteId();
 
+        File path = new File(sitemapPath);
+        if (log.isDebugEnabled()) {
+            log.debug("sitemap dir: " + path);
+            log.debug("sitemap dir exists: " + path.exists());
+        }
+        if (!path.exists()) {
+            path.mkdirs();
+        }
+        File sitemap = new File(path, SITEMAP_XML);
+        if (!sitemap.exists()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        InputStream is = new FileInputStream(sitemap);
+        response.setContentType(APPLICATION_X_GZIP_CONTENT_TYPE);
+        OutputStream os = response.getOutputStream();
+        byte[] bytes = new byte[BUFFER_SIZE];
+        int count;
+        while ((count=is.read(bytes))!=-1) {
+            os.write(bytes, 0, count);
+        }
+        os.flush();
+        os.close();
+        os=null;
+        is.close();
+        is=null;
+        sitemap=null;
+        path=null;
+    }
 }
