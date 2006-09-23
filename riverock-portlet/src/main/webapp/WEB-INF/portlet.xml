@@ -101,6 +101,32 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<keywords>webmill, webclip</keywords>
 		</portlet-info>
     </portlet>
+    <portlet>
+        <description>Wiki webclip portlet. This portlet not supported and can be deleted in future.</description>
+        <portlet-name>webmill.wiki-webclip</portlet-name>
+        <display-name>Wiki webclip portlet</display-name>
+        <portlet-class>org.riverock.portlet.webclip.WebclipPortlet</portlet-class>
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+		<portlet-info>
+			<title>Wiki webclip portlet</title>
+			<short-title>Wiki webclip portlet</short-title>
+			<keywords>webmill, webclip</keywords>
+		</portlet-info>
+        <portlet-preferences>
+            <preference>
+                <name>webclip.new_prefix</name>
+                <value>/page/about</value>
+            </preference>
+            <preference>
+                <name>webclip.href_start_page</name>
+                <value>/wiki</value>
+            </preference>
+        </portlet-preferences>
+    </portlet>
 	<portlet>
         <description>Webmill portal manager</description>
         <portlet-name>webmill.portal-manager</portlet-name>
