@@ -130,7 +130,7 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
                 article.setArticleCode( RsetTools.getString(rs, "ARTICLE_CODE") );
                 article.setSiteLanguageId( RsetTools.getLong(rs, "ID_SITE_SUPPORT_LANGUAGE") );
                 article.setCreated( RsetTools.getTimestamp(rs, "DATE_POST") );
-                article.setXml( RsetTools.getInt(rs, "ID_SITE_CTX_ARTICLE", 0)==0 );
+                article.setXml( RsetTools.getInt(rs, "IS_PLAIN_HTML", 0)==0 );
 
                 article.setArticleText( initArticleText(db_, article.getArticleId()) );
 
