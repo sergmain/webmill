@@ -1,47 +1,56 @@
 $Id$
 
-Очень краткая документация.
-Более подробно документация будет пополнятся на основе 
-вопросов, возникших у пользователей.
-Свои вопросы вы можете оставить в форуме
+Установка портала Webmill на Tomcat 5.5 
+1. Установить Tomcat 5.5 
 
-http://webmill.askmore.info/mill/ctx?mill.lang=ru_RU&mill.context=mill.forum&mill.template=templ-mill-dyn4-ru&mill.id_forum=9
+2. Внести изменения в %TOMCAT_HOME%\conf\server.xml, сконфигурировать DataSource и "семейство" базы данных 
 
-Требования для запуска сервера:
-JDK 1.3 или выше
+Конфиг DataSource 
+ <Resource name="jdbc/webmill" auth="Container" scope="Shareable"
+    type="javax.sql.DataSource"
+    driverClassName="com.mysql.jdbc.Driver"
+    url="jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull" username="sa"
+    password="" maxActive="100" maxIdle="30" maxWait="10000" 
+    factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
+    removeAbandoned="true"
+    removeAbandonedTimeout="60"
+    logAbandoned="true"
+/>
 
-Разработка, тестирование
-Текущая рабочая версия web сервера, 
-использовавшаяся при разработке - Tomcat4.1.12
-ОС на которых проводилось тестирование - win98, w2k
-JDK - SunJDK 1.3.x/1.4.1
-DB - Oracle8/8i, HypersonicSQL 1.7.2, MySql, MSSQL
-
-
-1. распаковать архив с дистрибутивом на любой диск в корень
-( для запуска демо версии без необходимости изменения настроек,  
-выполнение этого условия обязательно)
-2. запустить run.bat 
-3. перейти по адресу http://localhost/mill/ctx 
+"семейство" ДБ
+    <Environment name="dbFamily" type="java.lang.String" value="mysql"/>
 
 
-Возможные причины неработоспособности демо-версии:
-- на win98 при запуске run.bat возможно возникновение ситуации, когда 
-не хватает памяти в DOS окружении. Решением данной проблемы является увеличение
-размера памяти, отводимой под окружени при запуске. По умолчанию значение 
-равно 'Avto', поставьте значение равное или большее чем 4096.
+3. В файл %TOMCAT_HOME%/conf/tomcat-users.xml добавить роль 'webmill-init' и присвоить эту роль пользователю, которым вы планируете пройти авторизацию. Например так: 
 
+ 
+  <role rolename="webmill-init"/>
+  <user username="admin" password="" roles="admin,manager,webmill-init"/>
 
-Демо версия содержит два сайта. Один доступен по адресу http://localhost
-другой по адресу http://me.askmore 
-Для доступа ко второму сайту необходимо в файле hosts прописать алиас 
-на localhost, например:
+4. Загрузить файлы для установки Webmill портала 
 
-127.0.0.1 localhost me.asmore
+Релизы на sourceforge.net 
 
-Файл hosts в win9x находится в директории %WINDOWS_HOME%
-в win2k, winXP в директории %windir%\system32\drivers\etc
-в unix OS в /etc
+5. Установить портлет контейнер. Скопировать файлы портлет контейнера в %TOMCAT_HOME%\shared\lib. Файлы портлет контейнера запакованы в архив в директорий lib в архиве webmill-portal-x.x.x.zip 
 
+6. Установитьпортал. Удалить директорий %TOMCAT_HOME%\webapps\ROOT 
 
-Для доступа в 'member' раздел логин qqq, пароль www
+6. Распаковать файлы портала в %TOMCAT_HOME%\webapps. Файлы портала, это файлы *.war и запакованы в архив webmill-portal-x.x.x.zip 
+
+7. запустить Tomcat 
+
+8. Вызвать админ консоль Webmill портала по адресу http://localhost/webmill-admin 
+
+9. Создать структуру БД нажав на кнопку 'Structure' 
+
+10. Создать компанию к которой относится сайт перейдя по 'Company'. Информация по компании может быть любой и для первого запуска значения не имеет. 
+
+11. Создать сайт в разделе 'Manage sites' 
+
+12. Создать админ пользователя через 'Portal users' 
+
+13. Сайт доступен по адресу http://localhost 
+  
+
+ 
+  
