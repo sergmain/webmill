@@ -1,4 +1,4 @@
-$Id: install.txt 155 2005-05-25 08:32:29Z serg_main $
+$Id: install.en.txt 155 2005-05-25 08:32:29Z serg_main $
 
 Installation Webmill portal in Tomcat 5.5 
 
