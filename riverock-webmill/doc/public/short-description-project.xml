@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-/*
- * org.riverock.portlet - Portlet Library
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock - The Open-source Java Development Community
- * http://www.riverock.org
- * 
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
- */
--->
+  ~ org.riverock.webmill - Portal framework implementation
+  ~
+  ~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
+  ~
+  ~ Riverock - The Open-source Java Development Community
+  ~ http://www.riverock.org
+  ~
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.                
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 <Article xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\js-portlet\doc\public\jsmithy-portlet-article-data.xsd">
 	<ArticlePara>js-common проект</ArticlePara>
 	<ArticlePara>js-common включает в себя классы, которые используются практически во всех проектах. Данный проект включает в себя следущие пакеты:</ArticlePara>
@@ -54,7 +49,7 @@
 	<ArticlePara>org.riverock.generic.exception - в данном пакете предполагается размещать все exception, чтобы они были в одном месте.</ArticlePara>
 	<ArticlePara>org.riverock.generic.main - в этом пакете находится реализация кеша с поддержкой отслеживания изменеий в БД. Так же здесь находится класс с константами.</ArticlePara>
 	<ArticlePara>org.riverock.generic.port - здесь находится только один класс LocalizedString. Предназначен для получения локализированных строк</ArticlePara>
-	<ArticlePara>org.riverock.generic.security - пакет классов для шифрования данных. �?спользуется для организации передачи зашифрованных данных через HTTP</ArticlePara>
+	<ArticlePara>org.riverock.generic.security - пакет классов для шифрования данных. �?спользуется для организации передачи зашифрованных данных через HTTP</ArticlePara>
 	<ArticlePara>org.riverock.generic.site - содержит класс SiteListSite.</ArticlePara>
 	<ArticlePara>org.riverock.generic.startup - в этом пакете содержатся классы для инициализации глобальных пременных, не зависимо от того, в как каком равианте работает приложение - как standalone или как web-приложение</ArticlePara>
 	<ArticlePara>org.riverock.generic.system - пакет классов для работы со структурой БД</ArticlePara>
