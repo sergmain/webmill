@@ -314,7 +314,7 @@ public class CmsNewsDaoImpl implements CmsNewsDao {
             if (news.getNewsDate()!=null)
                 ps.setTimestamp(3, new java.sql.Timestamp( news.getNewsDate().getTime()) );
             else
-                ps.setNull(3, Types.DATE);
+                ps.setTimestamp(3, new java.sql.Timestamp( System.currentTimeMillis() ) );
 
             if (news.getNewsHeader()!=null)
                 ps.setString(4, news.getNewsHeader() );
@@ -398,7 +398,7 @@ public class CmsNewsDaoImpl implements CmsNewsDao {
             if (news.getNewsDate()!=null)
                 ps.setTimestamp(2, new java.sql.Timestamp( news.getNewsDate().getTime()) );
             else
-                ps.setNull(2, Types.DATE);
+                ps.setTimestamp(2, new java.sql.Timestamp( System.currentTimeMillis()) );
 
             if (news.getNewsHeader()!=null)
                 ps.setString(3, news.getNewsHeader() );
