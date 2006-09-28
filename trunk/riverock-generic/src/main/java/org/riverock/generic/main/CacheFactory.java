@@ -53,6 +53,45 @@ public class CacheFactory {
         cache = singletonManager.getCache(clazz.getName());
     }
 
+    public synchronized static void shutdown() {
+        CacheManager manager=null;
+        try {
+            manager = CacheManager.getInstance();
+        }
+        catch (Throwable e) {
+            System.err.println("General error of releasing cache");
+            e.printStackTrace(System.err);
+        }
+        if (manager!=null) {
+            String[] cacheNames = null;
+            try {
+                cacheNames = manager.getCacheNames();
+            }
+            catch (Throwable e) {
+                System.err.println("Error get name of caches");
+                e.printStackTrace(System.err);
+            }
+            if (cacheNames!=null) {
+                for (String cacheName : cacheNames) {
+                    try {
+                        manager.removeCache(cacheName);
+                    }
+                    catch (Throwable e) {
+                        System.err.println("Error remove cache with name: " + cacheName);
+                        e.printStackTrace(System.err);
+                    }
+                }
+            }
+            try {
+                manager.shutdown();
+            }
+            catch (Exception e) {
+                System.err.println("Error shutdown cache");
+                e.printStackTrace(System.err);
+            }
+        }
+    }
+
     public void reinit() {
         cache.removeAll();
     }
