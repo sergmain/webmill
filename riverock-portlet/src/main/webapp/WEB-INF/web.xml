@@ -166,6 +166,9 @@
     <listener>
         <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>org.riverock.portlet.main.PortletContextListener</listener-class>
+    </listener>
 
     <!-- Faces Servlet -->
 	<servlet>

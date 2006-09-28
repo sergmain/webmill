@@ -160,6 +160,9 @@
     <listener>
         <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>org.riverock.commerce.CommerceContextListener</listener-class>
+    </listener>
 
     <!-- Faces Servlet -->
 	<servlet>
