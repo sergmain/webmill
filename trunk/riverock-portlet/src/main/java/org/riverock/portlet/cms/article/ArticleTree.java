@@ -30,6 +30,7 @@ import org.apache.myfaces.custom.tree2.TreeModel;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
@@ -106,7 +107,7 @@ public class ArticleTree implements Serializable {
                 for (ArticleBean articleBean : articleService.getArticleList(siteLanguage.getSiteLanguageId(), false)) {
                     TreeNodeBase articleNode = new TreeNodeBase(
                         "plain-article",
-                        articleBean.getArticleName(),
+                        StringUtils.isNotBlank(articleBean.getArticleName())?articleBean.getArticleName():"no name",
                         articleBean.getArticleId().toString(),
                         false);
                     plainArticleListNode.getChildren().add(articleNode);
@@ -118,7 +119,7 @@ public class ArticleTree implements Serializable {
                 for (ArticleBean articleBean : articleService.getArticleList(siteLanguage.getSiteLanguageId(), true)) {
                     TreeNodeBase articleNode = new TreeNodeBase(
                         "xml-article",
-                        articleBean.getArticleName(),
+                        StringUtils.isNotBlank(articleBean.getArticleName())?articleBean.getArticleName():"no name",
                         articleBean.getArticleId().toString(),
                         false);
                     xmlArticleListNode.getChildren().add(articleNode);
