@@ -33,7 +33,6 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.MalformedURLException;
 
 /**
  * User: SergeMaslyukov
@@ -139,10 +138,9 @@ public class WebclipPortlet implements Portlet {
                 processor.modify(os);
                 webclip.setWebclipData(os.toString(CharEncoding.UTF_8));
                 PortletDaoFactory.getWebclipDao().updateWebclip(webclip);
-            } catch (MalformedURLException me) {
-                log.error("Error get content from URL: " + url);
-            } catch (IOException ioe) {
-                log.error("Error get content from URL: " + url);
+            } catch (Throwable th) {
+                String es = "Error get content from URL: " + url;
+                log.error(es, th);
             }
         }
     }
