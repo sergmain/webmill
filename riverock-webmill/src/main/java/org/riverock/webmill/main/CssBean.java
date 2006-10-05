@@ -24,6 +24,15 @@ package org.riverock.webmill.main;
 import java.util.Date;
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.TableGenerator;
+
 import org.riverock.interfaces.portal.bean.Css;
 
 /**
@@ -32,14 +41,26 @@ import org.riverock.interfaces.portal.bean.Css;
  *         Time: 3:11:20
  *         $Id$
  */
+@Entity
+@Table(name="wm_portal_css")
+//@SequenceGenerator( name="SEQ_CSS", sequenceName="seq_wm_portal_css" )
+//@TableGenerator( name="TABLE_CSS", table="wm_portal_ids" )
 public class CssBean implements Serializable, Css {
     private static final long serialVersionUID = 3037005502L;
 
+//    @Id @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ_CSS, TABLE_CSS")
+    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="ID_SITE_CONTENT_CSS")
     private Long cssId = null;
+    @Column(name="ID_SITE")
     private Long siteId = null;
+    @Column(name="CSS_DATA")
     private String css = "";
+    @Column(name="TEXT_COMMENT")
     private String cssComment = "";
+    @Column(name="DATE_POST")
     private Date date = null;
+    @Column(name="IS_CURRENT")
     private boolean isCurrent = false;
 
     public String getCssComment() {
@@ -95,5 +116,9 @@ public class CssBean implements Serializable, Css {
             return;
         }
         this.date = new Date(date.getTime());
+    }
+
+    public String toString() {
+        return "[cssId:"+cssId+";siteId:"+siteId+"]";
     }
 }
