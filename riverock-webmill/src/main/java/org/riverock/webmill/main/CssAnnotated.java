@@ -26,6 +26,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Blob;
 
 /**
  * @author SergeMaslyukov
@@ -34,7 +35,7 @@ import javax.persistence.Table;
  *         $Id: CssBean.java 1019 2006-09-24 21:46:54Z serg_main $
  */
 @Entity
-@Table(name="wm_portal_css")
+@Table(name="css_test")
 public class CssAnnotated {
     @Id
     @Column(name="ID_SITE_CONTENT_CSS")
@@ -42,6 +43,28 @@ public class CssAnnotated {
 
     @Column(name="ID_SITE")
     private Long siteId = null;
+
+    @Column(name="css")
+    private Blob css;
+
+    @Column(name="text_comment")
+    private String comment;
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Blob getCss() {
+        return css;
+    }
+
+    public void setCss(Blob css) {
+        this.css = css;
+    }
 
     public Long getCssId() {
         return cssId;

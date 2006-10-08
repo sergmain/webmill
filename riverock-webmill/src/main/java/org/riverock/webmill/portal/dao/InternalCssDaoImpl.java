@@ -189,7 +189,9 @@ public class InternalCssDaoImpl implements InternalCssDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            clearCurrentFlag(css, adapter);
+            if (css.isCurrent()) {
+                clearCurrentFlag(css, adapter);
+            }
 
             WmPortalCssItemType item = new WmPortalCssItemType();
             item.setDatePost(css.getDate());
@@ -383,6 +385,10 @@ public class InternalCssDaoImpl implements InternalCssDao {
             log.error(es, e);
             throw new IllegalStateException( es, e);
         }
+    }
+
+    public void deleteCssForSite(Long siteId) {
+        throw new RuntimeException("Will not be implemented");
     }
 
     private StringBuilder getCssData(DatabaseAdapter adapter, Long cssId) throws PortalPersistenceException {
