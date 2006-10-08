@@ -41,5 +41,6 @@ public interface InternalCssDao {
     public void updateCss(Css css);
     public void deleteCss(Long cssId);
     public void deleteCssForSite(DatabaseAdapter adapter, Long siteId);
+    public void deleteCssForSite(Long siteId);
 
 }
