@@ -22,10 +22,8 @@
  */
 package org.riverock.webmill.main;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import java.sql.Blob;
 
 /**
@@ -35,20 +33,32 @@ import java.sql.Blob;
  *         $Id: CssBean.java 1019 2006-09-24 21:46:54Z serg_main $
  */
 @Entity
-@Table(name="css_test")
+@Table(name="wm_portal_css")
+@TableGenerator(
+    name="TABLE_CSS",
+    table="wm_portal_ids",
+    allocationSize=1,
+    pkColumnName = "sequence_name",
+    pkColumnValue = "wm_portal_css",
+    valueColumnName = "sequence_next_hi_value",
+    initialValue = 1
+)
 public class CssAnnotated {
     @Id
     @Column(name="ID_SITE_CONTENT_CSS")
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_CSS")
     private Long cssId = null;
 
     @Column(name="ID_SITE")
     private Long siteId = null;
 
-    @Column(name="css")
-    private Blob css;
+//    @Column(name="CSSBLOB")
+//    @Lob
+    private Blob cssblob;
 
     @Column(name="text_comment")
     private String comment;
+
 
     public String getComment() {
         return comment;
@@ -58,12 +68,14 @@ public class CssAnnotated {
         this.comment = comment;
     }
 
-    public Blob getCss() {
-        return css;
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
+    public Blob getCssblob() {
+        return cssblob;
     }
 
-    public void setCss(Blob css) {
-        this.css = css;
+    public void setCssblob(Blob cssblob) {
+        this.cssblob = cssblob;
     }
 
     public Long getCssId() {

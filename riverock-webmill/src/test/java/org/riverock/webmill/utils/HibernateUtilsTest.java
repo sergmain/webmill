@@ -23,6 +23,8 @@ package org.riverock.webmill.utils;
 
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.dialect.MySQLDialect;
+import org.hibernate.dialect.MySQL5Dialect;
+import org.hibernate.dialect.MySQL5InnoDBDialect;
 
 /**
  * User: SergeMaslyukov
@@ -35,13 +37,13 @@ public class HibernateUtilsTest {
 
     public static void prepareSession() {
         AnnotationConfiguration cfg = new AnnotationConfiguration();
-        cfg.setProperty("hibernate.dialect", MySQLDialect.class.getName() );
+        cfg.setProperty("hibernate.dialect", MySQL5InnoDBDialect.class.getName() );
         cfg.setProperty("hibernate.connection.release_mode", "after_transaction" );
 //        cfg.setProperty("hibernate.connection.release_mode", "on_close" );
         cfg.setProperty("hibernate.transaction.factory_class", org.hibernate.transaction.JDBCTransactionFactory.class.getName() );
         cfg.setProperty("hibernate.current_session_context_class", "thread" );
         cfg.setProperty("hibernate.transaction.flush_before_completion", "false" );
-        cfg.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.EhCacheProvider" );
+//        cfg.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.EhCacheProvider" );
 
         cfg.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver" );
         cfg.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull" );

@@ -21,17 +21,21 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import org.riverock.interfaces.portal.bean.Css;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.webmill.main.CssBean;
-import org.hibernate.Session;
-import org.hibernate.Query;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import java.util.List;
 import java.sql.Blob;
+import java.sql.SQLException;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.exception.DatabaseException;
+import org.riverock.interfaces.portal.bean.Css;
+import org.riverock.webmill.main.CssBean;
+import org.riverock.webmill.utils.HibernateUtils;
 
 /**
  * User: SergeMaslyukov
@@ -48,7 +52,21 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         session.beginTransaction();
         Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.isCurrent=true and css.siteId = :site_id");
         query.setLong("site_id", siteId);
-        Css css = (Css)query.uniqueResult();
+        CssBean css = (CssBean)query.uniqueResult();
+
+        if (css!=null) {
+            Blob blob = css.getCssBlob();
+            if (blob!=null) {
+                try {
+                    css.setCss( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get CSS";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+            }
+        }
         session.getTransaction().commit();
         return css;
     }
@@ -58,9 +76,22 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         session.beginTransaction();
         Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id");
         query.setLong("site_id", siteId);
-        List<Css> cssList = query.list();
+        List<CssBean> cssList = query.list();
+        for (CssBean css : cssList) {
+            Blob blob = css.getCssBlob();
+            if (blob!=null) {
+                try {
+                    css.setCss( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get CSS";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+            }
+        }
         session.getTransaction().commit();
-        return cssList;
+        return (List)cssList;
     }
 
     public Css getCss(Long cssId) {
@@ -68,7 +99,20 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         session.beginTransaction();
         Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
         query.setLong("css_id", cssId);
-        Css css = (Css)query.uniqueResult();
+        CssBean css = (CssBean)query.uniqueResult();
+        if (css!=null) {
+        Blob blob = css.getCssBlob();
+            if (blob!=null) {
+                try {
+                    css.setCss( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get CSS";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+            }
+        }
         session.getTransaction().commit();
         return css;
     }
@@ -84,26 +128,11 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         bean.setCurrent(css.isCurrent());
         bean.setDate(css.getDate());
         bean.setSiteId(css.getSiteId());
+        if (StringUtils.isNotBlank(css.getCss())) {
+            bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes()));
+        }
         session.save(bean);
-
-        Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
-        query.setLong("css_id", bean.getCssId());
-        bean = (CssBean)query.uniqueResult();
-
-        try {
-            if (StringUtils.isNotBlank(css.getCss())) {
-                Blob blob = bean.getCssBlob();
-                if (blob==null) {
-                    throw new RuntimeException("Blob object is null");
-                }
-                blob.setBytes(1, css.getCss().getBytes());
-            }
-        }
-        catch (Exception e) {
-            String es = "Error in createCss()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
+        session.flush();
 
         session.getTransaction().commit();
 
@@ -121,19 +150,15 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
         query.setLong("css_id", css.getCssId());
         CssBean bean = (CssBean)query.uniqueResult();
-
-        bean.setCssComment(css.getCssComment());
-        bean.setCurrent(css.isCurrent());
-        bean.setDate(css.getDate());
-        bean.setSiteId(css.getSiteId());
-        try {
-            Blob blob = bean.getCssBlob();
-            blob.setBytes(1, css.getCss().getBytes());
-        }
-        catch (Exception e) {
-            String es = "Error in updateCss()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
+        if (bean!=null) {
+            
+            bean.setCssComment(css.getCssComment());
+            bean.setCurrent(css.isCurrent());
+            bean.setDate(css.getDate());
+            bean.setSiteId(css.getSiteId());
+            if (StringUtils.isNotBlank(css.getCss())) {
+                bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes()));
+            }
         }
         session.getTransaction().commit();
     }
