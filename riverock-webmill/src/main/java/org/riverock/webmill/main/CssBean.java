@@ -23,8 +23,14 @@ package org.riverock.webmill.main;
 
 import java.util.Date;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.sql.Blob;
+import java.sql.SQLException;
 
 import javax.persistence.*;
+
+import org.apache.commons.lang.CharEncoding;
+import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.Css;
 
@@ -39,7 +45,7 @@ import org.riverock.interfaces.portal.bean.Css;
 @SequenceGenerator( name="SEQ_CSS", sequenceName="seq_wm_portal_css" )
 @TableGenerator(
     name="TABLE_CSS",
-    table="hibernate_sequences",
+    table="wm_portal_ids",
     allocationSize=1,
     pkColumnName = "sequence_name",
     pkColumnValue = "wm_portal_css",
@@ -47,10 +53,11 @@ import org.riverock.interfaces.portal.bean.Css;
     initialValue = 1
 )
 public class CssBean implements Serializable, Css {
+    private static Logger log = Logger.getLogger(CssBean.class);
+
     private static final long serialVersionUID = 3037005502L;
 
 //    @Id @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ_CSS, TABLE_CSS")
-//    @Id @GeneratedValue(strategy=GenerationType.TABLE, generator="TABLE_CSS")
     @Id @GeneratedValue(strategy=GenerationType.TABLE, generator = "TABLE_CSS")
     @Column(name="ID_SITE_CONTENT_CSS")
     private Long cssId = null;
@@ -58,8 +65,8 @@ public class CssBean implements Serializable, Css {
     @Column(name="ID_SITE")
     private Long siteId = null;
 
-    @Column(name="CSS_DATA")
-    private String css = "";
+    @Column(name="CSS_BLOB")
+    private Blob cssBlob;
 
     @Column(name="TEXT_COMMENT")
     private String cssComment = "";
@@ -69,6 +76,31 @@ public class CssBean implements Serializable, Css {
 
     @Column(name="IS_CURRENT")
     private boolean isCurrent = false;
+
+    @Transient
+    private String css = "";
+
+
+    public Blob getCssBlob() {
+        return cssBlob;
+    }
+
+    public void setCssBlob(Blob cssBlob) {
+
+        this.cssBlob = cssBlob;
+
+        try {
+            long length=cssBlob.length();
+            byte[] bytes = cssBlob.getBytes(1, (int)length);
+
+            this.css = new String(bytes, CharEncoding.UTF_8);
+        }
+        catch (Exception e) {
+            String es = "Error setCssBlob";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 
     public String getCssComment() {
         return cssComment;
