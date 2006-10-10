@@ -27,8 +27,11 @@ import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.main.CssBean;
 import org.hibernate.Session;
 import org.hibernate.Query;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import java.util.List;
+import java.sql.Blob;
 
 /**
  * User: SergeMaslyukov
@@ -38,6 +41,8 @@ import java.util.List;
  * $Id$
  */
 public class HibernateCssDaoImpl implements InternalCssDao {
+    private static Logger log = Logger.getLogger(HibernateCssDaoImpl.class);
+
     public Css getCssCurrent(Long siteId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
@@ -75,12 +80,30 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         clearCurrentFlag(css.getSiteId(), session);
 
         CssBean bean = new CssBean();
-        bean.setCss(css.getCss());
         bean.setCssComment(css.getCssComment());
         bean.setCurrent(css.isCurrent());
         bean.setDate(css.getDate());
         bean.setSiteId(css.getSiteId());
         session.save(bean);
+
+        Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
+        query.setLong("css_id", bean.getCssId());
+        bean = (CssBean)query.uniqueResult();
+
+        try {
+            if (StringUtils.isNotBlank(css.getCss())) {
+                Blob blob = bean.getCssBlob();
+                if (blob==null) {
+                    throw new RuntimeException("Blob object is null");
+                }
+                blob.setBytes(1, css.getCss().getBytes());
+            }
+        }
+        catch (Exception e) {
+            String es = "Error in createCss()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
 
         session.getTransaction().commit();
 
@@ -99,12 +122,19 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         query.setLong("css_id", css.getCssId());
         CssBean bean = (CssBean)query.uniqueResult();
 
-        bean.setCss(css.getCss());
         bean.setCssComment(css.getCssComment());
         bean.setCurrent(css.isCurrent());
         bean.setDate(css.getDate());
         bean.setSiteId(css.getSiteId());
-
+        try {
+            Blob blob = bean.getCssBlob();
+            blob.setBytes(1, css.getCss().getBytes());
+        }
+        catch (Exception e) {
+            String es = "Error in updateCss()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
         session.getTransaction().commit();
     }
 

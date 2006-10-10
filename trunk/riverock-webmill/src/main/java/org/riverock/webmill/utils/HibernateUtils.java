@@ -78,6 +78,7 @@ public class HibernateUtils {
             if (hibernateFamily==null) {
                 throw new IllegalArgumentException("hiberante family not defined");
             }
+            System.out.println("Hibernate family: "+hibernateFamily);
 
             AnnotationConfiguration cfg = new AnnotationConfiguration();
 
@@ -87,7 +88,7 @@ public class HibernateUtils {
                 .setProperty("hibernate.current_session_context_class", "thread" )
                 .setProperty("hibernate.transaction.flush_before_completion", "false" )
                 .setProperty("hibernate.cache.provider_class", org.hibernate.cache.EhCacheProvider.class.getName() )
-                .setProperty("hibernate.connection.datasource", "java:comp/env/jdbc/test")
+                .setProperty("hibernate.connection.datasource", "java:comp/env/jdbc/webmill")
             ;
             setAnnotatedClasses(cfg);
             sessionFactory = cfg.buildSessionFactory();

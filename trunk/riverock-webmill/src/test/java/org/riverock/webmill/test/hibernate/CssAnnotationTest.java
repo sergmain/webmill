@@ -22,27 +22,22 @@
  */
 package org.riverock.webmill.test.hibernate;
 
-import java.util.List;
-import java.util.Date;
-import java.sql.Blob;
 import java.sql.SQLException;
+import java.sql.Blob;
+import java.util.Date;
+import java.util.List;
 
-import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.AnnotationConfiguration;
 
-import org.riverock.generic.startup.StartupApplication;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.exception.DatabaseException;
-import org.riverock.webmill.main.CssAnnotated;
+import org.riverock.generic.startup.StartupApplication;
+import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.main.CssBean;
+import org.riverock.webmill.main.CssAnnotated;
+import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
+import org.riverock.webmill.portal.dao.InternalCssDao;
 import org.riverock.webmill.utils.HibernateUtilsTest;
 import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.webmill.portal.dao.InternalCssDao;
-import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
-import org.riverock.interfaces.portal.bean.Css;
 
 /**
  * @author Sergei Maslyukov
@@ -58,9 +53,8 @@ public class CssAnnotationTest {
         
         HibernateUtilsTest.prepareSession();
         InternalCssDao cssDao = new HibernateCssDaoImpl();
-        List<Css> result=null;
         long mills = System.currentTimeMillis();
-        result = cssDao.getCssList(16L);
+        List<Css> result=cssDao.getCssList(16L);
         System.out.println("Time: " +(System.currentTimeMillis()-mills) +" mills.");
         System.out.println("result: " + result);
 
@@ -69,7 +63,7 @@ public class CssAnnotationTest {
         System.out.println("css: " + css);
 
         CssBean bean = new CssBean();
-//        bean.setCss("aaaa");
+        bean.setCss("aaaa");
         bean.setCssComment("this is comment");
         bean.setCurrent(false);
         bean.setDate( new Date() );
@@ -78,10 +72,9 @@ public class CssAnnotationTest {
         Long cssId = cssDao.createCss(bean);
         System.out.println("cssId = " + cssId);
 
-/*
 
-//        Session session = HibernateUtils.getSession();
-        List result=null;
+
+        Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
 //        for (int i=0; i<10000; i++) {
@@ -91,20 +84,20 @@ public class CssAnnotationTest {
         System.out.println("Time: " +(System.currentTimeMillis()-mills) +" mills.");
         System.out.println("result: " + result);
 
-        Css cssAnnotated = result.get(0);
+        CssAnnotated cssAnnotated = (CssAnnotated)result.get(0);
         Blob blob = cssAnnotated.getCss();
         long length=blob.length();
         byte[] bytes = blob.getBytes(1, (int)length);
         System.out.println("bytes = " + new String(bytes));
 
         blob.setBytes(1, "09877654321".getBytes());
-        cssAnnotated.setCssComment("new comment");
+        cssAnnotated.setComment("new comment");
 
         Long count =  (Long)session.createQuery("select count(*) from org.riverock.webmill.main.CssAnnotated").uniqueResult();
         System.out.println("count = " + count);
 
         session.flush();
         session.getTransaction().commit();
-*/
+
     }
 }
