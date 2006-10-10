@@ -54,6 +54,7 @@ public class DbStructureCreateTable {
      * @throws Exception
      */
     public static void main(String args[]) throws Exception {
+        // MYSQL ..\..\riverock-webmill-db\xml\webmill-schema.xml WM_PORTAL_IDS
         if (args.length < 3) {
             System.out.println("Command line format: <DB_ALIAS> <IMPORT_FILE> <TABLE_NAME>");
             return;

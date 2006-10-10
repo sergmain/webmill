@@ -23,9 +23,7 @@ package org.riverock.webmill.main;
 
 import java.util.Date;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
-import java.sql.SQLException;
 
 import javax.persistence.*;
 
@@ -86,20 +84,7 @@ public class CssBean implements Serializable, Css {
     }
 
     public void setCssBlob(Blob cssBlob) {
-
         this.cssBlob = cssBlob;
-
-        try {
-            long length=cssBlob.length();
-            byte[] bytes = cssBlob.getBytes(1, (int)length);
-
-            this.css = new String(bytes, CharEncoding.UTF_8);
-        }
-        catch (Exception e) {
-            String es = "Error setCssBlob";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
     }
 
     public String getCssComment() {

@@ -25,14 +25,19 @@ package org.riverock.webmill.test.hibernate;
 import java.sql.SQLException;
 import java.sql.Blob;
 import java.util.List;
+import java.util.Date;
 
 import org.hibernate.Session;
 
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.startup.StartupApplication;
-import org.riverock.webmill.main.CssAnnotated;
 import org.riverock.webmill.utils.HibernateUtilsTest;
 import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.InternalCssDao;
+import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
+import org.riverock.webmill.main.CssBean;
+import org.riverock.webmill.main.CssAnnotated;
+import org.riverock.interfaces.portal.bean.Css;
 
 /**
  * @author Sergei Maslyukov
@@ -41,38 +46,30 @@ import org.riverock.webmill.utils.HibernateUtils;
  *         <p/>
  *         $Id$
  */
-public class CssAnnotationTest {
+public class CssBeanTest {
     public static void main(String[] args) throws DatabaseException, SQLException {
 
         StartupApplication.init();
+
         HibernateUtilsTest.prepareSession();
-
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        InternalCssDao cssDao = new HibernateCssDaoImpl();
         long mills = System.currentTimeMillis();
-
-        List result;
-//        for (int i=0; i<10000; i++) {
-            result = session.createQuery("select css from org.riverock.webmill.main.CssAnnotated as css").list();
-//        }
-
+        List<Css> result=cssDao.getCssList(16L);
         System.out.println("Time: " +(System.currentTimeMillis()-mills) +" mills.");
         System.out.println("result: " + result);
 
-        CssAnnotated cssAnnotated = (CssAnnotated)result.get(0);
-        Blob blob = cssAnnotated.getCssblob();
-        long length=blob.length();
-        byte[] bytes = blob.getBytes(1, (int)length);
-        System.out.println("bytes = " + new String(bytes));
+        Css css = cssDao.getCssCurrent(16L);
 
-        blob.setBytes(1, "09877654321".getBytes());
-        cssAnnotated.setComment("new comment");
+        System.out.println("css: " + css);
 
-        Long count =  (Long)session.createQuery("select count(*) from org.riverock.webmill.main.CssAnnotated").uniqueResult();
-        System.out.println("count = " + count);
+        CssBean bean = new CssBean();
+        bean.setCss("aaaa");
+        bean.setCssComment("this is comment");
+        bean.setCurrent(false);
+        bean.setDate( new Date() );
+        bean.setSiteId( 16L );
 
-        session.flush();
-        session.getTransaction().commit();
-
+        Long cssId = cssDao.createCss(bean);
+        System.out.println("cssId = " + cssId);
     }
 }
