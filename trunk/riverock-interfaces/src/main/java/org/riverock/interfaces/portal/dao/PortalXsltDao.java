@@ -31,7 +31,7 @@ import org.riverock.interfaces.portal.bean.Xslt;
  *         Time: 13:56:02
  */
 public interface PortalXsltDao {
-    public StringBuilder getXsltData( Long xsltId );
+//    public StringBuilder getXsltData( Long xsltId );
 
     /** key is language of site */
     public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId);

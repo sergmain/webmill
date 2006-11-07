@@ -22,6 +22,17 @@
 package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
+import java.sql.Blob;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.riverock.interfaces.portal.bean.Xslt;
 
@@ -30,14 +41,60 @@ import org.riverock.interfaces.portal.bean.Xslt;
  *         Date: 02.05.2006
  *         Time: 17:21:17
  */
+@Entity
+@Table(name="wm_portal_xslt")
+@TableGenerator(
+    name="TABLE_XSLT",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portal_xslt",
+    allocationSize=1,
+    initialValue = 1
+)
 public class PortalXsltBean implements Serializable, Xslt {
     private static final long serialVersionUID = 3255005501L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_XSLT")
+    @Column(name="ID_SITE_XSLT")
     private Long id = null;
+
+    @Column(name="ID_SITE_SUPPORT_LANGUAGE")
     private Long siteLanguageId = null;
+
+    @Column(name="TEXT_COMMENT")
     private String name = null;
-    private String xsltData = null;
+
+    @Column(name="IS_CURRENT")
     private boolean isCurrent = false;
+
+    @Column(name="XSLT_BLOB")
+    private Blob xsltBlob;
+
+    @Version
+    @Column(name="VERSION")
+    private int version;
+
+    @Transient
+    private String xsltData = null;
+
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public Blob getXsltBlob() {
+        return xsltBlob;
+    }
+
+    public void setXsltBlob(Blob xsltBlob) {
+        this.xsltBlob = xsltBlob;
+    }
 
     public boolean isCurrent() {
         return isCurrent;
@@ -77,5 +134,9 @@ public class PortalXsltBean implements Serializable, Xslt {
 
     public void setXsltData(String xsltData) {
         this.xsltData = xsltData;
+    }
+
+    public String toString() {
+        return "[xsltId:"+id+",siteLanguageId:"+siteLanguageId+",name:"+name+",version:"+version+"]";
     }
 }

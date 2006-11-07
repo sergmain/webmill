@@ -42,6 +42,7 @@ public class PortalXsltDaoImpl implements PortalXsltDao {
         this.classLoader = classLoader;
     }
 
+/*
     public StringBuilder getXsltData(Long xsltId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -52,6 +53,7 @@ public class PortalXsltDaoImpl implements PortalXsltDao {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
+*/
 
     /**
      * key is language of site
