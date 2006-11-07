@@ -23,21 +23,16 @@
 package org.riverock.webmill.test.hibernate;
 
 import java.sql.SQLException;
-import java.sql.Blob;
-import java.util.List;
 import java.util.Date;
-
-import org.hibernate.Session;
+import java.util.List;
 
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.startup.StartupApplication;
-import org.riverock.webmill.utils.HibernateUtilsTest;
-import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.webmill.portal.dao.InternalCssDao;
-import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
-import org.riverock.webmill.main.CssBean;
-import org.riverock.webmill.main.CssAnnotated;
 import org.riverock.interfaces.portal.bean.Css;
+import org.riverock.webmill.main.CssBean;
+import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
+import org.riverock.webmill.portal.dao.InternalCssDao;
+import org.riverock.webmill.utils.HibernateUtilsTest;
 
 /**
  * @author Sergei Maslyukov

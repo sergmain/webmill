@@ -39,7 +39,8 @@ public class InternalDaoFactory {
     public final static InternalTemplateDao internalTemplateDao = new InternalTemplateDaoImpl();
     public final static InternalPortletNameDao internalPortletNameDao = new InternalPortletNameDaoImpl();
     public final static InternalCatalogDao internalCatalogDao = new InternalCatalogDaoImpl();
-    public final static InternalCssDao internalCssDao = new InternalCssDaoImpl();
+//    public final static InternalCssDao internalCssDao = new InternalCssDaoImpl();
+    public final static InternalCssDao internalCssDao = new HibernateCssDaoImpl();
     public final static InternalCmsDao internalCmsDao = new InternalCmsDaoImpl();
     public final static InternalUserMetadataDao internalUserMetadataDao = new InternalUserMetadataDaoImpl();
     public final static InternalUserDao internalUserDao = new InternalUserDaoImpl();

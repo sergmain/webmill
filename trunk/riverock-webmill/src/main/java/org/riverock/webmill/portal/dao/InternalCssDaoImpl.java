@@ -1,7 +1,8 @@
 /*
- * org.riverock.webmill - Portal framework implementation
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
  *
- * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
  * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
@@ -37,15 +38,12 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
 import org.riverock.interfaces.portal.bean.Css;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.core.GetWmPortalCssDataWithIdSiteContentCssList;
 import org.riverock.webmill.core.GetWmPortalCssWithIdSiteList;
 import org.riverock.webmill.core.InsertWmPortalCssItem;
 import org.riverock.webmill.core.UpdateWmPortalCssItem;
 import org.riverock.webmill.core.GetWmPortalCssItem;
 import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.main.ContentCSS;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.schema.core.WmPortalCssDataItemType;
 import org.riverock.webmill.schema.core.WmPortalCssDataListType;
@@ -67,17 +65,6 @@ public class InternalCssDaoImpl implements InternalCssDao {
         "where  a.ID_SITE=? and a.is_current=1 and " +
         "       a.id_site_content_css=b.id_site_content_css " +
         "order by ID_SITE_CONTENT_CSS_DATA asc";
-
-    static {
-        try {
-            SqlStatement.registerSql(cssCurrentSql_, ContentCSS.class);
-        }
-        catch (Throwable exception) {
-            final String es = "Exception in SqlStatement.registerSql()";
-            log.error(es, exception);
-            throw new SqlStatementRegisterException(es, exception);
-        }
-    }
 
     public CssBean getCssCurrent(Long siteId) {
         if (siteId == null) {
@@ -264,17 +251,6 @@ public class InternalCssDaoImpl implements InternalCssDao {
         "from   WM_PORTAL_CSS a, WM_PORTAL_CSS_DATA b " +
         "where  a.ID_SITE_CONTENT_CSS=? and a.ID_SITE_CONTENT_CSS=b.ID_SITE_CONTENT_CSS " +
         "order by ID_SITE_CONTENT_CSS_DATA asc";
-
-    static {
-        try {
-            SqlStatement.registerSql(cssCurrentSql_, ContentCSS.class);
-        }
-        catch (Throwable exception) {
-            final String es = "Exception in SqlStatement.registerSql()";
-            log.error(es, exception);
-            throw new SqlStatementRegisterException(es, exception);
-        }
-    }
 
     public Css getCss(Long cssId) {
         if (cssId == null)

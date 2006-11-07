@@ -33,6 +33,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  *         $Id$
  */
 public interface InternalSiteDao {
+    public List<Site> getSites();
     public List<Site> getSites(AuthSession authSession);
     public Site getSite( Long siteId );
     public Site getSite( String siteName );
