@@ -35,6 +35,8 @@ import org.apache.log4j.Logger;
 import org.riverock.common.html.Header;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.interfaces.portal.bean.Css;
 
 /**
  * @author Serge Maslyukov
@@ -67,7 +69,7 @@ public final class ServletCSS extends HttpServlet {
             if ( log.isDebugEnabled() )
                 log.debug( "Dynamic status " + p.getSite().getCssDynamic() );
 
-            if ( Boolean.TRUE.equals( p.getSite().getCssDynamic() ) ) {
+            if ( p.getSite().getCssDynamic() ) {
                 if ( log.isDebugEnabled() ) {
                     log.debug( "ID_SITE " + p.getSite().getSiteId() );
                     log.debug( "p.getDefaultLocale().toString() " + p.getDefaultLocale().toString() );
@@ -80,33 +82,33 @@ public final class ServletCSS extends HttpServlet {
                     log.debug( "siteId: " + siteId );
                 }
 
-                ContentCSS css = ContentCSS.getInstance( siteId );
-                if ( css == null || css.getIsEmpty() ) {
+                Css css = InternalDaoFactory.getInternalCssDao().getCssCurrent( siteId );
+                if ( css == null ) {
                     out.write( "<style type=\"text/css\"><!-- --></style>" );
                 }
                 else {
                     out.write( css.getCss() );
                 }
-                return;
-            }
-
-            String cssFile = ( p.getSite().getCssFile() != null ?p.getSite().getCssFile() :"//styles.css" );
-
-            RequestDispatcher dispatcher = request.getRequestDispatcher( cssFile );
-            if ( log.isDebugEnabled() ) {
-                log.debug( "forvard to static CSS: " + cssFile );
-                log.debug( "RequestDispatcher - " + dispatcher );
-            }
-
-            if ( dispatcher == null ) {
-                if ( log.isDebugEnabled() ) {
-                    log.debug( "RequestDispatcher is null" );
-                }
-
-                out.write( "Error get dispatcher for path " + cssFile );
             }
             else {
-                dispatcher.forward( request, response );
+                String cssFile = ( p.getSite().getCssFile() != null ?p.getSite().getCssFile() :"//styles.css" );
+
+                RequestDispatcher dispatcher = request.getRequestDispatcher( cssFile );
+                if ( log.isDebugEnabled() ) {
+                    log.debug( "forvard to static CSS: " + cssFile );
+                    log.debug( "RequestDispatcher - " + dispatcher );
+                }
+
+                if ( dispatcher == null ) {
+                    if ( log.isDebugEnabled() ) {
+                        log.debug( "RequestDispatcher is null" );
+                    }
+
+                    out.write( "Error get dispatcher for path " + cssFile );
+                }
+                else {
+                    dispatcher.forward( request, response );
+                }
             }
         }
         catch( Exception e ) {

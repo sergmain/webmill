@@ -48,6 +48,9 @@ public class HibernateCssDaoImpl implements InternalCssDao {
     private static Logger log = Logger.getLogger(HibernateCssDaoImpl.class);
 
     public Css getCssCurrent(Long siteId) {
+        if (log.isDebugEnabled()) {
+            log.debug("Start getCssCurrent() for siteId "+siteId);
+        }
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.isCurrent=true and css.siteId = :site_id");
@@ -88,6 +91,9 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                     log.error(es, e);
                     throw new DatabaseException(es, e);
                 }
+                if (log.isDebugEnabled())  {
+                    log.debug("Length of CSS is "+css.getCss()!=null?css.getCss().length():0);
+                }
             }
         }
         session.getTransaction().commit();
@@ -95,6 +101,10 @@ public class HibernateCssDaoImpl implements InternalCssDao {
     }
 
     public Css getCss(Long cssId) {
+        if (log.isDebugEnabled()) {
+            log.debug("Start getCss() for cssId "+cssId);
+        }
+
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
@@ -110,6 +120,9 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                     String es = "Error get CSS";
                     log.error(es, e);
                     throw new DatabaseException(es, e);
+                }
+                if (log.isDebugEnabled())  {
+                    log.debug("Length of CSS is "+css.getCss()!=null?css.getCss().length():0);
                 }
             }
         }

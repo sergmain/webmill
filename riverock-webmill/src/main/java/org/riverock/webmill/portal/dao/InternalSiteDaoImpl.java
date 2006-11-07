@@ -52,6 +52,32 @@ import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
 public class InternalSiteDaoImpl implements InternalSiteDao {
     private final static Logger log = Logger.getLogger(InternalSiteDaoImpl.class);
 
+    public List<Site> getSites() {
+        List<Site> list = new ArrayList<Site>();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement("select * from WM_PORTAL_LIST_SITE ");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                WmPortalListSiteItemType item = GetWmPortalListSiteItem.fillBean(rs);
+                list.add( initSite(item) );
+            }
+        }
+        catch (Exception e) {
+            String es = "Error get list of sites";
+            log.error(es, e);
+            throw new IllegalStateException(es,e );
+        }
+        finally{
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+        return list;
+    }
+
     public List<Site> getSites(AuthSession authSession) {
         List<Site> list = new ArrayList<Site>();
         ResultSet rs = null;

@@ -27,9 +27,6 @@ import java.sql.Blob;
 
 import javax.persistence.*;
 
-import org.apache.commons.lang.CharEncoding;
-import org.apache.log4j.Logger;
-
 import org.riverock.interfaces.portal.bean.Css;
 
 /**
@@ -40,23 +37,20 @@ import org.riverock.interfaces.portal.bean.Css;
  */
 @Entity
 @Table(name="wm_portal_css")
-@SequenceGenerator( name="SEQ_CSS", sequenceName="seq_wm_portal_css" )
 @TableGenerator(
     name="TABLE_CSS",
     table="wm_portal_ids",
-    allocationSize=1,
     pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_portal_css",
-    valueColumnName = "sequence_next_hi_value",
+    allocationSize=1,
     initialValue = 1
 )
 public class CssBean implements Serializable, Css {
-    private static Logger log = Logger.getLogger(CssBean.class);
-
     private static final long serialVersionUID = 3037005502L;
 
-//    @Id @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ_CSS, TABLE_CSS")
-    @Id @GeneratedValue(strategy=GenerationType.TABLE, generator = "TABLE_CSS")
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE, generator = "TABLE_CSS")
     @Column(name="ID_SITE_CONTENT_CSS")
     private Long cssId = null;
 

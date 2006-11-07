@@ -25,7 +25,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.AnnotationConfiguration;
-import org.riverock.webmill.main.CssAnnotated;
 import org.riverock.webmill.main.CssBean;
 
 import javax.naming.InitialContext;
@@ -46,7 +45,6 @@ public class HibernateUtils {
 
     public static final Class[] CLASSES = {
         CssBean.class,
-        CssAnnotated.class
     };
 
     public static final String HIBERNATE_FAMILY = "hibernate_family";

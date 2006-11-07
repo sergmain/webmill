@@ -22,6 +22,7 @@
 package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.apache.commons.lang.CharEncoding;
 
@@ -146,5 +147,9 @@ public class SiteBean implements Serializable, Site {
 
     public void setCssFile(String cssFile) {
         this.cssFile = cssFile;
+    }
+
+    public String toString() {
+        return "[site #"+siteId+",name:"+siteName+", locale:"+new Locale(defLanguage, defCountry, defVariant)+"]";
     }
 }

@@ -65,7 +65,13 @@
     <property name="ehcache.lib" value="ehcache-1.2.1.jar"/>
 
     <property name="ejb3-persistence.lib" value="ejb3-persistence.jar"/>
-
+    <property name="hibernate.lib" value="hibernate3.jar"/>
+    <property name="hibernate-annotation.lib" value="hibernate-annotations.jar"/>
+    <property name="dom4j.lib" value="dom4j-1.6.1.jar"/>
+    <property name="cglib.lib" value="cglib-2.1.3.jar"/>
+    <property name="antlr.lib" value="antlr-2.7.6.jar"/>
+    <property name="asm.lib" value="asm.jar"/>
+    <property name="jta.lib" value="jta-1.0.1.jar"/>
 
     <property name="portlet.lib" value="portlet-1.0.jar"/>
     <property name="secure.lib" value="bcprov-jdk14-122.jar"/>
