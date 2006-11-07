@@ -88,7 +88,8 @@ public final class PortalXsltList implements XsltTransformerManager {
             log.debug("XsltList. serverName  ID - " + siteId);
         }
 
-        Map<String, XsltTransformer> map = InternalDaoFactory.getInternalXsltDao().getTransformerForCurrentXsltMap( siteId );
+        Map<String, XsltTransformer> map=new HashMap<String, XsltTransformer>();
+//        map = InternalDaoFactory.getInternalXsltDao().getTransformerForCurrentXsltMap( siteId );
         return new PortalXsltList( map );
     }
 }

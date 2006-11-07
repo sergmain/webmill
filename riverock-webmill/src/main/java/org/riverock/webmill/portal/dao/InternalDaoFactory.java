@@ -33,13 +33,13 @@ public class InternalDaoFactory {
     public final static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
     public final static InternalAuthDao internalAuthDao = new InternalAuthDaoImpl();
     public final static InternalSiteDao internalSiteDao = new InternalSiteDaoImpl();
-    public final static InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
+//    public final static InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
+    public final static InternalXsltDao internalXsltDao = new HibernateXsltDaoImpl();
     public final static InternalVirtualHostDao internalVirtualHostDao = new InternalVirtualHostDaoImpl();
     public final static InternalSiteLanguageDao internalSiteLanguageDao = new InternalSiteLanguageDaoImpl();
     public final static InternalTemplateDao internalTemplateDao = new InternalTemplateDaoImpl();
     public final static InternalPortletNameDao internalPortletNameDao = new InternalPortletNameDaoImpl();
     public final static InternalCatalogDao internalCatalogDao = new InternalCatalogDaoImpl();
-//    public final static InternalCssDao internalCssDao = new InternalCssDaoImpl();
     public final static InternalCssDao internalCssDao = new HibernateCssDaoImpl();
     public final static InternalCmsDao internalCmsDao = new InternalCmsDaoImpl();
     public final static InternalUserMetadataDao internalUserMetadataDao = new InternalUserMetadataDaoImpl();

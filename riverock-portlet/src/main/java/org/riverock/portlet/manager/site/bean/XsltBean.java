@@ -38,6 +38,7 @@ public class XsltBean implements Serializable, Xslt {
     private String name = null;
     private String xsltData = null;
     private boolean isCurrent = false;
+    private int version=0;
 
     public XsltBean(){
     }
@@ -48,6 +49,15 @@ public class XsltBean implements Serializable, Xslt {
         this.siteLanguageId=xslt.getSiteLanguageId();
         this.xsltData=xslt.getXsltData();
         this.isCurrent=xslt.isCurrent();
+        this.version=xslt.getVersion();
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public boolean isCurrent() {

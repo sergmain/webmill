@@ -31,5 +31,6 @@ public interface Xslt {
     public String getName();
     public String getXsltData();
     public boolean isCurrent();
+    public int getVersion();
 }
 

@@ -183,7 +183,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         mills = 0;
 
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-        xsltTransformerManager = PortalXsltList.getInstance(siteId);
+//        xsltTransformerManager = PortalXsltList.getInstance(siteId);
+        xsltTransformerManager = new XsltTransformerManagerImpl(siteId);
         if (log.isInfoEnabled()) log.info("Init xsltTransformerManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
 
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
