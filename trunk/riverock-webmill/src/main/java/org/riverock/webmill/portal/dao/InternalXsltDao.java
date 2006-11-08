@@ -35,9 +35,6 @@ import org.riverock.generic.db.DatabaseAdapter;
  *         $Id$
  */
 public interface InternalXsltDao {
-//    public Map<String, XsltTransformer> getTransformerForCurrentXsltMap(Long siteId);
-//    public StringBuilder getXsltData( Long xsltId );
-
     /**
      *  key is language of site
      *

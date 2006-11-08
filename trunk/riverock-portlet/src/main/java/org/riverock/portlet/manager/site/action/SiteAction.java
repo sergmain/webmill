@@ -180,6 +180,7 @@ public class SiteAction implements Serializable {
         log.info( "Process delete site action." );
         if( siteSessionBean.getSiteExtended() != null ) {
             FacesTools.getPortalDaoProvider().getPortalSiteDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
+            siteSessionBean.setCurrentSiteId(null);
             siteSessionBean.setSiteExtended( null );
             siteSessionBean.setId(null);
             siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);

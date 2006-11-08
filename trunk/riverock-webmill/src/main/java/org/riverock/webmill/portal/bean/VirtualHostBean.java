@@ -23,6 +23,14 @@ package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
@@ -30,11 +38,29 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
  *         Date: 02.05.2006
  *         Time: 17:56:55
  */
+@Entity
+@Table(name="wm_portal_virtual_host")
+@TableGenerator(
+    name="TABLE_VIRTUAL_HOST",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portal_virtual_host",
+    allocationSize=1,
+    initialValue = 1
+)
 public class VirtualHostBean implements Serializable, VirtualHost {
     private static final long serialVersionUID = 3255005504L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_VIRTUAL_HOST")
+    @Column(name="ID_SITE_SUPPORT_LANGUAGE")
     private Long id = null;
+
+    @Column(name="ID_SITE")
     private Long siteId = null;
+
+    @Column(name="NAME_VIRTUAL_HOST")
     private String host = null;
 
     public VirtualHostBean() {

@@ -67,6 +67,16 @@ public class SiteLanguageBean implements Serializable,  SiteLanguage {
     @Column(name="NAME_CUSTOM_LANGUAGE")
     private String nameCustomLanguage;
 
+    public SiteLanguageBean() {
+    }
+
+    public SiteLanguageBean(SiteLanguage siteLanguage) {
+        this.siteLanguageId = siteLanguage.getSiteLanguageId();
+        this.siteId = siteLanguage.getSiteId();
+        this.customLanguage = siteLanguage.getCustomLanguage();
+        this.nameCustomLanguage = siteLanguage.getNameCustomLanguage();
+    }
+
     public Long getSiteLanguageId() {
         return siteLanguageId;
     }

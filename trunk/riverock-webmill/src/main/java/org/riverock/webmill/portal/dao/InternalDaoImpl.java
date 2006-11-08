@@ -39,7 +39,6 @@ import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.a3.audit.RequestStatisticBean;
 import org.riverock.webmill.core.*;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.port.PortalXsltList;
 import org.riverock.webmill.portal.menu.PortalMenu;
 import org.riverock.webmill.portal.menu.PortalMenuLanguage;
 import org.riverock.webmill.portal.menu.SiteMenu;
@@ -287,7 +286,6 @@ public class InternalDaoImpl implements InternalDao {
 
             Class p = PortalInfoImpl.class;
             SqlStatement.registerRelateClass(p, GetWmPortalListSiteItem.class);
-            SqlStatement.registerRelateClass(p, PortalXsltList.class);
             SqlStatement.registerRelateClass(p, PortalTemplateManagerImpl.class);
             SqlStatement.registerRelateClass(p, GetWmPortalSiteLanguageWithIdSiteList.class);
             SqlStatement.registerRelateClass(p, SiteMenu.class);

@@ -128,6 +128,35 @@ public class InternalVirtualHostDaoImpl implements InternalVirtualHostDao {
         }
     }
 
+    public void deleteVirtualHost(VirtualHost virtualHost) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTAL_VIRTUAL_HOST where ID_SITE=? and lower(NAME_VIRTUAL_HOST)=?",
+                new Object[]{virtualHost.getSiteId(), virtualHost.getHost().toLowerCase()}, new int[]{Types.DECIMAL, Types.VARCHAR}
+            );
+
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter != null)
+                    adapter.rollback();
+            }
+            catch (Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error delet virtual host";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
     public Long createVirtualHost(DatabaseAdapter adapter, VirtualHost host) {
 
         try {
@@ -151,7 +180,7 @@ public class InternalVirtualHostDaoImpl implements InternalVirtualHostDao {
         }
     }
 
-    public void deleteVirtualHost(DatabaseAdapter adapter, Long siteId) {
+    public void deleteVirtualHostForSite(DatabaseAdapter adapter, Long siteId) {
 
         try {
             DatabaseManager.runSQL(

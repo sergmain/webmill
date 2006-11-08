@@ -38,6 +38,13 @@ import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalSiteLanguageDao;
+import org.riverock.webmill.portal.dao.InternalSiteLanguageDaoImpl;
+import org.riverock.webmill.portal.dao.InternalXsltDao;
+import org.riverock.webmill.portal.dao.HibernateXsltDaoImpl;
+import org.riverock.webmill.portal.dao.InternalSiteDao;
+import org.riverock.webmill.portal.dao.InternalSiteDaoImpl;
+import org.riverock.webmill.portal.dao.InternalXsltDaoImpl;
 
 /**
  * @author Sergei Maslyukov
@@ -50,12 +57,16 @@ public class ConvertXsltBigTableToBlob {
     public static void main(String[] args) throws SQLException, IOException {
         StartupApplication.init();
 
-        List<Site> sites = InternalDaoFactory.getInternalSiteDao().getSites();
+        InternalSiteLanguageDao internalSiteLanguageDao = new InternalSiteLanguageDaoImpl();
+        InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
+        InternalSiteDao internalSiteDao = new InternalSiteDaoImpl();
+
+        List<Site> sites = internalSiteDao.getSites();
         for (Site site : sites) {
             System.out.println("site = " + site);
-            List<SiteLanguage> sitesLanguages = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(site.getSiteId());
+            List<SiteLanguage> sitesLanguages = internalSiteLanguageDao.getSiteLanguageList(site.getSiteId());
             for (SiteLanguage sitesLanguage : sitesLanguages) {
-                List<Xslt> xslts = InternalDaoFactory.getInternalXsltDao().getXsltList(sitesLanguage.getSiteLanguageId());
+                List<Xslt> xslts = internalXsltDao.getXsltList(sitesLanguage.getSiteLanguageId());
 
                 for (Xslt xslt : xslts) {
 

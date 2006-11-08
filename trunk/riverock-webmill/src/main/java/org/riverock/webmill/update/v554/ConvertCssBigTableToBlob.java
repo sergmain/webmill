@@ -35,6 +35,9 @@ import org.riverock.generic.startup.StartupApplication;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalCssDao;
+import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
+import org.riverock.webmill.portal.dao.InternalCssDaoImpl;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.Css;
 
@@ -49,10 +52,12 @@ public class ConvertCssBigTableToBlob {
     public static void main(String[] args) throws SQLException, IOException {
         StartupApplication.init();
 
+        InternalCssDao internalCssDao = new InternalCssDaoImpl();
+
         List<Site> sites = InternalDaoFactory.getInternalSiteDao().getSites();
         for (Site site : sites) {
             System.out.println("site = " + site);
-            List<Css> cssList = InternalDaoFactory.getInternalCssDao().getCssList(site.getSiteId());
+            List<Css> cssList = internalCssDao.getCssList(site.getSiteId());
 
             for (Css css : cssList) {
 

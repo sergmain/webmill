@@ -51,6 +51,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -289,6 +290,7 @@ public final class CreateSchemaFromDb {
                 "\n" +
                 "import java.sql.PreparedStatement;\n" +
                 "import java.sql.ResultSet;\n" +
+                "import java.io.Serializable;\n" +
                 "\n" +
                 declareClass(className) +
 
@@ -370,9 +372,11 @@ public final class CreateSchemaFromDb {
     }
 
     private static String declareClass(String className) {
-        return
-                "@SuppressWarnings({\"UnusedAssignment\"})\n" +
-                "public class " + className + (isApplModule ? "implements ApplicationInterface" : "") + "\n";
+        String s =
+            "@SuppressWarnings({\"UnusedAssignment\"})\n" +
+            "public class " + className + " implements Serializable" + (isApplModule ? ", ApplicationInterface" : "") + "\n";
+
+        return s;
     }
 
 
@@ -1020,6 +1024,7 @@ public final class CreateSchemaFromDb {
                 "\n" +
                 "import java.sql.PreparedStatement;\n" +
                 "import java.sql.ResultSet;\n" +
+                "import java.io.Serializable;\n" +
                 "\n" +
                 declareClass(className) +
                 "{\n" +

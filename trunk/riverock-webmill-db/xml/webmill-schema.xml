@@ -1065,6 +1065,8 @@
 		<Fields name="TEXT_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="0"/>
 		<Fields name="XSLT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
 		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<Fields name="VERSION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1" defaultValue="0"/>
+		<Fields name="XSLT_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_XSLT" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPORT_LANG_SX_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
