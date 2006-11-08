@@ -24,6 +24,15 @@ package org.riverock.webmill.portal.bean;
 import java.io.Serializable;
 import java.util.Locale;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang.CharEncoding;
 
 import org.riverock.interfaces.portal.bean.Site;
@@ -34,21 +43,74 @@ import org.riverock.interfaces.portal.bean.Site;
  *         Time: 14:29:04
  *         $Id$
  */
+@Entity
+@Table(name="wm_portal_list_site")
+@TableGenerator(
+    name="TABLE_SITE",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portal_site",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class SiteBean implements Serializable, Site {
     private static final long serialVersionUID = 3255005503L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_SITE")
+    @Column(name="ID_SITE")
     private Long siteId;
+
+    @Column(name="ID_FIRM")
     private Long companyId;
+
+    @Column(name="IS_CSS_DYNAMIC")
     private boolean isCssDynamic = false;
+
+    @Column(name="IS_REGISTER_ALLOWED")
     private boolean isRegisterAllowed = false;
+
+    @Column(name="DEF_LANGUAGE")
     private String defLanguage;
+
+    @Column(name="DEF_COUNTRY")
     private String defCountry;
+
+    @Column(name="DEF_VARIANT")
     private String defVariant;
+
+    @Column(name="NAME_SITE")
     private String siteName;
+
+    @Column(name="ADMIN_EMAIL")
     private String adminEmail=null;
+
+    @Column(name="CSS_FILE")
     private String cssFile = "/front_styles.css";
+
+    @Column(name="PROPERTIES")
     private String properties=null;
+
+    @Transient
     private String portalCharset = CharEncoding.UTF_8;
+
+    public SiteBean() {
+    }
+
+    public SiteBean(Site site) {
+        this.siteId = site.getSiteId();
+        this.companyId = site.getCompanyId();
+        isCssDynamic = site.getCssDynamic();
+        isRegisterAllowed = site.getRegisterAllowed();
+        this.defLanguage = site.getDefLanguage();
+        this.defCountry = site.getDefCountry();
+        this.defVariant = site.getDefVariant();
+        this.siteName = site.getSiteName();
+        this.adminEmail = site.getAdminEmail();
+        this.cssFile = site.getCssFile();
+        this.properties = site.getProperties();
+    }
 
     public String getPortalCharset() {
         if (portalCharset==null)

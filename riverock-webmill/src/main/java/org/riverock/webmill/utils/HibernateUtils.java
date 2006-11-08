@@ -28,6 +28,8 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.bean.SiteBean;
+import org.riverock.webmill.portal.bean.VirtualHostBean;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -49,6 +51,8 @@ public class HibernateUtils {
         CssBean.class,
         PortalXsltBean.class,
         SiteLanguageBean.class,
+        SiteBean.class,
+        VirtualHostBean.class
     };
 
     public static final String HIBERNATE_FAMILY = "hibernate_family";

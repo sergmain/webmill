@@ -22,6 +22,14 @@ insert into wm_portal_ids
 (select 'wm_portal_site_language' name, max(ID_SITE_SUPPORT_LANGUAGE) from wm_portal_site_language)
 /
 
+insert into wm_portal_ids
+(select 'wm_portal_site' name, max(ID_SITE) from wm_portal_list_site)
+/
+
+insert into wm_portal_ids
+(select 'wm_portal_virtual_host' name, max(ID_SITE_VIRTUAL_HOST) from wm_portal_virtual_host)
+/
+
 alter table wm_portal_xslt
 add column VERSION decimal(5,0) default 0
 /

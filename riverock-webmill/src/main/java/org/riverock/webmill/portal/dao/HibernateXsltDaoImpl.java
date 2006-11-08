@@ -241,8 +241,10 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
         List<SiteLanguage> list = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
         for (SiteLanguage siteLanguage : list) {
             query.setLong("site_language_id", siteLanguage.getSiteLanguageId());
-            List xsltList = query.list();
-            session.delete(xsltList);
+            List<PortalXsltBean> xsltList = query.list();
+            for (PortalXsltBean portalXsltBean : xsltList) {
+                session.delete(portalXsltBean);
+            }
         }
         session.getTransaction().commit();
     }
@@ -254,8 +256,10 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
             "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt where xslt.siteLanguageId = :site_language_id"
         );
         query.setLong("site_language_id", siteLanguageId);
-        List list = query.list();
-        session.delete(list);
+        List<PortalXsltBean> xsltList = query.list();
+        for (PortalXsltBean portalXsltBean : xsltList) {
+            session.delete(portalXsltBean);
+        }
         session.getTransaction().commit();
     }
 

@@ -39,7 +39,6 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
 import org.riverock.interfaces.portal.bean.Xslt;
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.core.GetWmPortalXsltDataWithIdSiteXsltList;
@@ -112,6 +111,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         portalXsltBean.setXsltData( getXsltData(adapter, item.getIdSiteXslt() ).toString() );
         portalXsltBean.setSiteLanguageId( item.getIdSiteSupportLanguage() );
         portalXsltBean.setCurrent(item.getIsCurrent() != null && item.getIsCurrent() );
+        portalXsltBean.setVersion(item.getVersion());
         return portalXsltBean;
     }
 
@@ -499,6 +499,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         }
     }
 
+/*
     public Map<String, XsltTransformer> getTransformerForCurrentXsltMap(Long siteId) {
         PreparedStatement ps = null;
         ResultSet rset = null;
@@ -523,6 +524,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             ps = null;
         }
     }
+*/
 
     static {
         try {
@@ -535,6 +537,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         }
     }
 
+/*
     public StringBuilder getXsltData(Long xsltId) {
         DatabaseAdapter adapter = null;
         try {
@@ -551,6 +554,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             adapter = null;
         }
     }
+*/
 
     private StringBuilder getXsltData(DatabaseAdapter adapter, Long xsltId) throws PortalPersistenceException {
         StringBuilder sb = new StringBuilder();

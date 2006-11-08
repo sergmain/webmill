@@ -28,19 +28,19 @@ package org.riverock.webmill.portal.dao;
  *         $Id$
  */
 public class InternalDaoFactory {
+    public final static InternalCssDao internalCssDao = new HibernateCssDaoImpl();
+    public final static InternalXsltDao internalXsltDao = new HibernateXsltDaoImpl();
+    public final static InternalSiteDao internalSiteDao = new HibernateSiteDaoImpl();
+    public final static InternalSiteLanguageDao internalSiteLanguageDao = new HibernateSiteLanguageDaoImpl();
+    public final static InternalVirtualHostDao internalVirtualHostDao = new HibernateVirtualHostDaoImpl();
+
     public final static InternalDao internalDao = new InternalDaoImpl();
     public final static InternalCompanyDao internalCompanyDao = new InternalCompanyDaoImpl();
     public final static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
     public final static InternalAuthDao internalAuthDao = new InternalAuthDaoImpl();
-    public final static InternalSiteDao internalSiteDao = new InternalSiteDaoImpl();
-//    public final static InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
-    public final static InternalXsltDao internalXsltDao = new HibernateXsltDaoImpl();
-    public final static InternalVirtualHostDao internalVirtualHostDao = new InternalVirtualHostDaoImpl();
-    public final static InternalSiteLanguageDao internalSiteLanguageDao = new InternalSiteLanguageDaoImpl();
     public final static InternalTemplateDao internalTemplateDao = new InternalTemplateDaoImpl();
     public final static InternalPortletNameDao internalPortletNameDao = new InternalPortletNameDaoImpl();
     public final static InternalCatalogDao internalCatalogDao = new InternalCatalogDaoImpl();
-    public final static InternalCssDao internalCssDao = new HibernateCssDaoImpl();
     public final static InternalCmsDao internalCmsDao = new InternalCmsDaoImpl();
     public final static InternalUserMetadataDao internalUserMetadataDao = new InternalUserMetadataDaoImpl();
     public final static InternalUserDao internalUserDao = new InternalUserDaoImpl();

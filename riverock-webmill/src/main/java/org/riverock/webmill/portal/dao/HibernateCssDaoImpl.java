@@ -191,7 +191,7 @@ public class HibernateCssDaoImpl implements InternalCssDao {
     }
 
     public void deleteCssForSite(DatabaseAdapter adapter, Long siteId) {
-        throw new RuntimeException("Will not be implemented");
+        deleteCssForSite(siteId);
     }
 
     public void deleteCssForSite(Long siteId) {
@@ -199,8 +199,10 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         session.beginTransaction();
         Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id");
         query.setLong("site_id", siteId);
-        List cssList = query.list();
-        session.delete(cssList);
+        List<CssBean> cssList = query.list();
+        for (CssBean css : cssList) {
+            session.delete(css);
+        }
         session.getTransaction().commit();
     }
 
