@@ -30,6 +30,14 @@ import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
+import org.riverock.webmill.portal.bean.PortletNameBean;
+import org.riverock.webmill.portal.bean.HoldingCompanyRelationBean;
+import org.riverock.webmill.portal.bean.CompanyBean;
+import org.riverock.webmill.portal.bean.HoldingBean;
+import org.riverock.webmill.a3.bean.AuthInfoImpl;
+import org.riverock.webmill.a3.bean.UserInfoImpl;
+import org.riverock.webmill.a3.bean.RoleBeanImpl;
+import org.riverock.webmill.a3.bean.AuthRelateRole;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -52,7 +60,15 @@ public class HibernateUtils {
         PortalXsltBean.class,
         SiteLanguageBean.class,
         SiteBean.class,
-        VirtualHostBean.class
+        VirtualHostBean.class,
+        PortletNameBean.class,
+        AuthInfoImpl.class,
+        UserInfoImpl.class,
+        CompanyBean.class,
+        HoldingBean.class,
+        HoldingCompanyRelationBean.class,
+        RoleBeanImpl.class,
+        AuthRelateRole.class
     };
 
     public static final String HIBERNATE_FAMILY = "hibernate_family";

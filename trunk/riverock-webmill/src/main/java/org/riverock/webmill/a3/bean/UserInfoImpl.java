@@ -24,6 +24,14 @@ package org.riverock.webmill.a3.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 import org.riverock.interfaces.sso.a3.UserInfo;
 
 /**
@@ -32,22 +40,71 @@ import org.riverock.interfaces.sso.a3.UserInfo;
  *         Time: 16:32:21
  *         $Id$
  */
+@Entity
+@Table(name="wm_list_user")
+@TableGenerator(
+    name="TABLE_LIST_USER",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_list_user",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class UserInfoImpl implements UserInfo, Serializable {
     private static final long serialVersionUID = 3043770851L;
 
-    private java.lang.Long userId;
-    private java.lang.Long companyId;
-    private java.lang.String firstName;
-    private java.lang.String middleName;
-    private java.lang.String lastName;
-    private java.util.Date dateStartWork;
-    private java.util.Date dateFire;
-    private java.lang.String address;
-    private java.lang.String telephone;
-    private java.util.Date dateBindProff;
-    private java.lang.String homeTelephone;
-    private java.lang.String email;
-    private java.lang.Double discount;
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_LIST_USER")
+    @Column(name="ID_USER")
+    private Long userId;
+
+    @Column(name="ID_FIRM")
+    private Long companyId;
+
+    @Column(name="FIRST_NAME")
+    private String firstName;
+    
+    @Column(name="MIDDLE_NAME")
+    private String middleName;
+
+    @Column(name="LAST_NAME")
+    private String lastName;
+
+    @Column(name="DATE_START_WORK")
+    private Date dateStartWork;
+
+    @Column(name="DATE_FIRE")
+    private Date dateFire;
+
+    @Column(name="ADDRESS")
+    private String address;
+
+    @Column(name="TELEPHONE")
+    private String telephone;
+
+    @Column(name="DATE_BIND_PROFF")
+    private Date dateBindProff;
+
+    @Column(name="HOME_TELEPHONE")
+    private String homeTelephone;
+
+    @Column(name="EMAIL")
+    private String email;
+
+    @Column(name="DISCOUNT")
+    private Double discount;
+
+    @Column(name="IS_DELETED")
+    private boolean isDeleted;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public Long getUserId() {
         return userId;

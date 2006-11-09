@@ -54,7 +54,7 @@ public class VirtualHostBean implements Serializable, VirtualHost {
 
     @Id
     @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_VIRTUAL_HOST")
-    @Column(name="ID_SITE_SUPPORT_LANGUAGE")
+    @Column(name="ID_SITE_VIRTUAL_HOST")
     private Long id = null;
 
     @Column(name="ID_SITE")

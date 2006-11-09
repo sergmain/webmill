@@ -46,11 +46,11 @@ import org.riverock.interfaces.portal.user.PortalUserManager;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
-import org.riverock.sso.a3.AuthInfoImpl;
 import org.riverock.webmill.portal.bean.RoleEditableBeanImpl;
 import org.riverock.webmill.portal.bean.UserBean;
 import org.riverock.webmill.portal.bean.UserOperationStatusBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.a3.bean.AuthInfoImpl;
 
 /**
  * @author Sergei Maslyukov

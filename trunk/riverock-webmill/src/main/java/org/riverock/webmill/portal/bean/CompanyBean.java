@@ -23,6 +23,14 @@ package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 import org.riverock.interfaces.portal.bean.Company;
 
 /**
@@ -31,21 +39,48 @@ import org.riverock.interfaces.portal.bean.Company;
  *         Time: 1:16:22
  *         $Id$
  */
+@Entity
+@Table(name="wm_list_company")
+@TableGenerator(
+    name="TABLE_LIST_COMPANY",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_list_company",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class CompanyBean implements Serializable, Company {
     private static final long serialVersionUID = 1057005508L;
 
-	private String name = null;
-	private Long id = null;
-	private String shortName = null;
-	private String address = null;
-	private String ceo = null;
-	private String cfo = null;
-	private String website = null;
-	private String info = null;
-    private boolean isDeleted = false;
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_LIST_COMPANY")
+    @Column(name="ID_FIRM")
+    private Long id = null;
 
-    public CompanyBean() {
-	}
+    @Column(name="FULL_NAME")
+	private String name = null;
+
+    @Column(name="SHORT_NAME")
+	private String shortName = null;
+
+    @Column(name="ADDRESS")
+	private String address = null;
+
+    @Column(name="CHIEF")
+	private String ceo = null;
+
+    @Column(name="BUH")
+	private String cfo = null;
+
+    @Column(name="URL")
+	private String website = null;
+
+    @Column(name="SHORT_INFO")
+	private String info = null;
+
+    @Column(name="IS_DELETED")
+    private boolean isDeleted = false;
 
     public boolean isDeleted() {
         return isDeleted;

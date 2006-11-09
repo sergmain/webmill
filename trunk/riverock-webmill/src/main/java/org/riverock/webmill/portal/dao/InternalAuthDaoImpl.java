@@ -43,9 +43,9 @@ import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
-import org.riverock.sso.a3.AuthInfoImpl;
 import org.riverock.webmill.a3.bean.RoleBeanImpl;
 import org.riverock.webmill.a3.bean.UserInfoImpl;
+import org.riverock.webmill.a3.bean.AuthInfoImpl;
 import org.riverock.webmill.core.GetWmAuthUserItem;
 import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.schema.core.WmAuthUserItemType;
@@ -300,7 +300,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
-            return getGrantedUserIdList(db, username);
+            return getGrantedHoldingIdList(db, username);
         }
         catch(Exception e) {
             final String es = "Exception get list of holdingId";
