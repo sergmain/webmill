@@ -1,7 +1,8 @@
 /*
- * org.riverock.sso - Single Sign On implementation
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
  *
- * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
  * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
@@ -19,7 +20,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.riverock.sso.a3;
+package org.riverock.webmill.a3.bean;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
 
 import org.riverock.interfaces.sso.a3.AuthInfo;
 
@@ -27,26 +38,49 @@ import org.riverock.interfaces.sso.a3.AuthInfo;
  *
  *  $Id$
  */
-public class AuthInfoImpl implements AuthInfo {
+@Entity
+@Table(name="wm_auth_user")
+@TableGenerator(
+    name="TABLE_AUTH_USER",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_auth_user",
+    allocationSize = 1,
+    initialValue = 1
+)
+public class AuthInfoImpl implements AuthInfo, Serializable {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_AUTH_USER")
+    @Column(name="ID_AUTH_USER")
     private Long authUserId;
+    
+    @Column(name="ID_USER")
     private Long userId;
+
+    @Column(name="ID_FIRM")
     private Long companyId;
+
+    @Column(name="ID_HOLDING")
     private Long holdingId;
 
+    @Column(name="USER_LOGIN")
     private String userLogin = "";
+
+    @Column(name="USER_PASSWORD")
     private String userPassword = "";
 
+    @Column(name="IS_USE_CURRENT_FIRM")
     private boolean isCompany = false;
+
+    @Column(name="IS_HOLDING")
     private boolean isHolding = false;
+
+    @Column(name="IS_ROOT")
     private boolean isRoot = false;
 
-    protected void finalize() throws Throwable {
-        userLogin = null;
-        userPassword = null;
 
-        super.finalize();
-    }
 
     public Long getAuthUserId() {
         return authUserId;

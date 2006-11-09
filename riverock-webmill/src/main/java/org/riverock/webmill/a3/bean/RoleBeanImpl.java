@@ -23,6 +23,14 @@ package org.riverock.webmill.a3.bean;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 
 /**
@@ -31,10 +39,26 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
  *         Time: 16:08:54
  *         $Id$
  */
+@Entity
+@Table(name="wm_auth_access_group")
+@TableGenerator(
+    name="TABLE_AUTH_ROLE",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_auth_access_group",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class RoleBeanImpl implements Serializable, RoleBean {
     private static final long serialVersionUID = 2057005507L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_AUTH_ROLE")
+    @Column(name="ID_ACCESS_GROUP")
     private Long roleId = null;
+
+    @Column(name="NAME_ACCESS_GROUP")
     private String name = null;
 
     public String getName() {
@@ -53,8 +77,13 @@ public class RoleBeanImpl implements Serializable, RoleBean {
         this.roleId = roleId;
     }
 
-    public boolean equals( RoleBean roleBean ) {
-        if( roleBean == null || roleBean.getRoleId()==null || roleId==null ) {
+    public boolean equals( Object o ) {
+        if (!(o instanceof RoleBean)) {
+            return false;
+        }
+
+        RoleBean roleBean = (RoleBean)o;
+        if ( roleBean.getRoleId()==null || roleId==null ) {
             return false;
         }
         return roleBean.getRoleId().equals( roleId );

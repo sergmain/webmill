@@ -1028,6 +1028,7 @@
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
+<!--
 	<Tables schema="TEST" name="WM_PORTAL_TEMPLATE_MEMBER" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_PORTAL_TEMPLATE_MEMBER" columnName="ID_SITE_TEMPLATE_MEMBER" keySeq="1" pkName="ID_TMPLMBER_STM_PK"/>
@@ -1044,6 +1045,7 @@
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
+-->
 	<Tables schema="TEST" name="WM_PORTAL_VIRTUAL_HOST" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_PORTAL_VIRTUAL_HOST" columnName="ID_SITE_VIRTUAL_HOST" keySeq="1" pkName="ID_VIRT_HST_SVH_PK"/>

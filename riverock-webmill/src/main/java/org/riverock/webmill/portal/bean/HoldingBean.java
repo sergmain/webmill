@@ -24,6 +24,15 @@ package org.riverock.webmill.portal.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 import org.riverock.interfaces.portal.bean.Holding;
 
 /**
@@ -32,13 +41,33 @@ import org.riverock.interfaces.portal.bean.Holding;
  *         Time: 1:16:22
  *         $Id$
  */
+@Entity
+@Table(name="wm_list_holding")
+@TableGenerator(
+    name="TABLE_LIST_HOLDING",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_list_holding",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class HoldingBean implements Serializable, Holding {
     private static final long serialVersionUID = 4055005512L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_LIST_HOLDING")
+    @Column(name="ID_HOLDING")
+    private Long id = null;
+
+    @Column(name="FULL_NAME_HOLDING")
 	private String name = null;
-	private Long id = null;
+
+    @Column(name="NAME_HOLDING")
 	private String shortName = null;
-	private List<Long> companyIdList = null;
+
+    @Transient
+    private List<Long> companyIdList = null;
 
     public HoldingBean() {
     }
