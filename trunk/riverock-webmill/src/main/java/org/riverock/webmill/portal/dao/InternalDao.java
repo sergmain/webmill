@@ -39,9 +39,7 @@ public interface InternalDao {
     public ConcurrentMap<String, Long> getUrlList();
 
     /**
-     * in Map:<br/>
-     * key - virtual host name<br/>
-     * value - siteId
+     * @return Map&lt;String, Long&gt;  key - virtual host name,  value - siteId
      */
     public Map<String, Long> getSiteIdMap();
 

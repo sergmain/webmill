@@ -41,13 +41,8 @@ public interface AuthProvider extends Serializable {
 
     public UserInfo getUserInfo( AuthSession authSession );
 
-    public String getGrantedUserId( AuthSession authSession );
     public List<Long> getGrantedUserIdList( AuthSession authSession );
-
-    public String getGrantedCompanyId(AuthSession authSession);
     public List<Long> getGrantedCompanyIdList( AuthSession authSession );
-
-    public String getGrantedHoldingId( AuthSession authSession );
     public List<Long> getGrantedHoldingIdList( AuthSession authSession );
 
     public Long checkCompanyId(Long companyId, AuthSession authSession );

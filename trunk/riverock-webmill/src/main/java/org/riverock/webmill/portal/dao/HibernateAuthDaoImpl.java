@@ -22,37 +22,28 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.Query;
+import org.hibernate.Hibernate;
 
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.AuthInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
-import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.webmill.a3.bean.UserInfoImpl;
 import org.riverock.webmill.a3.bean.AuthInfoImpl;
+import org.riverock.webmill.a3.bean.AuthRelateRole;
 import org.riverock.webmill.a3.bean.RoleBeanImpl;
-import org.riverock.webmill.schema.core.WmAuthUserItemType;
-import org.riverock.webmill.core.GetWmAuthUserItem;
+import org.riverock.webmill.a3.bean.UserInfoImpl;
 import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.DateTools;
 
 /**
  * @author Sergei Maslyukov
@@ -68,7 +59,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         UserInfoImpl user = (UserInfoImpl)session.createQuery(
-            "select user from org.riverock.webmill.a3.bean.UserInfoImpl as user," +
+            "select user from org.riverock.webmill.a3.bean.UserInfoImpl as user, " +
             " org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
             "where user.userId = auth.userId and auth.userLogin=:userLogin ")
             .setString("userLogin", userLogin)
@@ -81,17 +72,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         return getUserInfo(userLogin);
     }
 
-    /**
-     * retrun list of users, which current user can operate
-     *
-     * @param username
-     * @return String comma separated list
-     */
-    public String getGrantedUserId(String username) {
-        return listToString( getGrantedUserIdList(null, username) );
-    }
-
-    private List<Long> getGrantedUserIdList(DatabaseAdapter adapter, String username) {
+    public List<Long> getGrantedUserIdList(String username) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         List<AuthInfoImpl> authInfos = session.createQuery(
@@ -107,24 +88,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         return result;
     }
 
-    public List<Long> getGrantedUserIdList(String username) {
-        return getGrantedUserIdList(null, username);
-    }
-
-    public String getGrantedCompanyId(String username) {
-        return getGrantedCompanyId(null, username);
-    }
-
-    public String getGrantedCompanyId(DatabaseAdapter db, String username) {
-        return listToString( getGrantedCompanyIdList(db, username) );
-    }
-
     public List<Long> getGrantedCompanyIdList(String username) {
-        return getGrantedCompanyIdList(null, username);
-    }
-
-    private List<Long> getGrantedCompanyIdList(DatabaseAdapter adapter, String username) {
-/*
         String sql_ =
             "select  a01.id_firm " +
             "from    WM_AUTH_USER a01 " +
@@ -138,42 +102,39 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04 " +
             "where   a04.is_root = 1 and a04.user_login=? ";
 
-*/
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        List<Long> list = session.createQuery(
+        List<Long> list = session
+            .createSQLQuery(sql_)
+            .addScalar("id_firm", Hibernate.LONG)
+            .setString(0, username)
+            .setString(1, username)
+            .setString(2, username)
+            .list();
+/*
+        Query query = session.createQuery(
             "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
             "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
             "union " +
-            "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
+            "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
             " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
-            "where  auth2.isHolding=true and auth2.holdingId=relate2.hodingId and auth2.userLogin=:userLogin2 " +
+            "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
             "union " +
             "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
             " org.riverock.webmill.portal.bean.CompanyBean company3 " +
-            "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 ")
+            "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 ");
+
+        List<Long> list = query
             .setString("userLogin1", username)
             .setString("userLogin2", username)
             .setString("userLogin3", username)
             .list();
+*/
         session.getTransaction().commit();
         return list;
     }
 
-    private String getGrantedHoldingId(DatabaseAdapter db, String username) {
-        return listToString( getGrantedHoldingIdList(db, username) );
-    }
-
-    public String getGrantedHoldingId(String username) {
-        return getGrantedHoldingId(null, username);
-    }
-
     public List<Long> getGrantedHoldingIdList(String username) {
-            return getGrantedHoldingIdList(null, username);
-    }
-
-    private List<Long> getGrantedHoldingIdList(DatabaseAdapter adapter, String username) {
-/*
         String sql_ =
             "select  a01.ID_HOLDING "+
             "from    WM_AUTH_USER a01 "+
@@ -182,20 +143,29 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             "select  b04.ID_HOLDING "+
             "from    WM_AUTH_USER a04, WM_LIST_HOLDING b04 "+
             "where   a04.is_root=1 and a04.user_login=?";
-*/
+        
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        List<Long> list = session.createQuery(
+        List<Long> list = session.createSQLQuery( sql_ )
+/*
             "select auth1.holdingId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
             "where  auth1.isHolding=true and auth1.userLogin=:userLogin1 " +
             "union " +
             "select holding2.holdingId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
             " org.riverock.webmill.portal.bean.HoldingBean holding2 " +
             "where  auth2.isRoot=true and auth3.userLogin=:userLogin2 ")
-            .setString("userLogin1", username)
-            .setString("userLogin2", username)
+*/
+            .addScalar("ID_HOLDING", Hibernate.LONG)
+            .setString(0, username)
+            .setString(1, username)
             .list();
         session.getTransaction().commit();
+        if (log.isDebugEnabled()) {
+            log.debug("list: " + list);
+            if (!list.isEmpty()) {
+                log.debug("   class: " + ((List)list).get(0).getClass().getName());
+            }
+        }
         return list;
     }
 
@@ -203,24 +173,10 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         Long id = (Long)session.createQuery(
-            "select company.companyId from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where company.companyId = :companyId and company.companyId in ( "+
-
-                "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
-                "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
-                "union " +
-                "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
-                " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
-                "where  auth2.isHolding=true and auth2.holdingId=relate2.hodingId and auth2.userLogin=:userLogin2 " +
-                "union " +
-                "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
-                " org.riverock.webmill.portal.bean.CompanyBean company3 " +
-                "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
-             ")")
+            "select company.id from org.riverock.webmill.portal.bean.CompanyBean as company " +
+            "where company.id = :companyId and company.id in (:companyIds) ")
+            .setParameterList("companyIds", getGrantedCompanyIdList(userLogin))
             .setLong("companyId", companyId)
-            .setString("userLogin1", userLogin)
-            .setString("userLogin2", userLogin)
-            .setString("userLogin3", userLogin)
             .uniqueResult();
         session.getTransaction().commit();
         return id;
@@ -230,19 +186,10 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         Long id = (Long)session.createQuery(
-            "select holding.holdingId from org.riverock.webmill.portal.bean.HoldingBean as holding " +
-            "where holding.holdingId = :holdingId and holding.holdingId in ( "+
-
-                "select auth1.holdingId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
-                "where  auth1.isHolding=true and auth1.userLogin=:userLogin1 " +
-                "union " +
-                "select holding2.holdingId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
-                " org.riverock.webmill.portal.bean.HoldingBean holding2 " +
-                "where  auth2.isRoot=true and auth3.userLogin=:userLogin2 " +
-             ")")
+            "select holding.id from org.riverock.webmill.portal.bean.HoldingBean as holding " +
+            "where  holding.id = :holdingId and holding.id in (:holdingIds) ")
+            .setParameterList("holdingIds", getGrantedHoldingIdList(userLogin))
             .setLong("holdingId", holdingId)
-            .setString("userLogin1", userLogin)
-            .setString("userLogin2", userLogin)
             .uniqueResult();
         session.getTransaction().commit();
         return id;
@@ -273,25 +220,29 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         if (auth!=null) {
             id = (Long)session.createQuery(
                 "select auth.authUserId " +
-                    "from org.riverock.webmill.a3.bean.AuthInfoImpl as auth, " +
-                    "     org.riverock.webmill.a3.bean.UserInfoImpl as user " +
-                    "where auth.authUserId = :id_auth_user_check and auth.userId=user.userId and company.companyId in ( "+
+                    "from  org.riverock.webmill.a3.bean.AuthInfoImpl as auth, " +
+                    "      org.riverock.webmill.a3.bean.UserInfoImpl as user " +
+                    "where auth.authUserId = :id_auth_user_check and auth.userId=user.userId and " +
+                    "      user.companyId in ( :companyIds )" )
+/*
 
                     "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
                     "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
                     "union " +
                     "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
                     " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
-                    "where  auth2.isHolding=true and auth2.holdingId=relate2.hodingId and auth2.userLogin=:userLogin2 " +
+                    "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
                     "union " +
                     "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
                     " org.riverock.webmill.portal.bean.CompanyBean company3 " +
                     "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
                     ")")
-                .setLong("id_auth_user_check", id_auth_user_check)
                 .setString("userLogin1", auth.getUserLogin())
                 .setString("userLogin2", auth.getUserLogin())
                 .setString("userLogin3", auth.getUserLogin())
+*/
+                .setParameterList("companyIds", getGrantedCompanyIdList(auth.getUserLogin()))
+                .setLong("id_auth_user_check", id_auth_user_check)
                 .uniqueResult();
         }
         session.getTransaction().commit();
@@ -334,9 +285,9 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 
             Long authUserId = (Long)session.createQuery(
                 "select auth.authUserId " +
-                    "from org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
-                    "     org.riverock.webmill.a3.bean.AuthRelateRole relateRole, " +
-                    "     org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+                    "from  org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
+                    "      org.riverock.webmill.a3.bean.AuthRelateRole relateRole, " +
+                    "      org.riverock.webmill.a3.bean.RoleBeanImpl role " +
                     "where auth.userLogin=:userLogin and auth.authUserId=relateRole.authUserId and " +
                     "      relateRole.roleId=role.roleId and role.name=:roleName ")
                 .setString("userLogin", userLogin)
@@ -350,32 +301,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-
-    private AuthInfo setAuthInfo(ResultSet rs) throws SQLException {
-        AuthInfoImpl bean = new AuthInfoImpl();
-        bean.setAuthUserId( RsetTools.getLong(rs, "ID_AUTH_USER") );
-        bean.setUserId( RsetTools.getLong(rs, "ID_USER") );
-        bean.setCompanyId( RsetTools.getLong(rs, "ID_FIRM") );
-        bean.setHoldingId( RsetTools.getLong(rs, "ID_HOLDING") );
-        bean.setUserLogin( RsetTools.getString(rs, "USER_LOGIN") );
-        bean.setUserPassword( RsetTools.getString(rs, "USER_PASSWORD") );
-
-        int isUseCurrentFirmTemp = RsetTools.getInt(rs, "IS_USE_CURRENT_FIRM", 0);
-        int isRoadTemp = RsetTools.getInt(rs, "IS_HOLDING", 0);
-        int isRootTemp = RsetTools.getInt(rs, "IS_ROOT", 0);
-
-        bean.setCompany( (isUseCurrentFirmTemp+isRoadTemp+isRootTemp)>0 );
-        bean.setHolding( (isRoadTemp+isRootTemp)>0 );
-        bean.setRoot( (isRootTemp)>0 );
-
-        return bean;
-    }
-
     public AuthInfo getAuthInfo(String login_, String pass_) {
-        return getAuthInfo(null, login_, pass_);
-    }
-
-    private AuthInfo getAuthInfo(DatabaseAdapter db_, String login_, String pass_) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
@@ -391,47 +317,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public AuthInfo getAuthInfo(Long authUserId) {
-        return getAuthInfo(null, authUserId);
-    }
-
-    public List<AuthInfo> getAuthInfoList(AuthSession authSession) {
-        return getAuthInfoList(null, authSession );
-    }
-
-    private List<AuthInfo> getAuthInfoList(DatabaseAdapter db, AuthSession authSession) {
-/*
-        "select a.* " +
-        "from   WM_AUTH_USER a, WM_LIST_USER b " +
-        "where  a.ID_USER=b.ID_USER and  " +
-        "       b.ID_FIRM  in ("+getGrantedCompanyId(db, authSession.getUserLogin())+") "
-*/
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<AuthInfoImpl> authInfos = session.createQuery(
-            "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
-                "     org.riverock.webmill.a3.bean.UserInfoImpl as user " +
-                "where auth.userId=user.userId and company.companyId in ( "+
-
-                "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
-                "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
-                "union " +
-                "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
-                " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
-                "where  auth2.isHolding=true and auth2.holdingId=relate2.hodingId and auth2.userLogin=:userLogin2 " +
-                "union " +
-                "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
-                " org.riverock.webmill.portal.bean.CompanyBean company3 " +
-                "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
-                ")")
-            .setString("userLogin1", authSession.getUserLogin())
-            .setString("userLogin2", authSession.getUserLogin())
-            .setString("userLogin3", authSession.getUserLogin())
-            .list();
-        session.getTransaction().commit();
-        return (List)authInfos;
-    }
-
-    private AuthInfo getAuthInfo(DatabaseAdapter db_, Long authUserId) {
         if (authUserId==null) {
             return null;
         }
@@ -448,192 +333,146 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         return authInfo;
     }
 
+    public List<AuthInfo> getAuthInfoList(AuthSession authSession) {
+        /*
+        "select a.* " +
+                "from   WM_AUTH_USER a, WM_LIST_USER b " +
+                "where  a.ID_USER=b.ID_USER and  " +
+                "       b.ID_FIRM  in ("+getGrantedCompanyId(db, authSession.getUserLogin())+") "
+        */
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<AuthInfoImpl> authInfos = session.createQuery(
+            "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
+                "     org.riverock.webmill.a3.bean.UserInfoImpl as user " +
+                "where auth.userId=user.userId and user.companyId in (:companyIds) ")
+/*
+
+                "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
+                "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
+                "union " +
+                "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
+                " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
+                "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
+                "union " +
+                "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                " org.riverock.webmill.portal.bean.CompanyBean company3 " +
+                "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
+                ")")
+            .setString("userLogin1", authSession.getUserLogin())
+            .setString("userLogin2", authSession.getUserLogin())
+            .setString("userLogin3", authSession.getUserLogin())
+*/
+            .setParameterList("companyIds", getGrantedCompanyIdList(authSession.getUserLogin()))
+            .list();
+        session.getTransaction().commit();
+        return (List) authInfos;
+    }
+
     public List<AuthInfo> getAuthInfo(DatabaseAdapter db_, Long userId, Long siteId) {
-        switch( db_.getFamily() ) {
-            case DatabaseManager.MYSQL_FAMALY:
-                return getAuthInfoMySql( db_, userId, siteId );
-            default:
-                return getAuthInfoDefault( db_, userId, siteId );
-        }
-    }
-
-    private List<AuthInfo> getAuthInfoDefault(DatabaseAdapter db_, Long userId, Long siteId) {
         List<AuthInfo> list = new ArrayList<AuthInfo>();
 
         if (userId==null || siteId==null) {
             return list;
         }
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try{
-            String sql =
-                "select a.* " +
-                    "from  WM_AUTH_USER a, V$_READ_LIST_FIRM z1, WM_PORTAL_LIST_SITE x1 " +
-                    "where x1.ID_SITE=? and z1.ID_FIRM = x1.ID_FIRM and " +
-                    "      a.ID_AUTH_USER=z1.ID_AUTH_USER and a.ID_USER=?";
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
-            ps = db_.prepareStatement(sql);
-            ps.setLong(1, siteId);
-            ps.setLong(1, userId);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                list.add(setAuthInfo(rs));
-            }
-            return list;
-        }
-        catch (Throwable e){
-            String es = "AuthInfo.getInstance() exception";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        finally{
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
-    }
-
-    private List<AuthInfo> getAuthInfoMySql(DatabaseAdapter db_, Long userId, Long siteId) {
-        List<AuthInfo> list = new ArrayList<AuthInfo>();
-
-        if (userId==null || siteId==null) {
-            return list;
-        }
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try{
-            String sql =
-                "select  a01.id_auth_user " +
-                "from    WM_AUTH_USER a01, WM_PORTAL_LIST_SITE f01 " +
-                "where   a01.is_use_current_firm = 1 and a01.ID_FIRM = f01.ID_FIRM and f01.ID_SITE=? and " +
-                "        a01.id_user=? " +
-                "union " +
-                "select  a02.id_auth_user " +
-                "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_COMPANY d02, WM_PORTAL_LIST_SITE f02 " +
-                "where   a02.IS_HOLDING = 1 and a02.ID_HOLDING = d02.ID_HOLDING and " +
-                "        d02.ID_COMPANY = f02.ID_FIRM and f02.ID_SITE=? and a02.id_user=? " +
-                "union " +
-                "select  a04.id_auth_user " +
-                "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04, WM_PORTAL_LIST_SITE f04 " +
-                "where   a04.is_root = 1 and b04.ID_FIRM = f04.ID_FIRM and f04.ID_SITE=? and " +
-                "        a04.id_user=? ";
-
-            ps = db_.prepareStatement(sql);
-            ps.setLong(1, siteId);
-            ps.setLong(2, userId);
-            ps.setLong(3, siteId);
-            ps.setLong(4, userId);
-            ps.setLong(5, siteId);
-            ps.setLong(6, userId);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                list.add( getAuthInfo(db_, RsetTools.getLong(rs, "id_auth_user")));
-            }
-            return list;
-        }
-        catch (Throwable e){
-            String es = "AuthInfo.getInstance() exception";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        finally{
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
-    }
-
-    boolean checkAccess( final DatabaseAdapter adapter, final String userLogin, String userPassword, final String serverName ) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        boolean isValid = false;
-
-        String sql_ =
-            "select a.ID_USER from WM_AUTH_USER a, WM_LIST_USER b, " +
-            "( " +
-            "select z1.USER_LOGIN from V$_READ_LIST_FIRM z1, WM_PORTAL_LIST_SITE x1 " +
-            "where x1.ID_SITE=? and z1.ID_FIRM = x1.ID_FIRM " +
+        String sql =
+            "select  a01.id_auth_user " +
+            "from    WM_AUTH_USER a01, WM_PORTAL_LIST_SITE f01 " +
+            "where   a01.is_use_current_firm = 1 and a01.ID_FIRM = f01.ID_FIRM and f01.ID_SITE=? and " +
+            "        a01.id_user=? " +
             "union " +
-            "select y1.USER_LOGIN from WM_AUTH_USER y1 where y1.IS_ROOT=1 " +
-            ") c " +
-            "where  a.USER_LOGIN=? and a.USER_PASSWORD=? and " +
-            "a.ID_USER = b.ID_USER and b.is_deleted=0 and a.USER_LOGIN=c.USER_LOGIN ";
+            "select  a02.id_auth_user " +
+            "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_COMPANY d02, WM_PORTAL_LIST_SITE f02 " +
+            "where   a02.IS_HOLDING = 1 and a02.ID_HOLDING = d02.ID_HOLDING and " +
+            "        d02.ID_COMPANY = f02.ID_FIRM and f02.ID_SITE=? and a02.id_user=? " +
+            "union " +
+            "select  a04.id_auth_user " +
+            "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04, WM_PORTAL_LIST_SITE f04 " +
+            "where   a04.is_root = 1 and b04.ID_FIRM = f04.ID_FIRM and f04.ID_SITE=? and " +
+            "        a04.id_user=? ";
+        List ids = session.createSQLQuery( sql )
+            .addScalar("id_auth_user", Hibernate.LONG)
+            .setLong(0, siteId)
+            .setLong(1, userId)
+            .setLong(2, siteId)
+            .setLong(3, userId)
+            .setLong(4, siteId)
+            .setLong(5, userId)
+            .list();
+        
+        list = session.createQuery(
+            "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "where auth.authUserId in ( :ids ) ")
+/*
 
-        try {
-
-            Long idSite = SiteList.getSiteId( serverName );
-            if ( log.isDebugEnabled() ) {
-                log.debug( "serverName " + serverName + ", idSite " + idSite );
-            }
-
-            ps = adapter.prepareStatement( sql_ );
-
-            RsetTools.setLong( ps, 1, idSite );
-            ps.setString( 2, userLogin );
-            ps.setString( 3, userPassword );
-
-            rs = ps.executeQuery();
-            if ( rs.next() )
-                isValid = true;
-
-        }
-        catch( Exception e1 ) {
-            log.error( "SQL:\n" + sql_ );
-            final String es = "Error check checkAccess()";
-            log.error( es, e1 );
-            throw new IllegalStateException( es, e1 );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-        if ( log.isDebugEnabled() ) {
-            log.debug( "isValid " + isValid );
-        }
-
-        return isValid;
+                "select auth1.authUserId " +
+                "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth1, " +
+                "       org.riverock.webmill.portal.bean.SiteBean site1 " +
+                "where  auth1.isCompany=true and auth1.companyId=site1.companyId and " +
+                "       auth1.userId=:userId1 and site1.siteId=:siteId1 " +
+                "union " +
+                "select auth2.authUserId " +
+                "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
+                "       org.riverock.webmill.portal.bean.SiteBean site2, " +
+                "       org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
+                "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and " +
+                "       relate2.companyId=site2.companyId and " +
+                "       auth2.userId=:userId2 and site2.siteId=:siteId2 " +
+                "union " +
+                "select auth3.authUserId " +
+                "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                "       org.riverock.webmill.portal.bean.CompanyBean company3, " +
+                "       org.riverock.webmill.portal.bean.SiteBean site3 " +
+                "where  auth3.isRoot=true and company3.companyId=site3.companyId and " +
+                "       auth3.userId=:userId3 and site3.siteId=:siteId3 " +
+                ")")
+            .setLong("userId1", userId)
+            .setLong("siteId1", siteId)
+            .setLong("userId2", userId)
+            .setLong("siteId2", siteId)
+            .setLong("userId3", userId)
+            .setLong("siteId3", siteId)
+*/
+            .setParameterList("ids", ids)
+            .list();
+        session.getTransaction().commit();
+        return (List)list;
     }
 
-    boolean checkAccessMySql( final DatabaseAdapter adapter, final String userLogin, String userPassword, final String serverName ) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        boolean isValid = false;
+    public boolean checkAccess( String userLogin, String userPassword, final String serverName ) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
+/*
         String sql_ =
             "select a.* from WM_AUTH_USER a, WM_LIST_USER b " +
             "where  a.USER_LOGIN=? and a.USER_PASSWORD=? and " +
             "       a.ID_USER = b.ID_USER and b.is_deleted=0";
+*/
 
         try {
+            AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
+                "select auth " +
+                    "from  org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
+                    "      org.riverock.webmill.a3.bean.UserInfoImpl as user " +
+                    "where auth.userLogin=:userLogin and auth.userPassword=:userPassword and " +
+                    "      auth.userId=user.userId and user.isDeleted=false")
+                .setString("userLogin", userLogin)
+                .setString("userPassword", userPassword)
+                .uniqueResult();
 
-            Long idSite = SiteList.getSiteId( serverName );
-            if ( log.isDebugEnabled() ) {
-                log.debug( "serverName " + serverName + ", idSite " + idSite );
-            }
-
-            ps = adapter.prepareStatement( sql_ );
-
-            ps.setString( 1, userLogin );
-            ps.setString( 2, userPassword );
-
-            rs = ps.executeQuery();
-            if ( !rs.next() )
+            if ( authInfo==null )
                 return false;
 
-            WmAuthUserItemType item = GetWmAuthUserItem.fillBean( rs );
-            rs.close();
-            rs = null;
-            ps.close();
-            ps = null;
-
-            if ( Boolean.TRUE.equals( item.getIsRoot() ) )
+            if (  authInfo.isRoot() ) {
                 return true;
+            }
 
+/*
             sql_ =
                 "select  a01.id_firm, a01.user_login, a01.id_user, a01.id_auth_user " +
                 "from    WM_AUTH_USER a01, WM_PORTAL_LIST_SITE f01 " +
@@ -649,58 +488,58 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04, WM_PORTAL_LIST_SITE f04 " +
                 "where   a04.is_root = 1 and b04.ID_FIRM = f04.ID_FIRM and f04.ID_SITE=? and " +
                 "        a04.user_login=? ";
+*/
 
-            ps = adapter.prepareStatement( sql_ );
-
-            RsetTools.setLong( ps, 1, idSite );
-            ps.setString( 2, userLogin );
-            RsetTools.setLong( ps, 3, idSite );
-            ps.setString( 4, userLogin );
-            RsetTools.setLong( ps, 5, idSite );
-            ps.setString( 6, userLogin );
-
-            rs = ps.executeQuery();
-
-            if ( rs.next() )
-                isValid = true;
-
-        }
-        catch( Exception e1 ) {
-            log.error( "SQL:\n" + sql_ );
-            final String es = "Error check checkAccess()";
-            log.error( es, e1 );
-            throw new IllegalStateException( es, e1 );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-        if ( log.isDebugEnabled() )
-            log.debug( "isValid " + isValid );
-
-        return isValid;
-    }
-
-    public boolean checkAccess( String userLogin, String userPassword, final String serverName ) {
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            switch( db_.getFamily() ) {
-                case DatabaseManager.MYSQL_FAMALY:
-                    return checkAccessMySql( db_, userLogin, userPassword, serverName );
-                default:
-                    return checkAccess( db_, userLogin, userPassword, serverName );
+            Long siteId = SiteList.getSiteId( serverName );
+            if ( log.isDebugEnabled() ) {
+                log.debug( "serverName " + serverName + ", siteId " + siteId);
             }
-        }
-        catch( Exception e1 ) {
-            final String es = "Error check checkAccess()";
-            log.error( es, e1 );
-            throw new IllegalStateException( es, e1 );
+
+            List list = session.createQuery(
+                    "select auth1.authUserId " +
+                    "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth1, " +
+                    "       org.riverock.webmill.portal.bean.SiteBean site1 " +
+                    "where  auth1.isCompany=true and auth1.companyId=site1.companyId and " +
+                    "       auth1.userLogin=:userLogin1 and site1.siteId=:siteId1 "
+                )
+                .setString("userLogin1", userLogin)
+                .setLong("siteId1", siteId)
+                .list();
+            if (!list.isEmpty()) {
+                return true;
+            }
+
+            list = session.createQuery(
+                    "select auth2.authUserId " +
+                    "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
+                    "       org.riverock.webmill.portal.bean.SiteBean site2, " +
+                    "       org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
+                    "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and " +
+                    "       relate2.companyId=site2.companyId and " +
+                    "       auth2.userLogin=:userLogin2 and site2.siteId=:siteId2 "
+                )
+                .setString("userLogin2", userLogin)
+                .setLong("siteId2", siteId)
+                .list();
+            if (!list.isEmpty()) {
+                return true;
+            }
+
+            list = session.createQuery(
+                "select auth3.authUserId " +
+                    "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                    "       org.riverock.webmill.portal.bean.CompanyBean company3, " +
+                    "       org.riverock.webmill.portal.bean.SiteBean site3 " +
+                    "where  auth3.isRoot=true and company3.companyId=site3.companyId and " +
+                    "       auth3.userLogin=:userLogin3 and site3.siteId=:siteId3 ")
+                .setString("userLogin3", userLogin)
+                .setLong("siteId3", siteId)
+                .list();
+
+            return !list.isEmpty(); 
         }
         finally {
-            DatabaseManager.close( db_ );
-            db_ = null;
+            session.getTransaction().commit();
         }
     }
 
@@ -727,201 +566,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
 /*
-    public static Long addRole(DatabaseAdapter db_, String role_name)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        try
-        {
-            String sql_ =
-                "insert into WM_AUTH_ACCESS_GROUP " +
-                "( ID_ACCESS_GROUP, NAME_ACCESS_GROUP ) " +
-                "VALUES "+
-                "( ?, ? )";
-
-            CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_WM_auth_access_group");
-            seq.setTableName( "WM_AUTH_ACCESS_GROUP");
-            seq.setColumnName( "ID_ACCESS_GROUP" );
-            Long id = db_.getSequenceNextValue(seq);
-
-            ps = db_.prepareStatement(sql_);
-
-            ps.setObject(1, id);
-            ps.setString(2, role_name);
-            int i = ps.executeUpdate();
-
-            if (log.isDebugEnabled())
-                log.debug("Count of added role - "+i);
-
-            return id;
-        }
-        catch (Exception e)
-        {
-            log.error("Error add role", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( ps );
-            ps = null;
-        }
-    }
-
-    public static Long checkWithCreateRole(DatabaseAdapter ora_, String role_name)
-        throws Exception
-    {
-
-        Long id_group = getIDRole(ora_, role_name);
-        if (id_group == null)
-            id_group = addRole(ora_, role_name);
-
-        return id_group;
-
-    }
-
-    public static Long getUserRole(DatabaseAdapter ora_, Long id_auth_user,
-        Long id_role)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            ps = ora_.prepareStatement(
-                "select id_relate_accgroup from WM_AUTH_RELATE_ACCGROUP " +
-                "where  id_auth_user=? and id_access_group=?"
-            );
-            ps.setObject(1, id_auth_user);
-            ps.setObject(2, id_role);
-            rs = ps.executeQuery();
-
-            Long result = null;
-            if (rs.next())
-                result = RsetTools.getLong(rs, "id_relate_accgroup");
-
-            return result;
-        }
-        catch (Exception e)
-        {
-            log.error("Error get user role", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-    }
-
-    public static Long getUserRole(DatabaseAdapter ora_, Long id_user,
-        String role_name)
-        throws Exception
-    {
-        Long id_role = getIDRole(ora_, role_name);
-        if (id_role == null)
-            return null;
-
-        return getUserRole(ora_, id_user, id_role);
-    }
-
-    public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user, String role_name)
-        throws Exception
-    {
-        Long roleId = getIDRole(ora_, role_name);
-        if (roleId==null) {
-             return false;
-        }
-        return bindUserRole(ora_, id_auth_user, roleId );
-    }
-
-    public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user, Long id_role) {
-        if (id_auth_user==null)  {
-            throw new IllegalStateException( "authUserId argument must not be null" );
-        }
-
-        if (id_role==null)  {
-            throw new IllegalStateException( "roleId argument must not be null" );
-        }
-
-        WmAuthRelateAccgroupItemType item = new WmAuthRelateAccgroupItemType();
-        CustomSequenceType seq = new CustomSequenceType();
-        seq.setSequenceName("SEQ_WM_AUTH_RELATE_ACCGROUP");
-        seq.setTableName( "WM_AUTH_RELATE_ACCGROUP");
-        seq.setColumnName( "ID_RELATE_ACCGROUP" );
-        try {
-            long id = ora_.getSequenceNextValue( seq );
-
-            item.setIdRelateAccgroup( id );
-            item.setIdAuthUser( id_auth_user );
-            item.setIdAccessGroup( id_role );
-            InsertWmAuthRelateAccgroupItem.process( ora_, item );
-        }
-        catch (Exception e) {
-            final String es = "error bind role to user";
-            log.error(es,e);
-            throw new IllegalStateException( es );
-        }
-        return true;
-    }
-
-    public static Long addUserAuth(DatabaseAdapter db_, Long id_user,
-        Long id_firm, Long id_service, Long id_road,
-        String username, String password,
-        boolean isFirm, boolean isService, boolean isRoad)
-        throws Exception
-    {
-
-        PreparedStatement ps = null;
-        try
-        {
-            CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("SEQ_WM_AUTH_USER");
-            seq.setTableName( "WM_AUTH_USER");
-            seq.setColumnName( "ID_AUTH_USER" );
-            long id_auth_user = db_.getSequenceNextValue( seq );
-
-            ps = db_.prepareStatement(
-                "insert into WM_AUTH_USER " +
-                "(ID_AUTH_USER, id_user, ID_FIRM, user_login, user_password, " +
-                "is_service, is_road, is_use_current_firm, is_root, id_road, id_service)" +
-                "values "+
-                "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )"
-            );
-
-            ps.setLong(1, id_auth_user);
-            RsetTools.setLong(ps, 2, id_user);
-            RsetTools.setLong(ps, 3, id_firm);
-            ps.setString(4, username);
-            ps.setString(5, password);
-            ps.setInt(6, isService ? 1 : 0);
-            ps.setInt(7, isRoad ? 1 : 0);
-            ps.setInt(8, isFirm ? 1 : 0);
-            ps.setInt(9, 0);
-            RsetTools.setLong(ps, 10, id_road);
-            RsetTools.setLong(ps, 11, id_service);
-
-            int i = ps.executeUpdate();
-
-            if (log.isDebugEnabled())
-                log.debug("Count of added role - "+i);
-
-            return id_auth_user;
-        }
-        catch (Exception e)
-        {
-            log.error("Error add user auth", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( ps );
-            ps = null;
-        }
-    }
-*/
-
     public static Long addNewUser(DatabaseAdapter db_, String first_name,
         String last_name, String middle_name, Long id_firm,
         String email, String address, String phone)
@@ -1000,72 +644,79 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             ps = null;
         }
     }
+*/
 
     public List<RoleBean> getUserRoleList( AuthSession authSession ) {
-        DatabaseAdapter db = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
         try {
-            db = DatabaseAdapter.getInstance();
+/*
             ps = db.prepareStatement(
                 "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP " +
                 "from   WM_AUTH_ACCESS_GROUP c, WM_AUTH_RELATE_ACCGROUP b " +
                 "where  b.ID_AUTH_USER=? and b.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP "
             );
-
-            ps.setLong( 1, authSession.getAuthInfo().getAuthUserId() );
-            rs = ps.executeQuery();
-
-            List<RoleBean> roles = new ArrayList<RoleBean>();
-            while( rs.next() ) {
-                RoleBeanImpl roleImpl = new RoleBeanImpl();
-
-                roleImpl.setName( RsetTools.getString( rs, "NAME_ACCESS_GROUP" ) );
-                roleImpl.setRoleId( RsetTools.getLong( rs, "ID_ACCESS_GROUP" ) );
-
-                roles.add( roleImpl );
-            }
-            return roles;
-        }
-        catch(Exception e) {
-            String es = "error";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
+*/
+            List<RoleBeanImpl> roles = session.createQuery(
+                "select role " +
+                    "from  org.riverock.webmill.a3.bean.RoleBeanImpl role, " +
+                    "      org.riverock.webmill.a3.bean.AuthRelateRole relate " +
+                    "where role.roleId=relate.roleId and relate.authUserId=:authUserId ")
+                .setLong("authUserId", authSession.getAuthInfo().getAuthUserId())
+                .list();
+            return (List)roles;
         }
         finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
+            session.getTransaction().commit();
         }
     }
 
     public List<RoleBean> getRoleList( AuthSession authSession ) {
-        DatabaseAdapter db = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
         try {
-            db = DatabaseAdapter.getInstance();
+/*
             ps = db.prepareStatement(
                 "select  ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
                 "from    WM_AUTH_ACCESS_GROUP "
             );
-
-            rs = ps.executeQuery();
-            return internalGetRoleList(rs);
-        }
-        catch( Exception e ) {
-            String es = "error";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
+*/
+            List<RoleBeanImpl> roles = session.createQuery(
+                "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role ")
+                .list();
+            return (List)roles;
         }
         finally {
-            DatabaseManager.close( db, rs, ps );
-            db = null;
-            rs = null;
-            ps = null;
+            session.getTransaction().commit();
         }
     }
 
+    public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        try {
+/*
+            ps = db.prepareStatement(
+                "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP  " +
+                "from   WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_ACCESS_GROUP c " +
+                "where  b.ID_AUTH_USER=? and " +
+                "       b.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP"
+            );
+*/
+            List<RoleBeanImpl> roles = session.createQuery(
+                "select role " +
+                    "from  org.riverock.webmill.a3.bean.RoleBeanImpl role, " +
+                    "      org.riverock.webmill.a3.bean.AuthRelateRole relate " +
+                    "where role.roleId=relate.roleId and relate.authUserId=:authUserId ")
+                .setLong("authUserId", authUserId)
+                .list();
+            return (List)roles;
+        }
+        finally {
+            session.getTransaction().commit();
+        }
+    }
+/*
     private static List<RoleBean> internalGetRoleList(ResultSet rs) throws SQLException {
         List<RoleBean> list = new ArrayList<RoleBean>();
         while( rs.next() ) {
@@ -1081,174 +732,46 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         }
         return list;
     }
-
-    public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
-        DatabaseAdapter db = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            ps = db.prepareStatement(
-                "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP  " +
-                "from   WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_ACCESS_GROUP c " +
-                "where  b.ID_AUTH_USER=? and " +
-                "       b.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP"
-            );
-            ps.setLong(1, authUserId);
-            rs = ps.executeQuery();
-            return internalGetRoleList(rs);
-        }
-        catch( Exception e ) {
-            String es = "error";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db, rs, ps );
-            db = null;
-            rs = null;
-            ps = null;
-        }
-    }
+*/
 
     public Long addRole( AuthSession authSession, RoleBean roleBean) {
-
-        PreparedStatement ps = null;
-        DatabaseAdapter dbDyn = null;
-        try {
-
-            dbDyn = DatabaseAdapter.getInstance();
-
-            CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_WM_AUTH_ACCESS_GROUP" );
-            seq.setTableName( "WM_AUTH_ACCESS_GROUP" );
-            seq.setColumnName( "ID_ACCESS_GROUP" );
-            Long sequenceValue = dbDyn.getSequenceNextValue( seq );
-
-
-            ps = dbDyn.prepareStatement(
-                "insert into WM_AUTH_ACCESS_GROUP " +
-                "( ID_ACCESS_GROUP, NAME_ACCESS_GROUP ) values " +
-                ( dbDyn.getIsNeedUpdateBracket() ? "(" : "" ) +
-                " ?, ? " +
-                ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" )
-            );
-
-            RsetTools.setLong( ps, 1, sequenceValue );
-            ps.setString( 2, roleBean.getName() );
-
-            int i1 = ps.executeUpdate();
-
-            if( log.isDebugEnabled() )
-                log.debug( "Count of inserted records - " + i1 );
-
-            dbDyn.commit();
-            return sequenceValue;
-        }
-        catch( Exception e ) {
-            try {
-                if( dbDyn != null )
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                // catch rollback error
-            }
-            String es = "Error add new role";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-
-        }
-        finally {
-            DatabaseManager.close( dbDyn, ps );
-            dbDyn = null;
-            ps = null;
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        RoleBeanImpl bean = new RoleBeanImpl(roleBean);
+        session.save(bean);
+        session.flush();
+        session.getTransaction().commit();
+        return bean.getRoleId();
     }
 
     public void updateRole( AuthSession authSession, RoleBean roleBean ) {
-        DatabaseAdapter dbDyn = null;
-        PreparedStatement ps = null;
-        try {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
-            dbDyn = DatabaseAdapter.getInstance();
-
-            String sql =
-                "update WM_AUTH_ACCESS_GROUP " +
-                "set    NAME_ACCESS_GROUP=? " +
-                "WHERE  ID_ACCESS_GROUP=? ";
-
-            ps = dbDyn.prepareStatement( sql );
-
-            ps.setString( 1, roleBean.getName() );
-            ps.setLong( 2, roleBean.getRoleId() );
-
-            int i1 = ps.executeUpdate();
-
-            if( log.isDebugEnabled() )
-                log.debug( "Count of updated record - " + i1 );
-
-            dbDyn.commit();
+        RoleBeanImpl bean = (RoleBeanImpl) session.createQuery(
+            "select role from org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+                "where role.roleId=:roleId")
+            .setLong("roleId", roleBean.getRoleId())
+            .uniqueResult();
+        if (bean!=null) {
+            bean.setName(roleBean.getName());
         }
-        catch( Exception e ) {
-            try {
-                if (dbDyn!=null)
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                // catch rollback error
-            }
-
-            String es = "Error save role";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn, ps );
-            dbDyn = null;
-            ps = null;
-        }
+        session.getTransaction().commit();
     }
 
     public void deleteRole( AuthSession authSession, RoleBean roleBean ) {
-        DatabaseAdapter dbDyn = null;
-        PreparedStatement ps = null;
-        try {
-            dbDyn = DatabaseAdapter.getInstance();
-
-            if( roleBean.getRoleId() == null )
-                throw new IllegalArgumentException( "role id is null" );
-
-            String sql = "delete from WM_AUTH_ACCESS_GROUP where ID_ACCESS_GROUP=? ";
-
-            ps = dbDyn.prepareStatement( sql );
-
-            RsetTools.setLong( ps, 1, roleBean.getRoleId() );
-
-            int i1 = ps.executeUpdate();
-
-            if( log.isDebugEnabled() )
-                log.debug( "Count of deleted records - " + i1 );
-
-            dbDyn.commit();
+        if (roleBean==null) {
+            return;
         }
-        catch( Exception e ) {
-            try {
-                if (dbDyn!=null)
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                // catch rollback error
-            }
-
-            String es = "Error delete role";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn, ps );
-            dbDyn = null;
-            ps = null;
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        RoleBeanImpl bean = (RoleBeanImpl) session.createQuery(
+            "select role from org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+                "where role.roleId=:roleId")
+            .setLong("roleId", roleBean.getRoleId())
+            .uniqueResult();
+        session.delete(bean);
+        session.getTransaction().commit();
     }
 
     public Long addUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
@@ -1259,38 +782,14 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public Long addUserInfo(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles) {
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            Long companyId = authSession.checkCompanyId( authInfo.getCompanyId() );
-            Long holdingId = authSession.checkHoldingId( authInfo.getHoldingId() );
-
-            Long id = addUserInfo(db, authInfo, roles, companyId, holdingId);
-
-            db.commit();
-            return id;
-        }
-        catch( Throwable e ) {
-            try {
-                if( db != null )
-                    db.rollback();
-            }
-            catch( Exception e001 ) {
-                // catch rollback error
-            }
-            final String es = "Error add user auth";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db );
-            db = null;
-        }
+        Long companyId = authSession.checkCompanyId( authInfo.getCompanyId() );
+        Long holdingId = authSession.checkHoldingId( authInfo.getHoldingId() );
+        return addUserInfo(null, authInfo, roles, companyId, holdingId);
     }
 
     public Long addUserInfo(DatabaseAdapter db, AuthInfo authInfo, List<RoleEditableBean> roles, Long companyId, Long holdingId) {
         if (authInfo==null) {
-            throw new IllegalStateException("Error add new auth of user, infoAuth.getAuthInfo() is null");
+            throw new IllegalStateException("Error add new auth of user, infoAuth.getAuthInfoInternal() is null");
         }
         if (StringUtils.isBlank(authInfo.getUserLogin())) {
             throw new IllegalStateException("Error add new auth of user, username is null or blank");
@@ -1304,71 +803,83 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         if( authInfo.getUserId() == null ) {
             throw new IllegalArgumentException( "Error add new auth of user, userId is null" );
         }
-        PreparedStatement ps = null;
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        AuthInfoImpl bean = new AuthInfoImpl();
+
+        if( log.isDebugEnabled() ) {
+            log.debug( "companyId " + companyId );
+            log.debug( "holdingId " + holdingId );
+        }
+        bean.setCompanyId(companyId);
+        bean.setHoldingId(holdingId);
+        bean.setUserId(authInfo.getUserId());
+        bean.setUserLogin(authInfo.getUserLogin());
+        bean.setUserPassword(authInfo.getUserPassword());
+        bean.setCompany(authInfo.isCompany());
+        bean.setHolding(authInfo.isHolding());
+
+        session.save(bean);
+
+        for (RoleEditableBean role : roles) {
+            if (log.isInfoEnabled()) {
+                log.info("Role: "+role.getName()+", id: "+role.getRoleId()+", " +
+                    "new: " + role.isNew() + ", delete: " + role.isDelete());
+            }
+            if (!role.isNew() || role.isDelete()) {
+                log.info("Skip this role");
+                continue;
+            }
+            AuthRelateRole relate = new AuthRelateRole();
+            relate.setAuthUserId(bean.getAuthUserId());
+            relate.setRoleId(role.getRoleId());
+            session.save(bean);
+        }
+
+        session.flush();
+        session.getTransaction().commit();
+        return bean.getAuthUserId();
+    }
+
+    public void updateUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        log.info("Start update auth");
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
         try {
-            CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_WM_AUTH_USER" );
-            seq.setTableName( "WM_AUTH_USER" );
-            seq.setColumnName( "ID_AUTH_USER" );
-            Long id = db.getSequenceNextValue( seq );
-
-            ps = db.prepareStatement( "insert into WM_AUTH_USER " +
-                "( ID_AUTH_USER, ID_FIRM, ID_HOLDING, " +
-                "  ID_USER, USER_LOGIN, USER_PASSWORD, " +
-                "IS_USE_CURRENT_FIRM, IS_HOLDING " +
-                ") values (" +
-                "?, " + // PK
-                "?, " + // b1.companyId, " +
-                "?, " + // b3.id_road, "+
-                "?, ?, ?, ?, " +
-                "? " +
-                ")" );
-
-            if( log.isDebugEnabled() ) {
-                log.debug( "companyId " + companyId );
-                log.debug( "holdingId " + holdingId );
+            AuthInfoImpl bean = (AuthInfoImpl) session.createQuery(
+                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                    "where auth.authUserId=:authUserId")
+                .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
+                .uniqueResult();
+            if (bean!=null) {
+                if (infoAuth.getAuthInfo().getCompanyId()==null) {
+                    bean.setCompanyId(null);
+                    bean.setCompany(false);
+                }
+                else {
+                    bean.setCompanyId(infoAuth.getAuthInfo().getCompanyId());
+                    bean.setCompany(infoAuth.getAuthInfo().isCompany());
+                }
+                if (infoAuth.getAuthInfo().getHoldingId()==null) {
+                    bean.setHoldingId(null);
+                    bean.setHolding(false);
+                }
+                else {
+                    bean.setHoldingId( infoAuth.getAuthInfo().getHoldingId() );
+                    bean.setHolding( infoAuth.getAuthInfo().isHolding() );
+                }
             }
 
-            RsetTools.setLong( ps, 1, id );
-            if( companyId != null )
-                RsetTools.setLong( ps, 2, companyId );
-            else
-                ps.setNull( 2, Types.INTEGER );
-
-            if( holdingId != null )
-                RsetTools.setLong( ps, 3, holdingId );
-            else
-                ps.setNull( 3, Types.INTEGER );
-
-
-            RsetTools.setLong( ps, 4, authInfo.getUserId() );
-            ps.setString( 5, authInfo.getUserLogin() );
-            ps.setString( 6, authInfo.getUserPassword() );
-
-            ps.setInt( 7, authInfo.isCompany()?1:0 );
-            ps.setInt( 8, authInfo.isHolding() ? 1 : 0 );
-            int i1 = ps.executeUpdate();
-
-            if( log.isDebugEnabled() )
-                log.debug( "Count of inserted records - " + i1 );
-
-//            processDeletedRoles( db, roles );
-            processNewRoles( db, roles, id );
-
-            return id;
-        }
-        catch( Throwable e ) {
-            final String es = "Error add user auth";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
+            processDeletedRoles( session, infoAuth );
+            processNewRoles( session, infoAuth.getRoles(), infoAuth.getAuthInfo().getAuthUserId() );
         }
         finally {
-            DatabaseManager.close( ps );
-            ps = null;
+            session.getTransaction().commit();
         }
     }
 
-    private void processDeletedRoles( DatabaseAdapter db_, AuthUserExtendedInfo infoAuth ) throws Exception {
+    private void processDeletedRoles( Session session, AuthUserExtendedInfo infoAuth ) {
 
         // do not process delete of roles for new users
         if (infoAuth==null || infoAuth.getAuthInfo()==null || infoAuth.getAuthInfo().getAuthUserId()==null) {
@@ -1378,188 +889,72 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         log.info( "Start delete roles for authUserId: " + infoAuth.getAuthInfo().getAuthUserId() +
             ", roles list: " + infoAuth.getRoles() );
 
-        PreparedStatement ps = null;
-        try {
-            if (infoAuth.getRoles()==null) {
-                log.info( "Role list is null, return.");
-                return;
-            }
-            for (RoleEditableBean roleBeanImpl : infoAuth.getRoles()) {
-                log.info("role: " + roleBeanImpl);
-
-                if (!roleBeanImpl.isDelete()) {
-                    continue;
-                }
-
-                ps = db_.prepareStatement(
-                    "delete from WM_AUTH_RELATE_ACCGROUP " +
-                        "where  ID_AUTH_USER=? and ID_ACCESS_GROUP=? ");
-
-                ps.setLong(1, infoAuth.getAuthInfo().getAuthUserId());
-                ps.setLong(2, roleBeanImpl.getRoleId());
-                ps.executeUpdate();
-                ps.close();
-                ps = null;
-            }
+        if (infoAuth.getRoles()==null) {
+            log.info( "Role list is null, return.");
+            return;
         }
-        finally {
-            DatabaseManager.close( ps );
-            ps = null;
+        for (RoleEditableBean roleBeanImpl : infoAuth.getRoles()) {
+            log.info("role: " + roleBeanImpl);
 
-            log.info( "End delete roles");
+            if (!roleBeanImpl.isDelete()) {
+                continue;
+            }
+            AuthRelateRole relate = (AuthRelateRole) session.createQuery(
+                "select relate from org.riverock.webmill.a3.bean.AuthRelateRole relate " +
+                    "where relate.roleId=:roleId and relate.authUserId=:authUserId")
+                .setLong("roleId", roleBeanImpl.getRoleId())
+                .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
+                .uniqueResult();
+            session.delete(relate);
         }
     }
 
-    private void processNewRoles( DatabaseAdapter db, List<RoleEditableBean> roles, Long authUserId ) throws Exception {
+    private void processNewRoles( Session session, List<RoleEditableBean> roles, Long authUserId ) {
         log.info("Start insert new roles for authUserId: " + authUserId +", roles list: " + roles);
 
-        PreparedStatement ps = null;
-        try {
-            if (roles==null) {
-                log.info( "Role list is null, return.");
-                return;
-            }
-
-            for (RoleEditableBean role : roles) {
-                log.info("Role: "+role.getName()+", id: "+role.getRoleId()+", new: " + role.isNew() + ", delete: " + role.isDelete());
-
-                if (!role.isNew() || role.isDelete()) {
-                    log.info("Skip this role");
-                    continue;
-                }
-
-                CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName("seq_WM_AUTH_RELATE_ACCGROUP");
-                seq.setTableName("WM_AUTH_RELATE_ACCGROUP");
-                seq.setColumnName("ID_RELATE_ACCGROUP");
-                Long id = db.getSequenceNextValue(seq);
-
-                ps = db.prepareStatement("insert into WM_AUTH_RELATE_ACCGROUP " +
-                    "(ID_RELATE_ACCGROUP, ID_ACCESS_GROUP, ID_AUTH_USER ) " +
-                    "values" +
-                    "(?, ?, ? ) ");
-
-                ps.setLong(1, id);
-                ps.setLong(2, role.getRoleId());
-                ps.setLong(3, authUserId);
-                ps.executeUpdate();
-                ps.close();
-                ps = null;
-            }
+        if (roles==null) {
+            log.info( "Role list is null, return.");
+            return;
         }
-        finally {
-            DatabaseManager.close( ps );
-            ps = null;
+        for (RoleEditableBean role : roles) {
+            log.info("Role: "+role.getName()+", id: "+role.getRoleId()+", new: " + role.isNew() + ", delete: " + role.isDelete());
 
-            log.info( "End add roles");
-        }
-    }
-
-    public void updateUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-        log.info("Start update auth");
-
-        PreparedStatement ps = null;
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            String sql =
-                "update WM_AUTH_USER " +
-                    "set "+
-                    "ID_FIRM=?, IS_USE_CURRENT_FIRM=?, "+
-                    "ID_HOLDING=?, IS_HOLDING=? "+
-                    "WHERE  ID_AUTH_USER=? ";
-
-            ps = db.prepareStatement( sql );
-
-            if (infoAuth.getAuthInfo().getCompanyId()==null) {
-                ps.setNull( 1, Types.INTEGER );
-                ps.setInt( 2, 0 );
+            if (!role.isNew() || role.isDelete()) {
+                log.info("Skip this role");
+                continue;
             }
-            else {
-                ps.setLong( 1, infoAuth.getAuthInfo().getCompanyId() );
-                ps.setInt( 2, infoAuth.getAuthInfo().isCompany()?1:0 );
-            }
-
-            if (infoAuth.getAuthInfo().getHoldingId()==null) {
-                ps.setNull( 3, Types.INTEGER );
-                ps.setInt( 4, 0 );
-            }
-            else {
-                ps.setLong( 3, infoAuth.getAuthInfo().getHoldingId() );
-                ps.setInt( 4, infoAuth.getAuthInfo().isHolding()?1:0 );
-            }
-
-            ps.setLong( 5, infoAuth.getAuthInfo().getAuthUserId() );
-            ps.executeUpdate();
-
-            processDeletedRoles( db, infoAuth );
-            processNewRoles( db, infoAuth.getRoles(), infoAuth.getAuthInfo().getAuthUserId() );
-
-            db.commit();
-        }
-        catch( Throwable e ) {
-            try {
-                if( db != null )
-                    db.rollback();
-            }
-            catch( Exception e001 ) {
-                // catch rollback error
-            }
-
-            final String es = "Error add user auth";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db, ps );
-            ps = null;
-            db = null;
-
-            log.info("End update auth");
+            AuthRelateRole bean = new AuthRelateRole();
+            bean.setAuthUserId(authUserId);
+            bean.setRoleId(role.getRoleId());
+            session.save(bean);
         }
     }
 
     public void deleteUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
         log.info("Start delete auth");
 
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-//            DeleteWmAuthRelateAccgroupWithIdAuthUser.process( db, infoAuth.getAuthInfo().getAuthUserId() );
-//            DeleteWmAuthUserWithIdAuthUser.process( db, infoAuth.getAuthInfo().getAuthUserId() );
-            DatabaseManager.runSQL(
-                db, "delete from WM_AUTH_RELATE_ACCGROUP where ID_AUTH_USER=?",
-                new Object[]{infoAuth.getAuthInfo().getAuthUserId()},
-                new int[]{Types.DECIMAL}
-            );
-
-            DatabaseManager.runSQL(
-                db, "delete from WM_AUTH_USER where ID_AUTH_USER=?",
-                new Object[]{infoAuth.getAuthInfo().getAuthUserId()},
-                new int[]{Types.DECIMAL}
-            );
-
-            db.commit();
+        if (infoAuth==null) {
+            return;
         }
-        catch( Throwable e ) {
-            try {
-                if( db != null )
-                    db.rollback();
-            }
-            catch( Exception e001 ) {
-                // catch rollback error
-            }
-
-            final String es = "Error add user auth";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<AuthInfoImpl> authInfos = session.createQuery(
+            "select relate from org.riverock.webmill.a3.bean.AuthRelateRole relate " +
+                "where relate.authUserId=:authUserId ")
+            .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
+            .list();
+        for (AuthInfoImpl authInfo : authInfos) {
+            session.delete(authInfo);
         }
-        finally {
-            DatabaseManager.close( db );
-            db = null;
+        AuthInfoImpl auth = (AuthInfoImpl)session.createQuery(
+            "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "where auth.authUserId=:authUserId ")
+            .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
+            .uniqueResult();
+        if (auth!=null)
+            session.delete(auth);
 
-            log.info("End delete auth");
-        }
+        session.getTransaction().commit();
     }
 
     public List<UserInfo> getUserInfoList(AuthSession authSession) {
@@ -1568,126 +963,68 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         if( authSession==null ) {
             return users;
         }
-        DatabaseAdapter db = null;
-        ResultSet rs = null;
-        PreparedStatement ps = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-
-	    String companyIdList = getGrantedCompanyId( db, authSession.getUserLogin() );
-
-            String sql =
-                "select * " +
-                "from 	WM_LIST_USER " +
-                "where  IS_DELETED=0 and ID_FIRM in (" + companyIdList + ")";
-
-            ps = db.prepareStatement( sql );
-            rs = ps.executeQuery();
-
-            while( rs.next() ) {
-		UserInfoImpl userInfo = new UserInfoImpl();
-		set(rs, userInfo);
-                users.add( userInfo );
-            }
-            return users;
-        }
-        catch( Exception e ) {
-            String es = "Error load list of users";
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db, rs, ps );
-            db = null;
-            rs = null;
-            ps = null;
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        users = session.createQuery(
+            "select user from org.riverock.webmill.a3.bean.UserInfoImpl as user " +
+                "where user.isDeleted=false and user.companyId in ( :companyIds )")
+/*
+                "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
+                "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
+                "union " +
+                "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
+                " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
+                "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
+                "union " +
+                "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                " org.riverock.webmill.portal.bean.CompanyBean company3 " +
+                "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
+                ")")
+                .setString("userLogin1", authSession.getUserLogin())
+                .setString("userLogin2", authSession.getUserLogin())
+                .setString("userLogin3", authSession.getUserLogin())
+*/
+            .setParameterList("companyIds", getGrantedCompanyIdList(authSession.getUserLogin()) )
+            .list();
+        session.getTransaction().commit();
+        return users;
     }
 
     public RoleBean getRole(Long roleId) {
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            return getRole(db, roleId);
-        }
-        catch( Exception e ) {
-            String es = "Error load role for id: " + roleId;
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db );
-            db = null;
-        }
+        return getRole(null, roleId);
     }
 
     public RoleBean getRole(DatabaseAdapter db, Long roleId) {
         if( roleId == null ) {
             return null;
         }
-        ResultSet rs = null;
-        PreparedStatement ps = null;
-        try {
-
-            String sql =
-                "select ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
-                "from 	WM_AUTH_ACCESS_GROUP " +
-                "where  ID_ACCESS_GROUP=? ";
-
-            ps = db.prepareStatement( sql );
-            ps.setLong( 1, roleId );
-
-            rs = ps.executeQuery();
-
-            RoleBean role = null;
-            if( rs.next() ) {
-                role = loadRoleFromResultSet( rs );
-            }
-            return role;
-        }
-        catch( Exception e ) {
-            String es = "Error load role for id: " + roleId;
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        RoleBeanImpl bean = (RoleBeanImpl)session.createQuery(
+            "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+            "where role.roleId=:roleId ")
+            .setLong("roleId", roleId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return bean;
     }
 
     public RoleBean getRole(DatabaseAdapter db, String roleName) {
         if( roleName == null ) {
             return null;
         }
-        ResultSet rs = null;
-        PreparedStatement ps = null;
-        try {
-
-            String sql =
-                "select ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
-                "from 	WM_AUTH_ACCESS_GROUP " +
-                "where  NAME_ACCESS_GROUP=? ";
-
-            ps = db.prepareStatement( sql );
-            ps.setString( 1, roleName);
-
-            rs = ps.executeQuery();
-
-            RoleBean role = null;
-            if( rs.next() ) {
-                role = loadRoleFromResultSet( rs );
-            }
-            return role;
-        }
-        catch( Exception e ) {
-            String es = "Error load role for name: " + roleName;
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        RoleBeanImpl bean = (RoleBeanImpl)session.createQuery(
+            "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+            "where role.name=:name ")
+            .setString("name", roleName)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return bean;
     }
+
+/*
 
     private RoleBean loadRoleFromResultSet( ResultSet rs ) throws Exception {
 
@@ -1718,4 +1055,5 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         userInfo.setEmail(RsetTools.getString(rs, "EMAIL"));
         userInfo.setDiscount(RsetTools.getDouble(rs, "DISCOUNT"));
     }
+*/
 }
