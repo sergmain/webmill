@@ -61,31 +61,11 @@ public final class ConfigFileAuthProvider implements AuthProvider, Serializable 
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public String getGrantedUserId(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public List<Long> getGrantedUserIdList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public String getGrantedCompanyId(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public List<Long> getGrantedCompanyIdList(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-//    public String getGrantedGroupCompanyId(AuthSession authSession) {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
-
-//    public List<Long> getGrantedGroupCompanyIdList(AuthSession authSession) {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
-
-    public String getGrantedHoldingId(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -96,10 +76,6 @@ public final class ConfigFileAuthProvider implements AuthProvider, Serializable 
     public Long checkCompanyId(Long companyId, AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-
-//    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession) {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
 
     public Long checkHoldingId(Long holdingId, AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -168,10 +144,6 @@ public final class ConfigFileAuthProvider implements AuthProvider, Serializable 
     public List<Company> getCompanyList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-
-//    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
 
     public List<Holding> getHoldingList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.

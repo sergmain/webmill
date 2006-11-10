@@ -61,6 +61,14 @@ public class RoleBeanImpl implements Serializable, RoleBean {
     @Column(name="NAME_ACCESS_GROUP")
     private String name = null;
 
+    public RoleBeanImpl() {
+    }
+
+    public RoleBeanImpl(RoleBean bean) {
+        this.roleId = bean.getRoleId();
+        this.name = bean.getName();
+    }
+
     public String getName() {
         return name;
     }

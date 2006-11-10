@@ -102,17 +102,6 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         }
     }
 
-    public String getGrantedUserId( AuthSession authSession ) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            return authDao.getGrantedUserId( authSession.getUserLogin() );
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
     public List<Long> getGrantedUserIdList( AuthSession authSession ) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -124,33 +113,11 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         }
     }
 
-    public String getGrantedCompanyId( AuthSession authSession ) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            return authDao.getGrantedCompanyId( authSession.getUserLogin() );
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
     public List<Long> getGrantedCompanyIdList( AuthSession authSession ) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
             return authDao.getGrantedCompanyIdList( authSession.getUserLogin() );
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public String getGrantedHoldingId( AuthSession authSession ) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            return authDao.getGrantedHoldingId( authSession.getUserLogin() );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

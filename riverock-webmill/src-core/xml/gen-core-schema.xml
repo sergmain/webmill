@@ -38,20 +38,20 @@
 	<DbTablePrefix>WM_PORTAL_SITE_LANGUAGE</DbTablePrefix>
 	<DbTablePrefix>WM_PORTAL_TEMPLATE</DbTablePrefix>
 	<DbTablePrefix>WM_PORTAL_XSLT</DbTablePrefix>
-	<DbTablePrefix>WM_PORTAL_VIRTUAL_HOST</DbTablePrefix>
-	<DbTablePrefix>WM_PORTAL_PORTLET_NAME</DbTablePrefix>
+	<!--<DbTablePrefix>WM_PORTAL_VIRTUAL_HOST</DbTablePrefix>-->
+	<!--<DbTablePrefix>WM_PORTAL_PORTLET_NAME</DbTablePrefix>-->
 	<DbTablePrefix>WM_PORTAL_CSS</DbTablePrefix>
 	<DbTablePrefix>WM_PORTAL_CATALOG</DbTablePrefix>
 	<DbTablePrefix>WM_PORTAL_CATALOG_LANGUAGE</DbTablePrefix>
-	<DbTablePrefix>WM_AUTH_USER</DbTablePrefix>
-	<DbTablePrefix>WM_AUTH_RELATE_ACCGROUP</DbTablePrefix>
+	<!--<DbTablePrefix>WM_AUTH_USER</DbTablePrefix>-->
+	<!--<DbTablePrefix>WM_AUTH_RELATE_ACCGROUP</DbTablePrefix>-->
 
     <DbTablePrefix>WM_LIST_USER_METADATA</DbTablePrefix>
 
 	<TableToList>WM_PORTAL_CATALOG</TableToList>
-	<TableToList>WM_PORTAL_PORTLET_NAME</TableToList>
+	<!--<TableToList>WM_PORTAL_PORTLET_NAME</TableToList>-->
 	<TableToList>WM_PORTAL_CSS</TableToList>
-	<TableToList>WM_PORTAL_VIRTUAL_HOST</TableToList>
+	<!--<TableToList>WM_PORTAL_VIRTUAL_HOST</TableToList>-->
 	<TableToList>WM_PORTAL_LIST_SITE</TableToList>
 
 	<Logger>

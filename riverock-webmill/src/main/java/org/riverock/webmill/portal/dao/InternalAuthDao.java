@@ -39,13 +39,8 @@ import org.riverock.generic.db.DatabaseAdapter;
  *         $Id$
  */
 public interface InternalAuthDao extends Serializable {
-    public String getGrantedUserId(String userLogin);
-    public String getGrantedCompanyId(String userLogin);
-
     public List<Long> getGrantedUserIdList(String userLogin);
     public List<Long> getGrantedCompanyIdList(String userLogin);
-
-    public String getGrantedHoldingId(String userLogin);
     public List<Long> getGrantedHoldingIdList(String userLogin);
 
     public Long checkCompanyId(Long companyId, String userLogin);

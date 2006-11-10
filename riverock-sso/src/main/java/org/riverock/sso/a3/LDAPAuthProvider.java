@@ -60,21 +60,6 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
     private transient DirContext ctx = null;
     public static final String PROVIDER_URL_CONST = "provider-url";
 
-/*
-    protected void finalize() throws Throwable {
-        if (ctx != null) {
-            try {
-                ctx.close();
-                ctx = null;
-            }
-            catch (Exception e) {
-                // catch close error
-            }
-        }
-        super.finalize();
-    }
-*/
-
     public boolean isUserInRole(final AuthSession authSession, final String role) {
         if (ctx == null || role == null || role.trim().length() == 0)
             return false;
@@ -184,23 +169,11 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public String getGrantedUserId(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public List<Long> getGrantedUserIdList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public String getGrantedCompanyId(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public List<Long> getGrantedCompanyIdList(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public String getGrantedHoldingId(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -233,10 +206,6 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
     }
 
     public RoleBean getRole(AuthSession authSession, Long roleId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public RoleBean loadRole(AuthSession authSession, Long roleId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
