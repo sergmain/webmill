@@ -8,16 +8,18 @@
   ~ http://www.riverock.org
   ~
   ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public
+  ~ License as published by the Free Software Foundation; either
+  ~ version 2 of the License, or (at your option) any later version.
   ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~ This library is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
   ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
+  ~ You should have received a copy of the GNU General Public
+  ~ License along with this library; if not, write to the Free Software
+  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
   -->
 <resource><pair key="main.home_page" value="Homepage"/><pair key="main.title" value="HAM page"/><pair key="main.become_member" value="Become member"/><pair key="main.about" value="About site"/><pair key="main.forum" value="Forum"/><pair key="main.vision" value="Our vision"/><pair key="main.privacy" value="Privacy"/><pair key="main.links" value="Links"/><pair key="main.contact" value="Contact"/><pair key="main.login" value="login"/><pair key="main.login_button" value="Login"/><pair key="main.next" value="Continue"/><pair key="main.register" value="Register"/><pair key="reg.title" value="Register page"/><pair key="reg.callsign" value="Your callsign"/><pair key="reg.password.1" value="Password"/><pair key="reg.password.2" value="Repeat password"/><pair key="reg.reg_button" value="Register"/><pair key="reg.commit.title" value="Confirm of registration page"/><pair key="reg.commit.no_email" value="E-Mail not input.&lt;br>Repeat input."/><pair key="reg.first_name" value="First name"/><pair key="main.work" value="Work with LogOnLine:"/><pair key="reg.message" value="For register you must fill your callsign, E-Mail and password.&lt;br>After successful registration we send on your E-Mail box ID-user."/><pair key="main.password" value="password"/><pair key="reg.last_name" value="Last name"/><pair key="reg.commit.wrong_pass" value="Passwords not equals.&lt;br>Repeat input."/></resource>
