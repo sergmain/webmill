@@ -21,30 +21,38 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.common.xml;
+package org.riverock.common.collections;
 
-import junit.framework.TestCase;
-import org.xml.sax.EntityResolver;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 05.09.2006
- *         Time: 17:07:03
+ *         Date: 10.11.2006
+ *         Time: 21:27:33
  *         <p/>
  *         $Id$
  */
-public class TestEntityResolver  extends TestCase {
+public class ListUtils {
+    public static String listToString(List<Long> list) {
+        if (list.isEmpty())
+            return "NULL";
 
-    public void testEntityResolver() throws Exception {
+        Iterator<Long> iterator = list.iterator();
+        StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        while (iterator.hasNext()) {
+            Long aLong = iterator.next();
 
-        assertNotNull(EntityResolverImpl.getEntityMap());
-        assertNotNull(EntityResolverImpl.getEntityMap().get(EntityResolverImpl.SUN_WEBXML_23_DTD_PUBLIC_ID));
-        assertNotNull(EntityResolverImpl.getEntityMap().get(EntityResolverImpl.IBM_PORTLET_DTD_PUBLIC_ID));
+            if (isFirst) {
+		isFirst = false;
+	    }
+	    else {
+                sb.append( ',' );
+            }
 
-        EntityResolver resolver = new EntityResolverImpl();
-        assertNotNull(resolver.resolveEntity(EntityResolverImpl.IBM_PORTLET_DTD_PUBLIC_ID, null) );
-        assertNotNull(resolver.resolveEntity(EntityResolverImpl.SUN_WEBXML_23_DTD_PUBLIC_ID, null) );
-        assertNull(resolver.resolveEntity(null, null) );
-        assertNull(resolver.resolveEntity("khsdfkhskf jhklsfhl ksdjhlfkjsd", null) );
+            sb.append( aLong );
+        }
+        return sb.toString();
     }
 }
