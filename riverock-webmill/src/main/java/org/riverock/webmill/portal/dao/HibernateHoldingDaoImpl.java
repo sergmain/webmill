@@ -1,0 +1,538 @@
+/*
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
+ *
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
+package org.riverock.webmill.portal.dao;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+
+import org.hibernate.Session;
+
+import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.webmill.portal.bean.HoldingBean;
+import org.riverock.webmill.portal.bean.CompanyBean;
+import org.riverock.webmill.portal.bean.HoldingCompanyRelationBean;
+import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.common.tools.RsetTools;
+
+/**
+ * @author Sergei Maslyukov
+ *         Date: 10.11.2006
+ *         Time: 21:52:09
+ *         <p/>
+ *         $Id$
+ */
+public class HibernateHoldingDaoImpl implements InternalHoldingDao {
+
+    public Holding loadHolding( Long holdingId, AuthSession authSession ) {
+        if( holdingId == null || authSession==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        HoldingBean bean = (HoldingBean)session.createQuery(
+            "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
+            "where  holding.id=:holdingId and holding.id in (:holdingIds)")
+            .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
+            .setLong("holdingId", holdingId)
+            .uniqueResult();
+
+        if (bean!=null) {
+            bean.setCompanyIdList(
+                session.createQuery(
+                    "select relate.companyId " +
+                        "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
+                        "where relate.holdingId=:holdingId")
+                    .setLong("holdingId", holdingId)
+                    .list()
+            );
+        }
+        session.getTransaction().commit();
+        return bean;
+    }
+
+    public List<Holding> getHoldingList( AuthSession authSession ) {
+        if (authSession==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<HoldingBean> bean = session.createQuery(
+            "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
+            "where  holding.id in (:holdingIds)")
+            .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
+            .list();
+        for (HoldingBean holdingBean : bean) {
+            holdingBean.setCompanyIdList(
+                session.createQuery(
+                    "select relate.companyId " +
+                        "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
+                        "where relate.holdingId=:holdingId")
+                    .setLong("holdingId", holdingBean.getId())
+                    .list()
+            );
+        }
+        session.getTransaction().commit();
+        return (List)bean;
+    }
+
+    public Long processAddHolding( Holding holdingBean, AuthSession authSession ) {
+        if (authSession==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        CompanyBean bean = new CompanyBean(companyBean);
+        session.save(bean);
+
+        if( holdingId != null ) {
+            HoldingCompanyRelationBean relate = new HoldingCompanyRelationBean();
+            relate.setCompanyId(bean.getId());
+            relate.setHoldingId(holdingId);
+            session.save(relate);
+        }
+
+        session.flush();
+        session.getTransaction().commit();
+        return bean.getId();
+
+        PreparedStatement ps = null;
+        DatabaseAdapter dbDyn = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_LIST_HOLDING" );
+            seq.setTableName( "WM_LIST_HOLDING" );
+            seq.setColumnName( "ID_HOLDING" );
+            Long sequenceValue = dbDyn.getSequenceNextValue( seq );
+
+
+            ps = dbDyn.prepareStatement(
+                "insert into WM_LIST_HOLDING "+
+                "( ID_HOLDING, full_name_HOLDING, NAME_HOLDING )" +
+                "values " +
+                ( dbDyn.getIsNeedUpdateBracket() ? "(" : "" )+
+                " ?, ?, ? "+
+                ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" )
+            );
+
+            int num = 1;
+            RsetTools.setLong( ps, num++, sequenceValue );
+            ps.setString( num++, holdingBean.getName() );
+            ps.setString( num++, holdingBean.getShortName() );
+
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of inserted records - " + i1 );
+
+            HoldingBean bean = new HoldingBean( holdingBean );
+            bean.setId( sequenceValue );
+            processInsertRelatedCompany( dbDyn, bean, authSession );
+
+            dbDyn.commit();
+            return sequenceValue;
+        }
+        catch( Exception e ) {
+            try {
+                if( dbDyn != null )
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                // catch rollback exception
+            }
+            String es = "Error add new holding";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
+            ps = null;
+        }
+    }
+
+    public void processSaveHolding( Holding holdingBean, AuthSession authSession ) {
+        if (authSession==null) {
+            return;
+        }
+
+        DatabaseAdapter dbDyn = null;
+        PreparedStatement ps = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            String sql =
+                "UPDATE WM_LIST_HOLDING " +
+                "SET " +
+                "   full_name_HOLDING=?, "+
+                "   NAME_HOLDING=? " +
+                "WHERE ID_HOLDING = ? and ID_HOLDING in ";
+
+
+            switch( dbDyn.getFamily() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    String idList = authSession.getGrantedHoldingId();
+
+                    sql += " (" + idList + ") ";
+
+                    break;
+                default:
+                    sql +=
+                        "(select z1.ID_ROAD from v$_read_list_road z1 where z1.user_login = ?)";
+                    break;
+            }
+
+            ps = dbDyn.prepareStatement( sql );
+            int num = 1;
+
+            ps.setString( num++, holdingBean.getName() );
+            ps.setString( num++, holdingBean.getShortName() );
+            RsetTools.setLong( ps, num++, holdingBean.getId() );
+
+            switch( dbDyn.getFamily() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    break;
+                default:
+                    ps.setString( num++, authSession.getUserLogin() );
+                    break;
+            }
+
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of updated record - " + i1 );
+
+            processDeleteRelatedCompany( dbDyn, holdingBean, authSession );
+            processInsertRelatedCompany( dbDyn, holdingBean, authSession );
+
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                if (dbDyn!=null)
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                // catch rollback exception
+            }
+
+            String es = "Error save holding";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
+            ps = null;
+        }
+    }
+
+
+    public void processDeleteHolding( Holding holdingBean, AuthSession authSession ) {
+        if (authSession==null) {
+            return;
+        }
+
+        DatabaseAdapter dbDyn = null;
+        PreparedStatement ps = null;
+        try {
+            dbDyn = DatabaseAdapter.getInstance();
+
+            if( holdingBean.getId() == null )
+                throw new IllegalArgumentException( "holdingId is null" );
+
+            processDeleteRelatedCompany( dbDyn, holdingBean, authSession );
+
+            String sql =
+                "delete from WM_LIST_HOLDING " +
+                "where  ID_HOLDING=? and ID_HOLDING in ";
+
+            switch( dbDyn.getFamily() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    String idList = authSession.getGrantedHoldingId();
+
+                    sql += " (" + idList + ") ";
+
+                    break;
+                default:
+                    sql +=
+                        "(select z1.ID_ROAD from v$_read_list_road z1 where z1.user_login = ?)";
+                    break;
+            }
+            ps = dbDyn.prepareStatement( sql );
+
+            RsetTools.setLong( ps, 1, holdingBean.getId() );
+            switch( dbDyn.getFamily() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    break;
+                default:
+                    ps.setString( 2, authSession.getUserLogin() );
+                    break;
+            }
+
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of deleted records - " + i1 );
+
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                if (dbDyn!=null)
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                // catch rollback exception
+            }
+
+            String es = "Error delete holding";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
+            ps = null;
+        }
+    }
+
+    public List<Long> getCompanyIdList( DatabaseAdapter db, Long holdingId, AuthSession authSession ) {
+        if( holdingId == null ) {
+            return null;
+        }
+        if (authSession==null) {
+            return null;
+        }
+
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            String sql =
+                "select ID_COMPANY "+
+                "from 	WM_LIST_R_HOLDING_COMPANY " +
+                "where  ID_HOLDING=? and ID_HOLDING in ";
+
+            switch( db.getFamily() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    String idList = authSession.getGrantedHoldingId();
+
+                    sql += " (" + idList + ") ";
+
+                    break;
+                default:
+                    sql +=
+                        "(select z1.ID_ROAD from v$_read_list_road z1 where z1.user_login = ?)";
+                    break;
+            }
+            ps = db.prepareStatement( sql );
+            int idx = 1;
+            ps.setLong( idx++, holdingId );
+            switch( db.getFamily() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    break;
+                default:
+                    ps.setString( idx++, authSession.getUserLogin() );
+                    break;
+            }
+
+            rs = ps.executeQuery();
+
+            List<Long> ids = new ArrayList<Long>();
+            while ( rs.next() ) {
+                ids.add( RsetTools.getLong(rs, "ID_COMPANY") );
+            }
+            return ids;
+        }
+        catch( Exception e ) {
+            String es = "Error load company id list for holding id: " + holdingId;
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( rs, ps );
+            rs = null;
+            ps = null;
+        }
+    }
+
+    public void setRelateHoldingCompany(DatabaseAdapter ora_, Long holdingId, Long companyId ) {
+        PreparedStatement ps = null;
+        try
+        {
+            if (!getRelateHoldingCompany(ora_, companyId, holdingId))
+            {
+                CustomSequenceType seq = new CustomSequenceType();
+                seq.setSequenceName("seq_WM_LIST_R_HOLDING_COMPANY");
+                seq.setTableName( "WM_LIST_R_HOLDING_COMPANY");
+                seq.setColumnName( "ID_REL_HOLDING" );
+                long id = ora_.getSequenceNextValue( seq );
+
+                ps = ora_.prepareStatement(
+                    "insert into WM_LIST_R_HOLDING_COMPANY " +
+                    "(ID_REL_HOLDING, ID_HOLDING, ID_COMPANY) " +
+                    "values "+
+                    "(?, ?, ?)"
+                );
+                ps.setLong(1, id);
+                ps.setObject(2, holdingId);
+                ps.setObject(3, companyId);
+                int i = ps.executeUpdate();
+
+                if (log.isDebugEnabled())
+                    log.debug("Count of added record in WM_LIST_R_HOLDING_COMPANY: "+i);
+            }
+        }
+        catch (Exception e) {
+            final String es = "Error setRelateHoldingCompany()";
+            log.error(es, e);
+            throw new IllegalStateException(es,e);
+        }
+        finally {
+            DatabaseManager.close( ps );
+            ps = null;
+        }
+
+    }
+
+    private void processDeleteRelatedCompany( DatabaseAdapter dbDyn, Holding holdingBean, AuthSession authSession ) {
+        if (authSession==null) {
+            return;
+        }
+
+        PreparedStatement ps = null;
+        try {
+
+            if( holdingBean.getId() == null )
+                throw new IllegalArgumentException( "holdingId is null" );
+
+            String sql =
+                "delete from wm_list_r_holding_company " +
+                "where  ID_HOLDING=? and ID_HOLDING in ";
+
+            switch( dbDyn.getFamily() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    String idList = authSession.getGrantedHoldingId();
+
+                    sql += " (" + idList + ") ";
+
+                    break;
+                default:
+                    sql +=
+                        "(select z1.ID_ROAD from v$_read_list_road z1 where z1.user_login = ?)";
+                    break;
+            }
+            ps = dbDyn.prepareStatement( sql );
+
+            RsetTools.setLong( ps, 1, holdingBean.getId() );
+            switch( dbDyn.getFamily() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    break;
+                default:
+                    ps.setString( 2, authSession.getUserLogin() );
+                    break;
+            }
+
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of deleted records - " + i1 );
+
+        }
+        catch( Exception e ) {
+            String es = "Error delete holding";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( ps );
+            ps = null;
+        }
+    }
+
+    private void processInsertRelatedCompany( DatabaseAdapter dbDyn, Holding holdingBean, AuthSession authSession ) {
+        if (authSession==null || holdingBean.getCompanyIdList()==null) {
+            return;
+        }
+
+        if( holdingBean.getId() == null )
+            throw new IllegalArgumentException( "holdingId is null" );
+
+        for (Long companyId : holdingBean.getCompanyIdList()) {
+            setRelateHoldingCompany(dbDyn, holdingBean.getId(), companyId);
+        }
+    }
+
+    private boolean getRelateHoldingCompany(DatabaseAdapter ora_, Long companyId, Long holdingId )
+        throws Exception
+    {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try
+        {
+            ps = ora_.prepareStatement(
+                "select null COUNT_REC from WM_LIST_R_HOLDING_COMPANY " +
+                "where ID_COMPANY=? and ID_HOLDING=?"
+            );
+            ps.setObject(1, companyId);
+            ps.setObject(2, holdingId);
+            rs = ps.executeQuery();
+
+            return rs.next();
+        }
+        catch (Exception e)
+        {
+            log.error("Error getRelateServiceFirm", e);
+            throw e;
+        }
+        finally
+        {
+            DatabaseManager.close( rs, ps );
+            rs = null;
+            ps = null;
+        }
+    }
+
+    private HoldingBean loadHoldingFromResultSet( ResultSet rs ) throws Exception {
+
+        HoldingBean holding = new HoldingBean();
+        holding.setId( RsetTools.getLong( rs, "ID_HOLDING" ) );
+        holding.setName( RsetTools.getString( rs, "full_name_HOLDING" ) );
+        holding.setShortName( RsetTools.getString( rs, "name_HOLDING" ) );
+
+        return holding;
+    }
+}

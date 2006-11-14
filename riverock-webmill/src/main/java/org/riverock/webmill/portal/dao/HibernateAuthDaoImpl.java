@@ -8,17 +8,19 @@
  * http://www.riverock.org
  *
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package org.riverock.webmill.portal.dao;
 
@@ -542,109 +544,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             session.getTransaction().commit();
         }
     }
-
-    private String listToString(List<Long> list) {
-        if (list.isEmpty())
-            return "NULL";
-
-        Iterator<Long> iterator = list.iterator();
-        StringBuilder sb = new StringBuilder();
-        boolean isFirst = true;
-        while (iterator.hasNext()) {
-            Long aLong = iterator.next();
-
-            if (isFirst) {
-		isFirst = false;
-	    }
-	    else {
-                sb.append( ',' );
-            }
-
-            sb.append( aLong );
-        }
-        return sb.toString();
-    }
-
-/*
-    public static Long addNewUser(DatabaseAdapter db_, String first_name,
-        String last_name, String middle_name, Long id_firm,
-        String email, String address, String phone)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        try
-        {
-            CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_WM_LIST_USER");
-            seq.setTableName( "WM_LIST_USER");
-            seq.setColumnName( "ID_USER" );
-            long id = db_.getSequenceNextValue( seq );
-
-            ps = db_.prepareStatement(
-                "insert into WM_LIST_USER " +
-                "(ID_USER, FIRST_NAME, LAST_NAME, MIDDLE_NAME, " +
-                "ID_FIRM, EMAIL, ADDRESS, TELEPHONE, DATE_START_WORK ) " +
-                "values "+
-                "( ?, ?, ?, ?, ?, ?, ?, ?, "+db_.getNameDateBind()+" )	"
-            );
-            ps.setLong(1, id);
-            ps.setString(2, first_name);
-            ps.setString(3, last_name);
-            ps.setString(4, middle_name);
-            ps.setObject(5, id_firm);
-            ps.setString(6, email);
-            ps.setString(7, address);
-            ps.setString(8, phone);
-            db_.bindDate(ps, 9, DateTools.getCurrentTime());
-            int i = ps.executeUpdate();
-
-            if (log.isDebugEnabled())
-                log.debug("Count of added role - "+i);
-
-            return id;
-        }
-        catch (Exception e)
-        {
-            log.error("Error addNewUser", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( ps );
-            ps = null;
-        }
-    }
-
-    public static Long getIDRole(DatabaseAdapter db_, String role_name)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            ps = db_.prepareStatement(
-                "select ID_ACCESS_GROUP from WM_AUTH_ACCESS_GROUP where NAME_ACCESS_GROUP=?"
-            );
-            ps.setString(1, role_name);
-            rs = ps.executeQuery();
-            if (rs.next())
-                return RsetTools.getLong(rs, "ID_ACCESS_GROUP");
-
-            return null;
-        }
-        catch (Exception e)
-        {
-            log.error("Error getIDRole", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
-    }
-*/
 
     public List<RoleBean> getUserRoleList( AuthSession authSession ) {
         Session session = HibernateUtils.getSession();
