@@ -37,4 +37,5 @@ public interface PortalTemplate extends Serializable {
     public String getTemplateName();
     public String getRole();
     public List<PortalTemplateItem> getPortalTemplateItems();
+    int getVersion();
 }

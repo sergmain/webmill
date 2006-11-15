@@ -20,7 +20,8 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- */kage org.riverock.portlet.article;
+ */
+package org.riverock.portlet.article;
 
 import java.io.IOException;
 
@@ -39,7 +40,6 @@ import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
  *
  * $Id$
  */
-
 public class ArticlePlainPortlet extends GenericWebmillPortlet {
 
     public ArticlePlainPortlet(){}

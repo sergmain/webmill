@@ -37,8 +37,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 public interface InternalUserMetadataDao {
     public UserMetadataItem getMetadata(String userLogin, Long siteId, String metadataName);
 
-    public UserMetadataItem getMetadata(DatabaseAdapter adapter, String userLogin, Long siteId, String metadataName);
-
     public void setMetadataIntValue(String userLogin, Long siteId, String metadataName, Long intValue);
 
     public void setMetadataStringValue(String userLogin, Long siteId, String metadataName, String stringValue);

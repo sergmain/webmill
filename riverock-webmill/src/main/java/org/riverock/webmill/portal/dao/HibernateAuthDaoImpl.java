@@ -25,25 +25,24 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 import org.hibernate.Hibernate;
+import org.hibernate.Session;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.webmill.a3.bean.AuthInfoImpl;
 import org.riverock.webmill.a3.bean.AuthRelateRole;
 import org.riverock.webmill.a3.bean.RoleBeanImpl;
-import org.riverock.webmill.a3.bean.UserInfoImpl;
+import org.riverock.webmill.portal.bean.UserBean;
 import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.utils.HibernateUtils;
 
@@ -57,11 +56,11 @@ import org.riverock.webmill.utils.HibernateUtils;
 public class HibernateAuthDaoImpl implements InternalAuthDao {
     private static Logger log = Logger.getLogger(HibernateAuthDaoImpl.class);
 
-    public UserInfo getUserInfo(String userLogin) {
+    public UserBean getUserBean(String userLogin) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        UserInfoImpl user = (UserInfoImpl)session.createQuery(
-            "select user from org.riverock.webmill.a3.bean.UserInfoImpl as user, " +
+        UserBean user = (UserBean)session.createQuery(
+            "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
             " org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
             "where user.userId = auth.userId and auth.userLogin=:userLogin ")
             .setString("userLogin", userLogin)
@@ -70,8 +69,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         return user;
     }
 
-    public UserInfo getUserInfo(DatabaseAdapter db_, String userLogin) {
-        return getUserInfo(userLogin);
+    public UserBean getUserBean(DatabaseAdapter db_, String userLogin) {
+        return getUserBean(userLogin);
     }
 
     public List<Long> getGrantedUserIdList(String username) {
@@ -223,7 +222,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             id = (Long)session.createQuery(
                 "select auth.authUserId " +
                     "from  org.riverock.webmill.a3.bean.AuthInfoImpl as auth, " +
-                    "      org.riverock.webmill.a3.bean.UserInfoImpl as user " +
+                    "      org.riverock.webmill.portal.bean.UserBean as user " +
                     "where auth.authUserId = :id_auth_user_check and auth.userId=user.userId and " +
                     "      user.companyId in ( :companyIds )" )
 /*
@@ -346,7 +345,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         session.beginTransaction();
         List<AuthInfoImpl> authInfos = session.createQuery(
             "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
-                "     org.riverock.webmill.a3.bean.UserInfoImpl as user " +
+                "     org.riverock.webmill.portal.bean.UserBean as user " +
                 "where auth.userId=user.userId and user.companyId in (:companyIds) ")
 /*
 
@@ -460,7 +459,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
                 "select auth " +
                     "from  org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
-                    "      org.riverock.webmill.a3.bean.UserInfoImpl as user " +
+                    "      org.riverock.webmill.portal.bean.UserBean as user " +
                     "where auth.userLogin=:userLogin and auth.userPassword=:userPassword and " +
                     "      auth.userId=user.userId and user.isDeleted=false")
                 .setString("userLogin", userLogin)
@@ -856,16 +855,16 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         session.getTransaction().commit();
     }
 
-    public List<UserInfo> getUserInfoList(AuthSession authSession) {
-            List<UserInfo> users = new ArrayList<UserInfo>();
+    public List<User> getUserInfoList(AuthSession authSession) {
+            List<UserBean> users = new ArrayList<UserBean>();
 
         if( authSession==null ) {
-            return users;
+            return (List)users;
         }
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         users = session.createQuery(
-            "select user from org.riverock.webmill.a3.bean.UserInfoImpl as user " +
+            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
                 "where user.isDeleted=false and user.companyId in ( :companyIds )")
 /*
                 "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
@@ -886,7 +885,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             .setParameterList("companyIds", getGrantedCompanyIdList(authSession.getUserLogin()) )
             .list();
         session.getTransaction().commit();
-        return users;
+        return (List)users;
     }
 
     public RoleBean getRole(Long roleId) {
@@ -922,37 +921,4 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         session.getTransaction().commit();
         return bean;
     }
-
-/*
-
-    private RoleBean loadRoleFromResultSet( ResultSet rs ) throws Exception {
-
-        RoleBeanImpl role = new RoleBeanImpl();
-        role.setRoleId( RsetTools.getLong( rs, "ID_ACCESS_GROUP" ) );
-        role.setName( RsetTools.getString( rs, "NAME_ACCESS_GROUP" ) );
-
-        return role;
-    }
-
-    private void set(ResultSet rs, UserInfoImpl userInfo) throws SQLException {
-        userInfo.setUserId(RsetTools.getLong(rs, "ID_USER"));
-        userInfo.setCompanyId(RsetTools.getLong(rs, "ID_FIRM"));
-        userInfo.setFirstName(RsetTools.getString(rs, "FIRST_NAME"));
-        userInfo.setMiddleName(RsetTools.getString(rs, "MIDDLE_NAME"));
-        userInfo.setLastName(RsetTools.getString(rs, "LAST_NAME"));
-
-        userInfo.setDateStartWork(RsetTools.getTimestamp(rs, "DATE_START_WORK"));
-
-        userInfo.setDateFire(RsetTools.getTimestamp(rs, "DATE_FIRE"));
-
-        userInfo.setAddress(RsetTools.getString(rs, "ADDRESS"));
-        userInfo.setTelephone(RsetTools.getString(rs, "TELEPHONE"));
-
-        userInfo.setDateBindProff(RsetTools.getTimestamp(rs, "DATE_BIND_PROFF"));
-
-        userInfo.setHomeTelephone(RsetTools.getString(rs, "HOME_TELEPHONE"));
-        userInfo.setEmail(RsetTools.getString(rs, "EMAIL"));
-        userInfo.setDiscount(RsetTools.getDouble(rs, "DISCOUNT"));
-    }
-*/
 }

@@ -29,16 +29,8 @@ import org.hibernate.Session;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.riverock.webmill.main.CssBean;
-import org.riverock.webmill.portal.bean.PortalXsltBean;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.bean.SiteBean;
-import org.riverock.webmill.portal.bean.VirtualHostBean;
-import org.riverock.webmill.portal.bean.PortletNameBean;
-import org.riverock.webmill.portal.bean.HoldingCompanyRelationBean;
-import org.riverock.webmill.portal.bean.CompanyBean;
-import org.riverock.webmill.portal.bean.HoldingBean;
+import org.riverock.webmill.portal.bean.*;
 import org.riverock.webmill.a3.bean.AuthInfoImpl;
-import org.riverock.webmill.a3.bean.UserInfoImpl;
 import org.riverock.webmill.a3.bean.RoleBeanImpl;
 import org.riverock.webmill.a3.bean.AuthRelateRole;
 
@@ -66,12 +58,16 @@ public class HibernateUtils {
         VirtualHostBean.class,
         PortletNameBean.class,
         AuthInfoImpl.class,
-        UserInfoImpl.class,
+        UserBean.class,
         CompanyBean.class,
         HoldingBean.class,
         HoldingCompanyRelationBean.class,
         RoleBeanImpl.class,
-        AuthRelateRole.class
+        AuthRelateRole.class,
+        CatalogBean.class,
+        CatalogLanguageBean.class,
+        TemplateBean.class,
+        UserMetadataItemBean.class
     };
 
     public static final String HIBERNATE_FAMILY = "hibernate_family";

@@ -29,8 +29,8 @@ import java.util.List;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
+import org.riverock.interfaces.portal.bean.User;
 
 /**
  * @author SMaslyukov
@@ -42,7 +42,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
     private static final long serialVersionUID = 2043005502L;
 
     private AuthInfoImpl authInfo = null;
-    private UserInfo userInfo = null;
+    private User userInfo = null;
 
     private String userName = null;
     private String companyName = null;
@@ -68,7 +68,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
         return authInfo;
     }
 
-    public UserInfo getUserInfo() {
+    public User getUser() {
         return userInfo;
     }
 
@@ -76,7 +76,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
         this.authInfo = authInfo;
     }
 
-    public void setUserInfo( UserInfo userInfo ) {
+    public void setUser( User userInfo ) {
         this.userInfo = userInfo;
         if (userInfo!=null) {
             userName = StringTools.getUserName(

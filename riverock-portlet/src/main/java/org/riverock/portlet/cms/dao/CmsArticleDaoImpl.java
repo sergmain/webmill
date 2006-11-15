@@ -177,7 +177,7 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
 
             ps.setLong(1, id );
 
-            ps.setLong(2, authSession.getUserInfo().getUserId() );
+            ps.setLong(2, authSession.getUser().getUserId() );
 
             ps.setTimestamp(3, new java.sql.Timestamp( System.currentTimeMillis()));
 
@@ -261,7 +261,7 @@ public class CmsArticleDaoImpl implements CmsArticleDao {
 
             ps = adapter.prepareStatement(sql_);
 
-            ps.setLong(1, authSession.getUserInfo().getUserId() );
+            ps.setLong(1, authSession.getUser().getUserId() );
 
             if (article.getArticleName()!=null)
                 ps.setString(2, article.getArticleName() );

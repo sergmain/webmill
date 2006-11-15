@@ -62,11 +62,40 @@ insert into wm_portal_ids
 (select 'wm_auth_access_group' name, max(ID_ACCESS_GROUP)+1 max_value from wm_auth_access_group)
 /
 
+insert into wm_portal_ids
+(select 'wm_list_user_metadata' name, max(ID_MAIN_USER_METADATA)+1 max_value from wm_list_user_metadata)
+/
+
+insert into wm_portal_ids
+(select 'wm_portal_catalog' name, max(ID_SITE_CTX_CATALOG)+1 max_value from wm_portal_catalog)
+/
+
+insert into wm_portal_ids
+(select 'wm_portal_catalog_language' name, max(ID_SITE_CTX_LANG_CATALOG)+1 max_value from wm_portal_catalog_language)
+/
+
+insert into wm_portal_ids
+(select 'wm_portal_template' name, max(ID_SITE_TEMPLATE)+1 max_value from wm_portal_template)
+/
+
+
 alter table wm_portal_xslt
 add column VERSION decimal(5,0) default 0
 /
 
 alter table wm_portal_xslt
 add column XSLT_BLOB blob
+/
+
+alter table wm_portal_template
+add column TEMPLATE_BLOB blob
+/
+
+update wm_portal_template
+set TEMPLATE_BLOB=TEMPLATE_DATA
+/
+
+alter table wm_portal_template
+add column VERSION decimal(5,0) default 0
 /
 

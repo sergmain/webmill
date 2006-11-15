@@ -87,11 +87,14 @@ public class PriceList {
         }
 
         if( auth != null ) {
+            // TODO in just time discount for all users is 0 (zero)
+/*
             if( log.isDebugEnabled() )
                 log.debug( "calc price: user discount=" + auth.getUserInfo().getDiscount() );
+*/
 
-            if( auth.getUserInfo().getDiscount() != null )
-                price = price * ( 100 - auth.getUserInfo().getDiscount() ) / 100;
+            int discount = 0;
+            price = price * ( 100 - discount ) / 100;
         }
 
         // производим округление
@@ -148,11 +151,12 @@ public class PriceList {
         }
 
         if( auth != null ) {
+            // TODO in just time discount for all users is 0 (zero)
+            int discount = 0;
             if( log.isDebugEnabled() )
-                log.debug( "calc price: user discount=" + auth.getUserInfo().getDiscount() );
+                log.debug( "calc price: user discount=" + 0 );
 
-            if( auth.getUserInfo().getDiscount() != null )
-                discountUser = ( 100 - auth.getUserInfo().getDiscount() ) / 100;
+            discountUser = ( 100 - discount ) / 100;
         }
 
         double discountShop = 0;

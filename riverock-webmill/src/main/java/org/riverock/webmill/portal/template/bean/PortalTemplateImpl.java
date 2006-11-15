@@ -26,6 +26,7 @@ package org.riverock.webmill.portal.template.bean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
@@ -37,7 +38,7 @@ import org.riverock.interfaces.portal.template.PortalTemplateParameter;
  *
  * @version $Revision$ $Date$
  */
-public class PortalTemplateImpl implements PortalTemplate {
+public class PortalTemplateImpl implements PortalTemplate, Serializable {
 
     /**
      * Field role
@@ -47,14 +48,7 @@ public class PortalTemplateImpl implements PortalTemplate {
     private java.lang.String templateName = null;
 
     private Long templateId = null;
-
-    public Long getTemplateId() {
-        return templateId;
-    }
-
-    public void setTemplateId(Long templateId) {
-        this.templateId = templateId;
-    }
+    private int version;
 
     /**
      * Field portalTemplateItems
@@ -62,8 +56,23 @@ public class PortalTemplateImpl implements PortalTemplate {
     private List<PortalTemplateItem> portalTemplateItems;
 
     public PortalTemplateImpl() {
-        super();
         portalTemplateItems = new ArrayList<PortalTemplateItem>();
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
     }
 
     public String getTemplateName() {
@@ -77,7 +86,7 @@ public class PortalTemplateImpl implements PortalTemplate {
     /**
      * Method addSiteTemplateItem
      *
-     * @param vSitePortalTemplateItem
+     * @param vSitePortalTemplateItem PortalTemplateItemImpl
      */
     public void addSiteTemplateItem(PortalTemplateItemImpl vSitePortalTemplateItem) {
         portalTemplateItems.add(vSitePortalTemplateItem);

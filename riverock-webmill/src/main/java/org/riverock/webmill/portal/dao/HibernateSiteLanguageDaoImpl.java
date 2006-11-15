@@ -31,7 +31,11 @@ import org.hibernate.Session;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.bean.CatalogLanguageBean;
+import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.utils.HibernateUtils;
 
 /**
@@ -110,12 +114,13 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        Query query = session.createQuery(
-            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-            "where siteLanguage.siteLanguageId = :site_language_id");
-        query.setLong("site_language_id", siteLanguageId);
-        SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
-        session.delete(bean);
+/*
+        InternalDaoFactory.getInternalCmsDao().deleteArticleForSiteLanguage(dbDyn, siteLanguageId);
+        InternalDaoFactory.getInternalCmsDao().deleteNewsForSiteLanguage(dbDyn, siteLanguageId);
+        InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSiteLanguage(dbDyn, siteLanguageId);
+*/
+
+        deleteSiteLanguage(session, siteLanguageId);
 
         session.getTransaction().commit();
     }
@@ -130,8 +135,59 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
         query.setLong("site_id", siteId);
         List<SiteLanguageBean> list = query.list();
         for (SiteLanguageBean bean : list) {
+            deleteSiteLanguage(session, bean.getSiteLanguageId());
             session.delete(bean);
         }
         session.getTransaction().commit();
+    }
+
+    private static void deleteSiteLanguage(Session session, Long siteLanguageId) {
+        List<TemplateBean> templateBeans = session.createQuery(
+            "select template " +
+                "from  org.riverock.webmill.portal.bean.TemplateBean as template " +
+                "where template.siteLanguageId=:siteLanguageId")
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+        for (TemplateBean templateBean : templateBeans) {
+            session.delete(templateBean);
+        }
+
+        List<CatalogBean> catalogItems = session.createQuery(
+            "select catalog " +
+                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
+                "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
+                "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
+                "      catalogLang.siteLanguageId=:siteLanguageId")
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+        for (CatalogBean catalogItem : catalogItems) {
+            session.delete(catalogItem);
+        }
+
+        List<CatalogLanguageBean> catalogLanguageBeans = session.createQuery(
+            "select catalogLang " +
+                "from  org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
+                "where catalogLang.siteLanguageId=:siteLanguageId")
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+        for (CatalogLanguageBean catalogLanguageBean : catalogLanguageBeans) {
+            session.delete(catalogLanguageBean);
+        }
+
+        List<PortalXsltBean> xsltList = session.createQuery(
+            "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
+                "where xslt.siteLanguageId = :siteLanguageId")
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+        for (PortalXsltBean portalXsltBean : xsltList) {
+            session.delete(portalXsltBean);
+        }
+
+        Query query = session.createQuery(
+            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+            "where siteLanguage.siteLanguageId = :site_language_id");
+        query.setLong("site_language_id", siteLanguageId);
+        SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
+        session.delete(bean);
     }
 }

@@ -46,6 +46,7 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.common.collections.ListUtils;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -320,7 +321,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
             switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = authSession.getGrantedCompanyId();
+                    String idList = ListUtils.listToString(authSession.getGrantedCompanyIdList());
 
                     whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                         ".ID_FIRM in ("+idList+") ";
@@ -369,7 +370,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idUser = authSession.getGrantedUserId();
+                    String idUser = ListUtils.listToString(authSession.getGrantedUserIdList());
                     whereSQL +=
                         prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                         ".ID_USER in ("+idUser+") ";
@@ -2054,7 +2055,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = authSession.getGrantedCompanyId();
+                    String idList = ListUtils.listToString(authSession.getGrantedCompanyIdList());
 
                     whereSQL += qa.getMainRefTable() +
                         ".ID_FIRM in ("+idList+") ";
@@ -3148,8 +3149,8 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         if (authSession==null)
             throw new IllegalArgumentException("UserPrincipal not initialized");
 
-        this.firmId = authSession.getUserInfo().getCompanyId();
-        this.userId = authSession.getUserInfo().getUserId();
+        this.firmId = authSession.getUser().getCompanyId();
+        this.userId = authSession.getUser().getUserId();
 
         fromParam = PortletService.getString(this.portletRequest, MemberConstants.MEMBER_FROM_PARAM, "").trim();
         try

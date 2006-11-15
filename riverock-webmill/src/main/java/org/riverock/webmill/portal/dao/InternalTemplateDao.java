@@ -37,17 +37,17 @@ import org.riverock.interfaces.portal.bean.Template;
 public interface InternalTemplateDao {
     public Template getTemplate(Long templateId);
     public Template getTemplate(String templateName, Long siteLanguageId);
+    public Template getTemplate(String templateName, String lang);
+    public Template getDefaultDynamicTemplate(Long siteLanguageId);
+
     public List<Template> getTemplateLanguageList( Long siteLanguageId );
     public List<Template> getTemplateList( Long siteId );
+
     public Long createTemplate(Template template);
 
-    public void deleteTemplateForSite(DatabaseAdapter adapter, Long siteId);
-
-    public void deleteTemplateForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
+    public void deleteTemplate(Long templateId);
+    public void deleteTemplateForSite(Long siteId);
+    public void deleteTemplateForSiteLanguage(Long siteLanguageId);
 
     public void updateTemplate(Template template);
-
-    public void deleteTemplate(Long templateId);
-
-    public Template getDefaultDynamicTemplate(Long siteLanguageId);
 }

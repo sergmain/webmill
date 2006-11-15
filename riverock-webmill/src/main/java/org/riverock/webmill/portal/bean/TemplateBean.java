@@ -25,6 +25,17 @@
 package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
+import java.sql.Blob;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.riverock.interfaces.portal.bean.Template;
 
@@ -34,15 +45,63 @@ import org.riverock.interfaces.portal.bean.Template;
  *         Time: 16:32:46
  *         $Id$
  */
+@Entity
+@Table(name="wm_portal_template")
+@TableGenerator(
+    name="TABLE_PORTAL_TEMPLATE",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portal_template",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class TemplateBean implements Serializable, Template {
     private static final long serialVersionUID = 1059005501L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PORTAL_TEMPLATE")
+    @Column(name="ID_SITE_TEMPLATE")
     private Long templateId;
+
+    @Column(name="ID_SITE_SUPPORT_LANGUAGE")
     private Long siteLanguageId;
-    private String templateName; 
-    private String templateData;
-    private String templateLanguage = null;
+
+    @Column(name="NAME_SITE_TEMPLATE")
+    private String templateName;
+
+    @Column(name="TEMPLATE_BLOB")
+    private Blob templateBlob;
+
+    @Column(name="is_default_dynamic")
     private boolean isDefaultDynamic = false;
+
+    @Version
+    @Column(name="VERSION")
+    private int version;
+
+    @Transient
+    private String templateLanguage = null;
+
+    @Transient
+    private String templateData;
+
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public Blob getTemplateBlob() {
+        return templateBlob;
+    }
+
+    public void setTemplateBlob(Blob templateBlob) {
+        this.templateBlob = templateBlob;
+    }
 
     public String getTemplateLanguage() {
         return templateLanguage;

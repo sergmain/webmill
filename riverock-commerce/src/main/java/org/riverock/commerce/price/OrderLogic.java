@@ -274,8 +274,8 @@ public final class OrderLogic {
             RsetTools.setLong( ps, 1, order.getIdOrder() );
             dbDyn.bindDate( ps, 2, DateTools.getCurrentTime() );
 
-            if( authSession != null && authSession.getUserInfo() != null ) {
-                RsetTools.setLong( ps, 3, authSession.getUserInfo().getUserId() );
+            if( authSession != null && authSession.getUser() != null ) {
+                RsetTools.setLong( ps, 3, authSession.getUser().getUserId() );
             }
             else
                 ps.setNull( 3, Types.NUMERIC );
@@ -288,8 +288,8 @@ public final class OrderLogic {
         catch( Exception e1 ) {
             log.error( "order.getIdOrder() " + order.getIdOrder() );
             log.error( "authSession " + authSession );
-            if( authSession != null && authSession.getUserInfo() != null )
-                log.error( "authSession.getUserInfo().getIdUser() " + authSession.getUserInfo().getUserId() );
+            if( authSession != null && authSession.getUser() != null )
+                log.error( "authSession.getUserInfo().getIdUser() " + authSession.getUser().getUserId() );
 
             log.error( "Error init AuthSession", e1 );
             throw e1;
@@ -306,7 +306,7 @@ public final class OrderLogic {
         PreparedStatement ps = null;
         try {
             if( authSession != null ) {
-                Long userId = authSession.getUserInfo().getUserId();
+                Long userId = authSession.getUser().getUserId();
                 if( userId != null ) {
                     sql_ =
                         "update WM_PRICE_RELATE_USER_ORDER " +

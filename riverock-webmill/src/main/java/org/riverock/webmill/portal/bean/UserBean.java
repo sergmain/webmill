@@ -27,6 +27,14 @@ package org.riverock.webmill.portal.bean;
 import java.util.Date;
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.common.tools.StringTools;
 
@@ -35,22 +43,56 @@ import org.riverock.common.tools.StringTools;
  *         Date: 29.05.2006
  *         Time: 15:28:27
  */
+@Entity
+@Table(name="wm_list_user")
+@TableGenerator(
+    name="TABLE_LIST_USER",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_list_user",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class UserBean implements User, Serializable {
     private static final long serialVersionUID = 2057005507L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_LIST_USER")
+    @Column(name="ID_USER")
     private Long userId = null;
 
+    @Column(name="DATE_BIND_PROFF")
+    private Date dateBindProff;
+
+    @Column(name="ID_FIRM")
     private Long companyId = null;
-    private String companyName = null;
+
+    @Column(name="FIRST_NAME")
     private String firstName = null;
+
+    @Column(name="MIDDLE_NAME")
     private String middleName = null;
+
+    @Column(name="LAST_NAME")
     private String lastName = null;
 
+    @Column(name="DATE_START_WORK")
     private Date createdDate = null;
+
+    @Column(name="DATE_FIRE")
     private Date deletedDate = null;
+
+    @Column(name="ADDRESS")
     private String address = null;
+
+    @Column(name="TELEPHONE")
     private String phone = null;
+
+    @Column(name="EMAIL")
     private String email = null;
+
+    @Column(name="IS_DELETED")
     private boolean isDeleted = false;
 
     public UserBean() {
@@ -70,20 +112,20 @@ public class UserBean implements User, Serializable {
         this.isDeleted = beanPortal.isDeleted();
     }
 
+    public Date getDateBindProff() {
+        return dateBindProff;
+    }
+
+    public void setDateBindProff(Date dateBindProff) {
+        this.dateBindProff = dateBindProff;
+    }
+
     public boolean isDeleted() {
         return isDeleted;
     }
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName( String companyName ) {
-        this.companyName = companyName;
     }
 
     public Long getCompanyId() {
@@ -172,10 +214,6 @@ public class UserBean implements User, Serializable {
         this.email = email;
     }
 
-    public String getName() {
-        return StringTools.getUserName( firstName, middleName, lastName );
-    }
-
     public Long getUserId() {
         return userId;
     }
@@ -184,14 +222,14 @@ public class UserBean implements User, Serializable {
         this.userId = id;
     }
 
-    public boolean equals( User portalUserBean ) {
-        if( portalUserBean == null || portalUserBean.getUserId()==null || userId ==null ) {
+    public boolean equals( Object portalUserBean ) {
+        if (!(portalUserBean instanceof User) || ((User)portalUserBean).getUserId()==null || userId ==null ) {
             return false;
         }
-        return portalUserBean.getUserId().equals( userId );
+        return ((User)portalUserBean).getUserId().equals( userId );
     }
 
     public String toString() {
-        return "[name:" + getName() + ",userId:" + userId + "]";
+        return "[name:" + StringTools.getUserName(firstName, middleName, lastName) + ",userId:" + userId + "]";
     }
 }

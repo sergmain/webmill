@@ -46,11 +46,11 @@ public class AuthSessionBean implements Serializable {
     }
 
     public String getAddress() {
-        return authSession!=null?authSession.getUserInfo().getAddress():null;
+        return authSession!=null?authSession.getUser().getAddress():null;
     }
 
     public Long getId() {
-        return authSession!=null?authSession.getUserInfo().getUserId():null;
+        return authSession!=null?authSession.getUser().getUserId():null;
     }
 
     public String getUserLogin() {

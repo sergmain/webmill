@@ -136,7 +136,7 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("InternalDaoImpl.getCatalogItemId()");
+            log.debug("InternalCatalogDaoImpl.getCatalogItemId()");
             log.debug("     siteId: " + siteId);
             log.debug("     locale: " + locale.toString().toLowerCase() );
             log.debug("     portletName: " + portletName);

@@ -26,6 +26,7 @@ package org.riverock.interfaces.sso.a3;
 import java.util.List;
 
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
+import org.riverock.interfaces.portal.bean.User;
 
 /**
  * @author SergeMaslyukov
@@ -35,7 +36,7 @@ import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
  */
 public interface AuthUserExtendedInfo {
     public AuthInfo getAuthInfo();
-    public UserInfo getUserInfo();
+    public User getUser();
     
     public List<RoleEditableBean> getRoles();
 

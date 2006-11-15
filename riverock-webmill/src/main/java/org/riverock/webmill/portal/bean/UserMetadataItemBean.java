@@ -25,6 +25,15 @@
 package org.riverock.webmill.portal.bean;
 
 import java.util.Date;
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
 
 import org.riverock.interfaces.portal.user.UserMetadataItem;
 
@@ -33,13 +42,40 @@ import org.riverock.interfaces.portal.user.UserMetadataItem;
  *         Date: 26.05.2006
  *         Time: 20:21:04
  */
-public class UserMetadataItemBean implements UserMetadataItem {
+@Entity
+@Table(name="wm_list_user_metadata")
+@TableGenerator(
+    name="TABLE_LIST_USER_METADATA",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_list_user_metadata",
+    allocationSize = 1,
+    initialValue = 1
+)
+public class UserMetadataItemBean implements UserMetadataItem, Serializable {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_LIST_USER_METADATA")
+    @Column(name="ID_MAIN_USER_METADATA")
     private Long metadataItemId = null;
+
+    @Column(name="ID_SITE")
     private Long siteId = null;
+    
+    @Column(name="ID_USER")
     private Long userId = null;
+
+    @Column(name="META")
     private String metadataName = null;
+
+    @Column(name="INT_VALUE")
     private Long intValue = null;
+
+    @Column(name="DATE_VALUE")
     private Date dateValue = null;
+
+    @Column(name="STRING_VALUE")
     private String stringValue = null;
 
     public Long getMetadataItemId() {

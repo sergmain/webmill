@@ -54,7 +54,7 @@ public class WebmillModuleUserImpl implements ModuleUser {
             return null;
         }
         else {
-            return authSession.getUserInfo().getAddress();
+            return authSession.getUser().getAddress();
         }
     }
 
@@ -63,7 +63,7 @@ public class WebmillModuleUserImpl implements ModuleUser {
             return null;
         }
         else {
-            return authSession.getUserInfo().getUserId();
+            return authSession.getUser().getUserId();
         }
     }
 
@@ -79,10 +79,6 @@ public class WebmillModuleUserImpl implements ModuleUser {
     public boolean isCompany() {
         return authSession.getAuthInfo().isCompany();
     }
-
-//    public boolean isGroupCompany() {
-//        return authSession.getAuthInfo().isGroupCompany();
-//    }
 
     public boolean isHolding() {
         return authSession.getAuthInfo().isHolding();

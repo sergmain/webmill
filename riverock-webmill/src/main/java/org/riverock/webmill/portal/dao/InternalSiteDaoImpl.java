@@ -220,7 +220,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
 
             InternalDaoFactory.getInternalCmsDao().deleteArticleForSite(dbDyn, siteId);
             InternalDaoFactory.getInternalCmsDao().deleteNewsForSite(dbDyn, siteId);
-            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(siteId);
             InternalDaoFactory.getInternalCssDao().deleteCssForSite(dbDyn, siteId);
             InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
             InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHostForSite(dbDyn, siteId);

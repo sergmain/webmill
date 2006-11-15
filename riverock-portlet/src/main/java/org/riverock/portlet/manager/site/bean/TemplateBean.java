@@ -41,6 +41,7 @@ public class TemplateBean implements Serializable, Template {
     private String templateData;
     private String templateLanguage = null;
     private boolean isDefaultDynamic = false;
+    private int version;
 
     public TemplateBean(){
     }
@@ -52,6 +53,15 @@ public class TemplateBean implements Serializable, Template {
         this.templateData=template.getTemplateData();
         this.templateLanguage=template.getTemplateLanguage();
         this.isDefaultDynamic=template.isDefaultDynamic();
+        this.version=template.getVersion();
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public String getTemplateLanguage() {

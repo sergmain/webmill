@@ -26,7 +26,6 @@ package org.riverock.sso.a3;
 import java.io.Serializable;
 import java.util.List;
 
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthProvider;
@@ -36,6 +35,7 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.portal.bean.Company;
 //import org.riverock.interfaces.portal.bean.GroupCompany;
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.bean.User;
 
 /**
  * User: Admin
@@ -59,7 +59,7 @@ public final class ConfigFileAuthProvider implements AuthProvider, Serializable 
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public UserInfo getUserInfo(AuthSession authSession) {
+    public User getUser(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -139,7 +139,7 @@ public final class ConfigFileAuthProvider implements AuthProvider, Serializable 
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<UserInfo> getUserList(AuthSession authSession) {
+    public List<User> getUserList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

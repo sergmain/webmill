@@ -29,7 +29,6 @@ import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author SergeMaslyukov
@@ -46,5 +45,5 @@ public interface InternalHoldingDao extends Serializable {
 
     public List<Holding> getHoldingList( AuthSession authSession );
 
-    public void setRelateHoldingCompany(DatabaseAdapter ora_, Long holdingId, Long companyId );
+    public void setRelateHoldingCompany(Long holdingId, Long companyId );
 }

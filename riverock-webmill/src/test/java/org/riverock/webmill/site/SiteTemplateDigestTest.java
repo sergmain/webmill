@@ -25,6 +25,7 @@
 package org.riverock.webmill.site;
 
 import org.riverock.interfaces.portal.template.PortalTemplate;
+import org.riverock.webmill.portal.bean.TemplateBean;
 
 /**
  * @author smaslyukov
@@ -167,8 +168,11 @@ public class SiteTemplateDigestTest {
     public static void main(String[] args) throws Exception {
 
         for (String aTemplate : template) {
-            PortalTemplate siteTemplate =
-                PortalTemplateManagerImpl.digestSiteTemplate(aTemplate, "template", 1L);
+            TemplateBean template = new TemplateBean();
+            template.setTemplateId(1L);
+            template.setTemplateData(aTemplate);
+            template.setTemplateName("template");
+            PortalTemplate siteTemplate = PortalTemplateManagerImpl.digestSiteTemplate(template);
             System.out.println("template:\n" + siteTemplate.toString());
         }
     }

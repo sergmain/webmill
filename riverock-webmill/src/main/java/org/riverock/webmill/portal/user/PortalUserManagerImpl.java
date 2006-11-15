@@ -88,7 +88,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
             DatabaseAdapter db = null;
             try {
                 db = DatabaseAdapter.getInstance();
-                User user = InternalDaoFactory.getInternalUserDao().getUserByEMail(db, eMail);
+                User user = InternalDaoFactory.getInternalUserDao().getUserByEMail(eMail);
 
                 if (user == null) {
                     return new UserOperationStatusBean(PortalUserManager.STATUS_NO_SUCH_EMAIL);
@@ -142,6 +142,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
         try {
             Thread.currentThread().setContextClassLoader(classLoader);
 
+            // TODO!!! all operation must in single transaction
             DatabaseAdapter db = null;
             try {
                 db = DatabaseAdapter.getInstance();
@@ -162,7 +163,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                     return new UserOperationStatusBean(PortalUserManager.STATUS_LOGIN_ALREADY_REGISTERED);
                 }
 
-                User checkUser = InternalDaoFactory.getInternalUserDao().getUserByEMail(db, userRegistration.getEmail());
+                User checkUser = InternalDaoFactory.getInternalUserDao().getUserByEMail(userRegistration.getEmail());
                 if (log.isDebugEnabled()) {
                     log.debug("Account for e-mail " + userRegistration.getEmail() + " already registered: " + (checkUser != null));
                 }
@@ -181,7 +182,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 user.setMiddleName(userRegistration.getMiddleName());
                 user.setPhone(userRegistration.getPhone());
                 user.setCompanyId(companyId);
-                Long userId = InternalDaoFactory.getInternalUserDao().addUser(db, user);
+                Long userId = InternalDaoFactory.getInternalUserDao().addUser(user);
 
                 // register-default-role
                 String roles = null;

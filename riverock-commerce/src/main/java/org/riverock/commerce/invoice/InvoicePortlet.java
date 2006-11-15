@@ -46,7 +46,7 @@ import org.riverock.common.tools.ServletTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.commerce.price.OrderLogic;
 import org.riverock.commerce.price.PriceList;
 import org.riverock.commerce.price.ShopPortlet;
@@ -279,7 +279,7 @@ public final class InvoicePortlet implements Portlet {
                 String orderCustomString =
                     MessageFormat.format( s, "" + order.getIdOrder());
 
-                UserInfo ui = authSession.getUserInfo();
+                User ui = authSession.getUser();
                 String orderAdminString =
                     "Заказчик: " + ui.getLastName() + ' ' + ui.getFirstName() + ' ' + ui.getMiddleName() + "\n\n" +
                     orderCustomString;

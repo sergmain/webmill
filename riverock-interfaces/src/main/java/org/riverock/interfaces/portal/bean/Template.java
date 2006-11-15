@@ -38,4 +38,5 @@ public interface Template extends Serializable {
     public String getTemplateName();
     public String getTemplateData();
     public boolean isDefaultDynamic();
+    int getVersion();
 }
