@@ -34,11 +34,11 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthProvider;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.sso.bean.AuthParameterBeanImpl;
@@ -75,7 +75,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     /**
      * Field _userInfo
      */
-    private UserInfo userInfo;
+    private User userInfo;
 
 
     private final static Object syncObj = new Object();
@@ -141,7 +141,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         return authProviderList;
     }
 
-    public AuthSessionImpl( UserInfo userInfo ) {
+    public AuthSessionImpl( User userInfo ) {
         this.userInfo = userInfo;
     }
 
@@ -172,7 +172,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         }
 
         if (status) {
-            userInfo = activeProvider.getUserInfo( this );
+            userInfo = activeProvider.getUser( this );
         }
 
         isAccessDenied = !status;
@@ -220,7 +220,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         return sessionId;
     }
 
-    public UserInfo getUserInfo() {
+    public User getUser() {
         return userInfo;
     }
 
@@ -300,7 +300,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         activeProvider.deleteUser( this, authInfo );
     }
 
-    public List<UserInfo> getUserList() {
+    public List<User> getUserList() {
         return activeProvider.getUserList( this );
     }
 

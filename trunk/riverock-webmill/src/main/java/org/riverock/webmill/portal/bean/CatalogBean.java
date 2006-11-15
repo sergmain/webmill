@@ -27,6 +27,15 @@ package org.riverock.webmill.portal.bean;
 import java.util.List;
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Transient;
+
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.common.TreeItem;
 
@@ -36,24 +45,88 @@ import org.riverock.interfaces.common.TreeItem;
  *         Time: 15:52:55
  *         $Id$
  */
+@Entity
+@Table(name="wm_portal_catalog")
+@TableGenerator(
+    name="TABLE_PORTAL_CATALOG",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portal_catalog",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class CatalogBean implements Serializable, CatalogItem {
     private static final long serialVersionUID = 1057005506L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PORTAL_CATALOG")
+    @Column(name="ID_SITE_CTX_CATALOG")
     private Long catalogId;
+
+    @Column(name="ID_TOP_CTX_CATALOG")
     private Long topCatalogId = 0L;
+
+    @Column(name="ID_SITE_CTX_TYPE")
     private Long portletId;
+
+    @Column(name="ID_CONTEXT")
     private Long contextId;
+
+    @Column(name="ID_SITE_TEMPLATE")
     private Long templateId;
+
+    @Column(name="ID_SITE_CTX_LANG_CATALOG")
     private Long catalogLanguageId;
+
+    @Column(name="ORDER_FIELD")
     private Integer orderField;
+
+    @Column(name="KEY_MESSAGE")
     private String keyMessage;
+
+    @Column(name="CTX_PAGE_URL")
     private String url;
+
+    @Column(name="CTX_PAGE_TITLE")
     private String title;
+
+    @Column(name="CTX_PAGE_AUTHOR")
     private String author;
+
+    @Column(name="CTX_PAGE_KEYWORD")
     private String keyword;
+
+    @Column(name="METADATA")
     private String metadata;
+
+    @Column(name="PORTLET_ROLE")
     private String portletRole;
+
+    @Transient
     private List<CatalogItem> subCatalogItemList = null;
+
+
+    public CatalogBean() {
+    }
+
+    public CatalogBean(CatalogItem catalogItem) {
+        this.catalogId = catalogItem.getCatalogId();
+        this.topCatalogId = catalogItem.getTopCatalogId();
+        this.portletId = catalogItem.getPortletId();
+        this.contextId = catalogItem.getContextId();
+        this.templateId = catalogItem.getTemplateId();
+        this.catalogLanguageId = catalogItem.getCatalogLanguageId();
+        this.orderField = catalogItem.getOrderField();
+        this.keyMessage = catalogItem.getKeyMessage();
+        this.url = catalogItem.getUrl();
+        this.title = catalogItem.getTitle();
+        this.author = catalogItem.getAuthor();
+        this.keyword = catalogItem.getKeyword();
+        this.metadata = catalogItem.getMetadata();
+        this.portletRole = catalogItem.getPortletRole();
+        this.subCatalogItemList = catalogItem.getSubCatalogItemList();
+    }
 
     public List<CatalogItem> getSubCatalogItemList() {
         return subCatalogItemList;

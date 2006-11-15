@@ -26,6 +26,14 @@ package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 
 /**
@@ -34,13 +42,43 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
  *         Time: 15:39:41
  *         $Id$
  */
+@Entity
+@Table(name="wm_portal_catalog_language")
+@TableGenerator(
+    name="TABLE_PORTAL_CATALOG_LANGUAGE",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portal_catalog_language",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class CatalogLanguageBean implements Serializable, CatalogLanguageItem {
     private static final long serialVersionUID = 1057005507L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PORTAL_CATALOG_LANGUAGE")
+    @Column(name="ID_SITE_CTX_LANG_CATALOG")
     private Long catalogLanguageId;
+
+    @Column(name="IS_DEFAULT")
     private Boolean isDefault = false;
+     
+    @Column(name="ID_SITE_SUPPORT_LANGUAGE")
     private Long siteLanguageId;
+
+    @Column(name="CATALOG_CODE")
     private String catalogCode = null;
+
+    public CatalogLanguageBean() {
+    }
+
+    public CatalogLanguageBean(CatalogLanguageItem catalogLanguageItem) {
+        this.catalogLanguageId = catalogLanguageItem.getCatalogLanguageId();
+        isDefault = catalogLanguageItem.getDefault();
+        this.siteLanguageId = catalogLanguageItem.getSiteLanguageId();
+        this.catalogCode = catalogLanguageItem.getCatalogCode();
+    }
 
     public Long getCatalogLanguageId() {
         return catalogLanguageId;

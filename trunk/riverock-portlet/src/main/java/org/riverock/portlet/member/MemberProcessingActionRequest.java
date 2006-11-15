@@ -409,9 +409,9 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                 RestrictTypeTypeType.FIRM_TYPE
             && !MemberServiceClass.checkRestrictField(content, RestrictTypeTypeType.FIRM_TYPE)) {
             if (log.isDebugEnabled())
-                log.debug("#4.09.07 bind long param #" + numParam + ' ' + authSession.getUserInfo().getCompanyId());
+                log.debug("#4.09.07 bind long param #" + numParam + ' ' + authSession.getUser().getCompanyId());
 
-            RsetTools.setLong(ps, numParam++, authSession.getUserInfo().getCompanyId());
+            RsetTools.setLong(ps, numParam++, authSession.getUser().getCompanyId());
         }
 
         if (content.getQueryArea().getRestrict() != null &&
@@ -431,9 +431,9 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                 RestrictTypeTypeType.USER_TYPE
             && !MemberServiceClass.checkRestrictField(content, RestrictTypeTypeType.USER_TYPE)) {
             if (log.isDebugEnabled())
-                log.debug("#4.09.09  bind long param #" + numParam + " " + authSession.getUserInfo().getUserId());
+                log.debug("#4.09.09  bind long param #" + numParam + " " + authSession.getUser().getUserId());
 
-            RsetTools.setLong(ps, numParam++, authSession.getUserInfo().getUserId());
+            RsetTools.setLong(ps, numParam++, authSession.getUser().getUserId());
         }
 
         if (log.isDebugEnabled())

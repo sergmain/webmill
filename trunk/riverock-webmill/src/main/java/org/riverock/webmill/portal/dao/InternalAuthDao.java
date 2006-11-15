@@ -28,12 +28,13 @@ import java.util.List;
 import java.io.Serializable;
 
 import org.riverock.interfaces.sso.a3.AuthInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.portal.bean.UserBean;
 
 /**
  * @author SergeMaslyukov
@@ -64,7 +65,7 @@ public interface InternalAuthDao extends Serializable {
 
     public boolean checkAccess( String userLogin, String userPassword, final String serverName ) ;
 
-    public UserInfo getUserInfo(String userLogin);
+    public UserBean getUserBean(String userLogin);
 
     public List<RoleBean> getRoleList( AuthSession authSession );
     public List<RoleBean> getRoleList( AuthSession authSession, Long authUserId );
@@ -80,9 +81,9 @@ public interface InternalAuthDao extends Serializable {
 
     public void updateUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth);
     public void deleteUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth);
-    public List<UserInfo> getUserInfoList(AuthSession authSession);
+    public List<User> getUserInfoList(AuthSession authSession);
 
-    public UserInfo getUserInfo(DatabaseAdapter db_, String userLogin);
+    public UserBean getUserBean(DatabaseAdapter db_, String userLogin);
 
     public List<AuthInfo> getAuthInfo(DatabaseAdapter db_, Long userId, Long siteId);
 }

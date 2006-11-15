@@ -34,12 +34,14 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
 import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.bean.CatalogLanguageBean;
+import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.main.CssBean;
 
@@ -65,11 +67,11 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
     public List<Site> getSites(AuthSession authSession) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        Query query = session.createQuery(
+        List siteList = session.createQuery(
             "select site from org.riverock.webmill.portal.bean.SiteBean as site " +
-             "where site.companyId in ("+authSession.getGrantedCompanyId()+")"
-        );
-        List<SiteBean> siteList = query.list();
+                "where site.companyId in (:companyIds)")
+            .setParameterList("ompanyIds", authSession.getGrantedCompanyIdList())
+            .list();
         session.getTransaction().commit();
         return (List)siteList;
     }
@@ -163,7 +165,6 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                 .setLong("site_id", site.getSiteId())
                 .list();
 
-//            List<VirtualHost> list = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(site.getSiteId());
             if (log.isDebugEnabled()) {
                 log.debug("current hosts in DB: " + list);
                 for (VirtualHost virtualHost : list) {
@@ -180,7 +181,6 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                     }
                 }
                 if (!isPresent) {
-//                    InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHost(virtualHost);
                     VirtualHostBean virtualHostBean = (VirtualHostBean) session.createQuery(
                         "select host from org.riverock.webmill.portal.bean.VirtualHostBean as host " +
                         "where host.id = :id")
@@ -199,7 +199,6 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                 }
                 if (!isPresent) {
                     VirtualHost hostBean = new VirtualHostBean(null, site.getSiteId(), host );
-//                    InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(hostBean);
                     session.save(hostBean);
                 }
             }
@@ -215,11 +214,10 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
 
             InternalDaoFactory.getInternalCmsDao().deleteArticleForSite(dbDyn, siteId);
             InternalDaoFactory.getInternalCmsDao().deleteNewsForSite(dbDyn, siteId);
-            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(dbDyn, siteId);
+//            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(dbDyn, siteId);
 //            InternalDaoFactory.getInternalCssDao().deleteCssForSite(dbDyn, siteId);
 //            InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
 //            InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHostForSite(dbDyn, siteId);
-//            InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguageForSite(dbDyn, siteId);
 
             dbDyn.commit();
         }
@@ -243,14 +241,26 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        List<CssBean> cssList = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id")
+        List<TemplateBean> templateBeans = session.createQuery(
+            "select template " +
+                "from  org.riverock.webmill.portal.bean.TemplateBean as template," +
+                "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLanguage " +
+                "where template.siteLanguageId=siteLanguage.siteLanguageId and " +
+                "      siteLanguage.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+        for (TemplateBean templateBean : templateBeans) {
+            session.delete(templateBean);
+        }
+
+        List<CssBean> cssList = session.createQuery(
+            "select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id")
             .setLong("site_id", siteId)
             .list();
         for (CssBean css : cssList) {
             session.delete(css);
         }
 
-//            InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
         List<PortalXsltBean> xsltList = session.createQuery(
             "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt, " +
                 " org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
@@ -261,7 +271,6 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             session.delete(portalXsltBean);
         }
 
-//            InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHostForSite(dbDyn, siteId);
         VirtualHostBean virtualHostBean = (VirtualHostBean) session.createQuery(
             "select host from org.riverock.webmill.portal.bean.VirtualHostBean as host " +
             "where host.siteId = :site_id")
@@ -269,14 +278,39 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             .uniqueResult();
         session.delete(virtualHostBean);
 
-//            InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguageForSite(dbDyn, siteId);
+        List<CatalogBean> catalogItems = session.createQuery(
+            "select catalog " +
+                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
+                "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang, " +
+                "      org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
+                "      catalogLang.siteLanguageId=siteLanguage.siteLanguageId and " +
+                "      siteLanguage.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+        for (CatalogBean catalogItem : catalogItems) {
+            session.delete(catalogItem);
+        }
+
+        List<CatalogLanguageBean> catalogLanguageBeans = session.createQuery(
+            "select catalogLang " +
+                "from  org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang, " +
+                "      org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where catalogLang.siteLanguageId=siteLanguage.siteLanguageId and " +
+                "      siteLanguage.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+        for (CatalogLanguageBean catalogLanguageBean : catalogLanguageBeans) {
+            session.delete(catalogLanguageBean);
+        }
+
         List<SiteLanguageBean> list = session.createQuery(
             "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
             "where siteLanguage.siteId = :site_id")
             .setLong("site_id", siteId)
             .list();
-        for (SiteLanguageBean bean : list) {
-            session.delete(bean);
+        for (SiteLanguageBean siteLanguageBean : list) {
+            session.delete(siteLanguageBean);
         }
 
         SiteBean siteBean = (SiteBean)session.createQuery(

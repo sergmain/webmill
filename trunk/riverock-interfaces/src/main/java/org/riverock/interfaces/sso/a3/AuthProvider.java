@@ -30,6 +30,7 @@ import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.bean.User;
 
 /**
  * @author SergeMaslyukov
@@ -42,7 +43,7 @@ public interface AuthProvider extends Serializable {
     public boolean checkAccess( AuthSession authSession, String serverName );
     public void setParameters( List<List<AuthParameterBean>> params );
 
-    public UserInfo getUserInfo( AuthSession authSession );
+    public User getUser( AuthSession authSession );
 
     public List<Long> getGrantedUserIdList( AuthSession authSession );
     public List<Long> getGrantedCompanyIdList( AuthSession authSession );
@@ -70,11 +71,11 @@ public interface AuthProvider extends Serializable {
     public void updateRole( AuthSession authSession, RoleBean roleBean );
     public void deleteRole( AuthSession authSession, RoleBean roleBean );
 
-    public Long addUser( AuthSession authSession, AuthUserExtendedInfo infoAuth );
+    public Long addUser( AuthSession authSession, AuthUserExtendedInfo usserBean );
     public void updateUser( AuthSession authSession, AuthUserExtendedInfo infoAuth );
     public void deleteUser( AuthSession authSession, AuthUserExtendedInfo infoAuth );
 
-    public List<UserInfo> getUserList( AuthSession authSession );
+    public List<User> getUserList( AuthSession authSession );
     public List<Company> getCompanyList( AuthSession authSession );
     public List<Holding> getHoldingList( AuthSession authSession );
 }

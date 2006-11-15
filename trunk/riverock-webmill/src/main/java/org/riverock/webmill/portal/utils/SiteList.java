@@ -26,10 +26,12 @@ package org.riverock.webmill.portal.utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * @author SergeMaslyukov
@@ -88,11 +90,13 @@ public class SiteList {
                         log.debug("#15.01.03 reinit cached value ");
                         log.debug("#15.01.04 old value " + backupObject);
                     }
-
                     backupObject = null;
-
                     SiteList site = new SiteList();
-                    site.hashListSite = InternalDaoFactory.getInternalDao().getSiteIdMap();
+
+                    List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
+                    for (VirtualHost host : hosts) {
+                        site.hashListSite.put(host.getHost().toLowerCase(), host.getSiteId());
+                    }
 
                     backupObject = site;
 

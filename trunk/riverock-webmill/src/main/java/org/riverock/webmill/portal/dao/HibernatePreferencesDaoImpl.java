@@ -24,33 +24,33 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import org.apache.log4j.Logger;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-
-import java.io.StringWriter;
-import java.sql.Types;
 import java.util.List;
 import java.util.Map;
+import java.io.StringWriter;
+
+import org.hibernate.Session;
+import org.apache.log4j.Logger;
+
+import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.bean.CatalogBean;
 
 /**
- * User: SergeMaslyukov
- * Date: 16.08.2006
- * Time: 17:27:39
- * <p/>
- * $Id$
+ * @author Sergei Maslyukov
+ *         Date: 15.11.2006
+ *         Time: 19:21:19
+ *         <p/>
+ *         $Id$
  */
-@SuppressWarnings({"UnusedAssignment"})
-public class InternalPreferencesDaoImpl implements InternalPreferencesDao {
-    private final static Logger log = Logger.getLogger(InternalPreferencesDaoImpl.class);
-    
+public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
+    private final static Logger log = Logger.getLogger(HibernatePreferencesDaoImpl.class);
+
     private ClassLoader classLoader=null;
 
-    public InternalPreferencesDaoImpl() {
+    public HibernatePreferencesDaoImpl() {
         classLoader=Thread.currentThread().getContextClassLoader();
     }
 
-    public void store(Map<String, List<String>> preferences, Long contextId) {
+    public void store(Map<String, List<String>> preferences, Long catalogId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
@@ -63,40 +63,32 @@ public class InternalPreferencesDaoImpl implements InternalPreferencesDao {
             }
             String s = out.toString();
 
-            DatabaseAdapter adapter = null;
-
             if (log.isDebugEnabled()) {
-                log.debug(" result metadata: " + s);
-                log.debug(" contextId: " + contextId);
+                log.debug("    result metadata: " + s);
+                log.debug("    catalogId: " + catalogId);
             }
 
-            try {
-                adapter = DatabaseAdapter.getInstance();
-
-                DatabaseManager.runSQL(
-                adapter,
-                    "update WM_PORTAL_CATALOG "+
-                    "set METADATA=? "+
-                    "where ID_SITE_CTX_CATALOG=?",
-                    new Object[]{s, contextId},
-                    new int[]{Types.VARCHAR,  Types.DECIMAL}
-                );
-                adapter.commit();
-            } catch (Throwable e) {
-                try {
-                    if (adapter!=null)
-                        adapter.rollback();
-                }
-                catch(Throwable th) {
-                    // catch rollback error
-                }
-                String es = "Error store portlet preferences";
-                log.error(es, e);
-                throw new IllegalStateException( es, e);
-            } finally {
-                DatabaseManager.close(adapter);
-                adapter = null;
+            if (catalogId==null) {
+                return;
             }
+
+            Session session = HibernateUtils.getSession();
+            session.beginTransaction();
+
+            CatalogBean bean = (CatalogBean)session.createQuery(
+                "select catalog " +
+                    "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
+                    "where catalog.catalogId=:catalogId")
+                .setLong("catalogId", catalogId)
+                .uniqueResult();
+
+            if (bean==null) {
+                session.getTransaction().commit();
+                return;
+            }
+            bean.setMetadata(s);
+
+            session.getTransaction().commit();
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

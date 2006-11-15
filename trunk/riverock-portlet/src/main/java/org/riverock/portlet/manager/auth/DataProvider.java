@@ -35,9 +35,9 @@ import org.apache.commons.lang.StringUtils;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.portlet.main.AuthSessionBean;
@@ -87,8 +87,8 @@ public class DataProvider implements Serializable {
             log.debug("authSessionBean: " +authSessionBean);
             log.debug("authSessionBean.getAuthSession(: " + authSessionBean.getAuthSession());
         }
-        List<UserInfo> userList = authSessionBean.getAuthSession().getUserList();
-        for (UserInfo userInfo : userList) {
+        List<User> userList = authSessionBean.getAuthSession().getUserList();
+        for (User userInfo : userList) {
             String userName = StringTools.getUserName(
                 userInfo.getFirstName(), userInfo.getMiddleName(), userInfo.getLastName()
             );
@@ -173,7 +173,7 @@ public class DataProvider implements Serializable {
         }
 
         List<Company> companies = authSession.getCompanyList();
-        List<UserInfo> userList = authSession.getUserList();
+        List<User> userList = authSession.getUserList();
         List<AuthInfo> authList = authSession.getAuthInfoList();
 
         for (Company company : companies) {
@@ -181,13 +181,13 @@ public class DataProvider implements Serializable {
             companyBean.setCompanyId(company.getId());
             companyBean.setCompanyName(company.getName());
 
-            for (UserInfo userInfo : userList) {
-                if (userInfo.getCompanyId().equals(company.getId())) {
+            for (User user : userList) {
+                if (user.getCompanyId().equals(company.getId())) {
                     for (AuthInfo authInfo : authList) {
-                        if (userInfo.getUserId().equals(authInfo.getUserId())) {
+                        if (user.getUserId().equals(authInfo.getUserId())) {
                             AuthUserExtendedInfoImpl bean = new AuthUserExtendedInfoImpl();
                             bean.setAuthInfo(new AuthInfoImpl(authInfo));
-                            bean.setUserInfo(userInfo);
+                            bean.setUser(user);
 
                             List<RoleBean> roles = authSession.getRoleList(authInfo.getAuthUserId());
                             for (RoleBean roleBean : roles) {

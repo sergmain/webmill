@@ -37,11 +37,11 @@ import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthProvider;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 
@@ -167,7 +167,7 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         }
     }
 
-    public UserInfo getUserInfo(AuthSession authSession) {
+    public User getUser(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -248,7 +248,7 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<UserInfo> getUserList(AuthSession authSession) {
+    public List<User> getUserList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

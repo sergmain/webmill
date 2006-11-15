@@ -224,7 +224,7 @@ public class InternalSiteLanguageDaoImpl implements InternalSiteLanguageDao {
 
             InternalDaoFactory.getInternalCmsDao().deleteArticleForSiteLanguage(dbDyn, siteLanguageId);
             InternalDaoFactory.getInternalCmsDao().deleteNewsForSiteLanguage(dbDyn, siteLanguageId);
-            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSiteLanguage(dbDyn, siteLanguageId);
+            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSiteLanguage(siteLanguageId);
             InternalDaoFactory.getInternalXsltDao().deleteXsltForSiteLanguage(dbDyn, siteLanguageId);
             InternalDaoFactory.getInternalCatalogDao().deleteCatalogLanguageForSiteLanguage(dbDyn, siteLanguageId);
             DatabaseManager.runSQL(

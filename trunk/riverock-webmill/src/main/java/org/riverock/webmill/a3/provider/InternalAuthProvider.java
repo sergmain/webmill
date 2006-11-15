@@ -29,11 +29,11 @@ import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthProvider;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.webmill.portal.dao.InternalAuthDao;
@@ -94,11 +94,11 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         }
     }
 
-    public UserInfo getUserInfo( AuthSession authSession ) {
+    public User getUser( AuthSession authSession ) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return authDao.getUserInfo( authSession.getUserLogin() );
+            return authDao.getUserBean( authSession.getUserLogin() );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
@@ -321,7 +321,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         }
     }
 
-    public List<UserInfo> getUserList(AuthSession authSession) {
+    public List<User> getUserList(AuthSession authSession) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );

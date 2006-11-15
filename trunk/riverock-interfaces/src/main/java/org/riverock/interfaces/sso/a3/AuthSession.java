@@ -29,8 +29,8 @@ import java.io.Serializable;
 
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.portal.bean.Company;
-//import org.riverock.interfaces.portal.bean.GroupCompany;
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.bean.User;
 
 /**
  * @author SergeMaslyukov
@@ -54,7 +54,7 @@ public interface AuthSession extends Principal, Serializable {
 
     public boolean checkRigthOnUser( Long id_auth_user_check, Long id_auth_user_owner );
 
-    public UserInfo getUserInfo();
+    public User getUser();
 
     public AuthInfo getAuthInfo();
     public AuthInfo getAuthInfo(Long authInfoId );
@@ -73,7 +73,7 @@ public interface AuthSession extends Principal, Serializable {
     public void updateUser( AuthUserExtendedInfo authInfo );
     public void deleteUser( AuthUserExtendedInfo authInfo );
 
-    public List<UserInfo> getUserList();
+    public List<User> getUserList();
     public List<Company> getCompanyList();
     public List<Holding> getHoldingList();
 

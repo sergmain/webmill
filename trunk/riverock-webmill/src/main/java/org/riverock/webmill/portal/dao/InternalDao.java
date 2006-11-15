@@ -40,12 +40,5 @@ public interface InternalDao {
     public Collection<String> getSupportedLocales();
     public ConcurrentMap<String, Long> getUserAgentList();
     public ConcurrentMap<String, Long> getUrlList();
-
-    /**
-     * @return Map&lt;String, Long&gt;  key - virtual host name,  value - siteId
-     */
-    public Map<String, Long> getSiteIdMap();
-
     public void saveRequestStatistic( ConcurrentMap<String, Long> userAgentList, ConcurrentMap<String, Long> urlList, RequestStatisticBean bean );
-
 }

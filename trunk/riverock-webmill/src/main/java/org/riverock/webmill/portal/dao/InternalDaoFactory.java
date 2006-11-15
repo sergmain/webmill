@@ -39,16 +39,15 @@ public class InternalDaoFactory {
     public final static InternalPortletNameDao internalPortletNameDao = new HibernatePortletNameDaoImpl();
     public final static InternalAuthDao internalAuthDao = new HibernateAuthDaoImpl();
     public final static InternalCompanyDao internalCompanyDao = new HibernateCompanyDaoImpl();
+    public final static InternalHoldingDao internalHoldingDao = new HibernateHoldingDaoImpl();
+    public final static InternalUserMetadataDao internalUserMetadataDao = new HibernateUserMetadataDaoImpl();
+    public final static InternalUserDao internalUserDao = new HibernateUserDaoImpl();
+    public final static InternalDao internalDao = new HibernateDaoImpl();
+    public final static InternalCatalogDao internalCatalogDao = new HibernateCatalogDaoImpl();
+    public final static InternalPreferencesDao internalPreferencesDao = new HibernatePreferencesDaoImpl();
+    public final static InternalTemplateDao internalTemplateDao = new HibernateTemplateDaoImpl();
     
-    public final static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
-    public final static InternalUserMetadataDao internalUserMetadataDao = new InternalUserMetadataDaoImpl();
-    public final static InternalUserDao internalUserDao = new InternalUserDaoImpl();
-
-    public final static InternalDao internalDao = new InternalDaoImpl();
-    public final static InternalTemplateDao internalTemplateDao = new InternalTemplateDaoImpl();
-    public final static InternalCatalogDao internalCatalogDao = new InternalCatalogDaoImpl();
     public final static InternalCmsDao internalCmsDao = new InternalCmsDaoImpl();
-    public final static InternalPreferencesDao internalPreferencesDao = new InternalPreferencesDaoImpl();
 
     public static InternalPreferencesDao getInternalPreferencesDao() {
         return internalPreferencesDao;

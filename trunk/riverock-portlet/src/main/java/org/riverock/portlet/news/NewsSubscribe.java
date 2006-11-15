@@ -164,7 +164,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
     }
 
     private boolean emailIsValid(AuthSession auth_, StringBuilder out) {
-        if ( StringUtils.isBlank(auth_.getUserInfo().getEmail())) {
+        if ( StringUtils.isBlank(auth_.getUser().getEmail())) {
             out.append( "You must setup your e-mail address before change of status of subscription");
 
             return false;

@@ -28,6 +28,7 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
 
+<!--
 	<filter>
 		<filter-name>RequestStatisticFilter</filter-name>
 		<filter-class>org.riverock.webmill.a3.audit.RequestStatisticFilter</filter-class>
@@ -37,6 +38,7 @@
 		<filter-name>RequestStatisticFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+-->
 
 	<servlet>
 		<servlet-name>WebMill engine startup servlet</servlet-name>

@@ -38,8 +38,6 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
@@ -49,8 +47,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.UserInfo;
-
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -157,7 +154,7 @@ public final class ImageUploadPortlet implements Portlet {
                 log.debug( "newFileName " + newFileName );
 
 
-            UserInfo userInfo = auth_.getUserInfo();
+            User userInfo = auth_.getUser();
 
             CustomSequenceType seqImageDir = new CustomSequenceType();
             seqImageDir.setSequenceName( "seq_WM_image_dir" );

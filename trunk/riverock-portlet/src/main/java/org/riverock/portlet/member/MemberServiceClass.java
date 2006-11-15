@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.collections.MapTools;
+import org.riverock.common.collections.ListUtils;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -672,7 +673,7 @@ public final class MemberServiceClass {
             switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = authSession.getGrantedCompanyId();
+                    String idList = ListUtils.listToString(authSession.getGrantedCompanyIdList());
 
                     sc.where +=
                         MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
@@ -1161,7 +1162,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = authSession.getGrantedCompanyId();
+                    String idList = ListUtils.listToString(authSession.getGrantedCompanyIdList());
 
                     where_ += " ID_FIRM in ("+idList+") ";
 
@@ -1226,7 +1227,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idUser = authSession.getGrantedUserId();
+                    String idUser = ListUtils.listToString(authSession.getGrantedUserIdList());
                     where_ += " ID_USER in ("+idUser+") ";
                     break;
 
@@ -1452,7 +1453,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = authSession.getGrantedCompanyId();
+                    String idList = ListUtils.listToString(authSession.getGrantedCompanyIdList());
                     // do update without aliases
                     where_ += " and ID_FIRM in ("+idList+") ";
 
@@ -1498,7 +1499,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idUser = authSession.getGrantedUserId();
+                    String idUser = ListUtils.listToString(authSession.getGrantedUserIdList());
                     where_ += " and ID_USER in ("+idUser+") ";
                     break;
 
