@@ -60,6 +60,12 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             .setLong("templateId", templateId)
             .uniqueResult();
 
+        prepareBlob(bean);
+        session.getTransaction().commit();
+        return bean;
+    }
+
+    private static void prepareBlob(TemplateBean bean) {
         if (bean!=null) {
             Blob blob = bean.getTemplateBlob();
             if (blob!=null) {
@@ -73,8 +79,6 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                 }
             }
         }
-        session.getTransaction().commit();
-        return bean;
     }
 
     public Template getTemplate(String templateName, Long siteLanguageId) {
@@ -87,19 +91,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             .setLong("siteLanguageId", siteLanguageId)
             .uniqueResult();
 
-        if (bean!=null) {
-            Blob blob = bean.getTemplateBlob();
-            if (blob!=null) {
-                try {
-                    bean.setTemplateData( new String(blob.getBytes(1, (int)blob.length())) );
-                }
-                catch (SQLException e) {
-                    String es = "Error get template";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-            }
-        }
+        prepareBlob(bean);
         session.getTransaction().commit();
         return bean;
     }
@@ -124,6 +116,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             .setString("customLanguage", lang)
             .uniqueResult();
 
+        // Do not process blob at this point
         session.getTransaction().commit();
         return bean;
     }
@@ -137,13 +130,17 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
     public List<Template> getTemplateLanguageList(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        List bean = session.createQuery(
+        List<TemplateBean> bean = session.createQuery(
             "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
             "where  template.siteLanguageId=:siteLanguageId")
             .setLong("siteLanguageId", siteLanguageId)
             .list();
+
+        for (TemplateBean templateBean : bean) {
+            prepareBlob(templateBean);
+        }
         session.getTransaction().commit();
-        return bean;
+        return (List)bean;
     }
 
     public List<Template> getTemplateList(Long siteId) {
@@ -152,7 +149,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
 
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        List bean = session.createQuery(
+        List<TemplateBean> beans = session.createQuery(
             "select template " +
                 "from  org.riverock.webmill.portal.bean.TemplateBean as template," +
                 "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLanguage " +
@@ -160,8 +157,11 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                 "      siteLanguage.siteId=:siteId")
             .setLong("siteId", siteId)
             .list();
+        for (TemplateBean templateBean : beans) {
+            prepareBlob(templateBean);
+        }
         session.getTransaction().commit();
-        return bean;
+        return (List)beans;
     }
 
     public Long createTemplate(Template template) {
