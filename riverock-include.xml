@@ -108,7 +108,7 @@ Sealed: true
         <antcall target="make_manifest_file"/>
         <jar jarfile="${build.dir}/${main.lib}"
             basedir="${build.dest}"
-            includes="org/riverock/**"
+            includes="org/riverock/**, ehcache.xml"
             excludes="**/*.txt,**/*.bat,**/*.sh,**/*.jav,**/*.java,${manifest-file-name}"
             manifest="${build.dest}/${manifest-file-name}"/>
     </target>

@@ -48,7 +48,7 @@ import org.riverock.webmill.utils.HibernateUtils;
  *         $Id$
  */
 public class HibernateCatalogDaoImpl implements InternalCatalogDao {
-    private final static Logger log = Logger.getLogger(InternalCatalogDaoImpl.class);
+    private final static Logger log = Logger.getLogger(HibernateCatalogDaoImpl.class);
 
     public Long getCatalogItemId(Long siteId, Locale locale, Long catalogItemId) {
         if (siteId == null || locale==null || catalogItemId==null) {
@@ -117,7 +117,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("InternalCatalogDaoImpl.getCatalogItemId()");
+            log.debug("HibernateCatalogDaoImpl.getCatalogItemId()");
             log.debug("     siteId: " + siteId);
             log.debug("     locale: " + locale.toString().toLowerCase() );
             log.debug("     portletName: " + portletName);
@@ -131,7 +131,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang, " +
                 "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLang, " +
                 "      org.riverock.webmill.portal.bean.PortletNameBean portlet, " +
-                "      org.riverock.webmill.portal.bean.TemplateBean " +
+                "      org.riverock.webmill.portal.bean.TemplateBean template " +
                 "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
                 "      catalogLang.siteLanguageId=siteLang.siteLanguageId and " +
                 "      siteLang.siteId=:siteId and siteLang.customLanguage=:customLanguage and " +

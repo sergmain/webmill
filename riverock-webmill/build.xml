@@ -323,6 +323,14 @@
             </classpath>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
+
+        <copy todir="${build.dest}" overwrite="true">
+            <fileset dir="${src.main.res.dir}">
+                <patternset>
+                    <include name="**/*.*"/>
+                </patternset>
+            </fileset>
+        </copy>
     </target>
 
     <patternset id="war.classes">
