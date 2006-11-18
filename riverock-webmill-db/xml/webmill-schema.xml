@@ -364,8 +364,10 @@
 		<Fields name="EDATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
 		<Fields name="HEADER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_PLAIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<Fields name="ANONS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="500" nullable="1"/>
 		<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="NEWS_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_NEWS_LIST" pkColumnName="ID_NEWS" fkSchemaName="TEST" fkTableName="WM_NEWS_ITEM" fkColumnName="ID_NEWS" keySeq="1" fkName="ID_NEWS_MN_FK" pkName="ID_NEWS_MLN_PK">
 			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
@@ -860,6 +862,7 @@
 		<Fields name="IS_SIMPLE_TEXT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
 		<Fields name="ARTICLE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="ARTICLE_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTLET_ARTICLE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPORT_LANG_SCA_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>

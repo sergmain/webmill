@@ -67,6 +67,8 @@ public class HibernateUtils {
         CatalogBean.class,
         CatalogLanguageBean.class,
         TemplateBean.class,
+        ArticleBean.class,
+        NewsBean.class,
         UserMetadataItemBean.class
     };
 
