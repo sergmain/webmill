@@ -1,0 +1,124 @@
+package org.riverock.webmill.portal.bean;
+
+import org.riverock.interfaces.portal.bean.Article;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.sql.Blob;
+
+/**
+ * User: SergeMaslyukov
+ * Date: 19.11.2006
+ * Time: 1:06:52
+ * <p/>
+ * $Id$
+ */
+@Entity
+@Table(name="wm_portlet_article")
+@TableGenerator(
+    name="TABLE_PORTLET_ARTICLE",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portlet_article",
+    allocationSize = 1,
+    initialValue = 1
+)
+public class ArticleBean implements Article, Serializable {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PORTLET_ARTICLE")
+    @Column(name="ID_SITE_CTX_ARTICLE")
+    private Long articleId;
+
+    @Column(name="ID_SITE_SUPPORT_LANGUAGE")
+    private Long siteLanguageId;
+
+    @Column(name="DATE_POST")
+    private Date postDate;
+
+    @Column(name="ARTICLE_CODE")
+    private String articleCode;
+
+    @Column(name="NAME_ARTICLE")
+    private String articleName;
+
+    @Column(name="ID_SITE_CTX_CATALOG")
+    private boolean isPlain;
+
+    @Column(name="ARTICLE_BLOB")
+    private Blob articleBlob;
+
+    @Transient
+    private String articleData;
+
+
+    public Blob getArticleBlob() {
+        return articleBlob;
+    }
+
+    public void setArticleBlob(Blob articleBlob) {
+        this.articleBlob = articleBlob;
+    }
+
+    public Long getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
+    public Long getSiteLanguageId() {
+        return siteLanguageId;
+    }
+
+    public void setSiteLanguageId(Long siteLanguageId) {
+        this.siteLanguageId = siteLanguageId;
+    }
+
+    public Date getPostDate() {
+        return postDate;
+    }
+
+    public void setPostDate(Date postDate) {
+        if (postDate==null) {
+            this.postDate=null;
+            return;
+        }
+        this.postDate = new Date(postDate.getTime());
+    }
+
+    public String getArticleCode() {
+        return articleCode;
+    }
+
+    public void setArticleCode(String articleCode) {
+        this.articleCode = articleCode;
+    }
+
+    public String getArticleName() {
+        return articleName;
+    }
+
+    public void setArticleName(String articleName) {
+        this.articleName = articleName;
+    }
+
+    public String getArticleData() {
+        return articleData;
+    }
+
+    public void setArticleData(String articleData) {
+        this.articleData = articleData;
+    }
+
+    public boolean isPlain() {
+        return isPlain;
+    }
+
+    public void setPlain(boolean plain) {
+        isPlain = plain;
+    }
+}
