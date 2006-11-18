@@ -132,10 +132,7 @@ public class CssBean implements Serializable, Css {
     }
 
     public Date getDate() {
-        if (date==null) {
-            return null;
-        }
-        return new Date(date.getTime());
+        return this.date;
     }
 
     public void setDate(Date date) {

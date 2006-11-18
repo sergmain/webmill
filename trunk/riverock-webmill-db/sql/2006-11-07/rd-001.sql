@@ -78,6 +78,18 @@ insert into wm_portal_ids
 (select 'wm_portal_template' name, max(ID_SITE_TEMPLATE)+1 max_value from wm_portal_template)
 /
 
+insert into wm_portal_ids
+(select 'wm_portlet_article' name, max(ID_SITE_CTX_ARTICLE)+1 max_value from wm_portlet_article)
+/
+
+insert into wm_portal_ids
+(select 'wm_news_item' name, max(ID)+1 max_value from wm_news_item)
+/
+
+insert into wm_portal_ids
+(select 'wm_news_list' name, max(ID_NEWS)+1 max_value from wm_news_list)
+/
+
 
 alter table wm_portal_xslt
 add column VERSION decimal(5,0) default 0
@@ -97,5 +109,17 @@ set TEMPLATE_BLOB=TEMPLATE_DATA
 
 alter table wm_portal_template
 add column VERSION decimal(5,0) default 0
+/
+
+alter table wm_portlet_article
+add column ARTICLE_BLOB blob
+/
+
+alter table wm_news_item
+add column NEWS_BLOB blob
+/
+
+alter table wm_news_item
+add column IS_PLAIN decimal(1,0) default 0
 /
 
