@@ -71,5 +71,6 @@ public interface InternalCmsDao {
     void deleteNewsGroup(Long newsGroupId);
 
     void updateNewsGroup(NewsGroup newsGroup);
-    
+
+    Article getArticleByCode(Long siteLanguageId, String articleCode);
 }

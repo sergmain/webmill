@@ -229,4 +229,8 @@ public class InternalCmsDaoImpl implements InternalCmsDao {
     public void updateNewsGroup(NewsGroup newsGroup) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    public Article getArticleByCode(Long siteLanguageId, String articleCode) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

@@ -99,7 +99,7 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
             ps = db_.prepareStatement( sql_ );
 
             PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
-            Long idSupportLanguageCurrent = portalInfo.getSupportLanguageId( renderRequest.getLocale() );
+            Long idSupportLanguageCurrent = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
             RsetTools.setLong( ps, 1, idSupportLanguageCurrent );
 
             rs = ps.executeQuery();

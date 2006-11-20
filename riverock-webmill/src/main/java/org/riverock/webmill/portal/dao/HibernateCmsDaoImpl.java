@@ -361,6 +361,39 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         session.getTransaction().commit();
     }
 
+    public Article getArticleByCode(Long siteLanguageId, String articleCode) {
+        if (siteLanguageId==null || articleCode==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        ArticleBean article = (ArticleBean)session.createQuery(
+            "select article " +
+                "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
+                "where article.isDeleted=false and article.articleCode=:articleCode and " +
+                "      article.siteLanguageId=:siteLanguageId")
+            .setString("articleCode", articleCode)
+            .setLong("siteLanguageId", siteLanguageId)
+            .uniqueResult();
+        if (article!=null) {
+            Blob blob = article.getArticleBlob();
+            if (blob!=null) {
+                try {
+                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get article data";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+            }
+        }
+
+        session.getTransaction().commit();
+        return article;
+    }
+
     public List<Article> getArticleList(Long siteLanguageId, boolean isXml) {
         List<Article> list = new ArrayList<Article>();
         if (siteLanguageId==null) {

@@ -69,6 +69,17 @@ public class PortalCmsArticleDaoImpl implements PortalCmsArticleDao {
         }
     }
 
+    public Article getArticleByCode(Long siteLanguageId, String articleCode) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCmsDao().getArticleByCode(siteLanguageId, articleCode);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
     public Long createArticle(Article article) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {

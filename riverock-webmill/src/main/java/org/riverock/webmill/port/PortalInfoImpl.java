@@ -90,7 +90,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return false;
     }
 
-    public Long getSupportLanguageId(Locale locale) {
+    public Long getSiteLanguageId(Locale locale) {
         if (log.isDebugEnabled()) {
             log.debug("get idSupportLanguage for locale " + locale.toString());
             log.debug("siteLanguageList " + getSiteLanguageList());
