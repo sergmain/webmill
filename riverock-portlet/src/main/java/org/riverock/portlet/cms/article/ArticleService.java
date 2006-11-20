@@ -35,8 +35,8 @@ import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.Article;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.cms.dao.CmsDaoFactory;
 import org.riverock.portlet.cms.article.bean.SiteBean;
 import org.riverock.portlet.cms.article.bean.ArticleBean;
 import org.riverock.portlet.cms.article.bean.SiteLanguageBean;
@@ -96,7 +96,12 @@ public class ArticleService implements Serializable {
     }
 
     public List<ArticleBean> getArticleList(Long siteLanguageId, boolean isXml) {
-        return CmsDaoFactory.getCmsArticleDao().getArticleList(siteLanguageId, isXml);
+        List<ArticleBean> beans = new ArrayList<ArticleBean>();
+        List<Article> list = FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().getArticleList(siteLanguageId, isXml);
+        for (Article article : list) {
+            beans.add( new ArticleBean(article));
+        }
+        return beans;
     }
 
     public List<SiteLanguageBean> getSiteLanguageList(Long siteId) {
@@ -131,7 +136,7 @@ public class ArticleService implements Serializable {
     }
 
     public ArticleBean getArticle(Long articleId) {
-        return CmsDaoFactory.getCmsArticleDao().getArticle(articleId);
+        return new ArticleBean(FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().getArticle(articleId));
     }
 }
 

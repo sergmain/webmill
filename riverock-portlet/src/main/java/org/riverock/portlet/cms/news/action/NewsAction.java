@@ -31,7 +31,7 @@ import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.cms.news.NewsSessionBean;
 import org.riverock.portlet.cms.news.NewsDataProvider;
 import org.riverock.portlet.cms.news.bean.NewsBean;
-import org.riverock.portlet.cms.dao.CmsDaoFactory;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -99,16 +99,7 @@ public class NewsAction implements Serializable {
             }
 
             NewsBean news = getSessionObject();
-/*
-            if (newsSessionBean.getCurrentNewsGroupId() != null) {
-                news.setNewsGroupId( newsSessionBean.getCurrentNewsGroupId() );
-            } else {
-                NewsBean newsItem = CmsDaoFactory.getCmsNewsDao().getNews(newsSessionBean.getCurrentNewsId());
-                news.setNewsGroupId( newsItem.getNewsGroupId() );
-            }
-*/
-
-            Long newsId = CmsDaoFactory.getCmsNewsDao().createNews(news);
+            Long newsId = FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().createNews(news);
             setSessionObject(null);
             newsSessionBean.setId(newsId);
             cleadDataProviderObject();
@@ -140,7 +131,7 @@ public class NewsAction implements Serializable {
         log.info("Save changes news item action.");
 
         if (getSessionObject() != null) {
-            CmsDaoFactory.getCmsNewsDao().updateNews(getSessionObject());
+            FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().updateNews(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -173,7 +164,7 @@ public class NewsAction implements Serializable {
         log.info("Process delete news item action.");
 
         if (getSessionObject() != null) {
-            CmsDaoFactory.getCmsNewsDao().deleteNews(getSessionObject().getNewsId());
+            FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().deleteNews(getSessionObject().getNewsId());
             setSessionObject(null);
             newsSessionBean.setId(null);
             newsSessionBean.setObjectType(NewsSessionBean.UNKNOWN_TYPE);

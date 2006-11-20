@@ -21,7 +21,7 @@
   ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
   -->
 <!--$Id$-->
-<project name="riverock global target file" basedir=".">
+<project name="riverock-target" basedir=".">
 
     <target name="restart.apache">
         <antcall target="stop.apache"/>

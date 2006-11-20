@@ -72,6 +72,18 @@ public class NewsGroupBean implements NewsGroup, Serializable {
     @Column(name="IS_DELETED")
     private boolean isDeleted;
 
+    public NewsGroupBean() {
+    }
+
+    public NewsGroupBean(NewsGroup newsGroup) {
+        this.newsGroupId = newsGroup.getNewsGroupId();
+        this.siteLanguageId = newsGroup.getSiteLanguageId();
+        this.newsGroupName = newsGroup.getNewsGroupName();
+        this.newsGroupCode = newsGroup.getNewsGroupCode();
+        this.countNewsPerGroup = newsGroup.getCountNewsPerGroup();
+        this.orderField = newsGroup.getOrderField();
+        isDeleted = newsGroup.isDeleted();
+    }
 
     public Long getNewsGroupId() {
         return newsGroupId;

@@ -32,6 +32,9 @@ public class ArticleBean implements Article, Serializable {
     @Column(name="ID_SITE_CTX_ARTICLE")
     private Long articleId;
 
+    @Column(name="ID_USER")
+    private Long userId;
+
     @Column(name="ID_SITE_SUPPORT_LANGUAGE")
     private Long siteLanguageId;
 
@@ -53,6 +56,28 @@ public class ArticleBean implements Article, Serializable {
     @Transient
     private String articleData;
 
+
+    public ArticleBean() {
+    }
+
+    public ArticleBean(Article article) {
+        this.articleId = article.getArticleId();
+        this.siteLanguageId = article.getSiteLanguageId();
+        this.postDate = article.getPostDate();
+        this.articleCode = article.getArticleCode();
+        this.articleName = article.getArticleName();
+        isPlain = article.isPlain();
+        this.articleData = article.getArticleData();
+        this.userId = article.getUserId();
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Blob getArticleBlob() {
         return articleBlob;

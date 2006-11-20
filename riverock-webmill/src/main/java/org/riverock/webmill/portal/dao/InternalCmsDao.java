@@ -24,7 +24,12 @@
  */
 package org.riverock.webmill.portal.dao;
 
+import java.util.List;
+
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.interfaces.portal.bean.Article;
+import org.riverock.interfaces.portal.bean.NewsGroup;
+import org.riverock.interfaces.portal.bean.News;
 
 /**
  * @author Sergei Maslyukov
@@ -36,4 +41,35 @@ public interface InternalCmsDao {
     public void deleteArticleForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
     public void deleteNewsForSite(DatabaseAdapter adapter, Long siteId);
     public void deleteNewsForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
+
+    List<Article> getArticleList(Long siteLanguageId, boolean isXml);
+
+    Article getArticle(Long articleId);
+
+    Long createArticle(Article article);
+
+    void updateArticle(Article article);
+
+    void deleteArticle(Long articleId);
+
+    List<NewsGroup> getNewsGroupList(Long siteLanguageId);
+
+    List<News> getNewsList(Long newsGroupId);
+
+    NewsGroup getNewsGroup(Long newsGroupId);
+
+    News getNews(Long newsId);
+
+    Long createNews(News news);
+
+    void updateNews(News news);
+
+    void deleteNews(Long newsId);
+
+    Long createNewsGroup(NewsGroup newsGroup);
+
+    void deleteNewsGroup(Long newsGroupId);
+
+    void updateNewsGroup(NewsGroup newsGroup);
+    
 }

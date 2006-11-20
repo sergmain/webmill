@@ -197,6 +197,9 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
         if (StringUtils.isNotBlank(xslt.getXsltData())) {
             bean.setXsltBlob( Hibernate.createBlob(xslt.getXsltData().getBytes()));
         }
+        else {
+            bean.setXsltBlob(null);
+        }
         session.save(bean);
         session.flush();
 
@@ -284,6 +287,9 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
             bean.setSiteLanguageId(xslt.getSiteLanguageId());
             if (StringUtils.isNotBlank(xslt.getXsltData())) {
                 bean.setXsltBlob( Hibernate.createBlob(xslt.getXsltData().getBytes()));
+            }
+            else {
+                bean.setXsltBlob(null);
             }
         }
         session.getTransaction().commit();

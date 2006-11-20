@@ -26,12 +26,14 @@ package org.riverock.portlet.cms.news.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.riverock.interfaces.portal.bean.News;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 23.08.2006
  *         Time: 15:49:45
  */
-public class NewsBean implements Serializable {
+public class NewsBean implements News, Serializable {
     private static final long serialVersionUID = 2057332507L;
 
     private Long newsId;
@@ -41,18 +43,19 @@ public class NewsBean implements Serializable {
     private String newsAnons;
     private String newsText;
     private boolean isDeleted=false;
+    private boolean isPlain=false;
 
     public NewsBean() {
     }
 
-    public NewsBean(NewsBean newsBean) {
-        this.newsId=newsBean.getNewsId();
-        this.newsGroupId=newsBean.getNewsGroupId();
-        this.newsDate=newsBean.getNewsDate();
-        this.newsHeader=newsBean.getNewsHeader();
-        this.newsAnons=newsBean.getNewsAnons();
-        this.newsText=newsBean.getNewsText();
-        this.isDeleted=newsBean.isDeleted();
+    public NewsBean(News news) {
+        this.newsId=news.getNewsId();
+        this.newsGroupId=news.getNewsGroupId();
+        this.newsDate=news.getPostDate();
+        this.newsHeader=news.getNewsHeader();
+        this.newsAnons=news.getNewsAnons();
+        this.newsText=news.getNewsText();
+        this.isDeleted=news.isDeleted();
     }
 
     public Long getNewsId() {
@@ -97,6 +100,14 @@ public class NewsBean implements Serializable {
 
     public String getNewsText() {
         return newsText;
+    }
+
+    public Date getPostDate() {
+        return newsDate;
+    }
+
+    public boolean isPlain() {
+        return isPlain;
     }
 
     public void setNewsText(String newsText) {

@@ -36,6 +36,9 @@ import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.bean.TemplateBean;
+import org.riverock.webmill.portal.bean.ArticleBean;
+import org.riverock.webmill.portal.bean.NewsBean;
+import org.riverock.webmill.portal.bean.NewsGroupBean;
 import org.riverock.webmill.utils.HibernateUtils;
 
 /**
@@ -142,6 +145,40 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
     }
 
     private static void deleteSiteLanguage(Session session, Long siteLanguageId) {
+        List<ArticleBean> articleBeans = session.createQuery(
+            "select article " +
+                "from org.riverock.webmill.portal.bean.ArticleBean as article " +
+                "where article.siteLanguageId=:siteLanguageId")
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+
+        for (ArticleBean articleBean : articleBeans) {
+            session.delete(articleBean);
+        }
+
+        List<NewsBean> beans = session.createQuery(
+            "select news " +
+                "from  org.riverock.webmill.portal.bean.NewsBean news, " +
+                "      org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                "where news.newsGroupId=newsGroup.newsGroupId and newsGroup.siteLanguageId=:siteLanguageId")
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+
+        for (NewsBean newsBean : beans) {
+            session.delete(newsBean);
+        }
+
+        List<NewsGroupBean> groupBeans = session.createQuery(
+            "select newsGroup " +
+                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                "where newsGroup.siteLanguageId=:siteLanguageId")
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+
+        for (NewsGroupBean newsGroupBean : groupBeans) {
+            session.delete(newsGroupBean);
+        }
+
         List<TemplateBean> templateBeans = session.createQuery(
             "select template " +
                 "from  org.riverock.webmill.portal.bean.TemplateBean as template " +

@@ -27,11 +27,11 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.cms.dao.CmsDaoFactory;
 import org.riverock.portlet.cms.article.ArticleSessionBean;
 import org.riverock.portlet.cms.article.ArticleDataProvider;
 import org.riverock.portlet.cms.article.bean.ArticleBean;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -92,7 +92,7 @@ public class ArticleAction implements Serializable {
         if (getSessionObject() != null) {
 
             ArticleBean article = getSessionObject();
-            Long articleId = CmsDaoFactory.getCmsArticleDao().createArticle(article, authSessionBean.getAuthSession());
+            Long articleId = FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().createArticle(article);
             setSessionObject(null);
             articleSessionBean.setId(articleId);
             cleadDataProviderObject();
@@ -122,7 +122,7 @@ public class ArticleAction implements Serializable {
         log.info("Save changes article action.");
 
         if (getSessionObject() != null) {
-            CmsDaoFactory.getCmsArticleDao().updateArticle(getSessionObject(), authSessionBean.getAuthSession());
+            FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().updateArticle(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -155,7 +155,7 @@ public class ArticleAction implements Serializable {
         log.info("Process delete article action.");
 
         if (getSessionObject() != null) {
-            CmsDaoFactory.getCmsArticleDao().deleteArticle(getSessionObject().getArticleId());
+            FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().deleteArticle(getSessionObject().getArticleId());
             setSessionObject(null);
             articleSessionBean.setId(null);
             articleSessionBean.setObjectType(ArticleSessionBean.UNKNOWN_TYPE);

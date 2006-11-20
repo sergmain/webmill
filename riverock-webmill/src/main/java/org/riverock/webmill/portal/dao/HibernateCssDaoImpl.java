@@ -114,7 +114,7 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         query.setLong("css_id", cssId);
         CssBean css = (CssBean)query.uniqueResult();
         if (css!=null) {
-        Blob blob = css.getCssBlob();
+            Blob blob = css.getCssBlob();
             if (blob!=null) {
                 try {
                     css.setCss( new String(blob.getBytes(1, (int)blob.length())) );
@@ -147,6 +147,9 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         if (StringUtils.isNotBlank(css.getCss())) {
             bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes()));
         }
+        else {
+            bean.setCssBlob(null);
+        }
         session.save(bean);
         session.flush();
 
@@ -174,6 +177,9 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             bean.setSiteId(css.getSiteId());
             if (StringUtils.isNotBlank(css.getCss())) {
                 bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes()));
+            }
+            else {
+                bean.setCssBlob(null);
             }
         }
         session.getTransaction().commit();

@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.portlet.cms.article.bean.ArticleBean;
 import org.riverock.portlet.cms.article.bean.SiteExtended;
-import org.riverock.portlet.cms.dao.CmsDaoFactory;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -123,7 +123,7 @@ public class ArticleDataProvider implements Serializable {
             log.debug("articleId: " + articleSessionBean.getId());
         }
         if (article ==null) {
-            article = CmsDaoFactory.getCmsArticleDao().getArticle(articleId);
+            article = new ArticleBean(FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().getArticle(articleId));
         }
 
         if (article.getArticleId()==null) {
@@ -132,7 +132,7 @@ public class ArticleDataProvider implements Serializable {
 
         if (!article.getArticleId().equals(articleId)) {
             log.warn("Mismatch articleId");
-            article = CmsDaoFactory.getCmsArticleDao().getArticle(articleId);
+            article = new ArticleBean(FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().getArticle(articleId));
         }
 
         return article;

@@ -35,7 +35,8 @@ import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.portlet.cms.dao.CmsDaoFactory;
+import org.riverock.interfaces.portal.bean.NewsGroup;
+import org.riverock.interfaces.portal.bean.News;
 import org.riverock.portlet.cms.news.bean.NewsBean;
 import org.riverock.portlet.cms.news.bean.NewsGroupBean;
 import org.riverock.portlet.cms.news.bean.SiteBean;
@@ -97,7 +98,12 @@ public class NewsService implements Serializable {
     }
 
     public List<NewsGroupBean> getNewsGroupList(Long siteLanguageId) {
-        return CmsDaoFactory.getCmsNewsDao().getNewsGroupList(siteLanguageId);
+        List<NewsGroupBean> beans = new ArrayList<NewsGroupBean>();
+        List<NewsGroup> list = FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNewsGroupList(siteLanguageId);
+        for (NewsGroup newsGroup : list) {
+            beans.add(new NewsGroupBean(newsGroup));
+        }
+        return beans;
     }
 
     public List<SiteLanguageBean> getSiteLanguageList(Long siteId) {
@@ -132,10 +138,15 @@ public class NewsService implements Serializable {
     }
 
     public List<NewsBean> getNewsList(Long newsGroupId) {
-        return CmsDaoFactory.getCmsNewsDao().getNewsList(newsGroupId);
+        List<NewsBean> beans = new ArrayList<NewsBean>();
+        List<News> newses = FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNewsList(newsGroupId);
+        for (News news : newses) {
+            beans.add( new NewsBean(news));
+        }
+        return beans;
     }
 
     public NewsGroupBean getNewsGroup(Long newsGroupId) {
-        return CmsDaoFactory.getCmsNewsDao().getNewsGroup(newsGroupId);
+        return new NewsGroupBean(FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNewsGroup(newsGroupId));
     }
 }

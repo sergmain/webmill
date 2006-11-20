@@ -21,7 +21,7 @@
   ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
   -->
 <!--$Id$-->
-<project name="riverock deploy file for build module" default="jar" basedir=".">
+<project name="riverock-include" default="jar" basedir=".">
 
     <import file="riverock-globals-macro.xml"/>
     <import file="riverock-globals-prop.xml"/>

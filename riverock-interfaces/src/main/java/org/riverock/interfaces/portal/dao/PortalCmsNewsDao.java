@@ -17,29 +17,43 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public               
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.interfaces.portal.bean;
+package org.riverock.interfaces.portal.dao;
 
-import java.util.Date;
-import java.io.Serializable;
+import java.util.List;
+
+import org.riverock.interfaces.portal.bean.NewsGroup;
+import org.riverock.interfaces.portal.bean.News;
 
 /**
- * User: SergeMaslyukov
- * Date: 19.11.2006
- * Time: 0:43:08
- * <p/>
- * $Id$
+ * @author Sergei Maslyukov
+ *         Date: 20.11.2006
+ *         Time: 21:00:43
+ *         <p/>
+ *         $Id$
  */
-public interface Article extends Serializable {
-    Long getArticleId();
-    Long getSiteLanguageId();
-    Date getPostDate();
-    String getArticleCode();
-    String getArticleName();
-    String getArticleData();
-    boolean isPlain();
-    Long getUserId();
+public interface PortalCmsNewsDao {
+
+    List<NewsGroup> getNewsGroupList(Long siteLanguageId);
+
+    List<News> getNewsList(Long newsGroupId);
+
+    NewsGroup getNewsGroup(Long newsGroupId);
+
+    News getNews(Long newsId);
+
+    Long createNews(News news);
+
+    void updateNews(News news);
+
+    void deleteNews(Long newsId);
+
+    Long createNewsGroup(NewsGroup newsGroup);
+
+    void deleteNewsGroup(Long newsGroupId);
+
+    void updateNewsGroup(NewsGroup newsGroup);
 }

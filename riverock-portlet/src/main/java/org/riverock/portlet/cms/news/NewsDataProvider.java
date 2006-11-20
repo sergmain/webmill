@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.riverock.portlet.cms.news.bean.NewsGroupBean;
 import org.riverock.portlet.cms.news.bean.NewsBean;
 import org.riverock.portlet.cms.news.bean.SiteExtended;
-import org.riverock.portlet.cms.dao.CmsDaoFactory;
+import org.riverock.portlet.tools.FacesTools;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 
 /**
@@ -150,7 +150,7 @@ public class NewsDataProvider implements Serializable {
             log.debug("newsId: " + newsSessionBean.getId());
         }
         if (news ==null) {
-            news = CmsDaoFactory.getCmsNewsDao().getNews(newsId);
+            news = new NewsBean(FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNews(newsId));
         }
 
         if (news.getNewsId()==null) {
@@ -159,7 +159,7 @@ public class NewsDataProvider implements Serializable {
 
         if (!news.getNewsId().equals(newsId)) {
             log.warn("Mismatch newsId");
-            news = CmsDaoFactory.getCmsNewsDao().getNews(newsId);
+            news = new NewsBean(FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNews(newsId));
         }
 
         return news;

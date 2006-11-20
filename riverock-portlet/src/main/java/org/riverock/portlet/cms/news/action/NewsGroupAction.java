@@ -31,7 +31,7 @@ import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.cms.news.NewsSessionBean;
 import org.riverock.portlet.cms.news.NewsDataProvider;
 import org.riverock.portlet.cms.news.bean.NewsGroupBean;
-import org.riverock.portlet.cms.dao.CmsDaoFactory;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -90,7 +90,7 @@ public class NewsGroupAction implements Serializable {
         log.info( "Procss add news group action." );
 
         if( getSessionObject() !=null ) {
-            Long newsGroupId = CmsDaoFactory.getCmsNewsDao().createNewsGroup( getSessionObject() );
+            Long newsGroupId = FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().createNewsGroup( getSessionObject() );
             setSessionObject(null);
             newsSessionBean.setId(newsGroupId);
             cleadDataProviderObject();
@@ -120,7 +120,7 @@ public class NewsGroupAction implements Serializable {
         log.info( "Save changes news group action." );
 
         if( getSessionObject() !=null ) {
-            CmsDaoFactory.getCmsNewsDao().updateNewsGroup(getSessionObject());
+            FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().updateNewsGroup(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -153,7 +153,7 @@ public class NewsGroupAction implements Serializable {
         log.info( "Process delete news group action. getSessionObject().getCatalogLanguageId(): " +getSessionObject().getNewsGroupId() );
 
         if( getSessionObject() != null ) {
-            CmsDaoFactory.getCmsNewsDao().deleteNewsGroup(getSessionObject().getNewsGroupId());
+            FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().deleteNewsGroup(getSessionObject().getNewsGroupId());
             setSessionObject(null);
             newsSessionBean.setId(null);
             newsSessionBean.setObjectType(NewsSessionBean.UNKNOWN_TYPE);
