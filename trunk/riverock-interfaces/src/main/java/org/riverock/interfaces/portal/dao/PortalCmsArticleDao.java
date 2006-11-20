@@ -38,6 +38,7 @@ public interface PortalCmsArticleDao {
     List<Article> getArticleList(Long siteLanguageId, boolean isXml);
 
     Article getArticle(Long articleId);
+    Article getArticleByCode(Long siteLanguageId, String articleCode);
 
     Long createArticle(Article article);
 

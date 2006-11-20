@@ -41,7 +41,7 @@ import org.riverock.interfaces.portal.bean.Site;
 public interface PortalInfo extends Serializable {
     public Long getSiteId();
     public Long getCompanyId();
-    public Long getSupportLanguageId( Locale locale );
+    public Long getSiteLanguageId( Locale locale );
     public MenuLanguage getMenu(String locale);
     public XsltTransformerManager getXsltTransformerManager();
     public Map<String, String> getPortalProperties();

@@ -23,38 +23,24 @@
  */
 package org.riverock.portlet.article;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.apache.log4j.Logger;
+import org.riverock.common.tools.DateTools;
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.bean.Article;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.common.tools.DateTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.main.CacheFactory;
-import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.portlet.core.GetWmPortletArticleItem;
-import org.riverock.portlet.member.ClassQueryItemImpl;
-import org.riverock.portlet.schema.core.WmPortletArticleItemType;
-import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import java.util.List;
 
 /**
  * Author: mill
@@ -67,16 +53,17 @@ import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 public final class ArticleXml implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Logger log = Logger.getLogger( ArticleXml.class );
 
-    private static final CacheFactory cache = new CacheFactory( ArticleXml.class);
     private static final String DEFAULT_ROOT_NAME = "Article";
 
-    private Date datePost = null;
-
-    private String nameArticle = "";
-    private String text = "";
-    private Long id = null;
-
+    public Article article;
     private RenderRequest renderRequest = null;
+
+    public ArticleXml() {
+    }
+
+    private ArticleXml( Article article ) {
+        this.article = article;
+    }
 
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
         if(log.isDebugEnabled())
@@ -85,30 +72,22 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         this.renderRequest = renderRequest;
     }
 
-    public void reinit() {
-        cache.reinit();
-    }
-
-    public synchronized void terminate(Long id) {
-        cache.terminate(id);
-    }
-
     public byte[] getXml(String rootName) throws Exception {
         if(log.isDebugEnabled()) {
             log.debug( "ArticleXml. method is 'Xml'. Root: "+rootName );
-            log.debug( "Article date: " + datePost );
+            log.debug( "Article date: " + article.getPostDate() );
             log.debug( "renderRequest: " + renderRequest );
         }
-        String dateText = DateTools.getStringDate(datePost, "dd.MMM.yyyy", renderRequest.getLocale(), GenericConfig.getTZ());
-        String timeText = DateTools.getStringDate(datePost, "HH:mm", renderRequest.getLocale(), GenericConfig.getTZ());
+        String dateText = DateTools.getStringDate(article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), GenericConfig.getTZ());
+        String timeText = DateTools.getStringDate(article.getPostDate(), "HH:mm", renderRequest.getLocale(), GenericConfig.getTZ());
 
         String xml = new StringBuilder().
             append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).
             append( "<" ).append( rootName ).
             append( "><ArticleDate>" ).append( dateText ).append( "</ArticleDate>" ).
             append( "<ArticleTime>" ).append( timeText ).append( "</ArticleTime>" ).
-            append( "<ArticleName>" ).append( nameArticle ).append( "</ArticleName>" ).
-            append( "<ArticleText>" ).append( text ).append( "</ArticleText></" ).
+            append( "<ArticleName>" ).append( article.getArticleName() ).append( "</ArticleName>" ).
+            append( "<ArticleText>" ).append( article.getArticleData() ).append( "</ArticleText></" ).
             append( rootName == null ?DEFAULT_ROOT_NAME :rootName ).append( ">" ).toString();
 
         if (log.isDebugEnabled())
@@ -128,242 +107,26 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         return null;
     }
 
-    public ArticleXml() {
-    }
-
-    public PortletResultContent getInstance( Long id__ ) throws PortletException {
-        try {
-            return (PortletResultContent) cache.getInstanceNew(id__);
-        }
-        catch(Throwable e) {
-            String es = "Error get instance of ArticleXml";
-            log.error(es, e);
-            throw new PortletException(es, e);
-        }
-    }
-
-    static String sql_ = null;
-    static {
-        sql_ =
-            "select a.ID_SITE_CTX_ARTICLE " +
-            "from   WM_PORTLET_ARTICLE a " +
-            "where  a.ID_SITE_SUPPORT_LANGUAGE=? and a.ARTICLE_CODE=? and a.IS_DELETED=0";
-
-        try {
-            SqlStatement.registerSql( sql_, ArticleXml.class );
-        }
-        catch(Throwable e) {
-            final String es = "Error in registerSql, sql\n"+sql_;
-            log.error(es, e);
-            throw new SqlStatementRegisterException( es, e );
-        }
+    public PortletResultContent getInstance( Long articleId ) {
+        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        Article article = provider.getPortalCmsArticleDao().getArticle(articleId);
+        return new ArticleXml(article);
     }
 
     public PortletResultContent getInstanceByCode( String articleCode_ ) throws PortletException {
-        if (log.isDebugEnabled())
-            log.debug("#10.01.01 " + articleCode_);
-
-        PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
-        Long idSupportLanguageCurrent = portalInfo.getSupportLanguageId( renderRequest.getLocale() );
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db__ = null;
-        try {
-            db__ = DatabaseAdapter.getInstance();
-            ps = db__.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSupportLanguageCurrent );
-            ps.setString(2, articleCode_);
-
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                if (log.isDebugEnabled())
-                    log.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE"));
-
-                return getInstance( RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE"));
-            }
-
-            if (log.isDebugEnabled())
-                log.debug("#10.01.05 ");
-
-            // return dummy Article
-            return new ArticleXml();
-        }
-        catch(Throwable e) {
-            String es = "Exception in ArticleXml.getInstanceByCode()";
-            log.error(es, e);
-            throw new PortletException(es, e);
-        }
-        finally {
-            DatabaseManager.close(db__, rs, ps);
-            rs = null;
-            ps = null;
-            db__ = null;
-        }
-    }
-
-    static String sql1_ = null;
-    static {
-        sql1_ =
-            "select * from WM_PORTLET_ARTICLE where ID_SITE_CTX_ARTICLE=? and IS_DELETED=0";
-
-        try {
-            SqlStatement.registerSql( sql1_, ArticleXml.class );
-        }
-        catch(Throwable e) {
-            final String es = "Error in registerSql, sql\n"+sql1_;
-            log.error(es, e);
-            throw new SqlStatementRegisterException( es, e );
-        }
-    }
-
-    public ArticleXml( Long id_) throws Exception {
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            WmPortletArticleItemType article = GetWmPortletArticleItem.getInstance(db_, id_).item;
-
-            if (article==null || Boolean.TRUE.equals( article.getIsDeleted()) )
-                return;
-
-            this.id = id_;
-            if (article.getDatePost()!=null)
-                datePost=new Date(article.getDatePost().getTime());
-            else
-                datePost=new Date();
-
-            nameArticle = article.getNameArticle();
-            initTextField( db_ );
-        }
-        finally {
-            DatabaseManager.close(db_);
-            db_ = null;
-        }
-    }
-
-    static String sql2_ = null;
-    static {
-        sql2_ =
-            "select ARTICLE_DATA " +
-            "from   WM_PORTLET_ARTICLE_DATA " +
-            "where  ID_SITE_CTX_ARTICLE = ? " +
-            "order by ID_SITE_CTX_ARTICLE_DATA ASC";
-
-        try {
-            SqlStatement.registerSql( sql2_, ArticleXml.class );
-        }
-        catch(Throwable e) {
-            final String es = "Error in registerSql, sql\n"+sql2_;
-            log.error(es, e);
-            throw new SqlStatementRegisterException( es, e );
-        }
-    }
-
-    private void initTextField( DatabaseAdapter db_ ) throws PortletException {
-        if (id == null) {
-            return;
+        if( log.isDebugEnabled() ) {
+            log.debug( "#10.01.01 " + articleCode_ );
         }
 
-        PreparedStatement ps = null;
-        ResultSet rset = null;
-        try {
-            ps = db_.prepareStatement( sql2_ );
+        PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
+        Long siteLangaugeId = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
 
-            RsetTools.setLong(ps, 1, id);
-            rset = ps.executeQuery();
-            StringBuilder sb = new StringBuilder();
-            while (rset.next()) {
-                sb.append( RsetTools.getString(rset, "ARTICLE_DATA") );
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug( "Result text of article: " + sb.toString());
-            }
-
-            text = sb.toString();
-        }
-        catch(Exception e) {
-            String es = "Exception in ArticleXml.initTextField";
-            log.error(es, e);
-            throw new PortletException(es, e);
-        }
-        catch(Error e) {
-            String es = "Error in ArticleXml.initTextField";
-            log.error(es, e);
-            throw new PortletException(es, e);
-        }
-        finally {
-            DatabaseManager.close(rset, ps);
-            rset = null;
-            ps = null;
-        }
-    }
-
-    static String sql3_ = null;
-    static {
-        sql3_ =
-            "SELECT b.ID_SITE_CTX_ARTICLE, b.NAME_ARTICLE, b.ARTICLE_CODE "+
-            "FROM   WM_PORTAL_CATALOG_LANGUAGE a, WM_PORTLET_ARTICLE b "+
-            "where  a.ID_SITE_CTX_LANG_CATALOG=? and "+
-            "       a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE and "+
-            "       b.IS_PLAIN_HTML=0";
-
-        try {
-            SqlStatement.registerSql( sql3_, ArticleXml.class );
-        }
-        catch(Throwable e) {
-            final String es = "Error in registerSql, sql\n"+sql3_;
-            log.error(es, e);
-            throw new SqlStatementRegisterException( es, e );
-        }
+        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        Article article = provider.getPortalCmsArticleDao().getArticleByCode(siteLangaugeId, articleCode_);
+        return new ArticleXml(article);
     }
 
     public List<ClassQueryItem> getList( final Long idSiteCtxLangCatalog, final Long idContext) {
-        if (log.isDebugEnabled())
-            log.debug("Get list of ArticleXml. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db_ = null;
-
-        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement( sql3_ );
-
-            RsetTools.setLong(ps, 1, idSiteCtxLangCatalog );
-
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Long id = RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE");
-                String name = ""+id + ", "+
-                        RsetTools.getString(rs, "ARTICLE_CODE")+ ", "+
-                        RsetTools.getString(rs, "NAME_ARTICLE");
-
-                ClassQueryItem item =
-                        new ClassQueryItemImpl(id, StringTools.truncateString(name, 60) );
-
-                if (item.getIndex().equals(idContext) )
-                    item.setSelected(true);
-
-                v.add( item );
-            }
-            return v;
-
-        }
-        catch(Exception e) {
-            log.error("Exception Get list of ArticlePlain. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog, e);
-            return null;
-        }
-        catch(Error e) {
-            log.error("Error Get list of ArticlePlain. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog, e);
-            return null;
-        }
-        finally {
-            DatabaseManager.close(db_, rs, ps);
-            rs = null;
-            ps = null;
-            db_ = null;
-        }
+        return ArticleUtils.getListInternal(renderRequest, idSiteCtxLangCatalog, idContext, false);
     }
 }
