@@ -26,11 +26,15 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.Types;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.interfaces.portal.bean.Article;
+import org.riverock.interfaces.portal.bean.NewsGroup;
+import org.riverock.interfaces.portal.bean.News;
 
 /**
  * @author Sergei Maslyukov
@@ -164,5 +168,65 @@ public class InternalCmsDaoImpl implements InternalCmsDao {
             log.error(es, e);
             throw new IllegalStateException( es, e);
         }
+    }
+
+    public List<Article> getArticleList(Long siteLanguageId, boolean isXml) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Article getArticle(Long articleId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long createArticle(Article article) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateArticle(Article article) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteArticle(Long articleId) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<NewsGroup> getNewsGroupList(Long siteLanguageId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<News> getNewsList(Long newsGroupId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public NewsGroup getNewsGroup(Long newsGroupId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public News getNews(Long newsId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long createNews(News news) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateNews(News news) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteNews(Long newsId) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long createNewsGroup(NewsGroup newsGroup) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteNewsGroup(Long newsGroupId) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateNewsGroup(NewsGroup newsGroup) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

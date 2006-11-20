@@ -174,6 +174,9 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         if (StringUtils.isNotBlank(template.getTemplateData())) {
             bean.setTemplateBlob( Hibernate.createBlob(template.getTemplateData().getBytes()));
         }
+        else {
+            bean.setTemplateBlob(null);
+        }
         session.save(bean);
         session.flush();
         session.getTransaction().commit();

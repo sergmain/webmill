@@ -30,20 +30,12 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.portal.bean.SiteBean;
-import org.riverock.webmill.portal.bean.VirtualHostBean;
-import org.riverock.webmill.portal.bean.PortalXsltBean;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.bean.CatalogBean;
-import org.riverock.webmill.portal.bean.CatalogLanguageBean;
-import org.riverock.webmill.portal.bean.TemplateBean;
-import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.main.CssBean;
+import org.riverock.webmill.portal.bean.*;
+import org.riverock.webmill.utils.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -206,40 +198,46 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
     }
 
     public void deleteSite(Long siteId) {
-
-        DatabaseAdapter dbDyn = null;
-        try {
-
-            dbDyn = DatabaseAdapter.getInstance();
-
-            InternalDaoFactory.getInternalCmsDao().deleteArticleForSite(dbDyn, siteId);
-            InternalDaoFactory.getInternalCmsDao().deleteNewsForSite(dbDyn, siteId);
-//            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(dbDyn, siteId);
-//            InternalDaoFactory.getInternalCssDao().deleteCssForSite(dbDyn, siteId);
-//            InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
-//            InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHostForSite(dbDyn, siteId);
-
-            dbDyn.commit();
-        }
-        catch( Exception e ) {
-            try {
-                if( dbDyn != null )
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error delete site";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn);
-            dbDyn = null;
-        }
-
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
+
+        List<NewsBean> newsBeans = session.createQuery(
+            "select news " +
+                "from  org.riverock.webmill.portal.bean.NewsBean news, " +
+                "      org.riverock.webmill.portal.bean.NewsGroupBean newsGroup, " +
+                "      org.riverock.webmill.portal.bean.SiteBean site " +
+                "where news.newsGroupId=newsGroup.newsGroupId and " +
+                "      newsGroup.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+
+        for (NewsBean newsBean : newsBeans) {
+            session.delete(newsBean);
+        }
+
+        List<NewsGroupBean> groupBeans = session.createQuery(
+            "select newsGroup " +
+                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup, " +
+                "      org.riverock.webmill.portal.bean.SiteBean site " +
+                "where newsGroup.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+
+        for (NewsGroupBean newsGroupBean : groupBeans) {
+            session.delete(newsGroupBean);
+        }
+
+        List<ArticleBean> articleBeans = session.createQuery(
+            "select article " +
+                "from org.riverock.webmill.portal.bean.ArticleBean as article, " +
+                "     org.riverock.webmill.portal.bean.SiteBean site " +
+                "where article.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+
+        for (ArticleBean articleBean : articleBeans) {
+            session.delete(articleBean);
+        }
 
         List<TemplateBean> templateBeans = session.createQuery(
             "select template " +

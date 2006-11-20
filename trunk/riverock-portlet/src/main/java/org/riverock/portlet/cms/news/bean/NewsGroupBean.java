@@ -25,12 +25,14 @@ package org.riverock.portlet.cms.news.bean;
 
 import java.io.Serializable;
 
+import org.riverock.interfaces.portal.bean.NewsGroup;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 23.08.2006
  *         Time: 15:49:39
  */
-public class NewsGroupBean implements Serializable {
+public class NewsGroupBean implements NewsGroup, Serializable {
     private static final long serialVersionUID = 1056131127L;
 
     private Long siteLanguageId;
@@ -43,11 +45,11 @@ public class NewsGroupBean implements Serializable {
 
     public NewsGroupBean(){}
 
-    public NewsGroupBean(NewsGroupBean item){
+    public NewsGroupBean(NewsGroup item){
         this.siteLanguageId=item.getSiteLanguageId();
         this.newsGroupId=item.getNewsGroupId();
-        this.maxNews=item.getMaxNews();
-        this.orderValue=item.getOrderValue();
+        this.maxNews=new Long(item.getCountNewsPerGroup());
+        this.orderValue=item.getOrderField();
         this.newsGroupName=item.getNewsGroupName();
         this.newsGroupCode=item.getNewsGroupCode();
         this.isDeleted=item.isDeleted();
@@ -108,4 +110,16 @@ public class NewsGroupBean implements Serializable {
     public void setNewsGroupCode(String newsGroupCode) {
         this.newsGroupCode = newsGroupCode;
     }
+
+    public int getCountNewsPerGroup() {
+        if (maxNews==null)
+            return 0;
+        else
+            return maxNews.intValue();
+    }
+
+    public int getOrderField() {
+        return orderValue;
+    }
+
 }

@@ -26,12 +26,14 @@ package org.riverock.portlet.cms.article.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.riverock.interfaces.portal.bean.Article;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 25.08.2006
  *         Time: 21:06:11
  */
-public class ArticleBean implements Serializable {
+public class ArticleBean implements Article, Serializable {
     private static final long serialVersionUID = 2057332507L;
 
     private Long articleId = null;
@@ -41,16 +43,18 @@ public class ArticleBean implements Serializable {
     private boolean isXml=false;
     private Long siteLanguageId=null;
     private Date created=null;
+    private Long userId=null;
 
     public ArticleBean() {
     }
 
-    public ArticleBean(ArticleBean articleBean) {
+    public ArticleBean(Article articleBean) {
         this.articleId = articleBean.getArticleId();
         this.articleName = articleBean.getArticleName();
         this.articleCode = articleBean.getArticleCode();
-        this.articleText = articleBean.getArticleText();
-        this.isXml = articleBean.isXml();
+        this.articleText = articleBean.getArticleData();
+        this.isXml = !articleBean.isPlain();
+        this.userId = articleBean.getUserId();
     }
 
     public String getArticleName() {
@@ -108,4 +112,21 @@ public class ArticleBean implements Serializable {
     public void setCreated(Date created) {
         this.created = created;
     }
+
+    public Date getPostDate() {
+        return created;
+    }
+
+    public String getArticleData() {
+        return articleText;
+    }
+
+    public boolean isPlain() {
+        return !isXml;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
 }

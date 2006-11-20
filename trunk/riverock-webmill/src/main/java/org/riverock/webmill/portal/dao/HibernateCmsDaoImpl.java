@@ -24,14 +24,26 @@
  */
 package org.riverock.webmill.portal.dao;
 
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
+
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.exception.DatabaseException;
+import org.riverock.interfaces.portal.bean.Article;
+import org.riverock.interfaces.portal.bean.News;
+import org.riverock.interfaces.portal.bean.NewsGroup;
 import org.riverock.webmill.portal.bean.ArticleBean;
 import org.riverock.webmill.portal.bean.NewsBean;
 import org.riverock.webmill.portal.bean.NewsGroupBean;
 import org.riverock.webmill.utils.HibernateUtils;
-
-import java.util.List;
 
 /**
  * User: SergeMaslyukov
@@ -41,7 +53,8 @@ import java.util.List;
  * $Id$
  */
 public class HibernateCmsDaoImpl implements InternalCmsDao {
-    
+    private static Logger log = Logger.getLogger(HibernateCmsDaoImpl.class);
+
     public void deleteArticleForSite(DatabaseAdapter adapter, Long siteId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
@@ -131,6 +144,357 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
 
         for (NewsGroupBean newsGroupBean : groupBeans) {
             session.delete(newsGroupBean);
+        }
+
+        session.getTransaction().commit();
+    }
+
+    public List<NewsGroup> getNewsGroupList(Long siteLanguageId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<NewsGroupBean> groupBeans = session.createQuery(
+            "select newsGroup " +
+                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                "where newsGroup.isDeleted=false and newsGroup.siteLanguageId=:siteLanguageId")
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+        session.getTransaction().commit();
+        return (List)groupBeans;
+    }
+
+    public List<News> getNewsList(Long newsGroupId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<NewsBean> beans = session.createQuery(
+            "select news " +
+                "from  org.riverock.webmill.portal.bean.NewsBean news " +
+                "where news.isDeleted=false and news.newsGroupId=:newsGroupId ")
+            .setLong("newsGroupId", newsGroupId)
+            .list();
+        for (NewsBean bean : beans) {
+            Blob blob = bean.getNewsBlob();
+            if (blob!=null) {
+                try {
+                    bean.setNewsText( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get news text";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+            }
+        }
+
+        session.getTransaction().commit();
+        return (List)beans;
+    }
+
+    public NewsGroup getNewsGroup(Long newsGroupId) {
+        if (newsGroupId==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        NewsGroupBean newsGroup = (NewsGroupBean)session.createQuery(
+            "select newsGroup " +
+                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
+            .setLong("newsGroupId", newsGroupId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return newsGroup;
+    }
+
+    public News getNews(Long newsId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        NewsBean news = (NewsBean)session.createQuery(
+            "select news " +
+                "from  org.riverock.webmill.portal.bean.NewsBean news " +
+                "where news.isDeleted=false and news.newsId=:newsId ")
+            .setLong("newsId", newsId)
+            .uniqueResult();
+        if (news!=null) {
+            Blob blob = news.getNewsBlob();
+            if (blob!=null) {
+                try {
+                    news.setNewsText( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get news text";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+            }
+        }
+
+        session.getTransaction().commit();
+        return news;
+    }
+
+    public Long createNews(News news) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        NewsBean bean = new NewsBean(news);
+        if (bean.getPostDate()==null) {
+            bean.setPostDate(new Date());
+        }
+        if (StringUtils.isNotBlank(bean.getNewsText())) {
+            bean.setNewsBlob( Hibernate.createBlob(bean.getNewsText().getBytes()));
+        }
+        else {
+            bean.setNewsBlob(null);
+        }
+        session.save(bean);
+        session.flush();
+
+        session.getTransaction().commit();
+
+        return bean.getNewsId();
+    }
+
+    public void updateNews(News news) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        NewsBean bean = (NewsBean)session.createQuery(
+            "select news " +
+                "from  org.riverock.webmill.portal.bean.NewsBean news " +
+                "where news.newsId=:newsId ")
+            .setLong("newsId", news.getNewsId())
+            .uniqueResult();
+        if (bean!=null) {
+            bean.setDeleted(news.isDeleted());
+            bean.setNewsAnons(news.getNewsAnons());
+            if (StringUtils.isNotBlank(news.getNewsText())) {
+                bean.setNewsBlob( Hibernate.createBlob(news.getNewsText().getBytes()));
+            }
+            else {
+                bean.setNewsBlob(null);
+            }
+
+            bean.setNewsGroupId(news.getNewsGroupId());
+            bean.setNewsHeader(news.getNewsHeader());
+            if (news.getPostDate()!=null)
+                bean.setPostDate(news.getPostDate());
+            else
+                bean.setPostDate(new Date() );
+        }
+        session.getTransaction().commit();
+    }
+
+    public void deleteNews(Long newsId) {
+        if (newsId==null) {
+            return;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        NewsBean news = (NewsBean)session.createQuery(
+            "select news " +
+                "from  org.riverock.webmill.portal.bean.NewsBean news " +
+                "where news.isDeleted=false and news.newsId=:newsId ")
+            .setLong("newsId", newsId)
+            .uniqueResult();
+        if (news!=null) {
+            news.setDeleted(true);
+        }
+
+        session.getTransaction().commit();
+    }
+
+    public Long createNewsGroup(NewsGroup newsGroup) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        NewsGroupBean bean = new NewsGroupBean(newsGroup);
+        session.save(bean);
+        session.flush();
+
+        session.getTransaction().commit();
+
+        return bean.getNewsGroupId();
+    }
+
+    public void deleteNewsGroup(Long newsGroupId) {
+        if (newsGroupId==null) {
+            return;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        NewsGroupBean newsGroup = (NewsGroupBean)session.createQuery(
+            "select newsGroup " +
+                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
+            .setLong("newsGroupId", newsGroupId)
+            .uniqueResult();
+        if (newsGroup!=null) {
+            newsGroup.setDeleted(true);
+        }
+
+        session.getTransaction().commit();
+    }
+
+    public void updateNewsGroup(NewsGroup newsGroup) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        NewsGroupBean bean = (NewsGroupBean)session.createQuery(
+            "select newsGroup " +
+                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
+            .setLong("newsGroupId", newsGroup.getNewsGroupId())
+            .uniqueResult();
+        if (bean!=null) {
+            bean.setCountNewsPerGroup(newsGroup.getCountNewsPerGroup());
+            bean.setDeleted(newsGroup.isDeleted());
+            bean.setNewsGroupCode(newsGroup.getNewsGroupCode());
+            bean.setNewsGroupName(newsGroup.getNewsGroupName());
+            bean.setOrderField(newsGroup.getOrderField());
+            bean.setSiteLanguageId(newsGroup.getSiteLanguageId());
+        }
+
+        session.getTransaction().commit();
+    }
+
+    public List<Article> getArticleList(Long siteLanguageId, boolean isXml) {
+        List<Article> list = new ArrayList<Article>();
+        if (siteLanguageId==null) {
+            return list;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<ArticleBean> beans = session.createQuery(
+            "select article " +
+                "from org.riverock.webmill.portal.bean.ArticleBean as article " +
+                "where article.isDeleted=false and article.isPlain=:isPlain and article.siteLanguageId=:siteLanguageId")
+            .setBoolean("isPlain", !isXml)
+            .setLong("siteLanguageId", siteLanguageId)
+            .list();
+
+        for (ArticleBean article : beans) {
+            Blob blob = article.getArticleBlob();
+            if (blob!=null) {
+                try {
+                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get article data";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+            }
+        }
+        session.getTransaction().commit();
+        return (List)beans;
+    }
+
+    public Article getArticle(Long articleId) {
+        if (articleId==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        ArticleBean article = (ArticleBean)session.createQuery(
+            "select article " +
+                "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
+                "where article.isDeleted=false and article.articleId=:articleId")
+            .setLong("articleId", articleId)
+            .uniqueResult();
+        if (article!=null) {
+            Blob blob = article.getArticleBlob();
+            if (blob!=null) {
+                try {
+                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get article data";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+            }
+        }
+
+        session.getTransaction().commit();
+        return article;
+    }
+
+    public Long createArticle(Article article) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        ArticleBean bean = new ArticleBean(article);
+        if (bean.getPostDate()==null) {
+            bean.setPostDate(new Date());
+        }
+        if (StringUtils.isNotBlank(bean.getArticleData())) {
+            bean.setArticleBlob( Hibernate.createBlob(bean.getArticleData().getBytes()));
+        }
+        else {
+            bean.setArticleBlob(null);
+        }
+
+        session.save(bean);
+        session.flush();
+
+        session.getTransaction().commit();
+
+        return bean.getArticleId();
+    }
+
+    public void updateArticle(Article article) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        ArticleBean bean = (ArticleBean)session.createQuery(
+            "select article " +
+                "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
+                "where article.articleId=:articleId ")
+            .setLong("articleId", article.getArticleId())
+            .uniqueResult();
+
+        if (bean!=null) {
+            bean.setUserId(article.getUserId());
+            bean.setArticleCode(article.getArticleCode());
+            bean.setArticleName(article.getArticleName());
+            bean.setPostDate(article.getPostDate());
+            bean.setPlain(article.isPlain());
+            bean.setPostDate(article.getPostDate());
+            bean.setPlain(article.isPlain());
+            bean.setSiteLanguageId(article.getSiteLanguageId());
+            if (StringUtils.isNotBlank(article.getArticleData())) {
+                bean.setArticleBlob( Hibernate.createBlob(article.getArticleData().getBytes()));
+            }
+            else {
+                bean.setArticleBlob(null);
+            }
+        }
+        session.getTransaction().commit();
+    }
+
+    public void deleteArticle(Long articleId) {
+        if (articleId==null) {
+            return;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        ArticleBean bean = (ArticleBean)session.createQuery(
+            "select article " +
+                "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
+                "where article.articleId=:articleId ")
+            .setLong("articleId", articleId)
+            .uniqueResult();
+
+        if (bean!=null) {
+            session.delete(bean);
         }
 
         session.getTransaction().commit();

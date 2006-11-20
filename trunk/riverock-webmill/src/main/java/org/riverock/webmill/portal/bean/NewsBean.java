@@ -80,6 +80,20 @@ public class NewsBean implements News, Serializable {
     @Transient
     private String newsText;
 
+    public NewsBean() {
+    }
+
+    public NewsBean(News news) {
+        this.newsId = news.getNewsId();
+        this.newsGroupId = news.getNewsGroupId();
+        this.postDate = news.getPostDate();
+        this.newsHeader = news.getNewsHeader();
+        this.newsAnons = news.getNewsAnons();
+        isPlain = news.isPlain();
+        isDeleted = news.isDeleted();
+        this.newsText = news.getNewsText();
+    }
+
     public Blob getNewsBlob() {
         return newsBlob;
     }
