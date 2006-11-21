@@ -33,8 +33,6 @@ import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.interfaces.portal.bean.User;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.portal.bean.UserBean;
 
 /**
  * @author SergeMaslyukov
@@ -55,8 +53,7 @@ public interface InternalAuthDao extends Serializable {
     public boolean isUserInRole( String userLogin, String userPassword, final String role_ );
 
     public RoleBean getRole(Long roleId);
-    public RoleBean getRole(DatabaseAdapter db, Long roleId);
-    public RoleBean getRole(DatabaseAdapter db, String roleName);
+    public RoleBean getRole(String roleName);
     public List<RoleBean> getUserRoleList( AuthSession authSession );
 
     public AuthInfo getAuthInfo(String userLogin, String userPassword);
@@ -65,7 +62,7 @@ public interface InternalAuthDao extends Serializable {
 
     public boolean checkAccess( String userLogin, String userPassword, final String serverName ) ;
 
-    public UserBean getUserBean(String userLogin);
+    public User getUser(String userLogin);
 
     public List<RoleBean> getRoleList( AuthSession authSession );
     public List<RoleBean> getRoleList( AuthSession authSession, Long authUserId );
@@ -76,14 +73,12 @@ public interface InternalAuthDao extends Serializable {
 
     public Long addUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth);
     public Long addUserInfo(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles);
-    public Long addUserInfo(DatabaseAdapter db_, AuthInfo authInfo, List<RoleEditableBean> roles,
+    public Long addUserInfo(AuthInfo authInfo, List<RoleEditableBean> roles,
                             Long companyId, Long holdingId);
 
     public void updateUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth);
     public void deleteUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth);
     public List<User> getUserInfoList(AuthSession authSession);
 
-    public UserBean getUserBean(DatabaseAdapter db_, String userLogin);
-
-    public List<AuthInfo> getAuthInfo(DatabaseAdapter db_, Long userId, Long siteId);
+    public List<AuthInfo> getAuthInfo(Long userId, Long siteId);
 }

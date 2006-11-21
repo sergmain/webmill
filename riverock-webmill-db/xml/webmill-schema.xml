@@ -3,7 +3,7 @@
 
 	<Tables schema="TEST" name="WM_PORTAL_IDS" type="TABLE">
 		<Fields name="sequence_name" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
-		<Fields name="sequence_next_hi_value" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+		<Fields name="sequence_next_value" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 	</Tables>
 	<Tables schema="TEST" name="WM_PORTLET_SEARCH" type="TABLE">
 		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
@@ -1023,32 +1023,16 @@
 		</PrimaryKey>
 		<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
 		<Fields name="NAME_SITE_TEMPLATE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="0"/>
-		<Fields name="TEMPLATE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="0"/>
+		<Fields name="TEMPLATE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="1"/>
 		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
 		<Fields name="IS_DEFAULT_DYNAMIC" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="VERSION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1" defaultValue="0"/>
+		<Fields name="TEMPLATE_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_TEMPLATE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SUPPORT_LANG_ST_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-<!--
-	<Tables schema="TEST" name="WM_PORTAL_TEMPLATE_MEMBER" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_PORTAL_TEMPLATE_MEMBER" columnName="ID_SITE_TEMPLATE_MEMBER" keySeq="1" pkName="ID_TMPLMBER_STM_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_SITE_TEMPLATE_MEMBER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_TEMPLATE_MEMBER" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SUPPORT_LANG_STM_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
-			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_TEMPLATE" pkColumnName="ID_SITE_TEMPLATE" fkSchemaName="TEST" fkTableName="WM_PORTAL_TEMPLATE_MEMBER" fkColumnName="ID_SITE_TEMPLATE" keySeq="1" fkName="ID_SITE_TEMPLATE_STM_FK" pkName="ID_SITETEMPL_ST_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
--->
 	<Tables schema="TEST" name="WM_PORTAL_VIRTUAL_HOST" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_PORTAL_VIRTUAL_HOST" columnName="ID_SITE_VIRTUAL_HOST" keySeq="1" pkName="ID_VIRT_HST_SVH_PK"/>

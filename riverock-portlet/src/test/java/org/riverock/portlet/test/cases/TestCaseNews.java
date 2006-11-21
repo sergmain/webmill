@@ -49,7 +49,6 @@ import org.riverock.generic.utils.DateUtils;
 import org.riverock.portlet.news.NewsSite;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
-import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
@@ -487,29 +486,29 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 //                    !desc.getPortletClass().equals(obj.getClass().getName()));
 //
 //                byte[] resultByte = obj.getXml();
-                NewsItemSimpleType originItem = new NewsItemSimpleType();
-                originItem.setNewsAnons( item.getNewsAnons() );
-                originItem.setNewsDate(
-                    DateUtils.getStringDate(
-                        item.getNewsDateTime(), "dd.MMM.yyyy",
-                        StringTools.getLocale( TestSite.TEST_LANGUAGE ) )
-                );
-                originItem.setNewsHeader( item.getNewsHeader() );
-                originItem.setNewsText( item.getNewsText() );
-                originItem.setNewsTime(
-                    DateUtils.getStringDate(
-                        item.getNewsDateTime(), "HH:mm",
-                        StringTools.getLocale( TestSite.TEST_LANGUAGE )
-                    )
-                );
-                byte[] originByte = XmlTools.getXml( originItem, "NewsItemSimple" );
+//                NewsItemSimpleType originItem = new NewsItemSimpleType();
+//                originItem.setNewsAnons( item.getNewsAnons() );
+//                originItem.setNewsDate(
+//                    DateUtils.getStringDate(
+//                        item.getNewsDateTime(), "dd.MMM.yyyy",
+//                        StringTools.getLocale( TestSite.TEST_LANGUAGE ) )
+//                );
+//                originItem.setNewsHeader( item.getNewsHeader() );
+//                originItem.setNewsText( item.getNewsText() );
+//                originItem.setNewsTime(
+//                    DateUtils.getStringDate(
+//                        item.getNewsDateTime(), "HH:mm",
+//                        StringTools.getLocale( TestSite.TEST_LANGUAGE )
+//                    )
+//                );
+//                byte[] originByte = XmlTools.getXml( originItem, "NewsItemSimple" );
 
 //                MainTools.writeToFile(SiteUtils.getTempDir()+"news-by-id-bytes-from-portlet.xml", resultByte);
-                MainTools.writeToFile(SiteUtils.getTempDir()+"news-by-id-bytes-from-test-object.xml", originByte);
+//                MainTools.writeToFile(SiteUtils.getTempDir()+"news-by-id-bytes-from-test-object.xml", originByte);
                 System.out.println("news id - "+item.getNewsItemId());
 
 //                System.out.println("result of compare "+(new String(originByte).equals(new String( resultByte))) );
-                System.out.println("result #1 "+new String( originByte, "utf-8") );
+//                System.out.println("result #1 "+new String( originByte, "utf-8") );
 //                System.out.println("result #2 "+new String( resultByte, "utf-8") );
 
 //                assertFalse("Transforming failed. Origin and Result not equals",

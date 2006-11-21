@@ -46,4 +46,24 @@ public interface InternalUserDao {
     public void updateUser(User portalUserBean, AuthSession authSession);
 
     public void deleteUser(User portalUserBean, AuthSession authSession);
+
+    /**
+     * Get list of all users without restriction. Deleted users (isDeleted==true) not included in list.
+     * @return list of all users in DB
+     */
+    public List<User> getUserList_notRestricted();
+
+    /**
+     * Get user without restriction. Deleted user (isDeleted==true) will be returned as null.
+     * @param userId PK of user
+     * @return user
+     */
+    public User getUser_notRestricted(Long userId);
+
+    /**
+     * update user without restriction.
+     * @param user user for update
+     */
+    public void updateUser_notRestricted(User user);
+
 }

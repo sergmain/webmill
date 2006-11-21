@@ -30,7 +30,7 @@ package org.riverock.webmill.admin.dao;
  *         Time: 17:26:04
  */
 public class DaoFactory {
-    private static WebmillAdminDao webmillAdminDao = new WebmillAdminDaoImpl();
+    private static WebmillAdminDao webmillAdminDao = new HibernatedWebmillAdminDaoImpl();
 
     public static WebmillAdminDao getWebmillAdminDao() {
         return webmillAdminDao;

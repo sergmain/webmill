@@ -59,15 +59,6 @@
 		<xs:attribute name="newsItemId" type="xs:long"/>
 		<xs:attribute name="newsDateTime" type="xs:dateTime"/>
 	</xs:complexType>
-	<xs:complexType name="NewsItemSimpleType">
-		<xs:sequence>
-			<xs:element name="NewsDate" type="xs:string"/>
-			<xs:element name="NewsTime" type="xs:string"/>
-			<xs:element name="NewsHeader" type="xs:string"/>
-			<xs:element name="NewsAnons" type="xs:string"/>
-			<xs:element name="NewsText" type="xs:string"/>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="NewsSiteType">
 		<xs:sequence>
 			<xs:element name="NewsBlock" type="NewsBlockType" minOccurs="0" maxOccurs="unbounded"/>

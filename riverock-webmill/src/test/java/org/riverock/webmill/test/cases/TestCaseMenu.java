@@ -28,8 +28,6 @@ import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.startup.StartupApplication;
-import org.riverock.webmill.core.GetWmPortalVirtualHostItem;
-import org.riverock.webmill.schema.core.WmPortalVirtualHostItemType;
 
 /**
  * User: Admin
@@ -227,6 +225,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
         testAbstract.testWithMSSQLConnection( this );
     }
 */
+/*
     public static void main(String args[])
         throws Exception
     {
@@ -248,4 +247,5 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
             ns
         );
     }
+*/
 }

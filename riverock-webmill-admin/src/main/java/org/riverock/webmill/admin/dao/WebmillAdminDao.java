@@ -27,7 +27,6 @@ package org.riverock.webmill.admin.dao;
 import java.util.List;
 
 import org.riverock.webmill.admin.bean.*;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author Sergei Maslyukov
@@ -88,8 +87,6 @@ public interface WebmillAdminDao {
     Long createCatalogItem(CatalogBean catalogBean);
 
     Long createVirtualHost(VirtualHostBean virtualHost);
-
-    Long createVirtualHost(DatabaseAdapter adapter, VirtualHostBean virtualHost);
 
     XsltBean getCurrentXslt(Long siteLanguageId);
 

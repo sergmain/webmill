@@ -29,6 +29,7 @@ import java.util.Locale;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.interfaces.portal.bean.Site;
 
 /**
  * @author SergeMaslyukov
@@ -36,7 +37,7 @@ import org.riverock.webmill.admin.utils.FacesTools;
  *         Time: 21:55:44
  *         $Id: PortalUserSessionBean.java 753 2006-07-10 07:53:57Z serg_main $
  */
-public class SiteBean implements Serializable {
+public class SiteBean implements Site, Serializable {
     private static final long serialVersionUID = 2057005502L;
 
     private Long siteId=null;
@@ -54,7 +55,7 @@ public class SiteBean implements Serializable {
     public SiteBean(){
     }
 
-    public SiteBean(SiteBean site){
+    public SiteBean(Site site){
         this.siteId = site.getSiteId();
         this.companyId = site.getCompanyId();
         this.siteName = site.getSiteName();
@@ -93,6 +94,10 @@ public class SiteBean implements Serializable {
 
     public String getProperties() {
         return properties;
+    }
+
+    public String getPortalCharset() {
+        return "utf-8";
     }
 
     public void setProperties(String properties) {

@@ -27,12 +27,15 @@ package org.riverock.webmill.admin.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.common.TreeItem;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 13.07.2006
  *         Time: 18:41:20
  */
-public class CatalogItemBean implements Serializable {
+public class CatalogItemBean implements CatalogItem, Serializable {
     private static final long serialVersionUID = 1057005506L;
 
     private Long catalogId;
@@ -49,7 +52,7 @@ public class CatalogItemBean implements Serializable {
     private String keyword;
     private String metadata;
     private String portletRole;
-    private List<CatalogItemBean> subCatalogItemList = null;
+    private List<CatalogItem> subCatalogItemList = null;
 
     public CatalogItemBean(Long portletId, Long templateId, Long catalogLanguageId, Integer orderField, String keyMessage, String url) {
         this.portletId = portletId;
@@ -60,7 +63,7 @@ public class CatalogItemBean implements Serializable {
         this.url = url;
     }
 
-    public CatalogItemBean(CatalogItemBean catalogItemBean) {
+    public CatalogItemBean(CatalogItem catalogItemBean) {
         this.catalogId = catalogItemBean.getCatalogId();
         this.topCatalogId = catalogItemBean.getTopCatalogId();
         this.portletId = catalogItemBean.getPortletId();
@@ -78,11 +81,11 @@ public class CatalogItemBean implements Serializable {
         this.subCatalogItemList = catalogItemBean.getSubCatalogItemList();
     }
 
-    public List<CatalogItemBean> getSubCatalogItemList() {
+    public List<CatalogItem> getSubCatalogItemList() {
         return subCatalogItemList;
     }
 
-    public void setSubCatalogItemList(List<CatalogItemBean> subCatalogItemList) {
+    public void setSubCatalogItemList(List<CatalogItem> subCatalogItemList) {
         this.subCatalogItemList = subCatalogItemList;
     }
 
@@ -196,5 +199,21 @@ public class CatalogItemBean implements Serializable {
 
     public void setPortletRole(String portletRole) {
         this.portletRole = portletRole;
+    }
+
+    public Long getTopId() {
+        return topCatalogId;
+    }
+
+    public Long getId() {
+        return catalogId;
+    }
+
+    public List<TreeItem> getSubTree() {
+        return (List)subCatalogItemList;
+    }
+
+    public void setSubTree(List<TreeItem> list) {
+        this.subCatalogItemList = (List)list;
     }
 }

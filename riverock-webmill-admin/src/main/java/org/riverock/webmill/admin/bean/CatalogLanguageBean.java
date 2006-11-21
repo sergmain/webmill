@@ -27,12 +27,14 @@ package org.riverock.webmill.admin.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 13.07.2006
  *         Time: 18:44:56
  */
-public class CatalogLanguageBean implements Serializable {
+public class CatalogLanguageBean implements CatalogLanguageItem, Serializable {
     private static final long serialVersionUID = 1057005507L;
 
     private Long catalogLanguageId;
@@ -40,6 +42,16 @@ public class CatalogLanguageBean implements Serializable {
     private Long siteLanguageId;
     private String catalogCode = null;
     private List<CatalogItemBean> catalogItems = null;
+
+    public CatalogLanguageBean() {
+    }
+
+    public CatalogLanguageBean(CatalogLanguageItem bean) {
+        this.catalogLanguageId = bean.getCatalogLanguageId();
+        isDefault = bean.getDefault();
+        this.siteLanguageId = bean.getSiteLanguageId();
+        this.catalogCode = bean.getCatalogCode();
+    }
 
     public List<CatalogItemBean> getCatalogItems() {
         return catalogItems;

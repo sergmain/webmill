@@ -28,7 +28,7 @@
     <property name="Name" value="riverock-webmill-admin"/>
     <property name="portlet-context-name" value=""/>
 
-    <import file="..\riverock-globals-prop.xml"/>
+    <import file="../riverock-globals-prop.xml"/>
 
     <property name="release-version" value="${webmill-portal-release-version}"/>
     <property name="name-portal-release-version" value="webmill-portal-${webmill-portal-release-version}"/>
@@ -48,6 +48,8 @@
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
 
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${secure.lib}"/>
@@ -131,6 +133,7 @@
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
+        <include name="${riverock-webmill.lib}"/>
         <include name="${riverock-webmill-admin.lib}"/>
 
         <include name="${commons-lang.lib}"/>
@@ -147,6 +150,16 @@
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>
         <include name="${myfaces-tomahawk.lib}"/>
+
+        <include name="${ehcache.lib}"/>
+        <include name="${ejb3-persistence.lib}"/>
+        <include name="${hibernate.lib}"/>
+        <include name="${hibernate-annotation.lib}"/>
+        <include name="${dom4j.lib}"/>
+        <include name="${cglib.lib}"/>
+        <include name="${antlr.lib}"/>
+        <include name="${asm.lib}"/>
+        <include name="${jta.lib}"/>
     </patternset>
 
     <property name="context.war.name" value="webmill-admin.war"/>
@@ -160,7 +173,7 @@
             </fileset>
         </delete>
 
-        <copy todir="${webmill-structure-dir}" file="..\riverock-webmill-db\xml\webmill-schema.xml " overwrite="true"/>
+        <copy todir="${webmill-structure-dir}" file="../riverock-webmill-db/xml/webmill-schema.xml " overwrite="true"/>
 
         <property name="war-file-name" value="${build.dir}/${context.war.name}"/>
         <delete file="${war-file-name}"/>

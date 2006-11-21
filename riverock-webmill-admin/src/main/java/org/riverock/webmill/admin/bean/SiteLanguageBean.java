@@ -28,13 +28,14 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 13.07.2006
  *         Time: 18:05:28
  */
-public class SiteLanguageBean implements Serializable {
+public class SiteLanguageBean implements SiteLanguage, Serializable {
     private static final long serialVersionUID = 2057005504L;
 
     private Long siteLanguageId;
@@ -53,10 +54,10 @@ public class SiteLanguageBean implements Serializable {
         this.nameCustomLanguage = nameCustomLanguage;
     }
 
-    public SiteLanguageBean(SiteLanguageBean siteLanguage) {
+    public SiteLanguageBean(SiteLanguage siteLanguage) {
         this.siteLanguageId = siteLanguage.getSiteLanguageId();
         this.siteId = siteLanguage.getSiteId();
-        this.locale = siteLanguage.getLocale();
+        this.locale = siteLanguage.getCustomLanguage();
         this.nameCustomLanguage = siteLanguage.getNameCustomLanguage();
     }
 
@@ -94,6 +95,10 @@ public class SiteLanguageBean implements Serializable {
 
     public Long getSiteId() {
         return siteId;
+    }
+
+    public String getCustomLanguage() {
+        return locale;
     }
 
     public void setSiteId(Long siteId) {

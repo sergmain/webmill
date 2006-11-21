@@ -62,7 +62,7 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
         List siteList = session.createQuery(
             "select site from org.riverock.webmill.portal.bean.SiteBean as site " +
                 "where site.companyId in (:companyIds)")
-            .setParameterList("ompanyIds", authSession.getGrantedCompanyIdList())
+            .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
             .list();
         session.getTransaction().commit();
         return (List)siteList;

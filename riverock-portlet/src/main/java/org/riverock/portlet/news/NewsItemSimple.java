@@ -24,18 +24,20 @@
 package org.riverock.portlet.news;
 
 import javax.portlet.PortletConfig;
-import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
+import org.riverock.generic.utils.DateUtils;
+import org.riverock.interfaces.portal.bean.News;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.tools.PortletMetadataService;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  *
@@ -47,7 +49,7 @@ import org.riverock.webmill.container.tools.PortletMetadataService;
 public final class NewsItemSimple implements PortletResultObject, PortletResultContent {
     private final static Logger log = Logger.getLogger( NewsItemSimple.class );
 
-    private NewsItemSimpleType newsItem = new NewsItemSimpleType();
+    private News news;
 
     private RenderRequest renderRequest = null;
 
@@ -58,75 +60,68 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
     public NewsItemSimple() {
     }
 
-    public PortletResultContent getInstance() throws PortletException
-    {
-        Long id__ = PortletService.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
-        try {
-            NewsItem item = NewsItem.getInstance(id__);
-
-            newsItem.setNewsAnons( item.newsItem.getNewsAnons() );
-            newsItem.setNewsDate( item.newsItem.getNewsDate() );
-            newsItem.setNewsHeader( item.newsItem.getNewsHeader() );
-            newsItem.setNewsText( item.newsItem.getNewsText() );
-            newsItem.setNewsTime( item.newsItem.getNewsTime() );
-        }
-        catch(Exception e)
-        {
-            final String es = "Error get NewsItem object";
-            log.error(es, e);
-            throw new PortletException( es, e );
-        }
-        return this;
+    private NewsItemSimple(News news) {
+        this.news =news;
     }
 
-    public PortletResultContent getInstance( Long id ) throws PortletException {
-        return getInstance();
+    public News getNews() {
+        Long newsId = PortletService.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
+        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        return provider.getPortalCmsNewsDao().getNews(newsId);
     }
 
-    public PortletResultContent getInstanceByCode( String portletCode_ ) throws PortletException {
-        return getInstance();
+    public PortletResultContent getInstance( Long id ) {
+        return new NewsItemSimple( getNews() );
+    }
+
+    public PortletResultContent getInstanceByCode( String newsCode ) {
+        return new NewsItemSimple( getNews() );
     }
 
     public byte[] getPlainHTML() throws Exception {
 
+        String newsDate = DateUtils.getStringDate(news.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale());
+        String newsTime = DateUtils.getStringDate(news.getPostDate(), "HH:mm", renderRequest.getLocale());
+
         StringBuilder s = new StringBuilder().
             append( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n").
             append( "<tr><td colspan=\"2\" class=\"newshead\">" ).
-            append( newsItem.getNewsHeader() ).
+            append( news.getNewsHeader() ).
             append( "</td></tr>\n" ).
-            append( "<tr><td class=\"newsdate\" valign=\"top\">" ).append( newsItem.getNewsDate() ).append( "</td><td>&nbsp;</td></tr>\n" ).
+            append( "<tr><td class=\"newsdate\" valign=\"top\">" ).append( newsDate ).append( "</td><td>&nbsp;</td></tr>\n" ).
             append( "<tr>\n" ).
             append( "<td class=\"newstime\" valign=\"top\">\n" ).
-            append( newsItem.getNewsTime() ).
+            append( newsTime ).
             append( "</td>\n" ).
             append( "<td width=\"100%\" class=\"newstitle\">\n<h6> " ).
-            append( newsItem.getNewsAnons() ).
+            append( news.getNewsAnons() ).
             append( "</h6>\n" ).
-            append( newsItem.getNewsText() ).
+            append( news.getNewsText() ).
             append( "\n</td></tr>\n" ).
             append( "</table>\n" );
 
         return s.toString().getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 
-    public byte[] getXml()
-        throws Exception
-    {
+    public byte[] getXml() throws Exception {
         return getXml( "NewsItemSimple");
     }
 
     public byte[] getXml( final String rootElement) throws Exception {
+
+        String newsDate = DateUtils.getStringDate(news.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale());
+        String newsTime = DateUtils.getStringDate(news.getPostDate(), "HH:mm", renderRequest.getLocale());
 
         String root = PortletMetadataService.getMetadata( renderRequest, "xml-root-name", rootElement );
 
         String xml = new StringBuilder().
             append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).
             append( '<' ).append( root ).append( '>' ).
-            append( "<NewsDate>" ).append( newsItem.getNewsDate() ).append( "</NewsDate>" ).
-            append( "<NewsTime>" ).append( newsItem.getNewsTime() ).append( "</NewsTime>" ).
-            append( "<NewsHeader>" ).append( newsItem.getNewsHeader()!=null?newsItem.getNewsHeader():"" ).append( "</NewsHeader>" ).
-            append( "<NewsAnons>" ).append( newsItem.getNewsAnons()!=null?newsItem.getNewsAnons():"" ).append( "</NewsAnons>" ).
-            append( "<NewsText>" ).append( newsItem.getNewsText()!=null?newsItem.getNewsText():"" ).append( "</NewsText>" ).
+            append( "<NewsDate>" ).append( newsDate ).append( "</NewsDate>" ).
+            append( "<NewsTime>" ).append( newsTime ).append( "</NewsTime>" ).
+            append( "<NewsHeader>" ).append( news.getNewsHeader()!=null? news.getNewsHeader():"" ).append( "</NewsHeader>" ).
+            append( "<NewsAnons>" ).append( news.getNewsAnons()!=null? news.getNewsAnons():"" ).append( "</NewsAnons>" ).
+            append( "<NewsText>" ).append( news.getNewsText()!=null? news.getNewsText():"" ).append( "</NewsText>" ).
             append( "</" ).append( root ).append( '>' ).toString();
 
         if (log.isDebugEnabled()) {
