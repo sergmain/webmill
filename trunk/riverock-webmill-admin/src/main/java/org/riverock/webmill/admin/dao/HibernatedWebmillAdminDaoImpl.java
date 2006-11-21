@@ -135,7 +135,7 @@ public class HibernatedWebmillAdminDaoImpl implements WebmillAdminDao {
                 return true;
             }
         };
-        InternalDaoFactory.getInternalAuthDao().addUserInfo(null, authInfo, new ArrayList<RoleEditableBean>(), userBean.getCompanyId(), null);
+        InternalDaoFactory.getInternalAuthDao().addUserInfo( authInfo, new ArrayList<RoleEditableBean>(), userBean.getCompanyId(), null);
         return userId;
     }
 
