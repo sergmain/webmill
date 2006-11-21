@@ -27,6 +27,7 @@ package org.riverock.webmill.admin.bean;
 import java.io.Serializable;
 
 import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.interfaces.portal.bean.Company;
 
 /**
  * @author SergeMaslyukov
@@ -34,7 +35,7 @@ import org.riverock.webmill.admin.utils.FacesTools;
  *         Time: 21:55:44
  *         $Id: PortalUserSessionBean.java 753 2006-07-10 07:53:57Z serg_main $
  */
-public class CompanyBean implements Serializable {
+public class CompanyBean implements Company, Serializable {
     private static final long serialVersionUID = 2055005502L;
 
     private String name = null;
@@ -50,7 +51,7 @@ public class CompanyBean implements Serializable {
     public CompanyBean() {
     }
 
-    public CompanyBean(CompanyBean company) {
+    public CompanyBean(Company company) {
         this.name = company.getName();
         this.id = company.getId();
         this.shortName = company.getShortName();

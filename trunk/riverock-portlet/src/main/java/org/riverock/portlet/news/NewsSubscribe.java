@@ -38,7 +38,6 @@ import org.apache.log4j.Logger;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.ServletTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.user.UserMetadataItem;
@@ -58,18 +57,15 @@ import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 public class NewsSubscribe implements PortletResultObject, PortletResultContent {
     private final static Logger log = Logger.getLogger( NewsSubscribe.class );
 
-    public NewsSubscribe()
-    {
+    public NewsSubscribe() {
     }
 
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
-//    private ResourceBundle bundle = null;
 
     public void setParameters( final RenderRequest renderRequest, final RenderResponse renderResponse, final PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
         this.renderResponse = renderResponse;
-//        this.bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
     }
 
     public PortletResultContent getInstance( final Long id )
@@ -130,37 +126,21 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
     public byte[] getPlainHTML() throws Exception {
         StringBuilder out = new StringBuilder();
-        DatabaseAdapter db_ = null;
-        try {
+        AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
-            db_ = DatabaseAdapter.getInstance();
-
-            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
-
-            if ( userNotLogged(auth_, out ) ) {
-                return prepareReturn( out );
-            }
-
-            if (!emailIsValid(auth_, out )) {
-                setSubscribeStatus(renderRequest, false);
-                return prepareReturn( out );
-            }
-
-            boolean isSubscribed = getSubscribeStatus( auth_ );
-            printSubscribeForm( out, isSubscribed );
-
+        if ( userNotLogged(auth_, out ) ) {
             return prepareReturn( out );
         }
-        catch (Exception e) {
-            final String es = "Erorr processing news subscribe page";
-            log.error(es, e);
-            throw new PortletException( es, e );
-        }
-        finally {
-            DatabaseAdapter.close( db_ );
-            db_ = null;
+
+        if (!emailIsValid(auth_, out )) {
+            setSubscribeStatus(renderRequest, false);
+            return prepareReturn( out );
         }
 
+        boolean isSubscribed = getSubscribeStatus( auth_ );
+        printSubscribeForm( out, isSubscribed );
+
+        return prepareReturn( out );
     }
 
     private boolean emailIsValid(AuthSession auth_, StringBuilder out) {

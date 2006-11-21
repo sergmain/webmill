@@ -32,7 +32,6 @@ import java.util.Collections;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.webmill.container.portlet.PortletContainer;
@@ -392,7 +391,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         session.getTransaction().commit();
     }
 
-    public void deleteCatalogLanguageForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId) {
+    public void deleteCatalogLanguageForSiteLanguage(Long siteLanguageId) {
         if (siteLanguageId==null) {
             return;
         }

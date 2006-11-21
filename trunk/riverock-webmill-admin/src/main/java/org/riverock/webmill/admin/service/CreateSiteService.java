@@ -42,6 +42,9 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.admin.bean.*;
 import org.riverock.webmill.admin.dao.DaoFactory;
 import org.riverock.webmill.admin.dao.WebmillAdminDao;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.interfaces.portal.bean.CatalogItem;
 
 /**
  * @author SergeMaslyukov
@@ -228,7 +231,7 @@ public class CreateSiteService {
                 portlets.get(millLogoutPortlet), dynamicTemplateBean.getTemplateId(), catalogLanguageItem.getCatalogLanguageId(), 40, "Logout", "logout"
             )
         );
-        processMenu(siteLanguage, catalogLanguageItem, menuList, 0L);
+        processMenu(siteLanguage, catalogLanguageItem, (List)menuList, 0L);
     }
 
     private static void initPortletName(WebmillAdminDao dao, String millIndexPortlet, Map<String, Long> portlets) {
@@ -240,13 +243,13 @@ public class CreateSiteService {
         portlets.put( millIndexPortlet,  portletNameBean.getPortletId());
     }
 
-    private static void processMenu(SiteLanguageBean siteLanguage, CatalogLanguageBean catalogLanguageItem, List<CatalogItemBean> menuList, Long topCatalogItemId) {
+    private static void processMenu(SiteLanguage siteLanguage, CatalogLanguageItem catalogLanguageItem, List<CatalogItem> menuList, Long topCatalogItemId) {
         if (menuList == null) {
             return;
         }
 
         int orderFiled = 1;
-        for (CatalogItemBean menuItem : menuList) {
+        for (CatalogItem menuItem : menuList) {
             if (log.isDebugEnabled()) {
                 log.debug("Process menu item");
                 log.debug("    portletName: " + menuItem.getPortletId());

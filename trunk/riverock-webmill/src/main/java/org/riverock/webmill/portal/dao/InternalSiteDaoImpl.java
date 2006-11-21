@@ -223,7 +223,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(siteId);
             InternalDaoFactory.getInternalCssDao().deleteCssForSite(dbDyn, siteId);
             InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
-            InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHostForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHostForSite(siteId);
             InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguageForSite(dbDyn, siteId);
 
 
@@ -321,7 +321,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
                     }
                     if (!isPresent) {
                         VirtualHost hostBean = new VirtualHostBean(null, site.getSiteId(), host );
-                        InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(dbDyn, hostBean);
+                        InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(hostBean);
                     }
                 }
             }
@@ -411,7 +411,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             if (hosts!=null) {
                 for (String s : hosts) {
                     VirtualHost host = new VirtualHostBean(null, siteId, s );
-                    InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(dbDyn, host);
+                    InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(host);
                 }
             }
 

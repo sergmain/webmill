@@ -41,12 +41,36 @@ public interface InternalCompanyDao extends Serializable {
     public Company getCompany( String companyName );
     public Company getCompany( Long id, AuthSession authSession );
 
-    public Long processAddCompany( Company companyBean, Long holdingId );
-    public Long processAddCompany( Company companyBean, String userLogin, Long holdingId, AuthSession authSession );
+    public Long processAddCompany( Company company, Long holdingId );
+    public Long processAddCompany( Company company, String userLogin, Long holdingId, AuthSession authSession );
 
-    public void processSaveCompany( Company companyBean, AuthSession authSession );
-    public void processDeleteCompany( Company companyBean, AuthSession authSession );
+    public void processSaveCompany( Company company, AuthSession authSession );
+    public void processDeleteCompany( Company company, AuthSession authSession );
 
     public List<Company> getCompanyList( AuthSession authSession );
 
+    /**
+     * Get list of company without restriction. Deleted company (isDeleted==true) not included.
+     * @return list of company
+     */
+    public List<Company> getCompanyList_notRestricted();
+
+    /**
+     * Get company without restriction. Deleted company (isDeleted==true) not returned.
+     * @param companyId PK of company
+     * @return company
+     */
+    public Company getCompany_notRestricted( Long companyId);
+
+    /**
+     * Updatet company without restriction. Access right on this company not checked
+     * @param company company
+     */
+    public void processSaveCompany_notRestricted( Company company);
+
+    /**
+     * Delete company without restriction. Access right on this company not checked
+     * @param company company
+     */
+    public void processDeleteCompany_notRestricted( Company company );
 }

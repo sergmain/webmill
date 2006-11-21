@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
@@ -56,7 +55,7 @@ import org.riverock.webmill.utils.HibernateUtils;
 public class HibernateAuthDaoImpl implements InternalAuthDao {
     private static Logger log = Logger.getLogger(HibernateAuthDaoImpl.class);
 
-    public UserBean getUserBean(String userLogin) {
+    public User getUser(String userLogin) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         UserBean user = (UserBean)session.createQuery(
@@ -67,10 +66,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             .uniqueResult();
         session.getTransaction().commit();
         return user;
-    }
-
-    public UserBean getUserBean(DatabaseAdapter db_, String userLogin) {
-        return getUserBean(userLogin);
     }
 
     public List<Long> getGrantedUserIdList(String username) {
@@ -370,7 +365,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         return (List) authInfos;
     }
 
-    public List<AuthInfo> getAuthInfo(DatabaseAdapter db_, Long userId, Long siteId) {
+    public List<AuthInfo> getAuthInfo(Long userId, Long siteId) {
         List<AuthInfo> list = new ArrayList<AuthInfo>();
 
         if (userId==null || siteId==null) {
@@ -682,10 +677,10 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     public Long addUserInfo(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles) {
         Long companyId = authSession.checkCompanyId( authInfo.getCompanyId() );
         Long holdingId = authSession.checkHoldingId( authInfo.getHoldingId() );
-        return addUserInfo(null, authInfo, roles, companyId, holdingId);
+        return addUserInfo(authInfo, roles, companyId, holdingId);
     }
 
-    public Long addUserInfo(DatabaseAdapter db, AuthInfo authInfo, List<RoleEditableBean> roles, Long companyId, Long holdingId) {
+    public Long addUserInfo(AuthInfo authInfo, List<RoleEditableBean> roles, Long companyId, Long holdingId) {
         if (authInfo==null) {
             throw new IllegalStateException("Error add new auth of user, infoAuth.getAuthInfoInternal() is null");
         }
@@ -706,8 +701,11 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         AuthInfoImpl bean = new AuthInfoImpl();
 
         if( log.isDebugEnabled() ) {
-            log.debug( "companyId " + companyId );
-            log.debug( "holdingId " + holdingId );
+            log.debug( "companyId: " + companyId );
+            log.debug( "holdingId: " + holdingId );
+            log.debug( "isRoot: " + authInfo.isRoot() );
+            log.debug( "isCompany: " + authInfo.isCompany() );
+            log.debug( "isHolding: " + authInfo.isHolding() );
         }
         bean.setCompanyId(companyId);
         bean.setHoldingId(holdingId);
@@ -716,6 +714,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         bean.setUserPassword(authInfo.getUserPassword());
         bean.setCompany(authInfo.isCompany());
         bean.setHolding(authInfo.isHolding());
+        bean.setRoot(authInfo.isRoot());
 
         session.save(bean);
 
@@ -731,7 +730,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             AuthRelateRole relate = new AuthRelateRole();
             relate.setAuthUserId(bean.getAuthUserId());
             relate.setRoleId(role.getRoleId());
-            session.save(bean);
+            session.save(relate);
         }
 
         session.flush();
@@ -889,10 +888,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public RoleBean getRole(Long roleId) {
-        return getRole(null, roleId);
-    }
-
-    public RoleBean getRole(DatabaseAdapter db, Long roleId) {
         if( roleId == null ) {
             return null;
         }
@@ -907,7 +902,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         return bean;
     }
 
-    public RoleBean getRole(DatabaseAdapter db, String roleName) {
+    public RoleBean getRole(String roleName) {
         if( roleName == null ) {
             return null;
         }

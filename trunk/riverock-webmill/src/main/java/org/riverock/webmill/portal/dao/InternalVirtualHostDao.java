@@ -27,7 +27,6 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author Sergei Maslyukov
@@ -37,10 +36,9 @@ import org.riverock.generic.db.DatabaseAdapter;
 public interface InternalVirtualHostDao {
     public List<VirtualHost> getVirtualHostsFullList();
     public List<VirtualHost> getVirtualHosts(Long siteId);
+
     public Long createVirtualHost(VirtualHost virtualHost);
+
     public void deleteVirtualHost(VirtualHost virtualHost);
-
-    public void deleteVirtualHostForSite(DatabaseAdapter adapter, Long siteId);
-
-    public Long createVirtualHost(DatabaseAdapter adapter, VirtualHost host);
+    public void deleteVirtualHostForSite(Long siteId);
 }

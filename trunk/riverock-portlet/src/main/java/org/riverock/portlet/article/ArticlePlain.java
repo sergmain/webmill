@@ -116,16 +116,16 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         return new ArticlePlain(article);
     }
 
-    public PortletResultContent getInstanceByCode( String articleCode_ ) {
+    public PortletResultContent getInstanceByCode( String articleCode ) {
         if( log.isDebugEnabled() ) {
-            log.debug( "#10.01.01 " + articleCode_ );
+            log.debug( "#10.01.01 " + articleCode );
         }
 
         PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
         Long siteLangaugeId = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
 
         PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
-        Article article = provider.getPortalCmsArticleDao().getArticleByCode(siteLangaugeId, articleCode_);
+        Article article = provider.getPortalCmsArticleDao().getArticleByCode(siteLangaugeId, articleCode);
         return new ArticlePlain(article);
     }
 

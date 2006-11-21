@@ -29,6 +29,7 @@ import java.util.Date;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.interfaces.portal.bean.User;
 
 /**
  * @author SergeMaslyukov
@@ -36,7 +37,7 @@ import org.riverock.webmill.admin.utils.FacesTools;
  *         Time: 21:55:44
  *         $Id: PortalUserSessionBean.java 753 2006-07-10 07:53:57Z serg_main $
  */
-public class UserBean implements Serializable {
+public class UserBean implements User, Serializable {
     private static final long serialVersionUID = 2057005507L;
 
     private Long userId = null;
@@ -61,7 +62,7 @@ public class UserBean implements Serializable {
     public UserBean() {
     }
 
-    public UserBean(UserBean beanPortal) {
+    public UserBean(User beanPortal) {
         this.userId = beanPortal.getUserId();
         this.companyId = beanPortal.getCompanyId();
         this.firstName = beanPortal.getFirstName();
@@ -73,9 +74,9 @@ public class UserBean implements Serializable {
         this.phone = beanPortal.getPhone();
         this.email = beanPortal.getEmail();
         this.isDeleted = beanPortal.isDeleted();
-        this.login = beanPortal.getLogin();
-        this.password1 = beanPortal.getPassword1();
-        this.password2 = beanPortal.getPassword2();
+//        this.login = beanPortal.getLogin();
+//        this.password1 = beanPortal.getPassword1();
+//        this.password2 = beanPortal.getPassword2();
     }
 
     public String getLogin() {
@@ -202,7 +203,7 @@ public class UserBean implements Serializable {
         this.userId = id;
     }
 
-    public boolean equals( UserBean portalUserBean ) {
+    public boolean equals( User portalUserBean ) {
         if( portalUserBean == null || portalUserBean.getUserId()==null || userId ==null ) {
             return false;
         }

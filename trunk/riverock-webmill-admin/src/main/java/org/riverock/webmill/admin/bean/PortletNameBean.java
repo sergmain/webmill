@@ -27,13 +27,14 @@ package org.riverock.webmill.admin.bean;
 import java.io.Serializable;
 
 import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.interfaces.portal.bean.PortletName;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 13.07.2006
  *         Time: 18:22:34
  */
-public class PortletNameBean implements Serializable {
+public class PortletNameBean implements PortletName, Serializable {
     private static final long serialVersionUID = 2057005507L;
 
     private Long portletId = null;
@@ -43,7 +44,7 @@ public class PortletNameBean implements Serializable {
     public PortletNameBean() {
     }
 
-    public PortletNameBean(PortletNameBean bean) {
+    public PortletNameBean(PortletName bean) {
         this.portletId = bean.getPortletId();
         this.portletName = bean.getPortletName();
         this.isActive = bean.isActive();

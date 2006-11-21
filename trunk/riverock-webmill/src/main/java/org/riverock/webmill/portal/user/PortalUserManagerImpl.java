@@ -24,8 +24,6 @@
  */
 package org.riverock.webmill.portal.user;
 
-import java.sql.SQLException;
-import java.sql.Types;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,21 +37,19 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.portal.bean.UserOperationStatus;
 import org.riverock.interfaces.portal.bean.UserRegistration;
 import org.riverock.interfaces.portal.mail.PortalMailServiceProvider;
 import org.riverock.interfaces.portal.user.PortalUserManager;
 import org.riverock.interfaces.sso.a3.AuthInfo;
-import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
+import org.riverock.webmill.a3.bean.AuthInfoImpl;
 import org.riverock.webmill.portal.bean.RoleEditableBeanImpl;
 import org.riverock.webmill.portal.bean.UserBean;
 import org.riverock.webmill.portal.bean.UserOperationStatusBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.a3.bean.AuthInfoImpl;
 
 /**
  * @author Sergei Maslyukov
@@ -85,9 +81,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
         try {
             Thread.currentThread().setContextClassLoader(classLoader);
 
-            DatabaseAdapter db = null;
             try {
-                db = DatabaseAdapter.getInstance();
                 User user = InternalDaoFactory.getInternalUserDao().getUserByEMail(eMail);
 
                 if (user == null) {
@@ -97,7 +91,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                     return new UserOperationStatusBean(PortalUserManager.STATUS_USER_DELETED);
                 }
 
-                List<AuthInfo> authInfos = InternalDaoFactory.getInternalAuthDao().getAuthInfo(db, user.getUserId(), siteId);
+                List<AuthInfo> authInfos = InternalDaoFactory.getInternalAuthDao().getAuthInfo(user.getUserId(), siteId);
                 if (authInfos == null || authInfos.isEmpty()) {
                     return new UserOperationStatusBean(PortalUserManager.STATUS_NOT_REGISTERED);
                 }
@@ -126,10 +120,6 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 log.error(es, e);
                 throw new IllegalStateException(es, e);
             }
-            finally {
-                DatabaseManager.close(db);
-                db = null;
-            }
         }
         finally {
             Thread.currentThread().setContextClassLoader(oldLoader);
@@ -143,27 +133,20 @@ public class PortalUserManagerImpl implements PortalUserManager {
             Thread.currentThread().setContextClassLoader(classLoader);
 
             // TODO!!! all operation must in single transaction
-            DatabaseAdapter db = null;
             try {
-                db = DatabaseAdapter.getInstance();
 
                 if (log.isDebugEnabled()) {
                     log.debug("Register user with e-mail: " + userRegistration.getEmail());
                 }
-                Long countRecord = DatabaseManager.getLongValue(
-                    db,
-                    "select count(*) COUNT_RECORDS from WM_AUTH_USER where USER_LOGIN=?",
-                    new Object[]{userRegistration.getUserLogin()},
-                    new int[] {Types.VARCHAR}
-                );
+                User checkUser = InternalDaoFactory.getInternalAuthDao().getUser(userRegistration.getUserLogin());
                 if (log.isDebugEnabled()) {
-                    log.debug("Login " + userRegistration.getUserLogin() + " exists: " + (countRecord > 0));
+                    log.debug("Login " + userRegistration.getUserLogin() + " exists: " + (checkUser!=null));
                 }
-                if (countRecord > 0) {
+                if (checkUser!=null) {
                     return new UserOperationStatusBean(PortalUserManager.STATUS_LOGIN_ALREADY_REGISTERED);
                 }
 
-                User checkUser = InternalDaoFactory.getInternalUserDao().getUserByEMail(userRegistration.getEmail());
+                checkUser = InternalDaoFactory.getInternalUserDao().getUserByEMail(userRegistration.getEmail());
                 if (log.isDebugEnabled()) {
                     log.debug("Account for e-mail " + userRegistration.getEmail() + " already registered: " + (checkUser != null));
                 }
@@ -211,7 +194,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 StringTokenizer st = new StringTokenizer(roles, ",");
                 while (st.hasMoreTokens()) {
                     String role = st.nextToken();
-                    RoleBean bean = InternalDaoFactory.getInternalAuthDao().getRole(db, role);
+                    RoleBean bean = InternalDaoFactory.getInternalAuthDao().getRole(role);
                     if (bean == null) {
                         log.warn("role specified in metadata for register portlet not exist. role: " + role);
                         continue;
@@ -231,7 +214,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 authInfo.setHolding(false);
                 authInfo.setUserId(userId);
 
-                InternalDaoFactory.getInternalAuthDao().addUserInfo(db, authInfo, roleList, companyId, null);
+                InternalDaoFactory.getInternalAuthDao().addUserInfo(authInfo, roleList, companyId, null);
 
                 String subject = messages.get(PortalUserManager.CREATE_ACCOUNT_SUBJECT_MESSAGE);
                 String body = messages.get(PortalUserManager.CREATE_ACCOUNT_BODY_MESSAGE);
@@ -241,24 +224,12 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 );
 
 
-                db.commit();
                 return new UserOperationStatusBean(PortalUserManager.STATUS_OK_OPERATION);
             }
             catch (Exception e) {
-                try {
-                    if (db != null)
-                        db.rollback();
-                }
-                catch (SQLException e1) {
-                    // catch rollback exception
-                }
                 String es = "Error register new user";
                 log.error(es, e);
                 throw new IllegalStateException(es, e);
-            }
-            finally {
-                DatabaseManager.close(db);
-                db = null;
             }
         }
         finally {

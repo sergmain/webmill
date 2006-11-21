@@ -27,13 +27,14 @@ package org.riverock.webmill.admin.bean;
 import java.io.Serializable;
 
 import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.interfaces.portal.bean.Xslt;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 13.07.2006
  *         Time: 18:02:15
  */
-public class XsltBean implements Serializable {
+public class XsltBean implements Xslt, Serializable {
     private static final long serialVersionUID = 2058005504L;
 
     private Long id = null;
@@ -41,16 +42,26 @@ public class XsltBean implements Serializable {
     private String name = null;
     private String xsltData = null;
     private boolean isCurrent = false;
+    private int version;
 
     public XsltBean() {
     }
 
-    public XsltBean(XsltBean xslt) {
+    public XsltBean(Xslt xslt) {
         this.id = xslt.getId();
         this.name = xslt.getName();
         this.siteLanguageId = xslt.getSiteLanguageId();
         this.xsltData = xslt.getXsltData();
         this.isCurrent = xslt.isCurrent();
+        this.version = xslt.getVersion();
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public boolean isCurrent() {

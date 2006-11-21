@@ -26,7 +26,6 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portal.bean.Template;
 
 /**

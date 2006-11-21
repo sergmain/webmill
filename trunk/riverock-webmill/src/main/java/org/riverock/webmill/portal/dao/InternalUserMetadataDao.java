@@ -27,7 +27,6 @@ package org.riverock.webmill.portal.dao;
 import java.util.Date;
 
 import org.riverock.interfaces.portal.user.UserMetadataItem;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author Sergei Maslyukov

@@ -27,13 +27,14 @@ package org.riverock.webmill.admin.bean;
 import java.io.Serializable;
 
 import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.interfaces.portal.bean.Template;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 13.07.2006
  *         Time: 18:04:07
  */
-public class TemplateBean implements Serializable {
+public class TemplateBean implements Template, Serializable {
     private static final long serialVersionUID = 2059005504L;
 
     private Long templateId;
@@ -42,6 +43,7 @@ public class TemplateBean implements Serializable {
     private String templateData;
     private String templateLanguage = null;
     private boolean isDefaultDynamic = false;
+    private int version;
 
     public TemplateBean(){
     }
@@ -53,13 +55,22 @@ public class TemplateBean implements Serializable {
         isDefaultDynamic = defaultDynamic;
     }
 
-    public TemplateBean(TemplateBean template){
+    public TemplateBean(Template template){
         this.templateId=template.getTemplateId();
         this.siteLanguageId=template.getSiteLanguageId();
         this.templateName=template.getTemplateName();
         this.templateData=template.getTemplateData();
         this.templateLanguage=template.getTemplateLanguage();
         this.isDefaultDynamic=template.isDefaultDynamic();
+        this.version=template.getVersion();
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public String getTemplateLanguage() {

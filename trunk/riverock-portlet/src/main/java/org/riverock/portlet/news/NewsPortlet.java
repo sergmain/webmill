@@ -41,7 +41,9 @@ import org.riverock.portlet.GenericWebmillPortlet;
  * $Id$
  */
 public final class NewsPortlet extends GenericWebmillPortlet {
-    public NewsPortlet(){}
+
+    public NewsPortlet(){
+    }
 
     public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
     }

@@ -155,4 +155,74 @@ public class HibernateUserDaoImpl implements InternalUserDao {
 
         session.getTransaction().commit();
     }
+
+    /**
+     * Get list of all users without restriction. Deleted users (isDeleted==true) not included in list.
+     * @return list of all users in DB
+     */
+    public List<User> getUserList_notRestricted() {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List list = session.createQuery(
+            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+            "where  user.isDeleted=false")
+            .list();
+        session.getTransaction().commit();
+        return list;
+    }
+
+    /**
+     * Get user without restriction. Deleted user (isDeleted==true) will be returned as null.
+     *
+     * @param userId PK of user
+     * @return user
+     */
+    public User getUser_notRestricted(Long userId) {
+        if (userId==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        UserBean bean = (UserBean)session.createQuery(
+            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+            "where  user.userId=:userId ")
+            .setLong("userId", userId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return bean;
+    }
+
+    /**
+     * update user without restriction.
+     *
+     * @param user user for update
+     */
+    public void updateUser_notRestricted(User user) {
+        if (user==null || user.getUserId()==null) {
+            return;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        UserBean bean = (UserBean)session.createQuery(
+            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+            "where  user.userId=:userId and user.isDeleted=false")
+            .setLong("userId", user.getUserId())
+            .uniqueResult();
+
+        if (bean==null) {
+            session.getTransaction().commit();
+            return;
+        }
+        bean.setFirstName(user.getFirstName());
+        bean.setMiddleName(user.getMiddleName());
+        bean.setLastName(user.getLastName());
+        bean.setAddress(user.getAddress());
+        bean.setPhone(user.getPhone());
+        bean.setEmail(user.getEmail());
+
+        session.getTransaction().commit();
+    }
 }

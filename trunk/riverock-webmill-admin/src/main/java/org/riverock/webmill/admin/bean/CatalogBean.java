@@ -29,13 +29,15 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.common.TreeItem;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 13.07.2006
  *         Time: 18:36:55
  */
-public class CatalogBean implements Serializable {
+public class CatalogBean implements CatalogItem, Serializable {
     private static final long serialVersionUID = 2057005507L;
 
     private Long catalogId;
@@ -52,12 +54,12 @@ public class CatalogBean implements Serializable {
     private String keyword;
     private String metadata;
     private String portletRole;
-    private List<CatalogItemBean> subCatalogItemList = null;
+    private List<CatalogItem> subCatalogItemList = null;
 
     public CatalogBean() {
     }
 
-    public CatalogBean(CatalogBean catalogItem) {
+    public CatalogBean(CatalogItem catalogItem) {
         this.catalogId=catalogItem.getCatalogId();
         this.topCatalogId=catalogItem.getTopCatalogId();
         this.portletId=catalogItem.getPortletId();
@@ -75,23 +77,23 @@ public class CatalogBean implements Serializable {
         this.subCatalogItemList=initCatalogList(catalogItem.getSubCatalogItemList());
     }
 
-    private List<CatalogItemBean> initCatalogList(List<CatalogItemBean> subCatalogItemList) {
+    private List<CatalogItem> initCatalogList(List<CatalogItem> subCatalogItemList) {
         if (subCatalogItemList==null) {
             return null;
         }
 
-        List<CatalogItemBean> items = new ArrayList<CatalogItemBean>();
-        for (CatalogItemBean item : subCatalogItemList) {
+        List<CatalogItem> items = new ArrayList<CatalogItem>();
+        for (CatalogItem item : subCatalogItemList) {
             items.add( new CatalogItemBean(item) );
         }
         return items;
     }
 
-    public List<CatalogItemBean> getSubCatalogItemList() {
+    public List<CatalogItem> getSubCatalogItemList() {
         return subCatalogItemList;
     }
 
-    public void setSubCatalogItemList(List<CatalogItemBean> subCatalogItemList) {
+    public void setSubCatalogItemList(List<CatalogItem> subCatalogItemList) {
         this.subCatalogItemList = subCatalogItemList;
     }
 
@@ -205,6 +207,22 @@ public class CatalogBean implements Serializable {
 
     public void setPortletRole(String portletRole) {
         this.portletRole = FacesTools.convertParameter(portletRole);
+    }
+
+    public Long getTopId() {
+        return topCatalogId;
+    }
+
+    public Long getId() {
+        return catalogId;
+    }
+
+    public List<TreeItem> getSubTree() {
+        return (List)subCatalogItemList;
+    }
+
+    public void setSubTree(List<TreeItem> list) {
+        this.subCatalogItemList = (List)list;
     }
 }
 

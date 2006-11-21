@@ -223,7 +223,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
 
         TemplateBean bean = (TemplateBean)session.createQuery(
             "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.siteLanguageId=:siteLanguageId amd template.isDefaultDynamic=true ")
+                "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
             .setLong("siteLanguageId", template.getSiteLanguageId())
             .uniqueResult();
         if (bean!=null) {
@@ -273,7 +273,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
 
         TemplateBean bean = (TemplateBean)session.createQuery(
             "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.siteLanguageId=:siteLanguageId amd template.isDefaultDynamic=true ")
+                "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
             .setLong("siteLanguageId", siteLanguageId)
             .uniqueResult();
         session.getTransaction().commit();

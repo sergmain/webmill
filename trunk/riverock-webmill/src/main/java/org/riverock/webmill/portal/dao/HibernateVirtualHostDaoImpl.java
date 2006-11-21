@@ -30,7 +30,6 @@ import org.hibernate.Session;
 import org.hibernate.Query;
 
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
 
@@ -90,7 +89,7 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         session.getTransaction().commit();
     }
 
-    public void deleteVirtualHostForSite(DatabaseAdapter adapter, Long siteId) {
+    public void deleteVirtualHostForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
@@ -104,7 +103,4 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         session.getTransaction().commit();
     }
 
-    public Long createVirtualHost(DatabaseAdapter adapter, VirtualHost host) {
-        return createVirtualHost(host);
-    }
 }

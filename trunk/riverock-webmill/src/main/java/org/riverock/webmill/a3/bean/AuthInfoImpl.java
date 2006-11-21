@@ -77,10 +77,10 @@ public class AuthInfoImpl implements AuthInfo, Serializable {
     private boolean isCompany = false;
 
     @Column(name="IS_HOLDING")
-    private boolean isHolding = false;
+    private boolean isHolding;
 
     @Column(name="IS_ROOT")
-    private boolean isRoot = false;
+    private boolean isRoot;
 
 
 

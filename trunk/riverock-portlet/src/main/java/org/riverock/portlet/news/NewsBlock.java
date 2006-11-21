@@ -48,14 +48,14 @@ public final class NewsBlock implements PortletResultContent {
 
     private NewsBlockType newsBlockType = null;
 
-    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
-    }
-
     public NewsBlock(NewsBlockType newsBlockType){
         this.newsBlockType = newsBlockType;
     }
 
     public NewsBlock(){
+    }
+
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
     }
 
     public byte[] getPlainHTML() throws Exception {

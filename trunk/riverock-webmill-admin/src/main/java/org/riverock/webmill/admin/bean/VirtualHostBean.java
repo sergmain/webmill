@@ -24,13 +24,17 @@
  */
 package org.riverock.webmill.admin.bean;
 
+import java.io.Serializable;
+
+import org.riverock.interfaces.portal.bean.VirtualHost;
+
 /**
  * @author SergeMaslyukov
  *         Date: 13.07.2006
  *         Time: 21:55:44
  *         $Id: PortalUserSessionBean.java 753 2006-07-10 07:53:57Z serg_main $
  */
-public class VirtualHostBean {
+public class VirtualHostBean implements VirtualHost, Serializable {
     private Long id=null;
     private Long siteId=null;
     private String host=null;
@@ -39,9 +43,15 @@ public class VirtualHostBean {
     }
 
     public VirtualHostBean(Long id, Long siteId, String host) {
-        this.id = id;
-        this.siteId = siteId;
-        this.host = host;
+         this.id = id;
+         this.siteId = siteId;
+         this.host = host;
+    }
+
+    public VirtualHostBean(VirtualHost host) {
+        this.id = host.getId();
+        this.siteId = host.getSiteId();
+        this.host = host.getHost();
     }
 
     public Long getId() {

@@ -98,7 +98,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return authDao.getUserBean( authSession.getUserLogin() );
+            return authDao.getUser( authSession.getUserLogin() );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

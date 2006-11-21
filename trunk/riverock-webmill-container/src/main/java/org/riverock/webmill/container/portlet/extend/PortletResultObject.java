@@ -36,6 +36,12 @@ import javax.portlet.PortletConfig;
  *
  */
 public interface PortletResultObject {
+    /**
+     * method setParameters() always queried before getInstance() and getInstanceByCode() methods
+     * @param renderRequest portlet's request
+     * @param renderResponse portlet's response
+     * @param portletConfig portlet's config
+     */
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig );
     public PortletResultContent getInstance( Long id ) throws PortletException;
     public PortletResultContent getInstanceByCode( String portletCode_ ) throws PortletException;
