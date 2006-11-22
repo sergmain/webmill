@@ -69,6 +69,7 @@ public class HibernateUtils {
         TemplateBean.class,
         ArticleBean.class,
         NewsBean.class,
+        NewsGroupBean.class,
         UserMetadataItemBean.class
     };
 
@@ -136,7 +137,7 @@ public class HibernateUtils {
     }
 
 
-    static void setSessionFactory(SessionFactory sessionFactory) {
+    public static void setSessionFactory(SessionFactory sessionFactory) {
         HibernateUtils.sessionFactory = sessionFactory;
     }
 }

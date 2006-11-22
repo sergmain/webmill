@@ -198,7 +198,7 @@ public final class ExtendedCatalogItemBean {
         }
 
         PortletName portletName = InternalDaoFactory.getInternalPortletNameDao().getPortletName(ctx.getPortletId());
-        if (portletName.getPortletName() == null) {
+        if (portletName==null || portletName.getPortletName() == null) {
             log.error("portletName for id " + ctx.getPortletId() + " not found");
             return null;
         }

@@ -82,7 +82,9 @@ public class ConvertCssBigTableToBlob {
 
     private static void updateBlobForOracle(DatabaseAdapter db, Css css) throws SQLException, IOException {
         // получаем поток на клоб
-        PreparedStatement ps = db.prepareStatement("select css_blob from wm_portal_css where ID_SITE_CONTENT_CSS=?");
+        PreparedStatement ps = db.getConnection().prepareStatement(
+            "select css_blob from wm_portal_css where ID_SITE_CONTENT_CSS=? for update "
+        );
         ps.setLong(1, css.getCssId());
         ResultSet rs = ps.executeQuery();
 

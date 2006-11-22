@@ -123,3 +123,6 @@ alter table wm_news_item
 add column IS_PLAIN decimal(1,0) default 0
 /
 
+alter table WM_PORTAL_CSS
+add column CSS_BLOB blob
+/

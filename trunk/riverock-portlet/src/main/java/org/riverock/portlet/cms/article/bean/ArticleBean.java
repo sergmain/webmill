@@ -41,6 +41,7 @@ public class ArticleBean implements Article, Serializable {
     private String articleCode=null;
     private String articleText=null;
     private boolean isXml=false;
+    private boolean isDeleted;
     private Long siteLanguageId=null;
     private Date created=null;
     private Long userId=null;
@@ -55,6 +56,15 @@ public class ArticleBean implements Article, Serializable {
         this.articleText = articleBean.getArticleData();
         this.isXml = !articleBean.isPlain();
         this.userId = articleBean.getUserId();
+        this.isDeleted = articleBean.isDeleted();
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public String getArticleName() {

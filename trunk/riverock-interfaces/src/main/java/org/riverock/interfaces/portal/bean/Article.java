@@ -41,5 +41,6 @@ public interface Article extends Serializable {
     String getArticleName();
     String getArticleData();
     boolean isPlain();
+    boolean isDeleted();
     Long getUserId();
 }
