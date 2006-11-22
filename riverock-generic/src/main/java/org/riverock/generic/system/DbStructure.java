@@ -116,7 +116,7 @@ public class DbStructure
             table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(dbOra.getConnection(), table.getSchema(), table.getName(), dbOra.getFamily()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
-            table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table));
+            table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table, dbOra.getFamily()));
         }
 
         String encoding = "UTF-8";

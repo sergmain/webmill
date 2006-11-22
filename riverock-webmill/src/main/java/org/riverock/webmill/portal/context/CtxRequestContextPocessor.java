@@ -201,7 +201,35 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
         if (bean.getDefaultPortletName()==null) {
             return null;
         }
-
+/*
+200469 WARN  org.riverock.webmill.portal.PortalInstanceImpl 17 - free memory 306760880 total memory 337248256 max memory 395444224
+210516 ERROR org.riverock.webmill.portal.PortalInstanceImpl 18 - General error processing request
+org.hibernate.NonUniqueResultException: query did not return a unique result: 2
+	at org.hibernate.impl.AbstractQueryImpl.uniqueElement(AbstractQueryImpl.java:789)
+	at org.hibernate.impl.AbstractQueryImpl.uniqueResult(AbstractQueryImpl.java:780)
+	at org.riverock.webmill.portal.dao.HibernateCatalogDaoImpl.getCatalogItemId(HibernateCatalogDaoImpl.java:127)
+	at org.riverock.webmill.portal.context.CtxRequestContextPocessor.parseRequest(CtxRequestContextPocessor.java:205)
+	at org.riverock.webmill.portal.context.RequestContextFactory.createRequestContext(RequestContextFactory.java:89)
+	at org.riverock.webmill.portal.PortalRequestInstance.<init>(PortalRequestInstance.java:218)
+	at org.riverock.webmill.portal.PortalInstanceImpl.process(PortalInstanceImpl.java:307)
+	at org.riverock.webmill.portal.ContextNavigator.doGet(ContextNavigator.java:97)
+	at org.riverock.webmill.portal.ContextNavigator.doPost(ContextNavigator.java:80)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:709)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:802)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:252)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:173)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:213)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:178)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:126)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:105)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:541)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:107)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:148)
+	at org.apache.coyote.http11.Http11AprProcessor.process(Http11AprProcessor.java:833)
+	at org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler.process(Http11AprProtocol.java:639)
+	at org.apache.tomcat.util.net.AprEndpoint$Worker.run(AprEndpoint.java:1285)
+	at java.lang.Thread.run(Unknown Source)
+*/
         Long ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(factoryParameter.getPortalInfo().getSiteId(), bean.getLocale(), bean.getDefaultPortletName(), bean.getTemplateName());
         if (log.isDebugEnabled()) {
             log.debug("ctxId: " + ctxId );

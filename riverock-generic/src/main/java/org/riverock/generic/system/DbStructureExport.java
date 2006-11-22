@@ -81,6 +81,7 @@ public class DbStructureExport {
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "MSSQL-JTDS");
 
+/*
         DatabaseManager.runSQL( dbOra, "delete from WM_PORTAL_ACCESS_STAT", null, null);
         DatabaseManager.runSQL( dbOra, "delete from WM_PORTAL_ACCESS_URL", null, null);
         DatabaseManager.runSQL( dbOra, "delete from WM_PORTAL_ACCESS_USERAGENT", null, null);
@@ -89,8 +90,9 @@ public class DbStructureExport {
         DatabaseManager.runSQL( dbOra, "delete from WM_PRICE_IMPORT_TABLE", null, null);
         DatabaseManager.runSQL( dbOra, "delete from WM_AUTH_USER where id_user in (select id_user from WM_LIST_USER where is_deleted=1)", null, null);
         DatabaseManager.runSQL( dbOra, "delete from WM_LIST_USER_METADATA where id_user in (select id_user from WM_LIST_USER where is_deleted=1)", null, null);
-//        DatabaseManager.runSQL( dbOra, "delete from WM_PRICE_USER_DISCOUNT where id_user in (select id_user from WM_LIST_USER where is_deleted=1)", null, null);
         DatabaseManager.runSQL( dbOra, "delete from WM_LIST_USER where is_deleted=1", null, null);
+*/
+//        DatabaseManager.runSQL( dbOra, "delete from WM_PRICE_USER_DISCOUNT where id_user in (select id_user from WM_LIST_USER where is_deleted=1)", null, null);
 
 
         dbOra.commit();
@@ -128,7 +130,7 @@ public class DbStructureExport {
             }
 
             if (isData && !isSkipData)
-                table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table));
+                table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table, dbOra.getFamily()));
         }
 
         String fileNameBigText =
