@@ -229,7 +229,12 @@ public final class RequestContextUtils {
         log.debug("Start getRequestContextBean()");
 
         RequestContext bean = new RequestContext();
-        bean.setExtendedCatalogItem( ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId) );
+        ExtendedCatalogItemBean extendedCatalogItem = ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId);
+        if (extendedCatalogItem==null) {
+            log.warn("page with id "+ctxId+" not found");
+            return null;
+        }
+        bean.setExtendedCatalogItem(extendedCatalogItem);
         bean.setLocale( bean.getExtendedCatalogItem().getLocale() );
 
         if (log.isDebugEnabled()) {

@@ -215,6 +215,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public String toString() {
-        return "[site #"+siteId+",name:"+siteName+", locale:"+new Locale(defLanguage, defCountry, defVariant)+"]";
+        Locale locale = new Locale(defLanguage, defCountry!=null?defCountry:"", defVariant!=null?defVariant:"");
+        return "[site #"+siteId+",name:"+siteName+", locale:"+ locale +"]";
     }
 }

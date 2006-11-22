@@ -91,8 +91,8 @@ public class ConvertXsltBigTableToBlob {
 
     private static void updateBlobForOracle(DatabaseAdapter db, Xslt xslt) throws SQLException, IOException {
         // получаем поток на клоб
-        PreparedStatement ps = db.prepareStatement(
-            "select xslt_blob from wm_portal_xslt where ID_SITE_XSLT=?");
+        PreparedStatement ps = db.getConnection().prepareStatement(
+            "select xslt_blob from wm_portal_xslt where ID_SITE_XSLT=? for update ");
 
         ps.setLong(1, xslt.getId());
         ResultSet rs = ps.executeQuery();

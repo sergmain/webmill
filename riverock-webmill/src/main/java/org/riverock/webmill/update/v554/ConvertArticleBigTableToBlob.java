@@ -102,8 +102,8 @@ public class ConvertArticleBigTableToBlob {
 
     private static void updateBlobForOracle(DatabaseAdapter db, Article article) throws SQLException, IOException {
         // получаем поток на блоб
-        PreparedStatement ps = db.prepareStatement(
-            "select article_blob from wm_portlet_article where ID_SITE_CTX_ARTICLE=?");
+        PreparedStatement ps = db.getConnection().prepareStatement(
+            "select article_blob from wm_portlet_article where ID_SITE_CTX_ARTICLE=? for update ");
 
         ps.setLong(1, article.getArticleId());
         ResultSet rs = ps.executeQuery();
@@ -114,7 +114,7 @@ public class ConvertArticleBigTableToBlob {
                 fileBytes = article.getArticleData().getBytes();
             }
 
-            Blob mapBlob = rs.getBlob("article_blob");
+            Blob mapBlob = rs.getBlob(1);
             OutputStream blobOutputStream = mapBlob.setBinaryStream(0L);
             blobOutputStream.write(fileBytes);
             blobOutputStream.flush();

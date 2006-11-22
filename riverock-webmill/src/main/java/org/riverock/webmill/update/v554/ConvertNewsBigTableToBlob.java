@@ -92,8 +92,8 @@ public class ConvertNewsBigTableToBlob {
 
     private static void updateBlobForOracle(DatabaseAdapter db, News news) throws SQLException, IOException {
         // получаем поток на блоб
-        PreparedStatement ps = db.prepareStatement(
-            "select NEWS_BLOB from wm_news_item where ID=?");
+        PreparedStatement ps = db.getConnection().prepareStatement(
+            "select NEWS_BLOB from wm_news_item where ID=? for update ");
 
         ps.setLong(1, news.getNewsId());
         ResultSet rs = ps.executeQuery();

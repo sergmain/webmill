@@ -47,8 +47,11 @@ public class ArticleBean implements Article, Serializable {
     @Column(name="NAME_ARTICLE")
     private String articleName;
 
-    @Column(name="ID_SITE_CTX_CATALOG")
+    @Column(name="IS_PLAIN_HTML")
     private boolean isPlain;
+
+    @Column(name="IS_DELETED")
+    private boolean isDeleted;
 
     @Column(name="ARTICLE_BLOB")
     private Blob articleBlob;
@@ -69,6 +72,15 @@ public class ArticleBean implements Article, Serializable {
         isPlain = article.isPlain();
         this.articleData = article.getArticleData();
         this.userId = article.getUserId();
+        this.isDeleted = article.isDeleted();
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public Long getUserId() {

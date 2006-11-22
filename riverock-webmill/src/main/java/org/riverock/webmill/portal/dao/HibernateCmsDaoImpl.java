@@ -154,7 +154,7 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         session.beginTransaction();
         List<NewsGroupBean> groupBeans = session.createQuery(
             "select newsGroup " +
-                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                "from  org.riverock.webmill.portal.bean.NewsGroupBean as newsGroup " +
                 "where newsGroup.isDeleted=false and newsGroup.siteLanguageId=:siteLanguageId")
             .setLong("siteLanguageId", siteLanguageId)
             .list();
