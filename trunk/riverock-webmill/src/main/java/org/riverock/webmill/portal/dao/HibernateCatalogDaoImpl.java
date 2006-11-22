@@ -284,7 +284,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         bean.setPortletId(catalogItem.getPortletId());
         bean.setTemplateId(catalogItem.getTemplateId());
         bean.setTopCatalogId(catalogItem.getTopCatalogId());
-        bean.setKeyMessage(catalogItem.getKeyword());
+        bean.setKeyMessage(catalogItem.getKeyMessage());
         bean.setMetadata(catalogItem.getMetadata());
         bean.setOrderField(catalogItem.getOrderField());
         bean.setPortletRole(catalogItem.getPortletRole());

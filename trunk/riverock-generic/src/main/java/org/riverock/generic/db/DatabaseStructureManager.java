@@ -600,9 +600,10 @@ public class DatabaseStructureManager {
     /**
      * @param connection
      * @param table
+     * @param dbFamily
      * @return DbDataTableType
      */
-    public static DbDataTableType getDataTable(Connection connection, DbTableType table)
+    public static DbDataTableType getDataTable(Connection connection, DbTableType table, int dbFamily)
         throws Exception {
         System.out.println("Start get data for table " + table.getName());
         DbDataTableType tableData = new DbDataTableType();
