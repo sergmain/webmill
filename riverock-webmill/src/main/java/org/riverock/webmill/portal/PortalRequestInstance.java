@@ -114,6 +114,7 @@ public final class PortalRequestInstance {
     private boolean isMultiPartRequest = false;
 
     private PortalDaoProvider portalDaoProvider = null;
+    private PortletContainer portletContainer = null;
 
     private File tempPath = null;
 
@@ -151,6 +152,7 @@ public final class PortalRequestInstance {
         MainTools.deleteFile( requestBodyFile );
         requestBodyFile = null;
         portalDaoProvider = null;
+        portletContainer = null;
     }
 
     public PortalRequestInstance() {
@@ -180,6 +182,7 @@ public final class PortalRequestInstance {
         this.httpRequest = request_;
         this.httpResponse = response_;
         this.portalServletConfig = portalServletConfig;
+        this.portletContainer = portletContainer;
         try {
             initTempPath();
 
@@ -412,6 +415,10 @@ public final class PortalRequestInstance {
             return null;
         else
             return requestContext.getLocale();
+    }
+
+    public PortletContainer getPortletContainer() {
+        return portletContainer;
     }
 
     public HttpServletRequest getHttpRequest() {

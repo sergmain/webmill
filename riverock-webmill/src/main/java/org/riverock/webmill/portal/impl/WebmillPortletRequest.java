@@ -913,7 +913,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             ContainerConstants.PORTAL_PORTAL_USER_MANAGER,
             new PortalUserManagerImpl(
                 portalRequestInstance.getPortalInfo().getSite().getSiteId(),
-                new Long(portalContext.getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID )),
+                portalRequestInstance.getPortalInfo().getCompanyId(),
                 mailServiceProvider,
                 portletPreferences,
                 classLoader
