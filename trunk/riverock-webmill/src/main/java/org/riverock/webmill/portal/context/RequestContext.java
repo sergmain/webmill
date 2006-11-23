@@ -51,11 +51,21 @@ public class RequestContext {
 
     private RequestState defaultRequestState = null;
 
+    private Long contextId;
+
     public RequestState getDefaultRequestState() {
         if (defaultRequestState==null) {
             throw new IllegalStateException("defaultRequestState is null");
         }
         return defaultRequestState;
+    }
+
+    public Long getContextId() {
+        return contextId;
+    }
+
+    public void setContextId(Long contextId) {
+        this.contextId = contextId;
     }
 
     public void setDefaultRequestState(RequestState defaultRequestState) {

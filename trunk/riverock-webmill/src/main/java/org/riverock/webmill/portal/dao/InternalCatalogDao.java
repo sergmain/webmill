@@ -38,6 +38,7 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 public interface InternalCatalogDao {
     public Long getCatalogItemId(Long siteLanguageId, Long portletNameId, Long templateId );
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName );
+    public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName, Long catalogId );
     public Long getCatalogItemId(Long siteId, Locale locale, String pageName );
     public Long getCatalogItemId(Long siteId, Locale locale, Long catalogId );
 

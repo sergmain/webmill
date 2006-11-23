@@ -24,13 +24,13 @@
  */
 package org.riverock.webmill.portal.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
@@ -46,6 +46,9 @@ import org.apache.log4j.Logger;
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.container.portlet.PortletContainerException;
+import org.riverock.webmill.container.portlet.PortletEntry;
+import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.context.CtxRequestContextPocessor;
 import org.riverock.webmill.portal.context.RequestState;
@@ -311,10 +314,21 @@ public final class PortletURLImpl implements PortletURL {
             log.debug( "portletRequest: " + portletRequest );
         }
 
-        String resultPortletName = portletName;
+        String resultPortletName;
         if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {
             resultPortletName = portletName.substring(PortletContainer.PORTLET_ID_NAME_SEPARATOR .length());
         }
+        else {
+            resultPortletName = portletName;
+        }
+
+        Long contextId=null;
+        if (portalRequestInstance.getRequestContext().getExtendedCatalogItem()!=null) {
+             contextId = portalRequestInstance.getRequestContext().getExtendedCatalogItem().getCatalogId();
+        }
+
+        // if url pointed to other portlet, change value of contextId with id of targer's portlet
+        contextId = prepareContextId(contextId);
 
         url.append(
             CtxRequestContextPocessor.encodeUrl(
@@ -322,8 +336,8 @@ public final class PortletURLImpl implements PortletURL {
                 (String)portletRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ),
                 portletRequest.getLocale(),
                 isActionReqeust,
-                namespace
-            )
+                namespace,
+                contextId)
         );
 
         if ( parameters != null ) {
@@ -355,6 +369,41 @@ public final class PortletURLImpl implements PortletURL {
         }
 
         return url.toString();
+    }
+
+    private Long prepareContextId(Long contextId) {
+
+        List<String> porteltNameParam = parameters.get(ContainerConstants.NAME_TYPE_CONTEXT_PARAM);
+        if (porteltNameParam!=null && porteltNameParam.size()>1) {
+            throw new IllegalStateException("portletName defined more than once in parameters: " + porteltNameParam);
+        }
+        if (porteltNameParam !=null) {
+            portalRequestInstance.getRequestContext().getDefaultPortletName();
+            PortletEntry entry;
+            try {
+                entry = portalRequestInstance.getPortletContainer().getPortletInstance(porteltNameParam.get(0));
+            }
+            catch (PortletContainerException e) {
+                String es = "Error get PortletEntry";
+                log.error(es, e);
+                throw new IllegalStateException(es, e);
+            }
+            if (entry!=null) {
+                String portletId = PortletService.getStringParam(
+                    entry.getPortletDefinition(), ContainerConstants.name_portlet_id
+                );
+                if (portletId!=null) {
+                    List<String> ids = parameters.get(portletId);
+                    if (ids!=null){
+                        if (ids.size()>1) {
+                            throw new IllegalStateException("portlet id defined more than once in parameters: " + ids);
+                        }
+                        return new Long(ids.get(0));
+                    }
+                }
+            }
+        }
+        return contextId;
     }
     // --------------------------------------------------------------------------------------------
 

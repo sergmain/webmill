@@ -52,8 +52,10 @@ public class RequestContextFactory {
     }
 
     /**
-     * init context type and name of template,
-     * if type of context is null, set it to 'index_page'
+     * init context type and name of template, if type of context is null, set it to 'index_page'
+     *
+     * @param factoryParameter request context parameters
+     * @return request context
      */
     public static RequestContext createRequestContext( RequestContextParameter factoryParameter ) {
 

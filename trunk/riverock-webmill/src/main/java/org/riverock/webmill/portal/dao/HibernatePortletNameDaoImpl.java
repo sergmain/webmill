@@ -56,23 +56,39 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
     public PortletName getPortletName(String portletName) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        PortletNameBean bean = (PortletNameBean)session.createQuery(
+        PortletNameBean bean = getPortletNameInternal(session, portletName);
+        session.getTransaction().commit();
+        return bean;
+    }
+
+    private PortletNameBean getPortletNameInternal(Session session, String portletName) {
+        List<PortletNameBean> beans = session.createQuery(
             "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet " +
             "where portlet.portletName = :portletName")
             .setString("portletName", portletName)
-            .uniqueResult();
-        session.getTransaction().commit();
+            .list();
+        PortletNameBean bean=null;
+        if (beans.size()>0) {
+            bean = beans.get(0);
+        }
         return bean;
     }
 
     public Long createPortletName(PortletName portletName) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        PortletNameBean bean = new PortletNameBean(portletName);
-        session.save(bean);
-        session.flush();
-        session.getTransaction().commit();
-        return bean.getPortletId();
+        try {
+            if (getPortletNameInternal(session, portletName.getPortletName())==null) {
+                PortletNameBean bean = new PortletNameBean(portletName);
+                session.save(bean);
+                return bean.getPortletId();
+            }
+        }
+        finally {
+            session.flush();
+            session.getTransaction().commit();
+        }
+        return null;
     }
 
     public void updatePortletName(PortletName portletNameBean) {
@@ -97,13 +113,13 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        PortletNameBean bean = (PortletNameBean) session.createQuery(
+        List<PortletNameBean> beans = session.createQuery(
             "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet " +
                 "where portlet.portletId = :portletId")
             .setLong("portletId", portletNameBean.getPortletId())
-            .uniqueResult();
+            .list();
         
-        if (bean!=null) {
+        for (PortletNameBean bean : beans) {
             session.delete(bean);
         }
 
@@ -127,6 +143,9 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
         String resultPortletName = portletName;
         if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {
             resultPortletName = portletName.substring(PortletContainer.PORTLET_ID_NAME_SEPARATOR .length());
+        }
+        if (getPortletName(resultPortletName)!=null) {
+            return;
         }
         PortletNameBean bean = new PortletNameBean();
         bean.setPortletName(resultPortletName);

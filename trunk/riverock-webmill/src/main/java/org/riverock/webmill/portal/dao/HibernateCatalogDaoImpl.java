@@ -146,6 +146,53 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         return id;
     }
 
+    public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName, Long catalogId) {
+        if (portletName==null || siteId==null || locale==null || templateName==null || catalogId==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        String resultPortletName = portletName;
+        if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {
+            resultPortletName = portletName.substring(PortletContainer.PORTLET_ID_NAME_SEPARATOR .length());
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("HibernateCatalogDaoImpl.getCatalogItemId()");
+            log.debug("     siteId: " + siteId);
+            log.debug("     locale: " + locale.toString().toLowerCase() );
+            log.debug("     portletName: " + portletName);
+            log.debug("     resultPortletName: " + resultPortletName);
+            log.debug("     templateName: " + templateName);
+            log.debug("     catalogId: " + catalogId);
+        }
+
+        Long id = (Long)session.createQuery(
+            "select catalog.catalogId " +
+                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
+                "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang, " +
+                "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLang, " +
+                "      org.riverock.webmill.portal.bean.PortletNameBean portlet, " +
+                "      org.riverock.webmill.portal.bean.TemplateBean template " +
+                "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
+                "      catalogLang.siteLanguageId=siteLang.siteLanguageId and " +
+                "      siteLang.siteId=:siteId and siteLang.customLanguage=:customLanguage and " +
+                "      catalog.portletId=portlet.portletId and " +
+                "      catalog.templateId=template.templateId and" +
+                "      portlet.portletName=:portletName and template.templateName=:templateName and " +
+                "      catalog.catalogId=:catalogId")
+            .setLong("catalogId", catalogId)
+            .setLong("siteId", siteId)
+            .setString("customLanguage", locale.toString().toLowerCase())
+            .setString("portletName", resultPortletName)
+            .setString("templateName", templateName)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return id;
+    }
+
     public Long getCatalogItemId(Long siteId, Locale locale, String pageName) {
         if (siteId == null || locale==null || pageName==null) {
             return null;

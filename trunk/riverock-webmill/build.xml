@@ -28,7 +28,7 @@
     <property name="Name" value="riverock-webmill"/>
     <property name="portlet-context-name" value=""/>
 
-    <import file="..\riverock-globals-prop.xml"/>
+    <import file="../riverock-globals-prop.xml"/>
 
     <property name="release-version" value="${webmill-portal-release-version}"/>
 
@@ -100,12 +100,10 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
         <antcall target="war"/>
     </target>
 
     <target name="full_clean">
-        <ant antfile="build-core.xml" target="clean"  inheritall="false" />
         <antcall target="clean"/>
     </target>
 

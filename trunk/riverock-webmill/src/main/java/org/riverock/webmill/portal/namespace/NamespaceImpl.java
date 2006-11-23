@@ -24,8 +24,6 @@
  */
 package org.riverock.webmill.portal.namespace;
 
-import org.riverock.webmill.portal.PortalConstants;
-
 /**
  * @author SergeMaslyukov
  *         Date: 08.03.2006
