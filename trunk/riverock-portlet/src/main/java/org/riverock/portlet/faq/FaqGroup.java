@@ -36,6 +36,7 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 
@@ -185,5 +186,8 @@ public class FaqGroup implements PortletGetList {
 
     public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext) {
         return null;
+    }
+
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
     }
 }

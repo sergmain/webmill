@@ -216,4 +216,6 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         return null;
     }
 
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    }
 }

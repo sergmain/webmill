@@ -35,6 +35,12 @@ public class WebclipConstants {
     static final String URL_SOURCE_PREF = "webclip.url";
     static final String NEW_HREF_PREFIX_PREF = "webclip.new_prefix";
     static final String HREF_START_PAGE_PREF = "webclip.href_start_page";
+
+    static final String PROXY_PORT_PREF = "webclip.proxy_port";
+    static final String PROXY_HOST_PREF = "webclip.proxy_host";
+    static final String PROXY_LOGIN_PREF = "webclip.proxy_login";
+    static final String PROXY_PASSWORD_PREF = "webclip.proxy_password";
+
     static final String RIVEROCK_WEBLICP_INDEX_JSP = "/riverock/webclip/webclip.jsp";
     static final String WEBCLIP_BEAN = "webclipBean";
     static final String SAVE_ACTION = "save";
@@ -42,4 +48,9 @@ public class WebclipConstants {
     static final String SOURCE_URL_PARAM = "sourceUrl";
     static final String NEW_HREF_PREFIX_PARAM = "newHrefPrefix";
     static final String HREF_START_PAGE_PARAM = "hrefStartPart";
+    static final int DEFAULT_READ_TIMEOUT = 20000;
+
+
+    static final int TABLE_NODE_TYPE = 1;
+    static final int DIV_NODE_TYPE = 2;
 }

@@ -65,6 +65,9 @@
             <td colspan="4"><input style="width:150px;" type="submit" name="save" value="<fmt:message key='save_webclip_action'/>"></td>
         </tr>
         <tr>
+            <td colspan="4"><c:out value='${webclipError}'/></td>
+        </tr>
+        <tr>
             <td colspan="4">&nbsp;</td>
         </tr>
         <tr>

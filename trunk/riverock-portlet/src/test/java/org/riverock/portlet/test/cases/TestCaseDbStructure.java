@@ -31,37 +31,14 @@
  */
 package org.riverock.portlet.test.cases;
 
-import java.sql.DatabaseMetaData;
-import java.sql.Types;
-import java.util.Enumeration;
-import java.util.Vector;
-
 import junit.framework.TestCase;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.member.MemberFile;
-import org.riverock.portlet.member.ModuleManager;
-import org.riverock.generic.schema.db.structure.DbFieldType;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
 import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
 import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
 import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
-import org.riverock.portlet.schema.member.ClassQueryType;
-import org.riverock.portlet.schema.member.ContentType;
-import org.riverock.portlet.schema.member.FieldsType;
-import org.riverock.portlet.schema.member.ModuleType;
-import org.riverock.portlet.schema.member.QueryAreaType;
-import org.riverock.portlet.schema.member.RestrictType;
-import org.riverock.portlet.schema.member.TableType;
-import org.riverock.portlet.schema.member.TargetModuleType;
-import org.riverock.portlet.schema.member.RelateClassType;
-import org.riverock.portlet.schema.member.types.ContentTypeActionType;
-import org.riverock.portlet.schema.member.types.FieldsTypeDbTypeType;
-import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
-import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
-import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 
 public class TestCaseDbStructure extends TestCase
 {

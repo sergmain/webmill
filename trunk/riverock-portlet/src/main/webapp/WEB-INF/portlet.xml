@@ -410,45 +410,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>mill.menu_member</portlet-name>
-		<portlet-class>org.riverock.portlet.member.MenuMemberPortlet</portlet-class>
-		<init-param>
-			<name>is-xml</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.site_hamradio</value>
-		</init-param>
-		<init-param>
-			<name>name-portlet-code-string</name>
-			<value>mill.menu_member_code</value>
-		</init-param>
-		<init-param>
-			<name>class-name-get-list</name>
-			<value>org.riverock.portlet.member.MenuMember</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.SiteHamradio</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.member</portlet-name>
-		<portlet-class>org.riverock.portlet.member.MemberPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-        <!-- delete this resource files too -->
-        <resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
 		<portlet-name>mill.login</portlet-name>
 		<portlet-class>org.riverock.portlet.login.LoginPlainPortlet</portlet-class>
 		<init-param>
@@ -527,7 +488,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
         </init-param>
 		<init-param>
 			<name>class-name-get-list</name>
-			<value>org.riverock.portlet.member.context.LanguagePerSite</value>
+			<value>org.riverock.portlet.main.LanguagePerSite</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>

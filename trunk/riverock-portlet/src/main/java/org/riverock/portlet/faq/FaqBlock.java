@@ -48,6 +48,7 @@ import org.riverock.portlet.schema.portlet.faq.FaqGroupType;
 import org.riverock.portlet.schema.portlet.faq.FaqItemType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
@@ -173,5 +174,10 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
 
     public List<ClassQueryItem> getList( final Long idSiteCtxLangCatalog, final Long idContext ) {
         return null;
+    }
+    
+    private PortalDaoProvider provider;
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
+        this.provider=provider;
     }
 }
