@@ -49,15 +49,9 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
-import org.riverock.generic.schema.db.structure.DbSequenceType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbFieldType;
 
 /**
  * Класс ORAconnect прденазначен для коннекта к оракловской базе данных.
@@ -437,7 +431,7 @@ DEFERRABLE INITIALLY DEFERRED
     public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
     }
 
-    public List getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 

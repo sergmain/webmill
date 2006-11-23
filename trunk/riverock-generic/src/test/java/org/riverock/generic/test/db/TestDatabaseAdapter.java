@@ -25,14 +25,9 @@
  */
 package org.riverock.generic.test.db;
 
-import junit.framework.TestCase;
 import org.riverock.generic.db.DatabaseAdapter;
-
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
 
 /**
  * User: Admin

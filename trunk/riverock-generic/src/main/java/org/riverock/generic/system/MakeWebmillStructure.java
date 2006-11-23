@@ -27,7 +27,7 @@ package org.riverock.generic.system;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
 
 /**
  * User: SergeMaslyukov

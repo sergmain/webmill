@@ -26,10 +26,10 @@
 package org.riverock.generic.test.db;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -92,7 +92,7 @@ public class TestOracleSequence
                 table.setType(meta.getString("TABLE_TYPE"));
                 table.setRemark(meta.getString("REMARKS"));
 
-                schema.addTables(table);
+                schema.getTables().add(table);
             }
         }
         finally

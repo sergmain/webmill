@@ -28,19 +28,18 @@ package org.riverock.generic.system;
 import java.io.FileInputStream;
 import java.sql.SQLException;
 
-import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
 import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbImportedKeyListType;
+import org.riverock.generic.annotation.schema.db.DbFieldType;
 
 /**
  * Author: mill

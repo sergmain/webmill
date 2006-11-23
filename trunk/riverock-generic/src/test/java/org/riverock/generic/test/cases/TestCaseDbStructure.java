@@ -28,7 +28,12 @@ package org.riverock.generic.test.cases;
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.*;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumnType;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
+
 import junit.framework.TestCase;
 
 /**

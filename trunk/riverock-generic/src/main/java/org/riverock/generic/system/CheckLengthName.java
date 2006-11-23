@@ -25,11 +25,10 @@
  */
 package org.riverock.generic.system;
 
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
 import org.riverock.generic.config.GenericConfig;
-import org.exolab.castor.xml.Unmarshaller;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+
 import org.xml.sax.InputSource;
 
 import java.io.FileInputStream;

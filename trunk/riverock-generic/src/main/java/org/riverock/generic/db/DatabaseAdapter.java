@@ -46,15 +46,14 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.exception.DatabaseException;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.generic.schema.config.types.DataSourceTypeType;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
-import org.riverock.generic.schema.db.structure.DbSequenceType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbSequenceType;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
+import org.riverock.generic.annotation.schema.db.DbFieldType;
+import org.riverock.generic.annotation.schema.db.DbDataFieldDataType;
+import org.riverock.generic.annotation.schema.db.CustomSequenceType;
 
 /**
  * $Revision$ $Date$
@@ -68,6 +67,9 @@ public abstract class DatabaseAdapter implements DbConnection {
     protected boolean isDriverLoaded = false;
     protected DatabaseConnectionType dc = null;
     protected DataSource dataSource = null;
+    private static final String DRIVER_DATASOURCE_TIPE = "DRIVER";
+    private static final String JNDI_DATASOURCE_TIPE = "JNDI";
+    private static final String NONE_DATASOURCE_TIPE = "NONE";
 
     public DatabaseAdapter() {
     }
@@ -171,7 +173,7 @@ public abstract class DatabaseAdapter implements DbConnection {
 
     public abstract String getDefaultTimestampValue();
 
-    public abstract List getViewList(String schemaPattern, String tablePattern) throws Exception;
+    public abstract List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception;
 
     public abstract ArrayList getSequnceList(String schemaPattern) throws Exception;
 
@@ -254,15 +256,11 @@ public abstract class DatabaseAdapter implements DbConnection {
             if (!isDriverLoaded) {
                 synchronized (syncObject) {
                     if (!isDriverLoaded) {
-                        switch (dc.getDataSourceType().getType()) {
-                            case DataSourceTypeType.DRIVER_TYPE:
+                        if (dc.getDataSourceType().equals(DRIVER_DATASOURCE_TIPE)) {
                                 if (log.isDebugEnabled())
                                     log.debug("Start create connection pooling with driver");
-
-
-                                break;
-                            case DataSourceTypeType.JNDI_TYPE:
-
+                        }
+                        else if (dc.getDataSourceType().equals(JNDI_DATASOURCE_TIPE)) {
                                 if (log.isDebugEnabled())
                                     log.debug("Start create connection pooling with JNDI");
                                 try {
@@ -299,14 +297,13 @@ public abstract class DatabaseAdapter implements DbConnection {
                                     throw new DatabaseException(es, e);
                                 }
 
-                                break;
-
-                            case DataSourceTypeType.NONE_TYPE:
+                        }
+                        else if (dc.getDataSourceType().equals(NONE_DATASOURCE_TIPE)){
                                 if (log.isDebugEnabled())
                                     log.debug("Start create connection pooling with simple mnaager");
                                 Class.forName(getDriverClass());
-                                break;
                         }
+
                         isDriverLoaded = true;
 
                     }
@@ -318,23 +315,20 @@ public abstract class DatabaseAdapter implements DbConnection {
                 log.debug("ConnectString - " + dc.getConnectString());
                 log.debug("username - " + dc.getUsername());
                 log.debug("password - " + dc.getPassword());
-                log.debug("isAutoCommit - " + dc.getIsAutoCommit());
+                log.debug("isAutoCommit - " + dc.isIsAutoCommit());
             }
 
-            switch (dc.getDataSourceType().getType()) {
-                case DataSourceTypeType.DRIVER_TYPE:
+            if (dc.getDataSourceType().equals(DRIVER_DATASOURCE_TIPE)) {
                     conn = dataSource.getConnection();
-                    break;
-                case DataSourceTypeType.JNDI_TYPE:
+            }
+            else if (dc.getDataSourceType().equals(JNDI_DATASOURCE_TIPE)) {
                     conn = dataSource.getConnection();
-                    break;
-
-                case DataSourceTypeType.NONE_TYPE:
+            }
+            else if (dc.getDataSourceType().equals(NONE_DATASOURCE_TIPE)) {
                     conn = DriverManager.getConnection(dc.getConnectString(), dc.getUsername(), dc.getPassword());
-                    break;
             }
 
-            conn.setAutoCommit(dc.getIsAutoCommit());
+            conn.setAutoCommit(dc.isIsAutoCommit());
         }
         catch (Exception e) {
             final String es = "Expeption create new Connection";

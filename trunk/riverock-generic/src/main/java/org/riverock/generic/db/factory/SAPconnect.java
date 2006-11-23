@@ -47,6 +47,9 @@ import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
 import org.riverock.generic.schema.db.structure.DbSequenceType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbFieldType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
 
 /**
  *
@@ -128,7 +131,7 @@ public class SAPconnect extends DatabaseAdapter {
     public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
     }
 
-    public List getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 

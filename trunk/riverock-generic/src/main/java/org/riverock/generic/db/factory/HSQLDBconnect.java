@@ -45,15 +45,15 @@ import org.apache.commons.lang.StringUtils;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
-import org.riverock.generic.schema.db.structure.DbSequenceType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbFieldType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumnType;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
+import org.riverock.generic.annotation.schema.db.DbSequenceType;
+import org.riverock.generic.annotation.schema.db.DbDataFieldDataType;
+import org.riverock.generic.annotation.schema.db.CustomSequenceType;
 
 /**
  *
@@ -140,7 +140,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
     }
 
     public void createTable(DbTableType table) throws Exception {
-        if (table == null || table.getFieldsCount() == 0)
+        if (table == null || table.getFields().size() == 0)
             return;
 
         String sql = "create table \"" + table.getName() + "\"\n" +
@@ -148,8 +148,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
 
         boolean isFirst = true;
 
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbFieldType field : table.getFields()) {
             if (!isFirst)
                 sql += ",";
             else
@@ -222,10 +221,10 @@ public class HSQLDBconnect extends DatabaseAdapter {
                 sql += " NOT NULL ";
             }
         }
-        if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumnsCount() != 0) {
+        if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumns().size() > 0) {
             DbPrimaryKeyType pk = table.getPrimaryKey();
 
-            String namePk = pk.getColumns(0).getPkName();
+            String namePk = pk.getColumns().get(0).getPkName();
 
 //            constraintDefinition:
 //            [ CONSTRAINT name ]
@@ -236,11 +235,10 @@ public class HSQLDBconnect extends DatabaseAdapter {
 
             int seq = Integer.MIN_VALUE;
             isFirst = true;
-            for (int i = 0; i < pk.getColumnsCount(); i++) {
-                DbPrimaryKeyColumnType column = null;
+            for (DbPrimaryKeyColumnType primaryKeyColumnType : pk.getColumns()) {
+                DbPrimaryKeyColumnType column = primaryKeyColumnType;
                 int seqTemp = Integer.MAX_VALUE;
-                for (int k = 0; k < pk.getColumnsCount(); k++) {
-                    DbPrimaryKeyColumnType columnTemp = pk.getColumns(k);
+                for (DbPrimaryKeyColumnType columnTemp : pk.getColumns()) {
                     if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp) {
                         seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
@@ -452,7 +450,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
     public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
     }
 
-    public List getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 

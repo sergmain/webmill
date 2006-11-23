@@ -28,13 +28,11 @@ package org.riverock.generic.test;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
-import org.exolab.castor.xml.Marshaller;
-
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
 
 /**
  * User: Admin
