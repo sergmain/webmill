@@ -45,9 +45,8 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.*;
+import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
+import org.riverock.generic.annotation.schema.db.*;
 
 /**
  * @author SergeMaslyukov
@@ -60,10 +59,10 @@ public class DatabaseStructureManager {
     private final static Logger log = Logger.getLogger(DatabaseStructureManager.class);
 
     public static void createForeignKey(DatabaseAdapter adapter, DbImportedKeyListType fkList) throws Exception {
-        if (fkList == null || fkList.getKeysCount() == 0)
+        if (fkList == null || fkList.getKeys().size() == 0)
             return;
 
-        Map<String, DbImportedPKColumnType> hash = DatabaseManager.getFkNames(fkList.getKeysAsReference());
+        Map<String, DbImportedPKColumnType> hash = DatabaseManager.getFkNames(fkList.getKeys());
 
 //        System.out.println("key count: "+hash.size() );
 //        for (Enumeration e = hash.keys(); e.hasMoreElements();)
@@ -77,19 +76,18 @@ public class DatabaseStructureManager {
             String searchCurrent = DatabaseManager.getRelateString(fkColumn);
 //            System.out.println("#"+p+" fk name - "+ fkColumn.getFkName()+" ");
             String sql =
-                "ALTER TABLE " + fkList.getKeys(0).getFkTableName() + " " +
+                "ALTER TABLE " + fkList.getKeys().get(0).getFkTableName() + " " +
                     "ADD CONSTRAINT " +
                     (
                         fkColumn.getFkName() == null || fkColumn.getFkName().length() == 0
-                            ? fkList.getKeys(0).getFkTableName() + p + "_fk"
+                            ? fkList.getKeys().get(0).getFkTableName() + p + "_fk"
                             : fkColumn.getFkName()
                     ) +
                     " FOREIGN KEY (";
 
             int seq = Integer.MIN_VALUE;
             boolean isFirst = true;
-            for (int i = 0; i < fkList.getKeysCount(); i++) {
-                DbImportedPKColumnType currFkCol = fkList.getKeys(i);
+            for (DbImportedPKColumnType currFkCol : fkList.getKeys()) {
                 String search = DatabaseManager.getRelateString(currFkCol);
 //                System.out.println( "1.0 "+search );
                 if (!searchCurrent.equals(search))
@@ -98,10 +96,8 @@ public class DatabaseStructureManager {
 //                System.out.println("here");
 
                 DbImportedPKColumnType column = null;
-                DbImportedPKColumnType columnTemp = null;
                 int seqTemp = Integer.MAX_VALUE;
-                for (int k = 0; k < fkList.getKeysCount(); k++) {
-                    columnTemp = fkList.getKeys(k);
+                for (DbImportedPKColumnType columnTemp : fkList.getKeys()) {
                     String searchTemp = DatabaseManager.getRelateString(columnTemp);
 //                    System.out.println("here 2.0 "+ searchTemp );
                     if (!searchCurrent.equals(searchTemp))
@@ -261,7 +257,7 @@ public class DatabaseStructureManager {
 
     public static void setDataTable(DatabaseAdapter adapter, DbTableType table, ArrayList bigTables)
         throws Exception {
-        if (table == null || table.getData() == null || table.getData().getRecordsCount() == 0) {
+        if (table == null || table.getData() == null || table.getData().getRecords().size() == 0) {
             System.out.println("Table is empty");
             return;
         }
@@ -318,8 +314,7 @@ public class DatabaseStructureManager {
 
         if (big == null) {
 
-            for (int i = 0; i < tableData.getRecordsCount(); i++) {
-                DbDataRecordType record = tableData.getRecords(i);
+            for (DbDataRecordType record : tableData.getRecords()) {
                 PreparedStatement ps = null;
                 ResultSet rs = null;
                 DbDataFieldDataType fieldData=null;
@@ -332,7 +327,7 @@ public class DatabaseStructureManager {
                         field = table.getFields(fieldPtr++);
                         fieldData = record.getFieldsData(k);
 
-                        if (fieldData.getIsNull()) {
+                        if (fieldData.isIsNull()) {
                             int type = fieldData.getJavaTypeField();
                             if (fieldData.getJavaTypeField() == Types.TIMESTAMP)
                                 type = Types.DATE;
@@ -383,7 +378,7 @@ public class DatabaseStructureManager {
 
                                 case Types.DATE:
                                 case Types.TIMESTAMP:
-                                    long timeMillis = fieldData.getDateData().getTime();
+                                    long timeMillis = fieldData.getDateData().toGregorianCalendar().getTimeInMillis();
                                     Timestamp stamp = new Timestamp(timeMillis);
                                     if (isDebug)
                                         System.out.println("param #" + (k + 1) + ", value " + stamp);
@@ -413,11 +408,10 @@ public class DatabaseStructureManager {
                 }
                 catch (Exception e) {
                     log.error("Error get data for table " + table.getName(), e);
-                    for (int k = 0; k < record.getFieldsDataCount(); k++) {
-                        DbDataFieldDataType data = record.getFieldsData(k);
+                    for (DbDataFieldDataType data : record.getFieldsData()) {
                         log.error("date: " + data.getDateData());
                         log.error("decimal digit: " + data.getDecimalDigit());
-                        log.error("is null: " + data.getIsNull());
+                        log.error("is null: " + data.isIsNull());
                         log.error("java type: " + data.getJavaTypeField());
                         log.error("number: " + data.getNumberData());
                         log.error("size: " + data.getSize());

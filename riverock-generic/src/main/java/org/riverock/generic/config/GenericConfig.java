@@ -36,11 +36,10 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.generic.schema.config.DateTimeSavingType;
-import org.riverock.generic.schema.config.DateTimeSavingTypeSequence;
-import org.riverock.generic.schema.config.GenericConfigType;
-import org.riverock.generic.schema.config.PropertyType;
+import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
+import org.riverock.generic.annotation.schema.config.GenericConfigType;
+import org.riverock.generic.annotation.schema.config.DateTimeSavingType;
+import org.riverock.generic.annotation.schema.config.PropertyType;
 
 /**
  * $Id$
@@ -105,9 +104,8 @@ public final class GenericConfig {
                 log.debug("#15.006");
             }
 
-            dbConfig = new HashMap<String, DatabaseConnectionType>(getConfig().getDatabaseConnectionCount());
-            for (int i = 0; i < getConfig().getDatabaseConnectionCount(); i++) {
-                DatabaseConnectionType dbc = getConfig().getDatabaseConnection(i);
+            dbConfig = new HashMap<String, DatabaseConnectionType>();
+            for (DatabaseConnectionType dbc : getConfig().getDatabaseConnection()) {
                 dbConfig.put(dbc.getName(), dbc);
             }
 
@@ -138,8 +136,8 @@ public final class GenericConfig {
             if (currentTimeZone != null) return currentTimeZone;
 
             DateTimeSavingType dts = getConfig().getDTS();
-            if (dts.getDateTimeSavingTypeSequence2() != null) {
-                String nameTimeZone = dts.getDateTimeSavingTypeSequence2().getTimeZoneName();
+            if (dts.getTimeZoneName() != null) {
+                String nameTimeZone = dts.getTimeZoneName();
 
                 // work around NPE in TimeZone.getTimeZone
                 if (nameTimeZone != null && nameTimeZone.trim().length() != 0) {
@@ -158,27 +156,25 @@ public final class GenericConfig {
                 }
                 log.fatal("<NameTimeZone> element not found. You must correct config file.");
                 return null;
-            } else if (dts.getDateTimeSavingTypeSequence() != null) {
-                DateTimeSavingTypeSequence dtSeq = dts.getDateTimeSavingTypeSequence();
-
+            } else {
                 currentTimeZone =
                     new SimpleTimeZone(
-                        dtSeq.getRawOffset(),
-                        dtSeq.getId(),
-                        dtSeq.getStart().getMonth(),
-                        dtSeq.getStart().getDay(),
-                        dtSeq.getStart().getDayOfWeek(),
-                        dtSeq.getStart().getTime(),
-                        dtSeq.getEnd().getMonth(),
-                        dtSeq.getEnd().getDay(),
-                        dtSeq.getEnd().getDayOfWeek(),
-                        dtSeq.getEnd().getTime()
+                        dts.getRawOffset(),
+                        dts.getId(),
+                        dts.getStart().getMonth(),
+                        dts.getStart().getDay(),
+                        dts.getStart().getDayOfWeek(),
+                        dts.getStart().getTime(),
+                        dts.getEnd().getMonth(),
+                        dts.getEnd().getDay(),
+                        dts.getEnd().getDayOfWeek(),
+                        dts.getEnd().getTime()
                     );
                 TimeZone.setDefault(currentTimeZone);
                 return currentTimeZone;
             }
-            log.fatal("<DTS> element present, but is empty. You must correct <DTS> element in config file.");
-            return null;
+//            log.fatal("<DTS> element present, but is empty. You must correct <DTS> element in config file.");
+//            return null;
         }
     }
 
@@ -243,7 +239,7 @@ public final class GenericConfig {
         return getConfig().getDefaultConnectionName();
     }
 
-    public static PropertyType[] getProperty() {
+    public static List<PropertyType> getProperty() {
 
         if (log.isDebugEnabled()) log.debug("#16.951");
         if (!isConfigProcessed) readConfig();
@@ -252,24 +248,7 @@ public final class GenericConfig {
         return getConfig().getProperty();
     }
 
-    public static List getPropertyList() {
-
-        if (log.isDebugEnabled()) log.debug("#16.961");
-        if (!isConfigProcessed) readConfig();
-        if (log.isDebugEnabled()) log.debug("#16.962");
-
-        return getConfig().getPropertyAsReference();
-    }
-
-    public static int getPropertyCount() {
-
-        if (log.isDebugEnabled()) log.debug("#16.971");
-        if (!isConfigProcessed) readConfig();
-        if (log.isDebugEnabled()) log.debug("#16.972");
-
-        return getConfig().getPropertyCount();
-    }
-
+/*
     public static PropertyType getProperty(final int idx) {
 
         if (log.isDebugEnabled()) log.debug("#16.981");
@@ -278,4 +257,5 @@ public final class GenericConfig {
 
         return getConfig().getProperty(idx);
     }
+*/
 }

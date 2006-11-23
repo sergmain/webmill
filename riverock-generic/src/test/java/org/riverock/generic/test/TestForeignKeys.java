@@ -31,10 +31,9 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbImportedKeyListType;
 
 /**
  * Author: mill
@@ -58,9 +57,7 @@ public class TestForeignKeys
         DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
         DbTableType testTable = null;
 
-        for (int j=0; j<schema.getTablesCount(); j++)
-        {
-            DbTableType table = schema.getTables(j);
+        for (DbTableType table : schema.getTables()) {
             if ( "A_TEST_1".equalsIgnoreCase(table.getName()) )
             {
                 testTable = table;
@@ -146,7 +143,7 @@ public class TestForeignKeys
         }
 
         DbImportedKeyListType fk = new DbImportedKeyListType();
-        fk.setKeys( testTable.getImportedKeysAsReference() );
+        fk.getKeys().addAll( testTable.getImportedKeys() );
         DatabaseStructureManager.createForeignKey(db_, fk );
 
     }

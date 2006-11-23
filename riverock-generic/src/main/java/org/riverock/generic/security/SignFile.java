@@ -32,28 +32,29 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.security.Provider;
 import java.security.Security;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.log4j.Logger;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.commons.codec.binary.Base64;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
+import org.riverock.generic.annotation.schema.transfer.TransferFileConfigType;
+import org.riverock.generic.annotation.schema.transfer.TransferFileContentType;
+import org.riverock.generic.annotation.schema.transfer.TransferFileListType;
 import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.schema.transfer.TransferFileConfigType;
-import org.riverock.generic.schema.transfer.TransferFileContentType;
-import org.riverock.generic.schema.transfer.TransferFileListType;
 import org.riverock.generic.utils.DateUtils;
 
 public class SignFile
 {
-    private static Object syncDebug = new Object();
+    private static final Object syncDebug = new Object();
 
     private static Logger log = Logger.getLogger(SignFile.class);
     private static int MAXFILES = 300;
@@ -163,8 +164,8 @@ public class SignFile
         log.debug("Length to gzip " + bytes.length);
 
         byte[] bytesToEncrypt = null;
-        log.debug("Gzip flag is  " + tfc.getIsGzip());
-        if (Boolean.TRUE.equals( tfc.getIsGzip() ))
+        log.debug("Gzip flag is  " + tfc.isIsGzip());
+        if (Boolean.TRUE.equals( tfc.isIsGzip() ))
         {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 
@@ -265,7 +266,7 @@ public class SignFile
             log.debug("Process file: " + s);
             File file_ = new File(s);
 
-            if (tfc.getExcludeAsReference().indexOf(file_.getName()) != -1)
+            if (tfc.getExclude().indexOf(file_.getName()) != -1)
             {
                 log.debug("Skip path " + file_.getName());
                 continue;
@@ -273,7 +274,7 @@ public class SignFile
 
             if (file_.isFile())
             {
-                fileList.addTransferFileContent( encryptFile(file_, parent) );
+                fileList.getTransferFileContent().add( encryptFile(file_, parent) );
             }
             else if (file_.isDirectory())
             {
@@ -304,62 +305,63 @@ public class SignFile
             System.out.println("Prov #" + i + ": " + prov[i].getName()+" v"+prov[i].getVersion());
 
         Provider provider = Security.getProvider("BC");
-        if (provider==null)
+        if (provider==null) {
             System.out.println("Provider DB not found");
 
+        }
+        else {
 //                Security.addProvider(
 //            new com.sun.net.ssl.internal.ssl.Provider());
 //org.bouncycastle.jce.provider.BouncyCastleProvider
 
-        System.out.println(
+            System.out.println(
                 provider.getName() + " v" +
-                provider.getVersion()
-        );
+                    provider.getVersion()
+            );
 
-        System.out.println( "Info "+
+            System.out.println( "Info "+
                 provider.getInfo()
-        );
+            );
+        }
+        
+        JAXBContext jaxbContext = JAXBContext.newInstance ( TransferFileConfigType.class.getPackage().getName() );
 
-
-        InputSource inSrc = new InputSource(new FileInputStream(args[0]));
-        tfc = (TransferFileConfigType) Unmarshaller.unmarshal(TransferFileConfigType.class, inSrc);
-
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        FileInputStream stream = new FileInputStream(args[0]);
+        Source source =  new StreamSource( stream );
+        tfc = unmarshaller.unmarshal( source, TransferFileConfigType.class).getValue();
 
         fileList.setDateCreate(
             DateUtils.getCurrentDate("dd.MM.yyyy HH:mm:ss")
         );
-        fileList.setIsGzip( tfc.getIsGzip() );
+        fileList.setIsGzip( tfc.isIsGzip() );
 
         log.debug("Base dir: " + tfc.getBaseDirectory() );
-        log.debug("is Gzip: " + tfc.getIsGzip() );
+        log.debug("is Gzip: " + tfc.isIsGzip() );
         log.debug("ExportFile: " + tfc.getExportFile() );
 
-        for (int i = 0; i < tfc.getDirectoryCount(); i++)
-        {
-            String processDir = tfc.getDirectory(i);
+        for (String processDir : tfc.getDirectory()) {
             log.debug("Directory: " + processDir);
         }
-        for (int i = 0; i < tfc.getExcludeCount(); i++)
-        {
-            String processDir = tfc.getExclude(i);
-            log.debug("Exclude: " + processDir);
+        for (String excludeDir : tfc.getExclude()) {
+            log.debug("Exclude: " + excludeDir);
         }
 
         log.debug("Run processing");
-        for (int i = 0; i < tfc.getDirectoryCount(); i++)
-        {
-            String processDir = tfc.getDirectory(i);
+        for (String processDir : tfc.getDirectory()) {
             dir(processDir);
         }
 
         String encoding = "UTF-8";
 
+/*
         FileOutputStream fos = new FileOutputStream(tfc.getExportFile());
         Marshaller marsh = new Marshaller(new OutputStreamWriter(fos, encoding));
         marsh.setRootElement("TransferFileList");
         marsh.setMarshalAsDocument(true);
         marsh.setEncoding(encoding);
         marsh.marshal( fileList );
+*/
 
     }
 }

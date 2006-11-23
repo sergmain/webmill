@@ -33,7 +33,6 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.db.factory.ORAconnect;
 import org.riverock.generic.db.factory.MYSQLconnect;
@@ -42,6 +41,7 @@ import org.riverock.generic.db.factory.MSSQL_JTDS_connect;
 import org.riverock.generic.db.factory.PostgreeSQLconnect;
 import org.riverock.generic.db.factory.IBMDB2connect;
 import org.riverock.generic.db.factory.SAPconnect;
+import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
 import org.riverock.common.tools.MainTools;
 
 /**

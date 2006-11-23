@@ -36,8 +36,8 @@
     <target name="gen_all_schema">
         <antcall target="delete_all_schema"/>
         <antcall target="gen_all_db_schema"/>
-        <antcall target="gen_config_schema"/>
-        <antcall target="gen_transfer_file_schema"/>
+        <!--<antcall target="gen_config_schema"/>-->
+        <!--<antcall target="gen_transfer_file_schema"/>-->
     </target>
 
     <target name="gen_all_db_schema">

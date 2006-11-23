@@ -34,6 +34,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
@@ -44,15 +45,15 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
-import org.riverock.generic.schema.db.structure.DbSequenceType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbViewType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbFieldType;
+import org.riverock.generic.annotation.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumnType;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
+import org.riverock.generic.annotation.schema.db.DbSequenceType;
+import org.riverock.generic.annotation.schema.db.DbDataFieldDataType;
 
 
 /**
@@ -131,7 +132,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
     }
 
     public void createTable(DbTableType table) throws Exception {
-        if (table == null || table.getFieldsCount() == 0)
+        if (table == null || table.getFields().size() == 0)
             return;
 
         String sql = "create table " + table.getName() + "\n" +
@@ -139,8 +140,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
         boolean isFirst = true;
 
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbFieldType field : table.getFields()) {
             if (!isFirst)
                 sql += ",";
             else
@@ -191,11 +191,11 @@ public final class MYSQLconnect extends DatabaseAdapter {
                     break;
 
                 case Types.BLOB:
-                    sql += " BLOB";
+                    sql += " LONGBLOB";
                     break;
 
                 case Types.OTHER:
-                    sql += " TEXT";
+                    sql += " LONGTEXT";
                     break;
 
                 // clob not supported by mysql
@@ -230,7 +230,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
                 sql += " NOT NULL ";
             }
         }
-        if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumnsCount() != 0) {
+        if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumns().size() != 0) {
             DbPrimaryKeyType pk = table.getPrimaryKey();
 
 //            String namePk = pk.getColumns(0).getPkName();
@@ -390,10 +390,12 @@ public final class MYSQLconnect extends DatabaseAdapter {
                 break;
 
             case Types.LONGVARBINARY:
-                // Oracle 'long raw' fields type
                 sql += " LONGVARBINARY";
                 break;
 
+            case Types.BLOB:
+                sql += " LONGBLOB";
+            
             default:
                 field.setJavaStringType("unknown field type field - " + field.getName() + " javaType - " + field.getJavaType());
                 System.out.println("unknown field type field - " + field.getName() + " javaType - " + field.getJavaType());
@@ -467,9 +469,9 @@ public final class MYSQLconnect extends DatabaseAdapter {
     public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
     }
 
-    public ArrayList getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
         // version 3.x and 4.0 of MySQL not support view
-        return new ArrayList(0);
+        return new ArrayList<DbViewType>(0);
     }
 
     public ArrayList getSequnceList(String schemaPattern) throws Exception {

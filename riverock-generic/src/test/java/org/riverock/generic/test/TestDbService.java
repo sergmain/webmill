@@ -25,14 +25,11 @@
  */
 package org.riverock.generic.test;
 
-import junit.framework.TestCase;
 import org.riverock.generic.db.DatabaseAdapter;
-
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
 
 /**
  * User: Admin
@@ -64,7 +61,7 @@ public class TestDbService
         if (pk==null)
             System.out.println("PK is null");
 
-        System.out.println("add primary key '"+pk.getColumns(0).getPkName()+"'");
+        System.out.println("add primary key '"+pk.getColumns().get(0).getPkName()+"'");
 
         DatabaseManager.addPrimaryKey(db_, checkTable, sourceTableOracle.getPrimaryKey());
 

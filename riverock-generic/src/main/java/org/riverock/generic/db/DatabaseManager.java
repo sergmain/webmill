@@ -42,9 +42,13 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.exception.GenericException;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.*;
-import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
+import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
+import org.riverock.generic.annotation.schema.db.DbFieldType;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumnType;
+import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbViewType;
 
 /**
  * User: Admin
@@ -123,7 +127,7 @@ public final class DatabaseManager {
 
         DbPrimaryKeyType checkPk = DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName());
 
-        if (checkPk != null && checkPk.getColumnsCount() != 0) {
+        if (checkPk != null && checkPk.getColumns().size() != 0) {
             String s = "primary key already exists";
             System.out.println(s);
             if (log.isInfoEnabled())
@@ -154,13 +158,13 @@ public final class DatabaseManager {
 
         String fields = "";
         boolean isNotFirst = false;
-        for (int i = 0; i < fieldsList.getFieldsCount(); i++) {
+        for (DbFieldType dbFieldType : fieldsList.getFields()) {
             if (isNotFirst) {
                 fields += ", ";
             } else {
                 isNotFirst = true;
             }
-            fields += fieldsList.getFields(i).getName();
+            fields += dbFieldType.getName();
         }
 
         String sql_ =
@@ -233,7 +237,6 @@ public final class DatabaseManager {
         DbTableType tempTable = cloneDescriptionTable(srcTable);
         tempTable.setName(targetTableName);
         tempTable.setPrimaryKey(null);
-        tempTable.setImportedKeys(new ArrayList(0));
         tempTable.setData(null);
 
         db_.createTable(tempTable);
@@ -279,9 +282,8 @@ public final class DatabaseManager {
             return null;
 
         DbPrimaryKeyType pk = new DbPrimaryKeyType();
-        for (int i = 0; i < srcPk.getColumnsCount(); i++) {
-            DbPrimaryKeyColumnType col = srcPk.getColumns(i);
-            pk.addColumns(cloneDescriptionPrimaryKeyColumn(col));
+        for (DbPrimaryKeyColumnType column : srcPk.getColumns()) {
+            pk.getColumns().add(cloneDescriptionPrimaryKeyColumn(column));
         }
 
         return pk;
@@ -325,16 +327,14 @@ public final class DatabaseManager {
         DbPrimaryKeyType pk = cloneDescriptionPK(srcTable.getPrimaryKey());
         r.setPrimaryKey(pk);
 
-        for (int k = 0; k < srcTable.getFieldsCount(); k++) {
-            DbFieldType srcField = srcTable.getFields(k);
-            DbFieldType f = cloneDescriptionField(srcField);
-            r.addFields(f);
+        for (DbFieldType dbFieldType : srcTable.getFields()) {
+            DbFieldType f = cloneDescriptionField(dbFieldType);
+            r.getFields().add(f);
         }
 
-        for (int k = 0; k < srcTable.getImportedKeysCount(); k++) {
-            DbImportedPKColumnType srcField = srcTable.getImportedKeys(k);
-            DbImportedPKColumnType f = cloneDescriptionFK(srcField);
-            r.addImportedKeys(f);
+        for (DbImportedPKColumnType dbImportedPKColumnType : srcTable.getImportedKeys()) {
+            DbImportedPKColumnType f = cloneDescriptionFK(dbImportedPKColumnType);
+            r.getImportedKeys().add(f);
         }
 
         return r;
@@ -344,15 +344,14 @@ public final class DatabaseManager {
         if (schema == null || tableName == null || fieldName == null)
             return null;
 
-        for (int k = 0; k < schema.getTablesCount(); k++) {
-            DbTableType checkTable = schema.getTables(k);
-            if (tableName.equalsIgnoreCase(checkTable.getName())) {
-                for (int i = 0; i < checkTable.getFieldsCount(); i++) {
-                    DbFieldType checkField = checkTable.getFields(i);
-                    if (fieldName.equalsIgnoreCase(checkField.getName()))
-                        return checkField;
+        for (DbTableType dbTableType : schema.getTables()) {
+            if (tableName.equalsIgnoreCase(dbTableType.getName())) {
+                for (DbFieldType dbFieldType : dbTableType.getFields()) {
+                    if (fieldName.equalsIgnoreCase(dbFieldType.getName()))
+                        return dbFieldType;
                 }
             }
+
         }
         return null;
     }
@@ -386,10 +385,9 @@ public final class DatabaseManager {
         if (table == null || field == null)
             return false;
 
-        for (int k = 0; k < table.getImportedKeysCount(); k++) {
-            DbImportedPKColumnType column = table.getImportedKeys(k);
-            if (table.getName().equalsIgnoreCase(column.getFkTableName()) &&
-                field.getName().equalsIgnoreCase(column.getFkColumnName()))
+        for (DbImportedPKColumnType dbImportedPKColumnType : table.getImportedKeys()) {
+            if (table.getName().equalsIgnoreCase(dbImportedPKColumnType.getFkTableName()) &&
+                field.getName().equalsIgnoreCase(dbImportedPKColumnType.getFkColumnName()))
                 return true;
         }
         return false;
@@ -400,9 +398,8 @@ public final class DatabaseManager {
             return false;
 
         DbPrimaryKeyType pk = table.getPrimaryKey();
-        for (int k = 0; k < pk.getColumnsCount(); k++) {
-            DbPrimaryKeyColumnType column = pk.getColumns(k);
-            if (field.getName().equalsIgnoreCase(column.getColumnName()))
+        for (DbPrimaryKeyColumnType dbPrimaryKeyColumnType : pk.getColumns()) {
+            if (field.getName().equalsIgnoreCase(dbPrimaryKeyColumnType.getColumnName()))
                 return true;
         }
         return false;
@@ -412,12 +409,10 @@ public final class DatabaseManager {
         if (schema == null || table == null || field == null)
             return false;
 
-        for (int k = 0; k < schema.getTablesCount(); k++) {
-            DbTableType checkTable = schema.getTables(k);
-            if (table.getName().equalsIgnoreCase(checkTable.getName())) {
-                for (int i = 0; i < checkTable.getFieldsCount(); i++) {
-                    DbFieldType checkField = checkTable.getFields(i);
-                    if (field.getName().equalsIgnoreCase(checkField.getName()))
+        for (DbTableType dbTableType : schema.getTables()) {
+            if (table.getName().equalsIgnoreCase(dbTableType.getName())) {
+                for (DbFieldType dbFieldType : dbTableType.getFields()) {
+                    if (field.getName().equalsIgnoreCase(dbFieldType.getName()))
                         return true;
                 }
             }
@@ -429,9 +424,8 @@ public final class DatabaseManager {
         if (schema == null || table == null)
             return false;
 
-        for (int i = 0; i < schema.getTablesCount(); i++) {
-            DbTableType checkTable = schema.getTables(i);
-            if (table.getName().equalsIgnoreCase(checkTable.getName()))
+        for (DbTableType dbTableType : schema.getTables()) {
+            if (table.getName().equalsIgnoreCase(dbTableType.getName()))
                 return true;
         }
         return false;
@@ -451,12 +445,12 @@ public final class DatabaseManager {
             if (table.getName().startsWith("BIN$")) {
                 continue;
             }
-            schema.addTables(table);
+            schema.getTables().add(table);
         }
 
-        List viewVector = db_.getViewList(dbSchema, "%");
+        List<DbViewType> viewVector = db_.getViewList(dbSchema, "%");
         if (viewVector != null)
-            schema.setViews( new ArrayList(viewVector));
+            schema.getViews().add( new ArrayList<DbViewType>(viewVector));
 
         ArrayList seqVector = db_.getSequnceList(dbSchema);
         if (seqVector != null)
@@ -830,7 +824,7 @@ public final class DatabaseManager {
             ;
     }
 
-    public static Map<String,DbImportedPKColumnType> getFkNames(final ArrayList keys) {
+    public static Map<String,DbImportedPKColumnType> getFkNames(final List<DbImportedPKColumnType> keys) {
         Map<String,DbImportedPKColumnType> hash = new HashMap<String,DbImportedPKColumnType>();
         for (int i = 0; i < keys.size(); i++) {
             DbImportedPKColumnType column = (DbImportedPKColumnType) keys.get(i);

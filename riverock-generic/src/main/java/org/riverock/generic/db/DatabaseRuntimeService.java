@@ -35,10 +35,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.schema.sql.SqlNameType;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.parser.Parser;
+import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
 
 /**
  * @author SergeMaslyukov
@@ -52,7 +52,7 @@ public class DatabaseRuntimeService {
     public static PreparedStatement prepareStatement(Connection conn, DatabaseConnectionType dc, Map<String, String> tables1, final String sql_) throws SQLException {
 
         try {
-            if (Boolean.TRUE.equals(dc.getIsSupportCache())) {
+            if (Boolean.TRUE.equals(dc.isIsSupportCache())) {
                 Parser parser = SqlStatement.parseSql(sql_);
 
                 if (log.isDebugEnabled())
@@ -103,7 +103,7 @@ public class DatabaseRuntimeService {
         }
 
         try {
-            if (Boolean.TRUE.equals(dc.getIsSupportCache())) {
+            if (Boolean.TRUE.equals(dc.isIsSupportCache())) {
 
                 if (log.isDebugEnabled()) log.debug("Start sync cache. DB action - COMMIT");
 
@@ -163,7 +163,7 @@ public class DatabaseRuntimeService {
     private final static Object syncRollback = new Object();
     public static void rollback(Connection conn, DatabaseConnectionType dc, Map<String, String> tables) throws SQLException {
         conn.rollback();
-        if (Boolean.TRUE.equals(dc.getIsSupportCache())) {
+        if (Boolean.TRUE.equals(dc.isIsSupportCache())) {
             synchronized (syncRollback) {
                 tables.clear();
             }
