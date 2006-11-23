@@ -21,7 +21,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.member.context;
+package org.riverock.portlet.main;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +38,8 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.portlet.member.ClassQueryItemImpl;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.portlet.main.ClassQueryItemImpl;
 
 
 /**
@@ -52,6 +53,11 @@ public class LanguagePerSite implements PortletGetList {
     private static Logger log = Logger.getLogger( LanguagePerSite.class );
 
     public LanguagePerSite() {
+    }
+
+    private PortalDaoProvider provider;
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
+        this.provider=provider;
     }
 
     public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
@@ -101,4 +107,5 @@ public class LanguagePerSite implements PortletGetList {
             db_ = null;
         }
     }
+
 }

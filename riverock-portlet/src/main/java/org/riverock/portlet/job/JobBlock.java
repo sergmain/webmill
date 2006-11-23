@@ -47,6 +47,7 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.schema.portlet.job.JobBlockType;
 import org.riverock.portlet.schema.portlet.job.JobItemType;
 import org.riverock.portlet.tools.SiteUtils;
@@ -201,5 +202,8 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
 
     public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
         return null;
+    }
+
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
     }
 }

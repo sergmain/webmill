@@ -36,8 +36,6 @@
 
     <target name="gen_all_schema">
         <antcall target="delete_all_schema"/>
-        <antcall target="gen_member_schema"/>
-        <antcall target="gen_core_schema"/>
         <antcall target="gen_portlet_schema"/>
     </target>
     <target name="gen_menu_schema">
@@ -45,18 +43,6 @@
         <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-menu.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.menu"/>
         <antcall target="gen_schema_from_schema"/>
-    </target>
-    <target name="gen_member_schema">
-        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/member"/>
-        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-member.xsd"/>
-        <property name="schema-package-java" value="${main-package}.schema.member"/>
-        <antcall target="gen_schema_from_schema"/>
-    </target>
-    <target name="gen_core_schema">
-        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/core/"/>
-        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-schema-core.xsd"/>
-        <property name="schema-package-java" value="${main-package}.schema.core"/>
-        <antcall target="gen_schema_from_schema_nomarshall"/>
     </target>
     <target name="gen_portlet_desc_schema_$">
         <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/description/"/>
@@ -69,7 +55,6 @@
         <antcall target="gen_portlet_news_block_schema"/>
         <antcall target="gen_portlet_faq_schema"/>
         <antcall target="gen_portlet_job_schema"/>
-        <antcall target="gen_portlet_menu_member_schema"/>
         <antcall target="gen_portlet_register_schema"/>
         <antcall target="gen_portlet_login_schema"/>
         <antcall target="gen_menu_schema"/>
@@ -108,12 +93,6 @@
         <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/job"/>
         <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-job.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.job"/>
-        <antcall target="gen_schema_from_schema"/>
-    </target>
-    <target name="gen_portlet_menu_member_schema">
-        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/menu_member/"/>
-        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-menu-member.xsd"/>
-        <property name="schema-package-java" value="${main-package}.schema.portlet.menu_member"/>
         <antcall target="gen_schema_from_schema"/>
     </target>
 </project>

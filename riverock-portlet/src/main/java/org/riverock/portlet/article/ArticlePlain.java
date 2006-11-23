@@ -130,7 +130,13 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     }
 
     public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
-        return ArticleUtils.getListInternal(renderRequest, idSiteCtxLangCatalog, idContext, true);
+
+        return ArticleUtils.getListInternal(provider, idSiteCtxLangCatalog, idContext, true);
+    }
+
+    private PortalDaoProvider provider;
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
+        this.provider=provider;
     }
 
 }

@@ -126,7 +126,13 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         return new ArticleXml(article);
     }
 
-    public List<ClassQueryItem> getList( final Long idSiteCtxLangCatalog, final Long idContext) {
-        return ArticleUtils.getListInternal(renderRequest, idSiteCtxLangCatalog, idContext, false);
+    public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
+
+        return ArticleUtils.getListInternal(provider, idSiteCtxLangCatalog, idContext, false);
+    }
+
+    private PortalDaoProvider provider;
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
+        this.provider=provider;
     }
 }

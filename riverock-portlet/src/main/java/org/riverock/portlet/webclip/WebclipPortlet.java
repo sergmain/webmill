@@ -35,6 +35,9 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.Proxy;
+import java.net.SocketAddress;
+import java.net.InetSocketAddress;
 
 /**
  * User: SergeMaslyukov
@@ -105,6 +108,26 @@ public class WebclipPortlet implements Portlet {
         return preferences.getValue(WebclipConstants.HREF_START_PAGE_PREF, null);
     }
 
+    private String getProxyPort(PortletRequest request) {
+        PortletPreferences preferences = request.getPreferences();
+        return preferences.getValue(WebclipConstants.PROXY_PORT_PREF, null);
+    }
+
+    private String getProxyHost(PortletRequest request) {
+        PortletPreferences preferences = request.getPreferences();
+        return preferences.getValue(WebclipConstants.PROXY_HOST_PREF, null);
+    }
+
+    private String getProxyLogin(PortletRequest request) {
+        PortletPreferences preferences = request.getPreferences();
+        return preferences.getValue(WebclipConstants.PROXY_LOGIN_PREF, null);
+    }
+
+    private String getProxyPassword(PortletRequest request) {
+        PortletPreferences preferences = request.getPreferences();
+        return preferences.getValue(WebclipConstants.PROXY_PASSWORD_PREF, null);
+    }
+
     private void refreshWebclipData(PortletRequest request, Long webclipId, Long siteId) {
         log.info("Start refreshWebclipData()");
 
@@ -123,7 +146,18 @@ public class WebclipPortlet implements Portlet {
             }
             try {
                 URL urlObject = new URL(url);
-                URLConnection urlConnection = urlObject.openConnection();
+                URLConnection urlConnection;
+//                Proxy proxy = prepareProxy(request);
+//                if (proxy!=null) {
+//                    urlConnection = urlObject.openConnection(proxy);
+//                }
+//                else {
+                    urlConnection = urlObject.openConnection();
+//                }
+                if (log.isDebugEnabled()) {
+                    log.debug("Current read timeout: " + urlConnection.getReadTimeout());
+                }
+                urlConnection.setReadTimeout(WebclipConstants.DEFAULT_READ_TIMEOUT);
                 InputStream is = urlConnection.getInputStream();
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 byte[] bytes = new byte[1024];
@@ -134,8 +168,13 @@ public class WebclipPortlet implements Portlet {
                 is.close();
 
                 bytes = os.toByteArray();
+                if (log.isDebugEnabled()) {
+                    log.debug("Content from "+url+":\n" + new String(bytes));
+                }
                 WebclipUrlProducer producer = new WebclipUrlProducerImpl(getNewHrefPrefix(request), getHrefStartPart(request));
-                WebclipDataProcessor processor = new WebclipDataProcessorImpl(producer, bytes, 2, "content" );
+                WebclipDataProcessor processor = new WebclipDataProcessorImpl(
+                    producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content" );
+                
                 os = new ByteArrayOutputStream();
                 processor.modify(os);
                 webclip.setWebclipData(os.toString(CharEncoding.UTF_8));
@@ -145,6 +184,24 @@ public class WebclipPortlet implements Portlet {
                 log.error(es, th);
             }
         }
+    }
+
+    private Proxy prepareProxy(PortletRequest request) {
+        String port = getProxyPort(request);
+        String host = getProxyHost(request);
+        String login = getProxyLogin(request);
+        String password = getProxyPassword(request);
+
+        if (port==null && host==null) {
+            return null;
+        }
+        if (port==null || host==null ){
+            log.warn("Proxy definition not complete. proxy host: " +host+", port: " + port);
+        }
+
+        SocketAddress addr = new InetSocketAddress(host, new Integer(port));
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+        return proxy;
     }
 
     private WebclipBean getWebclip(Long webclipId, Long siteId) {

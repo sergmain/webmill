@@ -98,12 +98,12 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
         if ( node.getNodeType() == Node.ELEMENT_NODE) {
                 switch (elementType) {
-                    case 1:
+                    case WebclipConstants.TABLE_NODE_TYPE:
                         if (node.getNodeName().equalsIgnoreCase("table") && getIdAttr(node).equals(elementId)) {
                             return node;
                         }
                         break;
-                    case 2:
+                    case WebclipConstants.DIV_NODE_TYPE:
                         if (node.getNodeName().equalsIgnoreCase("div") && getIdAttr(node).equals(elementId)) {
                             return node;
                         }

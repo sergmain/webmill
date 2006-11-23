@@ -43,6 +43,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
@@ -638,6 +639,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
     public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext) {
         return null;
+    }
+
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
     }
 
 /*

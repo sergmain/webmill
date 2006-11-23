@@ -41,6 +41,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 
@@ -149,5 +150,8 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
 
     public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext) {
         return null;
+    }
+
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
     }
 }

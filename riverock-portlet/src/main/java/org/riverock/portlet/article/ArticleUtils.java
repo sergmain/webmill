@@ -1,17 +1,16 @@
 package org.riverock.portlet.article;
 
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.interfaces.portal.bean.Article;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.portlet.member.ClassQueryItemImpl;
-import org.riverock.common.tools.StringTools;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
-import javax.portlet.RenderRequest;
-import java.util.List;
-import java.util.ArrayList;
+import org.riverock.common.tools.StringTools;
+import org.riverock.interfaces.portal.bean.Article;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.portlet.main.ClassQueryItemImpl;
 
 /**
  * User: SergeMaslyukov
@@ -23,19 +22,15 @@ import java.util.ArrayList;
 public class ArticleUtils {
     private final static Logger log = Logger.getLogger( ArticlePlain.class );
 
-    static List<ClassQueryItem> getListInternal(RenderRequest renderRequest, Long idSiteCtxLangCatalog, Long idContext, boolean isPlain) {
+    static List<ClassQueryItem> getListInternal(PortalDaoProvider provider, Long idSiteCtxLangCatalog, Long idContext, boolean isPlain) {
         if( log.isDebugEnabled() ) {
             log.debug( "Get list of Article. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog );
         }
 
         List<ClassQueryItem> items = new ArrayList<ClassQueryItem>();
 
-        PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
-        Long siteLangaugeId = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
-
-        PortalDaoProvider provider =
-            (PortalDaoProvider) renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
-        List<Article> articles = provider.getPortalCmsArticleDao().getArticleList(siteLangaugeId, !isPlain);
+        CatalogLanguageItem catalogLanguage = provider.getPortalCatalogDao().getCatalogLanguageItem(idSiteCtxLangCatalog);
+        List<Article> articles = provider.getPortalCmsArticleDao().getArticleList(catalogLanguage.getSiteLanguageId(), !isPlain);
         for (Article bean : articles) {
             String name = "" + bean.getArticleId() + ", " +
                 bean.getArticleCode() + ", " +

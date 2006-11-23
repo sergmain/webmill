@@ -175,7 +175,7 @@ public class MenuDataProvider implements Serializable {
                         )
                     );
                 }
-
+                obj.setPortalDaoProvider(FacesTools.getPortalDaoProvider());
                 v = obj.getList( menuItem.getCatalogLanguageId(), menuItem.getContextId());
 
                 if (v==null) {
