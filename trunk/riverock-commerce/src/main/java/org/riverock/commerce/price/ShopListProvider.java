@@ -38,6 +38,7 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.commerce.bean.ClassQueryItemImpl;
 
 /**
@@ -53,6 +54,12 @@ public class ShopListProvider implements PortletGetList {
 
     private static Logger log = Logger.getLogger( ShopPage.class );
 
+    private PortalDaoProvider provider=null;
+
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
+        this.provider=provider;
+    }
+
     public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
 
         if (log.isDebugEnabled())
@@ -62,18 +69,17 @@ public class ShopListProvider implements PortletGetList {
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
 
+        Long siteId = provider.getPortalCatalogDao().getSiteId(idSiteCtxLangCatalog);
         List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         try {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( 
                 "SELECT b.ID_SHOP, b.CODE_SHOP, b.NAME_SHOP " +
-                "FROM   WM_PORTAL_CATALOG_LANGUAGE a, WM_PRICE_SHOP_LIST b, WM_PORTAL_SITE_LANGUAGE c " +
-                "where  a.ID_SITE_CTX_LANG_CATALOG=? and " +
-                "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       c.ID_SITE=b.ID_SITE" 
+                "FROM   WM_PRICE_SHOP_LIST b " +
+                "where  b.ID_SITE=?"
             );
 
-            RsetTools.setLong( ps, 1, idSiteCtxLangCatalog );
+            RsetTools.setLong( ps, 1, siteId );
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -105,4 +111,5 @@ public class ShopListProvider implements PortletGetList {
             db_ = null;
         }
     }
+
 }

@@ -36,6 +36,7 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.PortletURL;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -110,7 +111,7 @@ public final class InvoicePortlet implements Portlet {
             ShopBean shop = (ShopBean)session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
 
             AuthSession authSession = (AuthSession)renderRequest.getUserPrincipal();
-
+            Integer shopGroupId = PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 );
 
             boolean isActivateEmailOrder = false;
             String orderEmail = null;
@@ -169,11 +170,6 @@ public final class InvoicePortlet implements Portlet {
                     PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ) ) +
                 ServletTools.getHiddenItem( ShopPortlet.NAME_ID_SHOP_PARAM, shop.getShopId() );
 
-            String addUrl =
-                ShopPortlet.NAME_ID_CURRENCY_SHOP + '=' + currencyID + '&' +
-                ShopPortlet.NAME_ID_GROUP_SHOP + '=' +
-                PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ) + '&' +
-                ShopPortlet.NAME_ID_SHOP_PARAM + '=' + shop.getShopId();
 
             String action = PortletService.getString(renderRequest, "action", null);
 
@@ -406,9 +402,12 @@ public final class InvoicePortlet implements Portlet {
                         GenericConfig.getMailSMTPHost() );
                 }
 */
-                String shopUrl = "<a href=\"" +
-                    PortletService.url( ShopPortlet.CTX_TYPE_SHOP, renderRequest, renderResponse ) + '&' +
-                    addUrl + "\">";
+
+                PortletURL url = renderResponse.createRenderURL();
+                url.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
+                addParameters(url, currencyID, shopGroupId, shop.getShopId());
+
+                String shopUrl = "<a href=\"" +url.toString()+ "\">";
 
                 String str = null;
                 Object args1[] = {PortletService.url( "mill.index", renderRequest, renderResponse )};
@@ -478,9 +477,11 @@ public final class InvoicePortlet implements Portlet {
             }
 */
             out.write( "<table border=\"0\">\n<tr>\n<td align=\"left\">\n" );
-            out.write( "<a href=\"" +
-                PortletService.url( ShopPortlet.CTX_TYPE_SHOP, renderRequest, renderResponse ) + '&' +
-                addUrl + "\">" );
+            PortletURL url = renderResponse.createRenderURL();
+            url.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
+            addParameters(url, currencyID, shopGroupId, shop.getShopId());
+
+            out.write( "<a href=\"" + url.toString() + "\">" );
 
             out.write( bundle.getString( "invoice.continue_select" ) );
             out.write( "</a>" );
@@ -632,5 +633,11 @@ public final class InvoicePortlet implements Portlet {
             out.close();
             out = null;
         }
+    }
+
+    private void addParameters(PortletURL url, Long currencyId, Integer shopGroupId, Long shopId) {
+        url.setParameter(ShopPortlet.NAME_ID_CURRENCY_SHOP , ""+currencyId);
+        url.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP,  shopGroupId.toString());
+        url.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM , shopId.toString());
     }
 }

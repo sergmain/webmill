@@ -44,7 +44,7 @@ import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -382,7 +382,7 @@ public class ShopSearch extends HttpServlet {
 
                 // Todo this is simple stub, current not work
                 // Todo because sequence was used to simple getting of next id of file
-                CustomSequenceType seq = new CustomSequenceType();
+                CustomSequence seq = new CustomSequence();
                 seq.setSequenceName("SEQ_WM_PRICE_QUERY_TABLE");
                 seq.setTableName("WM_PRICE_QUERY_TABLE");
                 seq.setColumnName("ID_THREAD");
