@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<DbSchemaType xmlns="http://generic.riverock.org/xsd/riverock-database-structure.xsd">
+<riverock-db-stuct:SchemaElement xmlns:riverock-db-stuct="http://generic.riverock.org/xsd/riverock-database-structure.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://generic.riverock.org/xsd/riverock-database-structure.xsd
+riverock-database-structure.xsd">
 
 	<Tables schema="TEST" name="WM_PORTAL_IDS" type="TABLE">
 		<Fields name="sequence_name" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
@@ -1339,4 +1340,5 @@ where   a04.is_root = 1
 		<StorageField>WEBCLIP_DATA</StorageField>
 		<SequenceName>SEQ_WM_PORTLET_WEBCLIP_DATA</SequenceName>
 	</BigTextTable>
-</DbSchemaType>
+
+</riverock-db-stuct:SchemaElement>

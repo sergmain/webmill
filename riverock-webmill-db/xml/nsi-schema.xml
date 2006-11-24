@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<DbSchemaType xmlns="http://generic.riverock.org/xsd/riverock-database-structure.xsd">
+<riverock-db-stuct:SchemaElement xmlns:riverock-db-stuct="http://generic.riverock.org/xsd/riverock-database-structure.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://generic.riverock.org/xsd/riverock-database-structure.xsd
+riverock-database-structure.xsd">
+
 	<Tables schema="TEST" name="NSI_LIST_HOLIDAY" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="NSI_LIST_HOLIDAY" columnName="ID_HOLIDAY" keySeq="1" pkName="ID_HOLIDAY_LH_PK"/>
@@ -28,4 +30,5 @@
 	</Tables>
 	<Sequences name="SEQ_NSI_LIST_WORKDAY" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
 	<Sequences name="SEQ_NSI_LIST_HOLIDAY" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="6"/>
-</DbSchemaType>
+
+</riverock-db-stuct:SchemaElement>
