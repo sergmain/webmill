@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 
@@ -118,7 +118,7 @@ public class ImportPriceProcess
                         PreparedStatement ps2 = null;
                         try
                         {
-                            CustomSequenceType seq = new CustomSequenceType();
+                            CustomSequence seq = new CustomSequence();
                             seq.setSequenceName("seq_WM_PRICE_LIST");
                             seq.setTableName( "WM_PRICE_LIST");
                             seq.setColumnName( "ID_ITEM" );

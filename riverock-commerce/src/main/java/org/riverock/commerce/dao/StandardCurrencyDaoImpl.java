@@ -38,7 +38,7 @@ import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
 import org.riverock.commerce.manager.std_currency.StandardCurrencyCurs;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.common.tools.RsetTools;
 
 /**
@@ -95,7 +95,7 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_WM_CASH_CURRENCY_STD" );
             seq.setTableName( "WM_CASH_CURRENCY_STD" );
             seq.setColumnName( "ID_STD_CURR" );
@@ -262,7 +262,7 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_WM_CASH_CURS_STD" );
             seq.setTableName( "WM_CASH_CURS_STD" );
             seq.setColumnName( "ID_STD_CURS" );

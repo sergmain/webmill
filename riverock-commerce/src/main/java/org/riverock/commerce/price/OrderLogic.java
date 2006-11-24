@@ -41,7 +41,7 @@ import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.core.GetWmPriceListItem;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
@@ -256,7 +256,7 @@ public final class OrderLogic {
         String sql_ = "";
         PreparedStatement ps = null;
         try {
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "SEQ_WM_PRICE_RELATE_USER_ORDER" );
             seq.setTableName( "WM_PRICE_RELATE_USER_ORDER" );
             seq.setColumnName( "ID_ORDER_V2" );
@@ -504,7 +504,7 @@ public final class OrderLogic {
         try {
             String sql_ = null;
 
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_WM_price_order" );
             seq.setTableName( "WM_PRICE_ORDER" );
             seq.setColumnName( "ID_PRICE_ORDER_V2" );

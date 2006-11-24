@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
 import org.riverock.commerce.bean.ShopBean;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.common.tools.RsetTools;
 
 /**
@@ -138,7 +138,7 @@ public class ShopDaoImpl implements ShopDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_WM_PRICE_SHOP_LIST" );
             seq.setTableName( "WM_PRICE_SHOP_LIST" );
             seq.setColumnName( "ID_SHOP" );

@@ -38,7 +38,7 @@ import org.riverock.commerce.manager.currency.CurrencyBean;
 import org.riverock.commerce.manager.currency.CurrencyCurs;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.common.tools.RsetTools;
 
 /**
@@ -98,7 +98,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_WM_CASH_CURRENCY" );
             seq.setTableName( "WM_CASH_CURRENCY" );
             seq.setColumnName( "ID_CURRENCY" );
@@ -285,7 +285,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_WM_CASH_CURR_VALUE" );
             seq.setTableName( "WM_CASH_CURR_VALUE" );
             seq.setColumnName( "ID_CURVAL" );

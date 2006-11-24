@@ -126,7 +126,7 @@ public class TestSite {
             throws Exception
     {
         Long countRec;
-        CustomSequenceType seqSite = new CustomSequenceType();
+        CustomSequence seqSite = new CustomSequence();
         seqSite.setSequenceName("SEQ_WM_PORTAL_TEMPLATE");
         seqSite.setTableName( "WM_PORTAL_TEMPLATE");
         seqSite.setColumnName( "ID_SITE_TEMPLATE" );
@@ -171,8 +171,8 @@ public class TestSite {
         langCatalog.setIsDefault( Boolean.TRUE );
         langCatalog.setIdSiteSupportLanguage( idRuSiteLanguage );
 
-        CustomSequenceType seqSite = null;
-        seqSite =  new CustomSequenceType();
+        CustomSequence seqSite = null;
+        seqSite =  new CustomSequence();
         seqSite.setSequenceName( "SEQ_WM_PORTAL_CATALOG_LANGUAGE" );
         seqSite.setTableName( "WM_PORTAL_CATALOG_LANGUAGE" );
         seqSite.setColumnName( "ID_SITE_CTX_LANG_CATALOG" );
@@ -197,7 +197,7 @@ public class TestSite {
             menu.setIdSiteTemplate( idTemplateIndex );
 
             seqSite = null;
-            seqSite = new CustomSequenceType();
+            seqSite = new CustomSequence();
             seqSite.setSequenceName( "SEQ_WM_PORTAL_CATALOG" );
             seqSite.setTableName( "WM_PORTAL_CATALOG" );
             seqSite.setColumnName( "ID_SITE_CTX_CATALOG" );
@@ -220,7 +220,7 @@ public class TestSite {
                 subMenu.setIdSiteTemplate( idTemplateIndex );
 
                 seqSite = null;
-                seqSite =  new CustomSequenceType();
+                seqSite =  new CustomSequence();
                 seqSite.setSequenceName( "SEQ_WM_PORTAL_CATALOG" );
                 seqSite.setTableName( "WM_PORTAL_CATALOG" );
                 seqSite.setColumnName( "ID_SITE_CTX_CATALOG" );
@@ -279,11 +279,11 @@ public class TestSite {
         Assert.assertFalse("Error get id for RUB standatd currency", idCurrencyStdRUB==null);
         Assert.assertFalse("Error get id for RUB standatd currency", idCurrencyStdEURO==null);
 
-        CustomSequenceType seqSite = null;
+        CustomSequence seqSite = null;
         CashCurrencyItemType currencyItem = null;
         Long id;
 
-        seqSite =  new CustomSequenceType();
+        seqSite =  new CustomSequence();
         seqSite.setSequenceName("SEQ_CASH_CURRENCY");
         seqSite.setTableName( "CASH_CURRENCY");
         seqSite.setColumnName( "ID_CURRENCY" );
@@ -301,7 +301,7 @@ public class TestSite {
         InsertCashCurrencyItem.processData( db_, currencyItem);
         db_.commit();
 
-        seqSite =  new CustomSequenceType();
+        seqSite =  new CustomSequence();
         seqSite.setSequenceName("SEQ_CASH_CURRENCY");
         seqSite.setTableName( "CASH_CURRENCY");
         seqSite.setColumnName( "ID_CURRENCY" );
@@ -327,7 +327,7 @@ public class TestSite {
         Timestamp stampTemp = new Timestamp(System.currentTimeMillis() );
         curs.setDateChange( stampTemp );
         curs.setIdCurrency( idCurrencyRUB );
-        seqSite =  new CustomSequenceType();
+        seqSite =  new CustomSequence();
         seqSite.setSequenceName("SEQ_WM_CASH_CURR_VALUE");
         seqSite.setTableName( "WM_CASH_CURR_VALUE");
         seqSite.setColumnName( "ID_CURVAL" );
@@ -341,7 +341,7 @@ public class TestSite {
         curs.setCurs( cursEURO );
         curs.setDateChange( new Timestamp(System.currentTimeMillis() ));
         curs.setIdCurrency( idCurrencyEURO );
-        seqSite =  new CustomSequenceType();
+        seqSite =  new CustomSequence();
         seqSite.setSequenceName("SEQ_WM_CASH_CURR_VALUE");
         seqSite.setTableName( "WM_CASH_CURR_VALUE");
         seqSite.setColumnName( "ID_CURVAL" );
@@ -374,7 +374,7 @@ public class TestSite {
         PriceShopTableItemType shop = new PriceShopTableItemType();
         shop.setIdSite( idSite );
 
-        seqSite = new CustomSequenceType();
+        seqSite = new CustomSequence();
         seqSite.setSequenceName("SEQ_WM_PRICE_SHOP_LIST");
         seqSite.setTableName( "WM_PRICE_SHOP_LIST");
         seqSite.setColumnName( "ID_SHOP" );
@@ -415,7 +415,7 @@ public class TestSite {
         try
         {
             {
-                CustomSequenceType seqSite = new CustomSequenceType();
+                CustomSequence seqSite = new CustomSequence();
                 seqSite.setSequenceName("SEQ_WM_PORTAL_LIST_SITE");
                 seqSite.setTableName( "WM_PORTAL_LIST_SITE");
                 seqSite.setColumnName( "ID_SITE" );
@@ -438,7 +438,7 @@ public class TestSite {
                 db_.commit();
             }
             {
-                CustomSequenceType seqVirtualHost = new CustomSequenceType();
+                CustomSequence seqVirtualHost = new CustomSequence();
                 seqVirtualHost.setSequenceName("SEQ_WM_PORTAL_VIRTUAL_HOST");
                 seqVirtualHost.setTableName( "WM_PORTAL_VIRTUAL_HOST");
                 seqVirtualHost.setColumnName( "ID_SITE_VIRTUAL_HOST" );
@@ -458,7 +458,7 @@ public class TestSite {
                 db_.commit();
             }
             {
-                CustomSequenceType seqSupportLanguage = new CustomSequenceType();
+                CustomSequence seqSupportLanguage = new CustomSequence();
                 seqSupportLanguage.setSequenceName("SEQ_WM_PORTAL_SITE_LANGUAGE");
                 seqSupportLanguage.setTableName( "WM_PORTAL_SITE_LANGUAGE");
                 seqSupportLanguage.setColumnName( "ID_SITE_SUPPORT_LANGUAGE" );

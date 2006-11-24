@@ -27,9 +27,9 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
 import org.riverock.generic.tools.servlet.HttpServletResponseApplWrapper;
 import org.riverock.generic.tools.servlet.HttpSessionApplWrapper;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.startup.StartupApplication;
+import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
