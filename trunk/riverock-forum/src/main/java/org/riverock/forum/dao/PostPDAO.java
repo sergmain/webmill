@@ -203,7 +203,9 @@ public class PostPDAO {
         //4
         Long forumConcreteId = DatabaseManager.getLongValue(adapter,
             "select T_F_ID from WM_FORUM_TOPIC where T_ID=?",
-            new Object[]{tId});
+            new Object[]{tId},
+            new int[] {Types.NUMERIC}
+        );
 
         if (forumConcreteId != null) {
             DatabaseManager.runSQL(adapter,

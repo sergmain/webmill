@@ -25,6 +25,7 @@ package org.riverock.forum.util;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 
 import org.apache.log4j.Logger;
 
@@ -57,7 +58,8 @@ public final class CommonUtils {
                 "from   WM_FORUM_CATEGORY a, WM_FORUM_CONCRETE b " +
                 "where  a.FORUM_ID=? and a.FORUM_CATEGORY_ID=b.FORUM_CATEGORY_ID and " +
                 "       b.F_ID=? ",
-                new Object[]{ forumId, f_id }
+                new Object[]{ forumId, f_id },
+                new int[] {Types.NUMERIC, Types.NUMERIC}
             );
             if (count==null || count.intValue()==0) {
                 return false;
@@ -85,7 +87,8 @@ public final class CommonUtils {
                 "select count(*) " +
                 "from   WM_FORUM_CATEGORY a " +
                 "where  a.FORUM_ID=? and a.FORUM_CATEGORY_ID=? ",
-                new Object[]{ forumId, forumCategoryId }
+                new Object[]{ forumId, forumCategoryId },
+                new int[] {Types.NUMERIC, Types.NUMERIC}
             );
             if (count==null || count.intValue()==0) {
                 return false;
@@ -114,7 +117,8 @@ public final class CommonUtils {
                 "from   WM_FORUM_CONCRETE a, WM_FORUM_TOPIC b, WM_FORUM_CATEGORY d " +
                 "where  b.T_F_ID=a.F_ID and b.T_ID=? and " +
                 "       a.FORUM_CATEGORY_ID=d.FORUM_CATEGORY_ID and d.FORUM_ID=?",
-                new Object[]{ t_id, forumId }
+                new Object[]{ t_id, forumId },
+                new int[] {Types.NUMERIC, Types.NUMERIC}
             );
             if (count==null || count.intValue()==0) {
                 return false;
@@ -145,7 +149,8 @@ public final class CommonUtils {
                 "where  b.T_F_ID=a.F_ID and b.T_ID=e.M_T_ID and " +
                 "       a.FORUM_CATEGORY_ID=d.FORUM_CATEGORY_ID and d.FORUM_ID=? and " +
                 "       e.M_ID=? ",
-                new Object[]{ forumId, messageId }
+                new Object[]{ forumId, messageId },
+                new int[] {Types.NUMERIC, Types.NUMERIC}
             );
             if (count==null || count.intValue()==0) {
                 return false;
