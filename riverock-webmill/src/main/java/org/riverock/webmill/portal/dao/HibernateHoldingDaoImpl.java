@@ -184,16 +184,11 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
             session.getTransaction().commit();
             return;
         }
-        List<HoldingCompanyRelationBean> relate = session.createQuery(
-            "select relate " +
-                "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate " +
                 "where relate.holdingId=:holdingId")
             .setLong("holdingId", holdingBean.getId())
-            .list();
-
-        for (HoldingCompanyRelationBean holdingCompanyRelationBean : relate) {
-            session.delete(holdingCompanyRelationBean);
-        }
+            .executeUpdate();
         session.delete(bean);
 
         session.getTransaction().commit();

@@ -55,7 +55,7 @@ import org.riverock.webmill.utils.HibernateUtils;
 public class HibernateCmsDaoImpl implements InternalCmsDao {
     private static Logger log = Logger.getLogger(HibernateCmsDaoImpl.class);
 
-    public void deleteArticleForSite(DatabaseAdapter adapter, Long siteId) {
+    public void deleteArticleForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         List<ArticleBean> beans = session.createQuery(
@@ -72,7 +72,7 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         session.getTransaction().commit();
     }
 
-    public void deleteArticleForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId) {
+    public void deleteArticleForSiteLanguage(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         List<ArticleBean> beans = session.createQuery(
@@ -88,7 +88,7 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         session.getTransaction().commit();
     }
 
-    public void deleteNewsForSite(DatabaseAdapter adapter, Long siteId) {
+    public void deleteNewsForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         List<NewsBean> beans = session.createQuery(
@@ -120,7 +120,7 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         session.getTransaction().commit();
     }
 
-    public void deleteNewsForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId) {
+    public void deleteNewsForSiteLanguage(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         List<NewsBean> beans = session.createQuery(

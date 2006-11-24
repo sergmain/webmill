@@ -27,9 +27,7 @@ package org.riverock.webmill.portal.dao;
 import java.util.Map;
 import java.util.List;
 
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.bean.Xslt;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author SergeMaslyukov
@@ -53,8 +51,8 @@ public interface InternalXsltDao {
 
     public List<Xslt> getXsltList(Long siteLanguageId);
 
-    public void deleteXsltForSite(DatabaseAdapter adapter, Long siteId);
-    public void deleteXsltForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
+    public void deleteXsltForSite(Long siteId);
+    public void deleteXsltForSiteLanguage(Long siteLanguageId);
 
     public void updateXslt(Xslt xslt);
 

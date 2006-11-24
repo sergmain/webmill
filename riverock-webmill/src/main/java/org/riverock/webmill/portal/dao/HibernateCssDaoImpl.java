@@ -34,7 +34,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.main.CssBean;
@@ -189,29 +188,20 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
-        query.setLong("css_id", cssId);
-        CssBean bean = (CssBean)query.uniqueResult();
-        if (!bean.isCurrent()) {
-            session.delete(bean);
-        }
+        session.createQuery
+            ("delete org.riverock.webmill.main.CssBean css where css.cssId = :css_id and css.isCurrent=false ")
+            .setLong("css_id", cssId)
+            .executeUpdate();
 
         session.getTransaction().commit();
-    }
-
-    public void deleteCssForSite(DatabaseAdapter adapter, Long siteId) {
-        deleteCssForSite(siteId);
     }
 
     public void deleteCssForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id");
-        query.setLong("site_id", siteId);
-        List<CssBean> cssList = query.list();
-        for (CssBean css : cssList) {
-            session.delete(css);
-        }
+        session.createQuery("delete org.riverock.webmill.main.CssBean css where css.siteId = :site_id")
+            .setLong("site_id", siteId)
+            .executeUpdate();
         session.getTransaction().commit();
     }
 

@@ -24,11 +24,6 @@
  */
 package org.riverock.webmill.test.cases;
 
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.startup.StartupApplication;
-
 /**
  * User: Admin
  * Date: May 9, 2003

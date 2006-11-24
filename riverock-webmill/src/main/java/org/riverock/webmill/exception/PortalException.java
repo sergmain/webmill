@@ -31,7 +31,7 @@ package org.riverock.webmill.exception;
  * @author Serge Maslyukov
  * $Id$
  */
-public class PortalException extends Exception {
+public class PortalException extends RuntimeException {
 
     public PortalException(){
         super();

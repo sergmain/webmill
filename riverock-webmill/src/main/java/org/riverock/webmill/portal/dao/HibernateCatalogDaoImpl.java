@@ -347,18 +347,10 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        CatalogBean bean = (CatalogBean)session.createQuery(
-            "select catalog " +
-                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
-                "where catalog.catalogId=:catalogId")
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.CatalogBean as catalog where catalog.catalogId=:catalogId")
             .setLong("catalogId", catalogId)
-            .uniqueResult();
-
-        if (bean==null) {
-            session.getTransaction().commit();
-            return;
-        }
-        session.delete(bean);
+            .executeUpdate();
         session.getTransaction().commit();
     }
 
@@ -446,6 +438,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
+        // TODO rewrite hql
         List<CatalogBean> catalogItems = session.createQuery(
             "select catalog " +
                 "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
@@ -458,17 +451,32 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             session.delete(catalogItem);
         }
 
-        List<CatalogLanguageBean> catalogLanguageBeans = session.createQuery(
-            "select catalogLang " +
-                "from  org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
                 "where catalogLang.siteLanguageId=:siteLanguageId")
             .setLong("siteLanguageId", siteLanguageId)
-            .list();
-        for (CatalogLanguageBean catalogLanguageBean : catalogLanguageBeans) {
-            session.delete(catalogLanguageBean);
-        }
+            .executeUpdate();
 
         session.getTransaction().commit();
+    }
+
+    public Long getSiteId(Long catalogLanguageId) {
+        if (catalogLanguageId==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        Long id = (Long)session.createQuery(
+            "select siteLang.siteId " +
+                "from  org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang, " +
+                "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLang " +
+                "where catalogLang.catalogLanguageId=:catalogLanguageId and " +
+                "      catalogLang.siteLanguageId=siteLang.siteLanguageId ")
+            .setLong("catalogLanguageId", catalogLanguageId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return id;
     }
 
     public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId) {

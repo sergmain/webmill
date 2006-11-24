@@ -658,12 +658,10 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         }
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        RoleBeanImpl bean = (RoleBeanImpl) session.createQuery(
-            "select role from org.riverock.webmill.a3.bean.RoleBeanImpl role " +
-                "where role.roleId=:roleId")
+        session.createQuery(
+            "delete org.riverock.webmill.a3.bean.RoleBeanImpl role where role.roleId=:roleId")
             .setLong("roleId", roleBean.getRoleId())
-            .uniqueResult();
-        session.delete(bean);
+            .executeUpdate();
         session.getTransaction().commit();
     }
 
@@ -835,21 +833,14 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         }
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        List<AuthInfoImpl> authInfos = session.createQuery(
-            "select relate from org.riverock.webmill.a3.bean.AuthRelateRole relate " +
-                "where relate.authUserId=:authUserId ")
+        session.createQuery(
+            "delete org.riverock.webmill.a3.bean.AuthRelateRole relate where relate.authUserId=:authUserId ")
             .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
-            .list();
-        for (AuthInfoImpl authInfo : authInfos) {
-            session.delete(authInfo);
-        }
-        AuthInfoImpl auth = (AuthInfoImpl)session.createQuery(
-            "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
-                "where auth.authUserId=:authUserId ")
+            .executeUpdate();
+        session.createQuery(
+            "delete org.riverock.webmill.a3.bean.AuthInfoImpl auth where auth.authUserId=:authUserId ")
             .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
-            .uniqueResult();
-        if (auth!=null)
-            session.delete(auth);
+            .executeUpdate();
 
         session.getTransaction().commit();
     }

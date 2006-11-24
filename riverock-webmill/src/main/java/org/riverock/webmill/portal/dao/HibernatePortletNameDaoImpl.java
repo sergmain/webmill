@@ -113,15 +113,11 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        List<PortletNameBean> beans = session.createQuery(
-            "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.PortletNameBean as portlet " +
                 "where portlet.portletId = :portletId")
             .setLong("portletId", portletNameBean.getPortletId())
-            .list();
-        
-        for (PortletNameBean bean : beans) {
-            session.delete(bean);
-        }
+            .executeUpdate();
 
         session.getTransaction().commit();
     }

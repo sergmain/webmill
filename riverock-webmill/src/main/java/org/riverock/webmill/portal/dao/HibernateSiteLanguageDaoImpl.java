@@ -29,16 +29,10 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.portal.bean.CatalogBean;
-import org.riverock.webmill.portal.bean.CatalogLanguageBean;
-import org.riverock.webmill.portal.bean.PortalXsltBean;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.bean.TemplateBean;
-import org.riverock.webmill.portal.bean.ArticleBean;
 import org.riverock.webmill.portal.bean.NewsBean;
-import org.riverock.webmill.portal.bean.NewsGroupBean;
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.utils.HibernateUtils;
 
 /**
@@ -117,18 +111,12 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-/*
-        InternalDaoFactory.getInternalCmsDao().deleteArticleForSiteLanguage(dbDyn, siteLanguageId);
-        InternalDaoFactory.getInternalCmsDao().deleteNewsForSiteLanguage(dbDyn, siteLanguageId);
-        InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSiteLanguage(dbDyn, siteLanguageId);
-*/
-
         deleteSiteLanguage(session, siteLanguageId);
 
         session.getTransaction().commit();
     }
 
-    public void deleteSiteLanguageForSite(DatabaseAdapter adapter, Long siteId) {
+    public void deleteSiteLanguageForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
@@ -145,16 +133,11 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
     }
 
     private static void deleteSiteLanguage(Session session, Long siteLanguageId) {
-        List<ArticleBean> articleBeans = session.createQuery(
-            "select article " +
-                "from org.riverock.webmill.portal.bean.ArticleBean as article " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.ArticleBean article " +
                 "where article.siteLanguageId=:siteLanguageId")
             .setLong("siteLanguageId", siteLanguageId)
-            .list();
-
-        for (ArticleBean articleBean : articleBeans) {
-            session.delete(articleBean);
-        }
+            .executeUpdate();
 
         List<NewsBean> beans = session.createQuery(
             "select news " +
@@ -168,30 +151,21 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
             session.delete(newsBean);
         }
 
-        List<NewsGroupBean> groupBeans = session.createQuery(
-            "select newsGroup " +
-                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
                 "where newsGroup.siteLanguageId=:siteLanguageId")
             .setLong("siteLanguageId", siteLanguageId)
-            .list();
+            .executeUpdate();
 
-        for (NewsGroupBean newsGroupBean : groupBeans) {
-            session.delete(newsGroupBean);
-        }
-
-        List<TemplateBean> templateBeans = session.createQuery(
-            "select template " +
-                "from  org.riverock.webmill.portal.bean.TemplateBean as template " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.TemplateBean template " +
                 "where template.siteLanguageId=:siteLanguageId")
             .setLong("siteLanguageId", siteLanguageId)
-            .list();
-        for (TemplateBean templateBean : templateBeans) {
-            session.delete(templateBean);
-        }
+            .executeUpdate();
 
         List<CatalogBean> catalogItems = session.createQuery(
             "select catalog " +
-                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
+                "from  org.riverock.webmill.portal.bean.CatalogBean catalog, " +
                 "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
                 "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
                 "      catalogLang.siteLanguageId=:siteLanguageId")
@@ -201,30 +175,22 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
             session.delete(catalogItem);
         }
 
-        List<CatalogLanguageBean> catalogLanguageBeans = session.createQuery(
-            "select catalogLang " +
-                "from  org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
                 "where catalogLang.siteLanguageId=:siteLanguageId")
             .setLong("siteLanguageId", siteLanguageId)
-            .list();
-        for (CatalogLanguageBean catalogLanguageBean : catalogLanguageBeans) {
-            session.delete(catalogLanguageBean);
-        }
+            .executeUpdate();
 
-        List<PortalXsltBean> xsltList = session.createQuery(
-            "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.PortalXsltBean xslt " +
                 "where xslt.siteLanguageId = :siteLanguageId")
             .setLong("siteLanguageId", siteLanguageId)
-            .list();
-        for (PortalXsltBean portalXsltBean : xsltList) {
-            session.delete(portalXsltBean);
-        }
+            .executeUpdate();
 
-        Query query = session.createQuery(
-            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-            "where siteLanguage.siteLanguageId = :site_language_id");
-        query.setLong("site_language_id", siteLanguageId);
-        SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
-        session.delete(bean);
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.SiteLanguageBean siteLanguage " +
+            "where siteLanguage.siteLanguageId = :site_language_id")
+            .setLong("site_language_id", siteLanguageId)
+            .executeUpdate();
     }
 }

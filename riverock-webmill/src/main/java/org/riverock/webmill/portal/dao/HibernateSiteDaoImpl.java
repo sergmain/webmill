@@ -33,7 +33,6 @@ import org.hibernate.Session;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.portal.bean.*;
 import org.riverock.webmill.utils.HibernateUtils;
 
@@ -251,13 +250,10 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             session.delete(templateBean);
         }
 
-        List<CssBean> cssList = session.createQuery(
-            "select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id")
+        session.createQuery(
+            "delete org.riverock.webmill.main.CssBean as css where css.siteId = :site_id")
             .setLong("site_id", siteId)
-            .list();
-        for (CssBean css : cssList) {
-            session.delete(css);
-        }
+            .executeUpdate();
 
         List<PortalXsltBean> xsltList = session.createQuery(
             "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt, " +
@@ -269,12 +265,11 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             session.delete(portalXsltBean);
         }
 
-        VirtualHostBean virtualHostBean = (VirtualHostBean) session.createQuery(
-            "select host from org.riverock.webmill.portal.bean.VirtualHostBean as host " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.VirtualHostBean as host " +
             "where host.siteId = :site_id")
             .setLong("site_id", siteId)
-            .uniqueResult();
-        session.delete(virtualHostBean);
+            .executeUpdate();
 
         List<CatalogBean> catalogItems = session.createQuery(
             "select catalog " +
@@ -302,21 +297,16 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             session.delete(catalogLanguageBean);
         }
 
-        List<SiteLanguageBean> list = session.createQuery(
-            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.SiteLanguageBean siteLanguage " +
             "where siteLanguage.siteId = :site_id")
             .setLong("site_id", siteId)
-            .list();
-        for (SiteLanguageBean siteLanguageBean : list) {
-            session.delete(siteLanguageBean);
-        }
+            .executeUpdate();
 
-        SiteBean siteBean = (SiteBean)session.createQuery(
-            "select site from org.riverock.webmill.portal.bean.SiteBean as site " +
-                "where site.siteId = :site_id")
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.SiteBean site where site.siteId = :site_id")
             .setLong("site_id", siteId)
-            .uniqueResult();
-        session.delete(siteBean);
+            .executeUpdate();
 
         session.getTransaction().commit();
     }
