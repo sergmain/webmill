@@ -29,17 +29,17 @@
 	<xs:annotation>
 		<xs:documentation>jSmithy Single Sign On config file schema</xs:documentation>
 	</xs:annotation>
-	<xs:element name="SsoConfig" type="SsoConfigType"/>
-	<xs:complexType name="SsoConfigType">
+	<xs:element name="SsoConfig" type="SsoConfig"/>
+	<xs:complexType name="SsoConfig">
 		<xs:sequence>
 			<xs:element name="SsoTempDir" type="xs:string" default="\\tmp" minOccurs="0"/>
 			<xs:element name="SsoDebugDir" type="xs:string" default="c:\\opt1" minOccurs="0"/>
-			<xs:element name="Auth" type="AuthType"/>
+			<xs:element name="Auth" type="Auth"/>
 		</xs:sequence>
 		<xs:attribute name="isDebugDirInit" type="xs:boolean" default="false"/>
 		<xs:attribute name="isTempDirInit" type="xs:boolean" default="false"/>
 	</xs:complexType>
-	<xs:complexType name="MainUserInfoType">
+	<xs:complexType name="MainUserInfo">
 		<xs:sequence>
 			<xs:element name="FirstName" type="xs:string"/>
 			<xs:element name="MiddleName" type="xs:string"/>
@@ -56,32 +56,32 @@
 		<xs:attribute name="idUser" type="xs:long"/>
 		<xs:attribute name="idFirm" type="xs:long"/>
 	</xs:complexType>
-	<xs:complexType name="AuthType">
+	<xs:complexType name="Auth">
 		<xs:sequence>
-			<xs:element name="AuthProvider" type="AuthProviderType" maxOccurs="unbounded"/>
+			<xs:element name="AuthProvider" type="AuthProvider" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="AuthProvider" type="AuthProviderType"/>
-	<xs:complexType name="AuthProviderType">
+	<xs:element name="AuthProvider" type="AuthProvider"/>
+	<xs:complexType name="AuthProvider">
 		<xs:sequence>
 			<xs:element name="ProviderName" type="xs:string"/>
 			<xs:element name="ProviderClass" type="xs:string"/>
-			<xs:element name="ProviderParameters" type="AuthProviderParametersListType" minOccurs="0"/>
+			<xs:element name="ProviderParameters" type="AuthProviderParametersList" minOccurs="0"/>
 			<xs:element name="ProviderComment" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="isUse" type="xs:boolean" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="AuthProviderParametersListType">
+	<xs:complexType name="AuthProviderParametersList">
 		<xs:sequence>
-			<xs:element name="ParametersList" type="AuthProviderParametersType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ParametersList" type="AuthProviderParameters" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="AuthProviderParametersType">
+	<xs:complexType name="AuthProviderParameters">
 		<xs:sequence>
-			<xs:element name="Parameter" type="ParameterType" maxOccurs="unbounded"/>
+			<xs:element name="Parameter" type="Parameter" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ParameterType">
+	<xs:complexType name="Parameter">
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="value" type="xs:string"/>
 	</xs:complexType>

@@ -27,8 +27,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
-import org.riverock.sso.schema.config.AuthType;
-import org.riverock.sso.schema.config.SsoConfigType;
+import org.riverock.sso.annotation.schema.config.Auth;
 
 /**
  * User: serg_main
@@ -48,8 +47,8 @@ public class SsoConfig {
 
     private static boolean isConfigProcessed = false;
 
-    public static SsoConfigType getConfig() {
-        return (SsoConfigType)configObject.getConfigObject();
+    public static SsoConfig getConfig() {
+        return (SsoConfig)configObject.getConfigObject();
     }
 
     private final static Object syncReadConfig = new Object();
@@ -69,7 +68,7 @@ public class SsoConfig {
                 log.debug("ConfigObject classLoader: "+ccl+"\nhash: "+ccl.hashCode() );
             }
 
-            configObject = ConfigObject.load(JNDI_SSO_CONFIG_FILE , CONFIG_FILE_PARAM_NAME,  NAME_CONFIG_FILE, SsoConfigType.class);
+            configObject = ConfigObject.load(JNDI_SSO_CONFIG_FILE , CONFIG_FILE_PARAM_NAME,  NAME_CONFIG_FILE, SsoConfig.class);
 
             if (log.isDebugEnabled())
                 log.debug("#15.006");
@@ -78,7 +77,7 @@ public class SsoConfig {
         }
     }
 
-    public static AuthType getAuth()
+    public static Auth getAuth()
         throws ConfigException
     {
         if (log.isDebugEnabled())
