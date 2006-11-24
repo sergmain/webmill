@@ -39,6 +39,9 @@
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
+
+        <pathelement location="${lib.dir}/${jaxb-api.lib}"/>
+        <pathelement location="${lib.dir}/${jsr173_1.0_api.lib}"/>
     </path>
 
     <target name="full_build_module">

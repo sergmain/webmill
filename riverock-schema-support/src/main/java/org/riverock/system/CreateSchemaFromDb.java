@@ -27,11 +27,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.ValidationEventHandler;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventLocator;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.XMLConstants;
 
 import org.exolab.castor.util.Version;
 import org.exolab.castor.xml.Namespaces;
@@ -55,12 +63,12 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKey;
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.startup.StartupApplication;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.schema.gen.DatabaseType;
@@ -91,7 +99,7 @@ public final class CreateSchemaFromDb {
     private static boolean isApplModule = false;
 
     private static Schema schema = new Schema();
-    private static DbSchemaType dbSchema = null;
+    private static DbSchema dbSchema = null;
     private static ComplexType baseType = null;
 
     private static boolean isInsertInterface = false;
@@ -101,14 +109,14 @@ public final class CreateSchemaFromDb {
     private static String updateInterface = null;
     private static String deleteInterface = null;
 
-    private static String getAttributeName(DbFieldType field) {
+    private static String getAttributeName(DbField field) {
         String s = StringTools.capitalizeString(field.getName());
         return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
     private static String getCopyItemMethod(
         String classNameItem,
-        DbTableType table)
+        DbTable table)
         throws Exception {
         String s =
             "    public void copyItem(" + classNameItem + " target)\n" +
@@ -122,8 +130,7 @@ public final class CreateSchemaFromDb {
                 "            return;\n" +
                 "\n";
 
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
             if (field.getName().toLowerCase().startsWith("is_")) {
                 s +=
                     "        target.set" + StringTools.capitalizeString(field.getName()) + "( " +
@@ -356,7 +363,7 @@ public final class CreateSchemaFromDb {
     }
 
 
-    private static String putAuthCheck(DbTableType table, String accessActionType, String className) {
+    private static String putAuthCheck(DbTable table, String accessActionType, String className) {
         if (table == null)
             return "";
 
@@ -383,7 +390,7 @@ public final class CreateSchemaFromDb {
     private static String getEndOfClass(
         String className, String classNameItem,
         String debugTable,
-        DbTableType table, String accessAction,
+        DbTable table, String accessAction,
         boolean isAddParam, boolean isCloseRsPs, boolean isFillBean)
         throws Exception {
         String s =
@@ -549,14 +556,13 @@ public final class CreateSchemaFromDb {
      * @@throws Exception
      */
     private static String getEndOfClassUID( String className, String classNameItem,
-        DbTableType table, String accessAction, String sqlName) throws Exception {
+        DbTable table, String accessAction, String sqlName) throws Exception {
         String s =
             "         }\n" +
                 "         catch (Exception e) {\n";
 
         if (config.getIsUseLogging()) {
-            for (int i = 0; i < table.getFieldsCount(); i++) {
-                DbFieldType field = table.getFields(i);
+            for (DbField field : table.getFields()) {
                 if (field.getJavaType()==Types.OTHER || field.getJavaType()==Types.BLOB) {
                     continue;
                 }
@@ -747,19 +753,18 @@ public final class CreateSchemaFromDb {
                 "}\n";
     }
 
-    private static void createGetClassForFk(DbTableType table)
+    private static void createGetClassForFk(DbTable table)
         throws Exception {
-        DbPrimaryKeyType pk = table.getPrimaryKey();
-        if (pk.getColumnsCount() == 0) {
+        DbPrimaryKey pk = table.getPrimaryKey();
+        if (pk.getColumns().isEmpty()) {
             System.out.println("Table '" + table.getName() + "' can not be processed, primary key not defined");
             return;
 //            throw new Exception("Table '"+table.getName()+"' not have primary key");
         }
 
-        DbPrimaryKeyColumnType column = pk.getColumns(0);
+        DbPrimaryKeyColumn column = pk.getColumns().get(0);
 
-        for (int k = 0; k < table.getImportedKeysCount(); k++) {
-            DbImportedPKColumnType key = table.getImportedKeys(k);
+        for (DbImportedPKColumn key : table.getImportedKeys()) {
 
             if (DatabaseManager.isMultiColumnFk(table, key)) {
                 System.out.println("Create class list for table with multicolumn foreign keys not supported");
@@ -882,7 +887,7 @@ public final class CreateSchemaFromDb {
                     "        " + sql + "\n\n";
     }
 
-    private static void createGetClassFullTable(DbTableType table)
+    private static void createGetClassFullTable(DbTable table)
         throws Exception {
         boolean isNotFound = true;
         for (int i = 0; i < config.getTableToListCount(); i++) {
@@ -894,7 +899,7 @@ public final class CreateSchemaFromDb {
         if (isNotFound)
             return;
 
-        if (table.getPrimaryKey().getColumnsCount() != 1) {
+        if (table.getPrimaryKey().getColumns().size() != 1) {
             System.out.println("Can not create full list of table '" + table.getName() +
                 "' 'cos multicolumn PK not supported");
             return;
@@ -915,7 +920,7 @@ public final class CreateSchemaFromDb {
                 "\n" +
                 initSql(
                     className, base,
-                    "\"select " + table.getPrimaryKey().getColumns(0).getColumnName() + " " +
+                    "\"select " + table.getPrimaryKey().getColumns().get(0).getColumnName() + " " +
                         "from " + table.getName() + " \";\n"
                 ) +
                 "    public " + className + "(" + db.getFactoryMethod() + " db_, Long id) " +
@@ -934,7 +939,7 @@ public final class CreateSchemaFromDb {
                 "\n" +
                 "                Get" + base + "Item tempItem = " + "Get" + base + "Item" +
                 ".getInstance(db_, rs.getLong( \"" +
-                table.getPrimaryKey().getColumns(0).getColumnName() + "\" ));\n" +
+                table.getPrimaryKey().getColumns().get(0).getColumnName() + "\" ));\n" +
                 "                if (tempItem!=null && tempItem.item!=null)\n" +
                 "                {\n" +
                 "                    this.isFound = true;\n" +
@@ -962,7 +967,7 @@ public final class CreateSchemaFromDb {
     public static boolean declareStringVars = false;
 
 
-    private static void createGetClassForPk(DbTableType table)
+    private static void createGetClassForPk(DbTable table)
         throws Exception {
         declareVars = "";
         declareIntVars = false;
@@ -972,12 +977,12 @@ public final class CreateSchemaFromDb {
         declareTimestampVars = false;
         declareStringVars = false;
 
-        DbPrimaryKeyType pk = table.getPrimaryKey();
-        if (pk.getColumnsCount() == 0) {
+        DbPrimaryKey pk = table.getPrimaryKey();
+        if (pk.getColumns().isEmpty()) {
             return;
         }
 
-        DbPrimaryKeyColumnType column = pk.getColumns(0);
+        DbPrimaryKeyColumn column = pk.getColumns().get(0);
 
         String base = StringTools.capitalizeString(table.getName());
         String className = "Get" + base + "Item";
@@ -1071,11 +1076,10 @@ public final class CreateSchemaFromDb {
 
     }
 
-    private static String createFieldList(DbTableType table) {
+    private static String createFieldList(DbTable table) {
         boolean isNotFirst=false;
         String s="";
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
             // skip BLOB fields and other type(i.e. Oracle's ROWID)
             if (field.getJavaType()==Types.BLOB|| field.getJavaType()==Types.OTHER) {
                 continue;
@@ -1091,20 +1095,19 @@ public final class CreateSchemaFromDb {
         return s;
     }
 
-    private static String getBeanFiller(String classNameItem, DbTableType table) {
+    private static String getBeanFiller(String classNameItem, DbTable table) {
         String s1 =
             "    public static " + classNameItem + " fillBean(ResultSet rs) throws java.sql.SQLException {\n" +
                 "        " + classNameItem + " item = new " + classNameItem + "();\n" +
                 "\n";
 
         String s = "";
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
             if (isLogicField(field)) {
-                s += getBooleanField(i, field);
+                s += getBooleanField(field);
             }
             else if (isKeyField(field)) {
-                s += getLongField(i, field);
+                s += getLongField(field);
             }
             else {
                 switch (field.getJavaType().intValue()) {
@@ -1112,24 +1115,24 @@ public final class CreateSchemaFromDb {
                     case Types.DECIMAL:
                         if (field.getDecimalDigit() == null || field.getDecimalDigit() == 0) {
                             if (field.getSize() < 7)
-                                s += getIntField(i, field);
+                                s += getIntField(field);
                             else
-                                s += getLongField(i, field);
+                                s += getLongField(field);
                         }
                         else
-                            s += getDoubleField(i, field);
+                            s += getDoubleField(field);
 
                         break;
 
                     case Types.INTEGER:
                         if (field.getSize() < 7)
-                            s += getIntField(i, field);
+                            s += getIntField(field);
                         else
-                            s += getLongField(i, field);
+                            s += getLongField(field);
                         break;
 
                     case Types.DOUBLE:
-                        s += getDoubleField(i, field);
+                        s += getDoubleField(field);
                         break;
 
                     case Types.VARCHAR:
@@ -1168,7 +1171,7 @@ public final class CreateSchemaFromDb {
                 "\n";
     }
 
-    private static String getBooleanField(int i, DbFieldType field) {
+    private static String getBooleanField(DbField field) {
         if (!declareBooleanVars) {
             declareVars +=
                 "                 int tempBoolean;\n";
@@ -1182,7 +1185,7 @@ public final class CreateSchemaFromDb {
                 "                     item.set" + StringTools.capitalizeString(field.getName()) + "( false );\n";
     }
 
-    private static String getLongField(int i, DbFieldType field) {
+    private static String getLongField(DbField field) {
         if (!declareLongVars) {
             declareVars += "                 long tempLong;\n";
             declareLongVars = true;
@@ -1203,7 +1206,7 @@ public final class CreateSchemaFromDb {
                 );
     }
 
-    private static String getIntField(int i, DbFieldType field) {
+    private static String getIntField(DbField field) {
         if (!declareIntVars) {
             declareVars += "                 int tempInt;\n";
             declareIntVars = true;
@@ -1226,7 +1229,7 @@ public final class CreateSchemaFromDb {
                 );
     }
 
-    private static String getDoubleField(int i, DbFieldType field) {
+    private static String getDoubleField(DbField field) {
         if (!declareDoubleVars) {
             declareVars +=
                 "                 double tempDouble;\n";
@@ -1241,7 +1244,7 @@ public final class CreateSchemaFromDb {
                 );
     }
 
-    private static String getStringField(DbFieldType field) {
+    private static String getStringField(DbField field) {
         if (!declareStringVars) {
             declareVars +=
                 "                 String tempString;\n";
@@ -1259,7 +1262,7 @@ public final class CreateSchemaFromDb {
                 "                     item.set" + StringTools.capitalizeString(field.getName()) + "( tempString );\n";
     }
 
-    private static String getTimestampField(DbFieldType field) {
+    private static String getTimestampField(DbField field) {
         if (!declareTimestampVars) {
             declareVars +=
                 "                 java.sql.Timestamp tempTimestamp = null;\n";
@@ -1281,7 +1284,7 @@ public final class CreateSchemaFromDb {
         return "";
     }
 
-    private static boolean isLogicField(DbFieldType field) {
+    private static boolean isLogicField(DbField field) {
         if (config.getLogicPrefix() != null &&
             config.getLogicPrefix().length() > 0 &&
             field.getName().toLowerCase().startsWith(config.getLogicPrefix().toLowerCase())
@@ -1297,7 +1300,7 @@ public final class CreateSchemaFromDb {
         return false;
     }
 
-    private static boolean isKeyField(DbFieldType field) {
+    private static boolean isKeyField(DbField field) {
         if (config.getKeyPrefix() != null &&
             config.getKeyPrefix().length() > 0 &&
             field.getName().toLowerCase().startsWith(config.getKeyPrefix().toLowerCase())
@@ -1321,7 +1324,7 @@ public final class CreateSchemaFromDb {
         return ns + ':' + type;
     }
 
-    private static String convertType(DbFieldType field) {
+    private static String convertType(DbField field) {
         if (field == null)
             return null;
 
@@ -1391,7 +1394,7 @@ public final class CreateSchemaFromDb {
         return addNamespace(type);
     }
 
-    private static void createComplexTypeList(DbTableType table)
+    private static void createComplexTypeList(DbTable table)
         throws Exception {
         boolean isNotFound = true;
         for (int i = 0; i < config.getTableToListCount(); i++) {
@@ -1406,7 +1409,7 @@ public final class CreateSchemaFromDb {
         }
 
         if (isNotFound) {
-            if (table.getImportedKeysCount() == 0) {
+            if (table.getImportedKeys().isEmpty()) {
                 System.out.println("Table '" + table.getName() + "' not contain foreign keys. This table is skipped");
             }
             else
@@ -1439,14 +1442,13 @@ public final class CreateSchemaFromDb {
         schema.addComplexType(cType);
     }
 
-    private static Group createComplexTypeItem(DbTableType table)
+    private static Group createComplexTypeItem(DbTable table)
         throws Exception {
         List<AttributeDecl> a = new ArrayList<AttributeDecl>(); // vector of attributes
         List<ElementDecl> e = new ArrayList<ElementDecl>(); // vector of elements
 
         boolean flag = false;
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
             if (flag)
                 System.out.println("Field - " + field.getName());
 
@@ -1619,7 +1621,7 @@ public final class CreateSchemaFromDb {
         return group;
     }
 
-    private static boolean isOptionalField(DbTableType table, DbFieldType field) {
+    private static boolean isOptionalField(DbTable table, DbField field) {
         if (table == null || field == null)
             return false;
 
@@ -1638,10 +1640,9 @@ public final class CreateSchemaFromDb {
         return false;
     }
 
-    private static void createDeleteListForFk(DbTableType table) throws Exception {
+    private static void createDeleteListForFk(DbTable table) throws Exception {
 
-        for (int k = 0; k < table.getImportedKeysCount(); k++) {
-            DbImportedPKColumnType key = table.getImportedKeys(k);
+        for (DbImportedPKColumn key : table.getImportedKeys()) {
 
             if (DatabaseManager.isMultiColumnFk(table, key)) {
                 System.out.println("Create class list for table with multicolumn foreign keys not supported");
@@ -1835,15 +1836,15 @@ public final class CreateSchemaFromDb {
         );
     }
 
-    private static void createDeleteClassForPk(DbTableType table)
+    private static void createDeleteClassForPk(DbTable table)
         throws Exception {
-        DbPrimaryKeyType pk = table.getPrimaryKey();
-        if (pk.getColumnsCount() == 0) {
+        DbPrimaryKey pk = table.getPrimaryKey();
+        if (pk.getColumns().isEmpty()) {
             return;
 //            throw new Exception("Table '"+table.getName()+"' not have primary key");
         }
 
-        DbPrimaryKeyColumnType column = pk.getColumns(0);
+        DbPrimaryKeyColumn column = pk.getColumns().get(0);
 
         String base = StringTools.capitalizeString(table.getName());
         String className = "Delete" + base + "Item";
@@ -1926,13 +1927,13 @@ public final class CreateSchemaFromDb {
                 "\n";
     }
 
-    private static void createDeleteItemForPk(DbTableType table) throws Exception {
-        DbPrimaryKeyType pk = table.getPrimaryKey();
-        if (pk.getColumnsCount() != 1) {
+    private static void createDeleteItemForPk(DbTable table) throws Exception {
+        DbPrimaryKey pk = table.getPrimaryKey();
+        if (pk.getColumns().size() != 1) {
             return;
         }
 
-        DbPrimaryKeyColumnType column = pk.getColumns(0);
+        DbPrimaryKeyColumn column = pk.getColumns().get(0);
 
         String base = StringTools.capitalizeString(table.getName());
         String className = "Delete" + base + "With" + StringTools.capitalizeString(column.getColumnName());
@@ -2119,9 +2120,8 @@ public final class CreateSchemaFromDb {
 
     }
 
-    private static int getDeleteRule(DbTableType table, DbFieldType field) {
-        for (int i = 0; i < table.getImportedKeysCount(); i++) {
-            DbImportedPKColumnType fk = table.getImportedKeys(i);
+    private static int getDeleteRule(DbTable table, DbField field) {
+        for (DbImportedPKColumn fk : table.getImportedKeys()) {
             if (fk.getFkColumnName().equals(field.getName())) {
                 if (fk.getDeleteRule() != null)
                     return fk.getDeleteRule().getRuleType();
@@ -2133,19 +2133,19 @@ public final class CreateSchemaFromDb {
     }
 
 
-    private static void createUpdateClassForPk(DbTableType table)
+    private static void createUpdateClassForPk(DbTable table)
         throws Exception {
-        DbPrimaryKeyType pk = table.getPrimaryKey();
-        if (pk.getColumnsCount() == 0) {
+        DbPrimaryKey pk = table.getPrimaryKey();
+        if (pk.getColumns().isEmpty()) {
             return;
         }
 
-        if (table.getFieldsCount() < 2) {
+        if (table.getFields().size() < 2) {
             System.out.println("Table '" + table.getName() + "' is skiped - count of fields < 2");
             return;
         }
 
-        DbPrimaryKeyColumnType column = pk.getColumns(0);
+        DbPrimaryKeyColumn column = pk.getColumns().get(0);
 
         String base = StringTools.capitalizeString(table.getName());
         String className = "Update" + base + "Item";
@@ -2191,9 +2191,7 @@ public final class CreateSchemaFromDb {
                 "             \"set\"+\n";
 
         boolean isNotFirst = false;
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
-
+        for (DbField field : table.getFields()) {
             // skip oracle column type ROWID (1111)
             if (field.getJavaType()==Types.OTHER || field.getJavaType()==Types.BLOB)
                 continue;
@@ -2221,9 +2219,7 @@ public final class CreateSchemaFromDb {
                 "\n";
 
         int numParam = 0;
-        for (int i1 = 0; i1 < table.getFieldsCount(); i1++) {
-            DbFieldType field = table.getFields(i1);
-
+        for (DbField field : table.getFields()) {
             // skip oracle column type ROWID (1111) and BLOB fields
             if (field.getJavaType()==Types.BLOB||field.getJavaType()==Types.OTHER) {
                 continue;
@@ -2372,8 +2368,8 @@ public final class CreateSchemaFromDb {
 
     }
 
-    private static void createInsertClassForPk(DbTableType table) throws Exception {
-//        DbPrimaryKeyType pk = table.getPrimaryKey();
+    private static void createInsertClassForPk(DbTable table) throws Exception {
+//        DbPrimaryKey pk = table.getPrimaryKey();
 //        if ( pk.getColumnsCount()==0)
 //        {
 //            return;
@@ -2426,9 +2422,7 @@ public final class CreateSchemaFromDb {
                 "            \"(";
 
         boolean isFirst = true;
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
-
+        for (DbField field : table.getFields()) {
             // skip oracle column type ROWID (1111)
             if (field.getJavaType()==Types.OTHER|| field.getJavaType()==Types.BLOB)
                 continue;
@@ -2460,9 +2454,7 @@ public final class CreateSchemaFromDb {
                 "\n";
 
         int numParam = 0;
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
             if (field.getJavaType()==Types.BLOB||field.getJavaType()==Types.OTHER) {
                 continue;
             }
@@ -2759,20 +2751,19 @@ public final class CreateSchemaFromDb {
                 "             ps.setString(" + i + ", item.get" + capitalizeName + " );\n";
     }
 
-    private static String buildInsertFieldList(DbTableType table, int indentSize)
+    private static String buildInsertFieldList(DbTable table, int indentSize)
         throws Exception {
 
         if (table == null)
             throw new Exception("Table object is null");
 
-        if (table.getFieldsCount() == 0)
+        if (table.getFields().isEmpty())
             throw new Exception("Table not containt fields");
 
         String list = StringTools.addString("\"(", ' ', indentSize, true);
         boolean isNotFirst = false;
         int size = 0;
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
 
             // skip oracle column type ROWID (1111) and BLOB
             if (field.getJavaType()==Types.OTHER || field.getJavaType()==Types.BLOB)
@@ -2795,7 +2786,7 @@ public final class CreateSchemaFromDb {
         return list + ")\"+\n";
     }
 
-    private static boolean excludeTable(DbTableType table) {
+    private static boolean excludeTable(DbTable table) {
         for (int i = 0; i < config.getDbTableExcludeCount(); i++) {
             if (table.getName().equals(config.getDbTableExclude(i)))
                 return true;
@@ -2803,7 +2794,7 @@ public final class CreateSchemaFromDb {
         return false;
     }
 
-    private static boolean isIncludeTable(DbTableType table) {
+    private static boolean isIncludeTable(DbTable table) {
         if (config.getIsProcessAllTables())
             return true;
 
@@ -2814,7 +2805,7 @@ public final class CreateSchemaFromDb {
         return false;
     }
 
-    private static boolean isAuthAccessTable(DbTableType table) {
+    private static boolean isAuthAccessTable(DbTable table) {
         for (int i = 0; i < config.getAuthDataCount(); i++) {
             if (table.getName().equals(config.getAuthData(i).getTableName()))
                 return true;
@@ -2833,23 +2824,21 @@ public final class CreateSchemaFromDb {
         throws Exception {
 
         if (item.getTableToItemCount() != 0) {
-            DbTableType t = new DbTableType();
+            DbTable t = new DbTable();
 
-            DbTableType temp = DatabaseManager.getTableFromStructure(dbSchema, item.getTableName());
+            DbTable temp = DatabaseManager.getTableFromStructure(dbSchema, item.getTableName());
             t.setPrimaryKey(temp.getPrimaryKey());
 //            t.setFields( temp.getFieldsAsReference() );
-            for (int i = 0; i < temp.getFieldsCount(); i++) {
-                DbFieldType f = temp.getFields(i);
+            for (DbField f : temp.getFields()) {
                 if (isFk(item, temp, f, DatabaseManager.getTableFromStructure(dbSchema, topTable)) == null)
-                    t.addFields(f);
+                    t.getFields().add(f);
             }
             t.setName(temp.getName() + "_FOR_" + topTable + "_EXTEND");
 
             Group group = createComplexTypeItem(t);
 
             System.out.println("#23 " + t.getName());
-            for (int i = 0; i < temp.getFieldsCount(); i++) {
-                DbFieldType f = temp.getFields(i);
+            for (DbField f : temp.getFields()) {
                 String relTableName = isFk(
                     item, temp, f,
                     DatabaseManager.getTableFromStructure(dbSchema, topTable)
@@ -2903,26 +2892,25 @@ public final class CreateSchemaFromDb {
     }
 
 
-    private static void putExtendComplexType(SchemaGenTableToItemType item, DbTableType table1)
+    private static void putExtendComplexType(SchemaGenTableToItemType item, DbTable table1)
         throws Exception {
 
 
         if (item.getTableToItemCount() != 0) {
-            DbTableType t = new DbTableType();
+            DbTable t = new DbTable();
 
-            DbTableType temp1 = DatabaseManager.getTableFromStructure(dbSchema, item.getTableName());
+            DbTable temp1 = DatabaseManager.getTableFromStructure(dbSchema, item.getTableName());
             t.setPrimaryKey(temp1.getPrimaryKey());
-            for (int i = 0; i < temp1.getFieldsCount(); i++) {
-                DbFieldType f = temp1.getFields(i);
+            for (DbField f : temp1.getFields()) {
                 if (isFk(item, temp1, f, null) == null)
-                    t.addFields(f);
+                    t.getFields().add(f);
             }
             t.setName(temp1.getName() + "_EXTEND");
 
             createComplexTypeItem(t);
             for (int j = 0; j < item.getTableToItemCount(); j++) {
                 SchemaGenTableToItemType ti = item.getTableToItem(j);
-                DbTableType temp = DatabaseManager.getTableFromStructure(dbSchema, ti.getTableName());
+                DbTable temp = DatabaseManager.getTableFromStructure(dbSchema, ti.getTableName());
 
                 String nameItemTemp = null;
                 String baseTemp = StringTools.capitalizeString(ti.getTableName());
@@ -2955,11 +2943,9 @@ public final class CreateSchemaFromDb {
                             "    }\n" +
                             "\n";
 
-                    for (int l = 0; l < temp.getFieldsCount(); l++) {
-                        DbFieldType field = temp.getFields(l);
+                    for (DbField field : temp.getFields()) {
                         boolean isNotFk = true;
-                        for (int n = 0; n < temp.getImportedKeysCount(); n++) {
-                            DbImportedPKColumnType fk = temp.getImportedKeys(n);
+                        for (DbImportedPKColumn fk : temp.getImportedKeys()) {
                             if (field.getName().equals(fk.getFkColumnName())) {
                                 isNotFk = false;
                                 break;
@@ -2980,11 +2966,10 @@ public final class CreateSchemaFromDb {
         }
     }
 
-    private static String isFk(SchemaGenTableToItemType item, DbTableType t, DbFieldType f, DbTableType top)
+    private static String isFk(SchemaGenTableToItemType item, DbTable t, DbField f, DbTable top)
         throws Exception {
-        DbTableType temp = t;
-        for (int i = 0; i < temp.getImportedKeysCount(); i++) {
-            DbImportedPKColumnType fk = temp.getImportedKeys(i);
+        DbTable temp = t;
+        for (DbImportedPKColumn fk : temp.getImportedKeys()) {
             System.out.println(
                 "check field " + f.getName() + ", fk.getFkColumnName() " + fk.getFkColumnName() +
                     ", fk.getFkColumnName().equals(f.getName()) " + fk.getFkColumnName().equals(f.getName())
@@ -3005,8 +2990,7 @@ public final class CreateSchemaFromDb {
             return null;
 
         temp = top;
-        for (int i = 0; i < temp.getImportedKeysCount(); i++) {
-            DbImportedPKColumnType fk = temp.getImportedKeys(i);
+        for (DbImportedPKColumn fk : temp.getImportedKeys()) {
             System.out.println(
                 "check field " + f.getName() + ", fk.getFkColumnName() " + fk.getFkColumnName() +
                     ", fk.getFkColumnName().equals(f.getName()) " + fk.getFkColumnName().equals(f.getName())
@@ -3046,18 +3030,16 @@ public final class CreateSchemaFromDb {
             countTempParam++;
             SchemaGenExtendClassType ec = config.getExtendClasses(i);
             SchemaGenTableToItemType topTable = ec.getTopTable();
-            DbTableType table = DatabaseManager.getTableFromStructure(dbSchema, topTable.getTableName());
+            DbTable table = DatabaseManager.getTableFromStructure(dbSchema, topTable.getTableName());
             putExtendComplexType(topTable, table);
 
-            DbPrimaryKeyType pk = table.getPrimaryKey();
-            if (pk.getColumnsCount() == 0)
+            DbPrimaryKey pk = table.getPrimaryKey();
+            if (pk.getColumns().isEmpty())
                 throw new Exception("Error create extend class 'cos table '" + table.getName() + "' not containt PK");
 
-            DbPrimaryKeyColumnType column = pk.getColumns(0);
+            DbPrimaryKeyColumn column = pk.getColumns().get(0);
 
-            for (int k = 0; k < table.getImportedKeysCount(); k++) {
-                DbImportedPKColumnType key = table.getImportedKeys(k);
-
+            for (DbImportedPKColumn key : table.getImportedKeys()) {
                 if (DatabaseManager.isMultiColumnFk(table, key)) {
                     System.out.println("Create class list for table with multicolumn foreign keys not supported");
                     continue;
@@ -3153,11 +3135,9 @@ public final class CreateSchemaFromDb {
                         "                return;\n" +
                         "            " + nameItem + " = new " + classNameItem + "();\n";
 
-                for (int l = 0; l < table.getFieldsCount(); l++) {
-                    DbFieldType field = table.getFields(l);
+                for (DbField field : table.getFields()) {
                     boolean isNotFk = true;
-                    for (int n = 0; n < table.getImportedKeysCount(); n++) {
-                        DbImportedPKColumnType fk = table.getImportedKeys(n);
+                    for (DbImportedPKColumn fk : table.getImportedKeys()) {
                         if (field.getName().equals(fk.getFkColumnName())) {
                             isNotFk = false;
                             break;
@@ -3185,17 +3165,16 @@ public final class CreateSchemaFromDb {
         }
     }
 
-    private static String findRelateKey(DbTableType table, String tableName)
+    private static String findRelateKey(DbTable table, String tableName)
         throws Exception {
-        DbTableType relateTable = DatabaseManager.getTableFromStructure(dbSchema, tableName);
+        DbTable relateTable = DatabaseManager.getTableFromStructure(dbSchema, tableName);
         if (relateTable == null)
             throw new Exception("Target relate table '" + tableName + "' not found");
 
-        DbTableType mainTable = table;
+        DbTable mainTable = table;
 
         System.out.println("main - " + mainTable.getName() + ", relate - " + relateTable.getName());
-        for (int i = 0; i < mainTable.getImportedKeysCount(); i++) {
-            DbImportedPKColumnType fk = mainTable.getImportedKeys(i);
+        for (DbImportedPKColumn fk : mainTable.getImportedKeys()) {
             System.out.println(
                 "fk " + fk.getFkName() + ", " +
                     fk.getFkTableName() + "." + fk.getFkColumnName() + "->" +
@@ -3205,8 +3184,7 @@ public final class CreateSchemaFromDb {
                 return "get" + StringTools.capitalizeString(fk.getFkColumnName()) + "()";
         }
         System.out.println("main - " + relateTable.getName() + ", relate - " + mainTable.getName());
-        for (int i = 0; i < relateTable.getImportedKeysCount(); i++) {
-            DbImportedPKColumnType fk = relateTable.getImportedKeys(i);
+        for (DbImportedPKColumn fk : relateTable.getImportedKeys()) {
             System.out.println(
                 "fk " + fk.getFkName() + ", " +
                     fk.getFkTableName() + "." + fk.getFkColumnName() + "->" +
@@ -3219,9 +3197,7 @@ public final class CreateSchemaFromDb {
     }
 
     private static void processTables() throws Exception {
-        for (int i = 0; i < dbSchema.getTablesCount(); i++) {
-            DbTableType table = dbSchema.getTables(i);
-
+        for (DbTable table : dbSchema.getTables()) {
 
             if (DatabaseManager.isSkipTable(table.getName())) {
 //                System.out.println("Table '"+table.getName()+"', isSkip - "+DbService.isSkipTable(table.getName()));
@@ -3341,14 +3317,42 @@ public final class CreateSchemaFromDb {
             }
 
             XmlTools.writeToFile(
-                dbSchema, GenericConfig.getGenericDebugDir() + "db-schema.xml", "utf-8", null,
-                JsmithyNamespases.namespace
+                dbSchema, GenericConfig.getGenericDebugDir() + "db-schema.xml", "utf-8"
             );
         }
         else {
             System.out.println("Create DbSchema from file " + s[1]);
-            InputSource inSrcDb = new InputSource(new FileInputStream(s[1]));
-            dbSchema = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrcDb);
+            String packageName = DbSchema.class.getPackage().getName();
+            System.out.println("dbSchema package: " + packageName);
+            JAXBContext jaxbContext = JAXBContext.newInstance ( packageName );
+            javax.xml.bind.Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            try {
+                javax.xml.validation.Schema schema = sf.newSchema(new File("riverock-database-structure.xsd"));
+                unmarshaller.setSchema(schema);
+                unmarshaller.setEventHandler(
+                    new ValidationEventHandler() {
+                        // allow unmarshalling to continue even if there are errors
+                        public boolean handleEvent(ValidationEvent ve) {
+                            // ignore warnings
+                            if (ve.getSeverity() != ValidationEvent.WARNING) {
+                                ValidationEventLocator vel = ve.getLocator();
+                                System.out.println("Line:Col[" + vel.getLineNumber() +
+                                    ":" + vel.getColumnNumber() +
+                                    "]:" + ve.getMessage());
+                            }
+                            return true;
+                        }
+                    }
+                );
+            } catch (org.xml.sax.SAXException se) {
+                System.out.println("Unable to validate due to following error.");
+                se.printStackTrace();
+            }
+
+            Source source = new StreamSource(new FileInputStream(s[1]));
+            dbSchema = unmarshaller.unmarshal(source, DbSchema.class).getValue();
         }
 
         if (config.getBaseInterface() != null) {
