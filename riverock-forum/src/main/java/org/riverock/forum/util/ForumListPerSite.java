@@ -36,6 +36,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 
 /**
  * @author SMaslyukov
@@ -48,6 +49,11 @@ public class ForumListPerSite implements PortletGetList {
 
     public ForumListPerSite(){}
 
+    PortalDaoProvider provider=null;
+    public void setPortalDaoProvider(PortalDaoProvider provider) {
+        this.provider=provider;
+    }
+
     public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext)
     {
         if (log.isDebugEnabled()) {
@@ -58,18 +64,17 @@ public class ForumListPerSite implements PortletGetList {
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
 
+        Long siteId = provider.getPortalCatalogDao().getSiteId(idSiteCtxLangCatalog);
         List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         try {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                     "select b.FORUM_ID, b.FORUM_NAME, b.SITE_ID "+
-                    "from   WM_PORTAL_CATALOG_LANGUAGE a, WM_FORUM b, WM_PORTAL_SITE_LANGUAGE c "+
-                    "where  a.ID_SITE_CTX_LANG_CATALOG=? and "+
-                    "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
-                    "       c.ID_SITE=b.SITE_ID"
+                    "from   WM_FORUM b "+
+                    "where  b.SITE_ID=? "
             );
 
-            RsetTools.setLong(ps, 1, idSiteCtxLangCatalog );
+            RsetTools.setLong(ps, 1, siteId );
 
             rs = ps.executeQuery();
             while (rs.next())

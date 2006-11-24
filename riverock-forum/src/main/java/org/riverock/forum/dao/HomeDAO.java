@@ -25,6 +25,7 @@ package org.riverock.forum.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -159,7 +160,8 @@ public class HomeDAO {
             Long countRecord = DatabaseManager.getLongValue(
                 adapter,
                 "select count(*) count_records from WM_FORUM_USER",
-                new Object[]{}
+                new Object[]{},
+                new int[] {}
             );
             forumBean.setUserSum( ""+(countRecord!=null?countRecord.intValue() :0) );
 

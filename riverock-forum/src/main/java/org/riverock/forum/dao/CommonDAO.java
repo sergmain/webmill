@@ -34,13 +34,13 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.forum.bean.ForumSmallBean;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 
 @SuppressWarnings({"UnusedAssignment"})
 public final class CommonDAO {
 
     public static long getForumID(DatabaseAdapter adapter) throws SQLException {
-        CustomSequenceType seq = new CustomSequenceType();
+        CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM" );
         seq.setTableName( "WM_FORUM_CATEGORY" );
         seq.setColumnName( "FORUM_CATEGORY_ID" );
@@ -48,7 +48,7 @@ public final class CommonDAO {
     }
 
     public static long getForumCategoryID(DatabaseAdapter adapter) throws SQLException {
-        CustomSequenceType seq = new CustomSequenceType();
+        CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM_CATEGORY" );
         seq.setTableName( "WM_FORUM_CATEGORY" );
         seq.setColumnName( "FORUM_CATEGORY_ID" );
@@ -56,7 +56,7 @@ public final class CommonDAO {
     }
 
     public static long getForumConcreteID(DatabaseAdapter adapter) throws SQLException {
-        CustomSequenceType seq = new CustomSequenceType();
+        CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM_CONCRETE" );
         seq.setTableName( "WM_FORUM_CONCRETE" );
         seq.setColumnName( "F_ID" );
@@ -64,7 +64,7 @@ public final class CommonDAO {
     }
 
     public static long getTopicID(DatabaseAdapter adapter) throws SQLException {
-        CustomSequenceType seq = new CustomSequenceType();
+        CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM_TOPIC" );
         seq.setTableName( "WM_FORUM_TOPIC" );
         seq.setColumnName( "T_ID" );
@@ -72,7 +72,7 @@ public final class CommonDAO {
     }
 
     public static long getMessageID(DatabaseAdapter adapter) throws SQLException {
-        CustomSequenceType seq = new CustomSequenceType();
+        CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM_MESSAGE" );
         seq.setTableName( "WM_FORUM_MESSAGE" );
         seq.setColumnName( "M_ID" );

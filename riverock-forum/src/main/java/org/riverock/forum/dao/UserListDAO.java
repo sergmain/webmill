@@ -25,6 +25,7 @@ package org.riverock.forum.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -57,7 +58,9 @@ public class UserListDAO {
                 "FROM   WM_FORUM_USER " +
                 "WHERE  u_name LIKE ? " +
                 "ORDER BY u_post DESC",
-                new Object[]{searchKeyword});
+                new Object[]{searchKeyword},
+                new int[] {Types.VARCHAR}
+            );
 
             String sql =
                 "SELECT u_id,u_name,u_avatar_id,u_email,u_regtime, " +

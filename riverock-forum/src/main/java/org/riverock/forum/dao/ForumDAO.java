@@ -25,6 +25,7 @@ package org.riverock.forum.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,8 +112,11 @@ public class ForumDAO {
                 "FROM   WM_FORUM_TOPIC  " +
                 "WHERE  " + condition,
                 (StringUtils.isNotBlank(keyword))
-                ?new Object[]{f_id, keywordSearch}
-                :new Object[]{f_id}
+                    ?new Object[]{f_id, keywordSearch}
+                    :new Object[]{f_id},
+                (StringUtils.isNotBlank(keyword))
+                    ?new int[]{Types.NUMERIC, Types.NUMERIC}
+                    :new int[]{Types.NUMERIC}
             );
 
             String sql1 =

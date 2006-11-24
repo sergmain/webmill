@@ -47,6 +47,18 @@ public class HomeDaoTest {
             public StringBuilder getUrlStringBuilder(String string, String string1) {
                 return new StringBuilder("url");
             }
+
+            public void setParameter(String key, String value) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String getActionUrl() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public String getRenderUrl() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
         };
         ForumBean bean = dao.execute(urlProvider, 1L, true);
 
