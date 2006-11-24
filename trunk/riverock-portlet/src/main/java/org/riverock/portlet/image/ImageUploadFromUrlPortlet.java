@@ -46,7 +46,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.generic.utils.DateUtils;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -133,7 +133,7 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
             // Todo этот сиквенс просто заглушка, сейчас не работает.
             // т.к. сиквенс просто использовался чтобы получить уникальное имя файла
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_image_number_file" );
             seq.setTableName( "MAIN_FORUM_THREADS" );
             seq.setColumnName( "ID_THREAD" );

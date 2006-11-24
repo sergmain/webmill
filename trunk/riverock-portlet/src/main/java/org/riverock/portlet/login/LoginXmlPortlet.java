@@ -132,7 +132,7 @@ public final class LoginXmlPortlet implements Portlet {
                 xmlRoot = "LoginXml";
             }
 
-            byte[] bytes = XmlTools.getXml( login, xmlRoot, null, "utf-8");
+            byte[] bytes = XmlTools.getXml( login, xmlRoot, "utf-8");
             if (log.isDebugEnabled()) {
                 try {
                     writeDebug(bytes);

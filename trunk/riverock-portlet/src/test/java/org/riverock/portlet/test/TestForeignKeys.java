@@ -32,39 +32,28 @@
 package org.riverock.portlet.test;
 
 
-
-
-
-
-import org.apache.log4j.Logger;
-
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbImportedKeyList;
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbTable;
 
-public class TestForeignKeys
-{
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.test.TestForeignKeys");
+public class TestForeignKeys {
 
-    public TestForeignKeys(){}
+    public TestForeignKeys() {
+    }
 
     public static void main(String args[])
-        throws Exception
-    {
+        throws Exception {
         org.riverock.generic.startup.StartupApplication.init();
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE");
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
-        DbTableType testTable = null;
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance("ORACLE");
+        DbSchema schema = DatabaseManager.getDbStructure(db_);
+        DbTable testTable = null;
 
-        for (int j=0; j<schema.getTablesCount(); j++)
-        {
-            DbTableType table = schema.getTables(j);
-            if ( "A_TEST_1".equalsIgnoreCase(table.getName()) )
-            {
+        for (DbTable table : schema.getTables()) {
+            if ("A_TEST_1".equalsIgnoreCase(table.getName())) {
                 testTable = table;
 /*
                 DbImportedPKColumnType[] fkColumnList = DatabaseManager.getFkNames(table);
@@ -147,9 +136,9 @@ public class TestForeignKeys
             }
         }
 
-        DbImportedKeyListType fk = new DbImportedKeyListType();
-        fk.setKeys( testTable.getImportedKeysAsReference() );
-        DatabaseStructureManager.createForeignKey( db_, fk );
+        DbImportedKeyList fk = new DbImportedKeyList();
+        fk.getKeys().addAll(testTable.getImportedKeys());
+        DatabaseStructureManager.createForeignKey(db_, fk);
 
     }
 }

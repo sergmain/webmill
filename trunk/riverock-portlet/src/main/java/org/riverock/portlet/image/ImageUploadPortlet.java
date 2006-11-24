@@ -45,7 +45,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.webmill.container.tools.PortletService;
@@ -117,7 +117,7 @@ public final class ImageUploadPortlet implements Portlet {
 
             // Todo this sequence not work
             // 'cos this sequence was used only for recieve unique file name
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_image_number_file" );
             seq.setTableName( "MAIN_FORUM_THREADS" );
             seq.setColumnName( "ID_THREAD" );
@@ -156,7 +156,7 @@ public final class ImageUploadPortlet implements Portlet {
 
             User userInfo = auth_.getUser();
 
-            CustomSequenceType seqImageDir = new CustomSequenceType();
+            CustomSequence seqImageDir = new CustomSequence();
             seqImageDir.setSequenceName( "seq_WM_image_dir" );
             seqImageDir.setTableName( "WM_IMAGE_DIR" );
             seqImageDir.setColumnName( "ID_IMAGE_DIR" );

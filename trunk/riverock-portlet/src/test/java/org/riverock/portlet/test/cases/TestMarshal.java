@@ -42,7 +42,7 @@ import org.xml.sax.InputSource;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.portlet.tools.SiteUtils;
 
 public class TestMarshal extends TestCase
@@ -52,11 +52,11 @@ public class TestMarshal extends TestCase
         super(testName);
     }
 
-    private DbSchemaType makeSchema(String nameConnection, String nameOutputFiel)
+    private DbSchema makeSchema(String nameConnection, String nameOutputFiel)
         throws Exception
     {
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection);
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
+        DbSchema schema = DatabaseManager.getDbStructure(db_ );
 
         String encoding = "UTF-8";
         String nameFile = nameOutputFiel;
@@ -85,8 +85,8 @@ public class TestMarshal extends TestCase
         InputSource inSrc = new InputSource(
             new FileInputStream( SiteUtils.getTempDir()+fileName )
         );
-        DbSchemaType millSchema =
-            (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
+        DbSchema millSchema =
+            (DbSchema) Unmarshaller.unmarshal(DbSchema.class, inSrc);
 
     }
 

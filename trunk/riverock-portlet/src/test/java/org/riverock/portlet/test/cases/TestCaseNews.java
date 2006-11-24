@@ -31,21 +31,12 @@
  */
 package org.riverock.portlet.test.cases;
 
-import java.sql.PreparedStatement;
-import java.sql.Timestamp;
-
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.MainTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.utils.DateUtils;
 import org.riverock.portlet.news.NewsSite;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
@@ -144,6 +135,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
     public void insertTestData()
         throws Exception
     {
+/*
         newsBlock = null;
         newsBlock = new NewsBlockType();
         newsBlock.setIdSiteLanguage( TestCaseSiteAbstract.testSite.idRuSiteLanguage );
@@ -157,7 +149,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             int i1 = 0 ;
             try
             {
-                CustomSequenceType seqSite = new CustomSequenceType();
+                CustomSequence seqSite = new CustomSequence();
                 seqSite.setSequenceName("SEQ_WM_NEWS_LIST");
                 seqSite.setTableName( "WM_NEWS_LIST");
                 seqSite.setColumnName( "ID_NEWS" );
@@ -198,7 +190,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
                     NewsItemType newsItem = new NewsItemType();
                     newsGroup.addNewsItem( newsItem );
 
-                    CustomSequenceType seqNewsItem = new CustomSequenceType();
+                    CustomSequence seqNewsItem = new CustomSequence();
                     seqNewsItem.setSequenceName("SEQ_WM_NEWS_ITEM");
                     seqNewsItem.setTableName( "WM_NEWS_ITEM");
                     seqNewsItem.setColumnName( "ID" );
@@ -257,7 +249,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
                     DatabaseManager.close( ps );
                     ps = null;
 
-                    CustomSequenceType seqNewsItemText = new CustomSequenceType();
+                    CustomSequence seqNewsItemText = new CustomSequence();
                     seqNewsItemText.setSequenceName( "SEQ_WM_NEWS_ITEM_TEXT" );
                     seqNewsItemText.setTableName( "WM_NEWS_ITEM_TEXT" );
                     seqNewsItemText.setColumnName( "ID_MAIN_NEWS_TEXT" );
@@ -300,6 +292,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
         }
         newsBlock.validate();
 //        System.exit(0);
+*/
     }
 
     private void doTestNewsBlockPortletByCode()
@@ -332,12 +325,14 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             }
         }
 
+/*
         XmlTools.writeToFile(
             resultBlock,
             SiteUtils.getTempDir() + "news-block-result.xml",
             "utf-8",
             null
         );
+*/
 
         for (int i=0;i< resultBlock.getNewsGroupCount(); i++)
         {
@@ -583,6 +578,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             resultBlock.addNewsGroup( targetGroup );
         }
 
+/*
         XmlTools.writeToFile(
             newsBlock,
             SiteUtils.getTempDir() + "news-block-origin.xml",
@@ -595,6 +591,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             "utf-8",
             null
         );
+*/
 
         for (int i=0;i< resultBlock.getNewsGroupCount(); i++)
         {
