@@ -70,6 +70,9 @@
         <pathelement location="${lib.dir}/${ehcache.lib}"/>
 
         <pathelement location="${lib.dir}/${nekohtml.lib}"/>
+
+        <pathelement location="${lib.dir}/${jaxb-api.lib}"/>
+        <pathelement location="${lib.dir}/${jsr173_1.0_api.lib}"/>
     </path>
 
     <property name="build_context" value="${build.dir}/mill_context"/>
@@ -108,22 +111,6 @@
             >
             <classpath>
                 <path refid="classpath-base"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-core.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
             </classpath>
             <compilerarg value="-Xlint:-unchecked"/>
         </javac>

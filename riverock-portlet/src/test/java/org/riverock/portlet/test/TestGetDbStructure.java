@@ -38,7 +38,7 @@ import org.exolab.castor.xml.Marshaller;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.portlet.tools.SiteUtils;
 
 
@@ -51,7 +51,7 @@ public class TestGetDbStructure
         org.riverock.generic.startup.StartupApplication.init();
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( "HSQLDB");
 
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
+        DbSchema schema = DatabaseManager.getDbStructure(db_ );
 
         FileOutputStream fos = new FileOutputStream( SiteUtils.getTempDir()+"hypersonic-schema.xml" );
         Marshaller marsh = new Marshaller(new OutputStreamWriter(fos, "utf-8"));

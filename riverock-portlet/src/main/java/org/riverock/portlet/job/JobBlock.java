@@ -28,14 +28,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-
 
 import org.apache.log4j.Logger;
 
@@ -134,53 +131,51 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
         return null;
     }
 
-    private static Object syncDebug = new Object();
+    private static final Object syncDebug = new Object();
 
     public byte[] getXml( String rootElement ) throws Exception {
         JobBlockType block = new JobBlockType();
-        Iterator<JobItem> iterator = v.iterator();
-        while( iterator.hasNext() ) {
-            JobItem ji = iterator.next();
+        for (JobItem ji : v) {
             JobItemType job = new JobItemType();
 
-            job.setAgeFrom( ji.ageFrom );
-            job.setAgeFromString( ji.getAgeFromString() );
-            job.setAgeString( ji.getAgeString() );
-            job.setAgeTill( ji.ageTill );
-            job.setAgeTillString( ji.getAgeTillString() );
-            job.setCity( ji.cityPosition );
-            job.setCityString( ji.getCityString() );
-            job.setContactPerson( ji.contactPerson );
-            job.setContactPersonString( ji.getContactPersonString() );
+            job.setAgeFrom(ji.ageFrom);
+            job.setAgeFromString(ji.getAgeFromString());
+            job.setAgeString(ji.getAgeString());
+            job.setAgeTill(ji.ageTill);
+            job.setAgeTillString(ji.getAgeTillString());
+            job.setCity(ji.cityPosition);
+            job.setCityString(ji.getCityString());
+            job.setContactPerson(ji.contactPerson);
+            job.setContactPersonString(ji.getContactPersonString());
 
-            job.setDatePost( DateTools.getStringDate( ji.getJobDatePost(), "dd.MMM.yyyy",
-                renderRequest.getLocale() ) );
-            job.setDateEnd( DateTools.getStringDate( ji.getJobDateEnd(), "dd.MMM.yyyy",
-                renderRequest.getLocale() ) );
+            job.setDatePost(DateTools.getStringDate(ji.getJobDatePost(), "dd.MMM.yyyy",
+                renderRequest.getLocale()));
+            job.setDateEnd(DateTools.getStringDate(ji.getJobDateEnd(), "dd.MMM.yyyy",
+                renderRequest.getLocale()));
 
-            job.setEducationString( ji.getEducationString() );
-            job.setGender( ji.gender );
-            job.setGenderString( ji.getGenderString() );
-            job.setDateEndString( ji.getDateEndString() );
-            job.setDatePostString( ji.getDatePostString() );
-            job.setJobName( ji.jobName );
-            job.setJobNameString( ji.getJobNameString() );
-            job.setEducation( ji.nameEducation );
-            job.setSalary( ji.salaryComment );
-            job.setSalaryString( ji.getSalaryString() );
-            job.setTestPeriod( ji.testPeriod );
-            job.setTestPeriodString( ji.getTestPeriodString() );
-            job.setTextJob( ji.textJob );
-            job.setTextJobString( ji.getTextJobString() );
-            job.setUrl( ji.getUrlToJob( renderRequest, renderResponse ) );
+            job.setEducationString(ji.getEducationString());
+            job.setGender(ji.gender);
+            job.setGenderString(ji.getGenderString());
+            job.setDateEndString(ji.getDateEndString());
+            job.setDatePostString(ji.getDatePostString());
+            job.setJobName(ji.jobName);
+            job.setJobNameString(ji.getJobNameString());
+            job.setEducation(ji.nameEducation);
+            job.setSalary(ji.salaryComment);
+            job.setSalaryString(ji.getSalaryString());
+            job.setTestPeriod(ji.testPeriod);
+            job.setTestPeriodString(ji.getTestPeriodString());
+            job.setTextJob(ji.textJob);
+            job.setTextJobString(ji.getTextJobString());
+            job.setUrl(ji.getUrlToJob(renderRequest, renderResponse));
 
-            block.addJobItem( job );
+            block.addJobItem(job);
         }
 
         if( log.isDebugEnabled() ) {
             synchronized( syncDebug ) {
                 try {
-                    XmlTools.writeToFile( block, SiteUtils.getTempDir() + File.separatorChar + "test-job-block.xml", "utf-8", rootElement );
+                    XmlTools.writeToFile( block, SiteUtils.getTempDir() + File.separatorChar + "test-job-block.xml", "utf-8" );
                     byte bDebug[] = XmlTools.getXml( block, rootElement );
                     String sDebug = new String( bDebug );
 

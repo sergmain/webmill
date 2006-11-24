@@ -23,16 +23,21 @@
  */
 package org.riverock.portlet.dao;
 
-import org.apache.log4j.Logger;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
+import org.riverock.generic.annotation.schema.db.PrimaryKey;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
-import org.riverock.common.tools.RsetTools;
 import org.riverock.portlet.webclip.WebclipBean;
-
-import java.sql.*;
 
 /**
  * User: SergeMaslyukov
@@ -91,7 +96,7 @@ public class WebclipDaoImpl implements WebclipDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            CustomSequenceType seq = new CustomSequenceType();
+            CustomSequence seq = new CustomSequence();
             seq.setSequenceName( "seq_WM_PORTLET_WEBCLIP" );
             seq.setTableName( "WM_PORTLET_WEBCLIP" );
             seq.setColumnName( "ID_WEBCLIP" );
@@ -122,11 +127,13 @@ public class WebclipDaoImpl implements WebclipDao {
              */
 
             if (StringUtils.isNotBlank(webclipData)) {
+                PrimaryKey primaryKey = new PrimaryKey();
+                primaryKey.setType("NUMBER");
                 DatabaseManager.insertBigText(
                     adapter,
                     id,
                     "ID_WEBCLIP",
-                    PrimaryKeyTypeTypeType.NUMBER,
+                    primaryKey,
                     "WM_PORTLET_WEBCLIP_DATA",
                     "ID_WEBCLIP_DATA",
                     "WEBCLIP_DATA",
@@ -183,11 +190,13 @@ public class WebclipDaoImpl implements WebclipDao {
              * @param isDelete - delete data from slave table before insert true/false
              */
             if (StringUtils.isNotBlank(webclip.getWebclipData())) {
+                PrimaryKey primaryKey = new PrimaryKey();
+                primaryKey.setType("NUMBER");
                 DatabaseManager.insertBigText(
                     adapter,
                     webclip.getWebclipId(),
                     "ID_WEBCLIP",
-                    PrimaryKeyTypeTypeType.NUMBER,
+                    primaryKey,
                     "WM_PORTLET_WEBCLIP_DATA",
                     "ID_WEBCLIP_DATA",
                     "WEBCLIP_DATA",
