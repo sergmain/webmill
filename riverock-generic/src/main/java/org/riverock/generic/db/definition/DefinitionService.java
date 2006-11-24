@@ -29,6 +29,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
@@ -36,23 +38,7 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.DefinitionActionDataListType;
-import org.riverock.generic.schema.db.DefinitionActionDataType;
-import org.riverock.generic.schema.db.DefinitionActionListType;
-import org.riverock.generic.schema.db.DefinitionActionType;
-import org.riverock.generic.schema.db.DefinitionListType;
-import org.riverock.generic.schema.db.DefinitionTableListType;
-import org.riverock.generic.schema.db.DefinitionType;
-import org.riverock.generic.schema.db.DefinitionTypeChoice;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbSequenceListType;
-import org.riverock.generic.schema.db.structure.DbSequenceType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.types.ActionTypeType;
+import org.riverock.generic.annotation.schema.db.*;
 
 /**
  * User: Admin
@@ -65,11 +51,67 @@ import org.riverock.generic.schema.db.types.ActionTypeType;
 public final class DefinitionService {
     private static Logger log = Logger.getLogger(DefinitionService.class);
 
+    public static final String CUSTOM_SQL_TYPE="CUSTOM_SQL";
+    public static final String CUSTOM_CLASS_ACTION_TYPE="CUSTOM_CLASS_ACTION";
+    public static final String CREATE_SEQUENCE_TYPE="CREATE_SEQUENCE";
+    public static final String CREATE_TABLE_TYPE="CREATE_TABLE";
+    public static final String ADD_TABLE_COLUMN_TYPE="ADD_TABLE_COLUMN";
+    public static final String DROP_TABLE_COLUMN_TYPE="DROP_TABLE_COLUMN";
+    public static final String ADD_PRIMARY_KEY_TYPE="ADD_PRIMARY_KEY";
+    public static final String ADD_FOREIGN_KEY_TYPE="ADD_FOREIGN_KEY";
+    public static final String DROP_PRIMARY_KEY_TYPE="DROP_PRIMARY_KEY";
+    public static final String DROP_FOREIGN_KEY_TYPE="DROP_FOREIGN_KEY";
+    public static final String DROP_TABLE_TYPE="DROP_TABLE";
+    public static final String DROP_SEQUENCE_TYPE="DROP_SEQUENCE";
+    public static final String DELETE_BEFORE_FK_TYPE="DELETE_BEFORE_FK";
+    public static final String COPY_COLUMN_TYPE="COPY_COLUMN";
+    public static final String CLONE_COLUMN_TYPE="CLONE_COLUMN";
+    public static final String COPY_TABLE_TYPE="COPY_TABLE";
+
+    private static final int UNKNOWN_TYPE_VALUE = 0;
+    private static final int CUSTOM_SQL_TYPE_VALUE = 1;
+    private static final int CUSTOM_CLASS_ACTION_TYPE_VALUE = 2;
+    private static final int CREATE_SEQUENCE_TYPE_VALUE = 3;
+    private static final int CREATE_TABLE_TYPE_VALUE = 4;
+    private static final int ADD_TABLE_COLUMN_TYPE_VALUE = 5;
+    private static final int DROP_TABLE_COLUMN_TYPE_VALUE = 6;
+    private static final int ADD_PRIMARY_KEY_TYPE_VALUE = 7;
+    private static final int ADD_FOREIGN_KEY_TYPE_VALUE = 8;
+    private static final int DROP_PRIMARY_KEY_TYPE_VALUE = 9;
+    private static final int DROP_FOREIGN_KEY_TYPE_VALUE = 10;
+    private static final int DROP_TABLE_TYPE_VALUE = 11;
+    private static final int DROP_SEQUENCE_TYPE_VALUE = 12;
+    private static final int DELETE_BEFORE_FK_TYPE_VALUE = 13;
+    private static final int COPY_COLUMN_TYPE_VALUE = 14;
+    private static final int CLONE_COLUMN_TYPE_VALUE = 15;
+    private static final int COPY_TABLE_TYPE_VALUE = 16;
+
+    private static Map<String, Integer> actionTypes = new HashMap<String, Integer>();
+
+    static {
+        actionTypes.put(CUSTOM_SQL_TYPE, CUSTOM_SQL_TYPE_VALUE);
+        actionTypes.put(CUSTOM_CLASS_ACTION_TYPE, CUSTOM_CLASS_ACTION_TYPE_VALUE);
+        actionTypes.put(CREATE_SEQUENCE_TYPE, CREATE_SEQUENCE_TYPE_VALUE);
+        actionTypes.put(CREATE_TABLE_TYPE, CREATE_TABLE_TYPE_VALUE);
+        actionTypes.put(ADD_TABLE_COLUMN_TYPE, ADD_TABLE_COLUMN_TYPE_VALUE);
+        actionTypes.put(DROP_TABLE_COLUMN_TYPE, DROP_TABLE_COLUMN_TYPE_VALUE);
+        actionTypes.put(ADD_PRIMARY_KEY_TYPE, ADD_PRIMARY_KEY_TYPE_VALUE);
+        actionTypes.put(ADD_FOREIGN_KEY_TYPE, ADD_FOREIGN_KEY_TYPE_VALUE);
+        actionTypes.put(DROP_PRIMARY_KEY_TYPE, DROP_PRIMARY_KEY_TYPE_VALUE);
+        actionTypes.put(DROP_FOREIGN_KEY_TYPE, DROP_FOREIGN_KEY_TYPE_VALUE);
+        actionTypes.put(DROP_TABLE_TYPE, DROP_TABLE_TYPE_VALUE);
+        actionTypes.put(DROP_SEQUENCE_TYPE, DROP_SEQUENCE_TYPE_VALUE);
+        actionTypes.put(DELETE_BEFORE_FK_TYPE, DELETE_BEFORE_FK_TYPE_VALUE);
+        actionTypes.put(COPY_COLUMN_TYPE, COPY_COLUMN_TYPE_VALUE);
+        actionTypes.put(CLONE_COLUMN_TYPE, CLONE_COLUMN_TYPE_VALUE);
+        actionTypes.put(COPY_TABLE_TYPE, COPY_TABLE_TYPE_VALUE);
+    }
+
 //    private static boolean isDefinitionProcessed = false;
 //    private static Map<String, Object> definitionRelateHash = null;
-//    private static Map<String, DefinitionType> definitionHash = null;
+//    private static Map<String, Definition> definitionHash = null;
 //    private static Map<String, String> dbHash = null;
-//    private static DefinitionListType definitionList = new DefinitionListType();
+//    private static DefinitionList definitionList = new DefinitionList();
 
 /*
     public synchronized static void registerRelateDefinitionDown(String definitionMain, String definitionTarget) {
@@ -88,7 +130,7 @@ public final class DefinitionService {
             DataDefinitionManager.init();
 
             definitionRelateHash = new HashMap<String, Object>();
-            definitionHash = new HashMap<String, DefinitionType>();
+            definitionHash = new HashMap<String, Definition>();
 
             // получаем из менеджера все файлы с определениями в виде массива
             DataDefinitionFile[] defFileArray = DataDefinitionManager.getDefinitionFileArray();
@@ -99,7 +141,7 @@ public final class DefinitionService {
                     continue;
                 }
                 for (int j = 0; j < defFile.definitionList.getDefinitionCount(); j++) {
-                    DefinitionType defItem = defFile.definitionList.getDefinition(j);
+                    Definition defItem = defFile.definitionList.getDefinition(j);
                     Object defTemp = definitionHash.get(defItem.getNameDef());
                     if (defTemp == null) {
                         definitionHash.put(defItem.getNameDef(), defItem);
@@ -152,16 +194,14 @@ public final class DefinitionService {
     }
 */
 
-    public static void processDefinitionList(DatabaseAdapter db_, DefinitionListType definitionList) throws Exception {
+    public static void processDefinitionList(DatabaseAdapter db_, DefinitionList definitionList) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("definitionList " + definitionList);
             if (definitionList != null)
-                log.debug("definitionList.getDefinitionCount() " + definitionList.getDefinitionCount());
+                log.debug("definitionList.getDefinitionCount() " + definitionList.getDefinition().size());
         }
 
-        for (int i = 0; i < definitionList.getDefinitionCount(); i++) {
-            DefinitionType defItem = definitionList.getDefinition(i);
-
+        for (Definition defItem : definitionList.getDefinition()) {
             try {
                 if (log.isInfoEnabled())
                     log.info("process definition " + defItem.getNameDef());
@@ -189,12 +229,12 @@ public final class DefinitionService {
                 if (log.isDebugEnabled())
                     log.debug("store info about processed definition");
 
-                CustomSequenceType seq = new CustomSequenceType();
+                CustomSequence seq = new CustomSequence();
                 seq.setSequenceName("SEQ_WM_DB_DEFINITION");
                 seq.setTableName("WM_DB_DEFINITION");
                 seq.setColumnName("ID_DB_DEFINITION");
 
-                MainDbDefinitionItemType item = new MainDbDefinitionItemType();
+                MainDbDefinitionItem item = new MainDbDefinitionItem();
                 item.setIdDbDefinition(db_.getSequenceNextValue(seq));
                 item.setNameDefinition(defItem.getNameDef());
                 item.setAplayDate(new Timestamp(System.currentTimeMillis()));
@@ -241,7 +281,7 @@ public final class DefinitionService {
         }
     }
 
-    public static String getString(DefinitionActionDataListType actionList, String nameParam, String defValue)
+    public static String getString(DefinitionActionDataList actionList, String nameParam, String defValue)
         throws IllegalArgumentException {
         String value = getString(actionList, nameParam);
         if (value == null)
@@ -250,19 +290,18 @@ public final class DefinitionService {
         return value;
     }
 
-    public synchronized static String getString(DefinitionActionDataListType actionList, String nameParam) {
+    public synchronized static String getString(DefinitionActionDataList actionList, String nameParam) {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
-        for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DefinitionActionDataType action = actionList.getParameter(i);
+        for (DefinitionActionData action : actionList.getParameter()) {
             if (action.getName().equals(nameParam))
                 return action.getData();
         }
         return null;
     }
 
-    public static Double getDouble(DefinitionActionDataListType actionList, String nameParam, double defValue)
+    public static Double getDouble(DefinitionActionDataList actionList, String nameParam, double defValue)
         throws IllegalArgumentException {
         Double value = getDouble(actionList, nameParam);
         if (value == null)
@@ -271,13 +310,12 @@ public final class DefinitionService {
         return value;
     }
 
-    public synchronized static Double getDouble(DefinitionActionDataListType actionList, String nameParam)
+    public synchronized static Double getDouble(DefinitionActionDataList actionList, String nameParam)
         throws IllegalArgumentException {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
-        for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DefinitionActionDataType action = actionList.getParameter(i);
+        for (DefinitionActionData action : actionList.getParameter()) {
             if (action.getName().equals(nameParam)) {
                 String value = action.getData();
                 Double doubleValue = null;
@@ -295,7 +333,7 @@ public final class DefinitionService {
         return null;
     }
 
-    public static Long getLong(DefinitionActionDataListType actionList, String nameParam, long defValue)
+    public static Long getLong(DefinitionActionDataList actionList, String nameParam, long defValue)
         throws IllegalArgumentException {
         Long value = getLong(actionList, nameParam);
         if (value == null)
@@ -304,13 +342,12 @@ public final class DefinitionService {
         return value;
     }
 
-    public synchronized static Long getLong(DefinitionActionDataListType actionList, String nameParam)
+    public synchronized static Long getLong(DefinitionActionDataList actionList, String nameParam)
         throws IllegalArgumentException {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
-        for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DefinitionActionDataType action = actionList.getParameter(i);
+        for (DefinitionActionData action : actionList.getParameter()) {
             if (action.getName().equals(nameParam)) {
                 String value = action.getData();
                 Long longValue = null;
@@ -328,7 +365,7 @@ public final class DefinitionService {
         return null;
     }
 
-    public static Integer getInteger(DefinitionActionDataListType actionList, String nameParam, int defValue)
+    public static Integer getInteger(DefinitionActionDataList actionList, String nameParam, int defValue)
         throws IllegalArgumentException {
         Integer value = getInteger(actionList, nameParam);
         if (value == null)
@@ -337,13 +374,12 @@ public final class DefinitionService {
         return value;
     }
 
-    public static Integer getInteger(DefinitionActionDataListType actionList, String nameParam)
+    public static Integer getInteger(DefinitionActionDataList actionList, String nameParam)
         throws IllegalArgumentException {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
-        for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DefinitionActionDataType action = actionList.getParameter(i);
+        for (DefinitionActionData action : actionList.getParameter()) {
             if (action.getName().equals(nameParam)) {
                 String value = action.getData();
                 Integer intValue = null;
@@ -361,7 +397,7 @@ public final class DefinitionService {
         return null;
     }
 
-    public static Boolean getBoolean(DefinitionActionDataListType actionList, String nameParam, boolean defValue)
+    public static Boolean getBoolean(DefinitionActionDataList actionList, String nameParam, boolean defValue)
         throws IllegalArgumentException {
         Boolean value = getBoolean(actionList, nameParam);
         if (value == null)
@@ -370,13 +406,12 @@ public final class DefinitionService {
         return value;
     }
 
-    public synchronized static Boolean getBoolean(DefinitionActionDataListType actionList, String nameParam)
+    public synchronized static Boolean getBoolean(DefinitionActionDataList actionList, String nameParam)
         throws IllegalArgumentException {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
-        for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DefinitionActionDataType action = actionList.getParameter(i);
+        for (DefinitionActionData action : actionList.getParameter()) {
             if (action.getName().equals(nameParam)) {
                 String value = action.getData();
                 if (value == null)
@@ -402,79 +437,69 @@ public final class DefinitionService {
 
     ////////////////////////
 
-    private synchronized static void processTable(DatabaseAdapter db_, DefinitionType defItem)
+    private synchronized static void processTable(DatabaseAdapter db_, Definition defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
-            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
-
-            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
-                DefinitionTableListType tableList = choice.getDefinitionTypeChoiceItem(k).getTableList();
-//            DefinitionTableListType tableList = choice.getDefinitionTypeChoiceItem().getTableList();
+        for (Object o : defItem.getTableListOrActionListOrData()) {
+             if (o instanceof DefinitionTableList) {
+                DefinitionTableList tableList = (DefinitionTableList)o;
 
                 try {
-                    if (tableList != null) {
-                        for (int i = 0; i < tableList.getTableCount(); i++) {
-                            DbTableType table = tableList.getTable(i);
-                            db_.createTable(table);
-                        }
+                    for (DbTable table : tableList.getTable()) {
+                        db_.createTable(table);
                     }
                 }
                 catch (Exception e) {
-                    log.error("IsSilensAction - " + defItem.getIsSilensAction() + ", Definition - " + defItem.getNameDef(), e);
-                    if (Boolean.FALSE.equals(defItem.getIsSilensAction()))
+                    log.error("IsSilensAction - " + defItem.isIsSilensAction() + ", Definition - " + defItem.getNameDef(), e);
+                    if (Boolean.FALSE.equals(defItem.isIsSilensAction())) {
                         throw e;
+                    }
                 }
             }
         }
     }
 
-    private synchronized static void processPrimaryKey(DatabaseAdapter db_, DefinitionType defItem)
+    private synchronized static void processPrimaryKey(DatabaseAdapter db_, Definition defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
-            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
-
-            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
-                DbPrimaryKeyType pk = choice.getDefinitionTypeChoiceItem(k).getPrimaryKey();
-//            DbPrimaryKeyType pk = choice.getDefinitionTypeChoiceItem().getPrimaryKey();
+        for (Object o : defItem.getTableListOrActionListOrData()) {
+             if (o instanceof DbPrimaryKey) {
+                DbPrimaryKey pk = (DbPrimaryKey)o;
 
                 try {
-                    if (pk != null && pk.getColumnsCount() > 0) {
-                        DbSchemaType schema = DatabaseManager.getDbStructure(db_);
-                        DbTableType table = DatabaseManager.getTableFromStructure(schema, pk.getColumns(0).getTableName());
+                    if (!pk.getColumns().isEmpty()) {
+                        DbSchema schema = DatabaseManager.getDbStructure(db_);
+                        DbTable table = DatabaseManager.getTableFromStructure(schema, pk.getColumns().get(0).getTableName());
                         DatabaseManager.addPrimaryKey(db_, table, pk);
                     }
                 }
                 catch (Exception e) {
-                    log.error("IsSilensAction - " + defItem.getIsSilensAction() + ", Definition - " + defItem.getNameDef(), e);
-                    if (Boolean.FALSE.equals(defItem.getIsSilensAction()))
+                    log.error("IsSilensAction - " + defItem.isIsSilensAction() + ", Definition - " + defItem.getNameDef(), e);
+                    if (Boolean.FALSE.equals(defItem.isIsSilensAction()))
                         throw e;
                 }
             }
         }
     }
 
-    private synchronized static void processImportedKeys(DatabaseAdapter db_, DefinitionType defItem)
+    private synchronized static void processImportedKeys(DatabaseAdapter db_, Definition defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
-            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
-
-            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
-                DbImportedKeyListType fkList = choice.getDefinitionTypeChoiceItem(k).getImportedKeys();
+        for (Object o : defItem.getTableListOrActionListOrData()) {
+             if (o instanceof DbImportedKeyList) {
+                DbImportedKeyList fkList = (DbImportedKeyList)o;
                 try {
-                    if (fkList != null && fkList.getKeysCount() > 0) {
+                    if (!fkList.getKeys().isEmpty()) {
                         // Todo: and what we do with this table?
 /*
-                        DbSchemaType schema = DatabaseManager.getDbStructure(db_);
-                        DbTableType table =
+                        DbSchema schema = DatabaseManager.getDbStructure(db_);
+                        DbTable table =
                             DatabaseManager.getTableFromStructure(
                                 schema,
                                 fkList.getKeys(0).getPkTableName()
@@ -485,80 +510,72 @@ public final class DefinitionService {
                     }
                 }
                 catch (Exception e) {
-                    log.error("IsSilensAction - " + defItem.getIsSilensAction() + ", Definition - " + defItem.getNameDef(), e);
-                    if (Boolean.FALSE.equals(defItem.getIsSilensAction()))
+                    log.error("IsSilensAction - " + defItem.isIsSilensAction() + ", Definition - " + defItem.getNameDef(), e);
+                    if (Boolean.FALSE.equals(defItem.isIsSilensAction()))
                         throw e;
                 }
             }
         }
     }
 
-    private synchronized static void processSequences(DatabaseAdapter db_, DefinitionType defItem)
+    private synchronized static void processSequences(DatabaseAdapter db_, Definition defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
-            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
-
-            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
-                DbSequenceListType seqList = choice.getDefinitionTypeChoiceItem(k).getSequenceList();
-//            DbSequenceListType seqList = choice.getDefinitionTypeChoiceItem().getSequenceList();
+        for (Object o : defItem.getTableListOrActionListOrData()) {
+             if (o instanceof DbSequenceList) {
+                DbSequenceList seqList = (DbSequenceList)o;
                 try {
-                    if (seqList != null) {
-                        for (int i = 0; i < seqList.getSequencesCount(); i++) {
-                            DbSequenceType seq = seqList.getSequences(i);
-                            db_.createSequence(seq);
-                        }
+                    for (DbSequence seq : seqList.getSequences()) {
+                        db_.createSequence(seq);
                     }
                 }
                 catch (Exception e) {
-                    log.error("IsSilensAction - " + defItem.getIsSilensAction() + ", Definition - " + defItem.getNameDef(), e);
-                    if (Boolean.FALSE.equals(defItem.getIsSilensAction()))
+                    log.error("IsSilensAction - " + defItem.isIsSilensAction() + ", Definition - " + defItem.getNameDef(), e);
+                    if (Boolean.FALSE.equals(defItem.isIsSilensAction())) {
                         throw e;
+                    }
                 }
             }
         }
     }
 
-    private synchronized static void processAction(DatabaseAdapter db_, DefinitionType defItem)
+    private synchronized static void processAction(DatabaseAdapter db_, Definition defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        if (log.isDebugEnabled())
-            log.debug("defItem.getDefinitionTypeChoiceCount() " + defItem.getDefinitionTypeChoiceCount());
-
-        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
-            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
-
-            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
-                DefinitionActionListType actionList = choice.getDefinitionTypeChoiceItem(k).getActionList();
+        for (Object o : defItem.getTableListOrActionListOrData()) {
+             if (o instanceof DefinitionTableList) {
+                DefinitionActionList actionList = (DefinitionActionList)o;
 
                 if (actionList != null) {
                     if (log.isDebugEnabled())
-                        log.debug("actionList.getActionCount() " + actionList.getActionCount());
+                        log.debug("actionList.getActionCount() " + actionList.getAction().size());
 
-                    for (int i = 0; i < actionList.getActionCount(); i++) {
-                        DefinitionActionType action = actionList.getAction(i);
+                    for (DefinitionAction action : actionList.getAction()) {
                         try {
 
-                            switch (action.getActionType().getType()) {
-                                case ActionTypeType.ADD_FOREIGN_KEY_TYPE: {
+
+                            Integer type = actionTypes.get(action.getActionType());
+                            if (type==null) type=UNKNOWN_TYPE_VALUE;
+                            switch (type) {
+                                case ADD_FOREIGN_KEY_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.ADD_PRIMARY_KEY_TYPE: {
+                                case ADD_PRIMARY_KEY_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.ADD_TABLE_COLUMN_TYPE: {
+                                case ADD_TABLE_COLUMN_TYPE_VALUE: {
                                     if (log.isDebugEnabled())
                                         log.debug("process action ADD_TABLE_COLUMN_TYPE");
 
-                                    DbFieldType field = new DbFieldType();
+                                    DbField field = new DbField();
 
                                     field.setName(getString(action.getActionParameters(), "column_name"));
                                     field.setJavaType(
@@ -575,18 +592,18 @@ public final class DefinitionService {
                                 }
                                 break;
 
-                                case ActionTypeType.CLONE_COLUMN_TYPE: {
+                                case CLONE_COLUMN_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.COPY_COLUMN_TYPE: {
+                                case COPY_COLUMN_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.CREATE_SEQUENCE_TYPE: {
-                                    DbSequenceType seq = new DbSequenceType();
+                                case CREATE_SEQUENCE_TYPE_VALUE: {
+                                    DbSequence seq = new DbSequence();
                                     seq.setCacheSize(getInteger(action.getActionParameters(), "sequence_cache_size", 0));
                                     seq.setIncrementBy(getInteger(action.getActionParameters(), "sequence_increment", 1));
                                     seq.setIsCycle(getBoolean(action.getActionParameters(), "sequence_is_cycle", false));
@@ -600,28 +617,28 @@ public final class DefinitionService {
                                 }
                                 break;
 
-                                case ActionTypeType.CREATE_TABLE_TYPE: {
+                                case CREATE_TABLE_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.CUSTOM_CLASS_ACTION_TYPE: {
+                                case CUSTOM_CLASS_ACTION_TYPE_VALUE: {
                                     String className = getString(action.getActionParameters(), "class_name");
                                     if (className == null)
-                                        throw new Exception("Definition - " + defItem.getNameDef() + ", action '" + ActionTypeType.CUSTOM_CLASS_ACTION.toString() + "' must have parameter 'class_name'");
+                                        throw new Exception("Definition - " + defItem.getNameDef() + ", action '" + CUSTOM_CLASS_ACTION_TYPE + "' must have parameter 'class_name'");
 
                                     Object obj = MainTools.createCustomObject(className);
                                     if (obj == null)
-                                        throw new Exception("Definition - " + defItem.getNameDef() + ", action '" + ActionTypeType.CUSTOM_CLASS_ACTION.toString() + "', obj is null");
+                                        throw new Exception("Definition - " + defItem.getNameDef() + ", action '" + CUSTOM_CLASS_ACTION_TYPE + "', obj is null");
 
                                     ((DefinitionProcessingInterface) obj).processAction(db_, action.getActionParameters());
                                 }
                                 break;
 
-                                case ActionTypeType.CUSTOM_SQL_TYPE: {
+                                case CUSTOM_SQL_TYPE_VALUE: {
                                     String sql = getString(action.getActionParameters(), "sql");
                                     if (log.isDebugEnabled()) {
-                                        log.debug("Action type " + action.getActionType().toString());
+                                        log.debug("Action type " + action.getActionType());
                                         log.debug("Custom sql " + sql);
                                     }
                                     Statement st = null;
@@ -644,55 +661,55 @@ public final class DefinitionService {
                                 }
                                 break;
 
-                                case ActionTypeType.DELETE_BEFORE_FK_TYPE: {
+                                case DELETE_BEFORE_FK_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.DROP_FOREIGN_KEY_TYPE: {
+                                case DROP_FOREIGN_KEY_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.DROP_PRIMARY_KEY_TYPE: {
+                                case DROP_PRIMARY_KEY_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.DROP_TABLE_TYPE: {
+                                case DROP_TABLE_TYPE_VALUE: {
                                     String nameTable = getString(action.getActionParameters(), "name_table");
                                     if (nameTable != null) {
                                         db_.dropTable(nameTable);
                                         db_.commit();
                                     } else
-                                        log.error("Definition - " + defItem.getNameDef() + ", action '" + ActionTypeType.DROP_TABLE.toString() + "' must have parameter 'name_table'");
+                                        log.error("Definition - " + defItem.getNameDef() + ", action '" + DROP_TABLE_TYPE + "' must have parameter 'name_table'");
 
                                 }
                                 break;
 
-                                case ActionTypeType.DROP_TABLE_COLUMN_TYPE: {
+                                case DROP_TABLE_COLUMN_TYPE_VALUE: {
 
                                 }
                                 break;
 
-                                case ActionTypeType.DROP_SEQUENCE_TYPE: {
+                                case DROP_SEQUENCE_TYPE_VALUE: {
                                     String nameSeq = getString(action.getActionParameters(), "name_sequence");
                                     if (nameSeq != null) {
                                         db_.dropSequence(nameSeq);
                                     } else
-                                        log.error("Definition - " + defItem.getNameDef() + ", action '" + ActionTypeType.DROP_TABLE.toString() + "' must have parameter 'name_sequence'");
+                                        log.error("Definition - " + defItem.getNameDef() + ", action '" + DROP_TABLE_TYPE + "' must have parameter 'name_sequence'");
                                 }
                                 break;
                                 default:
-                                    String errorString = "Unknown type of action - " + action.getActionType().getType();
+                                    String errorString = "Unknown type of action - " + action.getActionType();
                                     log.error(errorString);
                                     throw new Exception(errorString);
 
                             }
                         }
                         catch (Exception e) {
-                            log.error("IsSilensAction - " + defItem.getIsSilensAction() + ", Definition - " + defItem.getNameDef() + ", action '" + action.getActionType().toString() + "'", e);
-                            if (Boolean.FALSE.equals(defItem.getIsSilensAction()))
+                            log.error("IsSilensAction - " + defItem.isIsSilensAction() + ", Definition - " + defItem.getNameDef() + ", action '" + action.getActionType() + "'", e);
+                            if (Boolean.FALSE.equals(defItem.isIsSilensAction()))
                                 throw e;
                         }
                     }
@@ -741,7 +758,7 @@ public final class DefinitionService {
 
     private synchronized static boolean isInQueue(String nameDef) {
         for (int i = 0; i < definitionList.getDefinitionCount(); i++) {
-            DefinitionType def = definitionList.getDefinition(i);
+            Definition def = definitionList.getDefinition(i);
             if (def.getNameDef().equals(nameDef))
                 return true;
         }
@@ -760,7 +777,7 @@ public final class DefinitionService {
         dbHash = new HashMap<String, String>();
 
         // получаем из базы данных список определений, которые были обработаны
-        MainDbDefinitionListType mainDef = null;
+        MainDbDefinitionList mainDef = null;
         try {
             String sql_ =
                 "select ID_DB_DEFINITION from WM_DB_DEFINITION ";
@@ -773,7 +790,7 @@ public final class DefinitionService {
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     if (mainDef == null)
-                        mainDef = new MainDbDefinitionListType();
+                        mainDef = new MainDbDefinitionList();
 
                     GetMainDbDefinitionItem tempItem = GetMainDbDefinitionItem.getInstance(db_, RsetTools.getLong(rs, "ID_DB_DEFINITION"));
                     mainDef.addMainDbDefinition(tempItem.item);
@@ -807,7 +824,7 @@ public final class DefinitionService {
         if (mainDef != null) {
             // проходим по определениям из базы
             for (int j = 0; j < mainDef.getMainDbDefinitionCount(); j++) {
-                MainDbDefinitionItemType tempDbItem = mainDef.getMainDbDefinition(j);
+                MainDbDefinitionItem tempDbItem = mainDef.getMainDbDefinition(j);
                 dbHash.put(tempDbItem.getNameDefinition(), tempDbItem.getNameDefinition());
             }
         }

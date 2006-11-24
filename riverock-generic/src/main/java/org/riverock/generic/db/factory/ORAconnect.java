@@ -49,9 +49,15 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbFieldType;
+import org.riverock.generic.annotation.schema.db.DbView;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.annotation.schema.db.DbSequence;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
+import org.riverock.generic.annotation.schema.db.DbDataFieldData;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKey;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
 
 /**
  * Класс ORAconnect прденазначен для коннекта к оракловской базе данных.
@@ -90,8 +96,8 @@ public class ORAconnect extends DatabaseAdapter {
         return getClobField(rs, nameField, 20000);
     }
 
-    public void createTable(DbTableType table) throws Exception {
-        if (table == null || table.getFieldsCount() == 0)
+    public void createTable(DbTable table) throws Exception {
+        if (table == null || table.getFields().isEmpty())
             return;
 
         String sql = "create table \"" + table.getName() + "\"\n" +
@@ -99,8 +105,7 @@ public class ORAconnect extends DatabaseAdapter {
 
         boolean isFirst = true;
 
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
             if (!isFirst)
                 sql += ",";
             else
@@ -179,10 +184,10 @@ public class ORAconnect extends DatabaseAdapter {
                 sql += " NOT NULL ";
             }
         }
-        if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumnsCount() != 0) {
-            DbPrimaryKeyType pk = table.getPrimaryKey();
+        if (table.getPrimaryKey() != null && !table.getPrimaryKey().getColumns().isEmpty()) {
+            DbPrimaryKey pk = table.getPrimaryKey();
 
-            String namePk = pk.getColumns(0).getPkName();
+            String namePk = pk.getColumns().get(0).getPkName();
 
 //            constraintDefinition:
 //            [ CONSTRAINT name ]
@@ -193,11 +198,11 @@ public class ORAconnect extends DatabaseAdapter {
 
             int seq = Integer.MIN_VALUE;
             isFirst = true;
-            for (int i = 0; i < pk.getColumnsCount(); i++) {
-                DbPrimaryKeyColumnType column = null;
+            for (DbPrimaryKeyColumn keyColumn : pk.getColumns()) {
+                DbPrimaryKeyColumn column = keyColumn;
                 int seqTemp = Integer.MAX_VALUE;
-                for (int k = 0; k < pk.getColumnsCount(); k++) {
-                    DbPrimaryKeyColumnType columnTemp = pk.getColumns(k);
+                for (DbPrimaryKeyColumn primaryKeyColumn : pk.getColumns()) {
+                    DbPrimaryKeyColumn columnTemp = primaryKeyColumn;
                     if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp) {
                         seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
@@ -253,7 +258,7 @@ DEFERRABLE INITIALLY DEFERRED
 /
     */
 
-    public void dropTable(DbTableType table) throws Exception {
+    public void dropTable(DbTable table) throws Exception {
         dropTable(table.getName());
     }
 
@@ -302,13 +307,13 @@ DEFERRABLE INITIALLY DEFERRED
         }
     }
 
-    public void dropConstraint(DbImportedPKColumnType impPk) throws Exception {
+    public void dropConstraint(DbImportedPKColumn impPk) throws Exception {
         throw new Exception("not implemented");
     }
 
-    public void addColumn(DbTableType table, DbFieldType field) throws Exception {
+    public void addColumn(DbTable table, DbField field) throws Exception {
         if (log.isDebugEnabled())
-            log.debug("addColumn(DbTableType table, DbFieldType field)");
+            log.debug("addColumn(DbTable table, DbField field)");
 
         String sql = "alter table " + table.getName() + " add ( " + field.getName() + " ";
 
@@ -428,14 +433,14 @@ DEFERRABLE INITIALLY DEFERRED
         return "SYSDATE";
     }
 
-    public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
+    public void setDefaultValue(DbTable originTable, DbField originField) {
     }
 
-    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 
-    public ArrayList getSequnceList(String schemaPattern) throws Exception {
+    public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
         String sql_ =
             "select SEQUENCE_NAME, MIN_VALUE, TO_CHAR(MAX_VALUE) MAX_VALUE, " +
             "INCREMENT_BY, CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER " +
@@ -444,7 +449,7 @@ DEFERRABLE INITIALLY DEFERRED
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        ArrayList v = new ArrayList();
+        List<DbSequence> v = new ArrayList<DbSequence>();
         try {
             ps = this.conn.prepareStatement(sql_);
 
@@ -452,7 +457,7 @@ DEFERRABLE INITIALLY DEFERRED
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                DbSequenceType seq = new DbSequenceType();
+                DbSequence seq = new DbSequence();
                 seq.setName(RsetTools.getString(rs, "SEQUENCE_NAME"));
                 seq.setMinValue(RsetTools.getInt(rs, "MIN_VALUE"));
                 seq.setMaxValue(RsetTools.getString(rs, "MAX_VALUE"));
@@ -475,7 +480,7 @@ DEFERRABLE INITIALLY DEFERRED
             return null;
     }
 
-    public String getViewText(DbViewType view) throws Exception {
+    public String getViewText(DbView view) throws Exception {
         String sql_ = "select TEXT from SYS.ALL_VIEWS where OWNER=? and VIEW_NAME=?";
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -505,7 +510,7 @@ DEFERRABLE INITIALLY DEFERRED
         return null;
     }
 
-    public void createView(DbViewType view)
+    public void createView(DbView view)
         throws Exception {
         if (view == null ||
             view.getName() == null || view.getName().length() == 0 ||
@@ -525,7 +530,7 @@ DEFERRABLE INITIALLY DEFERRED
         }
     }
 
-    public void createSequence(DbSequenceType seq) throws Exception {
+    public void createSequence(DbSequence seq) throws Exception {
         if (seq == null)
             return;
 /*
@@ -552,8 +557,8 @@ DEFERRABLE INITIALLY DEFERRED
             "MINVALUE " + seq.getMinValue() + " " +
             "MAXVALUE " + seq.getMaxValue() + " " +
             (seq.getCacheSize() == 0 ? "NOCACHE" : "CACHE " + seq.getCacheSize()) + " " +
-            (Boolean.TRUE.equals(seq.getIsCycle()) ? "CYCLE" : "NOCYCLE") + " " +
-            (Boolean.TRUE.equals(seq.getIsOrder()) ? "ORDER" : "") + " ";
+            (Boolean.TRUE.equals(seq.isIsCycle()) ? "CYCLE" : "NOCYCLE") + " " +
+            (Boolean.TRUE.equals(seq.isIsOrder()) ? "ORDER" : "") + " ";
 
         PreparedStatement ps = null;
 
@@ -571,12 +576,12 @@ DEFERRABLE INITIALLY DEFERRED
         }
     }
 
-    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setNull(index, Types.LONGVARBINARY);
     }
 
-    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setNull(index, Types.LONGVARCHAR);
     }
@@ -653,13 +658,13 @@ DEFERRABLE INITIALLY DEFERRED
 
     public long getSequenceNextValue(String s)
         throws SQLException {
-        CustomSequenceType seq = new CustomSequenceType();
+        CustomSequence seq = new CustomSequence();
         seq.setSequenceName(s);
 
         return getSequenceNextValue(seq);
     }
 
-    public long getSequenceNextValue(CustomSequenceType seq)
+    public long getSequenceNextValue(CustomSequence seq)
         throws SQLException {
         if (seq == null)
             return -1;

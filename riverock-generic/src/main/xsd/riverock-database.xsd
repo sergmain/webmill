@@ -32,26 +32,26 @@
 		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
 	</xs:annotation>
 	<xs:import namespace="http://generic.riverock.org/xsd/riverock-database-structure.xsd" schemaLocation="riverock-database-structure.xsd"/>
-	<xs:complexType name="CustomSequenceType">
+	<xs:complexType name="CustomSequence">
 		<xs:attribute name="sequenceName" type="xs:string"/>
 		<xs:attribute name="tableName" type="xs:string"/>
 		<xs:attribute name="columnName" type="xs:string"/>
 	</xs:complexType>
-	<xs:element name="DbFixPack" type="DbFixPackType"/>
-	<xs:complexType name="DbFixPackType">
+	<xs:element name="DbFixPack" type="DbFixPack"/>
+	<xs:complexType name="DbFixPack">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="FixPackFileName" type="xs:string"/>
 		</xs:sequence>
 		<xs:attribute name="version" type="xs:string" use="required"/>
 		<xs:attribute name="isPatch" type="xs:boolean" use="required"/>
 	</xs:complexType>
-	<xs:element name="DefinitionList" type="DefinitionListType"/>
-	<xs:complexType name="DefinitionListType">
+	<xs:element name="DefinitionList" type="DefinitionList"/>
+	<xs:complexType name="DefinitionList">
 		<xs:sequence>
-			<xs:element name="Definition" type="DefinitionType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Definition" type="Definition" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DefinitionType">
+	<xs:complexType name="Definition">
 		<xs:sequence>
 			<xs:element name="NameDef" type="xs:string"/>
 			<xs:element name="PreviousNameDef" type="xs:string" minOccurs="0" maxOccurs="unbounded">
@@ -70,39 +70,39 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="TableList" type="DefinitionTableListType" minOccurs="0"/>
-				<xs:element name="ActionList" type="DefinitionActionListType" minOccurs="0"/>
-				<xs:element name="Data" type="DefinitionDataListType" minOccurs="0"/>
-				<xs:element name="SequenceList" type="riverock-db-stuct:DbSequenceListType" minOccurs="0"/>
-				<xs:element name="ImportedKeys" type="riverock-db-stuct:DbImportedKeyListType" minOccurs="0"/>
-				<xs:element name="PrimaryKey" type="riverock-db-stuct:DbPrimaryKeyType" minOccurs="0"/>
-				<xs:element name="ViewList" type="riverock-db-stuct:DbViewListType" minOccurs="0"/>
+				<xs:element name="TableList" type="DefinitionTableList" minOccurs="0"/>
+				<xs:element name="ActionList" type="DefinitionActionList" minOccurs="0"/>
+				<xs:element name="Data" type="DefinitionDataList" minOccurs="0"/>
+				<xs:element name="SequenceList" type="riverock-db-stuct:DbSequenceList" minOccurs="0"/>
+				<xs:element name="ImportedKeys" type="riverock-db-stuct:DbImportedKeyList" minOccurs="0"/>
+				<xs:element name="PrimaryKey" type="riverock-db-stuct:DbPrimaryKey" minOccurs="0"/>
+				<xs:element name="ViewList" type="riverock-db-stuct:DbViewList" minOccurs="0"/>
 			</xs:choice>
 		</xs:sequence>
 		<xs:attribute name="isPatch" type="xs:boolean" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="DefinitionTableListType">
+	<xs:complexType name="DefinitionTableList">
 		<xs:sequence>
-			<xs:element name="Table" type="riverock-db-stuct:DbTableType" maxOccurs="unbounded"/>
+			<xs:element name="Table" type="riverock-db-stuct:DbTable" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DefinitionDataListType">
+	<xs:complexType name="DefinitionDataList">
 		<xs:sequence>
-			<xs:element name="Table" type="DefinitionTableDataType" maxOccurs="unbounded"/>
+			<xs:element name="Table" type="DefinitionTableData" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DefinitionTableDataType">
+	<xs:complexType name="DefinitionTableData">
 		<xs:sequence>
-			<xs:element name="Record" type="DefinitionRecordDataType" maxOccurs="unbounded"/>
+			<xs:element name="Record" type="DefinitionRecordData" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="nameTable" type="xs:string" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="DefinitionRecordDataType">
+	<xs:complexType name="DefinitionRecordData">
 		<xs:sequence>
-			<xs:element name="Field" type="DefinitionFieldDataType" maxOccurs="unbounded"/>
+			<xs:element name="Field" type="DefinitionFieldData" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DefinitionFieldDataType">
+	<xs:complexType name="DefinitionFieldData">
 		<xs:sequence>
 			<xs:element name="TypeField">
 				<xs:simpleType>
@@ -122,13 +122,13 @@
 		<xs:attribute name="nameField" type="xs:string" use="required"/>
 		<xs:attribute name="isNull" type="xs:boolean" use="required"/>
 	</xs:complexType>
-	<xs:element name="FieldData" type="DefinitionFieldDataType"/>
-	<xs:complexType name="DefinitionActionListType">
+	<xs:element name="FieldData" type="DefinitionFieldData"/>
+	<xs:complexType name="DefinitionActionList">
 		<xs:sequence>
-			<xs:element name="Action" type="DefinitionActionType" maxOccurs="unbounded"/>
+			<xs:element name="Action" type="DefinitionAction" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DefinitionActionType">
+	<xs:complexType name="DefinitionAction">
 		<xs:sequence>
 			<xs:element name="ActionType">
 				<xs:simpleType>
@@ -152,23 +152,23 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="ActionParameters" type="DefinitionActionDataListType" minOccurs="0"/>
+			<xs:element name="ActionParameters" type="DefinitionActionDataList" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="isSilensAction" type="xs:boolean" default="false"/>
 	</xs:complexType>
-	<xs:complexType name="DefinitionActionDataType">
+	<xs:complexType name="DefinitionActionData">
 		<xs:sequence>
 			<xs:element name="Data" type="xs:string"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="DefinitionActionDataListType">
+	<xs:complexType name="DefinitionActionDataList">
 		<xs:sequence>
-			<xs:element name="Parameter" type="DefinitionActionDataType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Parameter" type="DefinitionActionData" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="ActionData" type="DefinitionActionListType"/>
-	<xs:complexType name="PrimaryKeyType">
+	<xs:element name="ActionData" type="DefinitionActionList"/>
+	<xs:complexType name="PrimaryKey">
 		<xs:attribute name="type">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">

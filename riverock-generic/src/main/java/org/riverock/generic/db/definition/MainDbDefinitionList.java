@@ -42,7 +42,7 @@ import java.util.Vector;
  * 
  * @version $Revision$ $Date$
  */
-public class MainDbDefinitionListType implements java.io.Serializable {
+public class MainDbDefinitionList implements java.io.Serializable {
 
 
       //--------------------------/
@@ -59,7 +59,7 @@ public class MainDbDefinitionListType implements java.io.Serializable {
      //- Constructors -/
     //----------------/
 
-    public MainDbDefinitionListType() {
+    public MainDbDefinitionList() {
         super();
         _mainDbDefinitionList = new Vector();
     } //-- MainDbDefinitionListType()
@@ -75,22 +75,22 @@ public class MainDbDefinitionListType implements java.io.Serializable {
      * @param index
      * @param vMainDbDefinition
      */
-    public void addMainDbDefinition(int index, MainDbDefinitionItemType vMainDbDefinition)
+    public void addMainDbDefinition(int index, MainDbDefinitionItem vMainDbDefinition)
         throws java.lang.IndexOutOfBoundsException
     {
         _mainDbDefinitionList.insertElementAt(vMainDbDefinition, index);
-    } //-- void addMainDbDefinition(int, MainDbDefinitionItemType)
+    } //-- void addMainDbDefinition(int, MainDbDefinitionItem)
 
     /**
      * Method addMainDbDefinition
      *
      * @param vMainDbDefinition
      */
-    public void addMainDbDefinition(MainDbDefinitionItemType vMainDbDefinition)
+    public void addMainDbDefinition(MainDbDefinitionItem vMainDbDefinition)
         throws java.lang.IndexOutOfBoundsException
     {
         _mainDbDefinitionList.add(vMainDbDefinition);
-    } //-- void addMainDbDefinition(int, MainDbDefinitionItemType)
+    } //-- void addMainDbDefinition(int, MainDbDefinitionItem)
 
     /**
      * Method enumerateMainDbDefinition
@@ -105,7 +105,7 @@ public class MainDbDefinitionListType implements java.io.Serializable {
      * 
      * @param index
      */
-    public MainDbDefinitionItemType getMainDbDefinition(int index)
+    public MainDbDefinitionItem getMainDbDefinition(int index)
         throws java.lang.IndexOutOfBoundsException
     {
         //-- check bounds for index
@@ -113,21 +113,21 @@ public class MainDbDefinitionListType implements java.io.Serializable {
             throw new IndexOutOfBoundsException();
         }
         
-        return (MainDbDefinitionItemType) _mainDbDefinitionList.elementAt(index);
-    } //-- MainDbDefinitionItemType getMainDbDefinition(int)
+        return (MainDbDefinitionItem) _mainDbDefinitionList.elementAt(index);
+    } //-- MainDbDefinitionItem getMainDbDefinition(int)
 
     /**
      * Method getMainDbDefinition
      */
-    public MainDbDefinitionItemType[] getMainDbDefinition()
+    public MainDbDefinitionItem[] getMainDbDefinition()
     {
         int size = _mainDbDefinitionList.size();
-        MainDbDefinitionItemType[] mArray = new MainDbDefinitionItemType[size];
+        MainDbDefinitionItem[] mArray = new MainDbDefinitionItem[size];
         for (int index = 0; index < size; index++) {
-            mArray[index] = (MainDbDefinitionItemType) _mainDbDefinitionList.elementAt(index);
+            mArray[index] = (MainDbDefinitionItem) _mainDbDefinitionList.elementAt(index);
         }
         return mArray;
-    } //-- MainDbDefinitionItemType[] getMainDbDefinition()
+    } //-- MainDbDefinitionItem[] getMainDbDefinition()
 
     /**
      * Method getMainDbDefinitionAsReferenceReturns a reference to
@@ -162,12 +162,12 @@ public class MainDbDefinitionListType implements java.io.Serializable {
      * 
      * @param index
      */
-    public MainDbDefinitionItemType removeMainDbDefinition(int index)
+    public MainDbDefinitionItem removeMainDbDefinition(int index)
     {
         java.lang.Object obj = _mainDbDefinitionList.elementAt(index);
         _mainDbDefinitionList.removeElementAt(index);
-        return (MainDbDefinitionItemType) obj;
-    } //-- MainDbDefinitionItemType removeMainDbDefinition(int)
+        return (MainDbDefinitionItem) obj;
+    } //-- MainDbDefinitionItem removeMainDbDefinition(int)
 
     /**
      * Method setMainDbDefinition
@@ -175,7 +175,7 @@ public class MainDbDefinitionListType implements java.io.Serializable {
      * @param index
      * @param vMainDbDefinition
      */
-    public void setMainDbDefinition(int index, MainDbDefinitionItemType vMainDbDefinition)
+    public void setMainDbDefinition(int index, MainDbDefinitionItem vMainDbDefinition)
         throws java.lang.IndexOutOfBoundsException
     {
         //-- check bounds for index
@@ -183,21 +183,21 @@ public class MainDbDefinitionListType implements java.io.Serializable {
             throw new IndexOutOfBoundsException();
         }
         _mainDbDefinitionList.setElementAt(vMainDbDefinition, index);
-    } //-- void setMainDbDefinition(int, MainDbDefinitionItemType)
+    } //-- void setMainDbDefinition(int, MainDbDefinitionItem)
 
     /**
      * Method setMainDbDefinition
      * 
      * @param mainDbDefinitionArray
      */
-    public void setMainDbDefinition(MainDbDefinitionItemType[] mainDbDefinitionArray)
+    public void setMainDbDefinition(MainDbDefinitionItem[] mainDbDefinitionArray)
     {
         //-- copy array
         _mainDbDefinitionList.removeAllElements();
         for (int i = 0; i < mainDbDefinitionArray.length; i++) {
             _mainDbDefinitionList.addElement(mainDbDefinitionArray[i]);
         }
-    } //-- void setMainDbDefinition(MainDbDefinitionItemType)
+    } //-- void setMainDbDefinition(MainDbDefinitionItem)
 
     /**
      * Method setMainDbDefinitionSets the value of

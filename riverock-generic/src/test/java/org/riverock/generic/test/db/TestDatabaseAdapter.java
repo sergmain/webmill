@@ -27,7 +27,7 @@ package org.riverock.generic.test.db;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbSchema;
 
 /**
  * User: Admin
@@ -44,7 +44,7 @@ public class TestDatabaseAdapter
         org.riverock.generic.startup.StartupApplication.init();
 
         DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "ORACLE" );
-        DbSchemaType schemaOracle = DatabaseManager.getDbStructure(dbOra );
+        DbSchema schemaOracle = DatabaseManager.getDbStructure(dbOra );
 
 
     }

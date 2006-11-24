@@ -37,8 +37,8 @@ import org.apache.log4j.Logger;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
-import org.riverock.generic.annotation.schema.config.GenericConfigType;
 import org.riverock.generic.annotation.schema.config.DateTimeSavingType;
+import org.riverock.generic.annotation.schema.config.GenericConfigType;
 import org.riverock.generic.annotation.schema.config.PropertyType;
 
 /**
@@ -247,15 +247,4 @@ public final class GenericConfig {
 
         return getConfig().getProperty();
     }
-
-/*
-    public static PropertyType getProperty(final int idx) {
-
-        if (log.isDebugEnabled()) log.debug("#16.981");
-        if (!isConfigProcessed) readConfig();
-        if (log.isDebugEnabled()) log.debug("#16.982");
-
-        return getConfig().getProperty(idx);
-    }
-*/
 }

@@ -31,9 +31,9 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
-import org.riverock.generic.annotation.schema.db.DbImportedKeyListType;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbImportedKeyList;
 
 /**
  * Author: mill
@@ -54,22 +54,22 @@ public class TestForeignKeys
         org.riverock.generic.startup.StartupApplication.init();
 
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
-        DbTableType testTable = null;
+        DbSchema schema = DatabaseManager.getDbStructure(db_ );
+        DbTable testTable = null;
 
-        for (DbTableType table : schema.getTables()) {
+        for (DbTable table : schema.getTables()) {
             if ( "A_TEST_1".equalsIgnoreCase(table.getName()) )
             {
                 testTable = table;
 /*
-                DbImportedPKColumnType[] fkColumnList = DbService.getFkNames(table);
+                DbImportedPKColumn[] fkColumnList = DbService.getFkNames(table);
                 System.out.println("key count: "+fkColumnList.length );
                 for (int p=0; p<fkColumnList.length; p++)
                     System.out.println("key: "+fkColumnList[p].getFkName() );
 
                 for (int p=0; p<fkColumnList.length; p++)
                 {
-                    DbImportedPKColumnType fkColumn = fkColumnList[p];
+                    DbImportedPKColumn fkColumn = fkColumnList[p];
 
                     String sql =
                         "alter table "+table.getName()+" "+
@@ -85,7 +85,7 @@ public class TestForeignKeys
                     boolean isFirst = true;
                     for ( int i=0; i<table.getImportedKeysCount();i++ )
                     {
-                        DbImportedPKColumnType currFkCol = table.getImportedKeys(i);
+                        DbImportedPKColumn currFkCol = table.getImportedKeys(i);
                         if (
                             (currFkCol.getPkSchemaName()==null && fkColumn.getPkSchemaName()!=currFkCol.getPkSchemaName()) ||
                             (currFkCol.getPkSchemaName()!=null && !currFkCol.getPkSchemaName().equals(fkColumn.getPkSchemaName()) ) ||
@@ -101,11 +101,11 @@ public class TestForeignKeys
                         )
                             continue;
 
-                        DbImportedPKColumnType column = null;
+                        DbImportedPKColumn column = null;
                         int seqTemp = Integer.MAX_VALUE;
                         for ( int k=0; k<table.getImportedKeysCount(); k++ )
                         {
-                            DbImportedPKColumnType columnTemp = table.getImportedKeys(k);
+                            DbImportedPKColumn columnTemp = table.getImportedKeys(k);
                             if (
                                 (columnTemp.getPkSchemaName()==null && fkColumn.getPkSchemaName()!=columnTemp.getPkSchemaName()) ||
                                 (columnTemp.getPkSchemaName()!=null && !columnTemp.getPkSchemaName().equals(fkColumn.getPkSchemaName()) ) ||
@@ -142,7 +142,7 @@ public class TestForeignKeys
             }
         }
 
-        DbImportedKeyListType fk = new DbImportedKeyListType();
+        DbImportedKeyList fk = new DbImportedKeyList();
         fk.getKeys().addAll( testTable.getImportedKeys() );
         DatabaseStructureManager.createForeignKey(db_, fk );
 

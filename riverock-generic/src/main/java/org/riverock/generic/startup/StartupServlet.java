@@ -86,7 +86,6 @@ public final class StartupServlet extends HttpServlet {
         System.out.println("info dir - " + dir.getName());
 
         initLogging();
-        checkClassPresent();
 
         try {
             ConfigService.initLocale();
@@ -122,15 +121,6 @@ public final class StartupServlet extends HttpServlet {
             map.put(key, value);
         }
         PropertiesProvider.getParameters().putAll( map );
-    }
-
-    private static void checkClassPresent() {
-        try {
-            System.out.println("info Castor version - " + org.exolab.castor.util.Version.getBuildVersion());
-        }
-        catch (Throwable e) {
-            log.error("Error get version of Castor " + e.getMessage());
-        }
     }
 
     private static String replacePattern(String str, String oldToken, String newToken) {

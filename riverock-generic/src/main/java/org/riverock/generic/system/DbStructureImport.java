@@ -28,16 +28,16 @@ package org.riverock.generic.system;
 import java.io.FileInputStream;
 
 import org.apache.log4j.Logger;
-import org.xml.sax.InputSource;
 
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbSequence;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbView;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.startup.StartupApplication;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbSequenceType;
+import org.riverock.generic.tools.XmlTools;
 
 /**
  * Author: mill
@@ -68,74 +68,70 @@ public class DbStructureImport {
     }
 
     public static void importStructure(String fileName, boolean isData, DatabaseAdapter db_) throws Exception {
-            int i = 0;
-            log.debug("Unmarshal data from file " + fileName);
-            InputSource inSrc = new InputSource(new FileInputStream(fileName));
-            DbSchemaType millSchema = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
+        log.debug("Unmarshal data from file " + fileName);
+        FileInputStream stream = new FileInputStream(fileName);
+        DbSchema millSchema = XmlTools.getObjectFromXml(DbSchema.class, stream);
 
-            for (i = 0; i < millSchema.getTablesCount(); i++) {
-                DbTableType table = millSchema.getTables(i);
-                if (table.getName().toLowerCase().startsWith("tb_"))
-                    continue;
+        for (DbTable table : millSchema.getTables()) {
+            if (table.getName().toLowerCase().startsWith("tb_"))
+                continue;
 
-                if (!DatabaseManager.isSkipTable(table.getName())) {
-                    try {
-                        log.debug("create table " + table.getName());
-                        db_.createTable(table);
-                    }
-                    catch (Exception e) {
-                        log.debug("Error create table " + table.getName(), e);
-                        throw e;
-                    }
-                    if (isData) {
-                        DatabaseStructureManager.setDataTable(db_, table);
-                    }
-                }
-                else
-                    log.debug("skip table " + table.getName());
-
-            }
-
-            for (i = 0; i < millSchema.getViewsCount(); i++) {
-                DatabaseManager.createWithReplaceAllView(db_, millSchema);
-                DbViewType view = millSchema.getViews(i);
+            if (!DatabaseManager.isSkipTable(table.getName())) {
                 try {
-                    log.debug("create view " + view.getName());
-                    db_.createView(view);
+                    log.debug("create table " + table.getName());
+                    db_.createTable(table);
                 }
                 catch (Exception e) {
-                    if (db_.testExceptionViewExists(e)) {
-                        log.debug("view " + view.getName() + " already exists");
-                        log.debug("drop view " + view.getName());
-                        DatabaseStructureManager.dropView(db_, view);
-                        log.debug("create view " + view.getName());
-                        try {
-                            db_.createView(view);
-                        }
-                        catch (Exception e1) {
-                            log.error("Error create view - " + e1.toString());
-                            throw e;
-                        }
-                    }
-                    else {
-                        log.debug("Error create view",e);
-                        throw e;
-                    }
+                    log.debug("Error create table " + table.getName(), e);
+                    throw e;
+                }
+                if (isData) {
+                    DatabaseStructureManager.setDataTable(db_, table);
                 }
             }
+            else
+                log.debug("skip table " + table.getName());
+
+        }
+
+        for (DbView view : millSchema.getViews()) {
             DatabaseManager.createWithReplaceAllView(db_, millSchema);
-
-            for (i = 0; i < millSchema.getSequencesCount(); i++) {
-                DbSequenceType seq = millSchema.getSequences(i);
-                try {
-                    log.debug("create sequence " + seq.getName());
-                    db_.createSequence(seq);
+            try {
+                log.debug("create view " + view.getName());
+                db_.createView(view);
+            }
+            catch (Exception e) {
+                if (db_.testExceptionViewExists(e)) {
+                    log.debug("view " + view.getName() + " already exists");
+                    log.debug("drop view " + view.getName());
+                    DatabaseStructureManager.dropView(db_, view);
+                    log.debug("create view " + view.getName());
+                    try {
+                        db_.createView(view);
+                    }
+                    catch (Exception e1) {
+                        log.error("Error create view - " + e1.toString());
+                        throw e;
+                    }
                 }
-                catch (Exception e) {
-                    log.debug("Error create sequence " + seq.getName(), e);
+                else {
+                    log.debug("Error create view",e);
                     throw e;
                 }
             }
+        }
+        DatabaseManager.createWithReplaceAllView(db_, millSchema);
+
+        for (DbSequence seq : millSchema.getSequences()) {
+            try {
+                log.debug("create sequence " + seq.getName());
+                db_.createSequence(seq);
+            }
+            catch (Exception e) {
+                log.debug("Error create sequence " + seq.getName(), e);
+                throw e;
+            }
+        }
     }
 
     public static void main(String args[]) throws Exception {

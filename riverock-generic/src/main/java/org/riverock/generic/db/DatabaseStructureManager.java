@@ -39,6 +39,9 @@ import java.util.Hashtable;
 import java.util.TreeSet;
 import java.util.Map;
 import java.util.List;
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.DatatypeFactory;
 
 import org.apache.log4j.Logger;
 
@@ -58,11 +61,11 @@ import org.riverock.generic.annotation.schema.db.*;
 public class DatabaseStructureManager {
     private final static Logger log = Logger.getLogger(DatabaseStructureManager.class);
 
-    public static void createForeignKey(DatabaseAdapter adapter, DbImportedKeyListType fkList) throws Exception {
+    public static void createForeignKey(DatabaseAdapter adapter, DbImportedKeyList fkList) throws Exception {
         if (fkList == null || fkList.getKeys().size() == 0)
             return;
 
-        Map<String, DbImportedPKColumnType> hash = DatabaseManager.getFkNames(fkList.getKeys());
+        Map<String, DbImportedPKColumn> hash = DatabaseManager.getFkNames(fkList.getKeys());
 
 //        System.out.println("key count: "+hash.size() );
 //        for (Enumeration e = hash.keys(); e.hasMoreElements();)
@@ -70,9 +73,9 @@ public class DatabaseStructureManager {
 
         int p = 0;
 
-        for (Map.Entry<String, DbImportedPKColumnType> entry : hash.entrySet()) {
+        for (Map.Entry<String, DbImportedPKColumn> entry : hash.entrySet()) {
 
-            DbImportedPKColumnType fkColumn = entry.getValue();
+            DbImportedPKColumn fkColumn = entry.getValue();
             String searchCurrent = DatabaseManager.getRelateString(fkColumn);
 //            System.out.println("#"+p+" fk name - "+ fkColumn.getFkName()+" ");
             String sql =
@@ -87,7 +90,7 @@ public class DatabaseStructureManager {
 
             int seq = Integer.MIN_VALUE;
             boolean isFirst = true;
-            for (DbImportedPKColumnType currFkCol : fkList.getKeys()) {
+            for (DbImportedPKColumn currFkCol : fkList.getKeys()) {
                 String search = DatabaseManager.getRelateString(currFkCol);
 //                System.out.println( "1.0 "+search );
                 if (!searchCurrent.equals(search))
@@ -95,9 +98,9 @@ public class DatabaseStructureManager {
 
 //                System.out.println("here");
 
-                DbImportedPKColumnType column = null;
+                DbImportedPKColumn column = null;
                 int seqTemp = Integer.MAX_VALUE;
-                for (DbImportedPKColumnType columnTemp : fkList.getKeys()) {
+                for (DbImportedPKColumn columnTemp : fkList.getKeys()) {
                     String searchTemp = DatabaseManager.getRelateString(columnTemp);
 //                    System.out.println("here 2.0 "+ searchTemp );
                     if (!searchCurrent.equals(searchTemp))
@@ -123,17 +126,14 @@ public class DatabaseStructureManager {
 
             seq = Integer.MIN_VALUE;
             isFirst = true;
-            for (int i = 0; i < fkList.getKeysCount(); i++) {
-                DbImportedPKColumnType currFkCol = fkList.getKeys(i);
+            for (DbImportedPKColumn currFkCol : fkList.getKeys()) {
                 String search = DatabaseManager.getRelateString(currFkCol);
                 if (!searchCurrent.equals(search))
                     continue;
 
-                DbImportedPKColumnType column = null;
-                DbImportedPKColumnType columnTemp = null;
+                DbImportedPKColumn column = null;
                 int seqTemp = Integer.MAX_VALUE;
-                for (int k = 0; k < fkList.getKeysCount(); k++) {
-                    columnTemp = fkList.getKeys(k);
+                for (DbImportedPKColumn columnTemp : fkList.getKeys()) {
                     String searchTemp = DatabaseManager.getRelateString(columnTemp);
                     if (!searchCurrent.equals(searchTemp))
                         continue;
@@ -201,13 +201,13 @@ public class DatabaseStructureManager {
         }
     }
 
-    public static void addColumn(DatabaseAdapter adapter, String tableName, DbFieldType field) throws Exception {
-        DbTableType table = new DbTableType();
+    public static void addColumn(DatabaseAdapter adapter, String tableName, DbField field) throws Exception {
+        DbTable table = new DbTable();
         table.setName(tableName);
         adapter.addColumn(table, field);
     }
 
-    public static void dropColumn(DatabaseAdapter adapter, DbTableType table, DbFieldType field)
+    public static void dropColumn(DatabaseAdapter adapter, DbTable table, DbField field)
         throws Exception {
         if (table == null ||
             table.getName() == null || table.getName().length() == 0
@@ -231,7 +231,7 @@ public class DatabaseStructureManager {
         }
     }
 
-    public static void dropView(DatabaseAdapter adapter, DbViewType view)
+    public static void dropView(DatabaseAdapter adapter, DbView view)
         throws Exception {
         if (view == null ||
             view.getName() == null || view.getName().length() == 0
@@ -250,21 +250,21 @@ public class DatabaseStructureManager {
         }
     }
 
-    public static void setDataTable(DatabaseAdapter adapter, DbTableType table)
+    public static void setDataTable(DatabaseAdapter adapter, DbTable table)
         throws Exception {
         setDataTable(adapter, table, null);
     }
 
-    public static void setDataTable(DatabaseAdapter adapter, DbTableType table, ArrayList bigTables)
+    public static void setDataTable(DatabaseAdapter adapter, DbTable table, List<DbBigTextTable> bigTables)
         throws Exception {
         if (table == null || table.getData() == null || table.getData().getRecords().size() == 0) {
             System.out.println("Table is empty");
             return;
         }
 
-        DbBigTextTableType big = DatabaseManager.getBigTextTableDesc(table, bigTables);
+        DbBigTextTable big = DatabaseManager.getBigTextTableDesc(table, bigTables);
 
-        if (table.getFieldsCount() == 0)
+        if (table.getFields().isEmpty())
             throw new Exception("Table has zero count of fields");
 
 
@@ -277,8 +277,7 @@ public class DatabaseStructureManager {
                 "(";
 
         boolean isFirst = true;
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
             if (isFirst)
                 isFirst = false;
             else
@@ -289,8 +288,7 @@ public class DatabaseStructureManager {
         sql_ += ")values(";
 
         isFirst = true;
-        for (int i = 0; i < table.getFieldsCount(); i++) {
-            DbFieldType field = table.getFields(i);
+        for (DbField field : table.getFields()) {
             if (isFirst)
                 isFirst = false;
             else
@@ -303,29 +301,28 @@ public class DatabaseStructureManager {
         }
         sql_ += ")";
 
-        DbDataTableType tableData = table.getData();
+        DbDataTable tableData = table.getData();
 
         System.out.println(
             "\nTable " + table.getName() + ", " +
-                "fields " + table.getFieldsCount() + ", " +
-                "records " + tableData.getRecordsCount() + ", sql:\n" + sql_
+                "fields " + table.getFields().size() + ", " +
+                "records " + tableData.getRecords().size() + ", sql:\n" + sql_
         );
 
 
         if (big == null) {
 
-            for (DbDataRecordType record : tableData.getRecords()) {
+            for (DbDataRecord record : tableData.getRecords()) {
                 PreparedStatement ps = null;
                 ResultSet rs = null;
-                DbDataFieldDataType fieldData=null;
-                DbFieldType field=null;
+                DbField field=null;
                 try {
                     ps = adapter.conn.prepareStatement(sql_);
 
                     int fieldPtr = 0;
-                    for (int k = 0; k < record.getFieldsDataCount(); k++) {
-                        field = table.getFields(fieldPtr++);
-                        fieldData = record.getFieldsData(k);
+                    int k=0;
+                    for (DbDataFieldData fieldData : record.getFieldsData()) {
+                        field = table.getFields().get(fieldPtr++);
 
                         if (fieldData.isIsNull()) {
                             int type = fieldData.getJavaTypeField();
@@ -353,7 +350,6 @@ public class DatabaseStructureManager {
                                     else {
                                         if (isDebug)
                                             System.out.println("Types.NUMERIC param #" + (k + 1) + ", value " + fieldData.getNumberData().doubleValue());
-//                                        ps.setDouble(k + 1, fieldData.getNumberData().doubleValue());
                                         ps.setBigDecimal(k + 1, fieldData.getNumberData());
                                     }
                                     break;
@@ -403,12 +399,13 @@ public class DatabaseStructureManager {
                                     System.out.println("Unknown field type.");
                             }
                         }
+                        k++;
                     }
                     ps.executeUpdate();
                 }
                 catch (Exception e) {
                     log.error("Error get data for table " + table.getName(), e);
-                    for (DbDataFieldDataType data : record.getFieldsData()) {
+                    for (DbDataFieldData data : record.getFieldsData()) {
                         log.error("date: " + data.getDateData());
                         log.error("decimal digit: " + data.getDecimalDigit());
                         log.error("is null: " + data.isIsNull());
@@ -424,9 +421,6 @@ public class DatabaseStructureManager {
                     rs = null;
                     ps = null;
                 }
-
-                if ((i % 200) == 0 && i != 0)
-                    System.out.print("count inserted records - " + i + "\n");
             }
         }
         else // process big text table
@@ -436,9 +430,9 @@ public class DatabaseStructureManager {
             int idxFk = 0;
             int idxPk = 0;
             boolean isNotFound = true;
-            // находим индексы полей в списке
-            for (int i = 0; i < table.getFieldsCount(); i++) {
-                DbFieldType field = table.getFields(i);
+            // search indices of fields in list
+            int i=0;
+            for (DbField field : table.getFields()) {
                 if (field.getName().equals(big.getStorageField())) {
                     idx = i;
                     isNotFound = false;
@@ -449,6 +443,7 @@ public class DatabaseStructureManager {
                 if (field.getName().equals(big.getSlavePkField())) {
                     idxPk = i;
                 }
+                i++;
             }
             if (isNotFound)
                 throw new Exception("Storage field '" + big.getStorageField() + "' not found in table " + table.getName());
@@ -458,13 +453,9 @@ public class DatabaseStructureManager {
                 System.out.println("fk idx " + idxFk);
                 System.out.println("storage idx " + idx);
             }
-            Hashtable<Long, Object> hashFk = new Hashtable<Long, Object>(tableData.getRecordsCount());
-            // получаем хеш вторичных ключей. Т.к. используется Hashtable
-            // все значения в хеше уникальны
-            for (int i = 0; i < tableData.getRecordsCount(); i++) {
-                DbDataRecordType record = tableData.getRecords(i);
-
-                DbDataFieldDataType fieldFk = record.getFieldsData(idxFk);
+            Hashtable<Long, Object> hashFk = new Hashtable<Long, Object>(tableData.getRecords().size());
+            for (DbDataRecord record : tableData.getRecords()) {
+                DbDataFieldData fieldFk = record.getFieldsData().get(idxFk);
                 Long idRec = fieldFk.getNumberData().longValue();
 
                 hashFk.put(idRec, new Object());
@@ -481,13 +472,13 @@ public class DatabaseStructureManager {
 
                 // Создаем список упорядоченных первичных ключей
                 // для данного вторичного ключа
-                for (int i = 0; i < tableData.getRecordsCount(); i++) {
-                    DbDataRecordType record = tableData.getRecords(i);
-
-                    DbDataFieldDataType fieldFk = record.getFieldsData(idxFk);
+                for (DbDataRecord record : tableData.getRecords()) {
+                    // get value for foreign key
+                    DbDataFieldData fieldFk = record.getFieldsData().get(idxFk);
                     long idRec = fieldFk.getNumberData().longValue();
 
-                    DbDataFieldDataType fieldPk = record.getFieldsData(idxPk);
+                    // get value for primary key
+                    DbDataFieldData fieldPk = record.getFieldsData().get(idxPk);
                     long idPkRec = fieldPk.getNumberData().longValue();
 
                     if (idFk == idRec)
@@ -498,14 +489,13 @@ public class DatabaseStructureManager {
                 // двигаясь по списку первичных ключей создаем результирующий строковый объект
                 for (Long aSetPk : setPk) {
 
-                    for (int i = 0; i < tableData.getRecordsCount(); i++) {
-                        DbDataRecordType record = tableData.getRecords(i);
+                    for (DbDataRecord record : tableData.getRecords()) {
 
-                        DbDataFieldDataType fieldPk = record.getFieldsData(idxPk);
+                        DbDataFieldData fieldPk = record.getFieldsData().get(idxPk);
                         long pkTemp = fieldPk.getNumberData().longValue();
 
                         if (pkTemp == aSetPk) {
-                            DbDataFieldDataType fieldData = record.getFieldsData(idx);
+                            DbDataFieldData fieldData = record.getFieldsData().get(idx);
                             if (fieldData.getStringData() != null)
                                 tempData += fieldData.getStringData();
                         }
@@ -544,7 +534,7 @@ public class DatabaseStructureManager {
                         if (log.isDebugEnabled())
                             log.debug("Name sequence - " + big.getSequenceName());
 
-                        CustomSequenceType seq = new CustomSequenceType();
+                        CustomSequence seq = new CustomSequence();
                         seq.setSequenceName(big.getSequenceName());
                         seq.setTableName(big.getSlaveTable());
                         seq.setColumnName(big.getSlavePkField());
@@ -595,12 +585,12 @@ public class DatabaseStructureManager {
      * @param connection
      * @param table
      * @param dbFamily
-     * @return DbDataTableType
+     * @return DbDataTable
      */
-    public static DbDataTableType getDataTable(Connection connection, DbTableType table, int dbFamily)
+    public static DbDataTable getDataTable(Connection connection, DbTable table, int dbFamily)
         throws Exception {
         System.out.println("Start get data for table " + table.getName());
-        DbDataTableType tableData = new DbDataTableType();
+        DbDataTable tableData = new DbDataTable();
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -612,26 +602,25 @@ public class DatabaseStructureManager {
             rs = ps.executeQuery();
             ResultSetMetaData meta = rs.getMetaData();
 
-            if (table.getFieldsCount() != meta.getColumnCount()) {
+            if (table.getFields().size() != meta.getColumnCount()) {
                 System.out.println("table " + table.getName());
-                System.out.println("count field " + table.getFieldsCount());
+                System.out.println("count field " + table.getFields().size());
                 System.out.println("meta count field " + meta.getColumnCount());
-                for (int k = 0; k < table.getFieldsCount(); k++)
-                    System.out.println("\tfield " + table.getFields(k).getName());
+                for (DbField field : table.getFields()) {
+                    System.out.println("\tfield " + field.getName());
+                }
 
-                throw new Exception("Count for field in ResultSet not equals in DbTableType");
+                throw new Exception("Count for field in ResultSet not equals in DbTable");
             }
 
-            System.out.println("count of fields " + table.getFieldsCount());
+            System.out.println("count of fields " + table.getFields());
 
             int countRecords = 0;
             while (rs.next()) {
                 countRecords++;
-                DbDataRecordType record = new DbDataRecordType();
-
-                for (int i = 0; i < table.getFieldsCount(); i++) {
-                    DbFieldType field = table.getFields(i);
-                    DbDataFieldDataType fieldData = new DbDataFieldDataType();
+                DbDataRecord record = new DbDataRecord();
+                for (DbField field : table.getFields()) {
+                    DbDataFieldData fieldData = new DbDataFieldData();
 
                     Object obj = rs.getObject(field.getName());
 
@@ -661,7 +650,9 @@ public class DatabaseStructureManager {
 
                             case Types.DATE:
                             case Types.TIMESTAMP:
-                                fieldData.setDateData(rs.getTimestamp(field.getName()));
+                                GregorianCalendar calendar = new GregorianCalendar();
+                                calendar.setTimeInMillis(rs.getTimestamp(field.getName()).getTime());
+                                fieldData.setDateData(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
                                 break;
 
                             case Types.LONGVARCHAR:
@@ -672,9 +663,9 @@ public class DatabaseStructureManager {
                                 System.out.println("Unknown field type. Field '" + field.getName() + "' type '" + field.getJavaStringType() + "'");
                         }
                     }
-                    record.addFieldsData(fieldData);
+                    record.getFieldsData().add(fieldData);
                 }
-                tableData.addRecords(record);
+                tableData.getRecords().add(record);
             }
             System.out.println("count of records " + countRecords);
             return tableData;
@@ -694,20 +685,20 @@ public class DatabaseStructureManager {
     /**
      * Возвращает список таблиц по фильтру
      *
-     * @return java.lang.ArrayList of DbTableType
+     * @return java.lang.ArrayList of DbTable
      */
-    public static ArrayList<DbTableType> getTableList(Connection conn1, String schemaPattern, String tablePattern) {
+    public static ArrayList<DbTable> getTableList(Connection conn1, String schemaPattern, String tablePattern) {
         String[] types = {"TABLE"};
 
         ResultSet meta = null;
-        ArrayList<DbTableType> v = new ArrayList<DbTableType>();
+        ArrayList<DbTable> v = new ArrayList<DbTable>();
         try {
             DatabaseMetaData db = conn1.getMetaData();
 
             meta = db.getTables(null, schemaPattern, tablePattern, types );
 
             while (meta.next()) {
-                DbTableType table = new DbTableType();
+                DbTable table = new DbTable();
 
                 table.setSchema(meta.getString("TABLE_SCHEM"));
                 table.setName(meta.getString("TABLE_NAME"));
@@ -734,15 +725,15 @@ public class DatabaseStructureManager {
      * @param dbFamily db family
      * @return ArrayList
      */
-    public static List<DbFieldType> getFieldsList(Connection conn1, String schemaPattern, String tablePattern, int dbFamily) {
-        List<DbFieldType> v = new ArrayList<DbFieldType>();
+    public static List<DbField> getFieldsList(Connection conn1, String schemaPattern, String tablePattern, int dbFamily) {
+        List<DbField> v = new ArrayList<DbField>();
         DatabaseMetaData db = null;
         ResultSet metaField = null;
         try {
             db = conn1.getMetaData();
             metaField = db.getColumns(null, schemaPattern, tablePattern, null);
             while (metaField.next()) {
-                DbFieldType field = new DbFieldType();
+                DbField field = new DbField();
 
                 field.setName(metaField.getString("COLUMN_NAME"));
                 field.setDataType(metaField.getString("TYPE_NAME"));
@@ -857,15 +848,15 @@ public class DatabaseStructureManager {
     }
 
     /**
-     * Возвращает информаци о первичных ключах на которые есть ссылки из текущей таблицы
-     * т.е. все справочники на которые ссылается данная таблица
+     * Return info about all PK for tables, which referenced from current table(tableName)
      *
-     * @param connection
-     * @param tableName  String имя таблицы для которой ищутся все стравочники
-     * @return ArrayList
+     * @param connection jdbc connection
+     * @param tableName  name of table
+     * @param schemaName name of schema
+     * @return List<DbImportedPKColumn>
      */
-    public static ArrayList getImportedKeys(Connection connection, String schemaName, String tableName) {
-        ArrayList<DbImportedPKColumnType> v = new ArrayList<DbImportedPKColumnType>();
+    public static List<DbImportedPKColumn> getImportedKeys(Connection connection, String schemaName, String tableName) {
+        List<DbImportedPKColumn> v = new ArrayList<DbImportedPKColumn>();
         try {
             DatabaseMetaData db = connection.getMetaData();
             ResultSet columnNames = null;
@@ -877,7 +868,7 @@ public class DatabaseStructureManager {
                 columnNames = db.getImportedKeys(null, schemaName, tableName);
 
                 while (columnNames.next()) {
-                    DbImportedPKColumnType impPk = new DbImportedPKColumnType();
+                    DbImportedPKColumn impPk = new DbImportedPKColumn();
 
                     impPk.setPkSchemaName(columnNames.getString("PKTABLE_SCHEM"));
                     impPk.setPkTableName(columnNames.getString("PKTABLE_NAME"));
@@ -985,10 +976,10 @@ public class DatabaseStructureManager {
         return v;
     }
 
-    public static DbPrimaryKeyType getPrimaryKey(Connection connection, String schemaPattern, String tablePattern) {
+    public static DbPrimaryKey getPrimaryKey(Connection connection, String schemaPattern, String tablePattern) {
 
-        DbPrimaryKeyType pk = new DbPrimaryKeyType();
-        ArrayList<DbPrimaryKeyColumnType> v = new ArrayList<DbPrimaryKeyColumnType>();
+        DbPrimaryKey pk = new DbPrimaryKey();
+        ArrayList<DbPrimaryKeyColumn> v = new ArrayList<DbPrimaryKeyColumn>();
 
         if (log.isDebugEnabled())
             log.debug("Get data from getPrimaryKeys");
@@ -998,7 +989,7 @@ public class DatabaseStructureManager {
             ResultSet metaData = null;
             metaData = db.getPrimaryKeys(null, schemaPattern, tablePattern);
             while (metaData.next()) {
-                DbPrimaryKeyColumnType pkColumn = new DbPrimaryKeyColumnType();
+                DbPrimaryKeyColumn pkColumn = new DbPrimaryKeyColumn();
 
                 pkColumn.setCatalogName(metaData.getString("TABLE_CAT"));
                 pkColumn.setSchemaName(metaData.getString("TABLE_SCHEM"));
@@ -1036,7 +1027,7 @@ public class DatabaseStructureManager {
             if (v.size() > 1) {
                 log.debug("Table with multicolumn PK.");
 
-                for (DbPrimaryKeyColumnType pkColumn : v) {
+                for (DbPrimaryKeyColumn pkColumn : v) {
                     log.debug(
                             pkColumn.getCatalogName() + "." +
                                     pkColumn.getSchemaName() + "." +
@@ -1051,7 +1042,7 @@ public class DatabaseStructureManager {
                 }
             }
         }
-        pk.setColumns(v);
+        pk.getColumns().addAll(v);
 
         return pk;
     }
@@ -1064,15 +1055,15 @@ public class DatabaseStructureManager {
      *
      * @param conn
      * @param dc1
-     * @return java.lang.Vector of DbTableType
+     * @return java.lang.Vector of DbTable
      */
     public static ArrayList getTableList(Connection conn, DatabaseConnectionType dc1) {
         return getTableList(conn, dc1.getUsername().toUpperCase(), "%");
     }
 
-    public static void setDefaultValueTimestamp(DatabaseAdapter adapter, DbTableType originTable, DbFieldType originField)
+    public static void setDefaultValueTimestamp(DatabaseAdapter adapter, DbTable originTable, DbField originField)
         throws Exception {
-        DbFieldType tempField = DatabaseManager.cloneDescriptionField(originField);
+        DbField tempField = DatabaseManager.cloneDescriptionField(originField);
         tempField.setName(tempField.getName() + '1');
         adapter.addColumn(originTable, tempField);
         DatabaseManager.copyFieldData(adapter, originTable, originField, tempField);

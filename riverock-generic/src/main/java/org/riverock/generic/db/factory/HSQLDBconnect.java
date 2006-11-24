@@ -45,15 +45,15 @@ import org.apache.commons.lang.StringUtils;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbFieldType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumnType;
-import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
-import org.riverock.generic.annotation.schema.db.DbSequenceType;
-import org.riverock.generic.annotation.schema.db.DbDataFieldDataType;
-import org.riverock.generic.annotation.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.DbView;
+import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKey;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
+import org.riverock.generic.annotation.schema.db.DbSequence;
+import org.riverock.generic.annotation.schema.db.DbDataFieldData;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
 
 /**
  *
@@ -139,7 +139,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
         return outputStream.toByteArray();
     }
 
-    public void createTable(DbTableType table) throws Exception {
+    public void createTable(DbTable table) throws Exception {
         if (table == null || table.getFields().size() == 0)
             return;
 
@@ -148,7 +148,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
 
         boolean isFirst = true;
 
-        for (DbFieldType field : table.getFields()) {
+        for (DbField field : table.getFields()) {
             if (!isFirst)
                 sql += ",";
             else
@@ -222,7 +222,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
             }
         }
         if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumns().size() > 0) {
-            DbPrimaryKeyType pk = table.getPrimaryKey();
+            DbPrimaryKey pk = table.getPrimaryKey();
 
             String namePk = pk.getColumns().get(0).getPkName();
 
@@ -235,10 +235,9 @@ public class HSQLDBconnect extends DatabaseAdapter {
 
             int seq = Integer.MIN_VALUE;
             isFirst = true;
-            for (DbPrimaryKeyColumnType primaryKeyColumnType : pk.getColumns()) {
-                DbPrimaryKeyColumnType column = primaryKeyColumnType;
+            for (DbPrimaryKeyColumn column : pk.getColumns()) {
                 int seqTemp = Integer.MAX_VALUE;
-                for (DbPrimaryKeyColumnType columnTemp : pk.getColumns()) {
+                for (DbPrimaryKeyColumn columnTemp : pk.getColumns()) {
                     if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp) {
                         seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
@@ -278,7 +277,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
 
     }
 
-    public void dropTable(DbTableType table) throws Exception {
+    public void dropTable(DbTable table) throws Exception {
         dropTable(table.getName());
     }
 
@@ -317,7 +316,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
     public void dropSequence(String nameSequence) throws Exception {
     }
 
-    public void dropConstraint(DbImportedPKColumnType impPk) throws Exception {
+    public void dropConstraint(DbImportedPKColumn impPk) throws Exception {
         if (impPk == null)
             return;
 
@@ -343,7 +342,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
         }
     }
 
-    public void addColumn(DbTableType table, DbFieldType field) throws Exception {
+    public void addColumn(DbTable table, DbField field) throws Exception {
         String sql = "alter table \"" + table.getName() + "\" add column " + field.getName() + " ";
 
         int fieldType = field.getJavaType();
@@ -447,22 +446,22 @@ public class HSQLDBconnect extends DatabaseAdapter {
         return "current_timestamp";
     }
 
-    public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
+    public void setDefaultValue(DbTable originTable, DbField originField) {
     }
 
-    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 
-    public ArrayList getSequnceList(String schemaPattern) throws Exception {
+    public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
+        return new ArrayList<DbSequence>();
+    }
+
+    public String getViewText(DbView view) throws Exception {
         return null;
     }
 
-    public String getViewText(DbViewType view) throws Exception {
-        return null;
-    }
-
-    public void createView(DbViewType view)
+    public void createView(DbView view)
         throws Exception {
         if (view == null ||
             view.getName() == null || view.getName().length() == 0 ||
@@ -482,15 +481,15 @@ public class HSQLDBconnect extends DatabaseAdapter {
         }
     }
 
-    public void createSequence(DbSequenceType seq) throws Exception {
+    public void createSequence(DbSequence seq) throws Exception {
     }
 
-    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setNull(index, Types.LONGVARBINARY);
     }
 
-    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setNull(index, Types.LONGVARCHAR);
     }
@@ -522,7 +521,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
      * @return long - следующее значение для ключа из последовательности
      * @throws SQLException
      */
-    public long getSequenceNextValue(CustomSequenceType sequence)
+    public long getSequenceNextValue(CustomSequence sequence)
         throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
