@@ -25,6 +25,8 @@ package org.riverock.interfaces.portlet.member;
 
 import java.util.List;
 
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+
 /**
  * @author SMaslyukov
  *         Date: 19.04.2005
@@ -33,4 +35,5 @@ import java.util.List;
  */
 public interface PortletGetList {
     public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext);
-}    
+    void setPortalDaoProvider(PortalDaoProvider provider);
+}
