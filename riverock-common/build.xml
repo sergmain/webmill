@@ -33,14 +33,15 @@
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${commons-digester.lib}"/>
-        <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${mail.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
-        <pathelement location="${lib.dir}/${castor.lib}"/>
+
+        <pathelement location="${lib.dir}/${jaxb-api.lib}"/>
+        <pathelement location="${lib.dir}/${jsr173_1.0_api.lib}"/>
     </path>
 
     <target name="full_clean">

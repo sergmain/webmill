@@ -25,15 +25,19 @@ package org.riverock.common.config;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Map;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
 
 /**
  * $Id$
@@ -144,9 +148,8 @@ public class ConfigObject {
             log.debug("Start unmarshalling file " + nameConfigFile_);
 
         try {
-
-            InputSource inSrc = new InputSource(new FileInputStream(configFile));
-            config.configObject = Unmarshaller.unmarshal(configClass, inSrc);
+            FileInputStream stream = new FileInputStream(configFile);
+            config.configObject = unmarshal(stream, configClass);
         }
         catch (Throwable e) {
             String es = "Error while unmarshalling config file ";
@@ -155,5 +158,14 @@ public class ConfigObject {
         }
 
         return config;
+    }
+
+    private static Object unmarshal(FileInputStream configFile, Class clazz) throws JAXBException, FileNotFoundException {
+        System.out.println("Start unmarshal config file: " + configFile);
+        JAXBContext jaxbContext = JAXBContext.newInstance ( clazz.getPackage().getName());
+
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        Source source =  new StreamSource( configFile );
+        return unmarshaller.unmarshal( source, clazz).getValue();
     }
 }
