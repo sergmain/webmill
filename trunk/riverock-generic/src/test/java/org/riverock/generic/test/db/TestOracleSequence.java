@@ -28,8 +28,8 @@ package org.riverock.generic.test.db;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbTable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -64,7 +64,7 @@ public class TestOracleSequence
             String[] types = {""};
 
         ResultSet meta = null;
-        DbSchemaType schema = new DbSchemaType();
+        DbSchema schema = new DbSchema();
         DatabaseAdapter db_ = null;
         String schemaPattern = "%";
 //        String schemaPattern = "MILLENNIUM";
@@ -85,7 +85,7 @@ public class TestOracleSequence
             while (meta.next())
             {
 
-                DbTableType table = new DbTableType();
+                DbTable table = new DbTable();
 
                 table.setSchema(meta.getString("TABLE_SCHEM"));
                 table.setName(meta.getString("TABLE_NAME"));

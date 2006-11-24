@@ -25,74 +25,56 @@
  */
 package org.riverock.generic.test.cases;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import java.io.FileInputStream;
 
 import junit.framework.TestCase;
-import org.xml.sax.InputSource;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.tools.XmlTools;
 
 /**
  * User: Admin
  * Date: Dec 19, 2002
  * Time: 11:41:42 AM
- *
+ * <p/>
  * $Id$
  */
-public class TestMarshal extends TestCase
-{
-    public TestMarshal(String testName)
-    {
+public class TestMarshal extends TestCase {
+    public TestMarshal(String testName) {
         super(testName);
     }
 
-    private DbSchemaType makeSchema(String nameConnection, String nameOutputFiel)
-        throws Exception
-    {
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
+    private DbSchema makeSchema(String nameConnection, String nameOutputFiel)
+        throws Exception {
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance(nameConnection);
+        DbSchema schema = DatabaseManager.getDbStructure(db_);
 
-        String encoding = "UTF-8";
-        String nameFile = nameOutputFiel;
-        String outputSchemaFile = GenericConfig.getGenericDebugDir()+nameFile;
-        System.out.println("Marshal data to file " + nameFile);
+        String encoding = "utf-8";
+        String outputSchemaFile = GenericConfig.getGenericDebugDir() + nameOutputFiel;
+        System.out.println("Marshal data to file " + outputSchemaFile);
 
-        FileOutputStream fos = new FileOutputStream( outputSchemaFile );
-        Marshaller marsh = new Marshaller(new OutputStreamWriter(fos, encoding));
-        marsh.setMarshalAsDocument( true );
-        marsh.setEncoding( encoding );
-        marsh.marshal( schema );
+        XmlTools.writeToFile(schema, outputSchemaFile, encoding);
 
         return schema;
     }
 
     private String fileName = "webmill-schema-test.xml";
 
-    public void doTest()
-        throws Exception
-    {
+    public void doTest() throws Exception {
         org.riverock.generic.startup.StartupApplication.init();
 
         makeSchema("ORACLE", fileName);
 
         System.out.println("Unmarshal data from file");
-        InputSource inSrc = new InputSource(
-            new FileInputStream( GenericConfig.getGenericDebugDir()+fileName )
-        );
-        DbSchemaType millSchema =
-            (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
-
+        FileInputStream stream = new FileInputStream(GenericConfig.getGenericDebugDir() + fileName);
+        XmlTools.getObjectFromXml(DbSchema.class, stream);
     }
 
     public static void main(String args[])
-        throws Exception
-    {
+        throws Exception {
         TestMarshal test = new TestMarshal("test");
         test.doTest();
     }

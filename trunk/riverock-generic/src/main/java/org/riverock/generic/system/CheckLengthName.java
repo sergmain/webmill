@@ -25,13 +25,13 @@
  */
 package org.riverock.generic.system;
 
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-
-import org.xml.sax.InputSource;
-
 import java.io.FileInputStream;
+
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbView;
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.tools.XmlTools;
 
 /**
  * Author: mill
@@ -56,23 +56,16 @@ public class CheckLengthName
         org.riverock.generic.startup.StartupApplication.init();
 
         System.out.println("Unmarshal data from file");
-        InputSource inSrc = new InputSource(
-            new FileInputStream( GenericConfig.getGenericDebugDir()+"webmill-schema.xml" )
-        );
-        DbSchemaType millSchema =
-            (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
+        FileInputStream stream = new FileInputStream(GenericConfig.getGenericDebugDir() + "webmill-schema.xml");
+        DbSchema millSchema = XmlTools.getObjectFromXml(DbSchema.class, stream);
 
-        for (int i=0; i<millSchema.getTablesCount(); i++)
-        {
-            DbTableType table = millSchema.getTables(i);
+        for (DbTable table : millSchema.getTables()) {
             if (table.getName().length()>18)
                 System.out.println("Name of table '"+table.getName()+
                     "' is wrong. Exceed "+(table.getName().length()-18)+" of chars");
         }
 
-        for (int i=0; i<millSchema.getViewsCount(); i++)
-        {
-            DbViewType view = millSchema.getViews(i);
+        for (DbView view : millSchema.getViews()) {
             if (view.getName().length()>18)
                 System.out.println("Name of view '"+view.getName()+
                     "' is wrong. Exceed "+(view.getName().length()-18)+" of chars");

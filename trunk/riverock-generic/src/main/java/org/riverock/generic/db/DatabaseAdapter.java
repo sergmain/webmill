@@ -32,7 +32,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -47,13 +46,13 @@ import org.apache.log4j.Logger;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbSequenceType;
-import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
-import org.riverock.generic.annotation.schema.db.DbFieldType;
-import org.riverock.generic.annotation.schema.db.DbDataFieldDataType;
-import org.riverock.generic.annotation.schema.db.CustomSequenceType;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbView;
+import org.riverock.generic.annotation.schema.db.DbSequence;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
+import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.annotation.schema.db.DbDataFieldData;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 
 /**
  * $Revision$ $Date$
@@ -137,21 +136,21 @@ public abstract class DatabaseAdapter implements DbConnection {
 
     public abstract byte[] getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception;
 
-    public abstract void createTable(DbTableType table) throws Exception;
+    public abstract void createTable(DbTable table) throws Exception;
 
-    public abstract void createView(DbViewType view) throws Exception;
+    public abstract void createView(DbView view) throws Exception;
 
-    public abstract void createSequence(DbSequenceType seq) throws Exception;
+    public abstract void createSequence(DbSequence seq) throws Exception;
 
-    public abstract void dropTable(DbTableType table) throws Exception;
+    public abstract void dropTable(DbTable table) throws Exception;
 
     public abstract void dropTable(String nameTable) throws Exception;
 
     public abstract void dropSequence(String nameSequence) throws Exception;
 
-    public abstract void dropConstraint(DbImportedPKColumnType impPk) throws Exception;
+    public abstract void dropConstraint(DbImportedPKColumn impPk) throws Exception;
 
-    public abstract void addColumn(DbTableType table, DbFieldType field) throws Exception;
+    public abstract void addColumn(DbTable table, DbField field) throws Exception;
 
     /**
      * in some DB (Oracle8.0) setTimestamp not work and we need work around
@@ -173,16 +172,16 @@ public abstract class DatabaseAdapter implements DbConnection {
 
     public abstract String getDefaultTimestampValue();
 
-    public abstract List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception;
+    public abstract List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception;
 
-    public abstract ArrayList getSequnceList(String schemaPattern) throws Exception;
+    public abstract List<DbSequence> getSequnceList(String schemaPattern) throws Exception;
 
-    public abstract String getViewText(DbViewType view) throws Exception;
+    public abstract String getViewText(DbView view) throws Exception;
 
-    public abstract void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public abstract void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException;
 
-    public abstract void setLongVarchar(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public abstract void setLongVarchar(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException;
 
     /**
@@ -232,7 +231,7 @@ public abstract class DatabaseAdapter implements DbConnection {
      * @return long - ��������� �������� ��� ����� �� ������������������
      * @throws SQLException
      */
-    public abstract long getSequenceNextValue(final CustomSequenceType sequence) throws SQLException;
+    public abstract long getSequenceNextValue(final CustomSequence sequence) throws SQLException;
 
     /**
      * @return - int. Max size of char field

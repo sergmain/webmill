@@ -29,19 +29,20 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbView;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
 
 /**
  * Author: mill
@@ -77,13 +78,12 @@ public class DbStructure
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "IBM-DB2");
 
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
-        DbSchemaType schema = DatabaseManager.getDbStructure(dbOra );
+        DbSchema schema = DatabaseManager.getDbStructure(dbOra );
 
 //        schema.setViews( db_.getViewList( "MILLENNIUM", "%"));
 //        schema.setTables( db_.getTableList( "MILLENNIUM", "%"));
 //        schema.setTables(db_.getTableList("MILLENNIUM", "WM_AUTH_APPLICATION"));
 
-        int i = 0;
 /*
             DatabaseMetaData db = db_.conn.getMetaData();
             ResultSet rs = db.getCrossReference( null,
@@ -108,14 +108,12 @@ public class DbStructure
             }
 */
 
-        for (i = 0; i < schema.getTablesCount(); i++)
-        {
-            DbTableType table = schema.getTables(i);
+        for (DbTable table : schema.getTables()) {
             System.out.println( "Table - " + table.getName() );
 
-            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(dbOra.getConnection(), table.getSchema(), table.getName(), dbOra.getFamily()));
+            table.getFields().addAll(DatabaseStructureManager.getFieldsList(dbOra.getConnection(), table.getSchema(), table.getName(), dbOra.getFamily()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
-            table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.getImportedKeys().addAll(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table, dbOra.getFamily()));
         }
 
@@ -123,39 +121,33 @@ public class DbStructure
         String outputSchemaFile = GenericConfig.getGenericDebugDir()+"schema.xml";
         System.out.println("Marshal data to file");
 
+        JAXBContext jaxbContext = JAXBContext.newInstance ( DbSchema.class.getPackage().getName() );
         FileOutputStream fos = new FileOutputStream( outputSchemaFile );
-        Marshaller marsh = new Marshaller(new OutputStreamWriter(fos, encoding));
+        Marshaller marshaller = jaxbContext.createMarshaller();
 
-//        FileWriter w = new FileWriter( outputSchemaFile );
-//        Marshaller marsh = new Marshaller(w);
-
-        marsh.setMarshalAsDocument( true );
-        marsh.setEncoding( encoding );
-        marsh.marshal( schema );
+//        marshaller.setMarshalAsDocument( true );
+//        marshaller.setEncoding( encoding );
+        marshaller.marshal( schema, new OutputStreamWriter(fos, encoding) );
 
         System.out.println( "Unmarshal current data from file" );
-        DbSchemaType millCurrSchema = null; //new DbStructureType();
-        InputSource inCurrSrc = new InputSource( new FileInputStream( outputSchemaFile ));
-        millCurrSchema = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inCurrSrc);
+        FileInputStream stream = new FileInputStream(outputSchemaFile);
+        Source source = new StreamSource( stream );
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        DbSchema  millCurrSchema = unmarshaller.unmarshal(source, DbSchema.class).getValue();
 
-        for (; i < millCurrSchema.getViewsCount(); i++)
-        {
-            DbViewType view = millCurrSchema.getViews(i);
+        for (DbView view : millCurrSchema.getViews()) {
             System.out.println("View " + view.getName()+" text\n"+view.getText());
         }
 
         System.out.println("Unmarshal data from file");
-        DbSchemaType millSchema = null; //new DbStructureType();
-        InputSource inSrc = new InputSource(new FileInputStream( GenericConfig.getGenericDebugDir()+"schema-mill.xml" ));
-        millSchema = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
+        Source inSrc = new StreamSource(new FileInputStream( GenericConfig.getGenericDebugDir()+"schema-mill.xml" ));
+        DbSchema millSchema = unmarshaller.unmarshal(inSrc, DbSchema.class).getValue();
 
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
 
         if (!(db_ instanceof org.riverock.generic.db.factory.ORAconnect))
         {
-            for (; i < millSchema.getTablesCount(); i++)
-            {
-                DbTableType table = millSchema.getTables(i);
+            for (DbTable table : millSchema.getTables()) {
                 if (!DatabaseManager.isSkipTable(table.getName()))
                 {
                     try
@@ -189,10 +181,8 @@ public class DbStructure
 
         if (!(db_ instanceof org.riverock.generic.db.factory.ORAconnect))
         {
-            for (i=0; i < millSchema.getViewsCount(); i++)
-            {
+            for (DbView view : millSchema.getViews()) {
                 DatabaseManager.createWithReplaceAllView(db_, millSchema);
-                DbViewType view = millSchema.getViews(i);
                 try
                 {
                     System.out.println("create view " + view.getName());

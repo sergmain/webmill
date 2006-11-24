@@ -45,15 +45,15 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbFieldType;
-import org.riverock.generic.annotation.schema.db.CustomSequenceType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumnType;
-import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
-import org.riverock.generic.annotation.schema.db.DbSequenceType;
-import org.riverock.generic.annotation.schema.db.DbDataFieldDataType;
+import org.riverock.generic.annotation.schema.db.DbView;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKey;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
+import org.riverock.generic.annotation.schema.db.DbSequence;
+import org.riverock.generic.annotation.schema.db.DbDataFieldData;
 
 
 /**
@@ -131,7 +131,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
         return outputStream.toByteArray();
     }
 
-    public void createTable(DbTableType table) throws Exception {
+    public void createTable(DbTable table) throws Exception {
         if (table == null || table.getFields().size() == 0)
             return;
 
@@ -140,7 +140,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
         boolean isFirst = true;
 
-        for (DbFieldType field : table.getFields()) {
+        for (DbField field : table.getFields()) {
             if (!isFirst)
                 sql += ",";
             else
@@ -231,7 +231,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
             }
         }
         if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumns().size() != 0) {
-            DbPrimaryKeyType pk = table.getPrimaryKey();
+            DbPrimaryKey pk = table.getPrimaryKey();
 
 //            String namePk = pk.getColumns(0).getPkName();
 
@@ -240,11 +240,11 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
             int seq = Integer.MIN_VALUE;
             isFirst = true;
-            for (int i = 0; i < pk.getColumnsCount(); i++) {
-                DbPrimaryKeyColumnType column = null;
+            for (DbPrimaryKeyColumn c : pk.getColumns()) {
+                DbPrimaryKeyColumn column = c;
                 int seqTemp = Integer.MAX_VALUE;
-                for (int k = 0; k < pk.getColumnsCount(); k++) {
-                    DbPrimaryKeyColumnType columnTemp = pk.getColumns(k);
+                for (DbPrimaryKeyColumn dbPrimaryKeyColumn : pk.getColumns()) {
+                    DbPrimaryKeyColumn columnTemp = dbPrimaryKeyColumn;
                     if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp) {
                         seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
@@ -284,7 +284,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
     }
 
-    public void dropTable(DbTableType table) throws Exception {
+    public void dropTable(DbTable table) throws Exception {
         dropTable(table.getName());
     }
 
@@ -323,7 +323,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
     public void dropSequence(String nameSequence) throws Exception {
     }
 
-    public void dropConstraint(DbImportedPKColumnType impPk) throws Exception {
+    public void dropConstraint(DbImportedPKColumn impPk) throws Exception {
         if (impPk == null)
             return;
 
@@ -349,7 +349,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
         }
     }
 
-    public void addColumn(DbTableType table, DbFieldType field) throws Exception {
+    public void addColumn(DbTable table, DbField field) throws Exception {
         String sql = "alter table " + table.getName() + " add " + field.getName() + " ";
 
         int fieldType = field.getJavaType();
@@ -466,23 +466,23 @@ public final class MYSQLconnect extends DatabaseAdapter {
         return "'CURRENT_TIMESTAMP'";
     }
 
-    public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
+    public void setDefaultValue(DbTable originTable, DbField originField) {
     }
 
-    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
         // version 3.x and 4.0 of MySQL not support view
-        return new ArrayList<DbViewType>(0);
+        return new ArrayList<DbView>(0);
     }
 
-    public ArrayList getSequnceList(String schemaPattern) throws Exception {
+    public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
+        return new ArrayList<DbSequence>();
+    }
+
+    public String getViewText(DbView view) throws Exception {
         return null;
     }
 
-    public String getViewText(DbViewType view) throws Exception {
-        return null;
-    }
-
-    public void createView(DbViewType view) throws Exception {
+    public void createView(DbView view) throws Exception {
         // current version of MySql not supported view
 /*
         if (view == null ||
@@ -513,15 +513,15 @@ public final class MYSQLconnect extends DatabaseAdapter {
 */
     }
 
-    public void createSequence(DbSequenceType seq) throws Exception {
+    public void createSequence(DbSequence seq) throws Exception {
     }
 
-    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setNull(index, Types.VARCHAR);
     }
 
-    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setString(index, fieldData.getStringData());
     }
@@ -547,7 +547,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
      * @return long - следующее значение для ключа из последовательности
      * @throws SQLException
      */
-    public long getSequenceNextValue(CustomSequenceType sequence)
+    public long getSequenceNextValue(CustomSequence sequence)
         throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;

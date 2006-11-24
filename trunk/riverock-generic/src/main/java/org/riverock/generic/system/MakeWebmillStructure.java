@@ -27,7 +27,7 @@ package org.riverock.generic.system;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
+import org.riverock.generic.annotation.schema.db.DbSchema;
 
 /**
  * User: SergeMaslyukov
@@ -40,14 +40,14 @@ public class MakeWebmillStructure {
 
     public MakeWebmillStructure(){}
 
-    private static DbSchemaType makeSchema(String nameConnection, String nameOutputFiel)
+    private static DbSchema makeSchema(String nameConnection, String nameOutputFiel)
         throws Exception
     {
         DatabaseAdapter db_ = null;
         try
         {
             db_ = DatabaseAdapter.getInstance( nameConnection );
-            DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
+            DbSchema schema = DatabaseManager.getDbStructure(db_ );
 
 /*
             String encoding = "UTF-8";

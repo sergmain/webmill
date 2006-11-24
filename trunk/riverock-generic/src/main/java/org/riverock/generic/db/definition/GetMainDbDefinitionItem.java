@@ -38,7 +38,7 @@ import org.riverock.sql.cache.SqlStatement;
 public class GetMainDbDefinitionItem {
     private static CacheFactoryWithDb cache = new CacheFactoryWithDb(GetMainDbDefinitionItem.class);
 
-    public MainDbDefinitionItemType item = new MainDbDefinitionItemType();
+    public MainDbDefinitionItem item = new MainDbDefinitionItem();
 
     public boolean isFound = false;
 
@@ -50,20 +50,20 @@ public class GetMainDbDefinitionItem {
         return (GetMainDbDefinitionItem) cache.getInstanceNew(db__, id__);
     }
 
-    public MainDbDefinitionItemType getData(DatabaseAdapter db_, long id)
+    public MainDbDefinitionItem getData(DatabaseAdapter db_, long id)
         throws Exception {
         GetMainDbDefinitionItem obj = GetMainDbDefinitionItem.getInstance(db_, id);
         if (obj != null)
             return obj.item;
 
-        return new MainDbDefinitionItemType();
+        return new MainDbDefinitionItem();
     }
 
-    public void copyItem(MainDbDefinitionItemType target) {
+    public void copyItem(MainDbDefinitionItem target) {
         copyItem(this.item, target);
     }
 
-    public static void copyItem(MainDbDefinitionItemType source, MainDbDefinitionItemType target) {
+    public static void copyItem(MainDbDefinitionItem source, MainDbDefinitionItem target) {
         if (source == null || target == null)
             return;
 

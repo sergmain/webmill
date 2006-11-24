@@ -42,13 +42,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.exception.GenericException;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
-import org.riverock.generic.annotation.schema.db.DbFieldType;
-import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumnType;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
-import org.riverock.generic.annotation.schema.db.DbViewType;
+import org.riverock.generic.annotation.schema.db.*;
 
 /**
  * User: Admin
@@ -69,6 +63,22 @@ public final class DatabaseManager {
     public final static int SAPDB_FAMALY = 6;
     public final static int INTERBASE_FAMALY = 7;
 
+    public static final String NUMBER_TYPE="number";
+    public static final String STRING_TYPE="string";
+    public static final String DATE_TYPE="date";
+
+    private static final int UNKNOWN_TYPE_VALUE = 0;
+    private static final int NUMBER_TYPE_VALUE = 1;
+    private static final int STRING_TYPE_VALUE = 2;
+    private static final int DATE_TYPE_VALUE = 3;
+
+    private static Map<String, Integer> dataType = new HashMap<String, Integer>();
+
+    static {
+        dataType.put(NUMBER_TYPE, NUMBER_TYPE_VALUE);
+        dataType.put(STRING_TYPE, STRING_TYPE_VALUE);
+        dataType.put(DATE_TYPE, DATE_TYPE_VALUE);
+    }
 
     public static void close(final DatabaseAdapter db_) {
         DatabaseAdapter.close(db_);
@@ -114,7 +124,7 @@ public final class DatabaseManager {
         }
     }
 
-    public static void addPrimaryKey(final DatabaseAdapter db_, final DbTableType table, final DbPrimaryKeyType pk)
+    public static void addPrimaryKey(final DatabaseAdapter db_, final DbTable table, final DbPrimaryKey pk)
         throws Exception {
         if (table == null) {
             String s = "Add primary key failed - table object is null";
@@ -125,7 +135,7 @@ public final class DatabaseManager {
             return;
         }
 
-        DbPrimaryKeyType checkPk = DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName());
+        DbPrimaryKey checkPk = DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName());
 
         if (checkPk != null && checkPk.getColumns().size() != 0) {
             String s = "primary key already exists";
@@ -146,7 +156,7 @@ public final class DatabaseManager {
     }
 
     public static void copyData(
-        final DatabaseAdapter db_, final DbTableType fieldsList, final String sourceTable, final String targetTableName
+        final DatabaseAdapter db_, final DbTable fieldsList, final String sourceTable, final String targetTableName
     )
         throws Exception {
         if (fieldsList == null || sourceTable == null || targetTableName == null) {
@@ -158,13 +168,13 @@ public final class DatabaseManager {
 
         String fields = "";
         boolean isNotFirst = false;
-        for (DbFieldType dbFieldType : fieldsList.getFields()) {
+        for (DbField DbField : fieldsList.getFields()) {
             if (isNotFirst) {
                 fields += ", ";
             } else {
                 isNotFirst = true;
             }
-            fields += dbFieldType.getName();
+            fields += DbField.getName();
         }
 
         String sql_ =
@@ -194,7 +204,7 @@ public final class DatabaseManager {
     }
 
     public static void copyFieldData(
-        final DatabaseAdapter db_, final DbTableType table, final DbFieldType sourceField, final DbFieldType targetField
+        final DatabaseAdapter db_, final DbTable table, final DbField sourceField, final DbField targetField
     )
         throws Exception {
         if (table == null || sourceField == null || targetField == null) {
@@ -227,14 +237,14 @@ public final class DatabaseManager {
         }
     }
 
-    public static void duplicateTable(final DatabaseAdapter db_, final DbTableType srcTable, final String targetTableName)
+    public static void duplicateTable(final DatabaseAdapter db_, final DbTable srcTable, final String targetTableName)
         throws Exception {
         if (srcTable == null) {
             log.error("duplicate table failed, source table object is null");
             return;
         }
 
-        DbTableType tempTable = cloneDescriptionTable(srcTable);
+        DbTable tempTable = cloneDescriptionTable(srcTable);
         tempTable.setName(targetTableName);
         tempTable.setPrimaryKey(null);
         tempTable.setData(null);
@@ -243,9 +253,8 @@ public final class DatabaseManager {
         copyData(db_, tempTable, srcTable.getName(), targetTableName);
     }
 
-    public static DbPrimaryKeyColumnType
-        cloneDescriptionPrimaryKeyColumn(final DbPrimaryKeyColumnType srcCol) {
-        DbPrimaryKeyColumnType c = new DbPrimaryKeyColumnType();
+    public static DbPrimaryKeyColumn cloneDescriptionPrimaryKeyColumn(final DbPrimaryKeyColumn srcCol) {
+        DbPrimaryKeyColumn c = new DbPrimaryKeyColumn();
         c.setCatalogName(srcCol.getCatalogName());
         c.setColumnName(srcCol.getColumnName());
         c.setKeySeq(srcCol.getKeySeq());
@@ -256,11 +265,11 @@ public final class DatabaseManager {
         return c;
     }
 
-    public static DbImportedPKColumnType cloneDescriptionFK(final DbImportedPKColumnType srcFk) {
+    public static DbImportedPKColumn cloneDescriptionFK(final DbImportedPKColumn srcFk) {
         if (srcFk == null)
             return null;
 
-        DbImportedPKColumnType f = new DbImportedPKColumnType();
+        DbImportedPKColumn f = new DbImportedPKColumn();
         f.setDeferrability(srcFk.getDeferrability());
         f.setDeleteRule(srcFk.getDeleteRule());
         f.setFkColumnName(srcFk.getFkColumnName());
@@ -277,23 +286,23 @@ public final class DatabaseManager {
         return f;
     }
 
-    public static DbPrimaryKeyType cloneDescriptionPK(final DbPrimaryKeyType srcPk) {
+    public static DbPrimaryKey cloneDescriptionPK(final DbPrimaryKey srcPk) {
         if (srcPk == null)
             return null;
 
-        DbPrimaryKeyType pk = new DbPrimaryKeyType();
-        for (DbPrimaryKeyColumnType column : srcPk.getColumns()) {
+        DbPrimaryKey pk = new DbPrimaryKey();
+        for (DbPrimaryKeyColumn column : srcPk.getColumns()) {
             pk.getColumns().add(cloneDescriptionPrimaryKeyColumn(column));
         }
 
         return pk;
     }
 
-    public static DbFieldType cloneDescriptionField(final DbFieldType srcField) {
+    public static DbField cloneDescriptionField(final DbField srcField) {
         if (srcField == null)
             return null;
 
-        DbFieldType f = new DbFieldType();
+        DbField f = new DbField();
         f.setApplType(srcField.getApplType());
         f.setComment(srcField.getComment());
         f.setDataType(srcField.getDataType());
@@ -311,44 +320,44 @@ public final class DatabaseManager {
     /**
      * Clone description of table. Data not cloned
      *
-     * @param srcTable
-     * @return DbTableType
+     * @param srcTable source table
+     * @return DbTable cloned table
      */
-    public static DbTableType cloneDescriptionTable(final DbTableType srcTable) {
+    public static DbTable cloneDescriptionTable(final DbTable srcTable) {
         if (srcTable == null)
             return null;
 
-        DbTableType r = new DbTableType();
+        DbTable r = new DbTable();
 
         r.setSchema(srcTable.getSchema());
         r.setName(srcTable.getName());
         r.setType(srcTable.getType());
 
-        DbPrimaryKeyType pk = cloneDescriptionPK(srcTable.getPrimaryKey());
+        DbPrimaryKey pk = cloneDescriptionPK(srcTable.getPrimaryKey());
         r.setPrimaryKey(pk);
 
-        for (DbFieldType dbFieldType : srcTable.getFields()) {
-            DbFieldType f = cloneDescriptionField(dbFieldType);
+        for (DbField DbField : srcTable.getFields()) {
+            DbField f = cloneDescriptionField(DbField);
             r.getFields().add(f);
         }
 
-        for (DbImportedPKColumnType dbImportedPKColumnType : srcTable.getImportedKeys()) {
-            DbImportedPKColumnType f = cloneDescriptionFK(dbImportedPKColumnType);
+        for (DbImportedPKColumn DbImportedPKColumn : srcTable.getImportedKeys()) {
+            DbImportedPKColumn f = cloneDescriptionFK(DbImportedPKColumn);
             r.getImportedKeys().add(f);
         }
 
         return r;
     }
 
-    public static DbFieldType getFieldFromStructure(final DbSchemaType schema, final String tableName, final String fieldName) {
+    public static DbField getFieldFromStructure(final DbSchema schema, final String tableName, final String fieldName) {
         if (schema == null || tableName == null || fieldName == null)
             return null;
 
-        for (DbTableType dbTableType : schema.getTables()) {
-            if (tableName.equalsIgnoreCase(dbTableType.getName())) {
-                for (DbFieldType dbFieldType : dbTableType.getFields()) {
-                    if (fieldName.equalsIgnoreCase(dbFieldType.getName()))
-                        return dbFieldType;
+        for (DbTable DbTable : schema.getTables()) {
+            if (tableName.equalsIgnoreCase(DbTable.getName())) {
+                for (DbField DbField : DbTable.getFields()) {
+                    if (fieldName.equalsIgnoreCase(DbField.getName()))
+                        return DbField;
                 }
             }
 
@@ -357,62 +366,60 @@ public final class DatabaseManager {
     }
 
     // check is 'tableName' is table or view
-    public static DbTableType getTableFromStructure(final DbSchemaType schema, final String tableName) {
+    public static DbTable getTableFromStructure(final DbSchema schema, final String tableName) {
         if (schema == null || tableName == null)
             return null;
 
-        for (int k = 0; k < schema.getTablesCount(); k++) {
-            DbTableType checkTable = schema.getTables(k);
+        for (DbTable checkTable : schema.getTables()) {
             if (tableName.equalsIgnoreCase(checkTable.getName()))
                 return checkTable;
         }
         return null;
     }
 
-    public static DbViewType getViewFromStructure(final DbSchemaType schema, final String viewName) {
+    public static DbView getViewFromStructure(final DbSchema schema, final String viewName) {
         if (schema == null || viewName == null)
             return null;
 
-        for (int k = 0; k < schema.getViewsCount(); k++) {
-            DbViewType checkView = schema.getViews(k);
+        for (DbView checkView : schema.getViews()) {
             if (viewName.equalsIgnoreCase(checkView.getName()))
                 return checkView;
         }
         return null;
     }
 
-    public static boolean isFieldForeignKey(final DbTableType table, final DbFieldType field) {
+    public static boolean isFieldForeignKey(final DbTable table, final DbField field) {
         if (table == null || field == null)
             return false;
 
-        for (DbImportedPKColumnType dbImportedPKColumnType : table.getImportedKeys()) {
-            if (table.getName().equalsIgnoreCase(dbImportedPKColumnType.getFkTableName()) &&
-                field.getName().equalsIgnoreCase(dbImportedPKColumnType.getFkColumnName()))
+        for (DbImportedPKColumn DbImportedPKColumn : table.getImportedKeys()) {
+            if (table.getName().equalsIgnoreCase(DbImportedPKColumn.getFkTableName()) &&
+                field.getName().equalsIgnoreCase(DbImportedPKColumn.getFkColumnName()))
                 return true;
         }
         return false;
     }
 
-    public static boolean isFieldPrimaryKey(final DbTableType table, final DbFieldType field) {
+    public static boolean isFieldPrimaryKey(final DbTable table, final DbField field) {
         if (table == null || field == null)
             return false;
 
-        DbPrimaryKeyType pk = table.getPrimaryKey();
-        for (DbPrimaryKeyColumnType dbPrimaryKeyColumnType : pk.getColumns()) {
-            if (field.getName().equalsIgnoreCase(dbPrimaryKeyColumnType.getColumnName()))
+        DbPrimaryKey pk = table.getPrimaryKey();
+        for (DbPrimaryKeyColumn DbPrimaryKeyColumn : pk.getColumns()) {
+            if (field.getName().equalsIgnoreCase(DbPrimaryKeyColumn.getColumnName()))
                 return true;
         }
         return false;
     }
 
-    public static boolean isFieldExists(final DbSchemaType schema, final DbTableType table, final DbFieldType field) {
+    public static boolean isFieldExists(final DbSchema schema, final DbTable table, final DbField field) {
         if (schema == null || table == null || field == null)
             return false;
 
-        for (DbTableType dbTableType : schema.getTables()) {
-            if (table.getName().equalsIgnoreCase(dbTableType.getName())) {
-                for (DbFieldType dbFieldType : dbTableType.getFields()) {
-                    if (field.getName().equalsIgnoreCase(dbFieldType.getName()))
+        for (DbTable DbTable : schema.getTables()) {
+            if (table.getName().equalsIgnoreCase(DbTable.getName())) {
+                for (DbField DbField : DbTable.getFields()) {
+                    if (field.getName().equalsIgnoreCase(DbField.getName()))
                         return true;
                 }
             }
@@ -420,20 +427,20 @@ public final class DatabaseManager {
         return false;
     }
 
-    public static boolean isTableExists(final DbSchemaType schema, final DbTableType table) {
+    public static boolean isTableExists(final DbSchema schema, final DbTable table) {
         if (schema == null || table == null)
             return false;
 
-        for (DbTableType dbTableType : schema.getTables()) {
-            if (table.getName().equalsIgnoreCase(dbTableType.getName()))
+        for (DbTable DbTable : schema.getTables()) {
+            if (table.getName().equalsIgnoreCase(DbTable.getName()))
                 return true;
         }
         return false;
     }
 
-    public static DbSchemaType getDbStructure(final DatabaseAdapter db_)
+    public static DbSchema getDbStructure(final DatabaseAdapter db_)
         throws Exception {
-        DbSchemaType schema = new DbSchemaType();
+        DbSchema schema = new DbSchema();
 
         DatabaseMetaData db = db_.getConnection().getMetaData();
         String dbSchema = db.getUserName();
@@ -441,40 +448,35 @@ public final class DatabaseManager {
         ArrayList list = DatabaseStructureManager.getTableList(db_.conn, dbSchema, "%");
         final int initialCapacity = list.size();
         for (int i = 0; i < initialCapacity; i++) {
-            DbTableType table = (DbTableType) list.get(i);
+            DbTable table = (DbTable) list.get(i);
             if (table.getName().startsWith("BIN$")) {
                 continue;
             }
             schema.getTables().add(table);
         }
 
-        List<DbViewType> viewVector = db_.getViewList(dbSchema, "%");
+        List<DbView> viewVector = db_.getViewList(dbSchema, "%");
         if (viewVector != null)
-            schema.getViews().add( new ArrayList<DbViewType>(viewVector));
+            schema.getViews().addAll( viewVector );
 
-        ArrayList seqVector = db_.getSequnceList(dbSchema);
-        if (seqVector != null)
-            schema.setSequences(seqVector);
+        schema.getSequences().addAll(db_.getSequnceList(dbSchema));
 
-        for (int i = 0; i < schema.getTablesCount(); i++) {
-            DbTableType table = schema.getTables(i);
-
-            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(db_.conn, table.getSchema(), table.getName(), db_.getFamily()));
+        for (DbTable table : schema.getTables()) {
+            table.getFields().addAll(DatabaseStructureManager.getFieldsList(db_.conn, table.getSchema(), table.getName(), db_.getFamily()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName()));
-            table.setImportedKeys(DatabaseStructureManager.getImportedKeys(db_.conn, table.getSchema(), table.getName()));
+            table.getImportedKeys().addAll(DatabaseStructureManager.getImportedKeys(db_.conn, table.getSchema(), table.getName()));
         }
 
-        for (int i = 0; i < schema.getViewsCount(); i++) {
-            DbViewType view = schema.getViews(i);
+        for (DbView view : schema.getViews()) {
             view.setText(db_.getViewText(view));
         }
 
         return schema;
     }
 
-    public static void createWithReplaceAllView(final DatabaseAdapter db_, final DbSchemaType millSchema)
+    public static void createWithReplaceAllView(final DatabaseAdapter db_, final DbSchema millSchema)
         throws Exception {
-        boolean[] idx = new boolean[millSchema.getViewsCount()];
+        boolean[] idx = new boolean[millSchema.getViews().size()];
         for (int i = 0; i < idx.length; i++) {
             idx[i] = false;
         }
@@ -487,7 +489,7 @@ public final class DatabaseManager {
                 if (idx[i])
                     continue;
 
-                DbViewType view = millSchema.getViews(i);
+                DbView view = millSchema.getViews().get(i);
                 try {
                     db_.createView(view);
                     idx[i] = true;
@@ -516,11 +518,11 @@ public final class DatabaseManager {
         }
     }
 
-    public static List<DbViewType> getViewList(final Connection conn, final String schemaPattern, final String tablePattern) {
+    public static List<DbView> getViewList(final Connection conn, final String schemaPattern, final String tablePattern) {
         String[] types = {"VIEW"};
 
         ResultSet meta = null;
-        List<DbViewType> v = new ArrayList<DbViewType>();
+        List<DbView> v = new ArrayList<DbView>();
         try {
             DatabaseMetaData dbMeta = conn.getMetaData();
 
@@ -533,7 +535,7 @@ public final class DatabaseManager {
 
             while (meta.next()) {
 
-                DbViewType table = new DbViewType();
+                DbView table = new DbView();
 
                 table.setSchema(meta.getString("TABLE_SCHEM"));
                 table.setName(meta.getString("TABLE_NAME"));
@@ -560,24 +562,22 @@ public final class DatabaseManager {
         String s = table.trim();
 
         String fullCheck[] = {"SQLN_EXPLAIN_PLAN", "DBG", "CHAINED_ROWS"};
-        for (int i = 0; i < fullCheck.length; i++) {
-            if (fullCheck[i].equalsIgnoreCase(s))
+        for (String aFullCheck : fullCheck) {
+            if (aFullCheck.equalsIgnoreCase(s))
                 return true;
         }
 
         String startCheck[] = {"F_D_", "FOR_DEL_", "F_DEL_", "FOR_D_"};
-        for (int i = 0; i < startCheck.length; i++) {
-            if (s.toLowerCase().startsWith(startCheck[i].toLowerCase()))
+        for (String aStartCheck : startCheck) {
+            if (s.toLowerCase().startsWith(aStartCheck.toLowerCase()))
                 return true;
         }
 
         return false;
     }
 
-    public static boolean isMultiColumnFk(final DbTableType table, final DbImportedPKColumnType key) {
-        for (int i = 0; i < table.getImportedKeysCount(); i++) {
-            DbImportedPKColumnType checkKey = table.getImportedKeys(i);
-
+    public static boolean isMultiColumnFk(final DbTable table, final DbImportedPKColumn key) {
+        for (DbImportedPKColumn checkKey : table.getImportedKeys()) {
             if (checkKey.getFkColumnName().equals(key.getFkColumnName()) &&
                 checkKey.getKeySeq() != key.getKeySeq()
                 )
@@ -587,11 +587,11 @@ public final class DatabaseManager {
     }
 
     /**
-     * Прверяет не является ли значение поля по молчанию текущим временем.
-     * Например для Oracle это SYSDATE
+     * Check what field's default value is default timestamp(date) for bd column
+     * For example for Oracle value is 'SYSDATE'
      *
-     * @param val
-     * @return true - значение является датой, иначе false
+     * @param val value for check
+     * @return true, if value is date, otherwise false
      */
     public static boolean checkDefaultTimestamp(final String val) {
         if (val == null)
@@ -624,7 +624,7 @@ public final class DatabaseManager {
      */
     public static void insertBigText(
         final DatabaseAdapter dbDyn, final Object idRec, final String pkName,
-        final PrimaryKeyTypeTypeType pkType,
+        final PrimaryKey pkType,
         final String nameTargetTable,
         final String namePkTargetTable,
         final String nameTargetField,
@@ -662,7 +662,7 @@ public final class DatabaseManager {
                 while ((pos = StringTools.getStartUTF(b, maxByte, pos)) != -1) {
                     if (log.isDebugEnabled()) log.debug("Name sequence - " + "seq_" + nameTargetTable);
 
-                    CustomSequenceType seq = new CustomSequenceType();
+                    CustomSequence seq = new CustomSequence();
                     seq.setSequenceName("seq_" + nameTargetTable);
                     seq.setTableName(nameTargetTable);
                     seq.setColumnName(namePkTargetTable);
@@ -672,17 +672,22 @@ public final class DatabaseManager {
 
                     ps1.setLong(1, idSeq);
 
-                    if (pkType.getType() == PrimaryKeyTypeTypeType.NUMBER_TYPE) {
+                    Integer type = dataType.get(pkType.getType());
+                    if (type==null) type = UNKNOWN_TYPE_VALUE;
+                    switch(type) {
+                        case NUMBER_TYPE_VALUE:
 
-                        if (log.isDebugEnabled()) log.debug("Bind param #2 " + ((Long) idRec).longValue());
+                            if (log.isDebugEnabled()) log.debug("Bind param #2 " + idRec);
 
-                        ps1.setLong(2, ((Long) idRec).longValue());
+                            ps1.setLong(2, ((Long) idRec));
+                            break;
 
-                    } else if (pkType.getType() == PrimaryKeyTypeTypeType.STRING_TYPE) {
-                        if (log.isDebugEnabled()) log.debug("Bind param #2 " + (String) idRec);
+                        case STRING_TYPE_VALUE:
+                            if (log.isDebugEnabled()) log.debug("Bind param #2 " + idRec);
 
-                        ps1.setString(2, (String) idRec);
-                    } else if (pkType.getType() == PrimaryKeyTypeTypeType.DATE_TYPE) {
+                            ps1.setString(2, (String) idRec);
+                            break;
+                        case DATE_TYPE_VALUE:
 /*
                         if (content.getQueryArea().getPrimaryKeyMask()==null ||
                             content.getQueryArea().getPrimaryKeyMask().trim().length()==0)
@@ -691,10 +696,11 @@ public final class DatabaseManager {
                         primaryKeyValue = RsetTools.getStringDate(rs, content.getQueryArea().getPrimaryKey(),
                             content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 */
-                        throw new Exception("Type of PK 'date' for big_text not implemented");
-                    } else
-                        throw new Exception("Wrong type of primary key");
-
+                            throw new Exception("Type of PK 'date' for big_text not implemented");
+                        
+                        default:
+                            throw new Exception("Wrong type of primary key");
+                    }
 
                     String s = new String(b, prevPos, pos - prevPos, "utf-8");
 
@@ -709,7 +715,7 @@ public final class DatabaseManager {
                     ps1.clearParameters();
                     prevPos = pos;
 
-                } // while ( (pos=StringTools.getStartUTF ...
+                } 
             }
             finally {
                 close(ps1);
@@ -722,7 +728,7 @@ public final class DatabaseManager {
         }
     }
 
-    public static void deleteFromBigTable(final DatabaseAdapter dbDyn, final String nameTargetTable, final String pkName, final PrimaryKeyTypeTypeType pkType, final Object idRec) throws Exception {
+    public static void deleteFromBigTable(final DatabaseAdapter dbDyn, final String nameTargetTable, final String pkName, final PrimaryKey pkType, final Object idRec) throws Exception {
         PreparedStatement ps = null;
         try {
             String sql_ = "delete from " + nameTargetTable + " where " + pkName + "=?";
@@ -730,14 +736,18 @@ public final class DatabaseManager {
 
             ps = dbDyn.prepareStatement(sql_);
 
-            if (pkType.getType() == PrimaryKeyTypeTypeType.NUMBER_TYPE) {
-                if (log.isDebugEnabled()) log.debug("#88.01.02 " + idRec.getClass().getName());
+            Integer type = dataType.get(pkType.getType());
+            if (type==null) type = UNKNOWN_TYPE_VALUE;
+            switch(type) {
+                case NUMBER_TYPE_VALUE:
+                    if (log.isDebugEnabled()) log.debug("#88.01.02 " + idRec.getClass().getName());
 
-                ps.setLong(1, ((Long) idRec).longValue());
-
-            } else if (pkType.getType() == PrimaryKeyTypeTypeType.STRING_TYPE) {
-                ps.setString(1, (String) idRec);
-            } else if (pkType.getType() == PrimaryKeyTypeTypeType.DATE_TYPE) {
+                    ps.setLong(1, ((Long)idRec));
+                    break;
+                case STRING_TYPE_VALUE:
+                    ps.setString(1, (String) idRec);
+                    break;
+                case DATE_TYPE_VALUE:
 /*
                         if (content.getQueryArea().getPrimaryKeyMask()==null ||
                             content.getQueryArea().getPrimaryKeyMask().trim().length()==0)
@@ -746,10 +756,10 @@ public final class DatabaseManager {
                         primaryKeyValue = RsetTools.getStringDate(rs, content.getQueryArea().getPrimaryKey(),
                             content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 */
-                throw new Exception("Type of PK 'date' for big_text not implemented");
-            } else
-                throw new Exception("Wrong type of primary key");
-
+                    throw new Exception("Type of PK 'date' for big_text not implemented");
+                default:
+                    throw new Exception("Wrong type of primary key");
+            }
             int count = ps.executeUpdate();
 
             if (log.isDebugEnabled())
@@ -805,7 +815,7 @@ public final class DatabaseManager {
         return text.toString();
     }
 
-    public static String getRelateString(final DbImportedPKColumnType column) {
+    public static String getRelateString(final DbImportedPKColumn column) {
         return (
             column.getFkSchemaName() == null || column.getFkSchemaName().length() == 0 ?
                 "" :
@@ -824,10 +834,9 @@ public final class DatabaseManager {
             ;
     }
 
-    public static Map<String,DbImportedPKColumnType> getFkNames(final List<DbImportedPKColumnType> keys) {
-        Map<String,DbImportedPKColumnType> hash = new HashMap<String,DbImportedPKColumnType>();
-        for (int i = 0; i < keys.size(); i++) {
-            DbImportedPKColumnType column = (DbImportedPKColumnType) keys.get(i);
+    public static Map<String,DbImportedPKColumn> getFkNames(final List<DbImportedPKColumn> keys) {
+        Map<String,DbImportedPKColumn> hash = new HashMap<String,DbImportedPKColumn>();
+        for (DbImportedPKColumn column : keys) {
             String search = getRelateString(column);
             Object obj = hash.get(search);
             if (obj == null)
@@ -836,12 +845,12 @@ public final class DatabaseManager {
         }
         return hash;
 /*
-        DbImportedPKColumnType[] result = new DbImportedPKColumnType[hash.size()];
+        DbImportedPKColumn[] result = new DbImportedPKColumn[hash.size()];
 
         int i=0;
         for (Enumeration e = hash.elements(); e.hasMoreElements() ;i++)
         {
-            result[i] = (DbImportedPKColumnType)e.nextElement();
+            result[i] = (DbImportedPKColumn)e.nextElement();
         }
         if (log.isDebugEnabled())
         {
@@ -888,39 +897,34 @@ public final class DatabaseManager {
 
     }
 
-    public static void fixBigTextTable(final DbTableType table, final ArrayList bigTables, final int maxLengthTextField) {
+    public static void fixBigTextTable(final DbTable table, final List<DbBigTextTable> bigTables, final int maxLengthTextField) {
         if (bigTables == null || table == null)
             return;
 
-        for (int i = 0; i < bigTables.size(); i++) {
-            DbBigTextTableType big = (DbBigTextTableType) bigTables.get(i);
+        for (DbBigTextTable big : bigTables) {
             if (big.getSlaveTable().equals(table.getName())) {
-                for (int k = 0; k < table.getFieldsCount(); k++) {
-                    DbFieldType field = table.getFields(k);
+                for (DbField field : table.getFields()) {
                     if (big.getStorageField().equals(field.getName()))
-                        field.setSize(new Integer(maxLengthTextField));
+                        field.setSize(maxLengthTextField);
                 }
             }
         }
     }
 
-    public static DbBigTextTableType getBigTextTableDesc(final DbTableType table, final ArrayList bigTables) {
+    public static DbBigTextTable getBigTextTableDesc(final DbTable table, final List<DbBigTextTable> bigTables) {
         if (bigTables == null || table == null)
             return null;
 
-        for (int i = 0; i < bigTables.size(); i++) {
-            DbBigTextTableType big = (DbBigTextTableType) bigTables.get(i);
+        for (DbBigTextTable big : bigTables) {
             if (big.getSlaveTable().equals(table.getName()))
                 return big;
         }
         return null;
     }
 
-    public static void createDbStructure(final DatabaseAdapter db_, final DbSchemaType millSchema) throws Exception {
-        int i;
+    public static void createDbStructure(final DatabaseAdapter db_, final DbSchema millSchema) throws Exception {
         // create sequences
-        for (i = 0; i < millSchema.getSequencesCount(); i++) {
-            DbSequenceType seq = millSchema.getSequences(i);
+        for (DbSequence seq : millSchema.getSequences()) {
             try {
                 if (log.isDebugEnabled())
                     log.debug("create sequence " + seq.getName());
@@ -951,13 +955,11 @@ public final class DatabaseManager {
                 }
             }
         }
-
-        for (i = 0; i < millSchema.getTablesCount(); i++) {
-            DbTableType table = millSchema.getTables(i);
+        for (DbTable table : millSchema.getTables()) {
 
             fixBigTextTable(
                 table,
-                millSchema.getBigTextTableAsReference(),
+                millSchema.getBigTextTable(),
                 db_.getMaxLengthStringField()
             );
 
@@ -987,7 +989,7 @@ public final class DatabaseManager {
                         throw e;
                     }
                 }
-                DatabaseStructureManager.setDataTable(db_, table, millSchema.getBigTextTableAsReference());
+                DatabaseStructureManager.setDataTable(db_, table, millSchema.getBigTextTable());
                 db_.commit();
             } else {
                 if (log.isDebugEnabled())
@@ -998,13 +1000,13 @@ public final class DatabaseManager {
         createWithReplaceAllView(db_, millSchema);
     }
 
-    public static DbKeyActionRuleType decodeUpdateRule(final ResultSet rs) {
+    public static DbKeyActionRule decodeUpdateRule(final ResultSet rs) {
         try {
             Object obj = rs.getObject("UPDATE_RULE");
             if (obj == null)
                 return null;
 
-            DbKeyActionRuleType rule = new DbKeyActionRuleType();
+            DbKeyActionRule rule = new DbKeyActionRule();
             rule.setRuleType(RsetTools.getInt(rs, "UPDATE_RULE"));
 
             switch (rule.getRuleType().intValue()) {
@@ -1040,13 +1042,13 @@ public final class DatabaseManager {
         return null;
     }
 
-    public static DbKeyActionRuleType decodeDeleteRule(final ResultSet rs) {
+    public static DbKeyActionRule decodeDeleteRule(final ResultSet rs) {
         try {
             Object obj = rs.getObject("DELETE_RULE");
             if (obj == null)
                 return null;
 
-            DbKeyActionRuleType rule = new DbKeyActionRuleType();
+            DbKeyActionRule rule = new DbKeyActionRule();
             rule.setRuleType(RsetTools.getInt(rs, "DELETE_RULE"));
 
             switch (rule.getRuleType().intValue()) {
@@ -1082,13 +1084,13 @@ public final class DatabaseManager {
         return null;
     }
 
-    public static DbKeyActionRuleType decodeDeferrabilityRule(final ResultSet rs) {
+    public static DbKeyActionRule decodeDeferrabilityRule(final ResultSet rs) {
         try {
             Object obj = rs.getObject("DEFERRABILITY");
             if (obj == null)
                 return null;
 
-            DbKeyActionRuleType rule = new DbKeyActionRuleType();
+            DbKeyActionRule rule = new DbKeyActionRule();
             rule.setRuleType(RsetTools.getInt(rs, "DEFERRABILITY"));
 
             switch (rule.getRuleType().intValue()) {
@@ -1154,17 +1156,6 @@ public final class DatabaseManager {
         return n;
     }
 
-    /**
-     * @deprecated use getLongValue(final DatabaseAdapter db, final String sql, final Object[] params, final int[] types)
-     * @param db
-     * @param sql
-     * @param params
-     * @return Long
-     */
-    public static Long getLongValue(final DatabaseAdapter db, final String sql, final Object[] params) throws SQLException {
-        return getLongValue(db, sql, params, null);
-    }
-
     public static Long getLongValue(final DatabaseAdapter db, final String sql, final Object[] params, final int[] types)
         throws SQLException {
         Statement stmt = null;
@@ -1195,7 +1186,7 @@ public final class DatabaseManager {
                 if (rs.wasNull())
                     return null;
 
-                return new Long(tempLong);
+                return tempLong;
             }
             return null;
         }
@@ -1281,7 +1272,7 @@ public final class DatabaseManager {
                 if (rs.wasNull())
                     continue;
 
-                list.add(new Long(tempLong));
+                list.add(tempLong);
             }
             return list;
         }

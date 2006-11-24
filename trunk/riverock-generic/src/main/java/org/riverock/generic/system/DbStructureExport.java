@@ -28,18 +28,18 @@ package org.riverock.generic.system;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-
-import org.xml.sax.InputSource;
+import java.util.List;
 
 import org.riverock.common.config.PropertiesProvider;
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbView;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.startup.StartupApplication;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
 
 /**
  * Author: mill
@@ -95,12 +95,10 @@ public class DbStructureExport {
 
         dbOra.commit();
 
-        DbSchemaType schema = DatabaseManager.getDbStructure( dbOra );
+        DbSchema schema = DatabaseManager.getDbStructure( dbOra );
 
-        int i = 0;
-        for (i = 0; i < schema.getTablesCount(); i++)
-        {
-            DbTableType table = schema.getTables(i);
+        List<DbTable> tables = new ArrayList<DbTable>();
+        for (DbTable table : schema.getTables()) {
             if (
                 table.getName().toUpperCase().startsWith("A_") ||
                 table.getName().toUpperCase().startsWith("BIN$") ||
@@ -109,15 +107,14 @@ public class DbStructureExport {
                 table.getName().toUpperCase().startsWith("HAM_")
             )
             {
-                schema.getTablesAsReference().remove(i);
-                i--;
                 continue;
             }
+            tables.add(table);
             System.out.println( "Table - " + table.getName() );
 
-            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(dbOra.getConnection(), table.getSchema(), table.getName(), dbOra.getFamily()));
+            table.getFields().addAll(DatabaseStructureManager.getFieldsList(dbOra.getConnection(), table.getSchema(), table.getName(), dbOra.getFamily()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
-            table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.getImportedKeys().addAll(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
 
             boolean isSkipData = false;
             if ( table.getName().toUpperCase().startsWith("WM_FORUM") ||
@@ -140,15 +137,13 @@ public class DbStructureExport {
         fileNameBigText =
             "\\sandbox\\riverock\\trunk\\riverock-webmill-db\\xml\\webmill-schema.xml";
 
-        InputSource inSrc = new InputSource(new FileInputStream( fileNameBigText ));
-        DbSchemaType schemaBigTable = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
+        FileInputStream stream = new FileInputStream(fileNameBigText);
+        DbSchema schemaBigTable = XmlTools.getObjectFromXml(DbSchema.class, stream);
 
-        schema.setBigTextTable( schemaBigTable.getBigTextTableAsReference() );
+        schema.getBigTextTable().addAll( schemaBigTable.getBigTextTable() );
 
-        ArrayList views = new ArrayList();
-        for (int k=0; k<schema.getViewsCount(); k++ )
-        {
-            DbViewType view = schema.getViews(k);
+        List<DbView> views = new ArrayList<DbView>();
+        for (DbView view : schema.getViews()) {
             if (!view.getName().toUpperCase().startsWith("F_D_") &&
                 !view.getName().toUpperCase().startsWith("F_DEL_") &&
                 !view.getName().toUpperCase().startsWith("FOR_DEL_") &&
@@ -157,10 +152,9 @@ public class DbStructureExport {
                 views.add( view );
         }
 
-        schema.setViews( views );
+        schema.getViews().addAll( views );
 
         System.out.println("Marshal data to file "+fileName);
         XmlTools.writeToFile(schema, fileName);
-//        XmlTools.writeToFile(schema, fileName, "utf-8", "SchemaElement", JsmithyNamespases.namespace );
     }
 }

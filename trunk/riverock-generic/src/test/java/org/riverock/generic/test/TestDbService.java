@@ -27,9 +27,9 @@ package org.riverock.generic.test;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKey;
 
 /**
  * User: Admin
@@ -45,19 +45,19 @@ public class TestDbService
     {
         org.riverock.generic.startup.StartupApplication.init();
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( "MSSQL-JTDS" );
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
+        DbSchema schema = DatabaseManager.getDbStructure(db_ );
         DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "ORACLE" );
-        DbSchemaType schemaOracle = DatabaseManager.getDbStructure(dbOra );
+        DbSchema schemaOracle = DatabaseManager.getDbStructure(dbOra );
 
-        DbTableType sourceTableOracle =
+        DbTable sourceTableOracle =
             DatabaseManager.getTableFromStructure( schemaOracle, "WM_PRICE_SHOP_LIST");
 
-        DbTableType checkTable = DatabaseManager.getTableFromStructure( schema, "WM_PRICE_SHOP_LIST");
+        DbTable checkTable = DatabaseManager.getTableFromStructure( schema, "WM_PRICE_SHOP_LIST");
         checkTable.setData( null );
 
 //        DbService.duplicateTable(db_, sourceTable, sourceTable.getName()+"_TEMP");
 
-        DbPrimaryKeyType pk = sourceTableOracle.getPrimaryKey();
+        DbPrimaryKey pk = sourceTableOracle.getPrimaryKey();
         if (pk==null)
             System.out.println("PK is null");
 

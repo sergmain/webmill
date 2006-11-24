@@ -46,15 +46,15 @@ import org.riverock.common.tools.DateTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.CurrentTimeZone;
-import org.riverock.generic.annotation.schema.db.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbDataFieldDataType;
-import org.riverock.generic.annotation.schema.db.DbSequenceType;
-import org.riverock.generic.annotation.schema.db.CustomSequenceType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbFieldType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyType;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumnType;
-import org.riverock.generic.annotation.schema.db.DbImportedPKColumnType;
+import org.riverock.generic.annotation.schema.db.DbView;
+import org.riverock.generic.annotation.schema.db.DbDataFieldData;
+import org.riverock.generic.annotation.schema.db.DbSequence;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKey;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
 
 /**
  * InterBase database connect 
@@ -122,7 +122,7 @@ public class IBconnect extends DatabaseAdapter {
         return null;
     }
 
-    public void createTable(DbTableType table) throws Exception {
+    public void createTable(DbTable table) throws Exception {
         if (table == null || table.getFields().size() == 0)
             return;
 
@@ -131,7 +131,7 @@ public class IBconnect extends DatabaseAdapter {
 
         boolean isFirst = true;
 
-        for (DbFieldType field : table.getFields()) {
+        for (DbField field : table.getFields()) {
             if (!isFirst)
                 sql += ",";
             else
@@ -204,7 +204,7 @@ public class IBconnect extends DatabaseAdapter {
             }
         }
         if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumns().size() != 0) {
-            DbPrimaryKeyType pk = table.getPrimaryKey();
+            DbPrimaryKey pk = table.getPrimaryKey();
 
             String namePk = pk.getColumns().get(0).getPkName();
 
@@ -217,11 +217,14 @@ public class IBconnect extends DatabaseAdapter {
 
             int seq = Integer.MIN_VALUE;
             isFirst = true;
+
+            if (true) throw new RuntimeException("Need implement PK comparator");
+/*
             for (int i = 0; i < pk.getColumnsCount(); i++) {
-                DbPrimaryKeyColumnType column = null;
+                DbPrimaryKeyColumn column = null;
                 int seqTemp = Integer.MAX_VALUE;
                 for (int k = 0; k < pk.getColumnsCount(); k++) {
-                    DbPrimaryKeyColumnType columnTemp = pk.getColumns(k);
+                    DbPrimaryKeyColumn columnTemp = pk.getColumns(k);
                     if (seq < columnTemp.getKeySeq().intValue() && columnTemp.getKeySeq().intValue() < seqTemp) {
                         seqTemp = columnTemp.getKeySeq().intValue();
                         column = columnTemp;
@@ -236,6 +239,7 @@ public class IBconnect extends DatabaseAdapter {
 
                 sql += column.getColumnName();
             }
+*/
             sql += "\n)";
         }
         sql += "\n)";
@@ -265,7 +269,7 @@ public class IBconnect extends DatabaseAdapter {
 
     }
 
-    public void dropTable(DbTableType table) throws Exception {
+    public void dropTable(DbTable table) throws Exception {
         dropTable(table.getName());
     }
 
@@ -300,7 +304,7 @@ public class IBconnect extends DatabaseAdapter {
     public void dropSequence(String nameSequence) throws Exception {
     }
 
-    public void dropConstraint(DbImportedPKColumnType impPk) throws Exception {
+    public void dropConstraint(DbImportedPKColumn impPk) throws Exception {
         if (impPk == null)
             return;
 
@@ -326,7 +330,7 @@ public class IBconnect extends DatabaseAdapter {
         }
     }
 
-    public void addColumn(DbTableType table, DbFieldType field) throws Exception {
+    public void addColumn(DbTable table, DbField field) throws Exception {
         String sql = "alter table " + table.getName() + " add " + field.getName() + " ";
 
         switch (field.getJavaType().intValue()) {
@@ -444,7 +448,7 @@ public class IBconnect extends DatabaseAdapter {
         return "current_timestamp";
     }
 
-    public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
+    public void setDefaultValue(DbTable originTable, DbField originField) {
     }
 /*
 ALTER TABLE table
@@ -518,19 +522,19 @@ ALTER TABLE table
 
 */
 
-    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 
-    public ArrayList getSequnceList(String schemaPattern) throws Exception {
+    public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
+        return new ArrayList<DbSequence>();
+    }
+
+    public String getViewText(DbView view) throws Exception {
         return null;
     }
 
-    public String getViewText(DbViewType view) throws Exception {
-        return null;
-    }
-
-    public void createView(DbViewType view)
+    public void createView(DbView view)
         throws Exception {
         if (view == null ||
             view.getName() == null || view.getName().length() == 0 ||
@@ -560,15 +564,15 @@ ALTER TABLE table
         }
     }
 
-    public void createSequence(DbSequenceType seq) throws Exception {
+    public void createSequence(DbSequence seq) throws Exception {
     }
 
-    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setNull(index, Types.VARCHAR);
     }
 
-    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setString(index, "");
     }
@@ -620,7 +624,7 @@ ALTER TABLE table
      * @return long - следующее значение для ключа из последовательности
      * @throws SQLException
      */
-    public long getSequenceNextValue(CustomSequenceType sequence)
+    public long getSequenceNextValue(CustomSequence sequence)
         throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;

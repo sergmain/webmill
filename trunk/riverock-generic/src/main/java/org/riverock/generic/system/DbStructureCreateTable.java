@@ -28,13 +28,15 @@ package org.riverock.generic.system;
 import java.io.FileInputStream;
 import java.sql.SQLException;
 
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.startup.StartupApplication;
 
 /**
@@ -75,14 +77,15 @@ public class DbStructureCreateTable {
             db_ = DatabaseAdapter.getInstance(dbAlias);
             System.out.println("db connect - " + db_.getClass().getName());
 
-            int i;
+            JAXBContext jaxbContext = JAXBContext.newInstance ( DbSchema.class.getPackage().getName() );
 
             System.out.println("Unmarshal data from file " + fileName);
-            InputSource inSrc = new InputSource(new FileInputStream(fileName));
-            DbSchemaType millSchema = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-            for (i = 0; i < millSchema.getTablesCount(); i++) {
-                DbTableType table = millSchema.getTables(i);
+            Source inSrc = new StreamSource(new FileInputStream(fileName));
+            DbSchema millSchema = unmarshaller.unmarshal(inSrc, DbSchema.class).getValue();
+
+            for (DbTable table : millSchema.getTables()) {
                 if (!tableName.equalsIgnoreCase(table.getName())) {
                     System.out.println("skip table: " + table.getName());
                     continue;

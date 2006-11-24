@@ -46,7 +46,7 @@
         <pathelement location="${lib.dir}/${bcel.lib}"/>
         <pathelement location="${lib.dir}/mail.jar"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${castor.lib}"/>
+        <!--<pathelement location="${lib.dir}/${castor.lib}"/>-->
         <pathelement location="${lib.dir}/${hypersonic.lib}"/>
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
@@ -64,7 +64,7 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
+        <!--<ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />-->
         <antcall target="jar"/>
     </target>
 

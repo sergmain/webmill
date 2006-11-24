@@ -37,11 +37,11 @@ package org.riverock.generic.db.definition;
  * $Id$
  */
 /**
- * Class MainDbDefinitionItemType.
+ * Class MainDbDefinitionItem.
  * 
  * @version $Revision$ $Date$
  */
-public class MainDbDefinitionItemType implements java.io.Serializable {
+public class MainDbDefinitionItem implements java.io.Serializable {
 
 
       //--------------------------/
@@ -73,9 +73,9 @@ public class MainDbDefinitionItemType implements java.io.Serializable {
      //- Constructors -/
     //----------------/
 
-    public MainDbDefinitionItemType() {
+    public MainDbDefinitionItem() {
         super();
-    } //-- org.riverock.schema.core.MainDbDefinitionItemType()
+    } //-- org.riverock.schema.core.MainDbDefinitionItem()
 
 
       //-----------/

@@ -31,48 +31,48 @@
 	<xs:annotation>
 		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
 	</xs:annotation>
-	<xs:complexType name="DbDatabaseType">
+	<xs:complexType name="DbDatabase">
 		<xs:sequence>
-			<xs:element name="Schema" type="riverock-db-stuct:DbSchemaType"/>
+			<xs:element name="Schema" type="riverock-db-stuct:DbSchema"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="SchemaElement" type="riverock-db-stuct:DbSchemaType"/>
-	<xs:complexType name="DbSchemaType">
+	<xs:element name="SchemaElement" type="riverock-db-stuct:DbSchema"/>
+	<xs:complexType name="DbSchema">
 		<xs:sequence>
-			<xs:element name="Tables" type="riverock-db-stuct:DbTableType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Views" type="riverock-db-stuct:DbViewType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Sequences" type="riverock-db-stuct:DbSequenceType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="BigTextTable" type="riverock-db-stuct:DbBigTextTableType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Tables" type="riverock-db-stuct:DbTable" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Views" type="riverock-db-stuct:DbView" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sequences" type="riverock-db-stuct:DbSequence" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="BigTextTable" type="riverock-db-stuct:DbBigTextTable" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbAbstractTableType" abstract="true">
+	<xs:complexType name="DbAbstractTable" abstract="true">
 		<xs:attribute name="schema" type="xs:string"/>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="type" type="xs:string"/>
 		<xs:attribute name="remark" type="xs:string"/>
 	</xs:complexType>
-	<xs:complexType name="DbViewType">
+	<xs:complexType name="DbView">
 		<xs:complexContent>
-			<xs:extension base="riverock-db-stuct:DbAbstractTableType">
+			<xs:extension base="riverock-db-stuct:DbAbstractTable">
 				<xs:sequence>
 					<xs:element name="Text" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="DbViewListType">
+	<xs:complexType name="DbViewList">
 		<xs:sequence>
-			<xs:element name="View" type="riverock-db-stuct:DbViewType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="View" type="riverock-db-stuct:DbView" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbTableType">
+	<xs:complexType name="DbTable">
 		<xs:complexContent>
-			<xs:extension base="riverock-db-stuct:DbAbstractTableType">
+			<xs:extension base="riverock-db-stuct:DbAbstractTable">
 				<xs:sequence>
-					<xs:element name="PrimaryKey" type="riverock-db-stuct:DbPrimaryKeyType" minOccurs="0"/>
-					<xs:element name="Fields" type="riverock-db-stuct:DbFieldType" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="ImportedKeys" type="riverock-db-stuct:DbImportedPKColumnType" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="Data" type="riverock-db-stuct:DbDataTableType" minOccurs="0"/>
+					<xs:element name="PrimaryKey" type="riverock-db-stuct:DbPrimaryKey" minOccurs="0"/>
+					<xs:element name="Fields" type="riverock-db-stuct:DbField" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="ImportedKeys" type="riverock-db-stuct:DbImportedPKColumn" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="Data" type="riverock-db-stuct:DbDataTable" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -83,7 +83,7 @@
 		<xs:attribute name="remark" type="xs:string"/>
 -->
 	</xs:complexType>
-	<xs:complexType name="DbSequenceType">
+	<xs:complexType name="DbSequence">
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="minValue" type="xs:int" use="required"/>
 		<xs:attribute name="maxValue" type="xs:string" use="required"/>
@@ -93,12 +93,12 @@
 		<xs:attribute name="cacheSize" type="xs:int"/>
 		<xs:attribute name="lastNumber" type="xs:long" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="DbSequenceListType">
+	<xs:complexType name="DbSequenceList">
 		<xs:sequence>
-			<xs:element name="Sequences" type="riverock-db-stuct:DbSequenceType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sequences" type="riverock-db-stuct:DbSequence" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbBigTextTableType">
+	<xs:complexType name="DbBigTextTable">
 		<xs:sequence>
 			<xs:element name="MasterTable" type="xs:string"/>
 			<xs:element name="SlaveTable" type="xs:string"/>
@@ -109,7 +109,7 @@
 			<xs:element name="SequenceName" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbFieldType">
+	<xs:complexType name="DbField">
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="dataType" type="xs:string">
 			<xs:annotation>
@@ -125,12 +125,12 @@
 		<xs:attribute name="defaultValue" type="xs:string"/>
 		<xs:attribute name="comment" type="xs:string"/>
 	</xs:complexType>
-	<xs:complexType name="DbPrimaryKeyType">
+	<xs:complexType name="DbPrimaryKey">
 		<xs:sequence>
-			<xs:element name="columns" type="riverock-db-stuct:DbPrimaryKeyColumnType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="columns" type="riverock-db-stuct:DbPrimaryKeyColumn" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbPrimaryKeyColumnType">
+	<xs:complexType name="DbPrimaryKeyColumn">
 		<xs:attribute name="catalogName" type="xs:string"/>
 		<xs:attribute name="schemaName" type="xs:string"/>
 		<xs:attribute name="tableName" type="xs:string" use="required"/>
@@ -138,11 +138,11 @@
 		<xs:attribute name="keySeq" type="xs:int" use="required"/>
 		<xs:attribute name="pkName" type="xs:string"/>
 	</xs:complexType>
-	<xs:complexType name="DbImportedPKColumnType">
+	<xs:complexType name="DbImportedPKColumn">
 		<xs:sequence>
-			<xs:element name="UpdateRule" type="riverock-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
-			<xs:element name="DeleteRule" type="riverock-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
-			<xs:element name="Deferrability" type="riverock-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
+			<xs:element name="UpdateRule" type="riverock-db-stuct:DbKeyActionRule" minOccurs="0"/>
+			<xs:element name="DeleteRule" type="riverock-db-stuct:DbKeyActionRule" minOccurs="0"/>
+			<xs:element name="Deferrability" type="riverock-db-stuct:DbKeyActionRule" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="pkSchemaName" type="xs:string"/>
 		<xs:attribute name="pkTableName" type="xs:string"/>
@@ -154,31 +154,31 @@
 		<xs:attribute name="fkName" type="xs:string"/>
 		<xs:attribute name="pkName" type="xs:string"/>
 	</xs:complexType>
-	<xs:complexType name="DbImportedKeyListType">
+	<xs:complexType name="DbImportedKeyList">
 		<xs:sequence>
-			<xs:element name="Keys" type="riverock-db-stuct:DbImportedPKColumnType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Keys" type="riverock-db-stuct:DbImportedPKColumn" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbKeyActionRuleType">
+	<xs:complexType name="DbKeyActionRule">
 		<xs:attribute name="ruleType" type="xs:int"/>
 		<xs:attribute name="ruleName" type="xs:string"/>
 	</xs:complexType>
-	<xs:complexType name="DbDataSchemaType">
+	<xs:complexType name="DbDataSchema">
 		<xs:sequence>
-			<xs:element name="Tables" type="riverock-db-stuct:DbDataTableType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Tables" type="riverock-db-stuct:DbDataTable" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbDataTableType">
+	<xs:complexType name="DbDataTable">
 		<xs:sequence>
-			<xs:element name="Records" type="riverock-db-stuct:DbDataRecordType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Records" type="riverock-db-stuct:DbDataRecord" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbDataRecordType">
+	<xs:complexType name="DbDataRecord">
 		<xs:sequence>
-			<xs:element name="FieldsData" type="riverock-db-stuct:DbDataFieldDataType" maxOccurs="unbounded"/>
+			<xs:element name="FieldsData" type="riverock-db-stuct:DbDataFieldData" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="DbDataFieldDataType">
+	<xs:complexType name="DbDataFieldData">
 		<xs:sequence>
 			<xs:element name="JavaTypeField" type="xs:int"/>
 			<xs:element name="StringData" type="xs:string" minOccurs="0"/>

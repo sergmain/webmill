@@ -35,11 +35,11 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.annotation.schema.db.DbSchemaType;
-import org.riverock.generic.annotation.schema.db.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
-import org.riverock.generic.annotation.schema.db.DbImportedKeyListType;
-import org.riverock.generic.annotation.schema.db.DbFieldType;
+import org.riverock.generic.annotation.schema.db.DbSchema;
+import org.riverock.generic.annotation.schema.db.DbView;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbImportedKeyList;
+import org.riverock.generic.annotation.schema.db.DbField;
 
 /**
  * Author: mill
@@ -53,10 +53,9 @@ public class ValidateStructure {
     public ValidateStructure() {
     }
 
-    private static void processAllView(DatabaseAdapter db_, DbSchemaType millSchema) throws Exception {
-        for (int i = 0; i < millSchema.getViewsCount(); i++) {
+    private static void processAllView(DatabaseAdapter db_, DbSchema millSchema) throws Exception {
+        for (DbView view : millSchema.getViews()) {
             DatabaseManager.createWithReplaceAllView(db_, millSchema);
-            DbViewType view = millSchema.getViews(i);
             try {
                 System.out.println("create view " + view.getName());
                 db_.createView(view);
@@ -82,14 +81,13 @@ public class ValidateStructure {
         DatabaseManager.createWithReplaceAllView(db_, millSchema);
     }
 
-    private static void processForeignKey(DatabaseAdapter db_, DbSchemaType millSchema) throws Exception {
-        for (int i = 0; i < millSchema.getTablesCount(); i++) {
-            DbTableType table = millSchema.getTables(i);
+    private static void processForeignKey(DatabaseAdapter db_, DbSchema millSchema) throws Exception {
+        for (DbTable table : millSchema.getTables()) {
             if (!DatabaseManager.isSkipTable(table.getName())) {
                 try {
                     System.out.println("Create foreign key for table " + table.getName());
-                    DbImportedKeyListType fk = new DbImportedKeyListType();
-                    fk.setKeys(table.getImportedKeysAsReference());
+                    DbImportedKeyList fk = new DbImportedKeyList();
+                    fk.getKeys().addAll(table.getImportedKeys());
                     DatabaseStructureManager.createForeignKey(db_, fk);
                 }
                 catch (SQLException e) {
@@ -102,11 +100,11 @@ public class ValidateStructure {
         }
     }
 
-    private static void validateStructure(DbSchemaType millSchema, String nameConnection) throws Exception {
+    private static void validateStructure(DbSchema millSchema, String nameConnection) throws Exception {
         System.out.println("Connection - " + nameConnection);
 
         DatabaseAdapter db_ = DatabaseAdapter.getInstance(nameConnection);
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_);
+        DbSchema schema = DatabaseManager.getDbStructure(db_);
 
         String nameFile = "test-schema.xml";
         String outputSchemaFile = GenericConfig.getGenericDebugDir() + nameFile;
@@ -114,10 +112,9 @@ public class ValidateStructure {
 
         XmlTools.writeToFile(schema, outputSchemaFile);
 
-        for (int i = 0; i < millSchema.getTablesCount(); i++) {
-            DbTableType table = millSchema.getTables(i);
+        for (DbTable table : millSchema.getTables()) {
             if (!DatabaseManager.isSkipTable(table.getName())) {
-                DbTableType originTable = DatabaseManager.getTableFromStructure(schema, table.getName());
+                DbTable originTable = DatabaseManager.getTableFromStructure(schema, table.getName());
                 if (!DatabaseManager.isTableExists(schema, table)) {
                     try {
                         System.out.println("Create new table " + table.getName());
@@ -130,14 +127,13 @@ public class ValidateStructure {
                 }
                 else {
                     // check valid structure of fields
-                    for (int j = 0; j < table.getFieldsCount(); j++) {
-                        DbFieldType field = table.getFields(j);
+                    for (DbField field : table.getFields()) {
                         if (!DatabaseManager.isFieldExists(schema, table, field)) {
                             System.out.println("Add field '" + field.getName() + "' to table '" + table.getName() + "'");
                             db_.addColumn(table, field);
                         }
 
-                        DbFieldType originField =
+                        DbField originField =
                             DatabaseManager.getFieldFromStructure(schema, table.getName(), field.getName());
 
                         if (originField != null && (originField.getDefaultValue() == null && field.getDefaultValue() != null)) {
@@ -166,7 +162,7 @@ public class ValidateStructure {
         try
         {
             // check for correct PK
-            DbTableType tableForCheckPk =
+            DbTable tableForCheckPk =
                 DbService.getTableFromStructure(schema, table.getName());
 
 //                    System.out.println("orig table '"+table.getName()+"', table for check'"+tableForCheckPk.getName()+"'");
@@ -190,7 +186,7 @@ public class ValidateStructure {
         processForeignKey(db_, millSchema);
 
         db_.commit();
-        DbSchemaType schemaResult = DatabaseManager.getDbStructure(db_);
+        DbSchema schemaResult = DatabaseManager.getDbStructure(db_);
         System.out.println("Marshal data to file");
         XmlTools.writeToFile(schemaResult, GenericConfig.getGenericDebugDir() + "schema-result-" + nameConnection + ".xml");
         DatabaseAdapter.close(db_);
@@ -201,11 +197,12 @@ public class ValidateStructure {
         org.riverock.generic.startup.StartupApplication.init();
 
         System.out.println("Unmarshal data from file");
+        FileInputStream stream = new FileInputStream(GenericConfig.getGenericDebugDir() + "webmill-schema.xml");
         InputSource inSrc = new InputSource(
-            new FileInputStream(GenericConfig.getGenericDebugDir() + "webmill-schema.xml")
+            stream
         );
-        DbSchemaType millSchema =
-            (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
+        DbSchema millSchema =
+            XmlTools.getObjectFromXml(DbSchema.class, stream);
 
 //        validateStructure(millSchema, "ORACLE_MILL_TEST");
         validateStructure(millSchema, "HSQLDB");

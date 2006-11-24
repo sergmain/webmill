@@ -27,174 +27,133 @@ package org.riverock.generic.tools;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.io.InputStream;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
 
 /**
  * Author: mill
  * Date: Jan 22, 2003
  * Time: 9:33:19 AM
- *
+ * <p/>
  * $Id$
  */
-public final class XmlTools
-{
+public final class XmlTools {
     private final static Logger log = Logger.getLogger(XmlTools.class);
 
-    public XmlTools()
-    {
+    public XmlTools() {
     }
 
-    public static Object getObjectFromXml( final Class classType, final String str ) throws Exception
-    {
-        try
-        {
-            InputSource inSrc = new InputSource( new StringReader(str) );
-            return Unmarshaller.unmarshal(classType, inSrc);
+    public static <T> T getObjectFromXml(final Class<T> classType, final String str) throws Exception {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance ( classType.getPackage().getName() );
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+            Source inSrc = new StreamSource(new StringReader(str));
+            return unmarshaller.unmarshal(inSrc, classType).getValue();
+//
+//            InputSource inSrc = new InputSource(new StringReader(str));
+//            return Unmarshaller.unmarshal(classType, inSrc);
         }
-        catch(Exception e)
-        {
-            log.error("Error get object from xml string\n"+str, e);
+        catch (Exception e) {
+            log.error("Error get object from xml string\n" + str, e);
             throw e;
         }
     }
 
-    public static String getXmlAsString( final Object obj, final String rootElement ) throws Exception
-    {
-        if (log.isDebugEnabled())
-        {
+    public static <T> T getObjectFromXml(final Class<T> classType, InputStream is) throws Exception {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance ( classType.getPackage().getName() );
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+            Source inSrc = new StreamSource(is);
+            return unmarshaller.unmarshal(inSrc, classType).getValue();
+        }
+        catch (Exception e) {
+            log.error("Error get object from xml string\n", e);
+            throw e;
+        }
+    }
+
+    public static String getXmlAsString(final Object obj, final String rootElement) throws Exception {
+        if (log.isDebugEnabled()) {
             byte b[] = getXml(obj, rootElement);
             log.debug("new String(b) " + new String(b));
             return new String(b);
         }
         else
-            return new String( getXml(obj, rootElement) );
+            return new String(getXml(obj, rootElement));
     }
 
-    public static byte[] getXml( final Object obj, final String rootElement ) throws Exception
-    {
-        return getXml(obj, rootElement, null, "utf-8");
+    public static byte[] getXml(final Object obj, final String rootElement) throws Exception {
+        return getXml(obj, rootElement, "utf-8");
     }
 
-    public static byte[] getXml( final Object obj, final String rootElement, final String namespace[][] ) throws Exception
-    {
-        return getXml(obj, rootElement, namespace, "utf-8");
-    }
-
-    public static byte[] getXml( final Object obj, final String rootElement, final String namespace[][], final String encoding ) throws Exception
-    {
-        ByteArrayOutputStream fos = null;
-        if (log.isDebugEnabled())
-        {
-            log.debug("getXml(). Object to marshaling "+obj);
-            log.debug("getXml(). rootElement "+rootElement);
-            log.debug("getXml(). namespace "+namespace);
-            log.debug("getXml(). encoding "+encoding);
+    public static byte[] getXml(final Object obj, final String rootElement, final String encoding) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.debug("getXml(). Object to marshaling " + obj);
+            log.debug("getXml(). rootElement " + rootElement);
+            log.debug("getXml(). encoding " + encoding);
         }
-        try
-        {
+        ByteArrayOutputStream fos=null;
+        try {
             fos = new ByteArrayOutputStream(1000);
 
             if (log.isDebugEnabled())
-                log.debug("ByteArrayOutputStream object - "+fos);
+                log.debug("ByteArrayOutputStream object - " + fos);
 
-            Marshaller marsh = new Marshaller( new OutputStreamWriter(fos, encoding) );
+            JAXBContext jaxbContext = JAXBContext.newInstance ( obj.getClass().getPackage().getName() );
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
 
-            if (rootElement!=null && rootElement.trim().length()>0)
-                marsh.setRootElement( rootElement );
-
-            marsh.setMarshalAsDocument(true);
-            marsh.setEncoding(encoding);
-            if (namespace!=null)
-            {
-                for (int i=0; i<namespace.length; i++)
-                {
-                    marsh.setNamespaceMapping(namespace[i][0], namespace[i][1]);
-                }
+            if (rootElement != null && rootElement.trim().length() > 0) {
+                // http://weblogs.java.net/blog/kohsuke/archive/2005/10/101_ways_to_mar.html
+                marshaller.marshal( new JAXBElement(new QName("",rootElement), obj.getClass(), obj ), fos);
             }
-            marsh.marshal(obj);
-            marsh = null;
+            else {
+                marshaller.marshal(obj, fos);
+            }
 
             fos.flush();
             fos.close();
 
             return fos.toByteArray();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("Exception when marshaling object", e);
             throw e;
         }
-        catch (Error err)
-        {
+        catch (Error err) {
             log.error("Error when marshaling object", err);
             throw err;
         }
-        finally
-        {
+        finally {
+            fos.close();
             fos = null;
         }
     }
 
-    public static void writeToFile( final Object obj, final String fileName )
-        throws Exception
-    {
-        writeToFile(obj, fileName, "utf-8", null, true, null);
+    public static void writeToFile(final Object obj, final String fileName)
+        throws Exception {
+
+        writeToFile(obj, fileName, "utf-8");
     }
 
-    public static void writeToFile( final Object obj, final String fileName, final String encoding )
-        throws Exception
-    {
-        writeToFile(obj, fileName, encoding, null, true, null);
+    public static void writeToFile(final Object obj, final String fileName, final String encoding)
+        throws Exception {
+        JAXBContext jaxbContext = JAXBContext.newInstance ( obj.getClass().getPackage().getName() );
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
+        FileOutputStream fos = new FileOutputStream(fileName);
+        marshaller.marshal(obj, fos);
     }
-
-    public static void writeToFile( final Object obj, final String fileName, final String encoding, final String root )
-        throws Exception
-    {
-        writeToFile(obj, fileName, encoding, root, true, null);
-    }
-
-    public static void writeToFile( final Object obj, final String fileName, final String encoding, final String root,
-                                   final boolean isValidate)
-        throws Exception
-    {
-        writeToFile(obj, fileName, encoding, root, isValidate, null);
-    }
-
-    public static void writeToFile( final Object obj, final String fileName, final String encoding, final String root,
-                                   final String namespace[][])
-        throws Exception
-    {
-        writeToFile(obj, fileName, encoding, root, true, namespace);
-    }
-
-    public static void writeToFile( final Object obj, final String fileName, final String encoding, final String root,
-                                   final boolean isValidate, final String namespace[][] )
-        throws Exception
-    {
-        FileOutputStream fos = new FileOutputStream( fileName );
-        Marshaller marsh = new Marshaller( new OutputStreamWriter(fos, encoding) );
-        if (root!=null && root.trim().length()>0)
-            marsh.setRootElement( root );
-
-        marsh.setValidation( isValidate );
-        marsh.setMarshalAsDocument(true);
-        marsh.setEncoding(encoding);
-        if (namespace!=null)
-        {
-            for (String[] aNamespace : namespace) {
-                marsh.setNamespaceMapping(aNamespace[0], aNamespace[1]);
-            }
-        }
-        marsh.marshal(obj);
-        fos.flush();
-        fos.close();
-        fos = null;
-    }
-
 }

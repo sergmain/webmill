@@ -31,8 +31,8 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.DefinitionActionDataListType;
+import org.riverock.generic.annotation.schema.db.DefinitionActionDataList;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 
 /**
  * User: Admin
@@ -48,7 +48,7 @@ public class AddRecordToList implements DefinitionProcessingInterface {
     public AddRecordToList() {
     }
 
-    public void processAction(DatabaseAdapter db_, DefinitionActionDataListType parameters) throws Exception {
+    public void processAction(DatabaseAdapter db_, DefinitionActionDataList parameters) throws Exception {
         PreparedStatement ps = null;
         try {
             if (log.isDebugEnabled())
@@ -75,7 +75,7 @@ public class AddRecordToList implements DefinitionProcessingInterface {
                 throw new Exception(errorString);
             }
 
-            CustomSequenceType seqSite = new CustomSequenceType();
+            CustomSequence seqSite = new CustomSequence();
             seqSite.setSequenceName(seqName);
             seqSite.setTableName(tableName);
             seqSite.setColumnName(columnName);

@@ -29,14 +29,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
-import org.riverock.generic.main.CacheFile;
-import org.riverock.generic.schema.db.DefinitionListType;
+import org.apache.log4j.Logger;
+
+import org.riverock.generic.annotation.schema.db.DefinitionList;
 import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.main.CacheFile;
 
 /**
  * $Id$
@@ -44,7 +46,7 @@ import org.riverock.generic.config.GenericConfig;
 public class DataDefinitionFile extends CacheFile {
     private static Logger log = Logger.getLogger(DataDefinitionFile.class);
 
-    public DefinitionListType definitionList = null;
+    public DefinitionList definitionList = null;
 
     public DataDefinitionFile(File tempFile) {
         super(tempFile, 1000 * 10);
@@ -59,15 +61,18 @@ public class DataDefinitionFile extends CacheFile {
 
     private void processFile() {
         try {
-            InputSource inSrc = new InputSource(new FileInputStream(getFile()));
-            definitionList = (DefinitionListType) Unmarshaller.unmarshal(DefinitionListType.class, inSrc);
-            definitionList.validate();
+            JAXBContext jaxbContext = JAXBContext.newInstance ( DefinitionList.class.getPackage().getName());
+
+            FileInputStream stream = new FileInputStream(getFile());
+            Source source =  new StreamSource( stream );
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            definitionList =  unmarshaller.unmarshal( source, DefinitionList.class ).getValue();
 
             if (log.isDebugEnabled()) {
                 synchronized (syncObj) {
                     try {
                         FileWriter w = new FileWriter(GenericConfig.getGenericDebugDir() + "definitionList.xml");
-                        Marshaller.marshal(definitionList, w);
+                        jaxbContext.createMarshaller().marshal(definitionList, w);
                     }
                     catch (Exception e) {
                         // catch debug

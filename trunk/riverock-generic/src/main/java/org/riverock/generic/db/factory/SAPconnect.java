@@ -40,16 +40,13 @@ import javax.sql.DataSource;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
-import org.riverock.generic.schema.db.structure.DbSequenceType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbViewType;
-import org.riverock.generic.annotation.schema.db.DbFieldType;
-import org.riverock.generic.annotation.schema.db.DbTableType;
+import org.riverock.generic.annotation.schema.db.DbView;
+import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.annotation.schema.db.DbSequence;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
+import org.riverock.generic.annotation.schema.db.DbDataFieldData;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
 
 /**
  *
@@ -90,14 +87,14 @@ public class SAPconnect extends DatabaseAdapter {
         return false;
     }
 
-    public void createTable(DbTableType table) throws Exception {
+    public void createTable(DbTable table) throws Exception {
         throw new Exception("not implemented");
     }
 
-    public void createForeignKey(DbTableType view) throws Exception {
+    public void createForeignKey(DbTable view) throws Exception {
     }
 
-    public void dropTable(DbTableType table) throws Exception {
+    public void dropTable(DbTable table) throws Exception {
     }
 
     public void dropTable(String nameTable) throws Exception {
@@ -106,10 +103,10 @@ public class SAPconnect extends DatabaseAdapter {
     public void dropSequence(String nameSequence) throws Exception {
     }
 
-    public void dropConstraint(DbImportedPKColumnType impPk) throws Exception {
+    public void dropConstraint(DbImportedPKColumn impPk) throws Exception {
     }
 
-    public void addColumn(DbTableType table, DbFieldType field) throws Exception {
+    public void addColumn(DbTable table, DbField field) throws Exception {
     }
 
     public String getNameDateBind() {
@@ -128,22 +125,22 @@ public class SAPconnect extends DatabaseAdapter {
         return "SYSDATE";
     }
 
-    public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
+    public void setDefaultValue(DbTable originTable, DbField originField) {
     }
 
-    public List<DbViewType> getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 
-    public ArrayList getSequnceList(String schemaPattern) throws Exception {
+    public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
+        return new ArrayList<DbSequence>();
+    }
+
+    public String getViewText(DbView view) throws Exception {
         return null;
     }
 
-    public String getViewText(DbViewType view) throws Exception {
-        return null;
-    }
-
-    public void createView(DbViewType view)
+    public void createView(DbView view)
         throws Exception {
         if (view == null ||
             view.getName() == null || view.getName().length() == 0 ||
@@ -163,15 +160,15 @@ public class SAPconnect extends DatabaseAdapter {
         }
     }
 
-    public void createSequence(DbSequenceType seq) throws Exception {
+    public void createSequence(DbSequence seq) throws Exception {
     }
 
-    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarbinary(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setNull(index, Types.LONGVARBINARY);
     }
 
-    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
+    public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldData fieldData)
         throws SQLException {
         ps.setNull(index, Types.LONGVARCHAR);
     }
@@ -243,7 +240,7 @@ public class SAPconnect extends DatabaseAdapter {
      * @return long - следующее значение для ключа из последовательности
      * @throws SQLException
      */
-    public long getSequenceNextValue(CustomSequenceType sequence)
+    public long getSequenceNextValue(CustomSequence sequence)
         throws SQLException {
         throw new SQLException("not implemented");
 //        return 0;
