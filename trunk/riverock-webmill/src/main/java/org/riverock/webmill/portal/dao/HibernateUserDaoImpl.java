@@ -140,19 +140,12 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        UserBean bean = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.UserBean user " +
             "where  user.userId=:userId and user.isDeleted=false and user.companyId in (:companyIds)")
             .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
             .setLong("userId", portalUserBean.getUserId())
-            .uniqueResult();
-
-        if (bean==null) {
-            session.getTransaction().commit();
-            return;
-        }
-        bean.setDeleted(true);
-
+            .executeUpdate();
         session.getTransaction().commit();
     }
 

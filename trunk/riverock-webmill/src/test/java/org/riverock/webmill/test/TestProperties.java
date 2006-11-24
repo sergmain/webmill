@@ -22,6 +22,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
+package org.riverock.webmill.test;
+
+import java.util.Properties;
+import java.util.Enumeration;
+import java.sql.Timestamp;
+
+import org.riverock.common.tools.StringTools;
+import org.riverock.common.tools.DateTools;
 
 /**
  * Author: mill
@@ -30,28 +38,13 @@
  *
  * $Id$
  */
-
-package org.riverock.webmill.test;
-
-import java.util.Properties;
-import java.util.Enumeration;
-import java.sql.Timestamp;
-
-import org.apache.log4j.Logger;
-import org.riverock.common.tools.StringTools;
-import org.riverock.common.tools.DateTools;
-
-public class TestProperties
-{
-    private static Logger cat = Logger.getLogger("org.riverock.webmill.test.TestProperties");
-
-    public TestProperties()
-    {
+public class TestProperties {
+    
+    public TestProperties() {
     }
 
     public static void main(String args[])
-        throws Exception
-    {
+        throws Exception {
 
         org.riverock.generic.startup.StartupApplication.init();
 
@@ -59,15 +52,15 @@ public class TestProperties
         Properties prop = System.getProperties();
 
         Enumeration e = prop.keys();
-        for (; e.hasMoreElements() ;) {
+        for (; e.hasMoreElements();) {
 
-            String s =(String) e.nextElement();
-            String s1 = (String)prop.get( s );
-            System.out.println("Prop: "+s+", value - "+ s1 );
+            String s = (String) e.nextElement();
+            String s1 = (String) prop.get(s);
+            System.out.println("Prop: " + s + ", value - " + s1);
         }
 
-        System.out.println( System.getProperty("java.io.tmpdir"));
-        System.out.println( System.getProperty("file.encoding"));
+        System.out.println(System.getProperty("java.io.tmpdir"));
+        System.out.println(System.getProperty("file.encoding"));
 
         String i = "»»» “ÂÒÚ";
 
@@ -81,10 +74,10 @@ public class TestProperties
         byte b[] = i.getBytes();
         char c[] = new char[b.length];
 
-        for (int j=0; j<b.length; j++)
-            c[j] = (char)b[j];
+        for (int j = 0; j < b.length; j++)
+            c[j] = (char) b[j];
 //        i.
-        System.out.println( c );
+        System.out.println(c);
 
     }
 

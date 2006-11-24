@@ -37,7 +37,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Xslt;
@@ -236,35 +235,29 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
         return (List)xsltBeans;
     }
 
-    public void deleteXsltForSite(DatabaseAdapter adapter, Long siteId) {
+    public void deleteXsltForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         Query query = session.createQuery(
-            "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
-                "where xslt.siteLanguageId = :site_language_id"
-        );
+            "delete org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
+                "where xslt.siteLanguageId = :site_language_id");
+
         List<SiteLanguage> list = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
         for (SiteLanguage siteLanguage : list) {
-            query.setLong("site_language_id", siteLanguage.getSiteLanguageId());
-            List<PortalXsltBean> xsltList = query.list();
-            for (PortalXsltBean portalXsltBean : xsltList) {
-                session.delete(portalXsltBean);
-            }
+            query.setLong("site_language_id", siteLanguage.getSiteLanguageId())
+                .executeUpdate();
         }
         session.getTransaction().commit();
     }
 
-    public void deleteXsltForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId) {
+    public void deleteXsltForSiteLanguage(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        Query query = session.createQuery(
-            "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt where xslt.siteLanguageId = :site_language_id"
-        );
-        query.setLong("site_language_id", siteLanguageId);
-        List<PortalXsltBean> xsltList = query.list();
-        for (PortalXsltBean portalXsltBean : xsltList) {
-            session.delete(portalXsltBean);
-        }
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.PortalXsltBean xslt " +
+                "where xslt.siteLanguageId = :site_language_id")
+            .setLong("site_language_id", siteLanguageId)
+            .executeUpdate();
         session.getTransaction().commit();
     }
 
@@ -299,14 +292,10 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        Query query = session.createQuery(
-            "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt where xslt.id=:xslt_id"
-        );
-        query.setLong("xslt_id", xsltId);
-        PortalXsltBean bean = (PortalXsltBean)query.uniqueResult();
-        if (!bean.isCurrent()) {
-            session.delete(bean);
-        }
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.PortalXsltBean as xslt where xslt.id=:xslt_id and xslt.isCurrent=false ")
+            .setLong("xslt_id", xsltId)
+            .executeUpdate();
 
         session.getTransaction().commit();
     }

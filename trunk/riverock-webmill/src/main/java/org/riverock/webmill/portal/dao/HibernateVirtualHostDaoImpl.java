@@ -79,12 +79,10 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        Query query = session.createQuery(
-            "select host from org.riverock.webmill.portal.bean.VirtualHostBean as host " +
-            "where host.id = :id");
-        query.setLong("id", virtualHost.getId());
-        VirtualHostBean bean = (VirtualHostBean)query.uniqueResult();
-        session.delete(bean);
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.VirtualHostBean host where host.id = :id")
+            .setLong("id", virtualHost.getId())
+            .executeUpdate();
 
         session.getTransaction().commit();
     }
@@ -93,13 +91,10 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        Query query = session.createQuery(
-            "select host from org.riverock.webmill.portal.bean.VirtualHostBean as host " +
-            "where host.siteId = :site_id");
-        query.setLong("site_id", siteId);
-        VirtualHostBean bean = (VirtualHostBean)query.uniqueResult();
-        session.delete(bean);
-
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.VirtualHostBean host where host.siteId = :site_id")
+            .setLong("site_id", siteId)
+            .executeUpdate();
         session.getTransaction().commit();
     }
 

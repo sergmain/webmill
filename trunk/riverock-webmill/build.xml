@@ -46,7 +46,6 @@
     <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
 
     <path id="classpath-base">
-        <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
@@ -55,10 +54,9 @@
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
 
         <pathelement location="${lib.dir}/${servlet.lib}"/>
-        <pathelement location="${lib.dir}/${secure.lib}"/>
-        <pathelement location="${lib.dir}/${bcel.lib}"/>
         <pathelement location="${lib.dir}/${mail.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${junit.lib}"/>
 
         <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
@@ -67,16 +65,9 @@
         <pathelement location="${lib.dir}/${commons-beanutils.lib}"/>
         <pathelement location="${lib.dir}/${commons-fileupload.lib}"/>
 
-        <pathelement location="${lib.dir}/${castor.lib}"/>
-        <pathelement location="${lib.dir}/${hypersonic.lib}"/>
-        <pathelement location="${lib.dir}/${xalan.lib}"/>
-        <pathelement location="${lib.dir}/${xerces.lib}"/>
-        <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
         
         <pathelement location="${lib.dir}/${ehcache.lib}"/>
-
-        <pathelement location="${lib.dir}/ojdbc14.jar"/>
 
         <pathelement location="${lib.dir}/${jaxb-api.lib}"/>
         <pathelement location="${lib.dir}/${jsr173_1.0_api.lib}"/>
@@ -273,22 +264,6 @@
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
-            srcdir="${src-core.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
             srcdir="${src.java.dir}"
             destdir="${build.dest}"
             debug="${debug}"
@@ -337,7 +312,7 @@
 
     <patternset id="war.lib">
         <include name="${riverock-sso.lib}"/>
-        <include name="${riverock-sql-parser.lib}"/>
+        <!--<include name="${riverock-sql-parser.lib}"/>-->
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
         <include name="${riverock-webmill.lib}"/>
@@ -349,7 +324,6 @@
         <include name="${commons-collections.lib}"/>
         <include name="${commons-beanutils.lib}"/>
         <include name="${log4j.lib}"/>
-        <include name="${castor.lib}"/>
         <include name="${ehcache.lib}"/>
 
         <include name="${ejb3-persistence.lib}"/>

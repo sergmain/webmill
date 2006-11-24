@@ -59,4 +59,6 @@ public interface InternalCatalogDao {
     public void deleteCatalogLanguageItem(Long catalogLanguageId);
 
     void deleteCatalogLanguageForSiteLanguage(Long siteLanguageId);
+
+    Long getSiteId(Long catalogLanguageId);
 }

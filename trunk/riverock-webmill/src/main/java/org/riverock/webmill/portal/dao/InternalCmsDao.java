@@ -26,7 +26,6 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portal.bean.Article;
 import org.riverock.interfaces.portal.bean.NewsGroup;
 import org.riverock.interfaces.portal.bean.News;
@@ -37,10 +36,10 @@ import org.riverock.interfaces.portal.bean.News;
  *         Time: 18:10:18
  */
 public interface InternalCmsDao {
-    public void deleteArticleForSite(DatabaseAdapter adapter, Long siteId);
-    public void deleteArticleForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
-    public void deleteNewsForSite(DatabaseAdapter adapter, Long siteId);
-    public void deleteNewsForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
+    public void deleteArticleForSite(Long siteId);
+    public void deleteArticleForSiteLanguage(Long siteLanguageId);
+    public void deleteNewsForSite(Long siteId);
+    public void deleteNewsForSiteLanguage(Long siteLanguageId);
 
     List<Article> getArticleList(Long siteLanguageId, boolean isXml);
 

@@ -27,7 +27,7 @@ package org.riverock.webmill.portal.template.bean;
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 
 /**
- * Class SiteTemplateParameterType.
+ * Class PortalTemplateParameterImpl.
  *
  * @version $Revision$ $Date$
  */

@@ -106,18 +106,6 @@ public class PortalXslt implements XsltTransformer {
         }
         catch (TransformerConfigurationException e) {
             log.error("xslt with error\n"+xslt.getXsltData());
-            try {
-                log.error("Xalan version - " + org.apache.xalan.Version.getVersion());
-            }
-            catch (Throwable e1) {
-                log.error("Error get version of xalan", e1);
-            }
-            try {
-                log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion());
-            }
-            catch (Throwable e2) {
-                log.error("Error get version of xerces", e2);
-            }
             log.error("Error create TransformerFactory of XSLT", e);
             throw e;
         }
@@ -130,22 +118,9 @@ public class PortalXslt implements XsltTransformer {
         synchronized (transformerSync) {
             transformer=null;
             try {
-                Transformer transformerTemp = translet.newTransformer();
-                transformer = transformerTemp;
+                transformer = translet.newTransformer();
             }
             catch (javax.xml.transform.TransformerConfigurationException e) {
-                try {
-                    log.error("Xalan version - " + org.apache.xalan.Version.getVersion());
-                }
-                catch (Throwable e1) {
-                    log.error("Error get version of xalan", e1);
-                }
-                try {
-                    log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion());
-                }
-                catch (Throwable e2) {
-                    log.error("Error get version of xerces", e2);
-                }
                 log.error("Error create transformer", e);
                 throw e;
             }

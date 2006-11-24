@@ -27,7 +27,6 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Css;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author Sergei Maslyukov
@@ -43,7 +42,6 @@ public interface InternalCssDao {
     public Long createCss(Css css);
     public void updateCss(Css css);
     public void deleteCss(Long cssId);
-    public void deleteCssForSite(DatabaseAdapter adapter, Long siteId);
     public void deleteCssForSite(Long siteId);
 
 }
