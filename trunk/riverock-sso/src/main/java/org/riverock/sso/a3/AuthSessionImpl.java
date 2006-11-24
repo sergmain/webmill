@@ -43,10 +43,9 @@ import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.sso.bean.AuthParameterBeanImpl;
 import org.riverock.sso.config.SsoConfig;
-import org.riverock.sso.schema.config.AuthProviderParametersType;
-import org.riverock.sso.schema.config.AuthProviderType;
-import org.riverock.sso.schema.config.AuthType;
-import org.riverock.sso.schema.config.ParameterType;
+import org.riverock.sso.annotation.schema.config.Parameter;
+import org.riverock.sso.annotation.schema.config.AuthProviderParameters;
+import org.riverock.sso.annotation.schema.config.Auth;
 
 /**
  * $Id$
@@ -83,7 +82,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         if (authProviderList==null){
             synchronized(syncObj){
                 if (authProviderList==null) {
-                    AuthType auth;
+                    Auth auth;
                     try{
                         auth = SsoConfig.getAuth();
                     }
@@ -96,9 +95,8 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
 
                     authProviderList = new ArrayList<AuthProvider>();
                     if ( auth!=null ){
-                        for (Object o : auth.getAuthProviderAsReference()){
-                            AuthProviderType provider = (AuthProviderType) o;
-                            if (Boolean.TRUE.equals( provider.getIsUse() ) ){
+                        for (org.riverock.sso.annotation.schema.config.AuthProvider provider : auth.getAuthProvider()){
+                            if (Boolean.TRUE.equals( provider.isIsUse() ) ){
                                 if (log.isInfoEnabled()) {
                                     log.info("Add new auth provider "+provider.getProviderName());
                                     ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -110,12 +108,11 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
 
                                     List<List<AuthParameterBean>> lists = new ArrayList<List<AuthParameterBean>>();
                                     if (provider.getProviderParameters()!=null) {
-                                        for (Object object : provider.getProviderParameters().getParametersListAsReference() ) {
-                                            AuthProviderParametersType params = (AuthProviderParametersType) object;
+                                        for (AuthProviderParameters params : provider.getProviderParameters().getParametersList()) {
                                             List<AuthParameterBean> list = new ArrayList<AuthParameterBean>();
                                             lists.add(list);
-                                            for (Object o1 : params.getParameterAsReference()) {
-                                                ParameterType p = (ParameterType) o1;
+                                            for (Object o1 : params.getParameter()) {
+                                                Parameter p = (Parameter) o1;
                                                 AuthParameterBeanImpl bean = new AuthParameterBeanImpl();
                                                 bean.setName( p.getName() );
                                                 bean.setValue( p.getValue() );

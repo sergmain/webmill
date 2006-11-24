@@ -38,13 +38,15 @@
         <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
+
+        <pathelement location="${lib.dir}/${jaxb-api.lib}"/>
+        <pathelement location="${lib.dir}/${jsr173_1.0_api.lib}"/>
+
     </path>
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
         <antcall target="jar"/>
     </target>
 
@@ -60,28 +62,10 @@
     </target>
 
     <target name="full_clean">
-        <ant antfile="build-core.xml" target="clean"  inheritall="false" />
-        <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
     </target>
 
     <target name="compile" depends="prepare">
-        <javac
-            target="1.4"
-            source="1.4"
-            srcdir="${src-schema.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
