@@ -24,7 +24,10 @@
 package org.riverock.portlet.article;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.riverock.common.tools.DateTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.Article;
@@ -77,10 +80,17 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
     public byte[] getPlainHTML()
         throws Exception {
-        if( log.isDebugEnabled() )
+        if( log.isDebugEnabled() ) {
             log.debug( "Article plain. method is 'Plain'" );
+        }
 
-        return  article.getArticleData().getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
+        if (article.getArticleData()==null) {
+            return new byte[]{};
+        }
+
+        return
+            StringUtils.replace( article.getArticleData(), "\n", "<br>\n" )
+            .getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 
     public boolean isXml() {
@@ -109,6 +119,26 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
         return article.getArticleData();
     }
+
+/*
+    public String getArticleText() {
+        if( log.isDebugEnabled() )
+            log.debug( "Article text - " + text );
+
+        String s = text;
+        if( isTranslateCR )
+            s = StringTools.prepareToParsingSimple( s );
+
+        if( isSimpleTextBlock ) {
+            if( log.isDebugEnabled() )
+                log.debug( "isSimpleTextBlock - " + isSimpleTextBlock );
+
+            s = StringEscapeUtils.unescapeXml( s );
+        }
+
+        return s;
+    }
+*/
 
     public PortletResultContent getInstance( Long articleId ) throws PortletException {
         PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );

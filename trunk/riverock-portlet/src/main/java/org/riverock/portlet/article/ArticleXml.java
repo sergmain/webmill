@@ -86,8 +86,8 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
             append( "<" ).append( rootName ).
             append( "><ArticleDate>" ).append( dateText ).append( "</ArticleDate>" ).
             append( "<ArticleTime>" ).append( timeText ).append( "</ArticleTime>" ).
-            append( "<ArticleName>" ).append( article.getArticleName() ).append( "</ArticleName>" ).
-            append( "<ArticleText>" ).append( article.getArticleData() ).append( "</ArticleText></" ).
+            append( "<ArticleName>" ).append( article.getArticleName()!=null?article.getArticleName():"" ).append( "</ArticleName>" ).
+            append( "<ArticleText>" ).append( article.getArticleData()!=null?article.getArticleData():"" ).append( "</ArticleText></" ).
             append( rootName == null ?DEFAULT_ROOT_NAME :rootName ).append( ">" ).toString();
 
         if (log.isDebugEnabled())
