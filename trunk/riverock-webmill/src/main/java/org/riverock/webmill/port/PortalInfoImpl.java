@@ -58,6 +58,9 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private transient final static Logger log = Logger.getLogger(PortalInfoImpl.class);
 
+    /**
+     * as a key used siteId
+     */
     private transient static Map<Long, PortalInfoImpl> portatInfoMap = new ConcurrentHashMap<Long, PortalInfoImpl>();
 
     private transient Site siteBean = new SiteBean();
@@ -131,8 +134,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     private final static long LENGTH_TIME_PERIOD = 30000;
     private final static Object syncObject = new Object();
 
-    // Todo replace synchronized with synchronized(syncObject)
-    public synchronized static PortalInfoImpl getInstance(String serverName) {
+    public static PortalInfoImpl getInstance(String serverName) {
         Long id = SiteList.getSiteId(serverName);
         if (log.isDebugEnabled())
             log.debug("ServerName:" + serverName + ", siteId: " + id);
@@ -140,23 +142,32 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return getInstance(id);
     }
 
-    public synchronized static PortalInfoImpl getInstance(Long siteId) {
-
-        synchronized (syncObject) {
-
-            PortalInfoImpl p = null;
-            if (siteId != null)
-                p = portatInfoMap.get(siteId);
-
-            if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD || p == null) {
-                log.debug("#15.01.03 reinit cached value ");
-
-                p = new PortalInfoImpl(siteId);
-                portatInfoMap.put(siteId, p);
-            }
-            lastReadData = System.currentTimeMillis();
-            return p;
+    public static PortalInfoImpl getInstance(Long siteId) {
+        if (siteId==null) {
+            log.warn("siteId is null");
+            return null;
         }
+
+        PortalInfoImpl p = portatInfoMap.get(siteId);
+        if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD || p == null) {
+            synchronized (syncObject) {
+                if (p==null) {
+                    p = portatInfoMap.get(siteId);
+                    if (p!=null) {
+                        return null;
+                    }
+                }
+
+                if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD ) {
+                    log.debug("#15.01.03 reinit cached value ");
+
+                    p = new PortalInfoImpl(siteId);
+                    portatInfoMap.put(siteId, p);
+                }
+                lastReadData = System.currentTimeMillis();
+            }
+        }
+        return p;
     }
 
     private PortalInfoImpl(Long siteId) {
@@ -222,18 +233,35 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     public PortalInfoImpl() {
     }
 
+    public static void invalidateCache(Long siteLanguageId) {
+        if (siteLanguageId==null) {
+            return;
+        }
+        synchronized (syncObject) {
+            SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+            if (log.isDebugEnabled()) {
+                log.debug("Invalidate portalInfo for siteLanguageId: " + siteLanguageId+", siteLanguage bean: " + siteLanguage);
+            }
+            if (siteLanguage==null) {
+                return;
+            }
+            portatInfoMap.remove(siteLanguage.getSiteId());
+            lastReadData = 0;
+        }
+    }
+
     public void reinit() {
         synchronized (syncObject) {
             portatInfoMap.clear();
+            lastReadData = 0;
         }
-        lastReadData = 0;
     }
 
     public void terminate(java.lang.Long id_) {
         synchronized (syncObject) {
             portatInfoMap.clear();
+            lastReadData = 0;
         }
-        lastReadData = 0;
     }
 
     public Long getSiteId() {
@@ -284,7 +312,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return siteBean;
     }
 
-    public List<SiteLanguage> getSiteLanguageList() {
+    private List<SiteLanguage> getSiteLanguageList() {
         return siteLanguageList;
     }
+
 }

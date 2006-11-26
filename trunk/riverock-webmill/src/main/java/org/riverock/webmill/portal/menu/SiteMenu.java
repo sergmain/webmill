@@ -25,9 +25,9 @@
 package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
@@ -45,34 +45,70 @@ public final class SiteMenu {
     private final static Logger log = Logger.getLogger( SiteMenu.class );
 
     private List<MenuLanguage> menuLanguage = new ArrayList<MenuLanguage>();
-    private final static Map<Long, SiteMenu> siteMenuLaguage = new HashMap<Long, SiteMenu>();
+    /**
+     * as a key used siteId
+     */
+    private final static Map<Long, SiteMenu> siteMenuLaguage = new ConcurrentHashMap<Long, SiteMenu>();
 
     public List<MenuLanguage> getMenuLanguage() {
         return menuLanguage;
     }
 
-    protected void finalize() throws Throwable {
-        if (menuLanguage != null) {
-            menuLanguage.clear();
-            menuLanguage = null;
-        }
-
-        super.finalize();
-    }
-
     public SiteMenu(){}
 
-    public static SiteMenu getInstance( final Long idSite_) {
+    private final static Object syncObject = new Object();
 
-        SiteMenu tempLangMenu = siteMenuLaguage.get( idSite_ );
+    public static SiteMenu getInstance( final Long siteId) {
 
-        if (tempLangMenu!=null)
+        SiteMenu tempLangMenu = siteMenuLaguage.get( siteId );
+
+        if (tempLangMenu!=null) {
             return tempLangMenu;
+        }
 
-        synchronized(siteMenuLaguage) {
-            SiteMenu temp = new SiteMenu( idSite_ );
-            siteMenuLaguage.put( idSite_,  temp);
+        synchronized(syncObject) {
+            tempLangMenu = siteMenuLaguage.get( siteId );
+            if (tempLangMenu!=null) {
+                return tempLangMenu;
+            }
+            SiteMenu temp = new SiteMenu( siteId );
+            siteMenuLaguage.put( siteId,  temp);
             return temp;
+        }
+    }
+
+    /**
+     * @deprecated
+     */
+    public void reinit() {
+        synchronized (syncObject) {
+            siteMenuLaguage.clear();
+        }
+    }
+
+    /**
+     * @deprecated
+     * @param id_ not used
+     */
+    public void terminate(final Long id_) {
+        synchronized (syncObject) {
+            siteMenuLaguage.clear();
+        }
+    }
+    
+    public static void invalidateCache(Long siteLanguageId) {
+        if (siteLanguageId==null) {
+            return;
+        }
+        synchronized (syncObject) {
+            SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+            if (log.isDebugEnabled()) {
+                log.debug("Invalidate portalInfo for siteLanguageId: " + siteLanguageId+", siteLanguage bean: " + siteLanguage);
+            }
+            if (siteLanguage==null) {
+                return;
+            }
+            siteMenuLaguage.remove(siteLanguage.getSiteId());
         }
     }
 
@@ -106,19 +142,4 @@ public final class SiteMenu {
         }
     }
 
-    public void reinit() {
-        if (siteMenuLaguage != null) {
-            synchronized (siteMenuLaguage) {
-                siteMenuLaguage.clear();
-            }
-        }
-    }
-
-    public void terminate(final Long id_) {
-        if (siteMenuLaguage != null) {
-            synchronized (siteMenuLaguage) {
-                siteMenuLaguage.clear();
-            }
-        }
-    }
 }
