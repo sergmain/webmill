@@ -631,6 +631,9 @@ public final class DatabaseManager {
         final String insertString,
         final boolean isDelete
     ) throws Exception {
+        if (pkType.getType()==null) {
+            throw new IllegalStateException("type of PK is null");
+        }
         String sql_ = null;
         try {
 
@@ -672,8 +675,12 @@ public final class DatabaseManager {
 
                     ps1.setLong(1, idSeq);
 
-                    Integer type = dataType.get(pkType.getType());
-                    if (type==null) type = UNKNOWN_TYPE_VALUE;
+                    Integer type = dataType.get(pkType.getType().toLowerCase());
+                    if (type==null) {
+                        log.warn("Integer value of primary not found. PK type: " + pkType.getType().toLowerCase());
+                        type = UNKNOWN_TYPE_VALUE;
+                    }
+
                     switch(type) {
                         case NUMBER_TYPE_VALUE:
 
@@ -729,6 +736,9 @@ public final class DatabaseManager {
     }
 
     public static void deleteFromBigTable(final DatabaseAdapter dbDyn, final String nameTargetTable, final String pkName, final PrimaryKey pkType, final Object idRec) throws Exception {
+        if (pkType.getType()==null) {
+            throw new IllegalStateException("type of PK is null");
+        }
         PreparedStatement ps = null;
         try {
             String sql_ = "delete from " + nameTargetTable + " where " + pkName + "=?";
@@ -736,8 +746,11 @@ public final class DatabaseManager {
 
             ps = dbDyn.prepareStatement(sql_);
 
-            Integer type = dataType.get(pkType.getType());
-            if (type==null) type = UNKNOWN_TYPE_VALUE;
+            Integer type = dataType.get(pkType.getType().toLowerCase());
+            if (type==null) {
+                log.warn("Integer value of primary not found. PK type: " + pkType.getType().toLowerCase());
+                type = UNKNOWN_TYPE_VALUE;
+            }
             switch(type) {
                 case NUMBER_TYPE_VALUE:
                     if (log.isDebugEnabled()) log.debug("#88.01.02 " + idRec.getClass().getName());
