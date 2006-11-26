@@ -29,10 +29,6 @@ import java.io.Serializable;
 
 import org.riverock.webmill.container.portlet.PortletContainer;
 
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlType;
-
 /**
  * @author Serge Maslyukov
  *         Created 06.08.2005
@@ -93,7 +89,7 @@ public class PortletDefinition implements Serializable {
     /**
      * Field portletPreferences
      */
-    private Preferences preferences;
+    private Preferences preferences=null;
 
     /**
      * Field securityRoleRefList
@@ -137,6 +133,9 @@ public class PortletDefinition implements Serializable {
     }
 
     public Preferences getPreferences() {
+        if (preferences==null) {
+            preferences = new Preferences();
+        }
         return preferences;
     }
 

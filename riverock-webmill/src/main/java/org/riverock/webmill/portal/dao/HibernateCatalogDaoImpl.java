@@ -207,7 +207,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLang " +
                 "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
                 "      catalogLang.siteLanguageId=siteLang.siteLanguageId and " +
-                "      siteLang.siteId=:siteId and siteLang.customLanguage=:customLanguage and " +
+                "      siteLang.siteId=:siteId and lower(siteLang.customLanguage)=:customLanguage and " +
                 "      catalog.url=:url")
             .setLong("siteId", siteId)
             .setString("customLanguage", locale.toString().toLowerCase())

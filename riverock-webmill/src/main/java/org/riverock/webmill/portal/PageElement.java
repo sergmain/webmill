@@ -41,6 +41,7 @@ import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletEntry;
+import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
@@ -252,7 +253,7 @@ public final class PageElement {
             portletContainer.getContentCache().setContent( portletEntry.getPortletDefinition(), data, renderRequest );
         }
         catch( javax.portlet.UnavailableException ue ) {
-            PortletContainer.destroy( portletEntry.getPortletDefinition().getPortletName(), portletEntry.getPortalPath() );
+            PortletContainerFactory.destroy( portletEntry.getPortletDefinition().getPortletName(), portletEntry.getPortalPath() );
             errorString = portletUnavailable(portletEntry.getPortletDefinition().getPortletName());
             log.error( errorString, ue );
         }

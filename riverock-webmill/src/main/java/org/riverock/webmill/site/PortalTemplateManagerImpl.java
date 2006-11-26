@@ -52,10 +52,8 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     private static final int INIT_COUNT_OF_SITE = 10;
 
     private static Map<Long, PortalTemplateManager> managers = new HashMap<Long, PortalTemplateManager>(INIT_COUNT_OF_SITE);
-    private Map<Long, PortalTemplate> hashId = new ConcurrentHashMap<Long, PortalTemplate>(INIT_COUNT_OF_SITE);
 
     private static Digester digester = null;
-
     static {
         digester = new Digester();
         digester.setValidating(false);
@@ -77,6 +75,9 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         digester.addSetNext("SiteTemplate/SiteTemplateItem/Parameter", "addParameter");
 
     }
+
+    private Map<Long, PortalTemplate> hashId = new ConcurrentHashMap<Long, PortalTemplate>(INIT_COUNT_OF_SITE);
+    private Long siteId;
 
     public static PortalTemplateManager getInstance(Long siteId) {
         PortalTemplateManager manager = managers.get(siteId);
@@ -113,7 +114,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         if ( nameTemplate == null || lang == null )
             return null;
 
-        Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(nameTemplate, lang); 
+        Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(siteId, nameTemplate, lang); 
         if (template==null) {
             return null;
         }
@@ -140,6 +141,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     }
 
     private PortalTemplateManagerImpl(Long siteId) {
+        this.siteId=siteId;
         log.debug("Start PortalTemplateManagerImpl()");
         for (Template template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
             try {

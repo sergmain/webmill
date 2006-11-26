@@ -43,8 +43,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.portlet.schema.portlet.login.LoginType;
-import org.riverock.portlet.schema.portlet.login.types.LoginTypeIsLoggedType;
+import org.riverock.portlet.login.schema.LoginType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -95,7 +94,7 @@ public final class LoginXmlPortlet implements Portlet {
                 if ( log.isDebugEnabled() )
                     log.debug( "user " + auth_.getUserLogin() + " is  valid for " + renderRequest.getServerName() + " site" );
 
-                login.setIsLogged( LoginTypeIsLoggedType.VALUE_1 );
+                login.setIsLogged( 1 );
                 login.setInviteMessage( "User already logged in." );
                 login.setUserName( auth_.getName() );
             }
@@ -124,7 +123,7 @@ public final class LoginXmlPortlet implements Portlet {
                 login.setLoginMessage( bundle.getString( "auth.check.login" ) );
                 login.setPasswordMessage( bundle.getString( "auth.check.password" ) );
                 login.setButtonMessage( bundle.getString( "auth.check.register" ) );
-                login.setIsLogged( LoginTypeIsLoggedType.VALUE_0 );
+                login.setIsLogged( 0 );
             }
 
             String xmlRoot = (String)renderRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE );

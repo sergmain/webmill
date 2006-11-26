@@ -103,7 +103,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
      * @param lang String
      * @return org.riverock.interfaces.portal.bean.Template - Attention! template data not initalized
      */
-    public Template getTemplate(String templateName, String lang) {
+    public Template getTemplate(Long  siteId, String templateName, String lang) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         TemplateBean bean = (TemplateBean)session.createQuery(
@@ -111,9 +111,10 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                 "from  org.riverock.webmill.portal.bean.TemplateBean as template, " +
                 "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLang " +
                 "where template.templateName=:templateName and template.siteLanguageId=siteLang.siteLanguageId and " +
-                "      siteLang.customLanguage=:customLanguage")
+                "      siteLang.customLanguage=:customLanguage and siteLang.siteId=:siteId")
             .setString("templateName", templateName)
             .setString("customLanguage", lang)
+            .setLong("siteId", siteId)
             .uniqueResult();
 
         // Do not process blob at this point

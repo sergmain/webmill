@@ -79,9 +79,9 @@
     <property name="jdom.lib" value="jdom-1.0.jar"/>
     <property name="nekohtml.lib" value="nekohtml-0.9.5.jar"/>
 
-    <property name="jaxb-api.lib" value="jaxb-api-2.0.2.jar"/>
-    <property name="jaxb-impl.lib" value="jaxb-impl-2.0.2.jar"/>
-    <property name="jaxb-xjc.lib" value="jaxb-xjc-2.0.2.jar"/>
+    <property name="jaxb-api.lib" value="jaxb-api-2.0.4.jar"/>
+    <property name="jaxb-impl.lib" value="jaxb-impl-2.0.4.jar"/>
+    <property name="jaxb-xjc.lib" value="jaxb-xjc-2.0.4.jar"/>
     <property name="jsr173_1.0_api.lib" value="jsr173_1.0_api.jar"/>
 
     <property name="mail.lib" value="mail-1.4.jar"/>

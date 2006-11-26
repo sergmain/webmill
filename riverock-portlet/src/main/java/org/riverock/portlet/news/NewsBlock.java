@@ -23,20 +23,18 @@
  */
 package org.riverock.portlet.news;
 
-import java.util.Date;
+import org.apache.log4j.Logger;
+import org.riverock.generic.tools.XmlTools;
+import org.riverock.portlet.news.schema.NewsBlockType;
+import org.riverock.portlet.news.schema.NewsGroupType;
+import org.riverock.portlet.news.schema.NewsItemType;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
-import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
-import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
-import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import java.util.Date;
 
 /**
  *
@@ -62,11 +60,8 @@ public final class NewsBlock implements PortletResultContent {
         StringBuilder s =
                 new StringBuilder( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
 
-        for (int i = 0; i < newsBlockType.getNewsGroupCount(); i++)
-        {
-            NewsGroupType newsGroup = newsBlockType.getNewsGroup(i);
-            if (newsGroup.getNewsItemCount() > 0)
-            {
+        for (NewsGroupType newsGroup : newsBlockType.getNewsGroup()) {
+            if (!newsGroup.getNewsItem().isEmpty()) {
                 s.
                     append( "<tr><td colspan=\"2\" class=\"newshead\">" ).
                     append( newsGroup.getNewsGroupName() ).
@@ -74,10 +69,12 @@ public final class NewsBlock implements PortletResultContent {
 
                 Date currentDate = null;
                 boolean isFirst = true;
-                for (int i_news = 0; i_news < newsGroup.getNewsItemCount(); i_news++) {
-                    NewsItemType newsItem = newsGroup.getNewsItem(i_news);
-                    if (currentDate==null || currentDate.getTime()!= newsItem.getNewsDateTime().getTime()) {
-                        currentDate = newsItem.getNewsDateTime();
+                for (NewsItemType newsItem : newsGroup.getNewsItem()) {
+                    if (currentDate==null || currentDate.getTime()!= newsItem.getNewsDateTime().toGregorianCalendar().getTimeInMillis()) {
+//                        GregorianCalendar calendar = new GregorianCalendar();
+//                        calendar.setTimeInMillis(rs.getTimestamp(field.getName()).getTime());
+//                        fieldData.setDateData(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
+                        currentDate = newsItem.getNewsDateTime().toGregorianCalendar().getTime();
                         isFirst = true;
                     }
                     if (isFirst) {

@@ -45,9 +45,9 @@ import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.portlet.schema.portlet.job.JobBlockType;
-import org.riverock.portlet.schema.portlet.job.JobItemType;
 import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.portlet.job.schema.JobBlockType;
+import org.riverock.portlet.job.schema.JobItemType;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.ContainerConstants;
@@ -169,7 +169,7 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
             job.setTextJobString(ji.getTextJobString());
             job.setUrl(ji.getUrlToJob(renderRequest, renderResponse));
 
-            block.addJobItem(job);
+            block.getJobItem().add(job);
         }
 
         if( log.isDebugEnabled() ) {

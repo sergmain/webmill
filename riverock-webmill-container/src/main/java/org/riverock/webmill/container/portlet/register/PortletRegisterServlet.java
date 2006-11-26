@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServlet;
 
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
+import org.riverock.webmill.container.portlet.PortletContainerFactory;
+import org.riverock.webmill.container.tools.PortletContainerUtils;
 
 /**
  * @author smaslyukov
@@ -63,8 +65,9 @@ public class PortletRegisterServlet extends HttpServlet {
             try {
                 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                 System.out.println("PortletRegisterServlet classLoader\n" + classLoader + "\nhashCode: " + classLoader.hashCode() );
-                String portalPath = new File(servletConfig.getServletContext().getRealPath("/")).getParent();
-                PortletContainer.registerPortletFile( uniqueName, portletFile, servletConfig, classLoader, portalPath );
+                String deployedPath = PortletContainerUtils.getDeployedInPath(servletConfig);
+                System.out.println("deployed in path = " + deployedPath);
+                PortletContainerFactory.registerPortletFile( uniqueName, portletFile, servletConfig, classLoader, deployedPath );
             }
             catch (PortletContainerException e) {
                 String es = "Error register portlet";
@@ -76,7 +79,7 @@ public class PortletRegisterServlet extends HttpServlet {
     public final void destroy() {
         System.out.println("#1. Undeploy uniqueName: " + uniqueName);
         try {
-            PortletContainer.destroy( uniqueName, new File(servletConfig.getServletContext().getRealPath("/")).getParent() );
+            PortletContainerFactory.destroy( uniqueName, PortletContainerUtils.getDeployedInPath(servletConfig));
         }
         catch(Throwable th) {
             th.printStackTrace( System.out );

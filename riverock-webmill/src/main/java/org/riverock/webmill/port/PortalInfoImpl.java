@@ -195,7 +195,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
         siteLanguageList = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList( siteId );
-        if (log.isInfoEnabled()) log.info("Init language listfor " + (System.currentTimeMillis() - mills) + " milliseconds");
+        if (log.isInfoEnabled()) log.info("Init language list for " + (System.currentTimeMillis() - mills) + " milliseconds");
 
         initMenu();
     }

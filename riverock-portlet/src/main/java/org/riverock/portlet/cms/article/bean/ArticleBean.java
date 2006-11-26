@@ -51,6 +51,7 @@ public class ArticleBean implements Article, Serializable {
 
     public ArticleBean(Article articleBean) {
         this.articleId = articleBean.getArticleId();
+        this.siteLanguageId = articleBean.getSiteLanguageId();
         this.articleName = articleBean.getArticleName();
         this.articleCode = articleBean.getArticleCode();
         this.articleText = articleBean.getArticleData();

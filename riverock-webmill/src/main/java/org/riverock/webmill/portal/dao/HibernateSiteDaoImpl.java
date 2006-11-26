@@ -148,7 +148,6 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             bean.setSiteName(site.getSiteName());
             bean.setProperties(site.getProperties());
         }
-        session.getTransaction().commit();
         if (bean!=null && hosts!=null) {
             List<VirtualHostBean> list = session.createQuery(
                 "select host from org.riverock.webmill.portal.bean.VirtualHostBean as host " +
@@ -194,6 +193,7 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                 }
             }
         }
+        session.getTransaction().commit();
     }
 
     public void deleteSite(Long siteId) {
@@ -204,9 +204,10 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             "select news " +
                 "from  org.riverock.webmill.portal.bean.NewsBean news, " +
                 "      org.riverock.webmill.portal.bean.NewsGroupBean newsGroup, " +
-                "      org.riverock.webmill.portal.bean.SiteBean site " +
+                "      org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
                 "where news.newsGroupId=newsGroup.newsGroupId and " +
-                "      newsGroup.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+                "      newsGroup.siteLanguageId=siteLanguage.siteLanguageId and " +
+                "      siteLanguage.siteId=:siteId")
             .setLong("siteId", siteId)
             .list();
 
@@ -217,8 +218,9 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
         List<NewsGroupBean> groupBeans = session.createQuery(
             "select newsGroup " +
                 "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup, " +
-                "      org.riverock.webmill.portal.bean.SiteBean site " +
-                "where newsGroup.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+                "      org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where newsGroup.siteLanguageId=siteLanguage.siteLanguageId and " +
+                "      siteLanguage.siteId=:siteId")
             .setLong("siteId", siteId)
             .list();
 
@@ -228,9 +230,10 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
 
         List<ArticleBean> articleBeans = session.createQuery(
             "select article " +
-                "from org.riverock.webmill.portal.bean.ArticleBean as article, " +
-                "     org.riverock.webmill.portal.bean.SiteBean site " +
-                "where article.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+                "from  org.riverock.webmill.portal.bean.ArticleBean as article, " +
+                "      org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where article.siteLanguageId=siteLanguage.siteLanguageId and " +
+                "      siteLanguage.siteId=:siteId")
             .setLong("siteId", siteId)
             .list();
 
@@ -258,8 +261,8 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
         List<PortalXsltBean> xsltList = session.createQuery(
             "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt, " +
                 " org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-                "where xslt.siteLanguageId = siteLanguage.siteLanguageId and siteLanguage.siteId = :site_id")
-            .setLong("site_id", siteId)
+                "where xslt.siteLanguageId = siteLanguage.siteLanguageId and siteLanguage.siteId=:siteId")
+            .setLong("siteId", siteId)
             .list();
         for (PortalXsltBean portalXsltBean : xsltList) {
             session.delete(portalXsltBean);

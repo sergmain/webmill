@@ -1,0 +1,1 @@
+C:\opt2\jaxb-ri-20061115\bin\xjc.bat riverock-portlet-menu.xsd -p org.riverock.portlet.menu.schema -d ../java

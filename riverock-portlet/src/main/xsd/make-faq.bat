@@ -1,0 +1,1 @@
+C:\opt2\jaxb-ri-20061115\bin\xjc.bat riverock-portlet-faq.xsd -p org.riverock.portlet.faq.schema -d ../java

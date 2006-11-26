@@ -24,7 +24,6 @@
  */
 package org.riverock.webmill.portal;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -51,6 +50,8 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.container.portlet.PortletContainerFactory;
+import org.riverock.webmill.container.tools.PortletContainerUtils;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.utils.PortalUtils;
@@ -265,7 +266,7 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private PortalInstanceImpl( ServletConfig servletConfig ) {
         this.portalServletConfig = servletConfig;
-        this.portletContainer = PortletContainer.getInstance( this, new File(servletConfig.getServletContext().getRealPath("/")).getParent() );
+        this.portletContainer = PortletContainerFactory.getInstance( this, PortletContainerUtils.getDeployedInPath(servletConfig) );
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
     }
 
