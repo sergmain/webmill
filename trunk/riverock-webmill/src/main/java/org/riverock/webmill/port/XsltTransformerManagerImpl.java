@@ -77,6 +77,8 @@ public class XsltTransformerManagerImpl implements XsltTransformerManager {
                 return tr.transformer;
             }
             else if (tr.xslt.getVersion()<currentXslt.getVersion()) {
+                SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteId, lang);
+                currentXslt = InternalDaoFactory.getInternalXsltDao().getCurrentXslt(siteLanguage.getSiteLanguageId());
                 tr = new Transformation();
                 tr.transformer = new PortalXslt( currentXslt );
                 tr.xslt = currentXslt;
