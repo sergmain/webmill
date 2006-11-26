@@ -89,7 +89,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
     }
 
     public int getMaxLengthStringField() {
-        return 1000000;
+        return 65535;
     }
 
     protected DataSource createDataSource() {
