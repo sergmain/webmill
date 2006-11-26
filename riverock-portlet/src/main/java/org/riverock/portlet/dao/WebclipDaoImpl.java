@@ -284,7 +284,7 @@ public class WebclipDaoImpl implements WebclipDao {
             return "";
         }
 
-        return DatabaseManager.getBigTextField(db, webclipId, "WEBCLIP_DATA", "WM_PORTLET_WEBCLIP_DATA", "ID_WEBCLIP", "ID_WEBCLIP");
+        return DatabaseManager.getBigTextField(db, webclipId, "WEBCLIP_DATA", "WM_PORTLET_WEBCLIP_DATA", "ID_WEBCLIP", "ID_WEBCLIP_DATA");
     }
 }
 
