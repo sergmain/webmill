@@ -36,7 +36,7 @@ import org.riverock.interfaces.portal.bean.Template;
 public interface InternalTemplateDao {
     public Template getTemplate(Long templateId);
     public Template getTemplate(String templateName, Long siteLanguageId);
-    public Template getTemplate(String templateName, String lang);
+    public Template getTemplate(Long siteId, String templateName, String lang);
     public Template getDefaultDynamicTemplate(Long siteLanguageId);
 
     public List<Template> getTemplateLanguageList( Long siteLanguageId );

@@ -97,12 +97,6 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
         }
         catch(Exception e) {
             log.error("Error persists register object to XML", e);
-            try{
-                log.error("info Xerces version - " + org.apache.xerces.impl.Version.getVersion() );
-            }
-            catch(Exception e2){
-                log.error("Error get version of xerces "+e.getMessage());
-            }
             throw e;
         }
 

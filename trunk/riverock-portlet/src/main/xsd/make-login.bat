@@ -1,0 +1,1 @@
+C:\opt2\jaxb-ri-20061115\bin\xjc.bat riverock-portlet-login.xsd -p org.riverock.portlet.login.schema -d ../java

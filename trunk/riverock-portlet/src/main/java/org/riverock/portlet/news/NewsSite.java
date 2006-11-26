@@ -23,16 +23,15 @@
  */
 package org.riverock.portlet.news;
 
-import java.util.Enumeration;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -43,9 +42,9 @@ import org.riverock.interfaces.portal.bean.NewsGroup;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
-import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
-import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
+import org.riverock.portlet.news.schema.NewsBlockType;
+import org.riverock.portlet.news.schema.NewsItemType;
+import org.riverock.portlet.news.schema.NewsGroupType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -132,10 +131,8 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         }
 
         try {
-            for( int j = 0; j < newsBlock.getNewsGroupCount(); j++ ) {
-                NewsGroupType newsGroupType = newsBlock.getNewsGroup( j );
-                for( int i = 0; i < newsGroupType.getNewsItemCount(); i++ ) {
-                    NewsItemType item = newsGroupType.getNewsItem( i );
+            for (NewsGroupType newsGroupType : newsBlock.getNewsGroup()) {
+                for (NewsItemType item : newsGroupType.getNewsItem()) {
                     item.setToFullItem( nextNews );
 
                     PortletURL portletUrl = renderResponse.createRenderURL();
@@ -172,7 +169,16 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
             for (News news : newses) {
                 NewsItemType newsItemType = new NewsItemType();
                 newsItemType.setNewsAnons(StringEscapeUtils.unescapeXml(news.getNewsAnons()));
-                newsItemType.setNewsDateTime(news.getPostDate());
+
+                GregorianCalendar calendar = new GregorianCalendar();
+                calendar.setTimeInMillis(news.getPostDate().getTime());
+                try {
+                    newsItemType.setNewsDateTime(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
+                } catch (DatatypeConfigurationException e) {
+                    log.error("Error", e);
+                    throw new PortletException(e);
+                }
+
                 newsItemType.setNewsHeader(StringEscapeUtils.unescapeXml(news.getNewsHeader()));
                 newsItemType.setNewsItemId(news.getNewsId());
                 newsItemType.setNewsText(news.getNewsText());
@@ -180,9 +186,9 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
                 newsItemType.setNewsDate(DateUtils.getStringDate(news.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale()));
                 newsItemType.setNewsTime(DateUtils.getStringDate(news.getPostDate(), "HH:mm", renderRequest.getLocale()));
 
-                newsGroupType.addNewsItem(newsItemType);
+                newsGroupType.getNewsItem().add(newsItemType);
             }
-            nb.addNewsGroup(newsGroupType);
+            nb.getNewsGroup().add(newsGroupType);
         }
 
         return nb;
@@ -201,10 +207,9 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
 
     public PortletResultContent getInstanceByCode( String newsGroupCode) throws PortletException {
         NewsBlockType newsBlock = initNews();
-        for (Object o : newsBlock.getNewsGroupAsReference()) {
-            NewsGroupType newsGroup = (NewsGroupType) o;
+        for (NewsGroupType newsGroup : newsBlock.getNewsGroup()) {
             if (newsGroup.getNewsGroupCode()!=null && newsGroup.getNewsGroupCode().equals(newsGroupCode)) {
-                newsBlock.addNewsGroup(newsGroup);
+                newsBlock.getNewsGroup().add(newsGroup);
                 break;
             }
         }

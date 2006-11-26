@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _SsoConfig_QNAME = new QName("", "SsoConfig");
+    private final static QName _SsoConfig_QNAME = new QName("", "SsoConfigProcessor");
     private final static QName _AuthProvider_QNAME = new QName("", "AuthProvider");
 
     /**
@@ -101,7 +101,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link SsoConfig }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "SsoConfig")
+    @XmlElementDecl(namespace = "", name = "SsoConfigProcessor")
     public JAXBElement<SsoConfig> createSsoConfig(SsoConfig value) {
         return new JAXBElement<SsoConfig>(_SsoConfig_QNAME, SsoConfig.class, null, value);
     }

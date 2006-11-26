@@ -1,0 +1,1 @@
+C:\opt2\jaxb-ri-20061115\bin\xjc.bat riverock-portlet-job.xsd -p org.riverock.portlet.job.schema -d ../java

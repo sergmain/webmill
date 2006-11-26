@@ -26,7 +26,6 @@ package org.riverock.portlet.faq;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.portlet.PortletConfig;
@@ -43,9 +42,9 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.portlet.schema.portlet.faq.FaqBlockType;
-import org.riverock.portlet.schema.portlet.faq.FaqGroupType;
-import org.riverock.portlet.schema.portlet.faq.FaqItemType;
+import org.riverock.portlet.faq.schema.FaqBlockType;
+import org.riverock.portlet.faq.schema.FaqGroupType;
+import org.riverock.portlet.faq.schema.FaqItemType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
@@ -126,17 +125,12 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
 
     public byte[] getPlainHTML() {
         String s = "";
-        Iterator<FaqGroup> it = v.iterator();
-        while( it.hasNext() ) {
-            FaqGroup faqGroup = it.next();
+        for (FaqGroup faqGroup : v) {
             s += faqGroup.faqGroupName + "<br>";
 
             s += "<table border=\"0\">";
 
-            Iterator<FaqItem> iter = faqGroup.v.iterator();
-            while( iter.hasNext() ) {
-                FaqItem faqItem = iter.next();
-
+            for (FaqItem faqItem : faqGroup.v) {
                 s += "<tr><td>" + faqItem.question + "</td><td>" + faqItem.answer + "</td></tr>";
             }
             s += "</table>";
@@ -147,22 +141,20 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
     public byte[] getXml( final String rootElement ) throws Exception {
         FaqBlockType faqBlock = new FaqBlockType();
 
-        for( int i = 0; i < v.size(); i++ ) {
-            FaqGroup faqGroup = ( FaqGroup ) v.get( i );
+        for (FaqGroup faqGroup : v) {
             FaqGroupType group_ = new FaqGroupType();
-            group_.setFaqGroupName( faqGroup.faqGroupName );
+            group_.setFaqGroupName(faqGroup.faqGroupName);
 
-            for( int j = 0; j < faqGroup.v.size(); j++ ) {
-                FaqItem fi = ( FaqItem ) faqGroup.v.get( j );
+            for (FaqItem fi : faqGroup.v) {
                 FaqItemType item_ = new FaqItemType();
-                item_.setFaqItemAnswer( fi.answer );
-                item_.setFaqItemQuestion( fi.question );
-                item_.setFaqItemDate( DateTools.getStringDate( fi.datePost, "dd.MMM.yyyy", renderRequest.getLocale() ) );
-                item_.setFaqItemTime( DateTools.getStringDate( fi.datePost, "HH:mm", renderRequest.getLocale() ) );
+                item_.setFaqItemAnswer(fi.answer);
+                item_.setFaqItemQuestion(fi.question);
+                item_.setFaqItemDate(DateTools.getStringDate(fi.datePost, "dd.MMM.yyyy", renderRequest.getLocale()));
+                item_.setFaqItemTime(DateTools.getStringDate(fi.datePost, "HH:mm", renderRequest.getLocale()));
 
-                group_.addFaqItem( item_ );
+                group_.getFaqItem().add(item_);
             }
-            faqBlock.addFaqGroup( group_ );
+            faqBlock.getFaqGroup().add(group_);
         }
 
         return XmlTools.getXml( faqBlock, rootElement );

@@ -38,9 +38,9 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.news.NewsSite;
-import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
-import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
-import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
+import org.riverock.portlet.news.schema.NewsBlockType;
+import org.riverock.portlet.news.schema.NewsGroupType;
+import org.riverock.portlet.news.schema.NewsItemType;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -295,15 +295,13 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 */
     }
 
-    private void doTestNewsBlockPortletByCode()
-        throws Exception
-    {
+    private void doTestNewsBlockPortletByCode() throws Exception {
+
+/*
         NewsBlockType resultBlock = new NewsBlockType();
         resultBlock.setIdSiteLanguage( newsBlock.getIdSiteLanguage() );
 
-        for (int i=0;i< newsBlock.getNewsGroupCount(); i++)
-        {
-            NewsGroupType group = newsBlock.getNewsGroup(i);
+        for (NewsGroupType group : newsBlock.getNewsGroup()) {
             if (NEWS_GROUP_CODE.equals(group.getNewsGroupCode()) )
             {
                 NewsGroupType targetGroup = new NewsGroupType();
@@ -318,59 +316,45 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
                 {
                     NewsItemType item = getLatestNewsItem( group, startDate );
                     startDate = item.getNewsDateTime().getTime();
-                    targetGroup.addNewsItem( item );
+                    targetGroup.getNewsItem().add( item );
                 }
-                resultBlock.addNewsGroup( targetGroup );
+                resultBlock.getNewsGroup().add( targetGroup );
                 break;
             }
         }
 
-/*
         XmlTools.writeToFile(
             resultBlock,
             SiteUtils.getTempDir() + "news-block-result.xml",
-            "utf-8",
-            null
+            "utf-8"
         );
-*/
 
-        for (int i=0;i< resultBlock.getNewsGroupCount(); i++)
-        {
-            NewsGroupType groupResult = resultBlock.getNewsGroup(i);
-            for (int j=0; j<newsBlock.getNewsGroupCount();j++)
-            {
-                NewsGroupType groupOrigin = newsBlock.getNewsGroup(j);
+        for (NewsGroupType groupResult : resultBlock.getNewsGroup()) {
+            for (NewsGroupType groupOrigin : newsBlock.getNewsGroup()) {
                 if (groupOrigin.getNewsGroupId()==groupResult.getNewsGroupId())
                     assertFalse("Wrong number of item in group",
-                        groupOrigin.getMaxNews().intValue()<groupResult.getNewsItemCount());
+                        groupOrigin.getMaxNews().intValue()<groupResult.getNewsItem().size());
             }
         }
 
         testAbstract.initRequestSession();
         String str = null;
-        try
-        {
-/*
-            if (testAbstract.jspPage.sMain.checkKey("main.next-news"))
-                str = testAbstract.jspPage.sMain.getStr("main.next-news");
-            else
-                str = testAbstract.jspPage.sMain.getStr("main.next");
-*/
-        }
-        catch (Exception e)
-        {
-            log.error("Error get localized string", e);
-            str = "error";
-        }
+//        try
+//        {
+//            if (testAbstract.jspPage.sMain.checkKey("main.next-news"))
+//                str = testAbstract.jspPage.sMain.getStr("main.next-news");
+//            else
+//                str = testAbstract.jspPage.sMain.getStr("main.next");
+//        }
+//        catch (Exception e)
+//        {
+//            log.error("Error get localized string", e);
+//            str = "error";
+//        }
 
-        for (int i=0;i< resultBlock.getNewsGroupCount(); i++)
-        {
-            NewsGroupType groupResult = resultBlock.getNewsGroup(i);
+        for (NewsGroupType groupResult : resultBlock.getNewsGroup()) {
             groupResult.setOrderValue( null );
-            for (int j=0; j<groupResult.getNewsItemCount();j++)
-            {
-                NewsItemType newsItem = groupResult.getNewsItem(j);
-
+            for (NewsItemType newsItem : groupResult.getNewsItem()) {
                 newsItem.setToFullItem( str );
                 newsItem.setUrlToFullNewsItem(
 //                    PortletService.url( Constants .CTX_TYPE_NEWS ) + '&' +
@@ -414,6 +398,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 //        assertFalse("Transforming failed. Origin and Result NewsBlock not equals",
 //            !new String(originByte).equals(new String( resultByte))
 //            );
+*/
     }
 
     private void initNewsItemRequestByCode()
@@ -431,16 +416,10 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
     }
 
 
-    private void doTestNewsItemPortletById()
-        throws Exception
-    {
-        for (int i=0;i< newsBlock.getNewsGroupCount(); i++)
-        {
-            NewsGroupType group = newsBlock.getNewsGroup(i);
-            for (int j=0; j<group.getNewsItemCount(); j++)
-            {
-                NewsItemType item = group.getNewsItem(j);
-
+    private void doTestNewsItemPortletById() throws Exception {
+        
+        for (NewsGroupType group : newsBlock.getNewsGroup()) {
+            for (NewsItemType item : group.getNewsItem()) {
                 testAbstract.initRequestSession();
 
                 PortletDefinition desc;
@@ -518,9 +497,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
         int returnValue = Integer.MAX_VALUE;
 
         NewsGroupType returnGroup = null;
-        for (int i=0;i< newsBlock.getNewsGroupCount(); i++)
-        {
-            NewsGroupType group = newsBlock.getNewsGroup(i);
+        for (NewsGroupType group : newsBlock.getNewsGroup()) {
             if ( startOrder<group.getOrderValue().intValue() && group.getOrderValue().intValue()< returnValue )
             {
                 returnValue = group.getOrderValue().intValue();
@@ -536,10 +513,8 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
         long returnValue = Long.MIN_VALUE;
 
         NewsItemType returnItem = null;
-        for (int i=0;i< group.getNewsItemCount(); i++)
-        {
-            NewsItemType item = group.getNewsItem(i);
-            long currMills = item.getNewsDateTime().getTime();
+        for (NewsItemType item : group.getNewsItem()) {
+            long currMills = item.getNewsDateTime().toGregorianCalendar().getTimeInMillis();
             if ( mills>currMills && currMills>returnValue)
             {
                 returnValue = currMills;
@@ -557,10 +532,9 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
         resultBlock.setIdSiteLanguage( newsBlock.getIdSiteLanguage() );
 
         int startOrder = Integer.MIN_VALUE;
-        for (int i=0;i< newsBlock.getNewsGroupCount(); i++)
-        {
+        for (NewsGroupType newsGroupType : newsBlock.getNewsGroup()) {
             NewsGroupType group = getMinNewsBlock(startOrder);
-            startOrder = group.getOrderValue().intValue();
+            startOrder = group.getOrderValue();
             NewsGroupType targetGroup = new NewsGroupType();
             targetGroup.setNewsGroupName( group.getNewsGroupName() );
             targetGroup.setOrderValue( group.getOrderValue() );
@@ -569,39 +543,33 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             targetGroup.setNewsGroupCode( group.getNewsGroupCode() );
 
             long startDate = Long.MAX_VALUE;
+/*
             for (int j=0; j<group.getNewsItemCount() && targetGroup.getNewsItemCount()<group.getMaxNews().intValue(); j++)
             {
                 NewsItemType item = getLatestNewsItem( group, startDate );
-                startDate = item.getNewsDateTime().getTime();
-                targetGroup.addNewsItem( item );
+                startDate = item.getNewsDateTime().toGregorianCalendar().getTimeInMillis();
+                targetGroup.getNewsItem().add( item );
             }
-            resultBlock.addNewsGroup( targetGroup );
+*/
+            resultBlock.getNewsGroup().add( targetGroup );
         }
 
-/*
         XmlTools.writeToFile(
             newsBlock,
             SiteUtils.getTempDir() + "news-block-origin.xml",
-            "utf-8",
-            null
+            "utf-8"
         );
         XmlTools.writeToFile(
             resultBlock,
             SiteUtils.getTempDir() + "news-block-result.xml",
-            "utf-8",
-            null
+            "utf-8"
         );
-*/
 
-        for (int i=0;i< resultBlock.getNewsGroupCount(); i++)
-        {
-            NewsGroupType groupResult = resultBlock.getNewsGroup(i);
-            for (int j=0; j<newsBlock.getNewsGroupCount();j++)
-            {
-                NewsGroupType groupOrigin = newsBlock.getNewsGroup(j);
+        for (NewsGroupType groupResult : resultBlock.getNewsGroup()) {
+            for (NewsGroupType groupOrigin : newsBlock.getNewsGroup()) {
                 if (groupOrigin.getNewsGroupId()==groupResult.getNewsGroupId())
                     assertFalse("Wrong number of item in group",
-                        groupOrigin.getMaxNews().intValue()<groupResult.getNewsItemCount());
+                        groupOrigin.getMaxNews().intValue()<groupResult.getNewsItem().size());
             }
         }
 
@@ -621,14 +589,9 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             str = "error";
         }
 
-        for (int i=0;i< resultBlock.getNewsGroupCount(); i++)
-        {
-            NewsGroupType groupResult = resultBlock.getNewsGroup(i);
+        for (NewsGroupType groupResult : resultBlock.getNewsGroup()) {
             groupResult.setOrderValue( null );
-            for (int j=0; j<groupResult.getNewsItemCount();j++)
-            {
-                NewsItemType newsItem = groupResult.getNewsItem(j);
-
+            for (NewsItemType newsItem : groupResult.getNewsItem()) {
                 newsItem.setToFullItem( str );
 /*
                 newsItem.setUrlToFullNewsItem(

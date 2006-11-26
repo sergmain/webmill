@@ -42,7 +42,7 @@ import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.sso.bean.AuthParameterBeanImpl;
-import org.riverock.sso.config.SsoConfig;
+import org.riverock.sso.config.SsoConfigProcessor;
 import org.riverock.sso.annotation.schema.config.Parameter;
 import org.riverock.sso.annotation.schema.config.AuthProviderParameters;
 import org.riverock.sso.annotation.schema.config.Auth;
@@ -84,7 +84,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
                 if (authProviderList==null) {
                     Auth auth;
                     try{
-                        auth = SsoConfig.getAuth();
+                        auth = SsoConfigProcessor.getAuth();
                     }
                     catch(Throwable e){
                         String es = "Error get parameter from SSO config file";

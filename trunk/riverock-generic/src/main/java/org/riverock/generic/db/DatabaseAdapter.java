@@ -255,13 +255,18 @@ public abstract class DatabaseAdapter implements DbConnection {
             if (!isDriverLoaded) {
                 synchronized (syncObject) {
                     if (!isDriverLoaded) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("dc.getDataSourceType(): "+ dc.getDataSourceType() );
+                        }
                         if (dc.getDataSourceType().equals(DRIVER_DATASOURCE_TIPE)) {
-                                if (log.isDebugEnabled())
+                                if (log.isDebugEnabled()) {
                                     log.debug("Start create connection pooling with driver");
+                                }
                         }
                         else if (dc.getDataSourceType().equals(JNDI_DATASOURCE_TIPE)) {
-                                if (log.isDebugEnabled())
+                                if (log.isDebugEnabled()) {
                                     log.debug("Start create connection pooling with JNDI");
+                                }
                                 try {
                                     Context envCtx = null;
                                     try {
@@ -298,8 +303,9 @@ public abstract class DatabaseAdapter implements DbConnection {
 
                         }
                         else if (dc.getDataSourceType().equals(NONE_DATASOURCE_TIPE)){
-                                if (log.isDebugEnabled())
+                                if (log.isDebugEnabled()) {
                                     log.debug("Start create connection pooling with simple mnaager");
+                                }
                                 Class.forName(getDriverClass());
                         }
 
@@ -326,8 +332,11 @@ public abstract class DatabaseAdapter implements DbConnection {
             else if (dc.getDataSourceType().equals(NONE_DATASOURCE_TIPE)) {
                     conn = DriverManager.getConnection(dc.getConnectString(), dc.getUsername(), dc.getPassword());
             }
-
-            conn.setAutoCommit(dc.isIsAutoCommit());
+            if (log.isDebugEnabled()) {
+                log.debug("dc: " + dc);
+                log.debug("Connection: " + conn);
+            }
+            conn.setAutoCommit(dc.isIsAutoCommit()!=null?dc.isIsAutoCommit():false);
         }
         catch (Exception e) {
             final String es = "Expeption create new Connection";

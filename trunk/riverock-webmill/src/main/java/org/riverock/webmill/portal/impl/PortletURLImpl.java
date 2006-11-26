@@ -326,6 +326,10 @@ public final class PortletURLImpl implements PortletURL {
         if (portalRequestInstance.getRequestContext().getExtendedCatalogItem()!=null) {
              contextId = portalRequestInstance.getRequestContext().getExtendedCatalogItem().getCatalogId();
         }
+        if (log.isDebugEnabled()) {
+            log.debug("portalRequestInstance.getRequestContext().getExtendedCatalogItem(): " + portalRequestInstance.getRequestContext().getExtendedCatalogItem());
+            log.debug("contextId: "+contextId);
+        }
 
         // if url pointed to other portlet, change value of contextId with id of targer's portlet
         contextId = prepareContextId(contextId);

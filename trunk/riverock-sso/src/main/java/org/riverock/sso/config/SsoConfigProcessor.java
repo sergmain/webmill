@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.sso.annotation.schema.config.Auth;
+import org.riverock.sso.annotation.schema.config.SsoConfig;
 
 /**
  * User: serg_main
@@ -36,8 +37,8 @@ import org.riverock.sso.annotation.schema.config.Auth;
  * @author Serge Maslyukov
  * $Id$
  */
-public class SsoConfig {
-    private static Logger log = Logger.getLogger(SsoConfig.class );
+public class SsoConfigProcessor {
+    private static Logger log = Logger.getLogger(SsoConfigProcessor.class );
 
     private static final String CONFIG_FILE_PARAM_NAME = "sso-config-file";
     private static final String NAME_CONFIG_FILE = "sso.xml";
@@ -63,12 +64,14 @@ public class SsoConfig {
 
             if (log.isDebugEnabled()) {
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
-                log.debug("SsoConfig classLoader: "+cl+"\nhash: "+cl.hashCode() );
+                log.debug("SsoConfigProcessor classLoader: "+cl+"\nhash: "+cl.hashCode() );
                 ClassLoader ccl = ConfigObject.class.getClassLoader();
                 log.debug("ConfigObject classLoader: "+ccl+"\nhash: "+ccl.hashCode() );
             }
 
-            configObject = ConfigObject.load(JNDI_SSO_CONFIG_FILE , CONFIG_FILE_PARAM_NAME,  NAME_CONFIG_FILE, SsoConfig.class);
+            configObject = ConfigObject.load(
+                JNDI_SSO_CONFIG_FILE , CONFIG_FILE_PARAM_NAME,  NAME_CONFIG_FILE, SsoConfig.class
+            );
 
             if (log.isDebugEnabled())
                 log.debug("#15.006");

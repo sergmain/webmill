@@ -148,6 +148,7 @@ public class ConfigObject {
             log.debug("Start unmarshalling file " + nameConfigFile_);
 
         try {
+            System.out.println("Start unmarshal config file: " + configFile);
             FileInputStream stream = new FileInputStream(configFile);
             config.configObject = unmarshal(stream, configClass);
         }
@@ -161,7 +162,6 @@ public class ConfigObject {
     }
 
     private static Object unmarshal(FileInputStream configFile, Class clazz) throws JAXBException, FileNotFoundException {
-        System.out.println("Start unmarshal config file: " + configFile);
         JAXBContext jaxbContext = JAXBContext.newInstance ( clazz.getPackage().getName());
 
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();

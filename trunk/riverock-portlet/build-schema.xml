@@ -51,13 +51,13 @@
         <antcall target="gen_schema_from_schema"/>
     </target>
     <target name="gen_portlet_schema">
-        <antcall target="gen_portlet_article_schema"/>
-        <antcall target="gen_portlet_news_block_schema"/>
-        <antcall target="gen_portlet_faq_schema"/>
-        <antcall target="gen_portlet_job_schema"/>
-        <antcall target="gen_portlet_register_schema"/>
-        <antcall target="gen_portlet_login_schema"/>
-        <antcall target="gen_menu_schema"/>
+        <!--<antcall target="gen_portlet_article_schema"/>-->
+        <!--<antcall target="gen_portlet_news_block_schema"/>-->
+        <!--<antcall target="gen_portlet_faq_schema"/>-->
+        <!--<antcall target="gen_portlet_job_schema"/>-->
+        <!--<antcall target="gen_portlet_register_schema"/>-->
+        <!--<antcall target="gen_portlet_login_schema"/>-->
+        <!--<antcall target="gen_menu_schema"/>-->
     </target>
     <target name="gen_portlet_register_schema">
         <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/register"/>

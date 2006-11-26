@@ -49,8 +49,8 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
-import org.riverock.portlet.schema.menu.MenuModuleType;
-import org.riverock.portlet.schema.menu.MenuSimpleType;
+import org.riverock.portlet.menu.schema.MenuSimpleType;
+import org.riverock.portlet.menu.schema.MenuModuleType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -181,7 +181,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             for (MenuItem ci : menu.getMenuItem()) {
                 MenuModuleType tempMenu = getMenuModule(ci, 1, currentCtxId, treeId, ++treeId);
                 if (tempMenu!=null) {
-                    menuSimple.addMenuModule(tempMenu);
+                    menuSimple.getMenuModule().add(tempMenu);
                 }
             }
         }
@@ -269,10 +269,11 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
     }
 
     private void markAsCurrentThread(MenuModuleType temp) {
-        if (temp == null)
+        if (temp == null) {
             return;
-        for (int i = 0; i < temp.getMenuModuleCount(); i++) {
-            MenuModuleType tempMenuModule = temp.getMenuModule(i);
+        }
+
+        for (MenuModuleType tempMenuModule : temp.getMenuModule()) {
             tempMenuModule.setIsCurrentThread(1);
             markAsCurrentThread(tempMenuModule);
         }
@@ -282,9 +283,10 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
     private final static Object objSync = new Object();
 
-    MenuModuleType[] getMenuModuleWithLevel(MenuModuleType[] menuModuleArray, int level, int currentLevel) {
-        if (menuModuleArray == null)
+    List<MenuModuleType> getMenuModuleWithLevel(List<MenuModuleType> menuModuleArray, int level, int currentLevel) {
+        if (menuModuleArray==null || menuModuleArray.isEmpty()) {
             return null;
+        }
 
         if (log1.isDebugEnabled()) {
             log1.debug("level " + level + ", currentLevel " + currentLevel);
@@ -300,8 +302,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             }
         }
 
-        if (currentLevel == 0 && currentLevel == level)
+        if (currentLevel == 0 && currentLevel == level){
             return menuModuleArray;
+        }
 
         if (currentLevel == level) {
             for (final MenuModuleType newVar : menuModuleArray) {
@@ -315,11 +318,11 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
         for (final MenuModuleType newVar1 : menuModuleArray) {
 
-            MenuModuleType[] array = newVar1.getMenuModule();
+            List<MenuModuleType> array = newVar1.getMenuModule();
             if (array != null) {
-                for (MenuModuleType menuModule : array) {
+                for (MenuModuleType menuModule :  newVar1.getMenuModule()) {
                     if (menuModule.getIsCurrentThread() == 1) {
-                        MenuModuleType[] temp = getMenuModuleWithLevel(array, level, currentLevel + 1);
+                        List<MenuModuleType> temp = getMenuModuleWithLevel(array, level, currentLevel + 1);
                         if (temp != null)
                             return temp;
                     }
@@ -329,11 +332,10 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         return null;
     }
 
-    private void remarkLevel(List v, int level) {
-        for (Object aV : v) {
-            MenuModuleType menu = (MenuModuleType) aV;
+    private void remarkLevel(List<MenuModuleType> v, int level) {
+        for (MenuModuleType menu : v) {
             menu.setIncludeLevel(level);
-            remarkLevel(menu.getMenuModuleAsReference(), level + 1);
+            remarkLevel(menu.getMenuModule(), level + 1);
         }
     }
 
@@ -363,8 +365,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     if (log.isDebugEnabled())
                         log.debug("Start 'equals' level");
 
-                    MenuModuleType[] result =
-                        getMenuModuleWithLevel(menuSimple.getMenuModule(), level, 0);
+                    List<MenuModuleType> result = getMenuModuleWithLevel(menuSimple.getMenuModule(), level, 0);
 
                     if (log.isDebugEnabled())
                         log.debug("Result menu - " + result);
@@ -372,10 +373,13 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     if (result == null)
                         menuSimple = new MenuSimpleType();
                     else {
-                        for (final MenuModuleType newVar : result)
-                            newVar.setMenuModule(new ArrayList());
+/*
+                        for (final MenuModuleType newVar : result) {
+                            newVar.getMenuModule().addAll( new ArrayList());
+                        }
+*/
 
-                        menuSimple.setMenuModule(result);
+                        menuSimple.getMenuModule().addAll(result);
                     }
 
                 }
@@ -384,21 +388,22 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 break;
             case GREAT_THAN_LEVEL:
                 {
-                    MenuModuleType[] result =
+                    List<MenuModuleType> result =
                         getMenuModuleWithLevel(menuSimple.getMenuModule(), (level < 0 ? 1 : level + 1), 0);
 
                     if (log.isDebugEnabled()) {
                         log.debug("result = " + result);
                         log.debug("currentMenuModule = " + currentMenuModule);
-                        if (currentMenuModule != null)
-                            log.debug("currentMenuModule.getMenuModuleCount() = " + currentMenuModule.getMenuModuleCount());
+                        if (currentMenuModule != null) {
+                            log.debug("currentMenuModule.getMenuModule().size() = " + currentMenuModule.getMenuModule().size());
+                        }
                     }
 
                     menuSimple = new MenuSimpleType();
 
-                    if (result != null && result.length > 0 && currentMenuModule != null) {
+                    if (result != null && result.size() > 0 && currentMenuModule != null) {
                         int currLevel = currentMenuModule.getIncludeLevel();
-                        int topMenuLevel = result[0].getIncludeLevel();
+                        int topMenuLevel = result.get(0).getIncludeLevel();
 
                         if (log.isDebugEnabled()) {
                             log.debug("currLevel = " + Math.abs(currLevel));
@@ -406,7 +411,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                             log.debug("Substruct level = " + Math.abs(topMenuLevel - currLevel));
 
                         }
-                        menuSimple.setMenuModule(result);
+                        menuSimple.getMenuModule().addAll(result);
                     }
                 }
                 break;
@@ -414,21 +419,21 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 break;
             case GREAT_OR_EQUAL_LEVEL:
                 {
-                    MenuModuleType[] result =
+                    List<MenuModuleType> result =
                         getMenuModuleWithLevel(menuSimple.getMenuModule(), (level < 0 ? 0 : level), 0);
 
                     if (log.isDebugEnabled()) {
                         log.debug("result = " + result);
                         log.debug("currentMenuModule = " + currentMenuModule);
                         if (currentMenuModule != null)
-                            log.debug("currentMenuModule.getMenuModuleCount() = " + currentMenuModule.getMenuModuleCount());
+                            log.debug("currentMenuModule.getMenuModule().size() = " + currentMenuModule.getMenuModule().size());
                     }
 
                     menuSimple = new MenuSimpleType();
 
-                    if (result != null && result.length > 0 && currentMenuModule != null) {
+                    if (result != null && result.size() > 0 && currentMenuModule != null) {
                         int currLevel = currentMenuModule.getIncludeLevel();
-                        int topMenuLevel = result[0].getIncludeLevel();
+                        int topMenuLevel = result.get(0).getIncludeLevel();
 
                         if (log.isDebugEnabled()) {
                             log.debug("currLevel = " + Math.abs(currLevel));
@@ -437,12 +442,12 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
                         }
 
-                        menuSimple.setMenuModule(result);
+                        menuSimple.getMenuModule().addAll(result);
                     }
                 }
                 break;
         }
-        remarkLevel(menuSimple.getMenuModuleAsReference(), 1);
+        remarkLevel(menuSimple.getMenuModule(), 1);
 
         if (log.isDebugEnabled()) {
             synchronized (objSync3) {
@@ -551,10 +556,11 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             if (isCurrentThread)
                 m.setIsCurrentThread(1);
 
-            m.setMenuModule(vv);
+            m.getMenuModule().addAll(vv);
 
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Size of result list - " + vv.size());
+            }
 
             return m;
         }
@@ -566,7 +572,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
     }
 
     public byte[] getPlainHTML() {
-        return getMenuModule(menuSimple.getMenuModuleAsReference()).getBytes();
+        return getMenuModule(menuSimple.getMenuModule()).getBytes();
     }
 
     private final static Object syncDebug = new Object();
@@ -583,16 +589,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
         catch (Exception e) {
             log.error("menu name " + menu.getMenuName());
-            for (int k = 0; k < menu.getMenuModuleCount(); k++) {
-                MenuModuleType item = menu.getMenuModule(k);
-                log.error("menu item #" + k + " getModuleName() " + item.getModuleName());
-                log.error("menu item #" + k + " getModuleUrl() " + item.getModuleUrl());
-            }
-            try {
-                log.error("info Xerces version - " + org.apache.xerces.impl.Version.getVersion());
-            }
-            catch (Exception e2) {
-                log.error("Error get version of xerces " + e.getMessage());
+            for (MenuModuleType item : menu.getMenuModule()) {
+                log.error("menu item # getModuleName() " + item.getModuleName());
+                log.error("menu item # getModuleUrl() " + item.getModuleUrl());
             }
             throw e;
         }
@@ -629,7 +628,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
                 "\">" + item.getModuleName() + "</a></td></tr>";
 
-            s += getMenuModule(item.getMenuModuleAsReference());
+            s += getMenuModule(item.getMenuModule());
 
         }
         s += ("</table>");
