@@ -37,7 +37,9 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
+import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * @author Sergei Maslyukov
@@ -288,6 +290,14 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         return list;
     }
 
+    private void reinitMenuCache(Long siteLanguageId) {
+        if (siteLanguageId==null) {
+            return;
+        }
+        SiteMenu.invalidateCache(siteLanguageId);
+        PortalInfoImpl.invalidateCache(siteLanguageId);
+    }
+
     public Long createCatalogItem(CatalogItem catalogItem) {
         if (catalogItem == null) {
             return null;
@@ -300,6 +310,13 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
 
         session.flush();
         session.getTransaction().commit();
+
+        Long siteLanguageId = getCatalogLanguageItem(catalogItem.getCatalogLanguageId()).getSiteLanguageId();
+        if (log.isDebugEnabled()) {
+            log.debug("invalidate menu for siteLanguageId: " + siteLanguageId+", catalogLabguageId: " +catalogItem.getCatalogLanguageId());
+        }
+        reinitMenuCache(siteLanguageId);
+
         return bean.getCatalogId();
     }
 
@@ -337,6 +354,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         bean.setPortletRole(catalogItem.getPortletRole());
 
         session.getTransaction().commit();
+
+        reinitMenuCache(getCatalogLanguageItem(catalogItem.getCatalogLanguageId()).getSiteLanguageId());
     }
 
     public void deleteCatalogItem(Long catalogId) {
@@ -347,11 +366,19 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        session.createQuery(
-            "delete org.riverock.webmill.portal.bean.CatalogBean as catalog where catalog.catalogId=:catalogId")
+        Long siteLanguageId=null;
+        CatalogBean bean = (CatalogBean)session.createQuery(
+            "select catalog from org.riverock.webmill.portal.bean.CatalogBean catalog where catalog.catalogId=:catalogId")
             .setLong("catalogId", catalogId)
-            .executeUpdate();
+            .uniqueResult();
+        if (bean!=null) {
+            siteLanguageId=getCatalogLanguageItem(bean.getCatalogLanguageId()).getSiteLanguageId();
+            session.delete(bean);
+        }
         session.getTransaction().commit();
+
+            reinitMenuCache( siteLanguageId );
+
     }
 
     public Long createCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem) {
@@ -372,6 +399,9 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
 
         session.flush();
         session.getTransaction().commit();
+
+        reinitMenuCache(catalogLanguageItem.getSiteLanguageId());
+
         return bean.getCatalogLanguageId();
     }
 
@@ -402,6 +432,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         bean.setSiteLanguageId(catalogLanguageItem.getSiteLanguageId());
 
         session.getTransaction().commit();
+
+        reinitMenuCache(catalogLanguageItem.getSiteLanguageId());
     }
 
     public void deleteCatalogLanguageItem(Long catalogLanguageId) {
@@ -422,12 +454,15 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             .setLong("catalogLanguageId", catalogLanguageId)
             .uniqueResult();
 
-        if (bean==null) {
-            session.getTransaction().commit();
-            return;
+        Long siteLanguageId=null;
+        if (bean!=null) {
+            siteLanguageId=bean.getSiteLanguageId();
+            session.delete(bean);
         }
-        session.delete(bean);
         session.getTransaction().commit();
+
+        reinitMenuCache(siteLanguageId);
+
     }
 
     public void deleteCatalogLanguageForSiteLanguage(Long siteLanguageId) {
@@ -458,6 +493,9 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             .executeUpdate();
 
         session.getTransaction().commit();
+
+        reinitMenuCache(siteLanguageId);
+
     }
 
     public Long getSiteId(Long catalogLanguageId) {
