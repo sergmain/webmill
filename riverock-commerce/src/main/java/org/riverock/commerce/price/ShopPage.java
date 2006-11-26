@@ -25,6 +25,7 @@ package org.riverock.commerce.price;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.util.ResourceBundle;
 
 import javax.portlet.PortletConfig;
@@ -41,11 +42,11 @@ import org.riverock.common.tools.DateTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.schema.portlet.shop.ShopPageType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.schema.shop.ShopPageType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -92,6 +93,9 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             synchronized(syncDebug) {
                 try {
                     log.debug( "Unmarshal ShopPage object" );
+                    FileOutputStream w = new FileOutputStream( SiteUtils.getTempDir()+File.separatorChar+"portlet-shop.xml" );
+                    w.write(XmlTools.getXml( shopPage, rootElement ));
+/*
                     FileWriter w = new FileWriter( SiteUtils.getTempDir()+File.separatorChar+"portlet-shop.xml" );
                     Marshaller marsh = new Marshaller( w );
                     marsh.setMarshalAsDocument( true );
@@ -99,6 +103,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
                     marsh.setRootElement( rootElement );
                     marsh.marshal( shopPage );
                     marsh = null;
+*/
                     w.flush();
                     w.close();
                     w = null;

@@ -149,7 +149,7 @@ public final class UploadPricePortlet implements Portlet {
                 actionResponse.setRenderParameter(ERROR_URL, "загрузить повторно");
             }
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             log.error("General exception import price-list", e);
             actionResponse.setRenderParameter(
                 ERROR_TEXT,

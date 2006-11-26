@@ -40,7 +40,9 @@
         <antcall target="gen_import_price_schema"/>
 
         <antcall target="gen_core_schema"/>
+<!--
         <antcall target="gen_portlet_schema"/>
+-->
     </target>
     <target name="gen_shop_schema">
         <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/shop/"/>
@@ -67,13 +69,17 @@
         <antcall target="gen_schema_from_schema"/>
     </target>
 
+<!--
     <target name="gen_portlet_schema">
         <antcall target="gen_portlet_shop_schema"/>
     </target>
+-->
+<!--
     <target name="gen_portlet_shop_schema">
         <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/shop/"/>
         <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-shop.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.shop"/>
         <antcall target="gen_schema_from_schema"/>
     </target>
+-->
 </project>

@@ -27,12 +27,12 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.riverock.portlet.schema.portlet.shop.CurrencyItemType;
-import org.riverock.portlet.schema.portlet.shop.CurrencyListType;
-import org.riverock.portlet.schema.portlet.shop.HiddenParamType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.commerce.schema.shop.CurrencyListType;
+import org.riverock.commerce.schema.shop.HiddenParamType;
+import org.riverock.commerce.schema.shop.CurrencyItemType;
 
 /**
  *
@@ -76,12 +76,12 @@ public class PriceCurrency {
 
         currency.setCurrencySelectParam(ShopPortlet.NAME_ID_CURRENCY_SHOP);
 
-        currency.addHiddenParam( getHidden(ContainerConstants.NAME_LANG_PARAM, portletRequest.getLocale().toString()) );
-        currency.addHiddenParam( getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + shopParam_.id_group));
-        currency.addHiddenParam( getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam_.id_shop));
-        currency.addHiddenParam( getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
-        currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam_.sortBy));
-        currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam_.sortDirect));
+        currency.getHiddenParam().add( getHidden(ContainerConstants.NAME_LANG_PARAM, portletRequest.getLocale().toString()) );
+        currency.getHiddenParam().add( getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + shopParam_.id_group));
+        currency.getHiddenParam().add( getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam_.id_shop));
+        currency.getHiddenParam().add( getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
+        currency.getHiddenParam().add( getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam_.sortBy));
+        currency.getHiddenParam().add( getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam_.sortDirect));
 
         Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         CustomCurrencyType list = CurrencyManager.getInstance(siteId).getCurrencyList();
@@ -99,7 +99,7 @@ public class PriceCurrency {
                 if (ic.getCurrencyID() == shopParam_.id_currency)
                     ic.setSelectCurrentCurrency(" SELECTED ");
 
-                currency.addCurrencyItem(ic);
+                currency.getCurrencyItem().add(ic);
             }
         }
 
