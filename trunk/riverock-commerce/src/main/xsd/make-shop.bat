@@ -1,0 +1,1 @@
+C:\opt2\jaxb-ri-20061115\bin\xjc.bat riverock-portlet-shop.xsd -p org.riverock.commerce.schema.shop -d ../java

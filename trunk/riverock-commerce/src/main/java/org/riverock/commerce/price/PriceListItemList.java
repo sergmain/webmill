@@ -41,15 +41,16 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.schema.portlet.shop.ItemListType;
-import org.riverock.portlet.schema.portlet.shop.PriceFieldNameType;
-import org.riverock.portlet.schema.portlet.shop.PriceItemType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.ShopBean;
 import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.commerce.schema.shop.HiddenParamType;
+import org.riverock.commerce.schema.shop.ItemListType;
+import org.riverock.commerce.schema.shop.PriceFieldNameType;
+import org.riverock.commerce.schema.shop.PriceItemType;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -64,9 +65,9 @@ public final class PriceListItemList {
     private final static Logger log = Logger.getLogger( PriceListItemList.class );
 
     // dont edit return type - name must be with package
-    private static org.riverock.portlet.schema.portlet.shop.HiddenParamType getHidden(String name, String value)
+    private static HiddenParamType getHidden(String name, String value)
     {
-        org.riverock.portlet.schema.portlet.shop.HiddenParamType hidden = new org.riverock.portlet.schema.portlet.shop.HiddenParamType();
+        HiddenParamType hidden = new HiddenParamType();
         hidden.setHiddenParamName(name);
         hidden.setHiddenParamValue(value);
         return hidden;
@@ -239,13 +240,13 @@ public final class PriceListItemList {
                     item.setItemImageFileName(image.getItemImage(idPk));
 
                 if (shopParam.isProcessInvoice) {
-                    item.addHiddenParam(getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam.id_shop));
-                    item.addHiddenParam(getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + RsetTools.getLong(rs, "ID_MAIN")));
-                    item.addHiddenParam(getHidden(ShopPortlet.NAME_ID_CURRENCY_SHOP, "" + shopParam.id_currency));
-                    item.addHiddenParam(getHidden(ShopPortlet.NAME_ADD_ID_ITEM, "" + idPk));
-                    item.addHiddenParam(getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
-                    item.addHiddenParam(getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy));
-                    item.addHiddenParam(getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect));
+                    item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam.id_shop));
+                    item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + RsetTools.getLong(rs, "ID_MAIN")));
+                    item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_CURRENCY_SHOP, "" + shopParam.id_currency));
+                    item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ADD_ID_ITEM, "" + idPk));
+                    item.getHiddenParam().add(getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
+                    item.getHiddenParam().add(getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy));
+                    item.getHiddenParam().add(getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect));
                 }
 
                 if (log.isDebugEnabled()) {
@@ -258,7 +259,7 @@ public final class PriceListItemList {
                         }
                     }
                 }
-                items.addPriceItem(item);
+                items.getPriceItem().add(item);
             }
         }
         catch (SQLException e) {
@@ -282,7 +283,7 @@ public final class PriceListItemList {
             ps = null;
         }
 
-        if (items.getPriceItemCount() == 0)
+        if (items.getPriceItem().isEmpty())
             return null;
 
         return items;

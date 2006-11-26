@@ -31,18 +31,15 @@ import java.util.List;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletURL;
 
-
-
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.portlet.schema.portlet.shop.PositionItemType;
-import org.riverock.portlet.schema.portlet.shop.PricePositionType;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.commerce.schema.shop.PricePositionType;
+import org.riverock.commerce.schema.shop.PositionItemType;
 
 /**
  * Построение иерархии категорий товаров начиная от текущей и до корня вверх
@@ -108,7 +105,7 @@ public class PriceListPosition {
                     positionItem.setIdGroupCurrent(id_curr);
                     positionItem.setIdGroupTop(id_top);
 
-                    position.addPositionItem(positionItem);
+                    position.getPositionItem().add(positionItem);
                 }
                 else
                     break;
@@ -129,21 +126,20 @@ public class PriceListPosition {
             st = null;
         }
 
-
-        if (position.getPositionItemCount() == 0)
+        if (position.getPositionItem().isEmpty()) {
             return null;
+        }
 
-        List<PositionItemType> v = new ArrayList<PositionItemType>( position.getPositionItemCount() );
+        List<PositionItemType> v = new ArrayList<PositionItemType>();
 
-        if (log.isDebugEnabled())
-            log.debug("Count of position  - " + position.getPositionItemCount());
+        if (log.isDebugEnabled()) {
+            log.debug("Count of position  - " + position.getPositionItem().isEmpty());
+        }
 
         Long id = 0l;
         int maxLoop = 100;
         while (true || --maxLoop>0) {
-            for (int i = 0; i < position.getPositionItemCount(); i++) {
-                PositionItemType item = position.getPositionItem(i);
-
+            for (PositionItemType item : position.getPositionItem()) {
                 if (log.isDebugEnabled())
                     log.debug("Position id_curr - " + item.getIdGroupCurrent() + " id_top " + item.getIdGroupTop());
 
@@ -160,7 +156,8 @@ public class PriceListPosition {
         if (maxLoop==0)
             throw new PriceException("Error build price position, max loop count processed");
 
-        position.setPositionItem( (ArrayList)v );
+        position.getPositionItem().clear();
+        position.getPositionItem().addAll( v );
         v = null;
 
         PortletURL portletURL = renderResponse.createRenderURL();

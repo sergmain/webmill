@@ -35,6 +35,7 @@ import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.cms.article.bean.ArticleBean;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -44,6 +45,7 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import java.util.List;
+import java.util.Date;
 
 /**
  * Author: mill
@@ -156,6 +158,15 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
         PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         Article article = provider.getPortalCmsArticleDao().getArticleByCode(siteLangaugeId, articleCode);
+        if (article==null) {
+            ArticleBean bean = new ArticleBean();
+            bean.setArticleText("Article with code '"+articleCode+"' not found");
+            bean.setCreated(new Date());
+            bean.setXml(false);
+            bean.setDeleted(false);
+            bean.setSiteLanguageId(siteLangaugeId);
+            article = bean; 
+        }
         return new ArticlePlain(article);
     }
 

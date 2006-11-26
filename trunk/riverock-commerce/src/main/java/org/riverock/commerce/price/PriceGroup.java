@@ -31,16 +31,14 @@ import java.util.List;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
 
-
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.schema.portlet.shop.GroupItemType;
-import org.riverock.portlet.schema.portlet.shop.GroupListType;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.commerce.schema.shop.GroupListType;
+import org.riverock.commerce.schema.shop.GroupItemType;
 
 /**
  * $Author$
@@ -78,7 +76,7 @@ public final class PriceGroup {
             }
             groupItem.setGroupUrl(portletURL.toString());
 
-            group.addGroupItem(groupItem);
+            group.getGroupItem().add(groupItem);
         }
 
         return group;

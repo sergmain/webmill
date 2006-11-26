@@ -106,8 +106,8 @@ public final class OrderLogic {
             }
 
             ShopBean shopBean = null;
-            // если в сессии текущего магазина нет, но вызван какой-то конкретный магазин
-            // создаем новый магазин и помещаем в сессию
+            // if in session not exists current shop and queried concrete shop,
+            // then create this shop and put it in session
             if( tempShop == null && idShop != null ) {
                 if( log.isDebugEnabled() )
                     log.debug( "tempShop is null and idShop is not null " );
@@ -126,9 +126,9 @@ public final class OrderLogic {
 
                     shopBean = tempShop;
                 }
-// если в сессии есть текущий магазин и
-// код вызванного магазина не совпадает с кодом магаза в сессии,
-// заменяем магаз в сессии на магаз с вызываемым кодом
+                // если в сессии есть текущий магазин и
+                // код вызванного магазина не совпадает с кодом магаза в сессии,
+                // заменяем магаз в сессии на магаз с вызываемым кодом
                 else {
                     if( tempShop != null && idShop != null && !idShop.equals( tempShop.getShopId() ) ) {
                         if( log.isDebugEnabled() ) {
