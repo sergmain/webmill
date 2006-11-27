@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.myfaces.custom.tree2.HtmlTree;
 import org.apache.myfaces.custom.tree2.TreeModel;
 import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
@@ -51,6 +52,7 @@ public class MenuTree implements Serializable {
 
     private MenuService menuService = null;
     private TreeState treeState=null;
+    private HtmlTree _tree;
 
     private MenuSessionBean menuSessionBean = null;
 
@@ -73,6 +75,21 @@ public class MenuTree implements Serializable {
 
     public void setMenuSessionBean(MenuSessionBean menuSessionBean) {
         this.menuSessionBean = menuSessionBean;
+    }
+
+    public String expandAll() {
+        _tree.expandAll();
+        return null;
+    }
+
+    public void setTree(HtmlTree tree)
+    {
+        _tree = tree;
+    }
+
+    public HtmlTree getTree()
+    {
+        return _tree;
     }
 
     public TreeModel getMenuTree() {
@@ -108,20 +125,22 @@ public class MenuTree implements Serializable {
                 TreeNodeBase menuCatalogListNode = new TreeNodeBase("menu-catalog-list", "Menu catalog list", siteLanguage.getSiteLanguageId().toString(), false);
                 siteLanguageNode.getChildren().add(menuCatalogListNode);
 
-                for (CatalogLanguageItem catalogLanguageItem : menuService.getMenuCatalogList(siteLanguage.getSiteLanguageId())) {
-                    TreeNodeBase menuCatalogNode = new TreeNodeBase(
-                        "menu-catalog",
-                        catalogLanguageItem.getCatalogCode(),
-                        catalogLanguageItem.getCatalogLanguageId().toString(),
-                        false);
-                    menuCatalogListNode.getChildren().add(menuCatalogNode);
-
-                    processMenuItem(menuCatalogNode, menuService.getMenuItemList(catalogLanguageItem.getCatalogLanguageId()));
-                }
-
+                processCatalogLanguage(siteLanguage, menuCatalogListNode);
             }
         }
         return treeRoot;
+    }
+
+    private void processCatalogLanguage(SiteLanguage siteLanguage, TreeNodeBase menuCatalogListNode) {
+        for (CatalogLanguageItem catalogLanguageItem : menuService.getMenuCatalogList(siteLanguage.getSiteLanguageId())) {
+            TreeNodeBase menuCatalogNode = new TreeNodeBase(
+                "menu-catalog",
+                catalogLanguageItem.getCatalogCode(),
+                catalogLanguageItem.getCatalogLanguageId().toString(),
+                false);
+            menuCatalogListNode.getChildren().add(menuCatalogNode);
+            processMenuItem(menuCatalogNode, menuService.getMenuItemList(catalogLanguageItem.getCatalogLanguageId()));
+        }
     }
 
     private void processMenuItem(TreeNodeBase node, List<CatalogItem> menuItemList) {
@@ -132,6 +151,7 @@ public class MenuTree implements Serializable {
                 catalogItem.getCatalogId().toString(),
                 false);
             node.getChildren().add(menuItemNode);
+
             if (catalogItem.getSubCatalogItemList()!=null) {
                 processMenuItem(menuItemNode, catalogItem.getSubCatalogItemList());
             }

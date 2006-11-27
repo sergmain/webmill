@@ -42,14 +42,17 @@
         </h:commandButton>
     </h:panelGroup>
 
+    <h:commandButton value="Expand All" action="#{menuTree.expandAll}" styleClass="menu-button-action" rendered="#{!empty menuTree.tree}"/>
+
     <t:tree2 id="serverTree" value="#{menuTree.menuTree}" var="node"
-   			varNodeToggler="t" clientSideToggle="false"
-            showRootNode="false">
+             varNodeToggler="t" clientSideToggle="false"
+             binding="#{menuTree.tree}"
+             showRootNode="false">
         <f:facet name="tree-root">
             <h:panelGroup id="menu-tree-tree-root-group">
             </h:panelGroup>
         </f:facet>
-        <f:facet name="menu-catalog-list">
+        <f:facet name="menu-catalog-list" >
             <h:panelGroup id="menu-tree-menu-catalog-group">
                 <t:graphicImage id="menu-tree-menu-catalog-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                 <t:graphicImage id="menu-tree-menu-catalog-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
