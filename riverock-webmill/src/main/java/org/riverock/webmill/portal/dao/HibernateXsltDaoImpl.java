@@ -187,7 +187,9 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        clearCurrentFlag(xslt.getSiteLanguageId(), session);
+        if (xslt.isCurrent()) {
+            clearCurrentFlag(xslt.getSiteLanguageId(), session);
+        }
 
         PortalXsltBean bean = new PortalXsltBean();
         bean.setName(xslt.getName());
