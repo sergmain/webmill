@@ -599,7 +599,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         if (log.isDebugEnabled()) {
             log.debug("end get XmlByte array. length of array - " + b.length);
 
-            final String testFile = GenericConfig.getGenericDebugDir() + File.separatorChar + "menu-simple-url.xml";
+            final String testFile = GenericConfig.getGenericDebugDir() + File.separatorChar + "menu-simple-url"+(counter++)+".xml";
             log.debug("Start output test data to file " + testFile);
             synchronized (syncDebug) {
                 MainTools.writeToFile(testFile, b);
@@ -609,6 +609,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
         return b;
     }
+
+    private static int counter=0;
 
     public byte[] getXml() throws Exception {
         return getXml("MenuSimple");
