@@ -31,6 +31,7 @@
 
 <h:panelGroup id="site-tree-group">
 
+<h:panelGrid columns="1">
     <h:panelGroup id="site-tree-site-change-group">
         <h:selectOneMenu id="select-one-site" value="#{siteSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
             <f:selectItems value="#{siteService.siteList}"/>
@@ -42,7 +43,13 @@
         </h:commandButton>
     </h:panelGroup>
 
+    <h:panelGroup>
+    <h:commandButton value="Expand All" action="#{siteTree.expandAll}" styleClass="site-button-action" rendered="#{!empty siteTree.tree}"/>
+    <h:commandButton value="Collapse All" action="#{siteTree.collapseAll}" styleClass="site-button-action" rendered="#{!empty siteTree.tree}"/>
+    </h:panelGroup>
+
     <t:tree2 id="serverTree" value="#{siteTree.siteTree}" var="node" varNodeToggler="t" clientSideToggle="false"
+             binding="#{siteTree.tree}"
             showRootNode="false">
         <f:facet name="tree-root">
             <h:panelGroup id="site-tree-tree-root-group">
@@ -55,9 +62,9 @@
                 <h:outputText id="site-tree-site-list-name" value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText id="site-tree-site-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-site-action-id" action="#{siteAction.addSiteAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_button_alt}"
-rendered="#{isUserInRole['webmill.portal-manager']}"		
->
+                                 image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_button_alt}"
+                                 rendered="#{isUserInRole['webmill.portal-manager']}"
+                    >
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteType}"/>
@@ -71,9 +78,9 @@ rendered="#{isUserInRole['webmill.portal-manager']}"
                 <h:outputText id="site-tree-site-language-list-name" value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText id="site-tree-site-language-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-site-language-action-id" action="#{siteLanguageAction.addSiteLanguageAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_langage_button_alt}"
-rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"		
->
+                                 image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_langage_button_alt}"
+                                 rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"
+                    >
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteLanguageType}"/>
@@ -196,4 +203,6 @@ rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"
         </f:facet>
 
     </t:tree2>
+</h:panelGrid>
+
 </h:panelGroup>

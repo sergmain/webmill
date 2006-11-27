@@ -52,7 +52,7 @@ public class MenuTree implements Serializable {
 
     private MenuService menuService = null;
     private TreeState treeState=null;
-    private HtmlTree _tree;
+    private HtmlTree tree;
 
     private MenuSessionBean menuSessionBean = null;
 
@@ -78,18 +78,21 @@ public class MenuTree implements Serializable {
     }
 
     public String expandAll() {
-        _tree.expandAll();
+        tree.expandAll();
         return null;
     }
 
-    public void setTree(HtmlTree tree)
-    {
-        _tree = tree;
+    public String collapseAll() {
+        tree.collapseAll();
+        return null;
     }
 
-    public HtmlTree getTree()
-    {
-        return _tree;
+    public void setTree(HtmlTree tree) {
+        this.tree = tree;
+    }
+
+    public HtmlTree getTree() {
+        return tree;
     }
 
     public TreeModel getMenuTree() {

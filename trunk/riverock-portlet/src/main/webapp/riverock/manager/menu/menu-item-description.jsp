@@ -33,7 +33,9 @@
 <h:panelGroup rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}">
 
     <h:panelGrid columns="1">
-        <h:outputLink value=""/> 
+        <h:outputLink value="#{menuDataProvider.urlToPage}" rendered="#{!empty menuDataProvider.urlToPage}" target="blank">
+            <h:outputText value="#{menuSessionBean.menuItem.menuItem.keyMessage}"/>
+        </h:outputLink>
         <h:panelGrid columns="2">
 
             <h:outputText value="#{msg.menu_item_portlet_name}"/>
