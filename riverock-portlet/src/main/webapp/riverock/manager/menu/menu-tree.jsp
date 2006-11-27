@@ -31,6 +31,7 @@
 
 <h:panelGroup id="menu-tree-group">
 
+<h:panelGrid columns="1">
     <h:panelGroup id="menu-tree-site-change-group">
         <h:selectOneMenu id="select-one-site" value="#{menuSessionBean.currentSiteId}" styleClass="selectOneSite" required="true">
             <f:selectItems value="#{menuService.siteList}"/>
@@ -42,7 +43,10 @@
         </h:commandButton>
     </h:panelGroup>
 
+    <h:panelGroup>
     <h:commandButton value="Expand All" action="#{menuTree.expandAll}" styleClass="menu-button-action" rendered="#{!empty menuTree.tree}"/>
+    <h:commandButton value="Collapse All" action="#{menuTree.collapseAll}" styleClass="menu-button-action" rendered="#{!empty menuTree.tree}"/>
+    </h:panelGroup>
 
     <t:tree2 id="serverTree" value="#{menuTree.menuTree}" var="node"
              varNodeToggler="t" clientSideToggle="false"
@@ -133,4 +137,6 @@
         </f:facet>
 
     </t:tree2>
+</h:panelGrid>
+
 </h:panelGroup>

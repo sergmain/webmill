@@ -27,10 +27,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.myfaces.custom.tree2.TreeModel;
-import org.apache.myfaces.custom.tree2.TreeModelBase;
-import org.apache.myfaces.custom.tree2.TreeNode;
-import org.apache.myfaces.custom.tree2.TreeNodeBase;
+import org.apache.myfaces.custom.tree2.*;
 
 /**
  * @author SergeMaslyukov
@@ -45,8 +42,27 @@ public class UserTreeBean implements Serializable {
 
     private DataProvider dataProvider = null;
     private UserSessionBean userSessionBean = null;
+    private HtmlTree tree;
 
     public UserTreeBean() {
+    }
+
+    public String expandAll() {
+        tree.expandAll();
+        return null;
+    }
+
+    public String collapseAll() {
+        tree.collapseAll();
+        return null;
+    }
+
+    public void setTree(HtmlTree tree) {
+        this.tree = tree;
+    }
+
+    public HtmlTree getTree() {
+        return tree;
     }
 
     public UserSessionBean getUserSessionBean() {

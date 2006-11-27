@@ -27,12 +27,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.myfaces.custom.tree2.TreeNode;
-import org.apache.myfaces.custom.tree2.TreeNodeBase;
-import org.apache.myfaces.custom.tree2.TreeStateBase;
-import org.apache.myfaces.custom.tree2.TreeState;
-import org.apache.myfaces.custom.tree2.TreeModel;
-import org.apache.myfaces.custom.tree2.TreeModelBase;
+import org.apache.myfaces.custom.tree2.*;
 
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.interfaces.portal.bean.Site;
@@ -54,12 +49,31 @@ public class SiteTree implements Serializable {
 
     private SiteService siteService = null;
     private TreeState treeState=null;
+    private HtmlTree tree;
 
     private SiteSessionBean siteSessionBean = null;
 
     public SiteTree() {
         treeState = new TreeStateBase();
         treeState.setTransient(true);
+    }
+
+    public String expandAll() {
+        tree.expandAll();
+        return null;
+    }
+
+    public String collapseAll() {
+        tree.collapseAll();
+        return null;
+    }
+
+    public void setTree(HtmlTree tree) {
+        this.tree = tree;
+    }
+
+    public HtmlTree getTree() {
+        return tree;
     }
 
     public SiteSessionBean getSiteSessionBean() {

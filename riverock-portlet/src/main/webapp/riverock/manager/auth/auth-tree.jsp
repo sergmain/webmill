@@ -32,7 +32,15 @@
 
 <h:panelGroup id="user-tree-group">
 
+    <h:panelGrid columns="1">
+
+    <h:panelGroup>
+    <h:commandButton value="Expand All" action="#{userTree.expandAll}" styleClass="auth-button-action" rendered="#{!empty userTree.tree}"/>
+    <h:commandButton value="Collapse All" action="#{userTree.collapseAll}" styleClass="auth-button-action" rendered="#{!empty userTree.tree}"/>
+    </h:panelGroup>
+
     <t:tree2 id="serverTree" value="#{userTree.userTree}" var="node" varNodeToggler="t" clientSideToggle="false"
+             binding="#{userTree.tree}"
              showRootNode="false">
         <f:facet name="company">
             <h:panelGroup id="auth-tree-company-group">
@@ -62,7 +70,7 @@
             </h:panelGroup>
         </f:facet>
     </t:tree2>
-
+</h:panelGrid>
 </h:panelGroup>
 
 
