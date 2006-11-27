@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
+import javax.portlet.RenderRequest;
+import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -78,6 +80,17 @@ public class MenuDataProvider implements Serializable {
 
     public void setMenuService(MenuService menuService) {
         this.menuService = menuService;
+    }
+
+    public String getUrlToPage() {
+        if (menuItem!=null) {
+            PortletRequest renderRequest = FacesTools.getPortletRequest();
+            if (menuItem.getMenuItem().getUrl() == null)
+                return PortletService.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + menuItem.getMenuItem().getId();
+            else
+                return PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + menuItem.getMenuItem().getUrl();
+        }
+        return null;
     }
 
     public List<SelectItem> getContextList() {
