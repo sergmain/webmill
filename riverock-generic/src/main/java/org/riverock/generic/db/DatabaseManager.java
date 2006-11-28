@@ -73,6 +73,7 @@ public final class DatabaseManager {
     private static final int DATE_TYPE_VALUE = 3;
 
     private static Map<String, Integer> dataType = new HashMap<String, Integer>();
+    public static final DbPkComparator pkComparator = new DbPkComparator();
 
     static {
         dataType.put(NUMBER_TYPE, NUMBER_TYPE_VALUE);

@@ -36,6 +36,7 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.List;
+import java.util.Collections;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
@@ -57,6 +58,7 @@ import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
 import org.riverock.generic.annotation.schema.db.DbSequence;
 import org.riverock.generic.annotation.schema.db.DbDataFieldData;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
+import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
 
 /**
  * Microsoft database connect from sourceforge.net
@@ -150,11 +152,14 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
                 isFirst = !isFirst;
 
             sql += "\n\"" + field.getName() + "\"";
-            switch (field.getJavaType().intValue()) {
+            int javaType = field.getJavaType().intValue();
+            switch (javaType) {
 
                 case Types.NUMERIC:
                 case Types.DECIMAL:
-                    sql += " DECIMAL(" + (field.getSize() > 38 ? 38 : field.getSize()) + ',' + field.getDecimalDigit() + ")";
+                    Integer digit = field.getDecimalDigit();
+                    if (digit==null) digit=0;
+                    sql += " DECIMAL(" + (field.getSize() > 38 ? 38 : field.getSize()) + ',' + digit + ")";
                     break;
 
                 case Types.INTEGER:
@@ -178,30 +183,42 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
                     sql += " DATETIME";
                     break;
 
+                case Types.BLOB:
+                    sql += " IMAGE"; // Image type not compatible with hibernated blob
+
+                        break;
                 case Types.LONGVARCHAR:
-                    // Oracle 'long' fields type
-                    sql += " VARCHAR(10)";
-                    break;
+//                    sql += " VARCHAR(10)";
+//                    break;
 
                 case Types.LONGVARBINARY:
-                    // Oracle 'long raw' fields type
-                    sql += " LONGVARBINARY";
-                    break;
+//                    sql += " LONGVARBINARY";
+//                    break;
 
                 default:
-                    field.setJavaStringType("unknown field type field - " + field.getName() + " javaType - " + field.getJavaType());
-                    System.out.println("unknown field type field - " + field.getName() + " javaType - " + field.getJavaType());
+                    field.setJavaStringType("unknown field type field - " + field.getName() + " javaType - " + javaType);
+                    System.out.println("unknown field type field - " + field.getName() + " javaType - " + javaType);
             }
 
             if (field.getDefaultValue() != null) {
                 String val = field.getDefaultValue().trim();
 
-//                if (!val.equalsIgnoreCase("null"))
-//                    val = "'"+val+"'";
-                if (DatabaseManager.checkDefaultTimestamp(val))
-                    val = "current_timestamp";
+                if (StringUtils.isNotBlank(val)) {
+                    switch (javaType) {
+                        case Types.CHAR:
+                        case Types.VARCHAR:
+                            val = "'" + val + "'";
+                            break;
+                        case Types.TIMESTAMP:
+                        case Types.DATE:
+                            if (DatabaseManager.checkDefaultTimestamp(val))
+                                val = "CURRENT_TIMESTAMP";
 
-                sql += (" DEFAULT " + val);
+                            break;
+                        default:
+                    }
+                    sql += (" DEFAULT " + val);
+                }
             }
 
             if (field.getNullable() == DatabaseMetaData.columnNoNulls) {
@@ -220,30 +237,18 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
 
             sql += ",\nCONSTRAINT " + namePk + " PRIMARY KEY (\n";
 
-            int seq = Integer.MIN_VALUE;
-            isFirst = true;
-            if (true) throw new RuntimeException("Need implement PK comparator");
-/*
-            for (int i = 0; i < pk.getColumnsCount(); i++) {
-                DbPrimaryKeyColumn column = null;
-                int seqTemp = Integer.MAX_VALUE;
-                for (int k = 0; k < pk.getColumnsCount(); k++) {
-                    DbPrimaryKeyColumn columnTemp = pk.getColumns(k);
-                    if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp) {
-                        seqTemp = columnTemp.getKeySeq();
-                        column = columnTemp;
-                    }
-                }
-                seq = column.getKeySeq();
+            List<DbPrimaryKeyColumn> list = pk.getColumns();
+            Collections.sort(list, DatabaseManager.pkComparator);
 
+            isFirst = true;
+            for (DbPrimaryKeyColumn column : list) {
                 if (!isFirst)
-                    sql += ",";
+                    sql += ',';
                 else
                     isFirst = !isFirst;
 
                 sql += column.getColumnName();
             }
-*/
             sql += "\n)";
         }
         sql += "\n)";
@@ -261,7 +266,7 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
         catch (SQLException e) {
             log.error("code " + e.getErrorCode());
             log.error("state " + e.getSQLState());
-            log.error("sql " + sql);
+            log.error("sql:\n" + sql);
             log.error("message " + e.getMessage());
             log.error("string ", e);
             throw e;
