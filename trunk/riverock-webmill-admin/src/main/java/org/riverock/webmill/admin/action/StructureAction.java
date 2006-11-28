@@ -73,6 +73,7 @@ public class StructureAction implements Serializable {
             db = DatabaseAdapter.getInstance();
             structureSessionBean.setErrorMessage(null);
             DbStructureImport.importStructure(strucruteFileName, false, db);
+            db.commit();
         }
         catch (Throwable e) {
             String es = "Error create db structure";
