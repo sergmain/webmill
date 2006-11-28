@@ -31,6 +31,76 @@
 
 <portlet:defineObjects/>
 
+<%--
+<script language="JavaScript" type="text/javascript">
+var portletReq;
+
+// Generic AJAX function
+function asynchGet(updateURL){
+    if (window.XMLHttpRequest) {
+        portletReq = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+        portletReq = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    portletReq.onreadystatechange = processReqChange;
+    portletReq.open("GET", updateURL, true);
+    portletReq.send(null);
+}
+
+// Generic AJAX function
+// process the response when available
+function processReqChange() {
+    if (portletReq.readyState == 4) {
+        if (portletReq.status == 200) {
+            // process response
+            displayInvoice();
+        }
+    }
+}
+
+function selectInvoice(evt) {
+    evt = (evt) ? evt : ((window.event) ? window.event : null);
+    if (evt) {
+        var select = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+        if (select && select.options.length > 1) {
+            // When invoice is selected, call underlying web-app to return
+            // content.
+            // For this sample, the content is hard-coded HTML, but in a real
+            // deployment a call to servlet or JSP in the web-app can be
+            // used to return content from some other back-end store.
+            asynchGet("/AJAXPortlet/InvoiceServlet?invoice=" + select.value);
+        }
+    }
+}
+
+function displayInvoice() {
+    // substitute new invoice HTML content into "portletcontent" <div> tag
+    var div = document.getElementById("portletcontent");
+    div.innerHTML = "";
+    div.innerHTML = portletReq.responseText;
+
+}
+</script>
+
+<%
+    // hard-coded invoice numbers
+    String[] invoiceList = {"439089", "439090", "439091", "439092"};
+%>
+
+<select onchange="selectInvoice(event)" size="1">
+    <option>Select an invoice...</option>
+<%
+    for (String anInvoiceList : invoiceList) {
+%>
+    <option value="<%=anInvoiceList%>"><%=anInvoiceList%>
+    </option>
+    <%
+        }
+    %>
+</select>
+<div id="portletcontent"></div>
+--%>
+
 <%
     Object locale = request.getAttribute("request-locale");
 
