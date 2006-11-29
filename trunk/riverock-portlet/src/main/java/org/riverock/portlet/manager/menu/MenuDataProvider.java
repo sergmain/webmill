@@ -37,6 +37,8 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.manager.menu.bean.MenuCatalogBean;
@@ -85,10 +87,15 @@ public class MenuDataProvider implements Serializable {
     public String getUrlToPage() {
         if (menuItem!=null) {
             PortletRequest renderRequest = FacesTools.getPortletRequest();
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            CatalogLanguageItem bean = portalDaoProvider
+                .getPortalCatalogDao()
+                .getCatalogLanguageItem(menuItem.getMenuItem().getCatalogLanguageId());
+            String locale = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguage(bean.getSiteLanguageId()).getCustomLanguage();
             if (menuItem.getMenuItem().getUrl() == null)
-                return PortletService.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + menuItem.getMenuItem().getId();
+                return PortletService.pageid(renderRequest) + '/' + locale + '/' + menuItem.getMenuItem().getId();
             else
-                return PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + menuItem.getMenuItem().getUrl();
+                return PortletService.page(renderRequest) + '/' + locale + '/' + menuItem.getMenuItem().getUrl();
         }
         return null;
     }
