@@ -36,6 +36,7 @@ import java.security.Provider;
 import java.security.Security;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -49,11 +50,9 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.common.annotation.schema.transfer.TransferFileConfigType;
 import org.riverock.common.annotation.schema.transfer.TransferFileContentType;
 import org.riverock.common.annotation.schema.transfer.TransferFileListType;
-import org.riverock.common.config.GenericConfig;
 import org.riverock.common.utils.DateUtils;
 
-public class SignFile
-{
+public class SignFile {
     private static final Object syncDebug = new Object();
 
     private static Logger log = Logger.getLogger(SignFile.class);
@@ -62,63 +61,34 @@ public class SignFile
     private static TransferFileConfigType tfc = null;
     private static TransferFileListType fileList = new TransferFileListType();
 
-    private static void checkClass(String name)
-    {
-        try
-        {
-            if (Class.forName(name) != null)
-            {
+    private static void checkClass(String name) {
+        try {
+            if (Class.forName(name) != null) {
                 System.out.println("class " + name + " present");
             }
-            else
-            {
+            else {
                 System.out.println("class " + name + " NOT present");
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             System.out.println("Exception create class " + name + " -  " + e.getMessage());
         }
     }
 
-
-    private static String writeToFile(String full_file_name, byte bytes[])
-            throws Exception
-    {
-
-        File file_ = new File(full_file_name);
-        file_.delete();
-        file_ = null;
-
-        FileOutputStream out = new FileOutputStream(full_file_name, true);
-
-        out.write(bytes, 0, bytes.length);
-        out.flush();
-        out.close();
-
-        out = null;
-
-        return full_file_name + " создан успешно";
-    }
-
-    public static String getFileContent(String fileName)
-            throws Exception
-    {
+    public static String getFileContent(String fileName) throws Exception {
         File file_ = new File(fileName);
 
-        InputStreamReader in = new InputStreamReader( new FileInputStream(file_) );
+        InputStreamReader in = new InputStreamReader(new FileInputStream(file_));
 
         String buff = "";
         int ch;
         int sizeBuff = 1000;
         byte buffBytes[] = new byte[sizeBuff];
         int i = 0;
-        while ((ch = in.read()) != -1)
-        {
+        while ((ch = in.read()) != -1) {
             buffBytes[i++] = (byte) ch;
 
-            if (i == sizeBuff)
-            {
+            if (i == sizeBuff) {
                 buff += new String(buffBytes, 0, i);
                 i = 0;
             }
@@ -133,8 +103,7 @@ public class SignFile
     }
 
     public static byte[] getFileBytes(InputStream in, int sizeBuff)
-            throws Exception
-    {
+        throws Exception {
 
         int ch;
         byte buffBytes[] = new byte[sizeBuff];
@@ -151,22 +120,20 @@ public class SignFile
     }
 
     public static TransferFileContentType encryptFile(File fileToEncrypt, String path)
-            throws Exception
-    {
+        throws Exception {
         TransferFileContentType tf = new TransferFileContentType();
 
         File tempFile = File.createTempFile("temp_", ".sign");
 
         byte[] bytes = getFileBytes(
-                new FileInputStream(fileToEncrypt), 10000000
+            new FileInputStream(fileToEncrypt), 10000000
         );
 
         log.debug("Length to gzip " + bytes.length);
 
         byte[] bytesToEncrypt = null;
         log.debug("Gzip flag is  " + tfc.isIsGzip());
-        if (Boolean.TRUE.equals( tfc.isIsGzip() ))
-        {
+        if (Boolean.TRUE.equals(tfc.isIsGzip())) {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 
             GZIPOutputStream gzip = new GZIPOutputStream(byteStream);
@@ -204,19 +171,19 @@ public class SignFile
 
         EncryptFileSignature encFile = new EncryptFileSignature();
 
-        String keystoreFile=null;
+        String keystoreFile = null;
 //        keystoreFile = GenericConfig.getConfig().getSecurityKeyStorage().getPath();
-        if (keystoreFile==null) {
+        if (keystoreFile == null) {
             throw new IllegalStateException("need implement");
         }
 
         encFile.initParam(
-                bytesToEncrypt,
-                tempFile,
-                tfc.getCertificateFile(),
-                keystoreFile,
-                tfc.getPasswordKS(),
-                tfc.getAliasKS()
+            bytesToEncrypt,
+            tempFile,
+            tfc.getCertificateFile(),
+            keystoreFile,
+            tfc.getPasswordKS(),
+            tfc.getAliasKS()
         );
         encFile.encryptFileSIG();
 
@@ -228,11 +195,11 @@ public class SignFile
         tf.setFileContent64(
             new String(
                 base64.encode(
-                    getFileBytes( new FileInputStream(tempFile), 10000000) )
+                    getFileBytes(new FileInputStream(tempFile), 10000000))
             )
         );
 //        tf.fileContent64 = "data".getBytes();
-        tf.setFileName( path + File.separatorChar + fileToEncrypt.getName() );
+        tf.setFileName(path + File.separatorChar + fileToEncrypt.getName());
 
         String s = tempFile.getAbsolutePath();
         tempFile = null;
@@ -241,45 +208,37 @@ public class SignFile
     }
 
     private static void dir(String parent)
-            throws Exception
-    {
+        throws Exception {
         File dirName = new File(tfc.getBaseDirectory() + File.separatorChar + parent);
-        String fileArr[] = new String[MAXFILES];
-        try
-        {
+        String fileArr[];
+        try {
             fileArr = dirName.list();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("Error get file list in " + dirName.getAbsolutePath() + " directory.", e);
             return;
         }
-        if (fileArr == null)
-        {
+        if (fileArr == null) {
             log.info("Not found directory " + dirName.getAbsolutePath());
             return;
         }
 
-        for (int i = 0; i < fileArr.length; i++)
-        {
+        for (int i = 0; i < fileArr.length; i++) {
             String s = tfc.getBaseDirectory() + File.separatorChar +
-                    parent + File.separatorChar +
-                    fileArr[i];
+                parent + File.separatorChar +
+                fileArr[i];
             log.debug("Process file: " + s);
             File file_ = new File(s);
 
-            if (tfc.getExclude().indexOf(file_.getName()) != -1)
-            {
+            if (tfc.getExclude().indexOf(file_.getName()) != -1) {
                 log.debug("Skip path " + file_.getName());
                 continue;
             }
 
-            if (file_.isFile())
-            {
-                fileList.getTransferFileContent().add( encryptFile(file_, parent) );
+            if (file_.isFile()) {
+                fileList.getTransferFileContent().add(encryptFile(file_, parent));
             }
-            else if (file_.isDirectory())
-            {
+            else if (file_.isDirectory()) {
                 dir(parent + File.separatorChar + fileArr[i]);
             }
             file_ = null;
@@ -288,8 +247,7 @@ public class SignFile
     }
 
     public static void main(String args[])
-            throws Exception
-    {
+        throws Exception {
 
 //        TransferFileContent tf = new TransferFileContent();
 //        Base64 base64 = new Base64();
@@ -304,10 +262,10 @@ public class SignFile
 
         Provider prov[] = Security.getProviders();
         for (int i = 0; i < prov.length; i++)
-            System.out.println("Prov #" + i + ": " + prov[i].getName()+" v"+prov[i].getVersion());
+            System.out.println("Prov #" + i + ": " + prov[i].getName() + " v" + prov[i].getVersion());
 
         Provider provider = Security.getProvider("BC");
-        if (provider==null) {
+        if (provider == null) {
             System.out.println("Provider DB not found");
 
         }
@@ -321,26 +279,26 @@ public class SignFile
                     provider.getVersion()
             );
 
-            System.out.println( "Info "+
+            System.out.println("Info " +
                 provider.getInfo()
             );
         }
-        
-        JAXBContext jaxbContext = JAXBContext.newInstance ( TransferFileConfigType.class.getPackage().getName() );
+
+        JAXBContext jaxbContext = JAXBContext.newInstance(TransferFileConfigType.class.getPackage().getName());
 
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         FileInputStream stream = new FileInputStream(args[0]);
-        Source source =  new StreamSource( stream );
-        tfc = unmarshaller.unmarshal( source, TransferFileConfigType.class).getValue();
+        Source source = new StreamSource(stream);
+        tfc = unmarshaller.unmarshal(source, TransferFileConfigType.class).getValue();
 
         fileList.setDateCreate(
-            DateUtils.getCurrentDate("dd.MM.yyyy HH:mm:ss")
+            DateUtils.getCurrentDate("dd.MM.yyyy HH:mm:ss", TimeZone.getTimeZone("Europe/Moscow"))
         );
-        fileList.setIsGzip( tfc.isIsGzip() );
+        fileList.setIsGzip(tfc.isIsGzip());
 
-        log.debug("Base dir: " + tfc.getBaseDirectory() );
-        log.debug("is Gzip: " + tfc.isIsGzip() );
-        log.debug("ExportFile: " + tfc.getExportFile() );
+        log.debug("Base dir: " + tfc.getBaseDirectory());
+        log.debug("is Gzip: " + tfc.isIsGzip());
+        log.debug("ExportFile: " + tfc.getExportFile());
 
         for (String processDir : tfc.getDirectory()) {
             log.debug("Directory: " + processDir);

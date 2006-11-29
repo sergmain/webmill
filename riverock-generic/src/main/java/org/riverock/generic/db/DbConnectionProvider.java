@@ -33,7 +33,7 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.exception.DatabaseException;
+import org.riverock.common.exception.DatabaseException;
 import org.riverock.generic.db.factory.ORAconnect;
 import org.riverock.generic.db.factory.MYSQLconnect;
 import org.riverock.generic.db.factory.HSQLDBconnect;

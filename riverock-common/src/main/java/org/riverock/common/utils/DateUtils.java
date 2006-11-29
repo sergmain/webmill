@@ -25,6 +25,11 @@
  */
 package org.riverock.common.utils;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
+import org.apache.commons.lang.time.DateFormatUtils;
+
 //import org.riverock.common.tools.CurrentTimeZone;
 
 /**
@@ -35,22 +40,35 @@ package org.riverock.common.utils;
 public class DateUtils {
 
     /**
+     * @deprecated  use org.apache.commons.lang.time.DateFormatUtils.format(date, mask, tz, loc);
      * @param date
      * @param mask
      * @param loc
      * @return String
      */
-/*
-    public static String getStringDate(java.util.Date date, String mask, Locale loc) {
-        return DateFormatUtils.format(date, mask, CurrentTimeZone.getTZ(), loc);
+    public static String getStringDate(java.util.Date date, String mask, Locale loc, TimeZone tz) {
+        return DateFormatUtils.format(date, mask, tz, loc);
     }
 
-    public static String getCurrentDate(String mask, Locale loc) {
-        return DateFormatUtils.format(System.currentTimeMillis(), mask, CurrentTimeZone.getTZ(), loc);
+    /**
+     * @deprecated  use org.apache.commons.lang.time.DateFormatUtils.format(System.currentTimeMillis(), mask, tz, loc);
+     * @param mask
+     * @param loc
+     * @param tz
+     * @return
+     */
+    public static String getCurrentDate(String mask, Locale loc, TimeZone tz) {
+        return DateFormatUtils.format(System.currentTimeMillis(), mask, tz, loc);
     }
 
-    public static String getCurrentDate(String mask) {
-        return DateFormatUtils.format(System.currentTimeMillis(), mask, CurrentTimeZone.getTZ(), Locale.ENGLISH);
+    /**
+     * @deprecated use org.apache.commons.lang.time.DateFormatUtils.format(System.currentTimeMillis(), mask, tz, Locale.ENGLISH);
+     * @param mask
+     * @param tz
+     * @return
+     */
+    public static String getCurrentDate(String mask, TimeZone tz) {
+        return DateFormatUtils.format(System.currentTimeMillis(), mask, tz, Locale.ENGLISH);
     }
-*/    
+
 }

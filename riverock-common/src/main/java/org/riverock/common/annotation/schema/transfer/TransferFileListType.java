@@ -6,7 +6,7 @@
 //
 
 
-package org.riverock.generic.annotation.schema.transfer;
+package org.riverock.common.annotation.schema.transfer;
 
 import java.util.ArrayList;
 import java.util.List;

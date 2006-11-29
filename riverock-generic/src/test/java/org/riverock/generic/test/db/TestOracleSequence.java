@@ -27,9 +27,9 @@ package org.riverock.generic.test.db;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.common.tools.XmlTools;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;

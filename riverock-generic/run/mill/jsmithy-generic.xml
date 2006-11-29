@@ -62,15 +62,6 @@
 		<IsConvertDatabaseString>false</IsConvertDatabaseString>
 		<IsAutoCommit>false</IsAutoCommit>
 	</DatabaseConnection>
-	<DatabaseConnection name="ORACLE_PORT">
-		<Username>millenium</Username>
-		<Password>111</Password>
-		<ConnectString>jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.92.1.223)(PORT=1670))(ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 1527)))(CONNECT_DATA = (SID = IPZ))(SOURCE_ROUTE = YES))</ConnectString>
-		<ConnectionClass>org.riverock.generic.db.factory.ORA80connect</ConnectionClass>
-		<DatabaseCharset>UTF8</DatabaseCharset>
-		<IsConvertDatabaseString>false</IsConvertDatabaseString>
-		<IsAutoCommit>false</IsAutoCommit>
-	</DatabaseConnection>
 	<DatabaseConnection name="ORACLE_MILL_TEST">
 		<Username>MILL_TEST</Username>
 		<Password>qqq</Password>
