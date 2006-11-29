@@ -90,6 +90,17 @@ public class PortalCatalogDaoImpl implements PortalCatalogDao {
         }
     }
 
+    public boolean isUrlExist(String url, Long siteLanguageId) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCatalogDao().isUrlExist(url, siteLanguageId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
     public List<CatalogItem> getCatalogItemList(Long catalogLanguageId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
