@@ -83,6 +83,7 @@ public class MenuAction implements Serializable {
         MenuItemBean menuItemBean = new MenuItemBean();
         menuItemBean.setCatalogId(menuSessionBean.getId());
         setSessionObject(new MenuItemExtended(menuItemBean, null, null));
+        menuSessionBean.getMenuItem().getMenuItem().setPortletId(menuSessionBean.getPreviousCreatedPortletId());
 
         return "menu-add";
     }
@@ -113,6 +114,7 @@ public class MenuAction implements Serializable {
 
             Long menuItemId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogItem(menuItem);
             setSessionObject(null);
+            menuSessionBean.setPreviousCreatedPortletId(menuItem.getPortletId());
             menuSessionBean.setId(menuItemId);
             cleadDataProviderObject();
             loadCurrentObject();

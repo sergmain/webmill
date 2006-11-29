@@ -58,6 +58,15 @@ public class MenuSessionBean implements Serializable {
     private MenuCatalogBean menuCatalog = null;
     private MenuItemExtended menuItem = null;
     private List<Template> templates=null;
+    private Long previousCreatedPortletId=null;
+
+    public Long getPreviousCreatedPortletId() {
+        return previousCreatedPortletId;
+    }
+
+    public void setPreviousCreatedPortletId(Long previousCreatedPortletId) {
+        this.previousCreatedPortletId = previousCreatedPortletId;
+    }
 
     public Long getCurrentSiteId() {
         return currentSiteId;
