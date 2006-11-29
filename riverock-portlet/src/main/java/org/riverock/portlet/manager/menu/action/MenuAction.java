@@ -26,7 +26,6 @@ package org.riverock.portlet.manager.menu.action;
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.portlet.main.AuthSessionBean;
@@ -77,7 +76,7 @@ public class MenuAction implements Serializable {
         return "menu";
     }
 
-// Add actions
+    // Add actions
     public String addMenuItemAction() {
         log.info("Add menu item action.");
 
@@ -85,6 +84,18 @@ public class MenuAction implements Serializable {
         menuItemBean.setCatalogId(menuSessionBean.getId());
         setSessionObject(new MenuItemExtended(menuItemBean, null, null));
         menuSessionBean.getMenuItem().getMenuItem().setPortletId(menuSessionBean.getPreviousCreatedPortletId());
+
+        Long menuCatalogId;
+        if (menuSessionBean.getCurrentMenuCatalogId() != null) {
+            menuCatalogId =  menuSessionBean.getCurrentMenuCatalogId();
+        } else {
+            CatalogItem catalogItem = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItem(
+                menuSessionBean.getCurrentMenuItemId()
+            );
+            menuCatalogId = catalogItem.getCatalogLanguageId();
+        }
+        Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId).getSiteLanguageId();
+        menuSessionBean.setTemplates(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
 
         return "menu-add";
     }
@@ -113,9 +124,6 @@ public class MenuAction implements Serializable {
                 menuItem.setTopCatalogId( catalogItem.getCatalogId() );
             }
 
-            if (StringUtils.isNotBlank(menuItem.getUrl())) {
-                menuItem.setUrl( menuItem.getUrl().toLowerCase())
-            }
             Long menuItemId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogItem(menuItem);
             setSessionObject(null);
             menuSessionBean.setPreviousCreatedPortletId(menuItem.getPortletId());

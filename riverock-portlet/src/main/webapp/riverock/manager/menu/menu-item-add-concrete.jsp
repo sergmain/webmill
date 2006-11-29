@@ -40,6 +40,17 @@
     </h:panelGroup>
 </h:panelGrid>
 
+<h:panelGrid columns="1">
+    <h:outputText value="#{msg.menu_item_template_name}"/>
+    <h:panelGroup id="select-template-group">
+        <h:selectOneMenu id="select-one-template" value="#{menuSessionBean.menuItem.menuItem.templateId}"
+                         styleClass="selectOneMenu" required="true"
+            >
+            <f:selectItems value="#{menuDataProvider.templateList}"/>
+        </h:selectOneMenu>
+    </h:panelGroup>
+</h:panelGrid>
+
 <h:panelGrid columns="2">
 
     <h:outputText value="#{msg.menu_item_order_field}"/>
