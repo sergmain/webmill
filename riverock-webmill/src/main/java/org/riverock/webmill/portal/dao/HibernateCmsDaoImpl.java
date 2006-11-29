@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Article;
 import org.riverock.interfaces.portal.bean.News;

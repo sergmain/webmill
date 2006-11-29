@@ -46,8 +46,6 @@ public class TestProperties {
     public static void main(String args[])
         throws Exception {
 
-        org.riverock.generic.startup.StartupApplication.init();
-
         Timestamp t = DateTools.getCurrentTime();
         Properties prop = System.getProperties();
 

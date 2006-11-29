@@ -31,7 +31,6 @@
 	<!-- Charset used for get correct request parameters -->
 	<MailHost>localhost</MailHost>
 	<SecurityKeyStorage path="d:\keys\mill\keystore.ks" password="111" alias="222"/>
-	<!--    <DefaultConnectionName>ORACLE_TEST</DefaultConnectionName>-->
 	<DefaultConnectionName>ORACLE</DefaultConnectionName>
 	<DatabaseConnection name="ORACLE_ZEON">
 		<Username>zeon</Username>
