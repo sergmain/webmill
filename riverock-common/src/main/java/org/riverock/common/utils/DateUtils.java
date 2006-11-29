@@ -23,26 +23,24 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.generic.utils;
+package org.riverock.common.utils;
 
-import java.util.Locale;
-
-import org.apache.commons.lang.time.DateFormatUtils;
-
-import org.riverock.generic.tools.CurrentTimeZone;
+//import org.riverock.common.tools.CurrentTimeZone;
 
 /**
- *
+ * @deprecated you must specify concrete timeZone
  * $Id$
  *
  */
 public class DateUtils {
+
     /**
      * @param date
      * @param mask
      * @param loc
      * @return String
      */
+/*
     public static String getStringDate(java.util.Date date, String mask, Locale loc) {
         return DateFormatUtils.format(date, mask, CurrentTimeZone.getTZ(), loc);
     }
@@ -54,4 +52,5 @@ public class DateUtils {
     public static String getCurrentDate(String mask) {
         return DateFormatUtils.format(System.currentTimeMillis(), mask, CurrentTimeZone.getTZ(), Locale.ENGLISH);
     }
+*/    
 }

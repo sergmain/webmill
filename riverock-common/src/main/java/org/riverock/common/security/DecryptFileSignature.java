@@ -23,7 +23,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.generic.security;
+package org.riverock.common.security;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -34,8 +34,6 @@ import java.security.SecureRandom;
 import java.security.Security;
 
 import org.apache.log4j.Logger;
-
-import org.riverock.generic.config.GenericConfig;
 
 /**
 *
@@ -149,8 +147,9 @@ public class DecryptFileSignature
             //
             // Test password on keystore.
             // KeyStore will throw an exception if password incorrect.
-            //
-            char[] ks_pass = GenericConfig.getConfig().getSecurityKeyStorage().getPassword().toCharArray();
+
+            // TODO. change "password" to real value 
+            char[] ks_pass = "password".toCharArray();
             try
             {
                 key_store.load(new FileInputStream(keystore_file), ks_pass); // load in keystore file.

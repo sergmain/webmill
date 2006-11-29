@@ -1,9 +1,7 @@
 /*
- * org.riverock.generic - Database connectivity classes, part of Webmill portal
- * For more information about Webmill portal, please visit project site
- * http://webmill.askmore.info
+ * org.riverock.common - Supporting classes, interfaces, and utilities
  *
- * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
  * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
@@ -23,23 +21,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.generic.tools;
+package org.riverock.common.tools;
 
-import java.util.TimeZone;
-
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.common.config.ConfigException;
+//import org.riverock.common.config.GenericConfig;
 
 /**
- *
+ * @deprecated Dont use this class
  * $Id$
  *
  */
 public final class CurrentTimeZone
 {
+/*
     public static TimeZone getTZ()
         throws ConfigException
     {
         return GenericConfig.getTZ();
     }
+*/
 }
