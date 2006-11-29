@@ -61,4 +61,6 @@ public interface InternalCatalogDao {
     void deleteCatalogLanguageForSiteLanguage(Long siteLanguageId);
 
     Long getSiteId(Long catalogLanguageId);
+
+    boolean isUrlExist(String url, Long siteLanguageId);
 }

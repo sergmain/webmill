@@ -26,6 +26,7 @@ package org.riverock.portlet.manager.menu.action;
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.portlet.main.AuthSessionBean;
@@ -112,6 +113,9 @@ public class MenuAction implements Serializable {
                 menuItem.setTopCatalogId( catalogItem.getCatalogId() );
             }
 
+            if (StringUtils.isNotBlank(menuItem.getUrl())) {
+                menuItem.setUrl( menuItem.getUrl().toLowerCase())
+            }
             Long menuItemId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogItem(menuItem);
             setSessionObject(null);
             menuSessionBean.setPreviousCreatedPortletId(menuItem.getPortletId());

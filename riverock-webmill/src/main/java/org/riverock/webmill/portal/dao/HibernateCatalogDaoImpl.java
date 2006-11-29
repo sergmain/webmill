@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Collections;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
@@ -305,13 +306,19 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
 
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
+
+        Long siteLanguageId = getCatalogLanguageItem(catalogItem.getCatalogLanguageId()).getSiteLanguageId();
+        if (isUrlExist(catalogItem.getUrl(), siteLanguageId)) {
+            log.debug("Url '"+catalogItem.getUrl()+"' for siteLanguageId: " + siteLanguageId+" exist");
+            return null;
+        }
+
         CatalogBean bean = new CatalogBean(catalogItem);
         session.save(bean);
 
         session.flush();
         session.getTransaction().commit();
 
-        Long siteLanguageId = getCatalogLanguageItem(catalogItem.getCatalogLanguageId()).getSiteLanguageId();
         if (log.isDebugEnabled()) {
             log.debug("invalidate menu for siteLanguageId: " + siteLanguageId+", catalogLabguageId: " +catalogItem.getCatalogLanguageId());
         }
@@ -322,6 +329,12 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
 
     public void updateCatalogItem(CatalogItem catalogItem) {
         if (catalogItem==null) {
+            return;
+        }
+
+        Long siteLanguageId = getCatalogLanguageItem(catalogItem.getCatalogLanguageId()).getSiteLanguageId();
+        if (isUrlExist(catalogItem.getUrl(), siteLanguageId)) {
+            log.debug("Url '"+catalogItem.getUrl()+"' for siteLanguageId: " + siteLanguageId+" exist");
             return;
         }
 
@@ -355,7 +368,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
 
         session.getTransaction().commit();
 
-        reinitMenuCache(getCatalogLanguageItem(catalogItem.getCatalogLanguageId()).getSiteLanguageId());
+        reinitMenuCache(siteLanguageId);
     }
 
     public void deleteCatalogItem(Long catalogId) {
@@ -515,6 +528,26 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             .uniqueResult();
         session.getTransaction().commit();
         return id;
+    }
+
+    public boolean isUrlExist(String url, Long siteLanguageId) {
+        if (StringUtils.isBlank(url) || siteLanguageId==null) {
+            return false;
+        }
+        String urlReal = url.trim().toLowerCase();
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<Long> ids = session.createQuery(
+        "select catalog " +
+            "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
+            "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
+            "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
+            "      catalogLang.siteLanguageId=:siteLanguageId and lower(catalog.url)=:url")
+        .setLong("siteLanguageId", siteLanguageId)
+        .setString("url", urlReal)
+        .list();
+        session.getTransaction().commit();
+        return !ids.isEmpty();
     }
 
     public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId) {

@@ -40,6 +40,8 @@ public interface PortalCatalogDao {
     public Long getCatalogItemId(Long siteId, Locale locale, String pageName );
     public Long getCatalogItemId(Long siteId, Locale locale, Long catalogId );
 
+    boolean isUrlExist(String url, Long siteLanguageId);
+
     public List<CatalogItem> getCatalogItemList(Long catalogLanguageId);
     public CatalogItem getCatalogItem(Long catalogId);
 

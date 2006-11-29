@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SiteTemplate language="ru">
+	<WikiCatalog>
+		<MenuModule isCurrentThread="0" isCurrent="0" includeLevel="1">
+			<ModuleName>Sharapova</ModuleName>
+			<ModuleUrl>/page/ru/Sharapova</ModuleUrl>
+			<UrlAlias>Sharapova</UrlAlias>
+			<CatalodId>2249</CatalodId>
+			<TreeId>0</TreeId>
+			<OrderNumber>1</OrderNumber>
+		</MenuModule>
+		<MenuModule isCurrentThread="0" isCurrent="0" includeLevel="1">
+			<ModuleName>Paris_hilton</ModuleName>
+			<ModuleUrl>/page/ru/Paris_hilton</ModuleUrl>
+			<UrlAlias>Paris_hilton</UrlAlias>
+			<CatalodId>2250</CatalodId>
+			<TreeId>1</TreeId>
+			<OrderNumber>2</OrderNumber>
+		</MenuModule>
+		<MenuModule isCurrentThread="0" isCurrent="0" includeLevel="1">
+			<ModuleName>ph</ModuleName>
+			<ModuleUrl>/page/ru/ph</ModuleUrl>
+			<UrlAlias>ph</UrlAlias>
+			<CatalodId>2252</CatalodId>
+			<TreeId>2</TreeId>
+			<OrderNumber>3</OrderNumber>
+		</MenuModule>
+		<MenuName/>
+	</WikiCatalog>
+</SiteTemplate>
