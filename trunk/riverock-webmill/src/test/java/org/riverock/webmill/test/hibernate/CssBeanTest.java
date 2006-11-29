@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.riverock.generic.exception.DatabaseException;
-import org.riverock.generic.startup.StartupApplication;
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
@@ -45,8 +44,6 @@ import org.riverock.webmill.utils.HibernateUtilsTest;
  */
 public class CssBeanTest {
     public static void main(String[] args) throws DatabaseException, SQLException {
-
-        StartupApplication.init();
 
         HibernateUtilsTest.prepareSession();
         InternalCssDao cssDao = new HibernateCssDaoImpl();

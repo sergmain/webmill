@@ -36,7 +36,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
@@ -47,19 +46,9 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 public class PortalXslt implements XsltTransformer {
     private static Logger log = Logger.getLogger(PortalXslt.class);
 
-    private static CacheFactory cache = new CacheFactory(PortalXslt.class);
-
     private Xslt xslt = null;
     private Transformer transformer = null;
     private final Object transformerSync = new Object();
-
-    public void terminate(Long id_) {
-        cache.reinit();
-    }
-
-    public void reinit() {
-        cache.reinit();
-    }
 
     protected void finalize() throws Throwable {
         xslt = null;
@@ -69,11 +58,6 @@ public class PortalXslt implements XsltTransformer {
     }
 
     public PortalXslt() {
-    }
-
-    public static PortalXslt getInstance(Long id__)
-        throws Exception {
-        return (PortalXslt) cache.getInstanceNew(id__);
     }
 
     public PortalXslt(Long xsltId) {
