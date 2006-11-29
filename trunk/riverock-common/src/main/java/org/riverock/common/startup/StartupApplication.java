@@ -23,7 +23,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.generic.startup;
+package org.riverock.common.startup;
 
 import java.io.File;
 
@@ -33,7 +33,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigService;
 import org.riverock.common.config.PropertiesProvider;
-import org.riverock.generic.config.GenericConfig;
+//import org.riverock.common.config.GenericConfig;
 
 /**
  * $Id$
@@ -83,8 +83,8 @@ public final class StartupApplication
             isInit = true;
         }
         ConfigService.initLocale();
-        GenericConfig.setConfigPrefix(configPrefix);
-        GenericConfig.getTZ();
+//        GenericConfig.setConfigPrefix(configPrefix);
+//        GenericConfig.getTZ();
     }
 
 }

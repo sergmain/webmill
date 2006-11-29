@@ -23,7 +23,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.generic.startup;
+package org.riverock.common.startup;
 
 import java.io.File;
 import java.util.Enumeration;
@@ -47,8 +47,7 @@ import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.common.config.ConfigService;
 import org.riverock.common.config.PropertiesProvider;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.main.Constants;
+import org.riverock.common.main.Constants;
 
 /**
  * $Id$
@@ -92,16 +91,6 @@ public final class StartupServlet extends HttpServlet {
         }
         catch (ConfigException exc) {
             String es = "Error init locale from resource bundle";
-            log.error(es, exc);
-            throw new ServletException(es, exc);
-        }
-
-        // init time zone
-        try {
-            GenericConfig.getTZ();
-        }
-        catch (ConfigException exc) {
-            String es = "Error init time zone";
             log.error(es, exc);
             throw new ServletException(es, exc);
         }

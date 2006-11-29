@@ -23,7 +23,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.generic.security;
+package org.riverock.common.security;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -46,11 +46,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
-import org.riverock.generic.annotation.schema.transfer.TransferFileConfigType;
-import org.riverock.generic.annotation.schema.transfer.TransferFileContentType;
-import org.riverock.generic.annotation.schema.transfer.TransferFileListType;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.utils.DateUtils;
+import org.riverock.common.annotation.schema.transfer.TransferFileConfigType;
+import org.riverock.common.annotation.schema.transfer.TransferFileContentType;
+import org.riverock.common.annotation.schema.transfer.TransferFileListType;
+import org.riverock.common.config.GenericConfig;
+import org.riverock.common.utils.DateUtils;
 
 public class SignFile
 {
@@ -176,7 +176,7 @@ public class SignFile
 
             bytesToEncrypt = byteStream.toByteArray();
 
-            String tempDir = GenericConfig.getGenericDebugDir() + File.separatorChar;
+//            String tempDir = GenericConfig.getGenericDebugDir() + File.separatorChar;
 
 //            log.debug("write plain data in file " + tempDir + "file.gzip.1");
 //            log.debug( writeToFile(tempDir + "file.gzip.1", bytes) );
@@ -184,6 +184,7 @@ public class SignFile
 //            log.debug("write GZiped data in file " + tempDir + "file.gzip.2");
 //            log.debug( writeToFile(tempDir + "file.gzip.2", bytesToEncrypt) );
 
+/*
             ByteArrayInputStream byteInStream = new ByteArrayInputStream(bytesToEncrypt);
             if (log.isDebugEnabled())
             {
@@ -194,6 +195,7 @@ public class SignFile
                     log.debug( writeToFile(tempDir + "file.gzip.3", getFileBytes(gzip1, 10000000)) );
                 }
             }
+*/
         }
         else
             bytesToEncrypt = bytes;
