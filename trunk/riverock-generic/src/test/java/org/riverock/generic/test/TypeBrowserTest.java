@@ -28,7 +28,7 @@ package org.riverock.generic.test;
 import org.riverock.generic.startup.StartupApplication;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.DatabaseException;
+import org.riverock.common.exception.DatabaseException;
 import org.riverock.common.html.TypeBrowser;
 
 import java.sql.SQLException;

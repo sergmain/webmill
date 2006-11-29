@@ -433,6 +433,8 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
      * @throws SQLException
      */
     public void bindDate(PreparedStatement ps, int idx, Timestamp stamp) throws SQLException {
+
+/*
         try {
             String stringTimestamp =
                 DateTools.getStringDate(stamp, "yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH, CurrentTimeZone.getTZ());
@@ -445,6 +447,7 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
         }
         ;
 
+*/
     }
 
     /**

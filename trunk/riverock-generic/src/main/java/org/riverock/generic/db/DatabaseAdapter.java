@@ -44,7 +44,7 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.exception.DatabaseException;
+import org.riverock.common.exception.DatabaseException;
 import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
 import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.annotation.schema.db.DbView;

@@ -33,13 +33,11 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.JavaClass;
 
-import org.riverock.generic.main.ExtensionFileFilter;
+import org.riverock.common.main.ExtensionFileFilter;
 
 /**
  * Author: mill

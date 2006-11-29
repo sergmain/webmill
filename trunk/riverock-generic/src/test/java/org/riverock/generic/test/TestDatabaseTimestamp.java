@@ -26,9 +26,7 @@
 package org.riverock.generic.test;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.tools.CurrentTimeZone;
 import org.riverock.common.tools.DateTools;
-import org.apache.log4j.Logger;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -69,7 +67,7 @@ public class TestDatabaseTimestamp
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE_PORT" );
 
         System.out.println("#1 insert");
-        String stringDate = DateTools.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH, CurrentTimeZone.getTZ());
+        String stringDate = DateTools.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH, TimeZone.getDefault());
 //            DateUtils.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH);
 
         System.out.println( stringDate );

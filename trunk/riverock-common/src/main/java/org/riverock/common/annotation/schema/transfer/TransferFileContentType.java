@@ -6,7 +6,7 @@
 //
 
 
-package org.riverock.generic.annotation.schema.transfer;
+package org.riverock.common.annotation.schema.transfer;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

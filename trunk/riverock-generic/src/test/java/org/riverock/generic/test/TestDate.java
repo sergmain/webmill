@@ -26,7 +26,6 @@
 package org.riverock.generic.test;
 
 import org.riverock.common.tools.DateTools;
-import org.riverock.generic.tools.CurrentTimeZone;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -53,7 +52,7 @@ public class TestDate
         Calendar cal = GregorianCalendar.getInstance();
         String currDate =
             DateTools.getStringDate(
-                new GregorianCalendar(CurrentTimeZone.getTZ()), mask, Locale.ENGLISH
+                new GregorianCalendar(), mask, Locale.ENGLISH
             );
 //            DateUtils.getCurrentDate( mask );
 

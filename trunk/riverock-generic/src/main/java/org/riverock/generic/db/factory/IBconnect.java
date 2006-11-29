@@ -420,9 +420,9 @@ public class IBconnect extends DatabaseAdapter {
      * @param stamp @see java.sql.Timestamp
      * @throws SQLException
      */
-    public void bindDate(PreparedStatement ps, int idx, Timestamp stamp)
-        throws SQLException {
+    public void bindDate(PreparedStatement ps, int idx, Timestamp stamp) throws SQLException {
 
+/*
         try {
             String stringTimestamp = null;
             DateTools.getStringDate(stamp, "yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH, CurrentTimeZone.getTZ());
@@ -433,6 +433,7 @@ public class IBconnect extends DatabaseAdapter {
             log.error(es, exc);
             throw new SQLException(es);
         }
+*/
     }
 
     /**
