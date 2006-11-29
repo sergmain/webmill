@@ -100,6 +100,7 @@
 
                     <t:graphicImage id="menu-tree-menu-catalog-image" value="/images/user.png" border="0"/>
                     <h:outputText id="menu-tree-menu-catalog-name" value="#{node.description}"/>
+                    <h:outputText id="menu-tree-menu-catalog-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
 
                     <t:updateActionListener property="#{menuSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuCatalogType}"/>
