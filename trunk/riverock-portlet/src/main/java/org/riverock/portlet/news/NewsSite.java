@@ -183,8 +183,8 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
                 newsItemType.setNewsItemId(news.getNewsId());
                 newsItemType.setNewsText(news.getNewsText());
                 newsItemType.setNewsText(news.getNewsText());
-                newsItemType.setNewsDate(DateUtils.getStringDate(news.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale()));
-                newsItemType.setNewsTime(DateUtils.getStringDate(news.getPostDate(), "HH:mm", renderRequest.getLocale()));
+                newsItemType.setNewsDate(DateUtils.getStringDate(news.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), TimeZone.getDefault()));
+                newsItemType.setNewsTime(DateUtils.getStringDate(news.getPostDate(), "HH:mm", renderRequest.getLocale(), TimeZone.getDefault()));
 
                 newsGroupType.getNewsItem().add(newsItemType);
             }

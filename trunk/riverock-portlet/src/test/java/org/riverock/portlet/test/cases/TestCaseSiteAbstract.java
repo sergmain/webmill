@@ -23,8 +23,6 @@
  */
 package org.riverock.portlet.test.cases;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
 
 import org.riverock.common.tools.servlet.HttpServletRequestApplWrapper;
 import org.riverock.common.tools.servlet.HttpServletResponseApplWrapper;
@@ -41,7 +39,6 @@ import org.riverock.webmill.container.ContainerConstants;
  */
 @SuppressWarnings({"deprecation"})
 public class TestCaseSiteAbstract {
-    public DatabaseAdapter db_ = null;
     public HttpServletRequestApplWrapper request = null;
     public HttpServletResponseApplWrapper response = null;
     public HttpSessionApplWrapper session = null;
@@ -52,9 +49,6 @@ public class TestCaseSiteAbstract {
 
         System.out.println( "Start nameConnection with nameConnection "+nameConnection);
 
-        db_ = DatabaseAdapter.getInstance( nameConnection);
-        if (db_==null)
-            throw new Exception( "DatabaseAdapter not created, nameConnection - '"+nameConnection+"'" );
     }
 
     protected void testSiteStructure( TestCaseInterface testCase )
@@ -62,9 +56,9 @@ public class TestCaseSiteAbstract {
     {
 //        CacheArray.reinitFullCache();
 
-        DatabaseConnectionType dbConnConfig = GenericConfig.getDatabaseConnection( nameConnection );
-        if (dbConnConfig==null)
-            throw new Exception("Connection with name '"+nameConnection+"' not present");
+//        DatabaseConnectionType dbConnConfig = GenericConfig.getDatabaseConnection( nameConnection );
+//        if (dbConnConfig==null)
+//            throw new Exception("Connection with name '"+nameConnection+"' not present");
 
         initDatabaseConnection();
 
@@ -97,7 +91,7 @@ public class TestCaseSiteAbstract {
     {
         StartupApplication.init();
         nameConnection = "MYSQL";
-        GenericConfig.setDefaultConnectionName( nameConnection );
+//        GenericConfig.setDefaultConnectionName( nameConnection );
         testSiteStructure( testCase );
     }
 

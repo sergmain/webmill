@@ -23,7 +23,6 @@
  */
 package org.riverock.portlet.menu;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -33,11 +32,10 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
-import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
@@ -46,8 +44,8 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
-import org.riverock.portlet.menu.schema.MenuSimpleType;
 import org.riverock.portlet.menu.schema.MenuModuleType;
+import org.riverock.portlet.menu.schema.MenuSimpleType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -164,8 +162,6 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         processPortletParameters();
     }
 
-    private final static Object objSync4 = new Object();
-
     void initMenuSimple(Menu menu, Long currentCtxId) throws PortletException {
         if (menu != null) {
             int treeId = 0;
@@ -185,6 +181,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
         markAsCurrentThread(currentMenuModule);
 
+/*
         if (log.isDebugEnabled()) {
             synchronized (objSync4) {
                 try {
@@ -201,7 +198,10 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 }
             }
         }
+*/
     }
+//    private final static Object objSync4 = new Object();
+
 
     private void processPortletParameters() throws PortletException {
 
@@ -270,27 +270,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private static Logger log1 = Logger.getLogger("org.riverock.portlet.menu.MenuSimple-1");
-
-    private final static Object objSync = new Object();
-
     List<MenuModuleType> getMenuModuleWithLevel(List<MenuModuleType> menuModuleArray, int level, int currentLevel) {
         if (menuModuleArray==null || menuModuleArray.isEmpty()) {
             return null;
-        }
-
-        if (log1.isDebugEnabled()) {
-            log1.debug("level " + level + ", currentLevel " + currentLevel);
-            synchronized (objSync) {
-                String fileName = GenericConfig.getGenericDebugDir() + File.separatorChar + "menu-level-" + currentLevel + ".xml";
-                log.debug("Write menu to " + fileName);
-                try {
-                    XmlTools.writeToFile(menuModuleArray, fileName);
-                }
-                catch (Exception e) {
-                    // catch debug exception
-                }
-            }
         }
 
         if (currentLevel == 0 && currentLevel == level){
@@ -299,11 +281,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
         if (currentLevel == level) {
             for (final MenuModuleType newVar : menuModuleArray) {
-                if (log1.isDebugEnabled())
-                    log1.debug("menuModuleArray[k].getIncludeLevel() " + newVar.getIncludeLevel());
-
-                if (newVar.getIsCurrentThread() == 1)
+                if (newVar.getIsCurrentThread() == 1) {
                     return menuModuleArray;
+                }
             }
         }
 
@@ -338,6 +318,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         if (log.isDebugEnabled()) {
             log.debug("processMenuLevel(), level: " + level + ", compareLevel: " + compareLevel);
 
+/*
             synchronized (objSync2) {
                 String fileName = GenericConfig.getGenericDebugDir() + File.separatorChar + "menu-simple-" + tempLong + ".xml";
                 log.debug("Write menu to " + fileName);
@@ -348,6 +329,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     //catch debug exception
                 }
             }
+*/
         }
 
         switch (compareLevel) {
@@ -440,6 +422,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
         remarkLevel(menuSimple.getMenuModule(), 1);
 
+/*
         if (log.isDebugEnabled()) {
             synchronized (objSync3) {
                 String fileName = GenericConfig.getGenericDebugDir() + File.separatorChar + "menu-simple-result-" + tempLong + ".xml";
@@ -452,6 +435,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 }
             }
         }
+*/
     }
 
     MenuModuleType getMenuModule(MenuItem item, int level, Long currentCtxId, int treeId, int orderNumber)
@@ -587,6 +571,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             throw e;
         }
 
+/*
         if (log.isDebugEnabled()) {
             log.debug("end get XmlByte array. length of array - " + b.length);
 
@@ -597,6 +582,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             }
             log.debug("end output data");
         }
+*/
 
         return b;
     }

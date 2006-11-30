@@ -37,8 +37,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
@@ -93,10 +91,8 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement( sql_ );
+//            ps = db_.prepareStatement( sql_ );
 
             PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
             Long idSupportLanguageCurrent = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
@@ -105,7 +101,7 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
             rs = ps.executeQuery();
             while( rs.next() ) {
                 log.debug( "#10.01.04 " + RsetTools.getLong( rs, "ID_SITE_PORTLET_FAQ" ) );
-                v.add( FaqGroup.getInstance( RsetTools.getLong( rs, "ID_SITE_PORTLET_FAQ" ) ) );
+                v.add( new FaqGroup( RsetTools.getLong( rs, "ID_SITE_PORTLET_FAQ" ) ) );
             }
 
             log.debug( "#10.01.05 " );
@@ -113,12 +109,6 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
         catch( Exception e ) {
             log.error( "Error get faq block ", e );
             throw new PortletException( e.toString() );
-        }
-        finally {
-            DatabaseManager.close( db_, rs, ps );
-            rs = null;
-            ps = null;
-            db_ = null;
         }
         return this;
     }

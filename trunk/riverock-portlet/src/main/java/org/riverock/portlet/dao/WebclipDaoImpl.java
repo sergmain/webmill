@@ -23,20 +23,17 @@
  */
 package org.riverock.portlet.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.Blob;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
-import org.riverock.generic.annotation.schema.db.PrimaryKey;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
+import org.riverock.common.exception.DatabaseException;
+import org.riverock.portlet.tools.HibernateUtils;
 import org.riverock.portlet.webclip.WebclipBean;
 
 /**
@@ -54,181 +51,89 @@ public class WebclipDaoImpl implements WebclipDao {
         if (webclipId==null || siteId==null) {
             return null;
         }
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-
-            ps = db_.prepareStatement(
-                "select DATE_POST " +
-                "from   WM_PORTLET_WEBCLIP " +
-                "where  ID_SITE=? and ID_WEBCLIP=?"
-            );
-            RsetTools.setLong(ps, 1, siteId );
-            RsetTools.setLong(ps, 2, webclipId );
-
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                Timestamp datePost = RsetTools.getTimestamp(rs, "DATE_POST");
-                String webclipData = initWebclipData(db_, webclipId);
-                return new WebclipBean(siteId, webclipId, webclipData, datePost);
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        WebclipBean bean = (WebclipBean)session.createQuery(
+            "select bean from org.riverock.portlet.webclip.WebclipBean as bean " +
+                "where bean.webclipId = :webclipId and bean.siteId=:siteId")
+            .setLong("webclipId", webclipId)
+            .setLong("siteId", siteId)
+            .uniqueResult();
+        if (bean!=null) {
+            Blob blob = bean.getWebclipBlob();
+            if (blob!=null) {
+                try {
+                    bean.setWebclipData( new String(blob.getBytes(1, (int)blob.length())) );
+                }
+                catch (SQLException e) {
+                    String es = "Error get Webclip";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
             }
-            return null;
         }
-        catch (Throwable e) {
-            final String es = "Error get webclip";
-            log.error(es, e);
-            throw new RuntimeException( es, e );
+        session.getTransaction().commit();
+        return bean;
+    }
+
+    public int getWebclipVersion(Long siteId, Long webclipId) {
+        if (webclipId==null || siteId==null) {
+            throw new RuntimeException("webclipId and siteId must not null");
         }
-        finally {
-            DatabaseManager.close(db_, rs, ps);
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        Integer version = (Integer)session.createQuery(
+            "select bean.version from org.riverock.portlet.webclip.WebclipBean as bean " +
+                "where bean.webclipId = :webclipId and bean.siteId=:siteId")
+            .setLong("webclipId", webclipId)
+            .setLong("siteId", siteId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return version;
     }
 
     public Long createWebclip(Long siteId, String webclipData) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
 
-            CustomSequence seq = new CustomSequence();
-            seq.setSequenceName( "seq_WM_PORTLET_WEBCLIP" );
-            seq.setTableName( "WM_PORTLET_WEBCLIP" );
-            seq.setColumnName( "ID_WEBCLIP" );
-            Long id = adapter.getSequenceNextValue( seq );
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
-            String sql_ =
-                "insert into WM_PORTLET_WEBCLIP"+
-                 "(ID_WEBCLIP, ID_SITE, DATE_POST, WEBCLIP_DATA)"+
-                "values"+
-                "( ?,  ?,  ?,  null )";
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setLong(1, id );
-            ps.setLong(2, siteId );
-            ps.setTimestamp(3, new java.sql.Timestamp( System.currentTimeMillis()));
-            ps.executeUpdate();
-
-            /**
-             * @param idRec - value of PK in main table
-             * @param pkName - name PK in main table
-             * @param pkType - type of PK in main table
-             * @param nameTargetTable  - name of slave table
-             * @param namePkTargetTable - name of PK in slave table
-             * @param nameTargetField - name of filed with BigText data in slave table
-             * @param insertString - insert string
-             * @param isDelete - delete data from slave table before insert true/false
-             */
-
-            if (StringUtils.isNotBlank(webclipData)) {
-                PrimaryKey primaryKey = new PrimaryKey();
-                primaryKey.setType("NUMBER");
-                DatabaseManager.insertBigText(
-                    adapter,
-                    id,
-                    "ID_WEBCLIP",
-                    primaryKey,
-                    "WM_PORTLET_WEBCLIP_DATA",
-                    "ID_WEBCLIP_DATA",
-                    "WEBCLIP_DATA",
-                    webclipData,
-                    false
-                );
-            }
-            adapter.commit();
-            return id;
-        } catch (Throwable e) {
-            try {
-                if (adapter!=null)
-                    adapter.rollback();
-            }
-            catch(Throwable th) {
-                // catch rollback error
-            }
-            String es = "Error create webclip";
-            log.error(es, e);
-            throw new IllegalStateException( es, e);
-        } finally {
-            DatabaseManager.close(adapter, rs, ps);
-            rs=null;
-            ps=null;
-            adapter=null;
+        WebclipBean bean = new WebclipBean();
+        bean.setSiteId(siteId);
+        bean.setDatePost(new Date());
+        if (StringUtils.isNotBlank(webclipData)) {
+            bean.setWebclipBlob( Hibernate.createBlob(webclipData.getBytes()));
         }
+        else {
+            bean.setWebclipBlob(null);
+        }
+        session.save(bean);
+        session.flush();
+
+        session.getTransaction().commit();
+
+        return bean.getWebclipId();
     }
 
     public void updateWebclip(WebclipBean webclip) {
-        String sql_ =
-            "update WM_PORTLET_WEBCLIP "+
-            "set    DATE_POST=? "+
-            "where  ID_WEBCLIP=?";
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
-        PreparedStatement ps = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setTimestamp(1, new java.sql.Timestamp( System.currentTimeMillis()));
-            ps.setLong(2, webclip.getWebclipId() );
-            ps.executeUpdate();
-
-            /**
-             * @param idRec - value of PK in main table
-             * @param pkName - name PK in main table
-             * @param pkType - type of PK in main table
-             * @param nameTargetTable  - name of slave table
-             * @param namePkTargetTable - name of PK in slave table
-             * @param nameTargetField - name of filed with BigText data in slave table
-             * @param insertString - insert string
-             * @param isDelete - delete data from slave table before insert true/false
-             */
+        WebclipBean bean = (WebclipBean)session.createQuery(
+            "select bean from org.riverock.portlet.webclip.WebclipBean as bean " +
+                "where bean.webclipId = :webclipId and bean.siteId=:siteId")
+            .setLong("webclipId", webclip.getWebclipId())
+            .setLong("siteId", webclip.getSiteId())
+            .uniqueResult();
+        if (bean!=null) {
+            bean.setDatePost(webclip.getDatePost());
             if (StringUtils.isNotBlank(webclip.getWebclipData())) {
-                PrimaryKey primaryKey = new PrimaryKey();
-                primaryKey.setType("NUMBER");
-                DatabaseManager.insertBigText(
-                    adapter,
-                    webclip.getWebclipId(),
-                    "ID_WEBCLIP",
-                    primaryKey,
-                    "WM_PORTLET_WEBCLIP_DATA",
-                    "ID_WEBCLIP_DATA",
-                    "WEBCLIP_DATA",
-                    webclip.getWebclipData(),
-                    true
-                );
+                bean.setWebclipBlob( Hibernate.createBlob(webclip.getWebclipData().getBytes()));
             }
             else {
-                DatabaseManager.runSQL(
-                    adapter,
-                    "delete from WM_PORTLET_WEBCLIP_DATA where ID_WEBCLIP=?",
-                    new Object[]{webclip.getWebclipId()}, new int[]{Types.DECIMAL}
-                );
-
+                bean.setWebclipBlob(null);
             }
-            adapter.commit();
         }
-        catch (Exception e) {
-            try {
-                if( adapter != null )
-                    adapter.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error update webclip";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-       }
-       finally {
-            DatabaseManager.close(adapter, ps);
-       }
+        session.getTransaction().commit();
     }
 
     public void deleteWebclip(Long siteId, Long weblipId) {
@@ -236,55 +141,17 @@ public class WebclipDaoImpl implements WebclipDao {
             return;
         }
 
-        DatabaseAdapter dbDyn = null;
-        try {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
-            dbDyn = DatabaseAdapter.getInstance();
+        session.createQuery(
+            "delete org.riverock.portlet.webclip.WebclipBean as bean " +
+                "where bean.webclipId = :webclipId and bean.siteId=:siteId")
+            .setLong("webclipId", weblipId)
+            .setLong("siteId", siteId)
+            .executeUpdate();
 
-            Long testWebclipId = DatabaseManager.getLongValue(
-                dbDyn, "select ID_WEBCLIP from WM_PORTLET_WEBCLIP where ID_WEBCLIP=? and ID_SITE=?",
-                new Object[]{weblipId, siteId}, new int[]{Types.DECIMAL, Types.DECIMAL}
-            );
-            if (testWebclipId==null) {
-                return;
-            }
-            DatabaseManager.runSQL(
-                dbDyn,
-                "delete from WM_PORTLET_WEBCLIP_DATA where ID_WEBCLIP=?",
-                new Object[]{weblipId}, new int[]{Types.DECIMAL}
-            );
-
-            DatabaseManager.runSQL(
-                dbDyn,
-                "delete from WM_PORTLET_WEBCLIP where ID_WEBCLIP=?",
-                new Object[]{weblipId}, new int[]{Types.DECIMAL}
-            );
-
-            dbDyn.commit();
-        }
-        catch( Exception e ) {
-            try {
-                if( dbDyn != null )
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error delete webclip";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn);
-        }
-    }
-
-    private String initWebclipData(DatabaseAdapter db, Long webclipId) throws SQLException {
-        if (webclipId==null) {
-            return "";
-        }
-
-        return DatabaseManager.getBigTextField(db, webclipId, "WEBCLIP_DATA", "WM_PORTLET_WEBCLIP_DATA", "ID_WEBCLIP", "ID_WEBCLIP_DATA");
+        session.getTransaction().commit();
     }
 }
 

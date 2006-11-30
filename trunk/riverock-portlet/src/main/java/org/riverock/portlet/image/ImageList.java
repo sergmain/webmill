@@ -42,8 +42,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
@@ -73,7 +71,6 @@ public final class ImageList extends HttpServlet {
     public void doGet( HttpServletRequest request_, HttpServletResponse response )
         throws IOException {
         Writer out = null;
-        DatabaseAdapter db_ = null;
         try {
             RenderRequest renderRequest = null;
             RenderResponse renderResponse= null;
@@ -90,8 +87,6 @@ public final class ImageList extends HttpServlet {
                 throw new IllegalStateException( "You have not enough right to execute this operation" );
             }
 
-            db_ = DatabaseAdapter.getInstance();
-
             String index_page = PortletService.url( "mill.image.index", renderRequest, renderResponse );
 
             if ( auth_.isUserInRole( "webmill.upload_image" ) ) {
@@ -106,7 +101,8 @@ public final class ImageList extends HttpServlet {
                     "where   a.id = ? and a.is_group = 1 and " +
                     "a.ID_FIRM = b.ID_FIRM and b.user_login = ?";
 
-                PreparedStatement ps = db_.prepareStatement( sql_ );
+                PreparedStatement ps=null;
+//                ps = db_.prepareStatement( sql_ );
                 RsetTools.setLong( ps, 1, id_main_ );
                 ps.setString( 2, auth_.getUserLogin() );
                 ResultSet rs = ps.executeQuery();
@@ -128,9 +124,6 @@ public final class ImageList extends HttpServlet {
                     out.write( "</table>\r\n                " );
 
                 }
-                DatabaseManager.close( rs, ps );
-                rs = null;
-                ps = null;
 
                 out.write( "\r\n" );
                 out.write( "<br>\r\n" );
@@ -143,7 +136,7 @@ public final class ImageList extends HttpServlet {
                     "	    and b.user_login=? \n" +
                     "order by id asc ";
 
-                ps = db_.prepareStatement( sql_ );
+//                ps = db_.prepareStatement( sql_ );
                 RsetTools.setLong( ps, 1, id_main_ );
                 ps.setString( 2, auth_.getUserLogin() );
 
@@ -211,10 +204,6 @@ public final class ImageList extends HttpServlet {
                 out.write( "</table>\r\n            " );
 
 
-                DatabaseManager.close( rs, ps );
-                rs = null;
-                ps = null;
-
                 out.write( "\r\n" );
                 out.write( "</table>\r\n\r\n" );
                 out.write( "<a href=\"" );
@@ -238,10 +227,5 @@ public final class ImageList extends HttpServlet {
             cat.error( e );
             out.write( ExceptionTools.getStackTrace( e, 20, "<br>" ) );
         }
-        finally {
-            DatabaseAdapter.close( db_ );
-            db_ = null;
-        }
-
     }
 }

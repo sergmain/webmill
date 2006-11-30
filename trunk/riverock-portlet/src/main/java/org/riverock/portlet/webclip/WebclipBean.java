@@ -24,6 +24,18 @@
 package org.riverock.portlet.webclip;
 
 import java.util.Date;
+import java.io.Serializable;
+import java.sql.Blob;
+
+import javax.persistence.Entity;
+import javax.persistence.TableGenerator;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 
 /**
  * User: SergeMaslyukov
@@ -32,11 +44,39 @@ import java.util.Date;
  * <p/>
  * $Id$
  */
-public class WebclipBean {
+@Entity
+@Table(name="wm_portlet_webclip")
+@TableGenerator(
+    name="TABLE_PORTLET_WEBCLIP",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portlet_webclip",
+    allocationSize = 1,
+    initialValue = 1
+)
+public class WebclipBean implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PORTLET_WEBCLIP")
+    @Column(name="ID_WEBCLIP")
     private Long webclipId;
+
+    @Column(name="ID_SITE")
     private Long siteId;
-    private String webclipData;
+
+    @Column(name="WEBCLIP_BLOB")
+    private Blob webclipBlob;
+
+    @Column(name="DATE_POST")
     private Date datePost;
+
+    @Version
+    @Column(name="VERSION")
+    private int version;
+
+    @Transient
+    private String webclipData;
 
     public WebclipBean() {
     }
@@ -46,6 +86,22 @@ public class WebclipBean {
         this.siteId = siteId;
         this.webclipData = webclipData;
         this.datePost = datePost;
+    }
+
+    public Blob getWebclipBlob() {
+        return webclipBlob;
+    }
+
+    public void setWebclipBlob(Blob webclipBlob) {
+        this.webclipBlob = webclipBlob;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public Long getWebclipId() {

@@ -24,4 +24,5 @@
 <Context path="/riverock-portlets" docBase="riverock-portlets" debug="9999" reloadable="true" useNaming="true" unpack="true" antiJARLocking="true" crossContext="true">
     <ResourceLink name="jdbc/webmill" global="jdbc/webmill" type="javax.sql.DataSource" />
     <ResourceLink name="dbFamily" global="dbFamily" type="java.lang.String" />
+    <ResourceLink name="hibernate_family" global="hibernate_family" type="java.lang.String" />
 </Context>

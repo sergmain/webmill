@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.net.URL;
 import java.sql.PreparedStatement;
+import java.util.TimeZone;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -44,9 +45,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.common.utils.DateUtils;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -85,7 +83,6 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
         Writer out = null;
         PreparedStatement ps = null;
-        DatabaseAdapter dbDyn = null;
 
         try {
             out = renderResponse.getWriter();
@@ -97,7 +94,6 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
                 throw new PortletSecurityException( "You have not enough right" );
             }
 
-            dbDyn = DatabaseAdapter.getInstance();
 
             if ( log.isDebugEnabled() )
                 log.debug( "urlString - " + renderRequest.getParameter( "url_download" ) );
@@ -133,11 +129,12 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
             // Todo этот сиквенс просто заглушка, сейчас не работает.
             // т.к. сиквенс просто использовалс€ чтобы получить уникальное им€ файла
-            CustomSequence seq = new CustomSequence();
-            seq.setSequenceName( "seq_image_number_file" );
-            seq.setTableName( "MAIN_FORUM_THREADS" );
-            seq.setColumnName( "ID_THREAD" );
-            Long currID = dbDyn.getSequenceNextValue( seq );
+//            CustomSequence seq = new CustomSequence();
+//            seq.setSequenceName( "seq_image_number_file" );
+//            seq.setTableName( "MAIN_FORUM_THREADS" );
+//            seq.setColumnName( "ID_THREAD" );
+            Long currID=null;
+//            currID = dbDyn.getSequenceNextValue( seq );
 
             String storage_ = portletConfig.getPortletContext().getRealPath("/") + File.separatorChar + "image";
             String fileName = storage_ + File.separatorChar;
@@ -176,12 +173,12 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
             is = null;
             url = null;
 
-            out.write( DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale() ) + "<br>" );
+            out.write( DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale(), TimeZone.getDefault() ) + "<br>" );
 
-            ps = dbDyn.prepareStatement( "insert into WM_IMAGE_DIR " +
-                "( id_image_dir, ID_FIRM, is_group, id, id_main, name_file, description )" +
-                "(select seq_WM_IMAGE_DIR.nextval, ID_FIRM, 0, ?, ?, ?, ? " +
-                " from WM_AUTH_USER where user_login = ? )" );
+//            ps = dbDyn.prepareStatement( "insert into WM_IMAGE_DIR " +
+//                "( id_image_dir, ID_FIRM, is_group, id, id_main, name_file, description )" +
+//                "(select seq_WM_IMAGE_DIR.nextval, ID_FIRM, 0, ?, ?, ?, ? " +
+//                " from WM_AUTH_USER where user_login = ? )" );
 
             RsetTools.setLong( ps, 1, currID );
             RsetTools.setLong( ps, 2, id_main );
@@ -190,11 +187,10 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
             ps.setString( 5, auth_.getUserLogin() );
 
             ps.executeUpdate();
-            dbDyn.commit();
 
             out.write( "«агрузка данных прошла без ошибок<br>" +
                 "«агружен файл " + newFileName + "<br>" +
-                DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale() ) + "<br>" +
+                DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale(), TimeZone.getDefault() ) + "<br>" +
                 "<br>" +
                 "<p><a href=\"" + PortletService.url( "mill.image.index", renderRequest, renderResponse ) +
                 "\">«агрузить данные повторно</a></p><br>" +
@@ -203,20 +199,10 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
         }
         catch( Exception e ) {
-            try {
-                dbDyn.rollback();
-            }
-            catch( Exception e1 ) {
-            }
 
             final String es = "Error upload image from url";
             log.error( es, e );
             throw new PortletException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn, ps );
-            dbDyn = null;
-            ps = null;
         }
     }
 }
