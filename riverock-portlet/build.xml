@@ -38,9 +38,7 @@
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-        <!--<pathelement location="${lib.dir}/${riverock-generic.lib}"/>-->
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
-        <!--<pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>-->
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${riverock-module.lib}"/>
 
@@ -49,8 +47,6 @@
         <pathelement location="${lib.dir}/${log4j.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
 
-        <pathelement location="${lib.dir}/${castor.lib}"/>
-        
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${commons-codec.lib}"/>
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
@@ -68,6 +64,10 @@
 
         <pathelement location="${lib.dir}/${jcaptcha.lib}"/>
         <pathelement location="${lib.dir}/${ehcache.lib}"/>
+        
+        <pathelement location="${lib.dir}/${ejb3-persistence.lib}"/>
+        <pathelement location="${lib.dir}/${hibernate.lib}"/>
+        <pathelement location="${lib.dir}/${hibernate-annotation.lib}"/>
 
         <pathelement location="${lib.dir}/${nekohtml.lib}"/>
 
@@ -142,8 +142,6 @@
     </target>
 
     <patternset id="war.lib">
-        <include name="${riverock-sql-parser.lib}"/>
-        <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
         <include name="${riverock-portlet.lib}"/>
         <include name="${riverock-module.lib}"/>

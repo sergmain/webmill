@@ -43,9 +43,6 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.webmill.container.tools.PortletService;
@@ -82,7 +79,6 @@ public final class ImageUploadPortlet implements Portlet {
 
         Writer out = null;
         PreparedStatement ps = null;
-        DatabaseAdapter dbDyn = null;
 
         try {
 
@@ -94,7 +90,6 @@ public final class ImageUploadPortlet implements Portlet {
             if ( log.isDebugEnabled() )
                 log.debug( "Start commit new image from file" );
 
-            dbDyn = DatabaseAdapter.getInstance();
             String index_page = PortletService.url( "mill.image.index", renderRequest, renderResponse );
 
             if ( log.isDebugEnabled() )
@@ -117,11 +112,12 @@ public final class ImageUploadPortlet implements Portlet {
 
             // Todo this sequence not work
             // 'cos this sequence was used only for recieve unique file name
-            CustomSequence seq = new CustomSequence();
-            seq.setSequenceName( "seq_image_number_file" );
-            seq.setTableName( "MAIN_FORUM_THREADS" );
-            seq.setColumnName( "ID_THREAD" );
-            Long currID = dbDyn.getSequenceNextValue( seq );
+//            CustomSequence seq = new CustomSequence();
+//            seq.setSequenceName( "seq_image_number_file" );
+//            seq.setTableName( "MAIN_FORUM_THREADS" );
+//            seq.setColumnName( "ID_THREAD" );
+            Long currID=null;
+//            currID = dbDyn.getSequenceNextValue( seq );
 
             // Todo xxx work around with hacked URL - "../../.."
             String storage_ = portletConfig.getPortletContext().getRealPath("/") + File.separatorChar + "image";
@@ -156,6 +152,7 @@ public final class ImageUploadPortlet implements Portlet {
 
             User userInfo = auth_.getUser();
 
+/*
             CustomSequence seqImageDir = new CustomSequence();
             seqImageDir.setSequenceName( "seq_WM_image_dir" );
             seqImageDir.setTableName( "WM_IMAGE_DIR" );
@@ -176,6 +173,7 @@ public final class ImageUploadPortlet implements Portlet {
             ps.executeUpdate();
 
             dbDyn.commit();
+*/
 
             if ( log.isDebugEnabled() )
                 log.debug( "redirect to indexPage - " + index_page );
@@ -186,19 +184,9 @@ public final class ImageUploadPortlet implements Portlet {
 
         }
         catch( Exception e ) {
-            try {
-                dbDyn.rollback();
-            }
-            catch( SQLException e1 ) {
-            }
             final String es = "Error upload image";
             log.error( es, e );
             throw new PortletException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn, ps );
-            dbDyn = null;
-            ps = null;
         }
     }
 }

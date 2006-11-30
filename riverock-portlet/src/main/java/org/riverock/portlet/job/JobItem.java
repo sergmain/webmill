@@ -37,8 +37,6 @@ import org.apache.log4j.Logger;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -208,7 +206,7 @@ public class JobItem {
             "where  ID_JOB_POSITION=? " +
             "order by ID_JOB_POSITION_DATA asc";
 
-    public static JobItem getInstance(DatabaseAdapter db_, Long id_, Long siteId)
+    public static JobItem getInstance(Long id_, Long siteId)
             throws Exception
     {
         if (log.isDebugEnabled())
@@ -225,7 +223,7 @@ public class JobItem {
             if (log.isDebugEnabled())
                 log.debug("query db for job item");
 
-            ps = db_.prepareStatement(sqlJobPosition);
+//            ps = db_.prepareStatement(sqlJobPosition);
             RsetTools.setLong(ps, 1, item.idPosition);
             RsetTools.setLong(ps, 2, siteId );
             rs = ps.executeQuery();
@@ -256,14 +254,10 @@ public class JobItem {
                 item.testPeriod = RsetTools.getString(rs, "test_period");
                 item.contactPerson = RsetTools.getString(rs, "contact_person");
 
-                DatabaseManager.close(rs, ps);
-                rs = null;
-                ps = null;
-
                 if (log.isDebugEnabled())
                     log.debug("#1.2");
 
-                ps = db_.prepareStatement(sqlJobPositionData);
+//                ps = db_.prepareStatement(sqlJobPositionData);
                 RsetTools.setLong(ps, 1, item.idPosition);
                 rs = ps.executeQuery();
                 while (rs.next())
@@ -290,12 +284,6 @@ public class JobItem {
         {
             log.error("Error get position", e);
             throw e;
-        }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
         }
     }
 }

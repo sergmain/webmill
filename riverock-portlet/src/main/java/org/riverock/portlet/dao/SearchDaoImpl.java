@@ -23,11 +23,13 @@
  */
 package org.riverock.portlet.dao;
 
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.util.Date;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Session;
+
+import org.riverock.portlet.search.stub.SearchBean;
+import org.riverock.portlet.tools.HibernateUtils;
 
 /**
  * User: SergeMaslyukov
@@ -45,34 +47,21 @@ public class SearchDaoImpl implements SearchDao {
      * @param searchString String
      */
     public void storeRequest(Long siteId, String searchString) {
-        DatabaseAdapter db =null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            DatabaseManager.runSQL(
-                db,
-                "insert into WM_PORTLET_SEARCH " +
-                    "(ID_SITE, SEARCH_DATE, WORD)" +
-                    "values" +
-                    "(?, ?, ?)",
-                new Object[]{siteId, new Timestamp(System.currentTimeMillis()) ,searchString},
-                new int[]{Types.DECIMAL, Types.TIMESTAMP, Types.VARCHAR}
-            );
-            db.commit();
+        if (StringUtils.isBlank(searchString)) {
+            return;
         }
-        catch (Exception e) {
-            try {
-                if (db!=null)
-                    db.rollback();
-            }
-            catch(Throwable th) {
-                // catch rollback error
-            }
-            String es = "Error insert search words";
-            throw new RuntimeException( es, e);
-       }
-       finally {
-            DatabaseManager.close(db);
-            db=null;
-       }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        SearchBean bean = new SearchBean();
+        bean.setSiteId(siteId);
+        bean.setSearchDate(new Date());
+        bean.setWord(searchString);
+
+        session.save(bean);
+        session.flush();
+
+        session.getTransaction().commit();
     }
 }

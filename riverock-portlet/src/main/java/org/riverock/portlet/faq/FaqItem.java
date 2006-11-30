@@ -37,8 +37,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
@@ -54,12 +52,6 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
     public String question = null;
     public String answer = null;
     public Calendar datePost = null;
-
-    public void reinit() {
-    }
-
-    public void terminate( Long id_ ) {
-    }
 
     public FaqItem( String q, String a ) {
         question = q;
@@ -93,19 +85,13 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
     }
 
     public PortletResultContent getInstance( Long id ) {
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
-            return new FaqItem( db_, id );
+            return new FaqItem( id );
         }
         catch (Exception e) {
             String es = "Error getInstance()";
             log.error(es, e);
 //            throw new RuntimeException(es, e);
-        }
-        finally {
-            DatabaseManager.close(db_);
-            db_ = null;
         }
         return null;
     }
@@ -114,7 +100,7 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
         return null;
     }
 
-    public FaqItem( DatabaseAdapter db_, Long id) throws PortletException {
+    public FaqItem(  Long id) throws PortletException {
         if ( id==null)
             return;
 
@@ -126,25 +112,19 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = db_.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, id);
 
             rs = ps.executeQuery();
             if (rs.next()) {
                 datePost = RsetTools.getCalendar(rs, "DATE_POST");
             }
-            answer = DatabaseManager.getBigTextField(db_, id, "ANSWER", "WM_PORTLET_FAQ_ANSWER", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_ANSWER");
-            question = DatabaseManager.getBigTextField(db_, id, "QUESTION", "WM_PORTLET_FAQ_QUESTION", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_QUESTION");
+//            answer = DatabaseManager.getBigTextField(db_, id, "ANSWER", "WM_PORTLET_FAQ_ANSWER", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_ANSWER");
+//            question = DatabaseManager.getBigTextField(db_, id, "QUESTION", "WM_PORTLET_FAQ_QUESTION", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_QUESTION");
         }
         catch(Exception exc) {
             final String es = "Error create Faq item";
             log.error(es, exc);
             throw new PortletException(es, exc);
-        }
-        finally {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
         }
     }
 

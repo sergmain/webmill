@@ -39,8 +39,6 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
@@ -92,12 +90,9 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
             Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
-            ps = db_.prepareStatement( sql_ );
             RsetTools.setLong( ps, 1, siteId );
             rs = ps.executeQuery();
 
@@ -106,7 +101,7 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
                     log.debug( "#10.01.04 " + RsetTools.getLong( rs, "ID_JOB_POSITION" ) );
 
                 JobItem item = JobItem.getInstance(
-                    db_, RsetTools.getLong( rs, "ID_JOB_POSITION" ), siteId
+                    RsetTools.getLong( rs, "ID_JOB_POSITION" ), siteId
                 );
                 v.add( item );
             }
@@ -117,12 +112,6 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
         catch( Exception e ) {
             log.error( "Error get job block ", e );
             throw new PortletException( e.toString() );
-        }
-        finally {
-            DatabaseManager.close( db_, rs, ps );
-            rs = null;
-            ps = null;
-            db_ = null;
         }
         return this;
     }

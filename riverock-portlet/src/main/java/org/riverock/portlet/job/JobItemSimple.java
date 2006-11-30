@@ -38,8 +38,6 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.portlet.job.schema.JobItemType;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
@@ -58,10 +56,6 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
         this.renderResponse = renderResponse;
-    }
-
-    public PortletResultContent getInstance(DatabaseAdapter db__) {
-        return null;
     }
 
     public JobItemSimple() {
@@ -227,13 +221,11 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
             if (log.isDebugEnabled())
                 log.debug("query db for job item");
 
-            ps = db_.prepareStatement(sqlJobPosition);
+//            ps = db_.prepareStatement(sqlJobPosition);
             RsetTools.setLong(ps, 1, this.idPosition);
             rs = ps.executeQuery();
 
@@ -262,14 +254,10 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
                 this.testPeriod = RsetTools.getString(rs, "test_period");
                 this.contactPerson = RsetTools.getString(rs, "contact_person");
 
-                DatabaseManager.close(rs, ps);
-                rs = null;
-                ps = null;
-
                 if (log.isDebugEnabled())
                     log.debug("#1.2");
 
-                ps = db_.prepareStatement(sqlJobPositionData);
+//                ps = db_.prepareStatement(sqlJobPositionData);
                 RsetTools.setLong(ps, 1, this.idPosition);
                 rs = ps.executeQuery();
                 while (rs.next())
@@ -296,12 +284,6 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
             String es = "Error get position";
             log.error(es, e);
             throw new PortletException(es,e);
-        }
-        finally{
-            DatabaseManager.close(db_, rs, ps);
-            rs = null;
-            ps = null;
-            db_ = null;
         }
     }
 
