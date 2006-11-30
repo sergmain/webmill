@@ -41,7 +41,7 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;

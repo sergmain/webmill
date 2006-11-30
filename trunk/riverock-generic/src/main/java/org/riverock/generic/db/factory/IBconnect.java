@@ -25,36 +25,16 @@
  */
 package org.riverock.generic.db.factory;
 
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import org.riverock.common.config.ConfigException;
-import org.riverock.common.tools.DateTools;
+import org.riverock.generic.annotation.schema.db.*;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.CurrentTimeZone;
-import org.riverock.generic.annotation.schema.db.DbView;
-import org.riverock.generic.annotation.schema.db.DbDataFieldData;
-import org.riverock.generic.annotation.schema.db.DbSequence;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
-import org.riverock.generic.annotation.schema.db.DbTable;
-import org.riverock.generic.annotation.schema.db.DbField;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKey;
-import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
-import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
+
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * InterBase database connect 

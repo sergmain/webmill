@@ -33,7 +33,7 @@ import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 
 /**
  * User: Admin
@@ -64,7 +64,7 @@ public class TestMarshal extends TestCase {
     private String fileName = "webmill-schema-test.xml";
 
     public void doTest() throws Exception {
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         makeSchema("ORACLE", fileName);
 

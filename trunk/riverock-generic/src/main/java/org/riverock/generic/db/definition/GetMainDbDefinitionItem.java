@@ -30,33 +30,15 @@ import java.sql.ResultSet;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.GenericException;
-import org.riverock.generic.main.CacheFactoryWithDb;
-import org.riverock.sql.cache.SqlStatement;
 
 @SuppressWarnings({"UnusedAssignment"})
 public class GetMainDbDefinitionItem {
-    private static CacheFactoryWithDb cache = new CacheFactoryWithDb(GetMainDbDefinitionItem.class);
 
     public MainDbDefinitionItem item = new MainDbDefinitionItem();
 
     public boolean isFound = false;
 
     public GetMainDbDefinitionItem() {
-    }
-
-    public static GetMainDbDefinitionItem getInstance(DatabaseAdapter db__, Long id__)
-        throws GenericException {
-        return (GetMainDbDefinitionItem) cache.getInstanceNew(db__, id__);
-    }
-
-    public MainDbDefinitionItem getData(DatabaseAdapter db_, long id)
-        throws Exception {
-        GetMainDbDefinitionItem obj = GetMainDbDefinitionItem.getInstance(db_, id);
-        if (obj != null)
-            return obj.item;
-
-        return new MainDbDefinitionItem();
     }
 
     public void copyItem(MainDbDefinitionItem target) {
@@ -78,23 +60,9 @@ public class GetMainDbDefinitionItem {
         );
     }
 
-    private static String sql_ = null;
+    private static String sql_ = "select * from WM_DB_DEFINITION where ID_DB_DEFINITION=?";
 
-    static {
-        sql_ =
-            "select * from WM_DB_DEFINITION where ID_DB_DEFINITION=?";
-
-
-        try {
-            SqlStatement.registerSql(sql_, GetMainDbDefinitionItem.class);
-        }
-        catch (Exception e) {
-            // catch register exception
-        }
-    }
-
-    public GetMainDbDefinitionItem(DatabaseAdapter db_, Long id)
-        throws Exception {
+    public GetMainDbDefinitionItem(DatabaseAdapter db_, Long id) throws Exception {
         this(db_, id, sql_);
     }
 

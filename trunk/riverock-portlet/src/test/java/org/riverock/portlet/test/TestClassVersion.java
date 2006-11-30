@@ -41,7 +41,7 @@ import java.util.Hashtable;
 import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
 
-import org.riverock.generic.main.ExtensionFileFilter;
+import org.riverock.common.main.ExtensionFileFilter;
 
 public class TestClassVersion
 {

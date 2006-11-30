@@ -62,7 +62,7 @@ public class TestDatabaseTimestamp
     {
         Timestamp t = new Timestamp( System.currentTimeMillis() );
 
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE_PORT" );
 

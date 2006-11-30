@@ -32,13 +32,10 @@
 package org.riverock.portlet.test;
 
 import org.riverock.common.tools.DateTools;
-import org.riverock.generic.utils.DateUtils;
-import org.riverock.generic.startup.StartupApplication;
+import org.riverock.common.utils.DateUtils;
+import org.riverock.common.startup.StartupApplication;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 import java.text.SimpleDateFormat;
 
 public class TestDate
@@ -51,7 +48,7 @@ public class TestDate
         String mask = "dd.MMM.yyyy HH:mm:ss";
 
         Calendar cal = GregorianCalendar.getInstance();
-        String currDate = DateUtils.getCurrentDate( mask );
+        String currDate = DateUtils.getCurrentDate( mask, TimeZone.getDefault() );
         System.out.println("current date/time "+currDate);
 
         currDate = DateTools.getStringDate( cal, mask );

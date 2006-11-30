@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.tools.servlet.ServletResponseWrapperInclude;
+import org.riverock.common.tools.servlet.ServletResponseWrapperInclude;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.context.RequestState;
 import org.riverock.webmill.portal.namespace.Namespace;

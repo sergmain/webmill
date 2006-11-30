@@ -76,7 +76,7 @@ public class TimestampTest
 
         s = DateTools.getStringDate(new Date(), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getTimeZone(  "Europe/Moscow" ));
 
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         s = DateTools.getStringDate(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getDefault());
 //            DateUtils.getStringDate(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH);

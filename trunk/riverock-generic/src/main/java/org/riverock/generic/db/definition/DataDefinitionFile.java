@@ -38,18 +38,18 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.annotation.schema.db.DefinitionList;
 import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.main.CacheFile;
 
 /**
  * $Id$
  */
-public class DataDefinitionFile extends CacheFile {
+public class DataDefinitionFile {
     private static Logger log = Logger.getLogger(DataDefinitionFile.class);
 
-    public DefinitionList definitionList = null;
+    private DefinitionList definitionList = null;
+    private File definitionFile;
 
     public DataDefinitionFile(File tempFile) {
-        super(tempFile, 1000 * 10);
+        this.definitionFile=tempFile;
 
         if (log.isDebugEnabled())
             log.debug("Start unmarshalling file " + tempFile);
@@ -59,11 +59,19 @@ public class DataDefinitionFile extends CacheFile {
 
     private final static Object syncObj = new Object();
 
+    public DefinitionList getDefinitionList() {
+        return definitionList;
+    }
+
+    public File getDefinitionFile() {
+        return definitionFile;
+    }
+
     private void processFile() {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance ( DefinitionList.class.getPackage().getName());
 
-            FileInputStream stream = new FileInputStream(getFile());
+            FileInputStream stream = new FileInputStream(getDefinitionFile());
             Source source =  new StreamSource( stream );
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             definitionList =  unmarshaller.unmarshal( source, DefinitionList.class ).getValue();

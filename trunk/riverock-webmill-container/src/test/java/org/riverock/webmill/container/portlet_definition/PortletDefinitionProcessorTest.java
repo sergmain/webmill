@@ -28,9 +28,6 @@ import java.io.File;
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Preferences;
-import org.riverock.webmill.container.portlet_definition.PortletDefinitionProcessor;
-import org.riverock.webmill.container.portlet_definition.PortletDefinitionProcessorWithDigisterImpl;
-import org.riverock.webmill.container.portlet_definition.JaxbPortletDefinitionProcessorImpl;
 
 /**
  * @author smaslyukov
@@ -41,7 +38,6 @@ import org.riverock.webmill.container.portlet_definition.JaxbPortletDefinitionPr
 public class PortletDefinitionProcessorTest {
 
     public static void main(String[] args) throws Exception {
-//        PortletDefinitionProcessor processor = new PortletDefinitionProcessorWithDigisterImpl();
         PortletDefinitionProcessor processor = new JaxbPortletDefinitionProcessorImpl();
 
         String[] files = {

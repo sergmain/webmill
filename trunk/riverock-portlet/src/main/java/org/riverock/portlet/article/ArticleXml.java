@@ -25,7 +25,6 @@ package org.riverock.portlet.article;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.DateTools;
-import org.riverock.generic.config.GenericConfig;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.Article;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
@@ -43,6 +42,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import java.util.List;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Author: mill
@@ -80,8 +80,10 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
             log.debug( "Article date: " + article.getPostDate() );
             log.debug( "renderRequest: " + renderRequest );
         }
-        String dateText = DateTools.getStringDate(article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), GenericConfig.getTZ());
-        String timeText = DateTools.getStringDate(article.getPostDate(), "HH:mm", renderRequest.getLocale(), GenericConfig.getTZ());
+        //TODO need use site specific TimeZone
+        TimeZone timeZone = TimeZone.getDefault();
+        String dateText = DateTools.getStringDate(article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), timeZone);
+        String timeText = DateTools.getStringDate(article.getPostDate(), "HH:mm", renderRequest.getLocale(), timeZone);
 
         String xml = new StringBuilder().
             append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).

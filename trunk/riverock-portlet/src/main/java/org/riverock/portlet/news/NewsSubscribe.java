@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.ServletTools;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.user.UserMetadataItem;
 import org.riverock.interfaces.sso.a3.AuthSession;

@@ -41,7 +41,7 @@ import javax.portlet.RenderResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.login.schema.LoginType;
 import org.riverock.webmill.container.ContainerConstants;

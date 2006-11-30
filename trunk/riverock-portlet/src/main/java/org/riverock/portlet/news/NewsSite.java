@@ -49,7 +49,7 @@ import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.resource.PortletResourceBundleWithLocale;
-import org.riverock.generic.utils.DateUtils;
+import org.riverock.common.utils.DateUtils;
 
 /**
  * $Id$

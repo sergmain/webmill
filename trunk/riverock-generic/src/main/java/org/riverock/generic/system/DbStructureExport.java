@@ -38,8 +38,8 @@ import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.startup.StartupApplication;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.startup.StartupApplication;
+import org.riverock.common.tools.XmlTools;
 
 /**
  * Author: mill

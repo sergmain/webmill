@@ -25,30 +25,13 @@ package org.riverock.portlet.image;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.PortletConfig;
-import javax.portlet.RenderResponse;
-
-
-
 
 import org.apache.log4j.Logger;
-
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -75,6 +58,7 @@ public final class ImageIndex extends HttpServlet {
     public void doGet( HttpServletRequest request_, HttpServletResponse response )
         throws IOException {
         Writer out = null;
+/*
         DatabaseAdapter db_ = null;
         try {
             RenderRequest renderRequest = null;
@@ -217,5 +201,6 @@ public final class ImageIndex extends HttpServlet {
             DatabaseAdapter.close( db_ );
             db_ = null;
         }
+*/
     }
 }

@@ -47,7 +47,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
 import org.riverock.common.config.PropertiesProvider;
-import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
+import org.riverock.common.tools.servlet.RequestDispatcherImpl;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;

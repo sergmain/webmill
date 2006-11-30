@@ -40,7 +40,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.portlet.job.schema.JobItemType;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;

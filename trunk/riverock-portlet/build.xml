@@ -38,9 +38,9 @@
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
+        <!--<pathelement location="${lib.dir}/${riverock-generic.lib}"/>-->
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
+        <!--<pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>-->
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${riverock-module.lib}"/>
 

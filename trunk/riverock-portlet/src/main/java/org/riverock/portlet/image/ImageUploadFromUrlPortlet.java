@@ -47,7 +47,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
-import org.riverock.generic.utils.DateUtils;
+import org.riverock.common.utils.DateUtils;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;

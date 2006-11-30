@@ -45,7 +45,7 @@ public class TestDate
     public static void main(String args[])
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         String mask = "dd.MMM.yyyy HH:mm:ss";
 

@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
-import org.riverock.generic.exception.DatabaseException;
+import org.riverock.common.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.utils.HibernateUtils;

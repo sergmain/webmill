@@ -35,27 +35,22 @@
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
         <pathelement location="${lib.dir}/${commons-codec.lib}"/>
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${commons-digester.lib}"/>
-        <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
     </path>
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
         <antcall target="jar"/>
     </target>
 
     <target name="full_clean">
-        <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
     </target>
 
@@ -68,22 +63,6 @@
         </delete>
         <mkdir dir="${build.java}" />
 
-        <javac
-            target="1.4"
-            source="1.4"
-            srcdir="${src-schema.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
         <javac
             target="${java.class.target}"
             source="${java.class.source}"

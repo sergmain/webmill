@@ -37,7 +37,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.exception.DatabaseException;
+import org.riverock.common.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.webmill.portal.bean.PortalXsltBean;

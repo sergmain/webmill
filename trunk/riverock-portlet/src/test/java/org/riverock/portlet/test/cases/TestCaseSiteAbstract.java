@@ -26,12 +26,10 @@ package org.riverock.portlet.test.cases;
 import org.riverock.generic.db.DatabaseAdapter;
 
 
-import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
-import org.riverock.generic.tools.servlet.HttpServletResponseApplWrapper;
-import org.riverock.generic.tools.servlet.HttpSessionApplWrapper;
-import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.startup.StartupApplication;
+import org.riverock.common.tools.servlet.HttpServletRequestApplWrapper;
+import org.riverock.common.tools.servlet.HttpServletResponseApplWrapper;
+import org.riverock.common.tools.servlet.HttpSessionApplWrapper;
+import org.riverock.common.startup.StartupApplication;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -106,7 +104,7 @@ public class TestCaseSiteAbstract {
     public void testWithIbmDB2Connection( TestCaseInterface testCase )
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
         nameConnection = "IBM-DB2";
         testSiteStructure( testCase );
     }
@@ -115,7 +113,7 @@ public class TestCaseSiteAbstract {
     public void testWithMSSQLConnection( TestCaseInterface testCase )
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
         nameConnection = "MSSQL-JTDS";
         testSiteStructure( testCase );
     }

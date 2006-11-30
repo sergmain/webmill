@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import org.riverock.generic.exception.DatabaseException;
+import org.riverock.common.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;

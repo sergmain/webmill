@@ -32,18 +32,15 @@
 
 package org.riverock.portlet.test;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.text.ParseException;
 
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.utils.DateUtils;
+import org.riverock.common.utils.DateUtils;
 import org.riverock.common.tools.DateTools;
 
 
@@ -67,28 +64,28 @@ public class TestDatabaseTimestamp
     public static void main(String args[])
         throws Exception
     {
+        org.riverock.common.startup.StartupApplication.init();
+    }
+
+    private static void process(Connection conn) throws SQLException, ParseException {
         Timestamp t = new Timestamp( System.currentTimeMillis() );
 
-        org.riverock.generic.startup.StartupApplication.init();
-
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE_PORT" );
-
         System.out.println("#1 insert");
-        String stringDate = DateUtils.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH);
+        String stringDate = DateUtils.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH, TimeZone.getDefault());
         System.out.println( stringDate );
-        PreparedStatement ps = db_.prepareStatement(
+        PreparedStatement ps = conn.prepareStatement(
             "insert into A_TIMESTAMP(d) values( (select to_date(?, 'dd.mm.yyyy hh24:mi:ss') from dual))"
         );
         ps.setString(1, stringDate);
 
         ps.executeUpdate();
-        db_.commit();
+        conn.commit();
 
         t = new Timestamp(
             DateTools.getDateWithMask("2003-04-09 15:28:12.0", "yyyy-MM-dd HH:mm:ss.SSS").getTime()
         );
         System.out.println("#2 insert");
-        ps = db_.prepareStatement(
+        ps = conn.prepareStatement(
             "insert into A_TIMESTAMP values(?)"
         );
 //        ps.setTimestamp( 1, t);
@@ -101,12 +98,9 @@ public class TestDatabaseTimestamp
         ps.setLong(2, 0);
 
         ps.executeUpdate();
-        db_.commit();
+        conn.commit();
 
-
-        DatabaseAdapter.close( db_ );
-        db_ = null;
-
-
+        conn.close();
+        conn = null;
     }
 }
