@@ -38,10 +38,7 @@ import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.MainTools;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
@@ -137,9 +134,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
     public PortletResultContent getInstance()
         throws PortletException {
 
-        DatabaseAdapter adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
             PortalInfo portalInfo = (PortalInfo) renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
             Menu menu = portalInfo.getMenu(renderRequest.getLocale().toString()).getDefault();
 
@@ -161,10 +156,6 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             final String es = "Error create MenuSimple object";
             log.error(es, e);
             throw new PortletException(es, e);
-        }
-        finally {
-            DatabaseManager.close(adapter);
-            adapter = null;
         }
     }
 

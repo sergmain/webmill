@@ -40,9 +40,6 @@
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
 
-        <pathelement location="${lib.dir}/${commons-digester.lib}"/>
-        <pathelement location="${lib.dir}/${commons-beanutils.lib}"/>
-
         <pathelement location="${lib.dir}/${jsp-api.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>

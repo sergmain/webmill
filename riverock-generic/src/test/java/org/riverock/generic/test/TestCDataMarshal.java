@@ -40,7 +40,7 @@ public class TestCDataMarshal {
 
     public static void main(String args[]) throws Exception {
         long mills = System.currentTimeMillis();
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         String tempFile = "c:\\temp\\cdata-test.xml";
 

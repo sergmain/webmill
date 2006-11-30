@@ -26,8 +26,6 @@ package org.riverock.portlet.main;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
 
-import org.riverock.generic.main.CacheFactory;
-
 /**
  * @author Sergei Maslyukov
  *         Date: 28.09.2006
@@ -40,6 +38,5 @@ public class PortletContextListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        CacheFactory.shutdown();
     }
 }

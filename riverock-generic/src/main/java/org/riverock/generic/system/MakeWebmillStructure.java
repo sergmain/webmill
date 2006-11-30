@@ -73,7 +73,7 @@ public class MakeWebmillStructure {
     public static void main(String args[])
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         makeSchema("MYSQL", "webmill-schema.xml");
 //        makeSchema("MSSQL-JTDS", "webmill-schema-mssql.xml");

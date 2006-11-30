@@ -41,7 +41,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.annotation.schema.db.*;
 
 /**
@@ -1262,8 +1261,7 @@ public final class DatabaseManager {
         }
     }
 
-    public static List<Long> getIdByList(final DatabaseAdapter adapter, final String sql, final Object[] param)
-        throws GenericException {
+    public static List<Long> getIdByList(final DatabaseAdapter adapter, final String sql, final Object[] param) {
         Statement stmt = null;
         PreparedStatement pstm;
         ResultSet rs = null;
@@ -1293,7 +1291,7 @@ public final class DatabaseManager {
         catch (SQLException e) {
             final String es = "error getting long value fron sql '" + sql + "'";
             log.error(es, e);
-            throw new GenericException(es, e);
+            throw new RuntimeException(es, e);
         }
         finally {
             close(rs, stmt);

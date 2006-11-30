@@ -37,7 +37,7 @@ import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.startup.StartupApplication;
+import org.riverock.common.startup.StartupApplication;
 
 /**
  * Author: mill

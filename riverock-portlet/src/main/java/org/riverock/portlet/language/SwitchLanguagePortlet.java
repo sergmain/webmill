@@ -23,28 +23,17 @@
  */
 package org.riverock.portlet.language;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Enumeration;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.Portlet;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletException;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
+import javax.portlet.*;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * User: Admin
@@ -74,40 +63,6 @@ public final class SwitchLanguagePortlet implements Portlet {
         throw new PortletException( "render() method must never invoked" );
     }
 
-    private String getLanguageName( final Long idSiteLanguage ) throws Exception {
-        final String sql_ =
-            "select CUSTOM_LANGUAGE from WM_PORTAL_SITE_LANGUAGE " +
-            "where ID_SITE_SUPPORT_LANGUAGE=? ";
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db_ = null;
-        try
-        {
-            db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSiteLanguage);
-
-            rs = ps.executeQuery();
-
-            if (rs.next())
-                return RsetTools.getString(rs, "CUSTOM_LANGUAGE");
-        }
-        catch (Exception e01)
-        {
-            log.error("Error get code of language", e01);
-            throw e01;
-        }
-        finally
-        {
-            DatabaseManager.close(db_, rs, ps);
-            rs = null;
-            ps = null;
-            db_ = null;
-        }
-        return null;
-    }
-
     public void processAction( final ActionRequest actionRequest, final ActionResponse actionResponse )
         throws PortletException {
 
@@ -119,24 +74,36 @@ public final class SwitchLanguagePortlet implements Portlet {
                     log.debug( "PortletRequest attr - "+s+", value - "+PortletService.getString(actionRequest, s, null) );
                 }
             }
-            Long id_lang = PortletService.getLong( actionRequest, NAME_ID_LANGUAGE );
+            Long siteLanguageId = PortletService.getLong( actionRequest, NAME_ID_LANGUAGE );
             if (log.isDebugEnabled()) {
-                log.debug("id_lang: " + id_lang);
+                log.debug("siteLanguageId: " + siteLanguageId);
             }
 
-            String s = getLanguageName( id_lang );
+            PortalDaoProvider provider = (PortalDaoProvider)actionRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
 
-            if (log.isDebugEnabled())
-                log.debug("Language name: " + s);
+            SiteLanguage siteLanguage = provider.getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+            String languageLocaleName=null;
+            if (siteLanguage==null || siteLanguage.getCustomLanguage()==null) {
+                log.warn("locale for soteLanguageId: " + siteLanguageId +" not found");
+            }
+            else {
+                languageLocaleName = siteLanguage.getCustomLanguage();
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("Language name: " + languageLocaleName);
+            }
 
             String newUrl;
-            if (s == null || s.length() == 0) {
+            if (languageLocaleName == null || languageLocaleName.length() == 0) {
                 newUrl = actionResponse.encodeURL(PortletService.ctx( actionRequest ));
             }
             else {
-                StringBuilder b = null;
-                b = PortletService.ctxStringBuilder( actionRequest, null, null, StringTools.getLocale(s) );
-                b.append( '?' ).append( ContainerConstants.NAME_LANG_PARAM ).append( '=' ).append( s );
+                StringBuilder b =
+                    PortletService.ctxStringBuilder( actionRequest, null, null, StringTools.getLocale(languageLocaleName) )
+                        .append( '?' )
+                        .append( ContainerConstants.NAME_LANG_PARAM )
+                        .append( '=' )
+                        .append( languageLocaleName );
                 newUrl = b.toString();
             }
 

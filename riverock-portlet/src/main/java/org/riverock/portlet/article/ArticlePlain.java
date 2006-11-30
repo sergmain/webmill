@@ -23,19 +23,16 @@
  */
 package org.riverock.portlet.article;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 import org.riverock.common.tools.DateTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.generic.config.GenericConfig;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.Article;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.cms.article.bean.ArticleBean;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -44,8 +41,9 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Author: mill
@@ -104,11 +102,15 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     }
 
     public String getArticleDate() {
-        return DateTools.getStringDate( article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), GenericConfig.getTZ() );
+        //TODO need use site specific TimeZone
+        TimeZone timeZone = TimeZone.getDefault();
+        return DateTools.getStringDate( article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), timeZone);
     }
 
     public String getArticleTime() {
-        return DateTools.getStringDate( article.getPostDate(), "HH:mm", renderRequest.getLocale(), GenericConfig.getTZ() );
+        //TODO need use site specific TimeZone
+        TimeZone timeZone = TimeZone.getDefault();
+        return DateTools.getStringDate( article.getPostDate(), "HH:mm", renderRequest.getLocale(), timeZone );
     }
 
     public String getArticleName() {

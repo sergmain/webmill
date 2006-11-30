@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.portal.utils.SiteList;
-import org.riverock.generic.main.CacheFactory;
 
 /**
  * $Id$
@@ -64,7 +63,6 @@ public final class ContextNavigator extends HttpServlet {
             portalInstanceMap.clear();
             portalInstanceMap = null;
         }
-        CacheFactory.shutdown();
     }
 
     public ContextNavigator() {

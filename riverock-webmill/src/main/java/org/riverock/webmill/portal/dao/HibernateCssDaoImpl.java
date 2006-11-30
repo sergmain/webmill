@@ -34,7 +34,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import org.riverock.generic.exception.DatabaseException;
+import org.riverock.common.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.utils.HibernateUtils;

@@ -25,7 +25,7 @@
  */
 package org.riverock.generic.test;
 
-import org.riverock.generic.startup.StartupApplication;
+import org.riverock.common.startup.StartupApplication;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.exception.DatabaseException;

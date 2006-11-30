@@ -28,7 +28,6 @@ package org.riverock.generic.test;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.exception.GenericException;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.RsetTools;
 
@@ -47,7 +46,7 @@ public class RsetTest
     public static void main(String s[])
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
         test( "ORACLE" );
 //        test( "MSSQL-JTDS" );
 //        test( "HSQLDB" );
@@ -55,9 +54,7 @@ public class RsetTest
 //        test( "MYSQL" );
     }
 
-    public static void test(String nameConnect)
-        throws Exception
-    {
+    public static void test(String nameConnect) throws Exception {
         System.out.println( "run test fro '"+nameConnect+"' connection" );
 
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnect );
@@ -84,10 +81,6 @@ public class RsetTest
             else
                 System.out.println( "record not found" );
 
-        }
-        catch (Exception e)
-        {
-            throw new GenericException(e.toString());
         }
         finally
         {

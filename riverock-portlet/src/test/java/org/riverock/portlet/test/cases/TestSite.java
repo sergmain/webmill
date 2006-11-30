@@ -23,12 +23,7 @@
  */
 package org.riverock.portlet.test.cases;
 
-
-
 import org.apache.log4j.Logger;
-
-import org.riverock.generic.db.DatabaseAdapter;
-
 
 /**
  * User: Admin
@@ -55,7 +50,6 @@ public class TestSite {
     public Long idRuLanguage;
     public Long idRuLangCatalog;
 
-    private DatabaseAdapter db_ = null;
     public static String shopCode = null;
 
     Long idTemplateIndex;

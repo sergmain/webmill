@@ -52,7 +52,7 @@ public class TestNewsSimpleItem
     {
         throw new Exception("Old version of test. Use TestCaseNews class");
 /*
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
         String nameConnection = "MSSQL-JTDS";
         DatabaseConnectionType dbConnConfig = InitParam.getDatabaseConnection( nameConnection );
         WebmillConfig conf = InitParam.getWebmillConfig();

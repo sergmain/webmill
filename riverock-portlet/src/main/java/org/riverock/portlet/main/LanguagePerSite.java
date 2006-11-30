@@ -23,24 +23,16 @@
  */
 package org.riverock.portlet.main;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.portlet.main.ClassQueryItemImpl;
-
 
 /**
  * User: Admin
@@ -60,52 +52,32 @@ public class LanguagePerSite implements PortletGetList {
         this.provider=provider;
     }
 
-    public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
+    public List<ClassQueryItem> getList( Long catalogLanguageId, Long idContext ) {
         if( log.isDebugEnabled() )
-            log.debug( "Get list of Language. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog );
+            log.debug( "Get list of Language. catalogLanguageId - " + catalogLanguageId);
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db_ = null;
-
-        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         try {
-            db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement( "SELECT d.ID_SITE_SUPPORT_LANGUAGE, d.CUSTOM_LANGUAGE, d.NAME_CUSTOM_LANGUAGE " +
-                "FROM   WM_PORTAL_CATALOG_LANGUAGE a, WM_PORTAL_SITE_LANGUAGE c, WM_PORTAL_SITE_LANGUAGE d " +
-                "where  a.ID_SITE_CTX_LANG_CATALOG=? and " +
-                "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       c.ID_SITE=d.ID_SITE" );
-            RsetTools.setLong( ps, 1, idSiteCtxLangCatalog );
-
-            rs = ps.executeQuery();
-            while( rs.next() ) {
-                Long id = RsetTools.getLong( rs, "ID_SITE_SUPPORT_LANGUAGE" );
-                String name = "" + id + ", " +
-                    StringTools.getLocale( RsetTools.getString( rs, "CUSTOM_LANGUAGE" ) ).toString() + ", " +
-                    RsetTools.getString( rs, "NAME_CUSTOM_LANGUAGE" );
+            List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
+            List<SiteLanguage> siteLanguages = provider.getPortalSiteLanguageDao().getSiteLanguageList(provider.getPortalCatalogDao().getSiteId(catalogLanguageId));
+            for (SiteLanguage siteLanguage : siteLanguages) {
+                String name = "" + siteLanguage.getSiteLanguageId() + ", " +
+                    StringTools.getLocale( siteLanguage.getCustomLanguage() ).toString() + ", " +
+                    siteLanguage.getNameCustomLanguage();
 
                 ClassQueryItem item =
-                    new ClassQueryItemImpl( id, StringTools.truncateString( name, 60 ) );
+                    new ClassQueryItemImpl( siteLanguage.getSiteLanguageId(), StringTools.truncateString( name, 60 ) );
 
                 if( item.getIndex().equals( idContext ) )
                     item.setSelected( true );
 
                 v.add( item );
+
             }
             return v;
-
         }
         catch( Exception e ) {
-            log.error( "Get list of Language. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog, e );
+            log.error( "Get list of Language. catalogLanguageId - " + catalogLanguageId, e );
             return null;
         }
-        finally {
-            DatabaseManager.close( db_, rs, ps );
-            rs = null;
-            ps = null;
-            db_ = null;
-        }
     }
-
 }

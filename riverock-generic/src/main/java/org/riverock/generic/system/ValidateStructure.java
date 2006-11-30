@@ -34,7 +34,7 @@ import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.annotation.schema.db.DbView;
 import org.riverock.generic.annotation.schema.db.DbTable;
@@ -194,7 +194,7 @@ public class ValidateStructure {
 
     public static void main(String args[]) throws Exception {
         long mills = System.currentTimeMillis();
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         System.out.println("Unmarshal data from file");
         FileInputStream stream = new FileInputStream(GenericConfig.getGenericDebugDir() + "webmill-schema.xml");

@@ -51,7 +51,7 @@ public class TestForeignKeys
     public static void main(String args[])
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
         DbSchema schema = DatabaseManager.getDbStructure(db_ );

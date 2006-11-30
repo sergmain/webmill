@@ -35,8 +35,7 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.portlet.news.NewsSite;
 import org.riverock.portlet.news.schema.NewsBlockType;
 import org.riverock.portlet.news.schema.NewsGroupType;
@@ -78,6 +77,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
     {
         System.out.println("start tearDown()");
 
+/*
         if (testAbstract!=null)
         {
             if ( testAbstract.db_!=null && testAbstract.db_.getConnection() != null)
@@ -87,6 +87,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             DatabaseAdapter.close( testAbstract.db_);
             testAbstract.db_ = null;
         }
+*/
     }
 
     public void doTest()

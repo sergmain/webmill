@@ -59,7 +59,7 @@ public class TestOracleSequence
     public static void main(String[] s)
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
             String[] types = {""};
 
