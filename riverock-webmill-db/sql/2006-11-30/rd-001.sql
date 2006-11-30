@@ -10,3 +10,5 @@ alter table wm_portlet_webclip
 add WEBCLIP_BLOB blob
 /
 
+drop table wm_portlet_webclip_data
+/
