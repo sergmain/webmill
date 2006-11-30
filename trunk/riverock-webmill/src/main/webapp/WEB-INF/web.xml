@@ -42,7 +42,7 @@
 
 	<servlet>
 		<servlet-name>WebMill engine startup servlet</servlet-name>
-		<servlet-class>org.riverock.generic.startup.StartupServlet</servlet-class>
+		<servlet-class>org.riverock.common.startup.StartupServlet</servlet-class>
         <init-param>
             <param-name>is-local-config</param-name>
             <param-value>true</param-value>
