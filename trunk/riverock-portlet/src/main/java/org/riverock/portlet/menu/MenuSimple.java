@@ -500,10 +500,16 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
             m.setModuleName(item.getMenuName());
             // set menu URL
+/*
             if (item.getUrl() == null)
                 m.setModuleUrl(renderResponse.encodeURL(PortletService.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getId()));
             else
                 m.setModuleUrl(renderResponse.encodeURL(PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getUrl()));
+*/
+            if (item.getUrl() == null)
+                m.setModuleUrl(PortletService.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getId());
+            else
+                m.setModuleUrl(PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getUrl());
 
             //////
 
