@@ -42,17 +42,34 @@ public class PortletWebApplication implements Serializable {
     private ServletConfig servletConfig = null;
     private PortletDefinition portletDefinition = null;
     private String uniqueName = null;
+    private boolean isUniqueName=false;
     /**
      * boolean flag indicated, what portal already register this portlet
      */
     private boolean isRegistered=false;
+    private final static Object syncObject = new Object();
 
     public String getUniqueName() {
-        return uniqueName;
+        synchronized(syncObject) {
+            if (!isUniqueName) {
+                String es = "Unique name must be initialized";
+                System.err.println(es);
+                throw new IllegalStateException(es);
+            }
+            return uniqueName;
+        }
     }
 
     public void setUniqueName(String uniqueName) {
-        this.uniqueName = uniqueName;
+        if (uniqueName==null) {
+            String es = "Unique name must be not null value";
+            System.err.println(es);
+            throw new IllegalStateException(es);
+        }
+        synchronized(syncObject) {
+            this.uniqueName = uniqueName;
+            this.isUniqueName = true;
+        }
     }
 
     public PortletDefinition getPortletDefinition() {

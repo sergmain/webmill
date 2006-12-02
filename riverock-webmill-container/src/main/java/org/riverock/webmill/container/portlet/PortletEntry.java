@@ -110,7 +110,7 @@ public final class PortletEntry {
         this.portalPath = portalPath;
     }
 
-    PortletEntry(PortletDefinition portletDefinition, UnavailableException e) {
+    PortletEntry(PortletDefinition portletDefinition, UnavailableException e, String uniqueName) {
         if (portletDefinition==null) {
             throw new IllegalArgumentException("Portlet definition is null");
         } 
@@ -123,6 +123,7 @@ public final class PortletEntry {
             this.isPermanent = true;
         }
         exceptionMessage = e.toString();
+        this.uniqueName = uniqueName;
     }
 
     public boolean getIsWait() {
