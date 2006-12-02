@@ -26,7 +26,7 @@ package org.riverock.commerce.price;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.riverock.portlet.schema.price.CurrencyPrecisionType;
+import org.riverock.commerce.bean.price.CurrencyPrecisionType;
 
 /**
  *

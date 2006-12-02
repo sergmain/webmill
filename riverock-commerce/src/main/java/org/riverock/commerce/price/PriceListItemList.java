@@ -40,9 +40,9 @@ import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.schema.price.CurrencyPrecisionType;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
+import org.riverock.common.tools.XmlTools;
+import org.riverock.commerce.bean.price.CurrencyPrecisionType;
+import org.riverock.commerce.bean.price.CustomCurrencyItemType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.ShopBean;
@@ -175,13 +175,13 @@ public final class PriceListItemList {
                     double rsetPrice = RsetTools.getDouble(rs, "PRICE", 0.0);
 
                     if (log.isDebugEnabled())
-                        log.debug("currencyItem.getIdCurrency()" + currencyItem.getIdCurrency() + ", shopParam.id_currency " + shopParam.id_currency);
+                        log.debug("currencyItem.getCurrencyId()" + currencyItem.getCurrencyId() + ", shopParam.id_currency " + shopParam.id_currency);
                     int precisionValue = 0;
-                    if (currencyItem.getIdCurrency().equals(shopParam.id_currency) || shopParam.id_currency == 0) {
-                        item.setItemCurrencyID(currencyItem.getIdCurrency());
+                    if (currencyItem.getCurrencyId().equals(shopParam.id_currency) || shopParam.id_currency == 0) {
+                        item.setItemCurrencyID(currencyItem.getCurrencyId());
                         item.setItemNameCurrency(currencyItem.getCurrencyName());
 
-                        precisionValue = getPrecisionValue(shop, currencyItem.getIdCurrency());
+                        precisionValue = getPrecisionValue(shop, currencyItem.getCurrencyId());
                         resultPrice = NumberTools.truncate(rsetPrice, precisionValue);
                     } else {
                         precisionValue = getPrecisionValue(shop, shopParam.id_currency);
@@ -193,7 +193,7 @@ public final class PriceListItemList {
                             log.debug("targetCurrency " + targetCurrency);
                             log.debug("item " + item);
                         }
-                        item.setItemCurrencyID(targetCurrency.getIdCurrency());
+                        item.setItemCurrencyID(targetCurrency.getCurrencyId());
                         item.setItemNameCurrency(targetCurrency.getCurrencyName());
 
                         if (log.isDebugEnabled()) {

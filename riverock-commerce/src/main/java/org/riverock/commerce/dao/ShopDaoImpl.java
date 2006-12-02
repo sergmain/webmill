@@ -122,7 +122,7 @@ public class ShopDaoImpl implements ShopDao {
         bean.setId_type_shop_1(RsetTools.getLong( rs, "ID_TYPE_SHOP_1" ));
         bean.setId_type_shop_2(RsetTools.getLong( rs, "ID_TYPE_SHOP_2" ));
 
-        bean.getPrecisionList().initCurrencyPrecision( db_, bean.getShopId() );
+        bean.getPrecisionList().initCurrencyPrecision(bean.getShopId() );
         return bean;
     }
 

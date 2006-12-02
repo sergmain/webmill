@@ -29,7 +29,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.portlet.schema.price.OrderType;
+import org.riverock.commerce.bean.price.OrderType;
 import org.riverock.commerce.invoice.InvoicePortlet;
 import org.riverock.commerce.schema.shop.CurrentBasketType;
 import org.riverock.webmill.container.tools.PortletService;

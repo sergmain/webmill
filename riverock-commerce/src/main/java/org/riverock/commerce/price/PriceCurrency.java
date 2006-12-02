@@ -27,8 +27,7 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.schema.price.CustomCurrencyType;
+import org.riverock.commerce.bean.price.CustomCurrencyType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.commerce.schema.shop.CurrencyListType;
 import org.riverock.commerce.schema.shop.HiddenParamType;
@@ -86,14 +85,12 @@ public class PriceCurrency {
         Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         CustomCurrencyType list = CurrencyManager.getInstance(siteId).getCurrencyList();
 
-        for (int i = 0; i < list.getCurrencyListCount(); i++) {
-            CustomCurrencyItemType item = list.getCurrencyList(i);
-
-            if (Boolean.TRUE.equals(item.getIsUsed()) ) {
+        for (CurrencyItem item : list.getCurrencyList()) {
+            if (item.isUsed() ) {
                 CurrencyItemType ic = new CurrencyItemType();
 
                 ic.setCurrencyCurs(item.getRealCurs());
-                ic.setCurrencyID(item.getIdCurrency());
+                ic.setCurrencyID(item.getCurrencyId());
                 ic.setCurrencyName(item.getCurrencyName());
 
                 if (ic.getCurrencyID() == shopParam_.id_currency)

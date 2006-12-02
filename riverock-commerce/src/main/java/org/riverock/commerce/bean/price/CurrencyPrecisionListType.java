@@ -21,22 +21,31 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce;
+package org.riverock.commerce.bean.price;
 
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletContextEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.Serializable;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 28.09.2006
- *         Time: 19:00:48
- *         <p/>
- *         $Id$
+ * Class CurrencyPrecisionListType.
+ * 
+ * User: SergeMaslyukov
+ * Date: 02.12.2006
+ * Time: 19:37:32
  */
-public class CommerceContextListener implements ServletContextListener {
-    public void contextInitialized(ServletContextEvent servletContextEvent) {
+public class CurrencyPrecisionListType implements Serializable {
+
+    private List<CurrencyPrecisionType> precisionsList = new ArrayList<CurrencyPrecisionType>();
+
+    public List<CurrencyPrecisionType> getPrecisionsList() {
+        if (precisionsList==null) {
+            precisionsList = new ArrayList<CurrencyPrecisionType>();
+        }
+        return precisionsList;
     }
 
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    public void setPrecisionsList(List<CurrencyPrecisionType> precisionsList) {
+        this.precisionsList = precisionsList;
     }
 }

@@ -24,6 +24,7 @@
 package org.riverock.commerce.bean;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.io.Serializable;
 
 import org.riverock.commerce.manager.currency.CurrencyBean;
@@ -39,10 +40,13 @@ import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
 public class CustomCurrency implements Serializable {
     private static final long serialVersionUID = 2625005163L;
     
-    private List<CurrencyBean> currencies = null;
-    private List<StandardCurrencyBean> standardCurrencies = null;
+    private List<CurrencyBean> currencies = new ArrayList<CurrencyBean>();
+    private List<StandardCurrencyBean> standardCurrencies = new ArrayList<StandardCurrencyBean>();
 
     public List<CurrencyBean> getCurrencies() {
+        if (currencies==null) {
+            currencies = new ArrayList<CurrencyBean>();
+        }
         return currencies;
     }
 
@@ -51,6 +55,9 @@ public class CustomCurrency implements Serializable {
     }
 
     public List<StandardCurrencyBean> getStandardCurrencies() {
+        if (standardCurrencies==null) {
+            standardCurrencies = new ArrayList<StandardCurrencyBean>();
+        }
         return standardCurrencies;
     }
 

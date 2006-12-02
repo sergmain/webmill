@@ -23,6 +23,8 @@
  */
 package org.riverock.common.tools;
 
+import java.math.BigDecimal;
+
 import junit.framework.TestCase;
 
 /**
@@ -172,8 +174,6 @@ public class TestCaseNumberTools extends TestCase
         assertEquals("198.0", NumberTools.toString(198, 1));
         assertEquals("198.00", NumberTools.toString(198, 2));
 
-        NumberTools numberTools = new NumberTools();
-
         for (int i=0; i<testDateWithMaskArray.length; i++) {
             double d = 0;
             try
@@ -194,6 +194,80 @@ public class TestCaseNumberTools extends TestCase
                         ",out - "+testDateWithMaskArray[i].out+
                         ",chars - "+testDateWithMaskArray[i].c+
                         ",result - "+d
+                    );
+                    throw exc;
+                }
+            }
+        }
+
+    }
+
+    public static class InternalNumberToolsTruncateBigDecimal
+    {
+        public String in;
+        public String out;
+        public int c;
+        public boolean isException = false;
+        public boolean isResultNull = false;
+
+        public InternalNumberToolsTruncateBigDecimal(String in_, String out_, int c_, boolean isException_)
+        {
+            this.in = in_;
+            this.out = out_;
+            this.c = c_;
+            this.isException = isException_;
+        }
+    }
+
+    public void testTruncateBigDecimal() throws Throwable {
+
+        InternalNumberToolsTruncateBigDecimal[] testDateWithMaskArray =
+            {
+                new InternalNumberToolsTruncateBigDecimal("198.123", "198.1230", 4, false),
+                new InternalNumberToolsTruncateBigDecimal("0.1234", "0.12", 2, false),
+                new InternalNumberToolsTruncateBigDecimal("198.432", "198.4", 1, false),
+                new InternalNumberToolsTruncateBigDecimal("198.12", "198", 0, false),
+                new InternalNumberToolsTruncateBigDecimal("12", "0", -3, false),
+                new InternalNumberToolsTruncateBigDecimal("198.12", "198", 0, false),
+                new InternalNumberToolsTruncateBigDecimal("1989879879879879.1268643987", "1989879879879879.12686", 5, false),
+                new InternalNumberToolsTruncateBigDecimal("1989879879879879.12686", "1989879879879879.1268600000", 10, false),
+                new InternalNumberToolsTruncateBigDecimal("198.1268643987", "198.12686", 5, false),
+                new InternalNumberToolsTruncateBigDecimal("198.12686", "198.1268600000", 10, false),
+                new InternalNumberToolsTruncateBigDecimal("1989879879879879.12", "1989879879800000", -5, false)
+            };
+
+        assertEquals("0", NumberTools.truncate(new BigDecimal(198.12), -3).toString());
+        assertEquals("100", NumberTools.truncate(new BigDecimal(198.12), -2).toString());
+        assertEquals("190", NumberTools.truncate(new BigDecimal(198.12), -1).toString());
+        assertEquals("198", NumberTools.truncate(new BigDecimal(198.12), 0).toString());
+        assertEquals("198.1", NumberTools.truncate(new BigDecimal(198.12), 1).toString());
+        assertEquals("198.12", NumberTools.truncate(new BigDecimal(198.12), 2).toString());
+        assertEquals("198.120", NumberTools.truncate(new BigDecimal(198.12), 3).toString());
+
+        assertEquals("198", NumberTools.truncate(new BigDecimal(198), 0).toString());
+        assertEquals("198.0", NumberTools.truncate(new BigDecimal(198), 1).toString());
+        assertEquals("198.00", NumberTools.truncate(new BigDecimal(198), 2).toString());
+
+        for (int i=0; i<testDateWithMaskArray.length; i++) {
+            BigDecimal d=null;
+            try
+            {
+                d = NumberTools.truncate(
+                    new BigDecimal(testDateWithMaskArray[i].in),
+                    testDateWithMaskArray[i].c
+                );
+
+                assertEquals(true, new BigDecimal(testDateWithMaskArray[i].out).equals(d));
+            }
+            catch(Throwable exc) {
+                if (!testDateWithMaskArray[i].isException)
+                {
+                    System.out.println(
+                        "array index - "+i+", in - "+
+                        testDateWithMaskArray[i].in+
+                        ", out - "+testDateWithMaskArray[i].out+
+                        ", chars - "+testDateWithMaskArray[i].c+
+                        ", result - "+d
                     );
                     throw exc;
                 }

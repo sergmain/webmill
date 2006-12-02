@@ -26,7 +26,7 @@ package org.riverock.commerce.price;
 import java.io.PrintStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import java.math.BigDecimal;
 
 
 import org.apache.log4j.Logger;
@@ -46,7 +46,7 @@ public class PriceListItem
     public int isGroup = 0;
     public Long itemID = null;
     public Long id_group = null;
-    public double priceItem = 0;
+    public BigDecimal priceItem = null;
     public Long id_currency = null;
     public String nameItem = "";
     public String codeCurrency = "";
@@ -100,6 +100,7 @@ public class PriceListItem
                 if ( log.isDebugEnabled() )
                     log.debug("#2.0001");
 
+                id_currency = RsetTools.getLong( rs, "ID_CURRENCY");
                 set(rs);
             }
         }
@@ -118,10 +119,6 @@ public class PriceListItem
             log.debug("#5.002");
     }
 
-//    public PriceListItem(Long currencyID, ResultSet rs) throws PriceException {
-//        set( rs );
-//    }
-//
     public void set(ResultSet rs) throws PriceException {
         if ( log.isDebugEnabled() )
             log.debug("#2.0002");
@@ -132,14 +129,7 @@ public class PriceListItem
             itemID = RsetTools.getLong(rs, "ID");
             id_group = RsetTools.getLong(rs, "ID_MAIN");
             nameItem = RsetTools.getString(rs, "ITEM");
-            priceItem = RsetTools.getDouble(rs, "PRICE", 0.0);
-
-            if ( log.isDebugEnabled() ) {
-                log.debug("RSET priceItem "+ RsetTools.getDouble(rs, "PRICE"));
-                log.debug("java priceItem "+ priceItem);
-            }
-
-            id_currency = RsetTools.getLong( rs, "ID_CURRENCY");
+            priceItem = RsetTools.getBigDecimal(rs, "PRICE", new BigDecimal(0));
             codeCurrency = RsetTools.getString(rs, "CURRENCY");
             nameCurrency = RsetTools.getString(rs, "NAME_CURRENCY");
             isLoad = RsetTools.getInt(rs, "ABSOLETE", 0)==1? "YES" : "NO";
@@ -164,7 +154,7 @@ public class PriceListItem
         (" itemID -> " + itemID)+
         (" id_group -> " + id_group)+
         (" NameItem -> " + nameItem)+
-        (" PriceItem -> " + Double.toString(priceItem))+
+        (" PriceItem -> " + priceItem.toString())+
         (" CodeCurrency -> " + codeCurrency)+
         (" NameCurrency -> " + nameCurrency)+
         (" isLoad -> " + isLoad);

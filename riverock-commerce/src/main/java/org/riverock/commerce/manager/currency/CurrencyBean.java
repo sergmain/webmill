@@ -39,14 +39,14 @@ public class CurrencyBean implements Serializable {
 
     private static final long serialVersionUID = 55957005501L;
 
-    private Long currencyId =null;
+    private Long currencyId = null;
     private Long standardCurrencyId =null;
     private Long siteId =null;
     private BigDecimal percent =null;
     private String currencyName = null;
     private String currencyCode = null;
-    private boolean isUsed=false;
-    private boolean isUseStandard=false;
+    private boolean isUsed = false;
+    private boolean isUseStandard = false;
     private List<CurrencyCurs> curses = new ArrayList<CurrencyCurs>();
 
     public CurrencyBean() {

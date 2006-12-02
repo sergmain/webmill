@@ -43,13 +43,12 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.portlet.PortletFileUpload;
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
 
 import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.commerce.price.ImportPriceList;
-import org.riverock.portlet.schema.import_price.PricesType;
+import org.riverock.commerce.schema.import_price.PricesType;
 import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -110,10 +109,7 @@ public final class UploadPricePortlet implements Portlet {
                     if (!item.isFormField()) {
                         log.debug("uploaded file founded");
                         InputStream uploadedStream = item.getInputStream();
-
-                        InputSource inSrc = new InputSource(uploadedStream);
-                        prices = (PricesType) Unmarshaller.unmarshal(PricesType.class, inSrc);
-
+                        prices = XmlTools.getObjectFromXml(PricesType.class, uploadedStream);
                         uploadedStream.close();
                         item.delete();
                     }

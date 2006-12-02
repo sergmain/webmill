@@ -78,14 +78,10 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
-        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
         <antcall target="war"/>
     </target>
 
     <target name="full_clean">
-        <ant antfile="build-core.xml" target="clean"  inheritall="false" />
-        <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
     </target>
 
@@ -95,38 +91,6 @@
                 <include name="**"/>
             </fileset>
         </delete>
-        <javac
-            target="1.4"
-            source="1.4"
-            srcdir="${src-schema.java.dir}"
-            destdir="${build.dest}"
-            excludes="**/schema/extend/**"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-core.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
@@ -170,11 +134,6 @@
         <include name="${commons-codec.lib}"/>
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
-
-        <!--<include name="${jstl.lib}"/>-->
-        <!--<include name="${standard.lib}"/>-->
-        <!--<include name="${taglibs-request.lib}"/>-->
-        <!--<include name="${taglibs-session.lib}"/>-->
 
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>
