@@ -42,8 +42,8 @@ public final class CommonDAO {
     public static long getForumID(DatabaseAdapter adapter) throws SQLException {
         CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM" );
-        seq.setTableName( "WM_FORUM_CATEGORY" );
-        seq.setColumnName( "FORUM_CATEGORY_ID" );
+        seq.setTableName( "WM_FORUM" );
+        seq.setColumnName( "FORUM_ID" );
         return adapter.getSequenceNextValue( seq );
     }
 
