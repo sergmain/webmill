@@ -110,7 +110,6 @@
     <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
     <property name="riverock-sso.lib" value="riverock-sso-4.0.4.jar"/>
     <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
-    <property name="riverock-schema-support.lib" value="riverock-schema-support-4.0.3.jar"/>
     <property name="riverock-portlet.lib" value="riverock-portlet-4.0.0.jar"/>
     <property name="riverock-module.lib" value="riverock-module-1.0.0.jar"/>
     <property name="riverock-forum.lib" value="riverock-forum-1.0.0.jar"/>
