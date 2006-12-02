@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <!--
-  ~ org.riverock.generic - Database connectivity classes, part of Webmill portal
-  ~ For more information about Webmill portal, please visit project site
-  ~ http://webmill.askmore.info
+  ~ org.riverock.forum - Forum portlet
   ~
-  ~ Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
+  ~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
   ~
   ~ Riverock - The Open-source Java Development Community
   ~ http://www.riverock.org
   ~
   ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public
+  ~ License as published by the Free Software Foundation; either
+  ~ version 2 of the License, or (at your option) any later version.
   ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~ This library is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
   ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
+  ~ You should have received a copy of the GNU General Public
+  ~ License along with this library; if not, write to the Free Software
+  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
   -->
 <project name="riverock forum" default="usage-main" basedir=".">
 
@@ -56,46 +56,14 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
         <antcall target="war"/>
     </target>
 
     <target name="full_clean">
-        <ant antfile="build-core.xml" target="clean"  inheritall="false" />
         <antcall target="clean"/>
     </target>
 
     <target name="compile" depends="prepare">
-        <!-- Compile PersistenceException -->
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src.java.dir}/org/riverock/forum/exception"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath refid="classpath-base"/>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-core.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
@@ -108,7 +76,6 @@
             >
             <classpath>
                 <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
             </classpath>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
@@ -130,10 +97,11 @@
         <include name="${riverock-module.lib}"/>
         <include name="${commons-lang.lib}"/>
         <include name="${commons-logging.lib}"/>
+        <include name="${commons-digester.lib}"/>
+        <include name="${commons-collections.lib}"/>
         <include name="${log4j.lib}"/>
         <include name="${jstl.lib}"/>
         <include name="${standard.lib}"/>
-        <include name="${castor.lib}"/>
         <include name="${taglibs-request.lib}"/>
         <include name="${taglibs-session.lib}"/>
         <include name="${ehcache.lib}"/>
@@ -151,11 +119,6 @@
                 <exclude name="WEB-INF/web.xml"/>
                 <exclude name="**/*.*-*"/>
             </fileset>
-<!--
-            <classes dir="${build.dest}">
-                <patternset refid="war.classes"/>
-            </classes>
--->
             <lib dir="${lib.dir}">
                 <patternset refid="war.lib"/>
             </lib>
