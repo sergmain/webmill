@@ -101,7 +101,7 @@ public final class PortletContainer implements Serializable {
 
         PortletEntry obj = portletInstanceMap.get( portletName );
         if (obj!=null) {
-            if( obj.getPortlet()!=null || obj.getIsWait() ) {
+            if( obj.getPortlet()!=null || obj.getIsWait() || obj.getIsPermanent()) {
                 return obj;
             }
         }
@@ -118,9 +118,13 @@ public final class PortletContainer implements Serializable {
                 e.printStackTrace( System.out );
                 throw new PortletContainerException(es, e);
             }
-
             if (newPortlet==null) {
                 String es = "Erorr create instance of portlet '" + portletName + "'. Result is null";
+                System.out.println( es );
+                throw new PortletContainerException(es);
+            }
+            if (newPortlet.getUniqueName()==null) {
+                String es = "Erorr create instance of portlet '" + portletName + "'. UniqueName is null";
                 System.out.println( es );
                 throw new PortletContainerException(es);
             }
@@ -222,11 +226,15 @@ public final class PortletContainer implements Serializable {
 
         PortletEntry portletEntry = portletInstanceMap.get( portletName );
 
-        if (portletEntry!=null) {
+
+        if (portletEntry!=null && portletEntry.getExceptionMessage()==null) {
             throw new IllegalStateException(
                 "Portlet '"+portletDefinition.getPortletName()+"' " +
                 "for context unique name '"+portletWebApplication.getUniqueName()+"' already created."
             );
+        }
+        else if (portletEntry!=null && portletEntry.getIsPermanent()) {
+            return portletEntry;
         }
 
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
@@ -235,8 +243,14 @@ public final class PortletContainer implements Serializable {
             Thread.currentThread().setContextClassLoader( classLoader );
 
             PortletContext portletContext = getPortletContext( portletWebApplication, portalInstance.getPortalName() );
+            if (portletWebApplication.getUniqueName()==null) {
+                String es = "Erorr create instance of portlet '" + portletName + "'. UniqueName in portletWebApplication is null";
+                System.out.println( es );
+                throw new PortletContainerException(es);
+            }
             PortletResourceBundle resourceBundle = PortletResourceBundle.getInstance( portletDefinition, classLoader );
             PortletConfig portletConfig = new PortletConfigImpl(portletContext, portletDefinition, resourceBundle);
+            
             // forcce init preference validator
             if (portletDefinition.getPreferences()!=null) {
                 portletDefinition.getPreferences().getPreferencesValidator();
@@ -266,10 +280,9 @@ public final class PortletContainer implements Serializable {
             try {
                 object.init(portletConfig);
             }
-            catch (Throwable e) {
-                if (e instanceof UnavailableException) {
-                    if (((UnavailableException)e).isPermanent()) {
-                        // Todo
+            catch (UnavailableException e) {
+                if (e.isPermanent()) {
+                    // Todo
 /*
 If a permanent unavailability is indicated by the UnavailableException, the portlet
 container must remove the portlet from service immediately, call the portlet’s destroy
@@ -277,14 +290,9 @@ method, and release the portlet object.xviii A portlet that throws a permanent
 UnavailableException must be considered unavailable until the portlet application
 containing the portlet is restarted.
 */
-                        destroy( portletName );
-                    }
-                    return new PortletEntry(portletDefinition, (UnavailableException) e);
+                    destroy( portletName );
                 }
-                UnavailableException ue = new UnavailableException(
-                    "portlet '"+portletName+"' permanent unavailable. Exception: " + e.toString(), -1);
-
-                return new PortletEntry(portletDefinition, ue);
+                return new PortletEntry(portletDefinition, e, portletWebApplication.getUniqueName());
             }
 
             return new PortletEntry(
@@ -295,10 +303,11 @@ containing the portlet is restarted.
                 portalPath
             );
         }
-        catch (Exception e) {
-            String es = "Error create instance of portlet "+ portletName + ".";
+        catch (Throwable e) {
             e.printStackTrace( System.out );
-            throw new PortletContainerException(es, e);
+            UnavailableException ue = new UnavailableException(
+                "Portlet '"+portletName+"' permanent unavailable. Exception: " + e.toString(), -1);
+            return new PortletEntry(portletDefinition, ue, portletWebApplication.getUniqueName());
         }
         finally {
             Thread.currentThread().setContextClassLoader(oldLoader);
@@ -338,12 +347,12 @@ containing the portlet is restarted.
         return portletItems.get( portletName );
     }
 
-    private static void addPortletEntry( Map<String, List<PortletEntry>> map, final String key, final PortletEntry value ) {
-        List<PortletEntry> list = map.get( key );
+    private static void addPortletEntry( Map<String, List<PortletEntry>> map, final String portletName, final PortletEntry value ) {
+        List<PortletEntry> list = map.get( portletName );
         if (list==null) {
             List<PortletEntry> portletEntries = new ArrayList<PortletEntry>();
             portletEntries.add( value );
-            map.put( key, portletEntries );
+            map.put( portletName, portletEntries );
         }
         else {
             list.add( value );

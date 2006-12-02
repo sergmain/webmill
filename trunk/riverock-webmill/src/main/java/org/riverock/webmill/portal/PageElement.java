@@ -331,6 +331,21 @@ public final class PageElement {
                 throw new IllegalStateException("portletEntry is null");
             }
 
+            if (portletEntry.getIsPermanent()) {
+                errorString = "Portlet '"+ fullPortletName + "' permanent unavailable.";
+                log.error(errorString);
+                log.error("Exception message: " + portletEntry.getExceptionMessage());
+                return;
+            }
+
+            if (portletEntry.getIsWait()) {
+                errorString = "Portlet "+ fullPortletName + " unavailable for "+ portletEntry.getInterval() ;
+                log.error(errorString);
+                log.error("Exception message: " + portletEntry.getExceptionMessage());
+                return;
+            }
+
+
             if (parameters != null && parameters.getParameters() != null) {
                 // The portlet-container must not propagate parameters received
                 // in an action request to subsequent render requests of the portlet.

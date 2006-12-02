@@ -109,7 +109,26 @@ public final class PortletContainerFactory implements Serializable {
             Iterator<WaitDigestFile> iterator = digestWaitList.iterator();
             while (iterator.hasNext()) {
                 WaitDigestFile waitDigestFile = iterator.next();
-
+                if (waitDigestFile.file==null) {
+                    System.err.println("portlet.xml file is null. Skip application");
+                    iterator.remove();
+                    continue;
+                }
+                if (waitDigestFile.servletConfig==null) {
+                    System.err.println("ServletConfig is null, skip portlet file "+waitDigestFile.file);
+                    iterator.remove();
+                    continue;
+                }
+                if (waitDigestFile.classLoader==null) {
+                    System.err.println("classLoader is null, skip portlet file "+waitDigestFile.file);
+                    iterator.remove();
+                    continue;
+                }
+                if (waitDigestFile.uniqueName==null) {
+                    System.err.println("uniqueName is null, skip portlet file "+waitDigestFile.file);
+                    iterator.remove();
+                    continue;
+                }
                 PortletContainer container = portletContainers.get(waitDigestFile.portalPath);
                 if (container==null) {
                     container = new PortletContainer(waitDigestFile.portalPath);
