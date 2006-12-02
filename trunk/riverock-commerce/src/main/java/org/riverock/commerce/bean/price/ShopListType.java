@@ -21,22 +21,32 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce;
+package org.riverock.commerce.bean.price;
 
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletContextEvent;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 28.09.2006
- *         Time: 19:00:48
- *         <p/>
- *         $Id$
+ * List of shops for concrete site
+ * 
+ * @version $Revision$ $Date$
  */
-public class CommerceContextListener implements ServletContextListener {
-    public void contextInitialized(ServletContextEvent servletContextEvent) {
+public class ShopListType implements Serializable {
+
+    /**
+     * Field shops
+     */
+    private List<ShopType> shops = new ArrayList<ShopType>();
+
+    public List<ShopType> getShops() {
+        if (shops==null) {
+            shops = new ArrayList<ShopType>();
+        }
+        return shops;
     }
 
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    public void setShops(List<ShopType> shops) {
+        this.shops = shops;
     }
 }

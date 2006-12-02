@@ -26,9 +26,6 @@ package org.riverock.commerce.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
@@ -36,7 +33,6 @@ import org.riverock.commerce.bean.CurrencyCurrentCurs;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.CurrentTimeZone;
 
 /**
  * @author Sergei Maslyukov
@@ -92,21 +88,6 @@ public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
             rs = null;
             ps = null;
 
-            if( log.isDebugEnabled() ) {
-                try {
-                    SimpleDateFormat df = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss.SSS", Locale.ENGLISH );
-                    TimeZone tzTemp = CurrentTimeZone.getTZ();
-                    df.setTimeZone( tzTemp );
-
-                    String st = df.format( stamp );
-                    System.out.println( "ts in db " + st );
-                    log.debug( "Max date timestamp " + st + " ts " + stamp );
-
-                }
-                catch( Throwable th ) {
-                    System.out.println( "Error get timestamp " + th.toString() );
-                }
-            }
             sql_ =
                 "select  a.ID_CURRENCY, a.DATE_CHANGE, a.CURS " +
                     "from    WM_CASH_CURR_VALUE a, WM_CASH_CURRENCY b " +

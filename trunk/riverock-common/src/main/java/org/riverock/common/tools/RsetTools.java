@@ -66,6 +66,15 @@ public final class RsetTools {
             ps.setNull(index, Types.NUMERIC);
     }
 
+    public static void setBigDecimal(final PreparedStatement ps, final int index, final BigDecimal data)
+        throws SQLException {
+        if (data != null)
+            ps.setBigDecimal(index, data);
+        else
+            ps.setNull(index, Types.NUMERIC);
+    }
+
+
     public static void setDouble(final PreparedStatement ps, final int index, final Double data)
         throws SQLException {
         if (data != null)

@@ -23,15 +23,14 @@
  */
 package org.riverock.commerce.price;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.schema.core.WmCashCurrencyItemType;
-import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.schema.price.StandardCurrencyItemType;
-import org.riverock.portlet.schema.price.StandardCurrencyType;
+import org.riverock.commerce.bean.price.*;
+import org.riverock.commerce.bean.StandardCurrency;
 
 /**
  * User: Admin
@@ -43,24 +42,33 @@ import org.riverock.portlet.schema.price.StandardCurrencyType;
 public class CurrencyItem extends CustomCurrencyItemType {
     private static Logger log = Logger.getLogger(CurrencyItem.class);
 
-    public void fillRealCurrencyData(StandardCurrencyType stdCurrency) throws Exception {
-        if (!Boolean.TRUE.equals(this.getIsUseStandardCurrency()) && this.getCurrentCurs() == null) {
+    private CurrencyCurrentCursType currencyCurrentCurs;
+
+    public CurrencyCurrentCursType getCurrencyCurrentCurs() {
+        return currencyCurrentCurs;
+    }
+
+    public void setCurrencyCurrentCurs(CurrencyCurrentCursType currencyCurrentCurs) {
+        this.currencyCurrentCurs = currencyCurrentCurs;
+    }
+
+    public void fillRealCurrencyData(List<StandardCurrency> stdCurrency) throws Exception {
+        if (!this.isUseStandardCurrency() && this.getCurrencyCurrentCurs()==null) {
             this.setRealCurs(0.0);
             this.setRealDateChange(DateTools.getCurrentTime());
-            this.setIsRealInit(Boolean.FALSE);
+            this.setRealInit(false);
             return;
         }
 
-        if (Boolean.TRUE.equals(this.getIsUseStandardCurrency()) &&
-            (stdCurrency == null || stdCurrency.getStandardCurrencyListCount() == 0))
+        if (this.isUseStandardCurrency() && (stdCurrency == null || stdCurrency.isEmpty())) {
             throw new Exception("Curs for currency " + this.getCurrencyName() +
                 " can not calculated. Curs for standard currency not entered");
+        }
 
         CurrencyCurrentCursType curs = null;
-        if (Boolean.TRUE.equals(this.getIsUseStandardCurrency())) {
-            for (int k = 0; k < stdCurrency.getStandardCurrencyListCount(); k++) {
-                StandardCurrencyItemType stdItem = stdCurrency.getStandardCurrencyList(k);
-                if (stdItem.getIdStandardCurrency().equals(this.getIdStandardCurrency())) {
+        if (this.isUseStandardCurrency()) {
+            for (StandardCurrency stdItem : stdCurrency) {
+                if (stdItem.getStandardCurrencyId().equals(this.getStandardCurrencyId())) {
                     curs = stdItem.getCurrentCurs();
                     break;
                 }
@@ -68,11 +76,11 @@ public class CurrencyItem extends CustomCurrencyItemType {
             if (curs == null)
                 throw new Exception("Error get curs for standard currency. Local currency - " + this.getCurrencyName());
         } else
-            curs = this.getCurrentCurs();
+            curs = this.getCurrencyCurrentCurs();
 
-        this.setRealCurs(curs.getCurs());
+        this.setRealCurs(curs.getCurs()!=null?curs.getCurs():null);
         this.setRealDateChange(curs.getDateChange());
-        this.setIsRealInit(Boolean.TRUE);
+        this.setRealInit(true);
     }
 
     public CurrencyItem() {
@@ -80,15 +88,15 @@ public class CurrencyItem extends CustomCurrencyItemType {
 
     public CurrencyItem(DatabaseAdapter db_, WmCashCurrencyItemType item) {
         this.setCurrencyCode(item.getCurrency());
-        this.setCurrencyName(item.getNameCurrency());
-        this.setIdCurrency(item.getIdCurrency());
-        this.setIdSite(item.getIdSite());
-        this.setIdStandardCurrency(item.getIdStandartCurs());
-        this.setIsUsed(item.getIsUsed());
-        this.setIsUseStandardCurrency(item.getIsUseStandart());
+        this.setCurrencyName(item.getCurrencyName());
+        this.setCurrencyId(item.getCurrencyId());
+        this.setSiteId(item.getSiteId());
+        this.setStandardCurrencyId(item.getIdStandartCurs());
+        this.setUsed(item.isUsed());
+        this.setUseStandardCurrency(item.isUseStandart());
         this.setPercent(item.getPercentValue());
-        this.setCurrentCurs(CurrencyService.getCurrentCurs(db_, this.getIdCurrency(), this.getIdSite()));
-        if (this.getCurrentCurs() == null) {
+        this.setCurrencyCurrentCurs(CurrencyService.getCurrentCurs(db_, this.getCurrencyId(), this.getSiteId()));
+        if (this.getCurrencyCurrentCurs() == null) {
             log.warn("Current curs is null");
         }
     }

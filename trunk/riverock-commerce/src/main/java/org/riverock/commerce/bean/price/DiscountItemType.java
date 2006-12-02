@@ -21,22 +21,42 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce;
+package org.riverock.commerce.bean.price;
 
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletContextEvent;
+import java.io.Serializable;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 28.09.2006
- *         Time: 19:00:48
- *         <p/>
- *         $Id$
+ * Class DiscountItemType.
+ * 
+ * User: SergeMaslyukov
+ * Date: 02.12.2006
+ * Time: 19:37:32
  */
-public class CommerceContextListener implements ServletContextListener {
-    public void contextInitialized(ServletContextEvent servletContextEvent) {
+public class DiscountItemType implements Serializable {
+
+    /**
+     * Field discountName
+     */
+    private java.lang.String discountName;
+
+    /**
+     * Field discountValue
+     */
+    private java.lang.Double discountValue;
+
+    public String getDiscountName() {
+        return discountName;
     }
 
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    public void setDiscountName(String discountName) {
+        this.discountName = discountName;
+    }
+
+    public Double getDiscountValue() {
+        return discountValue;
+    }
+
+    public void setDiscountValue(Double discountValue) {
+        this.discountValue = discountValue;
     }
 }

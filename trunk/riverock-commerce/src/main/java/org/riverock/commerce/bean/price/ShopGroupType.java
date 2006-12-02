@@ -21,19 +21,16 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.test.cases;
+package org.riverock.commerce.bean.price;
+
+import java.io.Serializable;
 
 /**
+ * Class ShopGroupType.
+ * 
  * User: SergeMaslyukov
- * Date: 16.08.2006
- * Time: 20:29:22
- * <p/>
- * $Id$
+ * Date: 02.12.2006
+ * Time: 19:37:32
  */
-public interface TestCaseInterface
-{
-    public void insertTestData() throws Exception;
-    public void doTest() throws Exception;
-
+public class ShopGroupType implements Serializable {
 }
-

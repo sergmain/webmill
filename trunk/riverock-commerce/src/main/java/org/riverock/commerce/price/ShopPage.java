@@ -24,7 +24,6 @@
 package org.riverock.commerce.price;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FileOutputStream;
 import java.util.ResourceBundle;
 
@@ -36,13 +35,12 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.schema.price.CurrencyPrecisionType;
+import org.riverock.common.tools.XmlTools;
+import org.riverock.commerce.bean.price.CurrencyPrecisionType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.ShopBean;
@@ -95,15 +93,6 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
                     log.debug( "Unmarshal ShopPage object" );
                     FileOutputStream w = new FileOutputStream( SiteUtils.getTempDir()+File.separatorChar+"portlet-shop.xml" );
                     w.write(XmlTools.getXml( shopPage, rootElement ));
-/*
-                    FileWriter w = new FileWriter( SiteUtils.getTempDir()+File.separatorChar+"portlet-shop.xml" );
-                    Marshaller marsh = new Marshaller( w );
-                    marsh.setMarshalAsDocument( true );
-                    marsh.setEncoding( "utf-8" );
-                    marsh.setRootElement( rootElement );
-                    marsh.marshal( shopPage );
-                    marsh = null;
-*/
                     w.flush();
                     w.close();
                     w = null;

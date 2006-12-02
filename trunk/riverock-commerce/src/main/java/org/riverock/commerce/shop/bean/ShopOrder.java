@@ -23,7 +23,7 @@
  */
 package org.riverock.commerce.shop.bean;
 
-import org.riverock.portlet.schema.price.OrderType;
+import org.riverock.commerce.bean.price.OrderType;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**

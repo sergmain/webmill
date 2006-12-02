@@ -28,9 +28,9 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 import org.riverock.sql.cache.SqlStatement;
-import org.riverock.portlet.schema.price.CustomCurrencyType;
+import org.riverock.commerce.bean.price.CustomCurrencyType;
 import org.riverock.commerce.tools.SiteUtils;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.common.tools.MainTools;
 
 /**
@@ -60,8 +60,8 @@ public class CurrencyManager {
     private final static Object syncDebug = new Object();
 
     public static CurrencyManager getInstance(Long idSite) throws PriceException {
-        CurrencyManager currency = new CurrencyManager();
-        currency.currencyList = CurrencyList.getInstance(idSite).list;
+        CurrencyManager currencyManager = new CurrencyManager();
+        currencyManager.currencyList = CurrencyList.getInstance(idSite).list;
 
         long mills = 0; // System.currentTimeMillis();
 
@@ -69,21 +69,13 @@ public class CurrencyManager {
             mills = System.currentTimeMillis();
 
         if (log.isDebugEnabled()) {
-            synchronized (syncDebug) {
-                try {
-                    byte[] originByte = XmlTools.getXml(currency.currencyList, null);
-                    MainTools.writeToFile(SiteUtils.getTempDir() + File.separatorChar + "debug-custom-currency-type.xml", originByte);
-                }
-                catch (Throwable e) {
-                    log.error("error write debug information", e);
-                }
-            }
+            log.debug("CurrencyList: " + currencyManager.currencyList);
         }
 
         if (log.isInfoEnabled()) {
-            log.info("init currency list for " + (System.currentTimeMillis() - mills) + " milliseconds");
+            log.info("init currency manager list for " + (System.currentTimeMillis() - mills) + " milliseconds");
         }
-        return currency;
+        return currencyManager;
     }
 
     public void reinit() {

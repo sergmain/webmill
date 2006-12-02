@@ -23,18 +23,17 @@
  */
 package org.riverock.commerce.price;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.math.BigDecimal;
 
 import javax.portlet.PortletException;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.NumberTools;
@@ -43,14 +42,13 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.portlet.core.GetWmPriceListItem;
-import org.riverock.portlet.schema.price.CurrencyPrecisionType;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.schema.price.OrderItemType;
-import org.riverock.portlet.schema.price.OrderType;
-import org.riverock.portlet.schema.price.ShopOrderType;
+import org.riverock.commerce.dao.GetWmPriceListItem;
+import org.riverock.commerce.bean.price.CurrencyPrecisionType;
+import org.riverock.commerce.bean.price.CustomCurrencyItemType;
+import org.riverock.commerce.bean.price.OrderItemType;
+import org.riverock.commerce.bean.price.OrderType;
+import org.riverock.commerce.bean.price.ShopOrderType;
 import org.riverock.commerce.shop.bean.ShopOrder;
-import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.ShopBean;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
@@ -176,9 +174,9 @@ public final class OrderLogic {
                     order.setServerName( renderRequest.getServerName() );
 
                     ShopOrderType shopOrder = new ShopOrderType();
-                    shopOrder.setIdShop( shopBean.getShopId() );
+                    shopOrder.setShopId( shopBean.getShopId() );
 
-                    order.addShopOrdertList( shopOrder );
+                    order.getShopOrdertListList().add( shopOrder );
                     initAuthSession( dbDyn, order, ( AuthSession ) renderRequest.getUserPrincipal() );
                 }
 
@@ -205,7 +203,7 @@ public final class OrderLogic {
                 if( ( id_item != null ) && ( count > 0 ) ) {
                     if( log.isDebugEnabled() ) {
                         log.debug( "add item to order" );
-                        log.debug( "id_order " + order.getIdOrder() );
+                        log.debug( "id_order " + order.getOrderId() );
                         log.debug( "id_item " + id_item );
                         log.debug( "count " + count );
                     }
@@ -261,7 +259,7 @@ public final class OrderLogic {
             seq.setTableName( "WM_PRICE_RELATE_USER_ORDER" );
             seq.setColumnName( "ID_ORDER_V2" );
 
-            order.setIdOrder( dbDyn.getSequenceNextValue( seq ) );
+            order.setOrderId( dbDyn.getSequenceNextValue( seq ) );
 
             sql_ =
                 "insert into WM_PRICE_RELATE_USER_ORDER " +
@@ -271,7 +269,7 @@ public final class OrderLogic {
 
             ps = dbDyn.prepareStatement( sql_ );
 
-            RsetTools.setLong( ps, 1, order.getIdOrder() );
+            RsetTools.setLong( ps, 1, order.getOrderId() );
             dbDyn.bindDate( ps, 2, DateTools.getCurrentTime() );
 
             if( authSession != null && authSession.getUser() != null ) {
@@ -286,7 +284,7 @@ public final class OrderLogic {
                 log.debug( "count of inserted record - " + i );
         }
         catch( Exception e1 ) {
-            log.error( "order.getIdOrder() " + order.getIdOrder() );
+            log.error( "order.getOrderId() " + order.getOrderId() );
             log.error( "authSession " + authSession );
             if( authSession != null && authSession.getUser() != null )
                 log.error( "authSession.getUserInfo().getIdUser() " + authSession.getUser().getUserId() );
@@ -316,7 +314,7 @@ public final class OrderLogic {
                     ps = dbDyn.prepareStatement( sql_ );
 
                     RsetTools.setLong( ps, 1, userId );
-                    RsetTools.setLong( ps, 2, order.getIdOrder() );
+                    RsetTools.setLong( ps, 2, order.getOrderId() );
                 }
                 else {
                     throw new IllegalStateException("userId not found for user login: " +authSession.getUserLogin());
@@ -350,7 +348,7 @@ public final class OrderLogic {
         PreparedStatement ps = null;
         try {
             ps = dbDyn.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, order.getIdOrder() );
+            RsetTools.setLong( ps, 1, order.getOrderId() );
 
             int i = ps.executeUpdate();
 
@@ -373,11 +371,9 @@ public final class OrderLogic {
         if( order == null || idItem == null )
             return false;
 
-        for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
-            ShopOrderType shopOrder = order.getShopOrdertList( i );
-            for( int k = 0; k < shopOrder.getOrderItemListCount(); k++ ) {
-                OrderItemType item = shopOrder.getOrderItemList( k );
-                if( idItem.equals( item.getIdItem() ) )
+        for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
+            for (OrderItemType item : shopOrder.getOrderItemListList()) {
+                if( idItem.equals( item.getItemId() ) )
                     return true;
             }
         }
@@ -397,27 +393,28 @@ public final class OrderLogic {
             // в методе initItem выводится дополнительная информация в DEBUG
             OrderItemType item = initItem( dbDyn, idItem, siteId );
             if( log.isDebugEnabled() )
-                log.debug( "idShop of created item - " + item.getIdShop() );
+                log.debug( "idShop of created item - " + item.getShopId() );
 
             item.setCountItem( count );
             boolean isNotInOrder = true;
 
             // если в заказе есть магазин и наименование, то изменяем количество
-            for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
-                ShopOrderType shopOrderTemp = order.getShopOrdertList( i );
-                if( log.isDebugEnabled() )
-                    log.debug( "shopOrder.idShop - " + shopOrderTemp.getIdShop() );
+            for (ShopOrderType shopOrderTemp : order.getShopOrdertListList()) {
+                if( log.isDebugEnabled() ) {
+                    log.debug( "shopOrder.idShop - " + shopOrderTemp.getShopId() );
+                }
 
-                if( shopOrderTemp.getIdShop().equals( item.getIdShop() ) ) {
-                    if( log.isDebugEnabled() )
-                        log.debug( "Нужный магазин найден. Ищем нужное наименование, idItem - " + idItem );
+                if( shopOrderTemp.getShopId().equals( item.getShopId() ) ) {
+                    if( log.isDebugEnabled() ) {
+                        log.debug( "Shop exist. Start search item, idItem: " + idItem );
+                    }
 
                     shopOrder = shopOrderTemp;
-                    for( int k = 0; k < shopOrderTemp.getOrderItemListCount(); k++ ) {
-                        OrderItemType orderItem = shopOrderTemp.getOrderItemList( k );
-                        if( orderItem.getIdItem().equals( idItem ) ) {
-                            if( log.isDebugEnabled() )
+                    for (OrderItemType orderItem : shopOrderTemp.getOrderItemListList()) {
+                        if( orderItem.getItemId().equals( idItem ) ) {
+                            if( log.isDebugEnabled() ) {
                                 log.debug( "Нужное наименвание найдено, old count " + orderItem.getCountItem() + ". Устанавливаем новое количество " + count );
+                            }
 
                             orderItem.setCountItem( count );
                             isNotInOrder = false;
@@ -436,13 +433,13 @@ public final class OrderLogic {
             // если в заказе нет магазина, то создаем магазин помещаем туда нименование
             if( shopOrder == null ) {
                 if( log.isDebugEnabled() )
-                    log.debug( "Нужного магазина не найдено. Создаем новый с кодом - " + item.getIdShop() );
+                    log.debug( "Нужного магазина не найдено. Создаем новый с кодом - " + item.getShopId() );
 
                 shopOrder = new ShopOrderType();
-                shopOrder.setIdShop( item.getIdShop() );
-                shopOrder.addOrderItemList( item );
+                shopOrder.setShopId( item.getShopId() );
+                shopOrder.getOrderItemListList().add( item );
 
-                order.addShopOrdertList( shopOrder );
+                order.getShopOrdertListList().add( shopOrder );
 
                 isNotInOrder = false;
             }
@@ -451,14 +448,14 @@ public final class OrderLogic {
                 if( log.isDebugEnabled() )
                     log.debug( "Магазин есть но наименование не помещено в него. Помещаем" );
 
-                shopOrder.addOrderItemList( item );
+                shopOrder.getOrderItemListList().add( item );
             }
 
             if( log.isDebugEnabled() ) {
                 log.debug( "Try update count of existing item" );
                 log.debug( "count - " + count );
                 log.debug( "idItem - " + idItem );
-                log.debug( "idOrder - " + order.getIdOrder() );
+                log.debug( "idOrder - " + order.getOrderId() );
             }
 
             String sql_ =
@@ -470,7 +467,7 @@ public final class OrderLogic {
 
             ps.setInt( 1, count );
             RsetTools.setLong( ps, 2, idItem );
-            RsetTools.setLong( ps, 3, order.getIdOrder() );
+            RsetTools.setLong( ps, 3, order.getOrderId() );
 
             int update = ps.executeUpdate();
 
@@ -478,7 +475,7 @@ public final class OrderLogic {
                 log.debug( "count of updated record - " + update );
 
             if( update == 0 )
-                addItem( dbDyn, order.getIdOrder(), item );
+                addItem( dbDyn, order.getOrderId(), item );
 
         }
         catch( Exception e ) {
@@ -497,7 +494,7 @@ public final class OrderLogic {
             throw new Exception( "Error add item to order. Item is null" );
 
         if( log.isDebugEnabled() )
-            log.debug( "Add new count of item. id_item - " + item.getIdItem() + " count - " + item.getCountItem() );
+            log.debug( "Add new count of item. id_item - " + item.getItemId() + " count - " + item.getCountItem() );
 
         PreparedStatement ps = null;
 
@@ -527,14 +524,12 @@ public final class OrderLogic {
             ps = dbDyn.prepareStatement( sql_ );
             RsetTools.setLong( ps, 1, seqValue );
             RsetTools.setLong( ps, 2, idOrder );
-            RsetTools.setLong( ps, 3, item.getIdItem() );
+            RsetTools.setLong( ps, 3, item.getItemId() );
             RsetTools.setInt( ps, 4, item.getCountItem() );
             ps.setString( 5, item.getItem() );
-            RsetTools.setDouble( ps, 6, item.getPrice() );
-
+            RsetTools.setBigDecimal( ps, 6, item.getPrice() );
             ps.setString( 7, item.getCurrencyItem().getCurrencyCode() );
-
-            RsetTools.setDouble( ps, 8, item.getWmPriceItemResult() );
+            RsetTools.setBigDecimal( ps, 8, item.getWmPriceItemResult() );
             ps.setString( 9, item.getResultCurrency().getCurrencyCode() );
             ps.setString( 10, item.getResultCurrency().getCurrencyName() );
             RsetTools.setInt( ps, 11, item.getPrecisionResult() );
@@ -561,11 +556,9 @@ public final class OrderLogic {
         if( idItem == null )
             return;
 
-        for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
-            ShopOrderType shopOrder = order.getShopOrdertList( i );
-            for( int k = 0; k < shopOrder.getOrderItemListCount(); k++ ) {
-                OrderItemType item = shopOrder.getOrderItemList( k );
-                if( idItem.equals( item.getIdItem() ) ) {
+        for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
+            for (OrderItemType item : shopOrder.getOrderItemListList()) {
+                if( idItem.equals( item.getItemId() ) ) {
                     item.setCountItem( count );
                     isNotInOrder = false;
                     break;
@@ -585,7 +578,7 @@ public final class OrderLogic {
         try {
             ps = dbDyn.prepareStatement( sql_ );
             ps.setInt( 1, count );
-            RsetTools.setLong( ps, 2, order.getIdOrder() );
+            RsetTools.setLong( ps, 2, order.getOrderId() );
             RsetTools.setLong( ps, 3, idItem );
 
             int update = ps.executeUpdate();
@@ -610,15 +603,14 @@ public final class OrderLogic {
         if( id_item == null )
             return;
 
+        // in current version all shops has its unique code of items
         boolean isDeleted = false;
-        for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
-            ShopOrderType shopOrder = order.getShopOrdertList( i );
-            for( int k = 0; k < shopOrder.getOrderItemListCount(); k++ ) {
-                OrderItemType item = shopOrder.getOrderItemList( k );
-                if( id_item.equals( item.getIdItem() ) ) {
-                    shopOrder.removeOrderItemList( item );
-                    // в данной версии подразумевается, что в заказе не может быть
-                    // двух магазинов с одинаковым кодом товар
+        for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
+            Iterator<OrderItemType> it = shopOrder.getOrderItemListList().iterator();
+            while (it.hasNext()) {
+                OrderItemType item = it.next();
+                if( id_item.equals( item.getItemId() ) ) {
+                    it.remove();
                     isDeleted = true;
                     break;
                 }
@@ -635,7 +627,7 @@ public final class OrderLogic {
         try {
             ps = dbDyn.prepareStatement( sql_ );
 
-            RsetTools.setLong( ps, 1, order.getIdOrder() );
+            RsetTools.setLong( ps, 1, order.getOrderId() );
             RsetTools.setLong( ps, 2, id_item );
 
             int update = ps.executeUpdate();
@@ -656,16 +648,15 @@ public final class OrderLogic {
         }
     }
 
-    public static void clear( DatabaseAdapter dbDyn, OrderType order )
-        throws Exception {
-        order.setShopOrdertList( new ArrayList() );
+    public static void clear( DatabaseAdapter dbDyn, OrderType order ) throws Exception {
+        order.setShopOrdertListList( new ArrayList<ShopOrderType>() );
 
         String sql_ = "delete from WM_PRICE_ORDER where ID_ORDER_V2 = ? ";
 
         PreparedStatement ps = null;
         try {
             ps = dbDyn.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, order.getIdOrder() );
+            RsetTools.setLong( ps, 1, order.getOrderId() );
 
             int update = ps.executeUpdate();
 
@@ -683,8 +674,6 @@ public final class OrderLogic {
             ps = null;
         }
     }
-
-    private final static Object syncInitItemObj = new Object();
 
     public static OrderItemType initItem( DatabaseAdapter db_, Long idItem, long siteId )
         throws Exception {
@@ -704,43 +693,44 @@ public final class OrderLogic {
 
                 item.setCurrencyItem( currencyItem );
 
-                ShopBean shopBean = CommerceDaoFactory.getShopDao().getShop(item.getIdShop());
+                ShopBean shopBean = CommerceDaoFactory.getShopDao().getShop(item.getShopId());
 
                 if( log.isDebugEnabled() ) {
                     log.debug( "currencyCode " + item.getCurrency() );
                     log.debug( "currencyItem " + currencyItem );
                     log.debug( "item.price " + item.getPrice() );
                     if( currencyItem != null ) {
-                        log.debug( "currencyItem.isRealInit " + currencyItem.getIsRealInit() );
+                        log.debug( "currencyItem.isRealInit " + currencyItem.isRealInit() );
                         log.debug( "currencyItem.getRealCurs " + currencyItem.getRealCurs() );
                     }
                 }
 
                 if( log.isDebugEnabled() )
-                    log.debug( "new price will be calculated - " + ( currencyItem != null && Boolean.TRUE.equals( currencyItem.getIsRealInit() ) ) );
+                    log.debug( "new price will be calculated - " + ( currencyItem != null && currencyItem.isRealInit() ) );
 
-                if( currencyItem != null && Boolean.TRUE.equals( currencyItem.getIsRealInit() ) ) {
+                if( currencyItem != null && currencyItem.isRealInit() ) {
 
-                    double resultPrice = 0;
+                    BigDecimal resultPrice = new BigDecimal(0);
 
                     if( log.isDebugEnabled() ) {
-                        log.debug( "item idShop - " + item.getIdShop() );
+                        log.debug( "item idShop - " + item.getShopId() );
                         log.debug( "shop idShop - " + shopBean.getShopId() );
-                        log.debug( "item idCurrency - " + item.getCurrencyItem().getIdCurrency() );
+                        log.debug( "item idCurrency - " + item.getCurrencyItem().getCurrencyId() );
                         log.debug( "shop idOrderCurrency - " + shopBean.getInvoiceCurrencyId() );
                         log.debug( "код валюты наименования совпадает с валютой в которой выводить заказ - " +
-                            ( item.getCurrencyItem().getIdCurrency() == shopBean.getInvoiceCurrencyId() ) );
+                            ( item.getCurrencyItem().getCurrencyId() == shopBean.getInvoiceCurrencyId() ) );
                     }
 
                     // если код валюты наименования совпадает с валютой в которой выводить заказ
                     int precisionValue = 2;
                     CurrencyPrecisionType precision = null;
-                    if( item.getCurrencyItem().getIdCurrency().equals( shopBean.getInvoiceCurrencyId() ) ) {
+                    if( item.getCurrencyItem().getCurrencyId().equals( shopBean.getInvoiceCurrencyId() ) ) {
                         item.setResultCurrency( item.getCurrencyItem() );
 
-                        precision = getPrecisionValue( shopBean.getPrecisionList(), currencyItem.getIdCurrency() );
-                        if( precision != null && precision.getPrecision() != null )
+                        precision = getPrecisionValue( shopBean.getPrecisionList(), currencyItem.getCurrencyId() );
+                        if( precision != null && precision.getPrecision() != null ) {
                             precisionValue = precision.getPrecision();
+                        }
 
                         if( item.getPrice() != null )
                             resultPrice = NumberTools.truncate( item.getPrice(), precisionValue );
@@ -761,32 +751,15 @@ public final class OrderLogic {
                         item.setResultCurrency( defaultCurrency );
 
                         if( log.isDebugEnabled() ) {
-                            synchronized( syncInitItemObj ) {
-                                FileWriter w = new FileWriter( SiteUtils.getTempDir() + File.separatorChar + "schema-currency-item.xml" );
-                                FileWriter w1 = new FileWriter( SiteUtils.getTempDir() + File.separatorChar + "schema-currency-default.xml" );
-
-                                Marshaller.marshal( item.getCurrencyItem(), w );
-                                Marshaller.marshal( defaultCurrency, w1 );
-
-                                w.flush();
-                                w.close();
-                                w = null;
-                                w1.flush();
-                                w1.close();
-                                w1 = null;
-
-                                log.debug( "item curs - " + item.getCurrencyItem().getRealCurs() );
-                                log.debug( "default curs - " + defaultCurrency.getRealCurs() );
-                            }
+                            log.debug("currency: " + item.getCurrencyItem());
+                            log.debug("default currency: " + defaultCurrency);
                         }
-                        double crossCurs = 0;
-
-                        crossCurs = item.getCurrencyItem().getRealCurs() / defaultCurrency.getRealCurs();
+                        double crossCurs = item.getCurrencyItem().getRealCurs() / defaultCurrency.getRealCurs();
 
                         if( item.getPrice() != null ) {
                             resultPrice =
-                                NumberTools.truncate( item.getPrice(), precisionValue ) *
-                                crossCurs;
+                                NumberTools.truncate( item.getPrice(), precisionValue )
+                                .multiply( new BigDecimal(crossCurs));
 
                             if( log.isDebugEnabled() ) {
                                 log.debug( "crossCurs - " + crossCurs + " price - " +
@@ -806,7 +779,7 @@ public final class OrderLogic {
                 else {
                     boolean isReal = false;
                     if( currencyItem != null )
-                        isReal = Boolean.TRUE.equals( currencyItem.getIsRealInit() );
+                        isReal = Boolean.TRUE.equals( currencyItem.isRealInit() );
 
                     throw new PriceException( "Price for item can not calculated. CurrencyItem is " +
                         ( currencyItem == null ? "" : "not " ) + "null, is real curs init - " + isReal );
@@ -835,13 +808,12 @@ public final class OrderLogic {
     }
 
     public static int getCountItem( OrderType order ) {
-
-        if( order == null )
+        if( order == null ) {
             return 0;
+        }
         int count = 0;
-        for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
-            ShopOrderType shopOrder = order.getShopOrdertList( i );
-            count += shopOrder.getOrderItemListCount();
+        for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
+            count += shopOrder.getOrderItemListList().size();
         }
         return count;
     }
