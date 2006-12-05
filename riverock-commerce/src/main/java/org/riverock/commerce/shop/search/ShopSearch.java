@@ -29,23 +29,21 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.portlet.RenderRequest;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.portlet.RenderRequest;
 
-
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
+import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
-import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -265,7 +263,6 @@ public class ShopSearch extends HttpServlet {
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
         throws IOException, ServletException {
         Writer out = null;
-        DatabaseAdapter db_ = null;
         try {
             RenderRequest renderRequest = null;
             ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
@@ -341,8 +338,6 @@ public class ShopSearch extends HttpServlet {
             out.write("</form>\r\n");
 
 
-            db_ = DatabaseAdapter.getInstance();
-
             if (PortletService.getString(renderRequest, "action", null).toLowerCase().equals("search")) {
 
                 int v_count_search = 2147483647;
@@ -350,8 +345,8 @@ public class ShopSearch extends HttpServlet {
 
                 String v_str_ip = ""; //request.getRemoteAddr();
 
-                CallableStatement call = db_.getConnection().prepareCall(
-                    "begin ? := tools.process_request(?, ?, ?, ?, ?, ?, ?, ?); end;");
+                CallableStatement call = null;
+//                    "begin ? := tools.process_request(?, ?, ?, ?, ?, ?, ?, ?); end;");
 
                 call.registerOutParameter(1, java.sql.Types.VARCHAR);
                 call.registerOutParameter(9, java.sql.Types.VARCHAR);
@@ -386,14 +381,14 @@ public class ShopSearch extends HttpServlet {
                 seq.setSequenceName("SEQ_WM_PRICE_QUERY_TABLE");
                 seq.setTableName("WM_PRICE_QUERY_TABLE");
                 seq.setColumnName("ID_THREAD");
-                Long v_id_query = db_.getSequenceNextValue(seq);
+                Long v_id_query = null;
 
                 String sql_ =
                     "insert into WM_PRICE_QUERY_TABLE " +
                         "( id_query, id_type_query, query_text, client_ip_address, client_host_name, date_query, count_exist ) " +
                         "VALUES ( ?, ?, ?, ?, ?, SYSDATE, 0 ) ";
 
-                PreparedStatement ps = db_.prepareStatement(sql_);
+                PreparedStatement ps = null;
                 RsetTools.setLong(ps, 1, v_id_query);
                 RsetTools.setLong(ps, 2, PortletService.getLong(renderRequest, "i"));
                 ps.setString(3, v_query);
@@ -439,7 +434,6 @@ WHERE id_query = v_id_query;
                             "       a.id_shop = c.id_shop and a.absolete = 0 and c.is_close = 0 " +
                             "       and b.is_deleted = 0 and " + v_str + " order by b.full_name";
 
-                    ps = db_.prepareStatement(sql_);
                     ResultSet rs = ps.executeQuery();
 
                     if (log.isDebugEnabled())
@@ -469,7 +463,7 @@ WHERE id_query = v_id_query;
                         if (log.isDebugEnabled())
                             log.debug("#2 " + sql_item);
 
-                        PreparedStatement ps_item = db_.prepareStatement(sql_item);
+                        PreparedStatement ps_item = null;
                         RsetTools.setLong(ps_item, 1, sclient_rec_id_client);
                         ResultSet rs_item = ps_item.executeQuery();
 
@@ -478,7 +472,7 @@ WHERE id_query = v_id_query;
 
                             sql_ = "insert into WM_PRICE_QUERY_LIST (id_shop, id_query) values ( ?, ?) ";
 
-                            PreparedStatement ps_tmp = db_.prepareStatement(sql_);
+                            PreparedStatement ps_tmp = null;
                             RsetTools.setLong(ps_tmp, 1, RsetTools.getLong(rs_item, "id_shop"));
                             RsetTools.setLong(ps_tmp, 2, v_id_query);
 
@@ -514,7 +508,7 @@ WHERE id_query = v_id_query;
 //out.writeln(sql_detail);
 //if (true) return;
 
-                            PreparedStatement ps_detail = db_.prepareStatement(sql_detail);
+                            PreparedStatement ps_detail = null;
                             RsetTools.setLong(ps_detail, 1, sclient_rec_id_client);
 
                             ResultSet rs_detail = ps_detail.executeQuery();
@@ -632,10 +626,6 @@ WHERE id_query = v_id_query;
         catch (Exception e) {
             log.error(e);
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
-        }
-        finally {
-            DatabaseAdapter.close(db_);
-            db_ = null;
         }
     }
 }

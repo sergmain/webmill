@@ -42,7 +42,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.commerce.price.PriceGroup;
 import org.riverock.commerce.price.PriceGroupItem;
@@ -90,7 +89,6 @@ public final class PriceEditImage extends HttpServlet {
 
             out = response.getWriter();
 
-            DatabaseAdapter db_ = null;
             try {
                 int itemsPerPage = 30;
 
@@ -98,8 +96,6 @@ public final class PriceEditImage extends HttpServlet {
                 if (auth_ == null) {
                     throw new IllegalStateException("You have not enough right to execute this operation");
                 }
-
-                db_ = DatabaseAdapter.getInstance();
 
                 String index_page = PortletService.url("mill.price.index", renderRequest, renderResponse);
 
@@ -190,7 +186,8 @@ public final class PriceEditImage extends HttpServlet {
 // print group from price-list
 //                    Vector items = PriceList.getPriceList(db_, shopParam.id_shop, 0, shopParam.id_group, renderRequest.getServerName(), true);
 
-                    List v = PriceGroup.getInstance(db_, shopParam.id_group, shopParam.id_shop, shopParam.idSite);
+                    List v=null;
+//                    v = PriceGroup.getInstance(db_, shopParam.id_group, shopParam.id_shop, shopParam.idSite);
                     if (v != null) {
                         out.write("<table border=\"0\" width=\"100%\" cellpadding=\"2px\" cellspacing=\"2px\">");
 
@@ -223,7 +220,8 @@ public final class PriceEditImage extends HttpServlet {
                             "where   a.id = ? and a.is_group = 1 and " +
                             "        a.ID_FIRM = b.ID_FIRM and b.user_login = ?";
 
-                    PreparedStatement ps = db_.prepareStatement(sql_);
+                    PreparedStatement ps=null;
+//                    ps = db_.prepareStatement(sql_);
                     RsetTools.setLong(ps, 1, shopParam.id_group);
                     ps.setString(2, auth_.getUserLogin());
                     ResultSet rs = ps.executeQuery();
@@ -259,7 +257,7 @@ public final class PriceEditImage extends HttpServlet {
                             "	    and b.user_login=? \n" +
                             "order by id asc ";
                     try {
-                        ps = db_.prepareStatement(sql_);
+//                        ps = db_.prepareStatement(sql_);
                         RsetTools.setLong(ps, 1, shopParam.id_group);
                         ps.setString(2, auth_.getUserLogin());
 
@@ -397,11 +395,6 @@ public final class PriceEditImage extends HttpServlet {
                 log.error(e);
                 out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
             }
-            finally {
-                DatabaseAdapter.close(db_);
-                db_ = null;
-            }
-
 
         }
         catch (Exception e) {

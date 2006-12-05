@@ -36,22 +36,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.commerce.price.ShopPageParam;
 import org.riverock.commerce.price.ShopPortlet;
 import org.riverock.commerce.tools.ContentTypeTools;
+import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.RsetTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
-
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -81,7 +75,6 @@ public class PriceEditShop extends HttpServlet
             throws IOException, ServletException
     {
         Writer out = null;
-        DatabaseAdapter db_ = null;
         try
         {
             RenderRequest renderRequest = null;
@@ -95,8 +88,6 @@ public class PriceEditShop extends HttpServlet
             if ( auth_==null ) {
                 throw new IllegalStateException("You have not enough right to execute this operation");
             }
-
-            db_ = DatabaseAdapter.getInstance();
 
             ShopPageParam shopParam = new ShopPageParam();
             PortletSession session = renderRequest.getPortletSession();
@@ -143,8 +134,8 @@ public class PriceEditShop extends HttpServlet
                         {
                             for (int i = 0; i < countItem; i++)
                             {
-                                if (st == null)
-                                    st = db_.prepareStatement(sql_);
+//                                if (st == null)
+//                                    st = db_.prepareStatement(sql_);
 
                                 Long idCode = PortletService.getLong(renderRequest, "id_code_" + i);
 
@@ -169,8 +160,8 @@ public class PriceEditShop extends HttpServlet
                         }
                         finally
                         {
-                            DatabaseManager.close(st);
-                            st = null;
+//                            DatabaseManager.close(st);
+//                            st = null;
                         }
                     }
 
@@ -385,11 +376,6 @@ public class PriceEditShop extends HttpServlet
         {
             log.error(e);
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
-        }
-        finally
-        {
-            DatabaseAdapter.close(db_);
-            db_ = null;
         }
     }
 }

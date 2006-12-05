@@ -28,13 +28,9 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.sql.cache.SqlStatement;
 
 /**
@@ -119,10 +115,8 @@ public class PriceItemImage {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement( sql_ );
+//            ps = db_.prepareStatement( sql_ );
 
             RsetTools.setLong( ps, 1, idSite );
 
@@ -135,12 +129,6 @@ public class PriceItemImage {
             String es = "Exception in PriceItemImage()";
             log.error( es, e );
             throw new PriceException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db_, rs, ps );
-            rs = null;
-            ps = null;
-            db_ = null;
         }
     }
 }

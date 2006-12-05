@@ -29,29 +29,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
-
-
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-
 import org.riverock.commerce.price.ShopPortlet;
 import org.riverock.commerce.tools.ContentTypeTools;
+import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.RsetTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
-
-
 
 /**
  * Author: mill
@@ -76,7 +68,6 @@ public final class PriceEditIndex extends HttpServlet {
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
             throws IOException {
         Writer out = null;
-        DatabaseAdapter db_ = null;
         try
         {
             RenderRequest renderRequest = (RenderRequest)request_;
@@ -92,7 +83,6 @@ public final class PriceEditIndex extends HttpServlet {
                 throw new IllegalStateException( "You have not enough right to execute this operation" );
             }
 
-                db_ = DatabaseAdapter.getInstance();
 
                 String sql_ =
                         "select a.* from WM_PRICE_SHOP_LIST a, WM_PORTAL_VIRTUAL_HOST b "+
@@ -106,7 +96,7 @@ public final class PriceEditIndex extends HttpServlet {
 
                     try
                     {
-                        ps = db_.prepareStatement( sql_ );
+//                        ps = db_.prepareStatement( sql_ );
                         ps.setString(1, renderRequest.getServerName() );
 
                         rs = ps.executeQuery();
@@ -157,13 +147,6 @@ public final class PriceEditIndex extends HttpServlet {
                         out.write( e.toString() );
                         log.error("Error create list of shops", e);
                     }
-                    finally
-                    {
-                        DatabaseManager.close(rs, ps);
-                        rs = null;
-                        ps = null;
-
-                    }
                 }
                 else
                 {
@@ -175,11 +158,5 @@ public final class PriceEditIndex extends HttpServlet {
             log.error(e);
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
         }
-        finally
-        {
-            DatabaseAdapter.close(db_);
-            db_ = null;
-        }
-
     }
 }
