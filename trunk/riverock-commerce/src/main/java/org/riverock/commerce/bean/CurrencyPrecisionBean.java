@@ -25,6 +25,14 @@ package org.riverock.commerce.bean;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 /**
  * User: SergeMaslyukov
  * Date: 06.09.2006
@@ -32,12 +40,32 @@ import java.io.Serializable;
  * <p/>
  * $Id$
  */
+@Entity
+@Table(name="wm_price_shop_precision")
+@TableGenerator(
+    name="TABLE_PRICE_SHOP_PRECISION",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_price_shop_precision",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class CurrencyPrecisionBean implements Serializable {
     private static final long serialVersionUID = 2625005325L;
     
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PRICE_SHOP_PRECISION")
+    @Column(name="ID_PRICE_SHOP_PRECISION")
     private Long currencyPrecisionId;
+                    
+    @Column(name="ID_CURRENCY")
     private Long currencyId;
+
+    @Column(name="ID_SHOP")
     private Long shopId;
+
+    @Column(name="PRECISION_SHOP")
     private Integer precision;
 
     public CurrencyPrecisionBean() {

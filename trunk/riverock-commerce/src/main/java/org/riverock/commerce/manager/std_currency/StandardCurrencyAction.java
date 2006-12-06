@@ -28,6 +28,7 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.commerce.bean.StandardCurrency;
 
 /**
  * @author Sergei Maslyukov
@@ -57,13 +58,13 @@ public class StandardCurrencyAction implements Serializable {
     public String addStandardCurrency() {
         log.debug("Start addStandardCurrency()");
 
-        standardCurrencySessionBean.setStandardCurrencyBean( new StandardCurrencyBean() );
+        standardCurrencySessionBean.setStandardCurrency( new StandardCurrency() );
 
         return "standard-currency-add";
     }
 
     public String processAddStandardCurrency() {
-        Long id = CommerceDaoFactory.getStandardCurrencyDao().createStandardCurrency( standardCurrencySessionBean.getStandardCurrencyBean() );
+        Long id = CommerceDaoFactory.getStandardCurrencyDao().createStandardCurrency( standardCurrencySessionBean.getStandardCurrency() );
         standardCurrencySessionBean.setCurrentStandardCurrencyId( id );
         loadCurrentStandardCurrency();
         return "standard-currency";
@@ -100,7 +101,7 @@ public class StandardCurrencyAction implements Serializable {
     // Edit standard currency
 
     public String processEditStandardCurrency() {
-        CommerceDaoFactory.getStandardCurrencyDao().updateStandardCurrency( standardCurrencySessionBean.getStandardCurrencyBean() );
+        CommerceDaoFactory.getStandardCurrencyDao().updateStandardCurrency( standardCurrencySessionBean.getStandardCurrency() );
         return "standard-currency";
     }
 
@@ -121,11 +122,11 @@ public class StandardCurrencyAction implements Serializable {
     }
 
     private void loadCurrentStandardCurrency() {
-        StandardCurrencyBean bean = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency( standardCurrencySessionBean.getCurrentStandardCurrencyId() );
-        setSessionBean( new StandardCurrencyBean(bean) );
+        StandardCurrency bean = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency( standardCurrencySessionBean.getCurrentStandardCurrencyId() );
+        setSessionBean( bean );
     }
 
-    private void setSessionBean(StandardCurrencyBean bean) {
-        standardCurrencySessionBean.setStandardCurrencyBean(bean);
+    private void setSessionBean(StandardCurrency bean) {
+        standardCurrencySessionBean.setStandardCurrency(bean);
     }
 }

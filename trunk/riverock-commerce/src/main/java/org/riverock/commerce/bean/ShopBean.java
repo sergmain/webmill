@@ -23,8 +23,17 @@
  */
 package org.riverock.commerce.bean;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.io.Serializable;
+
+import javax.persistence.TableGenerator;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Transient;
 
 import org.riverock.commerce.price.CurrencyPrecisionList;
 
@@ -35,39 +44,102 @@ import org.riverock.commerce.price.CurrencyPrecisionList;
  *         <p/>
  *         $Id$
  */
+@Entity
+@Table(name="wm_price_shop_list")
+@TableGenerator(
+    name="TABLE_PRICE_SHOP_LIST",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_price_shop_list",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class ShopBean implements Serializable {
     private static final long serialVersionUID = 2625005780L;
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PRICE_SHOP_LIST")
+    @Column(name="ID_SHOP")
     private Long shopId = null;
+
+    @Column(name="ID_SITE")
     private Long siteId = null;
+
+    @Column(name="IS_CLOSE")
     private boolean isOpened;
+
+    @Column(name="NAME_SHOP")
     private String shopName;
+
+    @Column(name="FOOTER_STRING")
     private String footer;
+
+    @Column(name="HEADER_STRING")
     private String header;
+
+    @Column(name="CODE_SHOP")
     private String shopCode = "";
+
+    @Column(name="NAME_SHOP_FOR_PRICE_LIST")
     private String shopNameForPriceList = "";
-    private Calendar dateUpload;
-    private Calendar dateCalcQuantity;
+
+    @Column(name="LAST_DATE_UPLOAD")
+    private Date dateUpload;
+
+    @Column(name="DATE_CALC_QUANTITY")
+    private Date dateCalcQuantity;
+
+    @Column(name="NEW_ITEM_DAYS")
     private int newItemDays;
 
-    // Валюта по умолчанию для отображения прайса
+    /**
+     * Defautl currency for shop
+     */
+    @Column(name="ID_CURRENCY")
     private Long defaultCurrencyId = null;
-    // Валюта по умолчанию для отображения заказа
+
+    /**
+     * Default currency for invoice
+     */
+    @Column(name="ID_ORDER_CURRENCY")
     private Long invoiceCurrencyId = null;
 
+    @Column(name="IS_DEFAULT_CURRENCY")
     private boolean isDefaultCurrency = true;
 
-    private boolean isNeedProcessing = false;  // Нужен ли интерфейс для проведения финансовых транзакций
-    private boolean isProcessInvoice = false; //  Нужен ли интерфейс для выписки счетов
-    private boolean isNeedRecalc = false; //  Нужен ли интерфейс для пересчета из одной валюты в другую
+    /**
+     * Нужен ли интерфейс для проведения финансовых транзакций
+     */
+    @Column(name="IS_NEED_PROCESSING")
+    private boolean isNeedProcessing = false;  
 
-    private CurrencyPrecisionList precisionList = new CurrencyPrecisionList();
+    /**
+     * Нужен ли интерфейс для выписки счетов
+     */
+    @Column(name="IS_PROCESS_INVOICE")
+    private boolean isProcessInvoice = false;
 
+    /**
+     * Нужен ли интерфейс для пересчета из одной валюты в другую
+     */
+    @Column(name="IS_NEED_RECALC")
+    private boolean isNeedRecalc = false;
+
+    @Column(name="DISCOUNT")
     private double discount = 0;
 
+    @Column(name="ID_TYPE_SHOP_1")
     private Long id_type_shop_1 = null;
+
+    @Column(name="ID_TYPE_SHOP_2")
     private Long id_type_shop_2 = null;
+
+    @Column(name="COMMAS_COUNT")
     private int digitsAfterComma;
+
+    @Transient
+    private CurrencyPrecisionList precisionList = new CurrencyPrecisionList();
 
     public int getDigitsAfterComma() {
         return digitsAfterComma;
@@ -141,19 +213,19 @@ public class ShopBean implements Serializable {
         this.shopNameForPriceList = shopNameForPriceList;
     }
 
-    public Calendar getDateUpload() {
+    public Date getDateUpload() {
         return dateUpload;
     }
 
-    public void setDateUpload(Calendar dateUpload) {
+    public void setDateUpload(Date dateUpload) {
         this.dateUpload = dateUpload;
     }
 
-    public Calendar getDateCalcQuantity() {
+    public Date getDateCalcQuantity() {
         return dateCalcQuantity;
     }
 
-    public void setDateCalcQuantity(Calendar dateCalcQuantity) {
+    public void setDateCalcQuantity(Date dateCalcQuantity) {
         this.dateCalcQuantity = dateCalcQuantity;
     }
 

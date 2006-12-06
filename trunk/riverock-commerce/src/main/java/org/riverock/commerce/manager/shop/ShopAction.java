@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.bean.ShopBean;
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -131,17 +131,17 @@ public class ShopAction implements Serializable {
             return;
         }
 
-        CurrencyBean defaultCurrencyBean=null;
+        Currency defaultCurrency =null;
         if (bean.getDefaultCurrencyId()!=null) {
-            defaultCurrencyBean=CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getDefaultCurrencyId());
+            defaultCurrency =CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getDefaultCurrencyId());
         }
 
-        CurrencyBean invoiceCurrencyBean=null;
+        Currency invoiceCurrency =null;
         if (bean.getInvoiceCurrencyId()!=null) {
-            invoiceCurrencyBean=CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getDefaultCurrencyId());
+            invoiceCurrency =CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getDefaultCurrencyId());
         }
 
-        setSessionBean( new ShopExtendedBean(bean, defaultCurrencyBean, invoiceCurrencyBean ) );
+        setSessionBean( new ShopExtendedBean(bean, defaultCurrency, invoiceCurrency) );
     }
 
     private void setSessionBean(ShopExtendedBean shopExtendedBean) {

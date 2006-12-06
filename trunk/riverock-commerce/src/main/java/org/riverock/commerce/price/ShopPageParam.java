@@ -26,7 +26,7 @@ package org.riverock.commerce.price;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.riverock.commerce.bean.price.CurrencyPrecisionType;
+import org.riverock.commerce.bean.CurrencyPrecisionBean;
 
 /**
  *
@@ -44,7 +44,7 @@ public class ShopPageParam {
     public Map<String, String> currencyURL = new HashMap<String, String>();
     public boolean  isProcessInvoice =  false;
 
-    public CurrencyPrecisionType precision = null;
+    public CurrencyPrecisionBean precision = null;
 
     public String sortBy = null;
     public int sortDirect = 0;

@@ -26,6 +26,7 @@ package org.riverock.commerce.price;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
@@ -40,10 +41,10 @@ import org.riverock.common.tools.DateTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.XmlTools;
-import org.riverock.commerce.bean.price.CurrencyPrecisionType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.CurrencyPrecisionBean;
 import org.riverock.commerce.schema.shop.ShopPageType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
@@ -132,8 +133,9 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             shopPage.setPriceHeader( shopBean.getHeader() );
             shopPage.setPriceFooter( shopBean.getFooter() );
 
-            shopPage.setDateUploadPrice( DateTools.getStringDate(shopBean.getDateUpload(), "dd MMM yyyy", renderRequest.getLocale()) );
-            shopPage.setTimeUploadPrice( DateTools.getStringDate(shopBean.getDateUpload(), "HH:mm", renderRequest.getLocale()) );
+            // TODO switch from TimeZone.getDefault() to site timezone
+            shopPage.setDateUploadPrice( DateTools.getStringDate(shopBean.getDateUpload(), "dd MMM yyyy", renderRequest.getLocale(), TimeZone.getDefault()) );
+            shopPage.setTimeUploadPrice( DateTools.getStringDate(shopBean.getDateUpload(), "HH:mm", renderRequest.getLocale(), TimeZone.getDefault()) );
 
 
             ShopPageParam shopParam = new ShopPageParam();
@@ -164,17 +166,15 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             }
 
             if (shopBean.getPrecisionList() != null) {
-                CurrencyPrecisionType item = shopBean.getPrecisionList().getCurrencyPrecision(shopParam.id_currency);
-                if (item != null)
+                CurrencyPrecisionBean item = shopBean.getPrecisionList().getCurrencyPrecision(shopParam.id_currency);
+                if (item != null) {
                     shopParam.precision = item;
+                }
             }
             else {
                     log.warn("Precision not defined. Use default - 2 digit.");
             }
 
-            // ��������� ���������� ��� ����������
-            // sort_direct == 0 �������� ���������� �� �����������,
-            // ����� ���������� �� ��������
             shopParam.sortBy = PortletService.getString(renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");
             shopParam.sortDirect = PortletService.getInt( renderRequest, ShopPortlet.NAME_SHOP_SORT_DIRECT, 1);
 

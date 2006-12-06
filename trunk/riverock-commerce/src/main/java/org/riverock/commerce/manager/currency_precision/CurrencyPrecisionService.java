@@ -24,7 +24,7 @@
 package org.riverock.commerce.manager.currency_precision;
 
 import org.riverock.commerce.manager.shop.ShopExtendedBean;
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 import org.riverock.commerce.bean.ShopBean;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 
@@ -56,16 +56,16 @@ public class CurrencyPrecisionService implements Serializable {
             return null;
         }
 
-        CurrencyBean defaultCurrencyBean=null;
+        Currency defaultCurrency =null;
         if (bean.getDefaultCurrencyId()!=null) {
-            defaultCurrencyBean=CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getDefaultCurrencyId());
+            defaultCurrency =CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getDefaultCurrencyId());
         }
 
-        CurrencyBean invoiceCurrencyBean=null;
+        Currency invoiceCurrency =null;
         if (bean.getInvoiceCurrencyId()!=null) {
-            invoiceCurrencyBean=CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getDefaultCurrencyId());
+            invoiceCurrency =CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getDefaultCurrencyId());
         }
 
-        return new ShopExtendedBean(bean, defaultCurrencyBean, invoiceCurrencyBean);
+        return new ShopExtendedBean(bean, defaultCurrency, invoiceCurrency);
     }
 }

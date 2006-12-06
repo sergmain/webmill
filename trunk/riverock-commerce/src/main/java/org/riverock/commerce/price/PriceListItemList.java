@@ -41,11 +41,11 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.XmlTools;
-import org.riverock.commerce.bean.price.CurrencyPrecisionType;
 import org.riverock.commerce.bean.price.CustomCurrencyItemType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.CurrencyPrecisionBean;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.schema.shop.HiddenParamType;
 import org.riverock.commerce.schema.shop.ItemListType;
@@ -236,8 +236,9 @@ public final class PriceListItemList {
                 item.setItemDescription(null);
 
                 PriceItemImage image = PriceItemImage.getInstance(shopParam.idSite);
-                if (image != null)
+                if (image != null) {
                     item.setItemImageFileName(image.getItemImage(idPk));
+                }
 
                 if (shopParam.isProcessInvoice) {
                     item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam.id_shop));
@@ -290,7 +291,7 @@ public final class PriceListItemList {
     }
 
     private static int getPrecisionValue( ShopBean shopBean, Long idCurrency ) {
-        CurrencyPrecisionType prec = shopBean.getPrecisionList().getCurrencyPrecision( idCurrency );
+        CurrencyPrecisionBean prec = shopBean.getPrecisionList().getCurrencyPrecision( idCurrency );
         if (prec==null)
             return 2;
 

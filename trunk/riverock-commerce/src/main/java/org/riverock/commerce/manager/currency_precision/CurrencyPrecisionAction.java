@@ -26,7 +26,7 @@ package org.riverock.commerce.manager.currency_precision;
 import org.apache.log4j.Logger;
 import org.riverock.commerce.bean.CurrencyPrecisionBean;
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 
 import java.io.Serializable;
 
@@ -109,14 +109,14 @@ public class CurrencyPrecisionAction implements Serializable {
             return;
         }
 
-        CurrencyBean currencyBean = CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getCurrencyId());
-        if (currencyBean==null) {
-            log.debug("CurrencyBean is null");
+        Currency currency = CommerceDaoFactory.getCurrencyDao().getCurrency(bean.getCurrencyId());
+        if (currency ==null) {
+            log.debug("Currency is null");
             currencyPrecisionSessionBean.setCurrencyPrecisionBean(null);
             return;
         }
 
-        CurrencyPrecisionExtendedBean currencyPrecisionExtendedBean = new CurrencyPrecisionExtendedBean(bean, currencyBean);
+        CurrencyPrecisionExtendedBean currencyPrecisionExtendedBean = new CurrencyPrecisionExtendedBean(bean, currency);
         log.debug("Set currencyPrecisionSessionBean.setCurrencyPrecisionBean to "+currencyPrecisionExtendedBean);
         currencyPrecisionSessionBean.setCurrentCurrencyPrecision(bean.getPrecision());
         currencyPrecisionSessionBean.setCurrencyPrecisionBean(currencyPrecisionExtendedBean);

@@ -37,61 +37,64 @@ import javax.persistence.Column;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 01.09.2006
- *         Time: 19:12:14
+ *         Date: 30.08.2006
+ *         Time: 20:02:15
  *         <p/>
  *         $Id$
  */
 @Entity
-@Table(name="wm_cash_curr_value")
+@Table(name = "wm_cash_curs_std")
 @TableGenerator(
-    name="TABLE_CASH_CURR_VALUE",
-    table="wm_portal_ids",
+    name = "TABLE_CASH_CURS_STD",
+    table = "wm_portal_ids",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
-    pkColumnValue = "wm_cash_curr_value",
+    pkColumnValue = "wm_cash_curs_std",
     allocationSize = 1,
     initialValue = 1
 )
-public class CurrencyCurrentCurs implements Serializable {
-    private static final long serialVersionUID = 2625005437L;
+public class StandardCurrencyCurs implements Serializable {
+    private static final long serialVersionUID = 7767005419L;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_CASH_CURR_VALUE")
-    @Column(name="ID_CURVAL")
-    private Long currencyCursId;
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_CASH_CURS_STD")
+    @Column(name = "ID_STD_CURS")
+    private Long standardCurrencyCursId;
 
-    @Column(name="ID_CURRENCY")
-    private Long currencyId;
-          
-    @Column(name="DATE_CHANGE")
-    private Date date;
+    @Column(name = "ID_STD_CURR")
+    private Long standardCurrencyId;
 
-    @Column(name="CURS")
+    @Column(name = "VALUE_CURS")
     private BigDecimal curs;
 
-    public Long getCurrencyCursId() {
-        return currencyCursId;
+    @Column(name = "DATE_CHANGE")
+    private Date created;
+
+    @Column(name = "IS_DELETED")
+    private boolean isDeleted;
+
+    public Long getStandardCurrencyId() {
+        return standardCurrencyId;
     }
 
-    public void setCurrencyCursId(Long currencyCursId) {
-        this.currencyCursId = currencyCursId;
+    public void setStandardCurrencyId(Long standardCurrencyId) {
+        this.standardCurrencyId = standardCurrencyId;
     }
 
-    public Long getCurrencyId() {
-        return currencyId;
+    public Long getStandardCurrencyCursId() {
+        return standardCurrencyCursId;
     }
 
-    public void setCurrencyId(Long currencyId) {
-        this.currencyId = currencyId;
+    public void setStandardCurrencyCursId(Long standardCurrencyCursId) {
+        this.standardCurrencyCursId = standardCurrencyCursId;
     }
 
-    public Date getDate() {
-        return date;
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public BigDecimal getCurs() {
@@ -100,5 +103,13 @@ public class CurrencyCurrentCurs implements Serializable {
 
     public void setCurs(BigDecimal curs) {
         this.curs = curs;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

@@ -24,7 +24,7 @@
 package org.riverock.commerce.manager.shop;
 
 import org.riverock.commerce.bean.ShopBean;
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 
 /**
  * @author Sergei Maslyukov
@@ -35,25 +35,25 @@ import org.riverock.commerce.manager.currency.CurrencyBean;
  */
 public class ShopExtendedBean {
     private ShopBean shopBean=null;
-    private CurrencyBean defaultCurrencyBean  = null;
-    private CurrencyBean invoiceCurrencyBean  = null;
+    private Currency defaultCurrency = null;
+    private Currency invoiceCurrency = null;
 
-    public ShopExtendedBean(ShopBean shopBean, CurrencyBean defaultCurrencyBean, CurrencyBean invoiceCurrencyBean) {
+    public ShopExtendedBean(ShopBean shopBean, Currency defaultCurrency, Currency invoiceCurrency) {
         this.shopBean = shopBean;
-        this.defaultCurrencyBean = defaultCurrencyBean;
-        this.invoiceCurrencyBean = invoiceCurrencyBean;
+        this.defaultCurrency = defaultCurrency;
+        this.invoiceCurrency = invoiceCurrency;
     }
 
     public String getDefaultCurrencyName() {
-        if (defaultCurrencyBean!=null) {
-            return defaultCurrencyBean.getCurrencyName();
+        if (defaultCurrency !=null) {
+            return defaultCurrency.getCurrencyName();
         }
         return "";
     }
 
     public String getInvoiceCurrencyName() {
-        if (invoiceCurrencyBean!=null) {
-            return invoiceCurrencyBean.getCurrencyName();
+        if (invoiceCurrency !=null) {
+            return invoiceCurrency.getCurrencyName();
         }
         return "";
     }
@@ -66,19 +66,19 @@ public class ShopExtendedBean {
         this.shopBean = shopBean;
     }
 
-    public CurrencyBean getDefaultCurrencyBean() {
-        return defaultCurrencyBean;
+    public Currency getDefaultCurrencyBean() {
+        return defaultCurrency;
     }
 
-    public void setDefaultCurrencyBean(CurrencyBean defaultCurrencyBean) {
-        this.defaultCurrencyBean = defaultCurrencyBean;
+    public void setDefaultCurrencyBean(Currency defaultCurrency) {
+        this.defaultCurrency = defaultCurrency;
     }
 
-    public CurrencyBean getInvoiceCurrencyBean() {
-        return invoiceCurrencyBean;
+    public Currency getInvoiceCurrencyBean() {
+        return invoiceCurrency;
     }
 
-    public void setInvoiceCurrencyBean(CurrencyBean invoiceCurrencyBean) {
-        this.invoiceCurrencyBean = invoiceCurrencyBean;
+    public void setInvoiceCurrencyBean(Currency invoiceCurrency) {
+        this.invoiceCurrency = invoiceCurrency;
     }
 }

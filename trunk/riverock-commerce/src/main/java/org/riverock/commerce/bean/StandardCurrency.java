@@ -1,8 +1,20 @@
 package org.riverock.commerce.bean;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Transient;
 
 import org.riverock.commerce.bean.price.CurrencyCurrentCursType;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
 
 /**
  * User: SergeMaslyukov
@@ -11,15 +23,54 @@ import org.riverock.commerce.bean.price.CurrencyCurrentCursType;
  * <p/>
  * $Id$
  */
+@Entity
+@Table(name = "wm_cash_currency_std")
+@TableGenerator(
+    name = "TABLE_CASH_CURRENCY_STD",
+    table = "wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_cash_currency_std",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class StandardCurrency implements Serializable {
 
-  private Long standardCurrencyId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_CASH_CURRENCY_STD")
+    @Column(name = "ID_STD_CURR")
+    private Long standardCurrencyId;
 
-  private String currencyCode;
+    @Column(name = "NAME_STD_CURR")
+    private String standardCurrencyName;
 
-  private String currencyName;
+    @Column(name = "CONVERT_CURRENCY")
+    private String standardCurrencyCode;
 
-  private CurrencyCurrentCursType currentCurs;
+    @Column(name = "IS_DELETED")
+    private boolean isDeleted;
+
+    @Transient
+    private CurrencyCurrentCursType currentCurs;
+
+    @Transient
+    private List<StandardCurrencyCurs> curses = new ArrayList<StandardCurrencyCurs>();
+
+    public List<StandardCurrencyCurs> getCurses() {
+        return curses;
+    }
+
+    public void setCurses(List<StandardCurrencyCurs> curses) {
+        this.curses = curses;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public Long getStandardCurrencyId() {
         return standardCurrencyId;
@@ -29,20 +80,20 @@ public class StandardCurrency implements Serializable {
         this.standardCurrencyId = standardCurrencyId;
     }
 
-    public String getCurrencyCode() {
-        return currencyCode;
+    public String getStandardCurrencyCode() {
+        return standardCurrencyCode;
     }
 
-    public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
+    public void setStandardCurrencyCode(String standardCurrencyCode) {
+        this.standardCurrencyCode = standardCurrencyCode;
     }
 
-    public String getCurrencyName() {
-        return currencyName;
+    public String getStandardCurrencyName() {
+        return standardCurrencyName;
     }
 
-    public void setCurrencyName(String currencyName) {
-        this.currencyName = currencyName;
+    public void setStandardCurrencyName(String standardCurrencyName) {
+        this.standardCurrencyName = standardCurrencyName;
     }
 
     public CurrencyCurrentCursType getCurrentCurs() {

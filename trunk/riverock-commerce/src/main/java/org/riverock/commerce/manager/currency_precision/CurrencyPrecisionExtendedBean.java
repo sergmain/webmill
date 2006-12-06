@@ -24,7 +24,7 @@
 package org.riverock.commerce.manager.currency_precision;
 
 import org.riverock.commerce.bean.CurrencyPrecisionBean;
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 
 /**
  * User: SergeMaslyukov
@@ -35,22 +35,22 @@ import org.riverock.commerce.manager.currency.CurrencyBean;
  */
 public class CurrencyPrecisionExtendedBean {
     private CurrencyPrecisionBean currencyPrecisionBean=null;
-    private CurrencyBean currencyBean=null;
+    private Currency currency =null;
 
     public CurrencyPrecisionExtendedBean() {
     }
 
-    public CurrencyPrecisionExtendedBean(CurrencyPrecisionBean currencyPrecisionBean, CurrencyBean currencyBean) {
+    public CurrencyPrecisionExtendedBean(CurrencyPrecisionBean currencyPrecisionBean, Currency currency) {
         this.currencyPrecisionBean = currencyPrecisionBean;
-        this.currencyBean = currencyBean;
+        this.currency = currency;
     }
 
     public CurrencyPrecisionBean getCurrencyPrecisionBean() {
         return currencyPrecisionBean;
     }
 
-    public CurrencyBean getCurrencyBean() {
-        return currencyBean;
+    public Currency getCurrencyBean() {
+        return currency;
     }
 }
 

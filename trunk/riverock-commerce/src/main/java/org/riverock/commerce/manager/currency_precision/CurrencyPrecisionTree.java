@@ -29,7 +29,7 @@ import org.riverock.commerce.bean.CurrencyPrecisionBean;
 import org.riverock.commerce.bean.ShopBean;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 import org.riverock.webmill.container.ContainerConstants;
 
 import java.io.Serializable;
@@ -97,10 +97,10 @@ public class CurrencyPrecisionTree implements Serializable {
             treeRoot.getChildren().add(shopNode);
 
             for (CurrencyPrecisionBean currencyPrecisionBean : CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(shop.getShopId())) {
-                CurrencyBean currencyBean =CommerceDaoFactory.getCurrencyDao().getCurrency(currencyPrecisionBean.getCurrencyId());
+                Currency currency =CommerceDaoFactory.getCurrencyDao().getCurrency(currencyPrecisionBean.getCurrencyId());
                 TreeNodeBase currencyPrecisionNode = new TreeNodeBase(
                     "currency-precision",
-                    currencyBean.getCurrencyName()+", " +currencyBean.getCurrencyCode() + " ["+ currencyPrecisionBean.getPrecision()+" digits]",
+                    currency.getCurrencyName()+", " + currency.getCurrencyCode() + " ["+ currencyPrecisionBean.getPrecision()+" digits]",
                     currencyPrecisionBean.getCurrencyPrecisionId().toString(),
                     false);
                 shopNode.getChildren().add(currencyPrecisionNode);

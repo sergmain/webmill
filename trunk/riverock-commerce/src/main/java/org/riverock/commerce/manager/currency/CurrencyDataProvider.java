@@ -41,12 +41,12 @@ import org.riverock.webmill.container.ContainerConstants;
 public class CurrencyDataProvider implements Serializable {
     private static final long serialVersionUID = 5595005509L;
 
-    public List<CurrencyBean> getCurrencyList() {
+    public List<Currency> getCurrencyList() {
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
-        List<CurrencyBean> list = CommerceDaoFactory.getCurrencyDao().getCurrencyList(siteId);
+        List<Currency> list = CommerceDaoFactory.getCurrencyDao().getCurrencyList(siteId);
         if (list==null) {
-            return new ArrayList<CurrencyBean>();
+            return new ArrayList<Currency>();
         }
         return list;
     }
