@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 
 import org.riverock.commerce.bean.CurrencyCurrentCurs;
 import org.riverock.commerce.bean.StandardCurrency;
+import org.riverock.commerce.bean.Currency;
 
 /**
  * @author Sergei Maslyukov

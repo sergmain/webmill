@@ -24,7 +24,7 @@
 package org.riverock.commerce.manager.currency_precision;
 
 import org.riverock.commerce.manager.shop.ShopExtendedBean;
-import org.riverock.commerce.manager.currency.Currency;
+import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.bean.ShopBean;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 

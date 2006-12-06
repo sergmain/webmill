@@ -26,7 +26,7 @@ package org.riverock.commerce.dao;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.riverock.commerce.manager.currency.Currency;
+import org.riverock.commerce.bean.Currency;
 
 /**
  * @author Sergei Maslyukov

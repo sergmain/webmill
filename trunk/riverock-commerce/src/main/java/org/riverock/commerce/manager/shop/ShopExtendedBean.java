@@ -24,7 +24,7 @@
 package org.riverock.commerce.manager.shop;
 
 import org.riverock.commerce.bean.ShopBean;
-import org.riverock.commerce.manager.currency.Currency;
+import org.riverock.commerce.bean.Currency;
 
 /**
  * @author Sergei Maslyukov

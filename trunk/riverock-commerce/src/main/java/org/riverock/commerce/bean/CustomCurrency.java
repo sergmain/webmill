@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.Serializable;
 
-import org.riverock.commerce.manager.currency.Currency;
+import org.riverock.commerce.bean.Currency;
 
 /**
  * @author Sergei Maslyukov

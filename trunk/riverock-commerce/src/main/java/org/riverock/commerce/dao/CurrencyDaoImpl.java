@@ -34,7 +34,7 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.commerce.manager.currency.Currency;
+import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.manager.currency.CurrencyCurs;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
