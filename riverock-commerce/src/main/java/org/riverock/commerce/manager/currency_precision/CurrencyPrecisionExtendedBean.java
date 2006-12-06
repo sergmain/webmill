@@ -24,7 +24,7 @@
 package org.riverock.commerce.manager.currency_precision;
 
 import org.riverock.commerce.bean.CurrencyPrecisionBean;
-import org.riverock.commerce.manager.currency.Currency;
+import org.riverock.commerce.bean.Currency;
 
 /**
  * User: SergeMaslyukov

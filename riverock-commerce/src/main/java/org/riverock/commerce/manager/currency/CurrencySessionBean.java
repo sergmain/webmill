@@ -26,6 +26,8 @@ package org.riverock.commerce.manager.currency;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.riverock.commerce.bean.Currency;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 31.08.2006

@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.bean.CurrencyCurrentCurs;
 import org.riverock.commerce.bean.StandardCurrency;
+import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.webmill.container.ContainerConstants;
 

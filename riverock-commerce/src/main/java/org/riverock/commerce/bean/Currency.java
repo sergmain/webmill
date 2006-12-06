@@ -21,12 +21,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.manager.currency;
+package org.riverock.commerce.bean;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
+
+import org.riverock.commerce.manager.currency.CurrencyCurs;
 
 /**
  * @author Sergei Maslyukov

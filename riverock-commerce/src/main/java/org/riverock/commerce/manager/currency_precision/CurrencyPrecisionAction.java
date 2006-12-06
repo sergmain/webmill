@@ -25,8 +25,8 @@ package org.riverock.commerce.manager.currency_precision;
 
 import org.apache.log4j.Logger;
 import org.riverock.commerce.bean.CurrencyPrecisionBean;
+import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.commerce.manager.currency.Currency;
 
 import java.io.Serializable;
 
