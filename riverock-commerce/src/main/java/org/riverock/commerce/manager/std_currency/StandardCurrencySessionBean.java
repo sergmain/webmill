@@ -26,6 +26,8 @@ package org.riverock.commerce.manager.std_currency;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.riverock.commerce.bean.StandardCurrency;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 29.08.2006
@@ -34,7 +36,7 @@ import java.math.BigDecimal;
 public class StandardCurrencySessionBean implements Serializable {
     private static final long serialVersionUID = 7767005504L;
 
-    private StandardCurrencyBean standardCurrencyBean = null;
+    private StandardCurrency standardCurrencyBean = null;
     private Long currentStandardCurrencyId = null;
     private BigDecimal currentCurs =null;
 
@@ -49,11 +51,11 @@ public class StandardCurrencySessionBean implements Serializable {
         this.currentCurs = currentCurs;
     }
 
-    public StandardCurrencyBean getStandardCurrencyBean() {
+    public StandardCurrency getStandardCurrency() {
         return standardCurrencyBean;
     }
 
-    public void setStandardCurrencyBean(StandardCurrencyBean standardCurrencyBean) {
+    public void setStandardCurrency(StandardCurrency standardCurrencyBean) {
         this.standardCurrencyBean = standardCurrencyBean;
     }
 

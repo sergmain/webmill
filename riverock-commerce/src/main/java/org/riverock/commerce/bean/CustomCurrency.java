@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.Serializable;
 
-import org.riverock.commerce.manager.currency.CurrencyBean;
-import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 
 /**
  * @author Sergei Maslyukov
@@ -40,28 +39,28 @@ import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
 public class CustomCurrency implements Serializable {
     private static final long serialVersionUID = 2625005163L;
     
-    private List<CurrencyBean> currencies = new ArrayList<CurrencyBean>();
-    private List<StandardCurrencyBean> standardCurrencies = new ArrayList<StandardCurrencyBean>();
+    private List<Currency> currencies = new ArrayList<Currency>();
+    private List<StandardCurrency> standardCurrencies = new ArrayList<StandardCurrency>();
 
-    public List<CurrencyBean> getCurrencies() {
+    public List<Currency> getCurrencies() {
         if (currencies==null) {
-            currencies = new ArrayList<CurrencyBean>();
+            currencies = new ArrayList<Currency>();
         }
         return currencies;
     }
 
-    public void setCurrencies(List<CurrencyBean> currencies) {
+    public void setCurrencies(List<Currency> currencies) {
         this.currencies = currencies;
     }
 
-    public List<StandardCurrencyBean> getStandardCurrencies() {
+    public List<StandardCurrency> getStandardCurrencies() {
         if (standardCurrencies==null) {
-            standardCurrencies = new ArrayList<StandardCurrencyBean>();
+            standardCurrencies = new ArrayList<StandardCurrency>();
         }
         return standardCurrencies;
     }
 
-    public void setStandardCurrencies(List<StandardCurrencyBean> standardCurrencies) {
+    public void setStandardCurrencies(List<StandardCurrency> standardCurrencies) {
         this.standardCurrencies = standardCurrencies;
     }
 }

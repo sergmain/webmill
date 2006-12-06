@@ -26,8 +26,8 @@ package org.riverock.commerce.manager.currency;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
 import org.riverock.commerce.bean.CurrencyCurrentCurs;
+import org.riverock.commerce.bean.StandardCurrency;
 
 /**
  * @author Sergei Maslyukov
@@ -39,8 +39,8 @@ import org.riverock.commerce.bean.CurrencyCurrentCurs;
 public class CurrencyExtendedBean implements Serializable {
     private static final long serialVersionUID = 55957005701L;
 
-    private CurrencyBean currencyBean  = null;
-    private StandardCurrencyBean standardCurrencyBean=null;
+    private Currency currency = null;
+    private StandardCurrency standardCurrencyBean=null;
     private BigDecimal realCurs=null;
 
     private CurrencyCurrentCurs currentCurs=null;
@@ -49,8 +49,8 @@ public class CurrencyExtendedBean implements Serializable {
     public CurrencyExtendedBean() {
     }
 
-    public CurrencyExtendedBean(CurrencyBean currencyBean, StandardCurrencyBean standardCurrencyBean, BigDecimal realCurs, CurrencyCurrentCurs currentCurs, CurrencyCurrentCurs currentStandardCurs) {
-        this.currencyBean = currencyBean;
+    public CurrencyExtendedBean(Currency currency, StandardCurrency standardCurrencyBean, BigDecimal realCurs, CurrencyCurrentCurs currentCurs, CurrencyCurrentCurs currentStandardCurs) {
+        this.currency = currency;
         this.standardCurrencyBean = standardCurrencyBean;
         this.realCurs = realCurs;
         this.currentCurs = currentCurs;
@@ -64,12 +64,12 @@ public class CurrencyExtendedBean implements Serializable {
         return standardCurrencyBean.getStandardCurrencyName();
     }
 
-    public CurrencyBean getCurrencyBean() {
-        return currencyBean;
+    public Currency getCurrencyBean() {
+        return currency;
     }
 
-    public void setCurrencyBean(CurrencyBean currencyBean) {
-        this.currencyBean = currencyBean;
+    public void setCurrencyBean(Currency currency) {
+        this.currency = currency;
     }
 
     public BigDecimal getRealCurs() {
@@ -80,7 +80,7 @@ public class CurrencyExtendedBean implements Serializable {
         this.realCurs = realCurs;
     }
 
-    public StandardCurrencyBean getStandardCurrencyBean() {
+    public StandardCurrency getStandardCurrencyBean() {
         return standardCurrencyBean;
     }
 

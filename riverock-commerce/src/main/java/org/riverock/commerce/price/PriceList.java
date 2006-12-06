@@ -72,11 +72,11 @@ public class PriceList {
             else if( ( obj != null ) && ( obj instanceof ShopBean ) ) {
                 shop = ( ShopBean ) obj;
             }
-            else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionType ) ) {
+            else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionBean ) ) {
                 if( log.isDebugEnabled() )
                     log.debug( "Redefine default value of precision" );
 
-                precision = ( ( CurrencyPrecisionType ) obj ).getPrecision();
+                precision = ( ( CurrencyPrecisionBean ) obj ).getPrecision();
             }
         }
 
@@ -133,11 +133,11 @@ public class PriceList {
             else if( ( obj != null ) && ( obj instanceof ShopBean ) ) {
                 shop = ( ShopBean ) obj;
             }
-            else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionType ) ) {
+            else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionBean ) ) {
                 if( log.isDebugEnabled() )
                     log.debug( "Redefine default value of precision" );
 
-                precision = ( ( CurrencyPrecisionType ) obj ).getPrecision();
+                precision = ( ( CurrencyPrecisionBean ) obj ).getPrecision();
             }
         }
 
@@ -329,20 +329,23 @@ public class PriceList {
                                 log.debug( "item idItem " + item.getItemId() + " inDb " + item.getInDb() );
                             }
 
-                            if( log.isDebugEnabled() )
+                            if( log.isDebugEnabled() ) {
                                 controllLoop( 35, order );
+                            }
 
                             break;
                         }
 
-                        if( log.isDebugEnabled() )
+                        if( log.isDebugEnabled() ) {
                             controllLoop( 4, order );
+                        }
                     }
                 }
             }
 
-            if( log.isDebugEnabled() )
+            if( log.isDebugEnabled() ) {
                 controllLoop( 5, order );
+            }
 
             // write to db all items, which not exists in db
             for (ShopOrderType shopOrder : order.getShopOrdertListList()) {

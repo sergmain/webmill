@@ -35,7 +35,7 @@ import java.math.BigDecimal;
  *         <p/>
  *         $Id$
  */
-public class CurrencyBean implements Serializable {
+public class Currency implements Serializable {
 
     private static final long serialVersionUID = 55957005501L;
 
@@ -49,19 +49,19 @@ public class CurrencyBean implements Serializable {
     private boolean isUseStandard = false;
     private List<CurrencyCurs> curses = new ArrayList<CurrencyCurs>();
 
-    public CurrencyBean() {
+    public Currency() {
     }
 
-    public CurrencyBean(CurrencyBean currencyBean) {
-        this.currencyId = currencyBean.getCurrencyId();
-        this.currencyName = currencyBean.getCurrencyName();
-        this.currencyCode = currencyBean.getCurrencyCode();
-        this.isUsed = currencyBean.isUsed();
-        this.isUseStandard = currencyBean.isUseStandard();
-        this.curses = currencyBean.getCurses();
-        this.standardCurrencyId = currencyBean.getStandardCurrencyId();
-        this.siteId = currencyBean.getSiteId();
-        this.percent = currencyBean.getPercent();
+    public Currency(Currency currency) {
+        this.currencyId = currency.getCurrencyId();
+        this.currencyName = currency.getCurrencyName();
+        this.currencyCode = currency.getCurrencyCode();
+        this.isUsed = currency.isUsed();
+        this.isUseStandard = currency.isUseStandard();
+        this.curses = currency.getCurses();
+        this.standardCurrencyId = currency.getStandardCurrencyId();
+        this.siteId = currency.getSiteId();
+        this.percent = currency.getPercent();
     }
 
     public BigDecimal getPercent() {

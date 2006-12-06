@@ -29,8 +29,8 @@ import java.math.BigDecimal;
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
 import org.riverock.commerce.bean.CurrencyCurrentCurs;
+import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -64,11 +64,11 @@ public class CurrencyAction implements Serializable {
     public String addCurrency() {
         log.debug("Start addCurrency()");
 
-        CurrencyBean currencyBean = new CurrencyBean();
-        currencyBean.setUsed(true);
+        Currency currency = new Currency();
+        currency.setUsed(true);
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        currencyBean.setSiteId(siteId);
-        currencySessionBean.setCurrencyBean( currencyBean );
+        currency.setSiteId(siteId);
+        currencySessionBean.setCurrencyBean(currency);
 
         return "currency-add";
     }
@@ -113,12 +113,12 @@ public class CurrencyAction implements Serializable {
     public String editCurrency() {
         log.debug("Start editCurrency()");
 
-        CurrencyBean currencyBean = CommerceDaoFactory.getCurrencyDao().getCurrency( currencySessionBean.getCurrentCurrencyId() );
-        if (currencyBean==null) {
+        Currency currency = CommerceDaoFactory.getCurrencyDao().getCurrency( currencySessionBean.getCurrentCurrencyId() );
+        if (currency ==null) {
             return "currency";
         }
 
-        currencySessionBean.setCurrencyBean( currencyBean );
+        currencySessionBean.setCurrencyBean(currency);
         return "currency-edit";
     }
 
@@ -145,7 +145,7 @@ public class CurrencyAction implements Serializable {
     }
 
     private void loadCurrentCurrency() {
-        CurrencyBean bean = CommerceDaoFactory.getCurrencyDao().getCurrency( currencySessionBean.getCurrentCurrencyId() );
+        Currency bean = CommerceDaoFactory.getCurrencyDao().getCurrency( currencySessionBean.getCurrentCurrencyId() );
         if (bean==null) {
             setSessionBean( new CurrencyExtendedBean() );
             return;
@@ -153,7 +153,7 @@ public class CurrencyAction implements Serializable {
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         CurrencyCurrentCurs currentCurs = CommerceDaoFactory.getCommonCurrencyDao().getCurrentCurs(bean.getCurrencyId(), siteId);
 
-        StandardCurrencyBean standardCurrencyBean=null;
+        StandardCurrency standardCurrencyBean=null;
         if (bean.isUseStandard() && bean.getStandardCurrencyId()!=null) {
             standardCurrencyBean=CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency(bean.getStandardCurrencyId());
         }

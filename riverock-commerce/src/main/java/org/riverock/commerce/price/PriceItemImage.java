@@ -31,6 +31,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.sql.cache.SqlStatement;
 
 /**
@@ -50,7 +52,7 @@ public class PriceItemImage {
     }
 
     public String getItemImage( Long id ) {
-        return ( String ) image.get( id );
+        return image.get( id );
     }
 
     public void reinit() {
@@ -69,28 +71,35 @@ public class PriceItemImage {
 
     private static long lastReadData = 0;
     private final static long LENGTH_TIME_PERIOD = 100000;
-    private static Object syncObject = new Object();
+    private static final Object syncObject = new Object();
 
-    public static PriceItemImage getInstance( Long siteId )
-        throws PriceException {
-        PriceItemImage image = null;
-        if( siteId != null )
-            image = ( PriceItemImage ) imageMap.get( siteId );
+    public static PriceItemImage getInstance( Long siteId ) {
 
-
-        synchronized( syncObject ) {
-            if( ( ( System.currentTimeMillis() - lastReadData ) > LENGTH_TIME_PERIOD )
-                || ( image == null ) ) {
-                if( log.isDebugEnabled() ) log.debug( "#15.01.03 reinit cached value " );
-
-                image = new PriceItemImage( siteId );
-                imageMap.put( siteId, image );
+        try {
+            PriceItemImage image = null;
+            if( siteId != null ) {
+                image = imageMap.get( siteId );
             }
-            else if( log.isDebugEnabled() ) log.debug( "Get from cache" );
 
+            synchronized( syncObject ) {
+                if( ( ( System.currentTimeMillis() - lastReadData ) > LENGTH_TIME_PERIOD )
+                    || ( image == null ) ) {
+                    if( log.isDebugEnabled() ) log.debug( "#15.01.03 reinit cached value " );
+
+                    image = new PriceItemImage( siteId );
+                    imageMap.put( siteId, image );
+                }
+                else if( log.isDebugEnabled() ) log.debug( "Get from cache" );
+
+            }
+            lastReadData = System.currentTimeMillis();
+            return image;
         }
-        lastReadData = System.currentTimeMillis();
-        return image;
+        catch (Throwable e) {
+            String es = "Error get image for item";
+            log.error(es, e);
+        }
+        return null;
     }
 
     static String sql_ = null;
@@ -115,8 +124,10 @@ public class PriceItemImage {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
+        DatabaseAdapter db_ = null;
         try {
-//            ps = db_.prepareStatement( sql_ );
+            db_ = DatabaseAdapter.getInstance();
+            ps = db_.prepareStatement( sql_ );
 
             RsetTools.setLong( ps, 1, idSite );
 
@@ -130,5 +141,11 @@ public class PriceItemImage {
             log.error( es, e );
             throw new PriceException( es, e );
         }
+        finally {
+            DatabaseManager.close( db_, rs, ps );
+            rs = null;
+            ps = null;
+            db_ = null;
     }
+}
 }

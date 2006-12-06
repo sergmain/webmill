@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 import javax.faces.model.SelectItem;
 
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.webmill.container.ContainerConstants;
@@ -50,13 +50,13 @@ public class ShopService implements Serializable {
     public List<SelectItem> getCurrencyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        List<CurrencyBean> beans = CommerceDaoFactory.getCurrencyDao().getCurrencyList(siteId);
-        for (CurrencyBean currencyBean : beans) {
-            if (currencyBean.getCurrencyId()==null) {
-                throw new IllegalStateException("getDefaultCurrencyId is null, currency name: " + currencyBean.getCurrencyName());
+        List<Currency> beans = CommerceDaoFactory.getCurrencyDao().getCurrencyList(siteId);
+        for (Currency currency : beans) {
+            if (currency.getCurrencyId()==null) {
+                throw new IllegalStateException("getDefaultCurrencyId is null, currency name: " + currency.getCurrencyName());
             }
 
-            list.add(new SelectItem(currencyBean.getCurrencyId(), currencyBean.getCurrencyName()));
+            list.add(new SelectItem(currency.getCurrencyId(), currency.getCurrencyName()));
         }
         return list;
     }

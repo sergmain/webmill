@@ -43,13 +43,13 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.commerce.dao.GetWmPriceListItem;
-import org.riverock.commerce.bean.price.CurrencyPrecisionType;
 import org.riverock.commerce.bean.price.CustomCurrencyItemType;
 import org.riverock.commerce.bean.price.OrderItemType;
 import org.riverock.commerce.bean.price.OrderType;
 import org.riverock.commerce.bean.price.ShopOrderType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.CurrencyPrecisionBean;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
@@ -723,7 +723,7 @@ public final class OrderLogic {
 
                     // если код валюты наименования совпадает с валютой в которой выводить заказ
                     int precisionValue = 2;
-                    CurrencyPrecisionType precision = null;
+                    CurrencyPrecisionBean precision = null;
                     if( item.getCurrencyItem().getCurrencyId().equals( shopBean.getInvoiceCurrencyId() ) ) {
                         item.setResultCurrency( item.getCurrencyItem() );
 
@@ -795,8 +795,8 @@ public final class OrderLogic {
         return item;
     }
 
-    private static CurrencyPrecisionType getPrecisionValue( CurrencyPrecisionList precList, Long idCurrency ) {
-        CurrencyPrecisionType prec;
+    private static CurrencyPrecisionBean getPrecisionValue( CurrencyPrecisionList precList, Long idCurrency ) {
+        CurrencyPrecisionBean prec;
         prec = precList.getCurrencyPrecision( idCurrency );
         if( prec == null ) {
             if( log.isDebugEnabled() ) {

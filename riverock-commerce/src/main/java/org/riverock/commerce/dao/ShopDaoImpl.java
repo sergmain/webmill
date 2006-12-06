@@ -69,7 +69,7 @@ public class ShopDaoImpl implements ShopDao {
 
             if( rs.next() ) {
                 ShopBean bean;
-                bean = initShopBean(rs, db_);
+                bean = initShopBean(rs);
 
                 return bean;
             }
@@ -85,7 +85,7 @@ public class ShopDaoImpl implements ShopDao {
         }
     }
 
-    private ShopBean initShopBean(ResultSet rs, DatabaseAdapter db_) throws SQLException {
+    private ShopBean initShopBean(ResultSet rs) throws SQLException {
         ShopBean bean = new ShopBean();
         bean.setShopId( RsetTools.getLong( rs, "ID_SHOP" )  );
         bean.setSiteId( RsetTools.getLong( rs, "ID_SITE" ) );
@@ -98,8 +98,8 @@ public class ShopDaoImpl implements ShopDao {
 
         bean.setFooter(RsetTools.getString( rs, "FOOTER_STRING" ));
         bean.setHeader(RsetTools.getString( rs, "HEADER_STRING" ));
-        bean.setDateUpload(RsetTools.getCalendar( rs, "LAST_DATE_UPLOAD" ));
-        bean.setDateCalcQuantity(RsetTools.getCalendar( rs, "DATE_CALC_QUANTITY" ));
+        bean.setDateUpload(RsetTools.getTimestamp( rs, "LAST_DATE_UPLOAD" ));
+        bean.setDateCalcQuantity(RsetTools.getTimestamp( rs, "DATE_CALC_QUANTITY" ));
         bean.setNewItemDays(RsetTools.getInt( rs, "NEW_ITEM_DAYS", 0));
         bean.setDigitsAfterComma(RsetTools.getInt( rs, "COMMAS_COUNT", 0));
 
@@ -107,11 +107,13 @@ public class ShopDaoImpl implements ShopDao {
         bean.setInvoiceCurrencyId(RsetTools.getLong( rs, "ID_ORDER_CURRENCY" ));
         bean.setDiscount(RsetTools.getDouble( rs, "DISCOUNT", 0.0));
 
-        if( bean.getDiscount() < 0 )
+        if( bean.getDiscount() < 0 ) {
             bean.setDiscount(0);
+        }
 
-        if( bean.getDiscount() >= 100 )
+        if( bean.getDiscount() >= 100 ) {
             bean.setDiscount(99);
+        }
 
 
         bean.setOpened(RsetTools.getInt( rs, "IS_CLOSE", 0)==0);
@@ -326,7 +328,7 @@ public class ShopDaoImpl implements ShopDao {
 
             List<ShopBean> list = new ArrayList<ShopBean>();
             while ( rs.next() ) {
-                ShopBean bean = initShopBean(rs, db_);
+                ShopBean bean = initShopBean(rs);
                 list.add(bean);
             }
             return list;

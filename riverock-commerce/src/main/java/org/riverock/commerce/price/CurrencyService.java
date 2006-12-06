@@ -94,8 +94,8 @@ public final class CurrencyService {
             while( rs.next() ) {
                 StandardCurrency currency = new StandardCurrency();
 
-                currency.setCurrencyCode( RsetTools.getString( rs, "CONVERT_CURRENCY" ) );
-                currency.setCurrencyName( RsetTools.getString( rs, "NAME_STD_CURR" ) );
+                currency.setStandardCurrencyCode( RsetTools.getString( rs, "CONVERT_CURRENCY" ) );
+                currency.setStandardCurrencyName( RsetTools.getString( rs, "NAME_STD_CURR" ) );
                 currency.setStandardCurrencyId( RsetTools.getLong( rs, "ID_STD_CURR" ) );
 
                 currency.setCurrentCurs( getStandardCurrencyCurs( db_, currency.getStandardCurrencyId() ) );
@@ -128,7 +128,7 @@ public final class CurrencyService {
 
         for (CustomCurrencyItemType item : list.getCurrencyList()) {
             if( log.isDebugEnabled() ) {
-                log.debug( "nameCurrency " + nameCurrency + ", item.getCurrencyCode() " + item.getCurrencyCode() );
+                log.debug( "nameCurrency " + nameCurrency + ", item.getStandardCurrencyCode() " + item.getCurrencyCode() );
             }
 
             if( item.getCurrencyCode() != null && item.getCurrencyCode().equals( nameCurrency ) ) {

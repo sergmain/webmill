@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.commerce.bean.StandardCurrency;
 
 /**
  * @author Sergei Maslyukov
@@ -40,10 +41,10 @@ public class StandardCurrencyService implements Serializable {
     public StandardCurrencyService() {
     }
 
-    public List<StandardCurrencyBean> getStandardCurrencyList() {
-        List<StandardCurrencyBean> list = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrencyList();
+    public List<StandardCurrency> getStandardCurrencyList() {
+        List<StandardCurrency> list = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrencyList();
         if (list==null) {
-            return new ArrayList<StandardCurrencyBean>();
+            return new ArrayList<StandardCurrency>();
         }
         return list;
     }

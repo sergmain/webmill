@@ -26,8 +26,7 @@ package org.riverock.commerce.dao;
 import java.util.List;
 import java.math.BigDecimal;
 
-import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.bean.StandardCurrency;
 
 /**
  * @author Sergei Maslyukov
@@ -35,15 +34,15 @@ import org.riverock.commerce.manager.currency.CurrencyBean;
  *         Time: 20:45:20
  */
 public interface StandardCurrencyDao {
-    List<StandardCurrencyBean> getStandardCurrencyList();
+    List<StandardCurrency> getStandardCurrencyList();
 
-    Long createStandardCurrency(StandardCurrencyBean standardCurrencyBean);
+    Long createStandardCurrency(StandardCurrency standardCurrencyBean);
 
-    void updateStandardCurrency(StandardCurrencyBean standardCurrencyBean);
+    void updateStandardCurrency(StandardCurrency standardCurrencyBean);
 
     void deleteStandardCurrency(Long standardCurrencyId);
 
-    StandardCurrencyBean getStandardCurrency(Long standardCurrencyId);
+    StandardCurrency getStandardCurrency(Long standardCurrencyId);
 
     void addStandardCurrencyCurs(Long standardCurrencyId, BigDecimal currentCurs);
 }

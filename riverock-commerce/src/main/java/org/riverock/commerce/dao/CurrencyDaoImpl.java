@@ -34,7 +34,7 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.commerce.manager.currency.CurrencyBean;
+import org.riverock.commerce.manager.currency.Currency;
 import org.riverock.commerce.manager.currency.CurrencyCurs;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -54,10 +54,10 @@ public class CurrencyDaoImpl implements CurrencyDao {
     /**
      * list of curs for currency not initialized
      *
-     * @return List<CurrencyBean>
+     * @return List<Currency>
      */
-    public List<CurrencyBean> getCurrencyList(Long siteId) {
-        List<CurrencyBean> list = new ArrayList<CurrencyBean>();
+    public List<Currency> getCurrencyList(Long siteId) {
+        List<Currency> list = new ArrayList<Currency>();
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -76,7 +76,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                CurrencyBean bean = initCurrencyBean(rs);
+                Currency bean = initCurrencyBean(rs);
                 list.add(bean);
             }
             return list;
@@ -91,7 +91,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
         }
     }
 
-    public Long createCurrency(CurrencyBean currencyBean) {
+    public Long createCurrency(Currency currency) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
@@ -113,13 +113,13 @@ public class CurrencyDaoImpl implements CurrencyDao {
             ps = adapter.prepareStatement(sql_);
 
             ps.setLong(1, id );
-            ps.setString(2, currencyBean.getCurrencyCode() );
-            ps.setInt(3, currencyBean.isUsed()?1:0 );
-            ps.setString(4, currencyBean.getCurrencyName() );
-            ps.setInt(5, currencyBean.isUseStandard()?1:0 );
-            ps.setLong(6, currencyBean.getStandardCurrencyId() );
-            ps.setLong(7, currencyBean.getSiteId() );
-            ps.setBigDecimal(8, currencyBean.getPercent() );
+            ps.setString(2, currency.getCurrencyCode() );
+            ps.setInt(3, currency.isUsed()?1:0 );
+            ps.setString(4, currency.getCurrencyName() );
+            ps.setInt(5, currency.isUseStandard()?1:0 );
+            ps.setLong(6, currency.getStandardCurrencyId() );
+            ps.setLong(7, currency.getSiteId() );
+            ps.setBigDecimal(8, currency.getPercent() );
 
             ps.executeUpdate();
 
@@ -141,8 +141,8 @@ public class CurrencyDaoImpl implements CurrencyDao {
         }
     }
 
-    public void updateCurrency(CurrencyBean currencyBean) {
-        if (currencyBean==null) {
+    public void updateCurrency(Currency currency) {
+        if (currency ==null) {
             return;
         }
         
@@ -165,20 +165,20 @@ public class CurrencyDaoImpl implements CurrencyDao {
 
             ps = adapter.prepareStatement(sql_);
 
-            ps.setString(1, currencyBean.getCurrencyName() );
-            ps.setString(2, currencyBean.getCurrencyCode() );
-            ps.setInt(3, currencyBean.isUsed()?1:0 );
-            ps.setInt(4, currencyBean.isUseStandard()?1:0 );
-            ps.setLong(5, currencyBean.getStandardCurrencyId() );
-            ps.setLong(6, currencyBean.getSiteId() );
-            ps.setBigDecimal(7, currencyBean.getPercent() );
+            ps.setString(1, currency.getCurrencyName() );
+            ps.setString(2, currency.getCurrencyCode() );
+            ps.setInt(3, currency.isUsed()?1:0 );
+            ps.setInt(4, currency.isUseStandard()?1:0 );
+            ps.setLong(5, currency.getStandardCurrencyId() );
+            ps.setLong(6, currency.getSiteId() );
+            ps.setBigDecimal(7, currency.getPercent() );
 
             // prepare PK
-            ps.setLong(8, currencyBean.getCurrencyId() );
+            ps.setLong(8, currency.getCurrencyId() );
 
             int i = ps.executeUpdate();
             if (log.isDebugEnabled()) {
-                log.debug("count of updated records; " + i+", PK: " +currencyBean.getCurrencyId());
+                log.debug("count of updated records; " + i+", PK: " + currency.getCurrencyId());
             }
 
             adapter.commit();
@@ -240,7 +240,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
         }
     }
 
-    public CurrencyBean getCurrency(Long currencyId) {
+    public Currency getCurrency(Long currencyId) {
         if (currencyId==null) {
             return null;
         }
@@ -262,9 +262,9 @@ public class CurrencyDaoImpl implements CurrencyDao {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                CurrencyBean currencyBean = initCurrencyBean(rs);
-                currencyBean.setCurses( getCurrencyCurses(db_, currencyId) );
-                return currencyBean;
+                Currency currency = initCurrencyBean(rs);
+                currency.setCurses( getCurrencyCurses(db_, currencyId) );
+                return currency;
             }
             return null;
         }
@@ -370,8 +370,8 @@ public class CurrencyDaoImpl implements CurrencyDao {
         return curs;
     }
 
-    private CurrencyBean initCurrencyBean(ResultSet rs) throws SQLException {
-        CurrencyBean bean = new CurrencyBean();
+    private Currency initCurrencyBean(ResultSet rs) throws SQLException {
+        Currency bean = new Currency();
 
         // ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE
         bean.setCurrencyId( RsetTools.getLong(rs, "ID_CURRENCY"));

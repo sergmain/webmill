@@ -34,8 +34,8 @@ import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.commerce.manager.std_currency.StandardCurrencyBean;
-import org.riverock.commerce.manager.std_currency.StandardCurrencyCurs;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
+import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
@@ -52,10 +52,10 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
     /**
      * list of curs for currency not initialized
      *
-     * @return List<StandardCurrencyBean>
+     * @return List<StandardCurrency>
      */
-    public List<StandardCurrencyBean> getStandardCurrencyList() {
-        List<StandardCurrencyBean> list = new ArrayList<StandardCurrencyBean>();
+    public List<StandardCurrency> getStandardCurrencyList() {
+        List<StandardCurrency> list = new ArrayList<StandardCurrency>();
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -73,8 +73,8 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                StandardCurrencyBean article = initStandardCurrencyBean(rs);
-                list.add(article);
+                StandardCurrency currency = initStandardCurrencyBean(rs);
+                list.add(currency);
             }
             return list;
         }
@@ -88,7 +88,7 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
         }
     }
 
-    public Long createStandardCurrency(StandardCurrencyBean standardCurrencyBean) {
+    public Long createStandardCurrency(StandardCurrency standardCurrencyBean) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
@@ -134,7 +134,7 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
         }
     }
 
-    public void updateStandardCurrency(StandardCurrencyBean standardCurrencyBean) {
+    public void updateStandardCurrency(StandardCurrency standardCurrencyBean) {
         String sql_ =
             "update WM_CASH_CURRENCY_STD "+
             "set"+
@@ -217,7 +217,7 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
         }
     }
 
-    public StandardCurrencyBean getStandardCurrency(Long standardCurrencyId) {
+    public StandardCurrency getStandardCurrency(Long standardCurrencyId) {
         if (standardCurrencyId==null) {
             return null;
         }
@@ -239,7 +239,7 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                StandardCurrencyBean standardCurrencyBean = initStandardCurrencyBean(rs);
+                StandardCurrency standardCurrencyBean = initStandardCurrencyBean(rs);
                 standardCurrencyBean.setCurses( getStandardCurrencyCurses(db_, standardCurrencyId) );
                 return standardCurrencyBean;
             }
@@ -347,12 +347,12 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
         return curs;
     }
 
-    private StandardCurrencyBean initStandardCurrencyBean(ResultSet rs) throws SQLException {
-        StandardCurrencyBean article = new StandardCurrencyBean();
+    private StandardCurrency initStandardCurrencyBean(ResultSet rs) throws SQLException {
+        StandardCurrency currency = new StandardCurrency();
 
-        article.setStandardCurrencyId( RsetTools.getLong(rs, "ID_STD_CURR"));
-        article.setStandardCurrencyName( RsetTools.getString(rs, "NAME_STD_CURR") );
-        article.setStandardCurrencyCode( RsetTools.getString(rs, "CONVERT_CURRENCY") );
-        return article;
+        currency.setStandardCurrencyId( RsetTools.getLong(rs, "ID_STD_CURR"));
+        currency.setStandardCurrencyName( RsetTools.getString(rs, "NAME_STD_CURR") );
+        currency.setStandardCurrencyCode( RsetTools.getString(rs, "CONVERT_CURRENCY") );
+        return currency;
     }
 }

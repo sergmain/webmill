@@ -25,12 +25,11 @@ package org.riverock.commerce.price;
 
 import org.apache.log4j.Logger;
 import org.riverock.commerce.bean.CurrencyPrecisionBean;
-import org.riverock.commerce.bean.price.CurrencyPrecisionListType;
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.commerce.bean.price.CurrencyPrecisionType;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * User: Admin
@@ -40,30 +39,34 @@ import java.util.List;
  * $Id$
  */
 @SuppressWarnings({"UnusedAssignment"})
-public class CurrencyPrecisionList extends CurrencyPrecisionListType implements Serializable {
+public class CurrencyPrecisionList implements Serializable {
     private static Logger log = Logger.getLogger( CurrencyPrecisionList.class );
 
-    public void initCurrencyPrecision(Long idShop) {
-        List<CurrencyPrecisionBean> list = CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(idShop);
-        for (CurrencyPrecisionBean bean : list) {
-            CurrencyPrecisionType prec = new CurrencyPrecisionType();
+    private List<CurrencyPrecisionBean> precisionsList = new ArrayList<CurrencyPrecisionBean>();
 
-            prec.setShopPrecisionId( bean.getCurrencyPrecisionId() );
-            prec.setCurrencyId( bean.getCurrencyId());
-            prec.setShopId( bean.getShopId() );
-            prec.setPrecision( bean.getPrecision() );
-
-            this.getPrecisionsList().add( prec );
+    public List<CurrencyPrecisionBean> getPrecisionsList() {
+        if (precisionsList==null) {
+            precisionsList = new ArrayList<CurrencyPrecisionBean>();
         }
+        return precisionsList;
     }
 
-    public CurrencyPrecisionType getCurrencyPrecision( Long idCurrency ) {
+    public void setPrecisionsList(List<CurrencyPrecisionBean> precisionsList) {
+        this.precisionsList = precisionsList;
+    }
+
+    public void initCurrencyPrecision(Long idShop) {
+        this.getPrecisionsList().clear();
+        this.getPrecisionsList().addAll( CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(idShop) );
+    }
+
+    public CurrencyPrecisionBean getCurrencyPrecision( Long idCurrency ) {
         if (log.isDebugEnabled()) {
             log.debug("count defined precision - "+this.getPrecisionsList().size());
             log.debug("id_currency - " + idCurrency);
         }
 
-        for (CurrencyPrecisionType prec : this.getPrecisionsList()) {
+        for (CurrencyPrecisionBean prec : this.getPrecisionsList()) {
             if (prec.getCurrencyId().equals(idCurrency))
                 return prec;
         }

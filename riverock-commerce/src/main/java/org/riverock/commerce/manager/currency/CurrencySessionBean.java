@@ -39,17 +39,17 @@ public class CurrencySessionBean implements Serializable {
     private CurrencyExtendedBean currencyExtendedBean = null;
     private Long currentCurrencyId = null;
     private BigDecimal currentCurs =null;
-    private CurrencyBean currencyBean = null;
+    private Currency currency = null;
 
     public CurrencySessionBean() {
     }
 
-    public CurrencyBean getCurrencyBean() {
-        return currencyBean;
+    public Currency getCurrencyBean() {
+        return currency;
     }
 
-    public void setCurrencyBean(CurrencyBean currencyBean) {
-        this.currencyBean = currencyBean;
+    public void setCurrencyBean(Currency currency) {
+        this.currency = currency;
     }
 
     public CurrencyExtendedBean getCurrencyExtendedBean() {
