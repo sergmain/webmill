@@ -154,7 +154,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
                 if (p==null) {
                     p = portatInfoMap.get(siteId);
                     if (p!=null) {
-                        return null;
+                        return p;
                     }
                 }
 
