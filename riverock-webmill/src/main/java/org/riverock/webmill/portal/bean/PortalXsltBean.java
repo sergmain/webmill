@@ -52,7 +52,7 @@ import org.riverock.interfaces.portal.bean.Xslt;
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_portal_xslt",
-    allocationSize=1,
+    allocationSize = 1,
     initialValue = 1
 )
 public class PortalXsltBean implements Serializable, Xslt {
