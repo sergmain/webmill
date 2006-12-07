@@ -84,7 +84,7 @@ public class ShopItem implements Serializable {
     /**
      * Field absolete
      */
-    private java.lang.Integer absolete = 0;
+    private java.lang.Integer obsolete = 0;
 
     /**
      * Field currency
@@ -94,7 +94,7 @@ public class ShopItem implements Serializable {
     /**
      * Field quantity
      */
-    private java.lang.Long quantity;
+    private Long quantity;
 
     /**
      * Field addDate
@@ -178,12 +178,12 @@ public class ShopItem implements Serializable {
         this.item = item;
     }
 
-    public Integer getAbsolete() {
-        return absolete;
+    public Integer getObsolete() {
+        return obsolete;
     }
 
-    public void setAbsolete(Integer absolete) {
-        this.absolete = absolete;
+    public void setObsolete(Integer obsolete) {
+        this.obsolete = obsolete;
     }
 
     public String getCurrency() {
