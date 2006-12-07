@@ -32,7 +32,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.commerce.bean.ShopOrderItem;
-import org.riverock.commerce.bean.price.OrderType;
+import org.riverock.commerce.bean.price.Invoice;
 import org.riverock.commerce.bean.price.ShopOrder;
 
 /**
@@ -186,11 +186,11 @@ public class PriceList {
     }
 */
 
-    private static void controllLoop( int idx, OrderType order ) {
+    private static void controllLoop( int idx, Invoice order ) {
         if( log.isDebugEnabled() ) {
             log.debug( "Check loop #" + idx );
-            for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+            for (ShopOrder shopOrder : order.getShopOrders()) {
+                for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                     log.debug( "id_item - " + item.getShopItem().getItemId() + ", isInDb - " + item.getInDb() );
                 }
             }
@@ -198,7 +198,7 @@ public class PriceList {
         }
     }
 
-    public static void synchronizeOrderWithDb( DatabaseAdapter dbDyn, OrderType order )
+    public static void synchronizeOrderWithDb( DatabaseAdapter dbDyn, Invoice order )
         throws Exception {
 
         PreparedStatement ps = null;
@@ -213,8 +213,8 @@ public class PriceList {
             rs = ps.executeQuery();
 
             // Before check, for all item we set flag isInDb to false
-            for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+            for (ShopOrder shopOrder : order.getShopOrders()) {
+                for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                     item.setInDb( false );
                 }
             }
@@ -229,15 +229,15 @@ public class PriceList {
                     log.debug( "Check item from DB with idItem - " + idItem );
 
                 // search in order from session item, which exist in db
-                for (ShopOrder shopOrder : order.getShopOrdertListList()) {
+                for (ShopOrder shopOrder : order.getShopOrders()) {
 
                     if( log.isDebugEnabled() ) {
                         controllLoop( 1, order );
                         log.debug( "check shop. idShop  - " + shopOrder.getShopId() );
-                        log.debug( "Count of items in shopOrder  - " + shopOrder.getOrderItemListList().size() );
+                        log.debug( "Count of items in shopOrder  - " + shopOrder.getShopOrderItems().size() );
                     }
 
-                    for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+                    for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
 
                         if( log.isDebugEnabled() ) {
                             log.debug( "item object - " + item );
@@ -349,8 +349,8 @@ public class PriceList {
             }
 
             // write to db all items, which not exists in db
-            for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+            for (ShopOrder shopOrder : order.getShopOrders()) {
+                for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                     if( log.isDebugEnabled() ) {
                         log.debug( "item object - " + item );
                         log.debug( "item idItem " + item.getShopItem().getItemId() );
