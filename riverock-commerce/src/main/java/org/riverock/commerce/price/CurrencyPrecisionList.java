@@ -24,7 +24,7 @@
 package org.riverock.commerce.price;
 
 import org.apache.log4j.Logger;
-import org.riverock.commerce.bean.CurrencyPrecisionBean;
+import org.riverock.commerce.bean.CurrencyPrecision;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 
 import java.io.Serializable;
@@ -42,16 +42,16 @@ import java.util.ArrayList;
 public class CurrencyPrecisionList implements Serializable {
     private static Logger log = Logger.getLogger( CurrencyPrecisionList.class );
 
-    private List<CurrencyPrecisionBean> precisionsList = new ArrayList<CurrencyPrecisionBean>();
+    private List<CurrencyPrecision> precisionsList = new ArrayList<CurrencyPrecision>();
 
-    public List<CurrencyPrecisionBean> getPrecisionsList() {
+    public List<CurrencyPrecision> getPrecisionsList() {
         if (precisionsList==null) {
-            precisionsList = new ArrayList<CurrencyPrecisionBean>();
+            precisionsList = new ArrayList<CurrencyPrecision>();
         }
         return precisionsList;
     }
 
-    public void setPrecisionsList(List<CurrencyPrecisionBean> precisionsList) {
+    public void setPrecisionsList(List<CurrencyPrecision> precisionsList) {
         this.precisionsList = precisionsList;
     }
 
@@ -60,13 +60,13 @@ public class CurrencyPrecisionList implements Serializable {
         this.getPrecisionsList().addAll( CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(idShop) );
     }
 
-    public CurrencyPrecisionBean getCurrencyPrecision( Long idCurrency ) {
+    public CurrencyPrecision getCurrencyPrecision( Long idCurrency ) {
         if (log.isDebugEnabled()) {
             log.debug("count defined precision - "+this.getPrecisionsList().size());
             log.debug("id_currency - " + idCurrency);
         }
 
-        for (CurrencyPrecisionBean prec : this.getPrecisionsList()) {
+        for (CurrencyPrecision prec : this.getPrecisionsList()) {
             if (prec.getCurrencyId().equals(idCurrency))
                 return prec;
         }

@@ -23,8 +23,6 @@
  */
 package org.riverock.commerce.bean;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -36,46 +34,56 @@ import javax.persistence.GenerationType;
 import javax.persistence.Column;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 01.09.2006
- *         Time: 19:12:14
- *         <p/>
- *         $Id$
+ * User: SergeMaslyukov
+ * Date: 06.09.2006
+ * Time: 0:07:34
+ * <p/>
+ * $Id$
  */
 @Entity
-@Table(name="wm_cash_curr_value")
+@Table(name="wm_price_shop_precision")
 @TableGenerator(
-    name="TABLE_CASH_CURR_VALUE",
+    name="TABLE_PRICE_SHOP_PRECISION",
     table="wm_portal_ids",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
-    pkColumnValue = "wm_cash_curr_value",
+    pkColumnValue = "wm_price_shop_precision",
     allocationSize = 1,
     initialValue = 1
 )
-public class CurrencyCurrentCurs implements Serializable {
-    private static final long serialVersionUID = 2625005437L;
-
+public class CurrencyPrecision implements Serializable {
+    private static final long serialVersionUID = 2625005325L;
+    
     @Id
-    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_CASH_CURR_VALUE")
-    @Column(name="ID_CURVAL")
-    private Long currencyCursId;
-
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PRICE_SHOP_PRECISION")
+    @Column(name="ID_PRICE_SHOP_PRECISION")
+    private Long currencyPrecisionId;
+                    
     @Column(name="ID_CURRENCY")
     private Long currencyId;
-          
-    @Column(name="DATE_CHANGE")
-    private Date date;
 
-    @Column(name="CURS")
-    private BigDecimal curs;
+    @Column(name="ID_SHOP")
+    private Long shopId;
 
-    public Long getCurrencyCursId() {
-        return currencyCursId;
+    @Column(name="PRECISION_SHOP")
+    private Integer precision;
+
+    public CurrencyPrecision() {
     }
 
-    public void setCurrencyCursId(Long currencyCursId) {
-        this.currencyCursId = currencyCursId;
+    public CurrencyPrecision(CurrencyPrecision bean) {
+        this.currencyPrecisionId = bean.getCurrencyPrecisionId();
+        this.currencyId = bean.getCurrencyId();
+        this.shopId = bean.getShopId();
+        this.precision = bean.getPrecision();
+    }
+
+    public Long getCurrencyPrecisionId() {
+        return currencyPrecisionId;
+    }
+
+    public void setCurrencyPrecisionId(Long currencyPrecisionId) {
+        this.currencyPrecisionId = currencyPrecisionId;
     }
 
     public Long getCurrencyId() {
@@ -86,19 +94,19 @@ public class CurrencyCurrentCurs implements Serializable {
         this.currencyId = currencyId;
     }
 
-    public Date getDate() {
-        return date;
+    public Long getShopId() {
+        return shopId;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 
-    public BigDecimal getCurs() {
-        return curs;
+    public Integer getPrecision() {
+        return precision;
     }
 
-    public void setCurs(BigDecimal curs) {
-        this.curs = curs;
+    public void setPrecision(Integer precision) {
+        this.precision = precision;
     }
 }

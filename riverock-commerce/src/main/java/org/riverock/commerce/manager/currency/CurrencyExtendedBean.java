@@ -26,7 +26,7 @@ package org.riverock.commerce.manager.currency;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import org.riverock.commerce.bean.CurrencyCurrentCurs;
+import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.bean.Currency;
 
@@ -44,18 +44,18 @@ public class CurrencyExtendedBean implements Serializable {
     private StandardCurrency standardCurrencyBean=null;
     private BigDecimal realCurs=null;
 
-    private CurrencyCurrentCurs currentCurs=null;
-    private CurrencyCurrentCurs currentStandardCurs=null;
+    private CurrencyCurs curs =null;
+    private CurrencyCurs standardCurs =null;
 
     public CurrencyExtendedBean() {
     }
 
-    public CurrencyExtendedBean(Currency currency, StandardCurrency standardCurrencyBean, BigDecimal realCurs, CurrencyCurrentCurs currentCurs, CurrencyCurrentCurs currentStandardCurs) {
+    public CurrencyExtendedBean(Currency currency, StandardCurrency standardCurrencyBean, BigDecimal realCurs, CurrencyCurs curs, CurrencyCurs standardCurs) {
         this.currency = currency;
         this.standardCurrencyBean = standardCurrencyBean;
         this.realCurs = realCurs;
-        this.currentCurs = currentCurs;
-        this.currentStandardCurs = currentStandardCurs;
+        this.curs = curs;
+        this.standardCurs = standardCurs;
     }
 
     public String getStandardCurrencyName() {
@@ -85,11 +85,11 @@ public class CurrencyExtendedBean implements Serializable {
         return standardCurrencyBean;
     }
 
-    public CurrencyCurrentCurs getCurrentCurs() {
-        return currentCurs;
+    public CurrencyCurs getCurrentCurs() {
+        return curs;
     }
 
-    public CurrencyCurrentCurs getCurrentStandardCurs() {
-        return currentStandardCurs;
+    public CurrencyCurs getCurrentStandardCurs() {
+        return standardCurs;
     }
 }

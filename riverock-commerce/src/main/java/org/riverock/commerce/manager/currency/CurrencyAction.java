@@ -29,7 +29,7 @@ import java.math.BigDecimal;
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.commerce.bean.CurrencyCurrentCurs;
+import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.jsf.FacesTools;
@@ -152,24 +152,24 @@ public class CurrencyAction implements Serializable {
             return;
         }
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        CurrencyCurrentCurs currentCurs = CommerceDaoFactory.getCommonCurrencyDao().getCurrentCurs(bean.getCurrencyId(), siteId);
+        CurrencyCurs curs = CommerceDaoFactory.getCommonCurrencyDao().getCurrentCurs(bean.getCurrencyId(), siteId);
 
         StandardCurrency standardCurrencyBean=null;
         if (bean.isUseStandard() && bean.getStandardCurrencyId()!=null) {
             standardCurrencyBean=CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency(bean.getStandardCurrencyId());
         }
 
-        CurrencyCurrentCurs currentStandardCurs=null;
+        CurrencyCurs standardCurs =null;
         if (standardCurrencyBean!=null) {
-            currentStandardCurs=CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(standardCurrencyBean.getStandardCurrencyId());
+            standardCurs =CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(standardCurrencyBean.getStandardCurrencyId());
         }
 
         BigDecimal realCurs;
         if (bean.isUseStandard()) {
-            realCurs=(currentStandardCurs!=null?currentStandardCurs.getCurs():null);
+            realCurs=(standardCurs !=null? standardCurs.getCurs():null);
         }
         else {
-            realCurs=(currentCurs!=null?currentCurs.getCurs():null);
+            realCurs=(curs !=null? curs.getCurs():null);
         }
 /*
         if (realCurs==null) {
@@ -177,7 +177,7 @@ public class CurrencyAction implements Serializable {
         }
 */
 
-        setSessionBean( new CurrencyExtendedBean(bean,standardCurrencyBean, realCurs, currentCurs, currentStandardCurs ) );
+        setSessionBean( new CurrencyExtendedBean(bean,standardCurrencyBean, realCurs, curs, standardCurs) );
     }
 
     private void setSessionBean(CurrencyExtendedBean currencyExtendedBean) {

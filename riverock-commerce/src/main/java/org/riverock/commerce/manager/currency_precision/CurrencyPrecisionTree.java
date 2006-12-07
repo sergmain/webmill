@@ -25,8 +25,8 @@ package org.riverock.commerce.manager.currency_precision;
 
 import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.tree2.*;
-import org.riverock.commerce.bean.CurrencyPrecisionBean;
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.CurrencyPrecision;
+import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.bean.Currency;
@@ -90,18 +90,18 @@ public class CurrencyPrecisionTree implements Serializable {
 
         TreeNode treeRoot = new TreeNodeBase("tree-root", "tree-root", false);
 
-        List<ShopBean> shops = CommerceDaoFactory.getShopDao().getShopList(siteId);
+        List<Shop> shops = CommerceDaoFactory.getShopDao().getShopList(siteId);
 
-        for (ShopBean shop : shops) {
+        for (Shop shop : shops) {
             TreeNodeBase shopNode = new TreeNodeBase("shop", shop.getShopName(), shop.getShopId().toString(), false);
             treeRoot.getChildren().add(shopNode);
 
-            for (CurrencyPrecisionBean currencyPrecisionBean : CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(shop.getShopId())) {
-                Currency currency =CommerceDaoFactory.getCurrencyDao().getCurrency(currencyPrecisionBean.getCurrencyId());
+            for (CurrencyPrecision currencyPrecision : CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(shop.getShopId())) {
+                Currency currency =CommerceDaoFactory.getCurrencyDao().getCurrency(currencyPrecision.getCurrencyId());
                 TreeNodeBase currencyPrecisionNode = new TreeNodeBase(
                     "currency-precision",
-                    currency.getCurrencyName()+", " + currency.getCurrencyCode() + " ["+ currencyPrecisionBean.getPrecision()+" digits]",
-                    currencyPrecisionBean.getCurrencyPrecisionId().toString(),
+                    currency.getCurrencyName()+", " + currency.getCurrencyCode() + " ["+ currencyPrecision.getPrecision()+" digits]",
+                    currencyPrecision.getCurrencyPrecisionId().toString(),
                     false);
                 shopNode.getChildren().add(currencyPrecisionNode);
             }

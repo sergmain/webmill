@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.Currency;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -61,10 +61,10 @@ public class ShopAction implements Serializable {
     public String addShop() {
         log.debug("Start addShop()");
 
-        ShopBean shopBean = new ShopBean();
+        Shop shop = new Shop();
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        shopBean.setSiteId(siteId);
-        shopSessionBean.setShopBean( shopBean );
+        shop.setSiteId(siteId);
+        shopSessionBean.setShopBean(shop);
 
         return "shop-add";
     }
@@ -86,12 +86,12 @@ public class ShopAction implements Serializable {
     public String editShop() {
         log.debug("Start editShop()");
 
-        ShopBean shopBean = CommerceDaoFactory.getShopDao().getShop( shopSessionBean.getCurrentShopId() );
-        if (shopBean==null) {
+        Shop shop = CommerceDaoFactory.getShopDao().getShop( shopSessionBean.getCurrentShopId() );
+        if (shop ==null) {
             return "shop";
         }
 
-        shopSessionBean.setShopBean( shopBean );
+        shopSessionBean.setShopBean(shop);
         return "shop-edit";
     }
 
@@ -125,7 +125,7 @@ public class ShopAction implements Serializable {
     }
 
     private void loadCurrentShop() {
-        ShopBean bean = CommerceDaoFactory.getShopDao().getShop( shopSessionBean.getCurrentShopId() );
+        Shop bean = CommerceDaoFactory.getShopDao().getShop( shopSessionBean.getCurrentShopId() );
         if (bean==null) {
             setSessionBean( null );
             return;

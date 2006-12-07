@@ -32,22 +32,22 @@
  <h:outputText value="#{msg.shop_info}"/>
  <h:panelGrid columns="2" border="0">
      <h:outputText value="#{msg.shop_id}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.shopBean.shopId}"/>
+     <h:outputText value="#{shopSessionBean.shopExtendedBean.shop.shopId}"/>
 
      <h:outputText value="#{msg.shop_name}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.shopBean.shopName}"/>
+     <h:outputText value="#{shopSessionBean.shopExtendedBean.shop.shopName}"/>
 
      <h:outputText value="#{msg.shop_code}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.shopBean.shopCode}"/>
+     <h:outputText value="#{shopSessionBean.shopExtendedBean.shop.shopCode}"/>
 
      <h:outputText value="#{msg.is_opened}"/>
      <h:panelGroup>
-         <t:graphicImage value="/images/yes.gif" rendered="#{shopSessionBean.shopExtendedBean.shopBean.opened}" border="0"/>
-         <t:graphicImage value="/images/no.gif" rendered="#{!shopSessionBean.shopExtendedBean.shopBean.opened}" border="0"/>
+         <t:graphicImage value="/images/yes.gif" rendered="#{shopSessionBean.shopExtendedBean.shop.opened}" border="0"/>
+         <t:graphicImage value="/images/no.gif" rendered="#{!shopSessionBean.shopExtendedBean.shop.opened}" border="0"/>
      </h:panelGroup>
 
      <h:outputText value="#{msg.shop_name_for_price_list}"/>
-     <h:outputText value="#{shopSessionBean.shopExtendedBean.shopBean.shopNameForPriceList}"/>
+     <h:outputText value="#{shopSessionBean.shopExtendedBean.shop.shopNameForPriceList}"/>
 
      <h:outputText value="#{msg.default_currency}"/>
      <h:outputText value="#{shopSessionBean.shopExtendedBean.defaultCurrencyName}"/>

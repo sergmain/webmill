@@ -57,7 +57,7 @@ import org.riverock.commerce.bean.price.ShopOrderType;
 import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.commerce.tools.SiteUtils;
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
@@ -109,7 +109,7 @@ public final class InvoicePortlet implements Portlet {
             if ( order == null )
                 return;
 
-            ShopBean shop = (ShopBean)session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
+            Shop shop = (Shop)session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
 
             AuthSession authSession = (AuthSession)renderRequest.getUserPrincipal();
             Integer shopGroupId = PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 );
@@ -286,7 +286,7 @@ public final class InvoicePortlet implements Portlet {
                     idx++;
                     if ( shopOrder.getOrderItemListList().size()>0 ) {
                         OrderItemType itemTemp = shopOrder.getOrderItemListList().get(0);
-                        ShopBean shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
+                        Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
 
                         s = bundle.getString( "reg.send_order.shop-header" );
                         orderCustomString +=
@@ -331,7 +331,7 @@ public final class InvoicePortlet implements Portlet {
                     int currentPrecision = 0;
                     for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
                         OrderItemType itemTemp = shopOrder.getOrderItemListList().get(0);
-                        ShopBean shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
+                        Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
 
                         s = bundle.getString( "reg.send_order.shop-header" );
                         orderAdminString +=
@@ -491,7 +491,7 @@ public final class InvoicePortlet implements Portlet {
             out.write( "<table border=\"0\" cellpadding=\"2px\" cellspacing=\"2px\">\n" );
             for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
                 if ( shopOrder.getOrderItemListList().size()>0 ) {
-                    ShopBean shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
+                    Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
                     out.write( "<tr>\n<td colspan=\"6\" align=\"left\" border=\"0\">\n" );
                     out.write( shopBean.getShopNameForPriceList() );
                     out.write( "</td>\n<tr>\n" );

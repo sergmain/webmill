@@ -23,7 +23,7 @@
  */
 package org.riverock.commerce.manager.shop;
 
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.Currency;
 
 /**
@@ -34,12 +34,12 @@ import org.riverock.commerce.bean.Currency;
  *         $Id$
  */
 public class ShopExtendedBean {
-    private ShopBean shopBean=null;
+    private Shop shop =null;
     private Currency defaultCurrency = null;
     private Currency invoiceCurrency = null;
 
-    public ShopExtendedBean(ShopBean shopBean, Currency defaultCurrency, Currency invoiceCurrency) {
-        this.shopBean = shopBean;
+    public ShopExtendedBean(Shop shop, Currency defaultCurrency, Currency invoiceCurrency) {
+        this.shop = shop;
         this.defaultCurrency = defaultCurrency;
         this.invoiceCurrency = invoiceCurrency;
     }
@@ -58,12 +58,12 @@ public class ShopExtendedBean {
         return "";
     }
 
-    public ShopBean getShopBean() {
-        return shopBean;
+    public Shop getShop() {
+        return shop;
     }
 
-    public void setShopBean(ShopBean shopBean) {
-        this.shopBean = shopBean;
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     public Currency getDefaultCurrencyBean() {

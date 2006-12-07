@@ -24,7 +24,7 @@
 package org.riverock.commerce.dao;
 
 import org.apache.log4j.Logger;
-import org.riverock.commerce.bean.CurrencyPrecisionBean;
+import org.riverock.commerce.bean.CurrencyPrecision;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -46,7 +46,7 @@ import java.util.List;
 public class CurrencyPrecisionDaoImpl implements CurrencyPrecisionDao {
     private static Logger log = Logger.getLogger( CurrencyPrecisionDaoImpl.class );
 
-    public CurrencyPrecisionBean getCurrencyPrecision(Long currencyPrecisionId) {
+    public CurrencyPrecision getCurrencyPrecision(Long currencyPrecisionId) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter db=null;
@@ -77,7 +77,7 @@ public class CurrencyPrecisionDaoImpl implements CurrencyPrecisionDao {
         }
     }
 
-    public List<CurrencyPrecisionBean> getCurrencyPrecisionList(Long shopId) {
+    public List<CurrencyPrecision> getCurrencyPrecisionList(Long shopId) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter db=null;
@@ -93,9 +93,9 @@ public class CurrencyPrecisionDaoImpl implements CurrencyPrecisionDao {
             RsetTools.setLong(ps, 1, shopId);
             rs = ps.executeQuery();
 
-            List<CurrencyPrecisionBean> list = new ArrayList<CurrencyPrecisionBean>();
+            List<CurrencyPrecision> list = new ArrayList<CurrencyPrecision>();
             while (rs.next()) {
-                CurrencyPrecisionBean prec = initCurrencyPrecision(rs);
+                CurrencyPrecision prec = initCurrencyPrecision(rs);
                 list.add( prec );
             }
             return list;
@@ -145,8 +145,8 @@ public class CurrencyPrecisionDaoImpl implements CurrencyPrecisionDao {
         }
     }
 
-    private CurrencyPrecisionBean initCurrencyPrecision(ResultSet rs) throws SQLException {
-        CurrencyPrecisionBean prec = new CurrencyPrecisionBean();
+    private CurrencyPrecision initCurrencyPrecision(ResultSet rs) throws SQLException {
+        CurrencyPrecision prec = new CurrencyPrecision();
 
         prec.setCurrencyPrecisionId( RsetTools.getLong(rs, "ID_PRICE_SHOP_PRECISION"));
         prec.setCurrencyId(RsetTools.getLong(rs, "ID_CURRENCY"));

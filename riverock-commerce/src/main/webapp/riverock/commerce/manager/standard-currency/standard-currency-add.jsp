@@ -51,7 +51,7 @@
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
     <h:form id="add_standard_currency_form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:panelGrid columns="1" rendered="#{!empty standardCurrencySessionBean.standardCurrencyBean and isUserInRole['webmill.portal-manager']}">
+        <h:panelGrid columns="1" rendered="#{!empty standardCurrencySessionBean.standardCurrency and isUserInRole['webmill.portal-manager']}">
 
             <f:subview id="subviewStandardCurrencyInfo">
                 <jsp:include page="standard-currency-add-edit.jsp"/>

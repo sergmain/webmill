@@ -25,7 +25,7 @@ package org.riverock.commerce.manager.shop;
 
 import java.io.Serializable;
 
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 
 /**
  * @author Sergei Maslyukov
@@ -39,7 +39,7 @@ public class ShopSessionBean implements Serializable {
 
     private ShopExtendedBean shopExtendedBean = null;
     private Long currentShopId = null;
-    private ShopBean shopBean = null;
+    private Shop shop = null;
 
     public ShopSessionBean() {
     }
@@ -60,12 +60,12 @@ public class ShopSessionBean implements Serializable {
         this.currentShopId = currentShopId;
     }
 
-    public ShopBean getShopBean() {
-        return shopBean;
+    public Shop getShopBean() {
+        return shop;
     }
 
-    public void setShopBean(ShopBean shopBean) {
-        this.shopBean = shopBean;
+    public void setShopBean(Shop shop) {
+        this.shop = shop;
     }
 }
 

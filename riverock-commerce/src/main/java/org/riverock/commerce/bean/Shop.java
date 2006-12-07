@@ -55,7 +55,7 @@ import org.riverock.commerce.price.CurrencyPrecisionList;
     allocationSize = 1,
     initialValue = 1
 )
-public class ShopBean implements Serializable {
+public class Shop implements Serializable {
     private static final long serialVersionUID = 2625005780L;
 
     @Id

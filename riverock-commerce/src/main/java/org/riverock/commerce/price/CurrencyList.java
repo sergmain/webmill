@@ -23,12 +23,13 @@
  */
 package org.riverock.commerce.price;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
-import org.riverock.commerce.bean.price.CustomCurrencyType;
-import org.riverock.commerce.bean.price.WmCashCurrencyItemType;
-import org.riverock.commerce.bean.price.WmCashCurrencyListType;
-import org.riverock.commerce.dao.GetWmCashCurrencyWithIdSiteList;
+import org.riverock.commerce.bean.Currency;
+import org.riverock.commerce.bean.CustomCurrency;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 
@@ -42,7 +43,7 @@ import org.riverock.generic.db.DatabaseManager;
 public class CurrencyList {
     private static Logger log = Logger.getLogger( CurrencyList.class );
 
-    public CustomCurrencyType list = new CustomCurrencyType();
+    public CustomCurrency list = new CustomCurrency();
 
     public CurrencyList() {
     }
@@ -57,13 +58,13 @@ public class CurrencyList {
         }
     }
 
-    private static void fillRealCurrencyData( CustomCurrencyType currency ) throws Exception {
+    private static void fillRealCurrencyData( CustomCurrency currency ) throws Exception {
         if (currency==null) {
             return;
         }
 
-        for (CurrencyItem item : currency.getCurrencyList()) {
-            item.fillRealCurrencyData( currency.getStandardCurrencyList() );
+        for (CurrencyItem item : currency.getCurrencies()) {
+            item.fillRealCurrencyData( currency.getStandardCurrencies() );
         }
     }
 
@@ -71,10 +72,10 @@ public class CurrencyList {
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            WmCashCurrencyListType currList = GetWmCashCurrencyWithIdSiteList.getInstance(db_, idSite).item;
-            for (WmCashCurrencyItemType item : currList.getWmCashCurrencyList()) {
-                list.getCurrencyList().add( new CurrencyItem(db_, item) );
-                list.setStandardCurrencyList( CurrencyService.getStandardCurrencyList(db_) );
+            List<Currency> currList = CommerceDaoFactory.getCurrencyDao().getCurrencyList(idSite);
+            for (Currency item : currList) {
+                list.getCurrencies().add( new CurrencyItem(db_, item) );
+                list.setStandardCurrencies( CurrencyService.getStandardCurrencyList(db_) );
             }
         }
         catch (Error e) {

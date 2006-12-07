@@ -26,6 +26,8 @@ package org.riverock.commerce.bean.price;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.riverock.commerce.price.CurrencyItem;
+
 /**
  * Class OrderItemType.
  *
@@ -68,12 +70,12 @@ public class OrderItemType extends WmPriceListItemType implements Serializable {
     /**
      * Field currencyItem
      */
-    private CustomCurrencyItemType currencyItem;
+    private CurrencyItem currencyItem;
 
     /**
      * Field resultCurrency
      */
-    private CustomCurrencyItemType resultCurrency;
+    private CurrencyItem resultCurrency;
 
     public Integer getCountItem() {
         return countItem;
@@ -123,19 +125,19 @@ public class OrderItemType extends WmPriceListItemType implements Serializable {
         this.discount = discount;
     }
 
-    public CustomCurrencyItemType getCurrencyItem() {
+    public CurrencyItem getCurrencyItem() {
         return currencyItem;
     }
 
-    public void setCurrencyItem(CustomCurrencyItemType currencyItem) {
+    public void setCurrencyItem(CurrencyItem currencyItem) {
         this.currencyItem = currencyItem;
     }
 
-    public CustomCurrencyItemType getResultCurrency() {
+    public CurrencyItem getResultCurrency() {
         return resultCurrency;
     }
 
-    public void setResultCurrency(CustomCurrencyItemType resultCurrency) {
+    public void setResultCurrency(CurrencyItem resultCurrency) {
         this.resultCurrency = resultCurrency;
     }
 }

@@ -33,7 +33,7 @@ import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
@@ -49,7 +49,7 @@ import org.riverock.common.tools.RsetTools;
 public class ShopDaoImpl implements ShopDao {
     private final static Logger log = Logger.getLogger( ShopDaoImpl.class );
 
-    public ShopBean getShop(Long shopId) {
+    public Shop getShop(Long shopId) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
@@ -68,7 +68,7 @@ public class ShopDaoImpl implements ShopDao {
             rs = ps.executeQuery();
 
             if( rs.next() ) {
-                ShopBean bean;
+                Shop bean;
                 bean = initShopBean(rs);
 
                 return bean;
@@ -85,8 +85,8 @@ public class ShopDaoImpl implements ShopDao {
         }
     }
 
-    private ShopBean initShopBean(ResultSet rs) throws SQLException {
-        ShopBean bean = new ShopBean();
+    private Shop initShopBean(ResultSet rs) throws SQLException {
+        Shop bean = new Shop();
         bean.setShopId( RsetTools.getLong( rs, "ID_SHOP" )  );
         bean.setSiteId( RsetTools.getLong( rs, "ID_SITE" ) );
         bean.setProcessInvoice(RsetTools.getInt( rs, "IS_PROCESS_INVOICE", 0) == 1);
@@ -130,10 +130,10 @@ public class ShopDaoImpl implements ShopDao {
 
     /**
      *
-     * @param shopBean
+     * @param shop
      * @return
      */
-    public Long createShop(ShopBean shopBean) {
+    public Long createShop(Shop shop) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
@@ -160,21 +160,21 @@ public class ShopDaoImpl implements ShopDao {
             ps.setLong(1, id );
 
             // TODO is_closed == (!isOpened)
-            ps.setInt(2, shopBean.isOpened()?0:1 );
-            ps.setInt(3, shopBean.isProcessInvoice()?1:0 );
-            ps.setString(4, shopBean.getShopNameForPriceList() );
-            ps.setInt(5, shopBean.isNeedRecalc()?1:0 );
-            ps.setLong(6, shopBean.getSiteId() );
-            ps.setString(7, shopBean.getShopCode() );
-            ps.setLong(8, shopBean.getDefaultCurrencyId() );
-            ps.setInt(9, shopBean.isDefaultCurrency()?1:0 );
-            ps.setInt(10, shopBean.isNeedProcessing()?1:0 );
-            ps.setInt(11, shopBean.getDigitsAfterComma() );
-            ps.setBigDecimal(12, new BigDecimal(shopBean.getDiscount()) );
-            ps.setString(13, shopBean.getShopCode() );
-            ps.setString(14, shopBean.getShopCode() );
-            ps.setLong(15, shopBean.getDefaultCurrencyId() );
-            ps.setString(16, shopBean.getShopName() );
+            ps.setInt(2, shop.isOpened()?0:1 );
+            ps.setInt(3, shop.isProcessInvoice()?1:0 );
+            ps.setString(4, shop.getShopNameForPriceList() );
+            ps.setInt(5, shop.isNeedRecalc()?1:0 );
+            ps.setLong(6, shop.getSiteId() );
+            ps.setString(7, shop.getShopCode() );
+            ps.setLong(8, shop.getDefaultCurrencyId() );
+            ps.setInt(9, shop.isDefaultCurrency()?1:0 );
+            ps.setInt(10, shop.isNeedProcessing()?1:0 );
+            ps.setInt(11, shop.getDigitsAfterComma() );
+            ps.setBigDecimal(12, new BigDecimal(shop.getDiscount()) );
+            ps.setString(13, shop.getShopCode() );
+            ps.setString(14, shop.getShopCode() );
+            ps.setLong(15, shop.getDefaultCurrencyId() );
+            ps.setString(16, shop.getShopName() );
 
             ps.executeUpdate();
 
@@ -196,8 +196,8 @@ public class ShopDaoImpl implements ShopDao {
         }
     }
 
-    public void updateShop(ShopBean shopBean) {
-        if (shopBean==null) {
+    public void updateShop(Shop shop) {
+        if (shop ==null) {
             return;
         }
 
@@ -231,28 +231,28 @@ public class ShopDaoImpl implements ShopDao {
             ps = adapter.prepareStatement(sql_);
 
             // TODO is_closed == (!isOpened)
-            ps.setInt(1, shopBean.isOpened()?0:1 );
-            ps.setInt(2, shopBean.isProcessInvoice()?1:0 );
-            ps.setString(3, shopBean.getShopNameForPriceList() );
-            ps.setInt(4, shopBean.isNeedRecalc()?1:0 );
-            ps.setLong(5, shopBean.getSiteId() );
-            ps.setString(6, shopBean.getShopCode() );
-            ps.setLong(7, shopBean.getDefaultCurrencyId() );
-            ps.setInt(8, shopBean.isDefaultCurrency()?1:0 );
-            ps.setInt(9, shopBean.isNeedProcessing()?1:0 );
-            ps.setInt(10, shopBean.getDigitsAfterComma() );
-            ps.setBigDecimal(11, new BigDecimal(shopBean.getDiscount()) );
-            ps.setString(12, shopBean.getShopCode() );
-            ps.setString(13, shopBean.getShopCode() );
-            ps.setLong(14, shopBean.getDefaultCurrencyId() );
-            ps.setString(15, shopBean.getShopName() );
+            ps.setInt(1, shop.isOpened()?0:1 );
+            ps.setInt(2, shop.isProcessInvoice()?1:0 );
+            ps.setString(3, shop.getShopNameForPriceList() );
+            ps.setInt(4, shop.isNeedRecalc()?1:0 );
+            ps.setLong(5, shop.getSiteId() );
+            ps.setString(6, shop.getShopCode() );
+            ps.setLong(7, shop.getDefaultCurrencyId() );
+            ps.setInt(8, shop.isDefaultCurrency()?1:0 );
+            ps.setInt(9, shop.isNeedProcessing()?1:0 );
+            ps.setInt(10, shop.getDigitsAfterComma() );
+            ps.setBigDecimal(11, new BigDecimal(shop.getDiscount()) );
+            ps.setString(12, shop.getShopCode() );
+            ps.setString(13, shop.getShopCode() );
+            ps.setLong(14, shop.getDefaultCurrencyId() );
+            ps.setString(15, shop.getShopName() );
 
             // prepare PK
-            ps.setLong(16, shopBean.getShopId() );
+            ps.setLong(16, shop.getShopId() );
 
             int i = ps.executeUpdate();
             if (log.isDebugEnabled()) {
-                log.debug("count of updated records; " + i+", PK: " +shopBean.getShopId());
+                log.debug("count of updated records; " + i+", PK: " + shop.getShopId());
             }
 
             adapter.commit();
@@ -308,7 +308,7 @@ public class ShopDaoImpl implements ShopDao {
         }
     }
 
-    public List<ShopBean> getShopList(Long siteId) {
+    public List<Shop> getShopList(Long siteId) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
@@ -326,9 +326,9 @@ public class ShopDaoImpl implements ShopDao {
             RsetTools.setLong( ps, 1, siteId );
             rs = ps.executeQuery();
 
-            List<ShopBean> list = new ArrayList<ShopBean>();
+            List<Shop> list = new ArrayList<Shop>();
             while ( rs.next() ) {
-                ShopBean bean = initShopBean(rs);
+                Shop bean = initShopBean(rs);
                 list.add(bean);
             }
             return list;
