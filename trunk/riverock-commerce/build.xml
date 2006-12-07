@@ -65,7 +65,10 @@
         <pathelement location="${lib.dir}/${myfaces-tomahawk.lib}"/>
 
         <pathelement location="${lib.dir}/${ehcache.lib}"/>
-
+        <pathelement location="${lib.dir}/${hibernate-annotation.lib}"/>
+        <pathelement location="${lib.dir}/${hibernate.lib}"/>
+        <pathelement location="${lib.dir}/${ejb3-persistence.lib}"/>
+                                                         
         <pathelement location="${lib.dir}/${jaxb-api.lib}"/>
         <pathelement location="${lib.dir}/${jsr173_1.0_api.lib}"/>
     </path>
@@ -133,13 +136,21 @@
         <include name="${commons-beanutils.lib}"/>
         <include name="${commons-codec.lib}"/>
         <include name="${log4j.lib}"/>
-        <include name="${castor.lib}"/>
 
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>
         <include name="${myfaces-tomahawk.lib}"/>
 
         <include name="${ehcache.lib}"/>
+
+        <include name="${ejb3-persistence.lib}"/>
+        <include name="${hibernate.lib}"/>
+        <include name="${hibernate-annotation.lib}"/>
+        <include name="${dom4j.lib}"/>
+        <include name="${cglib.lib}"/>
+        <include name="${antlr.lib}"/>
+        <include name="${asm.lib}"/>
+        <include name="${jta.lib}"/>
 
     </patternset>
 
