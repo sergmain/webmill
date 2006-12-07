@@ -42,10 +42,10 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.commerce.bean.price.OrderItem;
+import org.riverock.commerce.bean.ShopOrderItem;
 import org.riverock.commerce.bean.price.OrderType;
 import org.riverock.commerce.bean.price.ShopOrder;
-import org.riverock.commerce.bean.price.ShopItem;
+import org.riverock.commerce.bean.ShopItem;
 import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.CurrencyPrecision;
 import org.riverock.commerce.dao.CommerceDaoFactory;
@@ -370,7 +370,7 @@ public final class OrderLogic {
             return false;
 
         for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-            for (OrderItem item : shopOrder.getOrderItemListList()) {
+            for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
                 if( idItem.equals( item.getShopItem().getItemId() ) )
                     return true;
             }
@@ -385,7 +385,7 @@ public final class OrderLogic {
         }
 
         // в методе initOrderItem выводится дополнительная информация в DEBUG
-        OrderItem item = initOrderItem(idItem, siteId );
+        ShopOrderItem item = initOrderItem(idItem, siteId );
         if( log.isDebugEnabled() ) {
             log.debug( "idShop of created item - " + item.getShopItem().getShopId() );
         }
@@ -413,7 +413,7 @@ public final class OrderLogic {
                     }
 
                     shopOrder = shopOrderTemp;
-                    for (OrderItem orderItem : shopOrderTemp.getOrderItemListList()) {
+                    for (ShopOrderItem orderItem : shopOrderTemp.getOrderItemListList()) {
                         if( orderItem.getShopItem().getItemId().equals( idItem ) ) {
                             if( log.isDebugEnabled() ) {
                                 log.debug( "Нужное наименвание найдено, old count " + orderItem.getCountItem() + ". Устанавливаем новое количество " + count );
@@ -491,7 +491,7 @@ public final class OrderLogic {
         }
     }
 
-    public static void addItem( DatabaseAdapter dbDyn, Long idOrder, OrderItem item )
+    public static void addItem( DatabaseAdapter dbDyn, Long idOrder, ShopOrderItem item )
         throws Exception {
         if( item == null )
             throw new Exception( "Error add item to order. Item is null" );
@@ -560,7 +560,7 @@ public final class OrderLogic {
             return;
 
         for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-            for (OrderItem item : shopOrder.getOrderItemListList()) {
+            for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
                 if( idItem.equals( item.getShopItem().getItemId() ) ) {
                     item.setCountItem( count );
                     isNotInOrder = false;
@@ -609,9 +609,9 @@ public final class OrderLogic {
         // in current version all shops has its unique code of items
         boolean isDeleted = false;
         for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-            Iterator<OrderItem> it = shopOrder.getOrderItemListList().iterator();
+            Iterator<ShopOrderItem> it = shopOrder.getOrderItemListList().iterator();
             while (it.hasNext()) {
-                OrderItem item = it.next();
+                ShopOrderItem item = it.next();
                 if( id_item.equals( item.getShopItem().getItemId() ) ) {
                     it.remove();
                     isDeleted = true;
@@ -678,11 +678,11 @@ public final class OrderLogic {
         }
     }
 
-    public static OrderItem initOrderItem(Long idItem, long siteId) throws Exception {
+    public static ShopOrderItem initOrderItem(Long idItem, long siteId) throws Exception {
         try {
             ShopItem shopItem = CommerceDaoFactory.getShopDao().getShopItem(idItem);
             if (shopItem!=null) {
-                OrderItem item = new OrderItem();
+                ShopOrderItem item = new ShopOrderItem();
                 item.setShopItem(shopItem);
                 
                 final CurrencyManager currencyManager = CurrencyManager.getInstance( siteId );

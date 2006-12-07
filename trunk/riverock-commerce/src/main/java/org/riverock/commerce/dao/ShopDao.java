@@ -26,7 +26,7 @@ package org.riverock.commerce.dao;
 import java.util.List;
 
 import org.riverock.commerce.bean.Shop;
-import org.riverock.commerce.bean.price.ShopItem;
+import org.riverock.commerce.bean.ShopItem;
 
 /**
  * @author Sergei Maslyukov

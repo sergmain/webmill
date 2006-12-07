@@ -21,21 +21,23 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.bean.price;
+package org.riverock.commerce.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.riverock.commerce.price.CurrencyItem;
+import org.riverock.commerce.bean.ShopItem;
+import org.riverock.commerce.bean.price.DiscountType;
 
 /**
- * Class OrderItem.
+ * Class ShopOrderItem.
  *
  * User: SergeMaslyukov
  * Date: 02.12.2006
  * Time: 19:37:32
  */
-public class OrderItem implements Serializable {
+public class ShopOrderItem implements Serializable {
 
     /**
      * Field countItem
