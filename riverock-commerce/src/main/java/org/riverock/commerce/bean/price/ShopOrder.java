@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
+import org.riverock.commerce.bean.ShopOrderItem;
+
 /**
  * Часть заказа, относящаяся к
  * определенному магазину
@@ -45,7 +47,7 @@ public class ShopOrder implements Serializable {
     /**
      * Field orderItemListList
      */
-    private List<OrderItem> orderItemListList = new ArrayList<OrderItem>();
+    private List<ShopOrderItem> orderItemListList = new ArrayList<ShopOrderItem>();
 
     /**
      * Field globalDiscount
@@ -71,14 +73,14 @@ public class ShopOrder implements Serializable {
         this.shopId = shopId;
     }
 
-    public List<OrderItem> getOrderItemListList() {
+    public List<ShopOrderItem> getOrderItemListList() {
         if (orderItemListList==null) {
-            orderItemListList = new ArrayList<OrderItem>();
+            orderItemListList = new ArrayList<ShopOrderItem>();
         }
         return orderItemListList;
     }
 
-    public void setOrderItemListList(List<OrderItem> orderItemListList) {
+    public void setOrderItemListList(List<ShopOrderItem> orderItemListList) {
         this.orderItemListList = orderItemListList;
     }
 

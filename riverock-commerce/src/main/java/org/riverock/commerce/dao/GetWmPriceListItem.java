@@ -1,6 +1,6 @@
 package org.riverock.commerce.dao;
 
-import org.riverock.commerce.bean.price.ShopItem;
+import org.riverock.commerce.bean.ShopItem;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseManager;

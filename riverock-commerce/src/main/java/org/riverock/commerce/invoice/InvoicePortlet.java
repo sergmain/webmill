@@ -52,7 +52,7 @@ import org.riverock.interfaces.portal.bean.User;
 import org.riverock.commerce.price.OrderLogic;
 import org.riverock.commerce.price.PriceList;
 import org.riverock.commerce.price.ShopPortlet;
-import org.riverock.commerce.bean.price.OrderItem;
+import org.riverock.commerce.bean.ShopOrderItem;
 import org.riverock.commerce.bean.price.ShopOrder;
 import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.commerce.tools.SiteUtils;
@@ -284,7 +284,7 @@ public final class InvoicePortlet implements Portlet {
                 for (ShopOrder shopOrder : order.getShopOrdertListList()) {
                     idx++;
                     if ( shopOrder.getOrderItemListList().size()>0 ) {
-                        OrderItem itemTemp = shopOrder.getOrderItemListList().get(0);
+                        ShopOrderItem itemTemp = shopOrder.getOrderItemListList().get(0);
                         Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
 
                         s = bundle.getString( "reg.send_order.shop-header" );
@@ -295,7 +295,7 @@ public final class InvoicePortlet implements Portlet {
                                 shopBean.getShopCode(),
                                 itemTemp.getResultCurrency().getCurrencyName());
 
-                        for (OrderItem item : shopOrder.getOrderItemListList()) {
+                        for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
                             BigDecimal itemFullPrice =
                                 NumberTools.multiply(
                                     item.getResultPrice(), item.getCountItem(), item.getPrecisionResult()
@@ -329,7 +329,7 @@ public final class InvoicePortlet implements Portlet {
                     String currentCurrency = "";
                     int currentPrecision = 0;
                     for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                        OrderItem itemTemp = shopOrder.getOrderItemListList().get(0);
+                        ShopOrderItem itemTemp = shopOrder.getOrderItemListList().get(0);
                         Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
 
                         s = bundle.getString( "reg.send_order.shop-header" );
@@ -343,7 +343,7 @@ public final class InvoicePortlet implements Portlet {
                         BigDecimal orderSumm = new BigDecimal(0);
                         boolean isFirst=true;
                         idx=0;
-                        for (OrderItem item : shopOrder.getOrderItemListList()) {
+                        for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
                             idx++;
                             if ( isFirst ) {
                                 isFirst=false;
@@ -526,7 +526,7 @@ public final class InvoicePortlet implements Portlet {
                     BigDecimal orderSumm = new BigDecimal(0);
                     int currentPrecision = 0;
                     boolean isFirst=true;
-                    for (OrderItem item : shopOrder.getOrderItemListList()) {
+                    for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
                         if ( isFirst ) {
                             isFirst=false;
                             currentCurrency = item.getResultCurrency().getCurrencyName();

@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.commerce.bean.price.OrderItem;
+import org.riverock.commerce.bean.ShopOrderItem;
 import org.riverock.commerce.bean.price.OrderType;
 import org.riverock.commerce.bean.price.ShopOrder;
 
@@ -190,7 +190,7 @@ public class PriceList {
         if( log.isDebugEnabled() ) {
             log.debug( "Check loop #" + idx );
             for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                for (OrderItem item : shopOrder.getOrderItemListList()) {
+                for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
                     log.debug( "id_item - " + item.getShopItem().getItemId() + ", isInDb - " + item.getInDb() );
                 }
             }
@@ -214,7 +214,7 @@ public class PriceList {
 
             // Before check, for all item we set flag isInDb to false
             for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                for (OrderItem item : shopOrder.getOrderItemListList()) {
+                for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
                     item.setInDb( false );
                 }
             }
@@ -237,7 +237,7 @@ public class PriceList {
                         log.debug( "Count of items in shopOrder  - " + shopOrder.getOrderItemListList().size() );
                     }
 
-                    for (OrderItem item : shopOrder.getOrderItemListList()) {
+                    for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
 
                         if( log.isDebugEnabled() ) {
                             log.debug( "item object - " + item );
@@ -350,7 +350,7 @@ public class PriceList {
 
             // write to db all items, which not exists in db
             for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                for (OrderItem item : shopOrder.getOrderItemListList()) {
+                for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
                     if( log.isDebugEnabled() ) {
                         log.debug( "item object - " + item );
                         log.debug( "item idItem " + item.getShopItem().getItemId() );

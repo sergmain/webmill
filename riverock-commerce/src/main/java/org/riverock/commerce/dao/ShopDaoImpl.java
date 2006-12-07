@@ -34,7 +34,7 @@ import java.math.BigDecimal;
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.bean.Shop;
-import org.riverock.commerce.bean.price.ShopItem;
+import org.riverock.commerce.bean.ShopItem;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
