@@ -41,10 +41,10 @@ import org.riverock.common.tools.DateTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.XmlTools;
-import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.CurrencyPrecision;
+import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.schema.shop.ShopPageType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
@@ -118,7 +118,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
         try {
             db_ = DatabaseAdapter.getInstance();
             PortletSession session = renderRequest.getPortletSession();
-            ShopOrder order = (ShopOrder) session.getAttribute( ShopPortlet.ORDER_SESSION , PortletSession.APPLICATION_SCOPE);
+            Invoice order = (Invoice) session.getAttribute( ShopPortlet.ORDER_SESSION , PortletSession.APPLICATION_SCOPE);
 
             shop = (Shop) session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
 

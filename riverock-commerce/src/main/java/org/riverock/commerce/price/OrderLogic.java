@@ -74,6 +74,7 @@ public final class OrderLogic {
             PortletSession session = renderRequest.getPortletSession( true );
             Long idShop = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM );
             Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+            AuthSession authSession = (AuthSession)renderRequest.getUserPrincipal();
 
 
             if( log.isDebugEnabled() ) {
@@ -155,20 +156,21 @@ public final class OrderLogic {
                 }
             }
 
-            org.riverock.commerce.shop.bean.ShopOrder order = null;
+            Invoice order = null;
             // если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
             // если заказа в сессии нет, то создаем
             if( shop != null && shop.getShopId() != null ) {
-                order = (org.riverock.commerce.shop.bean.ShopOrder) getFromSession(session, ShopPortlet.ORDER_SESSION);
+                order = (Invoice) getFromSession(session, ShopPortlet.ORDER_SESSION);
 
                 if( log.isDebugEnabled() )
                     log.debug( "order object - " + order );
 
                 if( order == null ) {
-                    if( log.isDebugEnabled() )
+                    if( log.isDebugEnabled() ) {
                         log.debug( "Create new order" );
+                    }
 
-                    order = new org.riverock.commerce.shop.bean.ShopOrder();
+                    order = new Invoice();
                     order.setServerName( renderRequest.getServerName() );
 
                     ShopOrder shopOrder = new ShopOrder();
@@ -180,11 +182,11 @@ public final class OrderLogic {
 
                 // если заказ создан ранее и юзер прошел авторизацию,
                 // помещаем авторизационные данные в заказ
-                if( ( order != null ) && ( order.getAuthSession() == null ) ) {
-                    AuthSession authSession = ( AuthSession ) renderRequest.getUserPrincipal();
-                    if( ( authSession != null ) && ( authSession.checkAccess( renderRequest.getServerName() ) ) ) {
-                        if( log.isDebugEnabled() )
+                if ( order != null && authSession != null ) {
+                    if( authSession.checkAccess( renderRequest.getServerName() ) ) {
+                        if( log.isDebugEnabled() ) {
                             log.debug( "updateAuthSession" );
+                        }
 
                         updateAuthSession( dbDyn, order, authSession );
                     }

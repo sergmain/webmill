@@ -57,6 +57,7 @@ import org.riverock.commerce.bean.ShopOrder;
 import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
+import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
@@ -103,7 +104,7 @@ public final class InvoicePortlet implements Portlet {
             out = renderResponse.getWriter();
 
             PortletSession session = renderRequest.getPortletSession();
-            org.riverock.commerce.shop.bean.ShopOrder order = (org.riverock.commerce.shop.bean.ShopOrder)session.getAttribute( ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE );
+            Invoice order = (Invoice)session.getAttribute( ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE );
 
             if ( order == null )
                 return;
@@ -123,12 +124,11 @@ public final class InvoicePortlet implements Portlet {
             String orderEmail = portalInfo.getSites().getOrderEmail();
 */
 
-            if ( order.getAuthSession() == null && authSession != null ) {
-                if ( log.isDebugEnabled() )
+            if ( authSession != null ) {
+                if ( log.isDebugEnabled() ) {
                     log.debug( "AuthSession is null. Try get from session" );
-
-                if ( log.isDebugEnabled() )
                     log.debug( "AuthSession in servlet session - " + authSession );
+                }
 
                 if ( authSession != null && log.isDebugEnabled() )
                     log.debug( "AuthSession not null. getLoginStatus() - " + authSession.checkAccess( renderRequest.getServerName() ) );
@@ -142,7 +142,6 @@ public final class InvoicePortlet implements Portlet {
                             log.debug( "Update order with new authSession" );
 
                         OrderLogic.updateAuthSession( dbDyn, order, authSession );
-                        order.setAuthSession( authSession );
                         dbDyn.commit();
                     }
                     catch( Exception e1 ) {
@@ -604,7 +603,7 @@ public final class InvoicePortlet implements Portlet {
             out.write( "</table>\n" );
 
 
-            if ( order.getShopOrders().size()!= 0 && order.getAuthSession()!=null &&
+            if ( !order.getShopOrders().isEmpty() && authSession!=null &&
                  !StringUtils.isBlank( orderEmail ) && isActivateEmailOrder ) {
 
                 out.write( "<br>\n" );

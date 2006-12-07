@@ -42,10 +42,10 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.XmlTools;
-import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.CurrencyPrecision;
+import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.schema.shop.HiddenParamType;
 import org.riverock.commerce.schema.shop.ItemListType;
@@ -129,7 +129,7 @@ public final class PriceListItemList {
             rs = ps.executeQuery();
 
             PortletSession session = renderRequest.getPortletSession();
-            ShopOrder order = (ShopOrder) session.getAttribute(ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE);
+            Invoice order = (Invoice) session.getAttribute(ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE);
             Shop shop = CommerceDaoFactory.getShopDao().getShop(shopParam.id_shop);
             while (rs.next()) {
                 Long idPk = RsetTools.getLong(rs, "ID_ITEM");
