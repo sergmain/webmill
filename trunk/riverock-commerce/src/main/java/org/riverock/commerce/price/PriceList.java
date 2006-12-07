@@ -186,10 +186,10 @@ public class PriceList {
     }
 */
 
-    private static void controllLoop( int idx, Invoice order ) {
+    private static void controllLoop( int idx, Invoice invoice ) {
         if( log.isDebugEnabled() ) {
             log.debug( "Check loop #" + idx );
-            for (ShopOrder shopOrder : order.getShopOrders()) {
+            for (ShopOrder shopOrder : invoice.getShopOrders()) {
                 for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                     log.debug( "id_item - " + item.getShopItem().getItemId() + ", isInDb - " + item.getInDb() );
                 }
@@ -198,7 +198,7 @@ public class PriceList {
         }
     }
 
-    public static void synchronizeOrderWithDb( DatabaseAdapter dbDyn, Invoice order )
+    public static void synchronizeOrderWithDb( DatabaseAdapter dbDyn, Invoice invoice)
         throws Exception {
 
         PreparedStatement ps = null;
@@ -208,12 +208,12 @@ public class PriceList {
                 "select a.* from WM_PRICE_ORDER a where a.ID_ORDER_V2=?";
 
             ps = dbDyn.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, order.getOrderId() );
+            RsetTools.setLong( ps, 1, invoice.getOrderId() );
 
             rs = ps.executeQuery();
 
             // Before check, for all item we set flag isInDb to false
-            for (ShopOrder shopOrder : order.getShopOrders()) {
+            for (ShopOrder shopOrder : invoice.getShopOrders()) {
                 for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                     item.setInDb( false );
                 }
@@ -228,11 +228,11 @@ public class PriceList {
                 if( log.isDebugEnabled() )
                     log.debug( "Check item from DB with idItem - " + idItem );
 
-                // search in order from session item, which exist in db
-                for (ShopOrder shopOrder : order.getShopOrders()) {
+                // search in invoice from session item, which exist in db
+                for (ShopOrder shopOrder : invoice.getShopOrders()) {
 
                     if( log.isDebugEnabled() ) {
-                        controllLoop( 1, order );
+                        controllLoop( 1, invoice);
                         log.debug( "check shop. idShop  - " + shopOrder.getShopId() );
                         log.debug( "Count of items in shopOrder  - " + shopOrder.getShopOrderItems().size() );
                     }
@@ -247,24 +247,24 @@ public class PriceList {
                         }
 
                         if( log.isDebugEnabled() ) {
-                            controllLoop( 2, order );
+                            controllLoop( 2, invoice);
                         }
 
                         if( item.getShopItem().getItemId() == idItem ) {
                             item.setInDb( true );
 
                             if( log.isDebugEnabled() )
-                                controllLoop( 3, order );
+                                controllLoop( 3, invoice);
 
                             if( log.isDebugEnabled() ) {
-                                log.debug( "item in order. check values of order" );
+                                log.debug( "item in invoice. check values of invoice" );
                                 log.debug( "item price " + item.getResultPrice() );
                                 log.debug( "db price " + RsetTools.getDouble( rs, "PRICE_RESULT" ) );
                                 log.debug( "init count " + item.getCountItem() );
                                 log.debug( "db count " + RsetTools.getInt( rs, "COUNT" ) );
                                 log.debug( "item code " + item.getResultCurrency().getCurrencyCode() );
                                 log.debug( "db code " + RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) );
-                                log.debug( "status of compare order item data " +
+                                log.debug( "status of compare invoice item data " +
                                     ( !item.getResultPrice().equals( RsetTools.getBigDecimal( rs, "PRICE_RESULT") ) ||
                                     ( item.getCountItem() != RsetTools.getInt( rs, "COUNT" ) ) ||
                                     !item.getResultCurrency().getCurrencyCode().equals( RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) )
@@ -275,7 +275,7 @@ public class PriceList {
                             }
 
                             if( log.isDebugEnabled() )
-                                controllLoop( 31, order );
+                                controllLoop( 31, invoice);
 
                             // Заказ найден, сравниваем данные
                             if ( !item.getResultPrice().equals( RsetTools.getBigDecimal( rs, "PRICE_RESULT" )) ||
@@ -284,11 +284,11 @@ public class PriceList {
                                 ) {
                                 
                                 if( log.isDebugEnabled() ) {
-                                    controllLoop( 32, order );
+                                    controllLoop( 32, invoice);
                                 }
 
                                 if( log.isDebugEnabled() ) {
-                                    log.debug( "item in order not equals with item in DB" );
+                                    log.debug( "item in invoice not equals with item in DB" );
 
                                     log.debug( "item price " + item.getResultPrice() );
                                     log.debug( "db price " + RsetTools.getBigDecimal( rs, "PRICE_RESULT" ) );
@@ -304,7 +304,7 @@ public class PriceList {
                                         "delete from WM_PRICE_ORDER where ID_ORDER_V2=?";
 
                                     ps1 = dbDyn.prepareStatement( sqlDel );
-                                    RsetTools.setLong( ps1, 1, order.getOrderId() );
+                                    RsetTools.setLong( ps1, 1, invoice.getOrderId() );
 
                                     ps1.executeUpdate();
                                 }
@@ -313,15 +313,15 @@ public class PriceList {
                                 }
 
                                 if( log.isDebugEnabled() )
-                                    controllLoop( 33, order );
+                                    controllLoop( 33, invoice);
 
                                 if( log.isDebugEnabled() )
                                     log.debug( "success delete item from db" );
 
-                                OrderLogic.addItem( dbDyn, order.getOrderId(), item );
+                                OrderLogic.addItem( dbDyn, invoice.getOrderId(), item );
 
                                 if( log.isDebugEnabled() )
-                                    controllLoop( 34, order );
+                                    controllLoop( 34, invoice);
 
                             }
 
@@ -331,25 +331,25 @@ public class PriceList {
                             }
 
                             if( log.isDebugEnabled() ) {
-                                controllLoop( 35, order );
+                                controllLoop( 35, invoice);
                             }
 
                             break;
                         }
 
                         if( log.isDebugEnabled() ) {
-                            controllLoop( 4, order );
+                            controllLoop( 4, invoice);
                         }
                     }
                 }
             }
 
             if( log.isDebugEnabled() ) {
-                controllLoop( 5, order );
+                controllLoop( 5, invoice);
             }
 
             // write to db all items, which not exists in db
-            for (ShopOrder shopOrder : order.getShopOrders()) {
+            for (ShopOrder shopOrder : invoice.getShopOrders()) {
                 for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                     if( log.isDebugEnabled() ) {
                         log.debug( "item object - " + item );
@@ -362,7 +362,7 @@ public class PriceList {
                             log.debug( "item not in db " + item.getShopItem().getItemId() );
                         }
 
-                        OrderLogic.addItem( dbDyn, order.getOrderId(), item );
+                        OrderLogic.addItem( dbDyn, invoice.getOrderId(), item );
                         item.setInDb( true );
                     }
                 }
@@ -370,7 +370,7 @@ public class PriceList {
 
         }
         catch( Exception e ) {
-            log.error( "Error synchronize order with DB", e );
+            log.error( "Error synchronize invoice with DB", e );
             throw e;
         }
         finally {

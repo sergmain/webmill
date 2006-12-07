@@ -268,7 +268,7 @@ public class PriceEditShop extends HttpServlet
 //                        shopParam.id_currency = shop.currencyID;
 
 //                    PriceListItemList items = PriceListItemList.getInstance( db_, shopParam  );
-                    Vector items = PriceList.getPriceList(db_, shopParam.id_shop, 0, shopParam.id_group, renderRequest.getServerName());
+                    List<ShopItem> items = PriceList.getPriceList(db_, shopParam.id_shop, 0, shopParam.id_group, renderRequest.getServerName());
                     if (items != null)
                     {
                         out.write("<form action=\"");
@@ -288,8 +288,8 @@ public class PriceEditShop extends HttpServlet
                         boolean headerFlag = true;
                         for (i = 0; i < items.size(); i++)
                         {
-                            PriceListItem item = null;
-                            item = (PriceListItem) items.elementAt(i);
+                            ShopItem item = null;
+                            item = (ShopItem) items.elementAt(i);
 //                            out.write("\n");
 //                            out.write("<tr>\n                    ");
 

@@ -806,12 +806,12 @@ public final class OrderLogic {
         return prec;
     }
 
-    public static int getCountItem( Invoice order ) {
-        if( order == null ) {
+    public static int getCountItem( Invoice invoice ) {
+        if( invoice == null ) {
             return 0;
         }
         int count = 0;
-        for (ShopOrder shopOrder : order.getShopOrders()) {
+        for (ShopOrder shopOrder : invoice.getShopOrders()) {
             count += shopOrder.getShopOrderItems().size();
         }
         return count;

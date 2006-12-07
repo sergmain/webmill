@@ -407,7 +407,7 @@ public class ShopDaoImpl implements ShopDao {
         if (!rs.wasNull())
             item.setItem( tempString );
         tempInt = rs.getInt( "ABSOLETE");
-        item.setAbsolete( tempInt );
+        item.setObsolete( tempInt );
         tempString = rs.getString( "CURRENCY" );
         if (!rs.wasNull())
             item.setCurrency( tempString );
