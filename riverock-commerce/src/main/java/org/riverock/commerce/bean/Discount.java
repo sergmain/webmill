@@ -21,59 +21,59 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.bean.price;
+package org.riverock.commerce.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
- * Заказ, объединяющий все
- * наименования из разных магазов
+ * Class Discount.
  * 
  * @version $Revision$ $Date$
  */
-public class Invoice implements Serializable {
+public class Discount implements Serializable {
 
     /**
-     * Field orderId
+     * Field discountItems
      */
-    private Long orderId;
+    private List<DiscountItem> discountItems = new ArrayList<DiscountItem>();
 
     /**
-     * Field serverName
+     * Field resultDiscount
      */
-    private String serverName;
+    private BigDecimal resultDiscount;
 
     /**
-     * Field shopOrders
+     * Field resultDiscountName
      */
-    private List<ShopOrder> shopOrders = new ArrayList<ShopOrder>();
+    private String resultDiscountName;
 
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
-    }
-
-    public List<ShopOrder> getShopOrders() {
-        if (shopOrders ==null) {
-            shopOrders = new ArrayList<ShopOrder>();
+    public List<DiscountItem> getDiscountItems() {
+        if (discountItems ==null) {
+            discountItems = new ArrayList<DiscountItem>();
         }
-        return shopOrders;
+        return discountItems;
     }
 
-    public void setShopOrders(List<ShopOrder> shopOrders) {
-        this.shopOrders = shopOrders;
+    public void setDiscountItems(List<DiscountItem> discountItems) {
+        this.discountItems = discountItems;
+    }
+
+    public BigDecimal getResultDiscount() {
+        return resultDiscount;
+    }
+
+    public void setResultDiscount(BigDecimal resultDiscount) {
+        this.resultDiscount = resultDiscount;
+    }
+
+    public String getResultDiscountName() {
+        return resultDiscountName;
+    }
+
+    public void setResultDiscountName(String resultDiscountName) {
+        this.resultDiscountName = resultDiscountName;
     }
 }

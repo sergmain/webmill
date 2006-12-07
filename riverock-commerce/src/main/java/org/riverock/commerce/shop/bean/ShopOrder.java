@@ -23,7 +23,7 @@
  */
 package org.riverock.commerce.shop.bean;
 
-import org.riverock.commerce.bean.price.Invoice;
+import org.riverock.commerce.bean.Invoice;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
