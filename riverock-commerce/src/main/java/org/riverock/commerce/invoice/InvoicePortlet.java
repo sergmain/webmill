@@ -281,10 +281,10 @@ public final class InvoicePortlet implements Portlet {
                     orderCustomString;
 
                 int idx=0;
-                for (ShopOrder shopOrder : order.getShopOrdertListList()) {
+                for (ShopOrder shopOrder : order.getShopOrders()) {
                     idx++;
-                    if ( shopOrder.getOrderItemListList().size()>0 ) {
-                        ShopOrderItem itemTemp = shopOrder.getOrderItemListList().get(0);
+                    if ( shopOrder.getShopOrderItems().size()>0 ) {
+                        ShopOrderItem itemTemp = shopOrder.getShopOrderItems().get(0);
                         Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
 
                         s = bundle.getString( "reg.send_order.shop-header" );
@@ -295,7 +295,7 @@ public final class InvoicePortlet implements Portlet {
                                 shopBean.getShopCode(),
                                 itemTemp.getResultCurrency().getCurrencyName());
 
-                        for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+                        for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                             BigDecimal itemFullPrice =
                                 NumberTools.multiply(
                                     item.getResultPrice(), item.getCountItem(), item.getPrecisionResult()
@@ -328,8 +328,8 @@ public final class InvoicePortlet implements Portlet {
                     }
                     String currentCurrency = "";
                     int currentPrecision = 0;
-                    for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                        ShopOrderItem itemTemp = shopOrder.getOrderItemListList().get(0);
+                    for (ShopOrder shopOrder : order.getShopOrders()) {
+                        ShopOrderItem itemTemp = shopOrder.getShopOrderItems().get(0);
                         Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
 
                         s = bundle.getString( "reg.send_order.shop-header" );
@@ -343,7 +343,7 @@ public final class InvoicePortlet implements Portlet {
                         BigDecimal orderSumm = new BigDecimal(0);
                         boolean isFirst=true;
                         idx=0;
-                        for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+                        for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                             idx++;
                             if ( isFirst ) {
                                 isFirst=false;
@@ -488,8 +488,8 @@ public final class InvoicePortlet implements Portlet {
             out.write( bundle.getString( "invoice.your_select" ) );
 
             out.write( "<table border=\"0\" cellpadding=\"2px\" cellspacing=\"2px\">\n" );
-            for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-                if ( shopOrder.getOrderItemListList().size()>0 ) {
+            for (ShopOrder shopOrder : order.getShopOrders()) {
+                if ( shopOrder.getShopOrderItems().size()>0 ) {
                     Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
                     out.write( "<tr>\n<td colspan=\"6\" align=\"left\" border=\"0\">\n" );
                     out.write( shopBean.getShopNameForPriceList() );
@@ -526,7 +526,7 @@ public final class InvoicePortlet implements Portlet {
                     BigDecimal orderSumm = new BigDecimal(0);
                     int currentPrecision = 0;
                     boolean isFirst=true;
-                    for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+                    for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                         if ( isFirst ) {
                             isFirst=false;
                             currentCurrency = item.getResultCurrency().getCurrencyName();
@@ -604,7 +604,7 @@ public final class InvoicePortlet implements Portlet {
             out.write( "</table>\n" );
 
 
-            if ( order.getShopOrdertListList().size()!= 0 && order.getAuthSession()!=null &&
+            if ( order.getShopOrders().size()!= 0 && order.getAuthSession()!=null &&
                  !StringUtils.isBlank( orderEmail ) && isActivateEmailOrder ) {
 
                 out.write( "<br>\n" );

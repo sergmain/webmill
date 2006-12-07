@@ -45,9 +45,9 @@ public class ShopOrder implements Serializable {
     private java.lang.Long shopId;
 
     /**
-     * Field orderItemListList
+     * Field shopOrderItems
      */
-    private List<ShopOrderItem> orderItemListList = new ArrayList<ShopOrderItem>();
+    private List<ShopOrderItem> shopOrderItems = new ArrayList<ShopOrderItem>();
 
     /**
      * Field globalDiscount
@@ -55,14 +55,14 @@ public class ShopOrder implements Serializable {
     private DiscountType globalDiscount;
 
     /**
-     * Field currentOrderUrl
+     * Field orderUrl
      */
-    private java.lang.String currentOrderUrl;
+    private java.lang.String orderUrl;
 
     /**
-     * Field currentOrderName
+     * Field orderName
      */
-    private java.lang.String currentOrderName;
+    private java.lang.String orderName;
 
 
     public Long getShopId() {
@@ -73,15 +73,15 @@ public class ShopOrder implements Serializable {
         this.shopId = shopId;
     }
 
-    public List<ShopOrderItem> getOrderItemListList() {
-        if (orderItemListList==null) {
-            orderItemListList = new ArrayList<ShopOrderItem>();
+    public List<ShopOrderItem> getShopOrderItems() {
+        if (shopOrderItems ==null) {
+            shopOrderItems = new ArrayList<ShopOrderItem>();
         }
-        return orderItemListList;
+        return shopOrderItems;
     }
 
-    public void setOrderItemListList(List<ShopOrderItem> orderItemListList) {
-        this.orderItemListList = orderItemListList;
+    public void setShopOrderItems(List<ShopOrderItem> shopOrderItems) {
+        this.shopOrderItems = shopOrderItems;
     }
 
     public DiscountType getGlobalDiscount() {
@@ -92,19 +92,19 @@ public class ShopOrder implements Serializable {
         this.globalDiscount = globalDiscount;
     }
 
-    public String getCurrentOrderUrl() {
-        return currentOrderUrl;
+    public String getOrderUrl() {
+        return orderUrl;
     }
 
-    public void setCurrentOrderUrl(String currentOrderUrl) {
-        this.currentOrderUrl = currentOrderUrl;
+    public void setOrderUrl(String orderUrl) {
+        this.orderUrl = orderUrl;
     }
 
-    public String getCurrentOrderName() {
-        return currentOrderName;
+    public String getOrderName() {
+        return orderName;
     }
 
-    public void setCurrentOrderName(String currentOrderName) {
-        this.currentOrderName = currentOrderName;
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
     }
 }

@@ -29,7 +29,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.commerce.bean.price.OrderType;
+import org.riverock.commerce.bean.price.Invoice;
 import org.riverock.commerce.invoice.InvoicePortlet;
 import org.riverock.commerce.schema.shop.CurrentBasketType;
 import org.riverock.webmill.container.tools.PortletService;
@@ -45,7 +45,7 @@ import org.riverock.webmill.container.ContainerConstants;
 public final class ShopBasket {
 
     public static CurrentBasketType getInstance(
-        final OrderType order, final ShopPageParam shopParam,
+        final Invoice order, final ShopPageParam shopParam,
         final RenderRequest renderRequest, final RenderResponse renderResponse,
         final ResourceBundle bundle) {
 

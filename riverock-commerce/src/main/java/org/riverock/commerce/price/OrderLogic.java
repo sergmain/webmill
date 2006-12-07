@@ -43,7 +43,7 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.commerce.bean.ShopOrderItem;
-import org.riverock.commerce.bean.price.OrderType;
+import org.riverock.commerce.bean.price.Invoice;
 import org.riverock.commerce.bean.price.ShopOrder;
 import org.riverock.commerce.bean.ShopItem;
 import org.riverock.commerce.bean.Shop;
@@ -174,7 +174,7 @@ public final class OrderLogic {
                     ShopOrder shopOrder = new ShopOrder();
                     shopOrder.setShopId( shop.getShopId() );
 
-                    order.getShopOrdertListList().add( shopOrder );
+                    order.getShopOrders().add( shopOrder );
                     initAuthSession( dbDyn, order, ( AuthSession ) renderRequest.getUserPrincipal() );
                 }
 
@@ -247,7 +247,7 @@ public final class OrderLogic {
         return session.getAttribute( key, PortletSession.APPLICATION_SCOPE );
     }
 
-    public static void initAuthSession( final DatabaseAdapter dbDyn, final OrderType order, final AuthSession authSession )
+    public static void initAuthSession( final DatabaseAdapter dbDyn, final Invoice order, final AuthSession authSession )
         throws Exception {
         String sql_ = "";
         PreparedStatement ps = null;
@@ -296,7 +296,7 @@ public final class OrderLogic {
         }
     }
 
-    public static void updateAuthSession( final DatabaseAdapter dbDyn, final OrderType order, final AuthSession authSession )
+    public static void updateAuthSession( final DatabaseAdapter dbDyn, final Invoice order, final AuthSession authSession )
         throws Exception {
         String sql_ = "";
         PreparedStatement ps = null;
@@ -336,7 +336,7 @@ public final class OrderLogic {
         }
     }
 
-    public static void removeOrder( final DatabaseAdapter dbDyn, final OrderType order )
+    public static void removeOrder( final DatabaseAdapter dbDyn, final Invoice order )
         throws Exception {
 
         String sql_ =
@@ -365,12 +365,12 @@ public final class OrderLogic {
         }
     }
 
-    public static boolean isItemInBasket( final Long idItem, final OrderType order ) {
+    public static boolean isItemInBasket( final Long idItem, final Invoice order ) {
         if( order == null || idItem == null )
             return false;
 
-        for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-            for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+        for (ShopOrder shopOrder : order.getShopOrders()) {
+            for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                 if( idItem.equals( item.getShopItem().getItemId() ) )
                     return true;
             }
@@ -378,7 +378,7 @@ public final class OrderLogic {
         return false;
     }
 
-    public static void addItem( final DatabaseAdapter dbDyn, final OrderType order, final Long idItem, final int count, long siteId )
+    public static void addItem( final DatabaseAdapter dbDyn, final Invoice order, final Long idItem, final int count, long siteId )
         throws Exception {
         if( log.isDebugEnabled() ) {
             log.debug( "Add new count of item. id_item - " + idItem + " count - " + count );
@@ -402,7 +402,7 @@ public final class OrderLogic {
             boolean isNotInOrder = true;
 
             // если в заказе есть магазин и наименование, то измен€ем количество
-            for (ShopOrder shopOrderTemp : order.getShopOrdertListList()) {
+            for (ShopOrder shopOrderTemp : order.getShopOrders()) {
                 if( log.isDebugEnabled() ) {
                     log.debug( "shopOrder.idShop - " + shopOrderTemp.getShopId() );
                 }
@@ -413,7 +413,7 @@ public final class OrderLogic {
                     }
 
                     shopOrder = shopOrderTemp;
-                    for (ShopOrderItem orderItem : shopOrderTemp.getOrderItemListList()) {
+                    for (ShopOrderItem orderItem : shopOrderTemp.getShopOrderItems()) {
                         if( orderItem.getShopItem().getItemId().equals( idItem ) ) {
                             if( log.isDebugEnabled() ) {
                                 log.debug( "Ќужное наименвание найдено, old count " + orderItem.getCountItem() + ". ”станавливаем новое количество " + count );
@@ -440,9 +440,9 @@ public final class OrderLogic {
 
                 shopOrder = new ShopOrder();
                 shopOrder.setShopId( item.getShopItem().getShopId() );
-                shopOrder.getOrderItemListList().add( item );
+                shopOrder.getShopOrderItems().add( item );
 
-                order.getShopOrdertListList().add( shopOrder );
+                order.getShopOrders().add( shopOrder );
 
                 isNotInOrder = false;
             }
@@ -451,7 +451,7 @@ public final class OrderLogic {
                 if( log.isDebugEnabled() )
                     log.debug( "ћагазин есть но наименование не помещено в него. ѕомещаем" );
 
-                shopOrder.getOrderItemListList().add( item );
+                shopOrder.getShopOrderItems().add( item );
             }
 
             if( log.isDebugEnabled() ) {
@@ -553,14 +553,14 @@ public final class OrderLogic {
         }
     }
 
-    public static void setItem( DatabaseAdapter dbDyn, OrderType order, Long idItem, int count, long siteId )
+    public static void setItem( DatabaseAdapter dbDyn, Invoice order, Long idItem, int count, long siteId )
         throws Exception {
         boolean isNotInOrder = true;
         if( idItem == null )
             return;
 
-        for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-            for (ShopOrderItem item : shopOrder.getOrderItemListList()) {
+        for (ShopOrder shopOrder : order.getShopOrders()) {
+            for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                 if( idItem.equals( item.getShopItem().getItemId() ) ) {
                     item.setCountItem( count );
                     isNotInOrder = false;
@@ -601,15 +601,15 @@ public final class OrderLogic {
         }
     }
 
-    public static void delItem( DatabaseAdapter dbDyn, OrderType order, Long id_item )
+    public static void delItem( DatabaseAdapter dbDyn, Invoice order, Long id_item )
         throws Exception {
         if( id_item == null )
             return;
 
         // in current version all shops has its unique code of items
         boolean isDeleted = false;
-        for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-            Iterator<ShopOrderItem> it = shopOrder.getOrderItemListList().iterator();
+        for (ShopOrder shopOrder : order.getShopOrders()) {
+            Iterator<ShopOrderItem> it = shopOrder.getShopOrderItems().iterator();
             while (it.hasNext()) {
                 ShopOrderItem item = it.next();
                 if( id_item.equals( item.getShopItem().getItemId() ) ) {
@@ -651,8 +651,8 @@ public final class OrderLogic {
         }
     }
 
-    public static void clear( DatabaseAdapter dbDyn, OrderType order ) throws Exception {
-        order.setShopOrdertListList( new ArrayList<ShopOrder>() );
+    public static void clear( DatabaseAdapter dbDyn, Invoice order ) throws Exception {
+        order.setShopOrders( new ArrayList<ShopOrder>() );
 
         String sql_ = "delete from WM_PRICE_ORDER where ID_ORDER_V2 = ? ";
 
@@ -806,13 +806,13 @@ public final class OrderLogic {
         return prec;
     }
 
-    public static int getCountItem( OrderType order ) {
+    public static int getCountItem( Invoice order ) {
         if( order == null ) {
             return 0;
         }
         int count = 0;
-        for (ShopOrder shopOrder : order.getShopOrdertListList()) {
-            count += shopOrder.getOrderItemListList().size();
+        for (ShopOrder shopOrder : order.getShopOrders()) {
+            count += shopOrder.getShopOrderItems().size();
         }
         return count;
     }

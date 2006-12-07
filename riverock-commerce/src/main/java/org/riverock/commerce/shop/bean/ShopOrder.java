@@ -23,7 +23,7 @@
  */
 package org.riverock.commerce.shop.bean;
 
-import org.riverock.commerce.bean.price.OrderType;
+import org.riverock.commerce.bean.price.Invoice;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
@@ -32,7 +32,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  *         Time: 16:36:41
  *         $Id$
  */
-public class ShopOrder extends OrderType {
+public class ShopOrder extends Invoice {
 
     public AuthSession getAuthSession() {
         return authSession;

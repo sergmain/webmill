@@ -33,22 +33,22 @@ import java.io.Serializable;
  * 
  * @version $Revision$ $Date$
  */
-public class OrderType implements Serializable {
+public class Invoice implements Serializable {
 
     /**
      * Field orderId
      */
-    private java.lang.Long orderId;
+    private Long orderId;
 
     /**
      * Field serverName
      */
-    private java.lang.String serverName;
+    private String serverName;
 
     /**
-     * Field shopOrdertListList
+     * Field shopOrders
      */
-    private List<ShopOrder> shopOrdertListList = new ArrayList<ShopOrder>();
+    private List<ShopOrder> shopOrders = new ArrayList<ShopOrder>();
 
     public Long getOrderId() {
         return orderId;
@@ -66,14 +66,14 @@ public class OrderType implements Serializable {
         this.serverName = serverName;
     }
 
-    public List<ShopOrder> getShopOrdertListList() {
-        if (shopOrdertListList==null) {
-            shopOrdertListList = new ArrayList<ShopOrder>();
+    public List<ShopOrder> getShopOrders() {
+        if (shopOrders ==null) {
+            shopOrders = new ArrayList<ShopOrder>();
         }
-        return shopOrdertListList;
+        return shopOrders;
     }
 
-    public void setShopOrdertListList(List<ShopOrder> shopOrdertListList) {
-        this.shopOrdertListList = shopOrdertListList;
+    public void setShopOrders(List<ShopOrder> shopOrders) {
+        this.shopOrders = shopOrders;
     }
 }
