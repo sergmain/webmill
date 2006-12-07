@@ -32,8 +32,8 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.commerce.bean.ShopOrderItem;
-import org.riverock.commerce.bean.price.Invoice;
-import org.riverock.commerce.bean.price.ShopOrder;
+import org.riverock.commerce.bean.Invoice;
+import org.riverock.commerce.bean.ShopOrder;
 
 /**
  * $Id$

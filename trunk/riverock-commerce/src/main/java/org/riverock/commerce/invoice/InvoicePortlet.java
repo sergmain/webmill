@@ -53,7 +53,7 @@ import org.riverock.commerce.price.OrderLogic;
 import org.riverock.commerce.price.PriceList;
 import org.riverock.commerce.price.ShopPortlet;
 import org.riverock.commerce.bean.ShopOrderItem;
-import org.riverock.commerce.bean.price.ShopOrder;
+import org.riverock.commerce.bean.ShopOrder;
 import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
