@@ -24,25 +24,26 @@
 package org.riverock.commerce.bean.price;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
- * Class DiscountItemType.
+ * Class DiscountItem.
  * 
  * User: SergeMaslyukov
  * Date: 02.12.2006
  * Time: 19:37:32
  */
-public class DiscountItemType implements Serializable {
+public class DiscountItem implements Serializable {
 
     /**
      * Field discountName
      */
-    private java.lang.String discountName;
+    private String discountName;
 
     /**
      * Field discountValue
      */
-    private java.lang.Double discountValue;
+    private BigDecimal discountValue;
 
     public String getDiscountName() {
         return discountName;
@@ -52,11 +53,11 @@ public class DiscountItemType implements Serializable {
         this.discountName = discountName;
     }
 
-    public Double getDiscountValue() {
+    public BigDecimal getDiscountValue() {
         return discountValue;
     }
 
-    public void setDiscountValue(Double discountValue) {
+    public void setDiscountValue(BigDecimal discountValue) {
         this.discountValue = discountValue;
     }
 }

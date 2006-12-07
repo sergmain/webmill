@@ -50,9 +50,9 @@ public class ShopOrder implements Serializable {
     private List<ShopOrderItem> shopOrderItems = new ArrayList<ShopOrderItem>();
 
     /**
-     * Field globalDiscount
+     * Field discount
      */
-    private DiscountType globalDiscount;
+    private Discount discount;
 
     /**
      * Field orderUrl
@@ -84,12 +84,12 @@ public class ShopOrder implements Serializable {
         this.shopOrderItems = shopOrderItems;
     }
 
-    public DiscountType getGlobalDiscount() {
-        return globalDiscount;
+    public Discount getDiscount() {
+        return discount;
     }
 
-    public void setGlobalDiscount(DiscountType globalDiscount) {
-        this.globalDiscount = globalDiscount;
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
     }
 
     public String getOrderUrl() {
