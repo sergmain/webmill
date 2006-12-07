@@ -26,45 +26,46 @@ package org.riverock.commerce.bean.price;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
 /**
- * Class DiscountType.
+ * Class Discount.
  * 
  * @version $Revision$ $Date$
  */
-public class DiscountType implements Serializable {
+public class Discount implements Serializable {
 
     /**
-     * Field discountItemList
+     * Field discountItems
      */
-    private List<DiscountItemType> discountItemList = new ArrayList<DiscountItemType>();
+    private List<DiscountItem> discountItems = new ArrayList<DiscountItem>();
 
     /**
      * Field resultDiscount
      */
-    private Double resultDiscount;
+    private BigDecimal resultDiscount;
 
     /**
      * Field resultDiscountName
      */
     private String resultDiscountName;
 
-    public List<DiscountItemType> getDiscountItemList() {
-        if (discountItemList==null) {
-            discountItemList = new ArrayList<DiscountItemType>();
+    public List<DiscountItem> getDiscountItems() {
+        if (discountItems ==null) {
+            discountItems = new ArrayList<DiscountItem>();
         }
-        return discountItemList;
+        return discountItems;
     }
 
-    public void setDiscountItemList(List<DiscountItemType> discountItemList) {
-        this.discountItemList = discountItemList;
+    public void setDiscountItems(List<DiscountItem> discountItems) {
+        this.discountItems = discountItems;
     }
 
-    public Double getResultDiscount() {
+    public BigDecimal getResultDiscount() {
         return resultDiscount;
     }
 
-    public void setResultDiscount(Double resultDiscount) {
+    public void setResultDiscount(BigDecimal resultDiscount) {
         this.resultDiscount = resultDiscount;
     }
 

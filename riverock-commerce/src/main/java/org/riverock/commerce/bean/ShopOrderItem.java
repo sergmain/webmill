@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.riverock.commerce.price.CurrencyItem;
-import org.riverock.commerce.bean.price.DiscountType;
+import org.riverock.commerce.bean.price.Discount;
 
 /**
  * Class ShopOrderItem.
@@ -66,7 +66,7 @@ public class ShopOrderItem implements Serializable {
     /**
      * Field discount
      */
-    private DiscountType discount;
+    private Discount discount;
 
     /**
      * Field currencyItem
@@ -128,11 +128,11 @@ public class ShopOrderItem implements Serializable {
         this.precisionResult = precisionResult;
     }
 
-    public DiscountType getDiscount() {
+    public Discount getDiscount() {
         return discount;
     }
 
-    public void setDiscount(DiscountType discount) {
+    public void setDiscount(Discount discount) {
         this.discount = discount;
     }
 
