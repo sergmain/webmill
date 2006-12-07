@@ -25,7 +25,7 @@ package org.riverock.commerce.dao;
 
 import java.util.List;
 
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 
 /**
  * @author Sergei Maslyukov
@@ -35,13 +35,13 @@ import org.riverock.commerce.bean.ShopBean;
  *         $Id$
  */
 public interface ShopDao {
-    ShopBean getShop(Long shopId);
+    Shop getShop(Long shopId);
 
-    Long createShop(ShopBean shopBean);
+    Long createShop(Shop shop);
 
-    void updateShop(ShopBean shopBean);
+    void updateShop(Shop shop);
 
     void deleteShop(Long shopId);
 
-    List<ShopBean> getShopList(Long siteId);
+    List<Shop> getShopList(Long siteId);
 }

@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 
-import org.riverock.commerce.manager.currency.CurrencyCurs;
-
 /**
  * @author Sergei Maslyukov
  *         Date: 31.08.2006

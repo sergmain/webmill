@@ -34,7 +34,7 @@ import org.apache.myfaces.shared_tomahawk.util.el.TestsMap;
  *         <p/>
  *         $Id$
  */
-public class UserInRoleChecker  extends TestsMap {
+public class UserInRoleChecker extends TestsMap {
 
     public boolean getTest(String role) {
         if (role==null) {

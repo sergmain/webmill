@@ -25,7 +25,7 @@ package org.riverock.commerce.manager.currency_precision;
 
 import org.riverock.commerce.manager.shop.ShopExtendedBean;
 import org.riverock.commerce.bean.Currency;
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 
 import java.io.Serializable;
@@ -48,9 +48,9 @@ public class CurrencyPrecisionService implements Serializable {
     }
 
     public ShopExtendedBean getShopExtended(Long shopId) {
-        ShopBean bean = CommerceDaoFactory.getShopDao().getShop( shopId );
+        Shop bean = CommerceDaoFactory.getShopDao().getShop( shopId );
         if (log.isDebugEnabled()) {
-            log.debug("ShopBean: " + bean);
+            log.debug("Shop: " + bean);
         }
         if (bean==null) {
             return null;

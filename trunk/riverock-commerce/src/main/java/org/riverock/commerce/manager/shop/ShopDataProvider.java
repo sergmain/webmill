@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -42,12 +42,12 @@ import org.riverock.webmill.container.ContainerConstants;
 public class ShopDataProvider implements Serializable {
     private static final long serialVersionUID = 3815005509L;
 
-    public List<ShopBean> getShopList() {
+    public List<Shop> getShopList() {
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
-        List<ShopBean> list = CommerceDaoFactory.getShopDao().getShopList(siteId);
+        List<Shop> list = CommerceDaoFactory.getShopDao().getShopList(siteId);
         if (list==null) {
-            return new ArrayList<ShopBean>();
+            return new ArrayList<Shop>();
         }
         return list;
     }

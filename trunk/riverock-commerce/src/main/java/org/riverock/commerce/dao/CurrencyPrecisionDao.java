@@ -23,7 +23,7 @@
  */
 package org.riverock.commerce.dao;
 
-import org.riverock.commerce.bean.CurrencyPrecisionBean;
+import org.riverock.commerce.bean.CurrencyPrecision;
 
 import java.util.List;
 
@@ -35,9 +35,9 @@ import java.util.List;
  * $Id: PriceCurrency.java 950 2006-09-01 18:11:51Z serg_main $
  */
 public interface CurrencyPrecisionDao {
-    CurrencyPrecisionBean getCurrencyPrecision(Long currencyPrecisionId);
+    CurrencyPrecision getCurrencyPrecision(Long currencyPrecisionId);
 
-    List<CurrencyPrecisionBean> getCurrencyPrecisionList(Long shopId);
+    List<CurrencyPrecision> getCurrencyPrecisionList(Long shopId);
 
     void updateCurrencyPrecision(Long currencyPrecisionId, Integer currencyPrecision);
 }

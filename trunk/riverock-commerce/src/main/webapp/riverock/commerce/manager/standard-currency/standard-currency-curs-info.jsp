@@ -31,7 +31,7 @@
 
 <t:dataTable id="standardCurrencyCursDataTable"
         var="standardCurrencyCurs"
-        value="#{standardCurrencySessionBean.standardCurrencyBean.curses}"
+        value="#{standardCurrencySessionBean.standardCurrency.curses}"
         rows="15"
     >
 

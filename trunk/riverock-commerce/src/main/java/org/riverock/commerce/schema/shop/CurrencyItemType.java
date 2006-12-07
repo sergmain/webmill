@@ -8,6 +8,8 @@
 
 package org.riverock.commerce.schema.shop;
 
+import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -50,7 +52,7 @@ public class CurrencyItemType {
     @XmlElement(name = "CurrencyID")
     protected long currencyID;
     @XmlElement(name = "CurrencyCurs")
-    protected double currencyCurs;
+    protected BigDecimal currencyCurs;
     @XmlAttribute
     protected String selectCurrentCurrency;
 
@@ -98,7 +100,7 @@ public class CurrencyItemType {
      * Gets the value of the currencyCurs property.
      * 
      */
-    public double getCurrencyCurs() {
+    public BigDecimal getCurrencyCurs() {
         return currencyCurs;
     }
 
@@ -106,7 +108,7 @@ public class CurrencyItemType {
      * Sets the value of the currencyCurs property.
      * 
      */
-    public void setCurrencyCurs(double value) {
+    public void setCurrencyCurs(BigDecimal value) {
         this.currencyCurs = value;
     }
 

@@ -29,7 +29,7 @@ import java.sql.Timestamp;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.commerce.bean.CurrencyCurrentCurs;
+import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -44,7 +44,7 @@ import org.riverock.generic.db.DatabaseManager;
 public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
     private final static Logger log = Logger.getLogger( CommonCurrencyDaoImpl.class );
 
-    public CurrencyCurrentCurs getCurrentCurs(Long currencyId, Long siteId) {
+    public CurrencyCurs getCurrentCurs(Long currencyId, Long siteId) {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
@@ -60,7 +60,7 @@ public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
         }
     }
 
-    public CurrencyCurrentCurs getCurrentCurs(DatabaseAdapter db, Long currencyId, Long siteId) {
+    public CurrencyCurs getCurrentCurs(DatabaseAdapter db, Long currencyId, Long siteId) {
         String sql_ =
             "select max(f.DATE_CHANGE) LAST_DATE " +
             "from   WM_CASH_CURR_VALUE f, WM_CASH_CURRENCY b " +
@@ -104,7 +104,7 @@ public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
             rs = ps.executeQuery();
 
             if( rs.next() ) {
-                CurrencyCurrentCurs curs = new CurrencyCurrentCurs();
+                CurrencyCurs curs = new CurrencyCurs();
 
                 curs.setCurs( RsetTools.getBigDecimal( rs, "CURS" ) );
                 curs.setDate( RsetTools.getTimestamp(rs, "DATE_CHANGE") );
@@ -124,7 +124,7 @@ public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
         }
     }
 
-    public CurrencyCurrentCurs getStandardCurrencyCurs(Long currencyId) {
+    public CurrencyCurs getStandardCurrencyCurs(Long currencyId) {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
@@ -140,7 +140,7 @@ public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
         }
     }
 
-    public CurrencyCurrentCurs getStandardCurrencyCurs( DatabaseAdapter db, Long standardCurrencyId ) {
+    public CurrencyCurs getStandardCurrencyCurs( DatabaseAdapter db, Long standardCurrencyId ) {
         String sql_ =
             "select max(z1.DATE_CHANGE) LAST_DATE " +
             "from   WM_CASH_CURS_STD z1, WM_CASH_CURRENCY_STD a2 " +
@@ -183,7 +183,7 @@ public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
             rs = ps.executeQuery();
 
             if( rs.next() ) {
-                CurrencyCurrentCurs curs = new CurrencyCurrentCurs();
+                CurrencyCurs curs = new CurrencyCurs();
 
                 curs.setCurs( RsetTools.getBigDecimal( rs, "CURS" ) );
                 curs.setDate( RsetTools.getTimestamp(rs, "DATE_CHANGE") );

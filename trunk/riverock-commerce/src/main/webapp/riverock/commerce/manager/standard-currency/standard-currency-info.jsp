@@ -31,13 +31,13 @@
  <h:outputText value="#{msg.standard_currency_info}"/>
  <h:panelGrid columns="2">
  		<h:outputText value="#{msg.standard_currency_id}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyId}"/>
+ 		<h:outputText value="#{standardCurrencySessionBean.standardCurrency.standardCurrencyId}"/>
 
  		<h:outputText value="#{msg.standard_currency_name}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyName}"/>
+ 		<h:outputText value="#{standardCurrencySessionBean.standardCurrency.standardCurrencyName}"/>
 
  		<h:outputText value="#{msg.standard_currency_code}"/>
- 		<h:outputText value="#{standardCurrencySessionBean.standardCurrencyBean.standardCurrencyCode}"/>
+ 		<h:outputText value="#{standardCurrencySessionBean.standardCurrency.standardCurrencyCode}"/>
  </h:panelGrid>
 
  	

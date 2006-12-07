@@ -33,22 +33,22 @@
  <h:panelGrid columns="2" border="0">
      
      <h:outputText value="#{msg.shop_id}"/>
-     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopId}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shop.shopId}"/>
 
      <h:outputText value="#{msg.shop_name}"/>
-     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopName}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shop.shopName}"/>
 
      <h:outputText value="#{msg.shop_code}"/>
-     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopCode}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shop.shopCode}"/>
 
      <h:outputText value="#{msg.is_opened}"/>
      <h:panelGroup>
-         <t:graphicImage value="/images/yes.gif" rendered="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.opened}" border="0"/>
-         <t:graphicImage value="/images/no.gif" rendered="#{!currencyPrecisionSessionBean.shopExtendedBean.shopBean.opened}" border="0"/>
+         <t:graphicImage value="/images/yes.gif" rendered="#{currencyPrecisionSessionBean.shopExtendedBean.shop.opened}" border="0"/>
+         <t:graphicImage value="/images/no.gif" rendered="#{!currencyPrecisionSessionBean.shopExtendedBean.shop.opened}" border="0"/>
      </h:panelGroup>
 
      <h:outputText value="#{msg.shop_name_for_price_list}"/>
-     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shopBean.shopNameForPriceList}"/>
+     <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.shop.shopNameForPriceList}"/>
 
      <h:outputText value="#{msg.default_currency}"/>
      <h:outputText value="#{currencyPrecisionSessionBean.shopExtendedBean.defaultCurrencyName}"/>

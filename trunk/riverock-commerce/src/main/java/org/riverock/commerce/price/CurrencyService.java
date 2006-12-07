@@ -30,15 +30,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.commerce.bean.CurrencyCurrentCurs;
+import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
+import org.riverock.commerce.bean.CustomCurrency;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.commerce.bean.price.CustomCurrencyItemType;
-import org.riverock.commerce.bean.price.CustomCurrencyType;
-import org.riverock.commerce.bean.price.CurrencyCurrentCursType;
 
 /**
  * Author: mill
@@ -51,30 +49,12 @@ import org.riverock.commerce.bean.price.CurrencyCurrentCursType;
 public final class CurrencyService {
     private final static Logger log = Logger.getLogger( CurrencyService.class );
 
-    public static CurrencyCurrentCursType getCurrentCurs( DatabaseAdapter db_, Long idCurrency, Long idSite ) {
-        CurrencyCurrentCurs curs = CommerceDaoFactory.getCommonCurrencyDao().getCurrentCurs(db_, idCurrency, idSite);
-        if (curs==null) {
-            return null;
-        }
-        CurrencyCurrentCursType bean = new CurrencyCurrentCursType();
-        bean.setCurrencyId(idCurrency);
-        bean.setDateChange(curs.getDate());
-        bean.setCurs(curs.getCurs().doubleValue());
-
-        return bean;
+    public static CurrencyCurs getCurrentCurs( DatabaseAdapter db_, Long idCurrency, Long idSite ) {
+        return CommerceDaoFactory.getCommonCurrencyDao().getCurrentCurs(db_, idCurrency, idSite);
     }
 
-    public static CurrencyCurrentCursType getStandardCurrencyCurs( DatabaseAdapter db_, Long idStandardCurrency ) {
-        CurrencyCurrentCurs curs = CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(db_, idStandardCurrency);
-        if (curs==null) {
-            return null;
-        }
-        CurrencyCurrentCursType bean = new CurrencyCurrentCursType();
-        bean.setCurrencyId(idStandardCurrency);
-        bean.setDateChange(curs.getDate());
-        bean.setCurs(curs.getCurs().doubleValue());
-
-        return bean;
+    public static CurrencyCurs getStandardCurrencyCurs( DatabaseAdapter db_, Long idStandardCurrency ) {
+        return CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(db_, idStandardCurrency);
     }
 
     public static List<StandardCurrency> getStandardCurrencyList( DatabaseAdapter db_ ) throws PriceException {
@@ -116,7 +96,7 @@ public final class CurrencyService {
         }
     }
 
-    public static CustomCurrencyItemType getCurrencyItemByCode( CustomCurrencyType list, String nameCurrency ) {
+    public static CurrencyItem getCurrencyItemByCode( CustomCurrency list, String nameCurrency ) {
         if( log.isDebugEnabled() ) {
             log.debug( "list " + list + ", nameCurrency " + nameCurrency );
         }
@@ -126,7 +106,7 @@ public final class CurrencyService {
         }
 
 
-        for (CustomCurrencyItemType item : list.getCurrencyList()) {
+        for (CurrencyItem item : list.getCurrencies()) {
             if( log.isDebugEnabled() ) {
                 log.debug( "nameCurrency " + nameCurrency + ", item.getStandardCurrencyCode() " + item.getCurrencyCode() );
             }
@@ -138,12 +118,12 @@ public final class CurrencyService {
         return null;
     }
 
-    public static CustomCurrencyItemType getCurrencyItem( CustomCurrencyType list, Long idCurrency ) {
+    public static CurrencyItem getCurrencyItem( CustomCurrency list, Long idCurrency ) {
         if( list == null || idCurrency == null ) {
             return null;
         }
 
-        for (CustomCurrencyItemType item : list.getCurrencyList()) {
+        for (CurrencyItem item : list.getCurrencies()) {
             if( idCurrency.equals( item.getCurrencyId() ) ) {
                 return item;
             }
@@ -151,11 +131,11 @@ public final class CurrencyService {
         return null;
     }
 
-    public static StandardCurrency getStandardCurrencyItem( CustomCurrencyType list, Long idCurrency ) {
-        if( list == null || idCurrency == null || list.getStandardCurrencyList() == null )
+    public static StandardCurrency getStandardCurrencyItem( CustomCurrency list, Long idCurrency ) {
+        if( list == null || idCurrency == null || list.getStandardCurrencies() == null )
             return null;
 
-        for (StandardCurrency item : list.getStandardCurrencyList()) {
+        for (StandardCurrency item : list.getStandardCurrencies()) {
             if( idCurrency.equals( item.getStandardCurrencyId() ) ) {
                 return item;
             }

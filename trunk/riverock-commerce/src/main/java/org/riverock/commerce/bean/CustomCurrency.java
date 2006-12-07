@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.io.Serializable;
 
 import org.riverock.commerce.bean.Currency;
+import org.riverock.commerce.price.CurrencyItem;
 
 /**
  * @author Sergei Maslyukov
@@ -39,17 +40,17 @@ import org.riverock.commerce.bean.Currency;
 public class CustomCurrency implements Serializable {
     private static final long serialVersionUID = 2625005163L;
     
-    private List<Currency> currencies = new ArrayList<Currency>();
+    private List<CurrencyItem> currencies = new ArrayList<CurrencyItem>();
     private List<StandardCurrency> standardCurrencies = new ArrayList<StandardCurrency>();
 
-    public List<Currency> getCurrencies() {
+    public List<CurrencyItem> getCurrencies() {
         if (currencies==null) {
-            currencies = new ArrayList<Currency>();
+            currencies = new ArrayList<CurrencyItem>();
         }
         return currencies;
     }
 
-    public void setCurrencies(List<Currency> currencies) {
+    public void setCurrencies(List<CurrencyItem> currencies) {
         this.currencies = currencies;
     }
 

@@ -13,9 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.Transient;
 
-import org.riverock.commerce.bean.price.CurrencyCurrentCursType;
-import org.riverock.commerce.bean.StandardCurrencyCurs;
-
 /**
  * User: SergeMaslyukov
  * Date: 02.12.2006
@@ -51,7 +48,7 @@ public class StandardCurrency implements Serializable {
     private boolean isDeleted;
 
     @Transient
-    private CurrencyCurrentCursType currentCurs;
+    private CurrencyCurs currentCurs;
 
     @Transient
     private List<StandardCurrencyCurs> curses = new ArrayList<StandardCurrencyCurs>();
@@ -96,11 +93,11 @@ public class StandardCurrency implements Serializable {
         this.standardCurrencyName = standardCurrencyName;
     }
 
-    public CurrencyCurrentCursType getCurrentCurs() {
+    public CurrencyCurs getCurrentCurs() {
         return currentCurs;
     }
 
-    public void setCurrentCurs(CurrencyCurrentCursType currentCurs) {
+    public void setCurrentCurs(CurrencyCurs currentCurs) {
         this.currentCurs = currentCurs;
     }
 }

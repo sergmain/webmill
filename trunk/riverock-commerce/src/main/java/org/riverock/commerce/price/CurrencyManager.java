@@ -23,15 +23,10 @@
  */
 package org.riverock.commerce.price;
 
-import java.io.File;
-
 import org.apache.log4j.Logger;
 
+import org.riverock.commerce.bean.CustomCurrency;
 import org.riverock.sql.cache.SqlStatement;
-import org.riverock.commerce.bean.price.CustomCurrencyType;
-import org.riverock.commerce.tools.SiteUtils;
-import org.riverock.common.tools.XmlTools;
-import org.riverock.common.tools.MainTools;
 
 /**
  * User: serg_main
@@ -48,9 +43,9 @@ public class CurrencyManager {
         SqlStatement.registerRelateClass(CurrencyManager.class, CurrencyList.class);
     }
 
-    private CustomCurrencyType currencyList = null;
+    private CustomCurrency currencyList = null;
 
-    public CustomCurrencyType getCurrencyList() {
+    public CustomCurrency getCurrencyList() {
         return currencyList;
     }
 

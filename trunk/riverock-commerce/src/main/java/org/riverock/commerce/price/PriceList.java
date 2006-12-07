@@ -56,7 +56,7 @@ public class PriceList {
         double price = priceItem;
 
         AuthSession auth = null;
-        ShopBean shop = null;
+        Shop shop = null;
         int precision = 2;
 
         for( int i = 0; i < object.length; i++ ) {
@@ -69,14 +69,14 @@ public class PriceList {
                 auth = ( AuthSession ) obj;
 
             }
-            else if( ( obj != null ) && ( obj instanceof ShopBean ) ) {
-                shop = ( ShopBean ) obj;
+            else if( ( obj != null ) && ( obj instanceof Shop ) ) {
+                shop = ( Shop ) obj;
             }
-            else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionBean ) ) {
+            else if( ( obj != null ) && ( obj instanceof CurrencyPrecision ) ) {
                 if( log.isDebugEnabled() )
                     log.debug( "Redefine default value of precision" );
 
-                precision = ( ( CurrencyPrecisionBean ) obj ).getPrecision();
+                precision = ( ( CurrencyPrecision ) obj ).getPrecision();
             }
         }
 
@@ -117,7 +117,7 @@ public class PriceList {
 
         double discountUser = 0;
         AuthSession auth = null;
-        ShopBean shop = null;
+        Shop shop = null;
         int precision = 2;
 
         // search object of AuthSession for calculate discount
@@ -130,14 +130,14 @@ public class PriceList {
             if( ( obj != null ) && ( obj instanceof AuthSession ) ) {
                 auth = ( AuthSession ) obj;
             }
-            else if( ( obj != null ) && ( obj instanceof ShopBean ) ) {
-                shop = ( ShopBean ) obj;
+            else if( ( obj != null ) && ( obj instanceof Shop ) ) {
+                shop = ( Shop ) obj;
             }
-            else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionBean ) ) {
+            else if( ( obj != null ) && ( obj instanceof CurrencyPrecision ) ) {
                 if( log.isDebugEnabled() )
                     log.debug( "Redefine default value of precision" );
 
-                precision = ( ( CurrencyPrecisionBean ) obj ).getPrecision();
+                precision = ( ( CurrencyPrecision ) obj ).getPrecision();
             }
         }
 

@@ -23,7 +23,7 @@
  */
 package org.riverock.commerce.manager.currency_precision;
 
-import org.riverock.commerce.bean.ShopBean;
+import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.manager.shop.ShopExtendedBean;
@@ -66,12 +66,12 @@ public class CurrencyPrecisionDataProvider implements Serializable {
         this.currencyPrecisionSessionBean = currencyPrecisionSessionBean;
     }
 
-    public List<ShopBean> getShopList() {
+    public List<Shop> getShopList() {
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
-        List<ShopBean> list = CommerceDaoFactory.getShopDao().getShopList(siteId);
+        List<Shop> list = CommerceDaoFactory.getShopDao().getShopList(siteId);
         if (list==null) {
-            return new ArrayList<ShopBean>();
+            return new ArrayList<Shop>();
         }
         return list;
     }
@@ -87,7 +87,7 @@ public class CurrencyPrecisionDataProvider implements Serializable {
         if (shopExtendedBean==null) {
             shopExtendedBean=currencyPrecisionService.getShopExtended(shopId);
         }
-        if (!shopExtendedBean.getShopBean().getShopId().equals(shopId)) {
+        if (!shopExtendedBean.getShop().getShopId().equals(shopId)) {
             log.warn("Mismatch shopId");
             shopExtendedBean=currencyPrecisionService.getShopExtended(shopId);
         }

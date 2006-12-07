@@ -35,7 +35,7 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.bean.Currency;
-import org.riverock.commerce.manager.currency.CurrencyCurs;
+import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
@@ -365,7 +365,10 @@ public class CurrencyDaoImpl implements CurrencyDao {
         if (rs.wasNull()) {
             return null;
         }
-        curs.setCreated( RsetTools.getTimestamp(rs, "DATE_CHANGE") );
+        curs.setDate( RsetTools.getTimestamp(rs, "DATE_CHANGE") );
+        
+        curs.setCurrencyCursId(rs.getLong("ID_CURVAL") );
+        curs.setCurrencyId(rs.getLong("ID_CURRENCY") );
 
         return curs;
     }

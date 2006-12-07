@@ -51,7 +51,7 @@
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
     <h:form id="delete_shop_form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:panelGrid columns="1" rendered="#{!empty shopSessionBean.shopExtendedBean.shopBean and isUserInRole['webmill.portal-manager']}">
+        <h:panelGrid columns="1" rendered="#{!empty shopSessionBean.shopExtendedBean.shop and isUserInRole['webmill.portal-manager']}">
 
             <f:subview id="subviewShopInfo">
                 <jsp:include page="shop-info.jsp"/>
