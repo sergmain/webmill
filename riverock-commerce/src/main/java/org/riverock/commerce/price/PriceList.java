@@ -31,9 +31,9 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.commerce.bean.price.OrderItemType;
+import org.riverock.commerce.bean.price.OrderItem;
 import org.riverock.commerce.bean.price.OrderType;
-import org.riverock.commerce.bean.price.ShopOrderType;
+import org.riverock.commerce.bean.price.ShopOrder;
 
 /**
  * $Id$
@@ -189,9 +189,9 @@ public class PriceList {
     private static void controllLoop( int idx, OrderType order ) {
         if( log.isDebugEnabled() ) {
             log.debug( "Check loop #" + idx );
-            for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
-                for (OrderItemType item : shopOrder.getOrderItemListList()) {
-                    log.debug( "id_item - " + item.getItemId() + ", isInDb - " + item.getInDb() );
+            for (ShopOrder shopOrder : order.getShopOrdertListList()) {
+                for (OrderItem item : shopOrder.getOrderItemListList()) {
+                    log.debug( "id_item - " + item.getShopItem().getItemId() + ", isInDb - " + item.getInDb() );
                 }
             }
             log.debug( "" );
@@ -213,8 +213,8 @@ public class PriceList {
             rs = ps.executeQuery();
 
             // Before check, for all item we set flag isInDb to false
-            for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
-                for (OrderItemType item : shopOrder.getOrderItemListList()) {
+            for (ShopOrder shopOrder : order.getShopOrdertListList()) {
+                for (OrderItem item : shopOrder.getOrderItemListList()) {
                     item.setInDb( false );
                 }
             }
@@ -229,7 +229,7 @@ public class PriceList {
                     log.debug( "Check item from DB with idItem - " + idItem );
 
                 // search in order from session item, which exist in db
-                for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
+                for (ShopOrder shopOrder : order.getShopOrdertListList()) {
 
                     if( log.isDebugEnabled() ) {
                         controllLoop( 1, order );
@@ -237,19 +237,20 @@ public class PriceList {
                         log.debug( "Count of items in shopOrder  - " + shopOrder.getOrderItemListList().size() );
                     }
 
-                    for (OrderItemType item : shopOrder.getOrderItemListList()) {
+                    for (OrderItem item : shopOrder.getOrderItemListList()) {
 
                         if( log.isDebugEnabled() ) {
                             log.debug( "item object - " + item );
                             log.debug( "item isInDb - " + item.getInDb() );
                             log.debug( "check item with id - " + idItem );
-                            log.debug( "status compare id_item - " + ( item.getItemId() == idItem ) );
+                            log.debug( "status compare id_item - " + ( item.getShopItem().getItemId() == idItem ) );
                         }
 
-                        if( log.isDebugEnabled() )
+                        if( log.isDebugEnabled() ) {
                             controllLoop( 2, order );
+                        }
 
-                        if( item.getItemId() == idItem ) {
+                        if( item.getShopItem().getItemId() == idItem ) {
                             item.setInDb( true );
 
                             if( log.isDebugEnabled() )
@@ -257,18 +258,18 @@ public class PriceList {
 
                             if( log.isDebugEnabled() ) {
                                 log.debug( "item in order. check values of order" );
-                                log.debug( "item price " + item.getWmPriceItemResult() );
+                                log.debug( "item price " + item.getResultPrice() );
                                 log.debug( "db price " + RsetTools.getDouble( rs, "PRICE_RESULT" ) );
                                 log.debug( "init count " + item.getCountItem() );
                                 log.debug( "db count " + RsetTools.getInt( rs, "COUNT" ) );
                                 log.debug( "item code " + item.getResultCurrency().getCurrencyCode() );
                                 log.debug( "db code " + RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) );
                                 log.debug( "status of compare order item data " +
-                                    ( !item.getWmPriceItemResult().equals( RsetTools.getBigDecimal( rs, "PRICE_RESULT") ) ||
+                                    ( !item.getResultPrice().equals( RsetTools.getBigDecimal( rs, "PRICE_RESULT") ) ||
                                     ( item.getCountItem() != RsetTools.getInt( rs, "COUNT" ) ) ||
                                     !item.getResultCurrency().getCurrencyCode().equals( RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) )
                                     ) );
-                                log.debug( "price " + ( !item.getWmPriceItemResult().equals( RsetTools.getBigDecimal( rs, "PRICE_RESULT" ) ) ));
+                                log.debug( "price " + ( !item.getResultPrice().equals( RsetTools.getBigDecimal( rs, "PRICE_RESULT" ) ) ));
                                 log.debug( "count " + ( item.getCountItem() != RsetTools.getInt( rs, "COUNT" ) ) );
                                 log.debug( "currency " + !item.getResultCurrency().getCurrencyCode().equals( RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) ) );
                             }
@@ -277,7 +278,7 @@ public class PriceList {
                                 controllLoop( 31, order );
 
                             // Заказ найден, сравниваем данные
-                            if ( !item.getWmPriceItemResult().equals( RsetTools.getBigDecimal( rs, "PRICE_RESULT" )) ||
+                            if ( !item.getResultPrice().equals( RsetTools.getBigDecimal( rs, "PRICE_RESULT" )) ||
                                 item.getCountItem() != RsetTools.getInt( rs, "COUNT" ) ||
                                 !item.getResultCurrency().getCurrencyCode().equals( RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) )
                                 ) {
@@ -289,7 +290,7 @@ public class PriceList {
                                 if( log.isDebugEnabled() ) {
                                     log.debug( "item in order not equals with item in DB" );
 
-                                    log.debug( "item price " + item.getWmPriceItemResult() );
+                                    log.debug( "item price " + item.getResultPrice() );
                                     log.debug( "db price " + RsetTools.getBigDecimal( rs, "PRICE_RESULT" ) );
                                     log.debug( "item count " + item.getCountItem() );
                                     log.debug( "db count " + RsetTools.getInt( rs, "COUNT" ) );
@@ -326,7 +327,7 @@ public class PriceList {
 
                             if( log.isDebugEnabled() ) {
                                 log.debug( "do continue" );
-                                log.debug( "item idItem " + item.getItemId() + " inDb " + item.getInDb() );
+                                log.debug( "item idItem " + item.getShopItem().getItemId() + " inDb " + item.getInDb() );
                             }
 
                             if( log.isDebugEnabled() ) {
@@ -348,17 +349,17 @@ public class PriceList {
             }
 
             // write to db all items, which not exists in db
-            for (ShopOrderType shopOrder : order.getShopOrdertListList()) {
-                for (OrderItemType item : shopOrder.getOrderItemListList()) {
+            for (ShopOrder shopOrder : order.getShopOrdertListList()) {
+                for (OrderItem item : shopOrder.getOrderItemListList()) {
                     if( log.isDebugEnabled() ) {
                         log.debug( "item object - " + item );
-                        log.debug( "item idItem " + item.getItemId() );
+                        log.debug( "item idItem " + item.getShopItem().getItemId() );
                         log.debug( "item inDb - " + item.getInDb() );
                     }
 
                     if( Boolean.FALSE.equals( item.getInDb() ) ) {
                         if( log.isDebugEnabled() ) {
-                            log.debug( "item not in db " + item.getItemId() );
+                            log.debug( "item not in db " + item.getShopItem().getItemId() );
                         }
 
                         OrderLogic.addItem( dbDyn, order.getOrderId(), item );

@@ -28,13 +28,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Class WmPriceListItemType.
+ * Class ShopItem.
  * 
  * User: SergeMaslyukov
  * Date: 02.12.2006
  * Time: 19:37:32
  */
-public class WmPriceListItemType implements Serializable {
+public class ShopItem implements Serializable {
 
     /**
      * Field itemId

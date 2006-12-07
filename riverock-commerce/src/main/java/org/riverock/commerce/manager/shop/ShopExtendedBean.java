@@ -45,17 +45,11 @@ public class ShopExtendedBean {
     }
 
     public String getDefaultCurrencyName() {
-        if (defaultCurrency !=null) {
-            return defaultCurrency.getCurrencyName();
-        }
-        return "";
+        return defaultCurrency != null ? defaultCurrency.getCurrencyName() : "";
     }
 
     public String getInvoiceCurrencyName() {
-        if (invoiceCurrency !=null) {
-            return invoiceCurrency.getCurrencyName();
-        }
-        return "";
+        return invoiceCurrency != null ? invoiceCurrency.getCurrencyName() : "";
     }
 
     public Shop getShop() {

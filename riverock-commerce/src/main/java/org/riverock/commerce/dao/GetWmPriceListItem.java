@@ -1,6 +1,6 @@
 package org.riverock.commerce.dao;
 
-import org.riverock.commerce.bean.price.WmPriceListItemType;
+import org.riverock.commerce.bean.price.ShopItem;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseManager;
@@ -17,7 +17,7 @@ public class GetWmPriceListItem implements Serializable
     public static void reinit() {
     }
 
-    public WmPriceListItemType item = null;
+    public ShopItem item = null;
 
     public boolean isFound = false;
 
@@ -27,12 +27,12 @@ public class GetWmPriceListItem implements Serializable
         return new GetWmPriceListItem(db__, id__ );
     }
 
-    public void copyItem(WmPriceListItemType target)
+    public void copyItem(ShopItem target)
     {
         copyItem(this.item, target);
     }
 
-    public static void copyItem(WmPriceListItemType source, WmPriceListItemType target)
+    public static void copyItem(ShopItem source, ShopItem target)
     {
         if (source==null || target==null)
             return;
@@ -113,8 +113,8 @@ public class GetWmPriceListItem implements Serializable
 
     }
 
-    public static WmPriceListItemType fillBean(ResultSet rs) throws java.sql.SQLException {
-        WmPriceListItemType item = new WmPriceListItemType();
+    public static ShopItem fillBean(ResultSet rs) throws java.sql.SQLException {
+        ShopItem item = new ShopItem();
 
         long tempLong;
         int tempBoolean;

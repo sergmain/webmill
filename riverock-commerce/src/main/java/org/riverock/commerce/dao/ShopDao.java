@@ -26,6 +26,7 @@ package org.riverock.commerce.dao;
 import java.util.List;
 
 import org.riverock.commerce.bean.Shop;
+import org.riverock.commerce.bean.price.ShopItem;
 
 /**
  * @author Sergei Maslyukov
@@ -44,4 +45,6 @@ public interface ShopDao {
     void deleteShop(Long shopId);
 
     List<Shop> getShopList(Long siteId);
+
+    ShopItem getShopItem(Long shotItemId);
 }

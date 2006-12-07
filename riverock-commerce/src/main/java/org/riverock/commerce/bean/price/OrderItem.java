@@ -29,13 +29,13 @@ import java.math.BigDecimal;
 import org.riverock.commerce.price.CurrencyItem;
 
 /**
- * Class OrderItemType.
+ * Class OrderItem.
  *
  * User: SergeMaslyukov
  * Date: 02.12.2006
  * Time: 19:37:32
  */
-public class OrderItemType extends WmPriceListItemType implements Serializable {
+public class OrderItem implements Serializable {
 
     /**
      * Field countItem
@@ -53,9 +53,9 @@ public class OrderItemType extends WmPriceListItemType implements Serializable {
     private java.lang.Long originId;
 
     /**
-     * Field wmPriceItemResult
+     * Field resultPrice
      */
-    private BigDecimal wmPriceItemResult;
+    private BigDecimal resultPrice;
 
     /**
      * Field precisionResult
@@ -76,6 +76,16 @@ public class OrderItemType extends WmPriceListItemType implements Serializable {
      * Field resultCurrency
      */
     private CurrencyItem resultCurrency;
+
+    private ShopItem shopItem;
+
+    public ShopItem getShopItem() {
+        return shopItem;
+    }
+
+    public void setShopItem(ShopItem shopItem) {
+        this.shopItem = shopItem;
+    }
 
     public Integer getCountItem() {
         return countItem;
@@ -101,12 +111,12 @@ public class OrderItemType extends WmPriceListItemType implements Serializable {
         this.originId = originId;
     }
 
-    public BigDecimal getWmPriceItemResult() {
-        return wmPriceItemResult;
+    public BigDecimal getResultPrice() {
+        return resultPrice;
     }
 
-    public void setWmPriceItemResult(BigDecimal wmPriceItemResult) {
-        this.wmPriceItemResult = wmPriceItemResult;
+    public void setResultPrice(BigDecimal resultPrice) {
+        this.resultPrice = resultPrice;
     }
 
     public Integer getPrecisionResult() {
