@@ -35,7 +35,7 @@ import java.io.Serializable;
  * Date: 02.12.2006
  * Time: 19:37:32
  */
-public class ShopOrderType implements Serializable {
+public class ShopOrder implements Serializable {
 
     /**
      * Field shopId
@@ -45,7 +45,7 @@ public class ShopOrderType implements Serializable {
     /**
      * Field orderItemListList
      */
-    private List<OrderItemType> orderItemListList = new ArrayList<OrderItemType>();
+    private List<OrderItem> orderItemListList = new ArrayList<OrderItem>();
 
     /**
      * Field globalDiscount
@@ -71,14 +71,14 @@ public class ShopOrderType implements Serializable {
         this.shopId = shopId;
     }
 
-    public List<OrderItemType> getOrderItemListList() {
+    public List<OrderItem> getOrderItemListList() {
         if (orderItemListList==null) {
-            orderItemListList = new ArrayList<OrderItemType>();
+            orderItemListList = new ArrayList<OrderItem>();
         }
         return orderItemListList;
     }
 
-    public void setOrderItemListList(List<OrderItemType> orderItemListList) {
+    public void setOrderItemListList(List<OrderItem> orderItemListList) {
         this.orderItemListList = orderItemListList;
     }
 

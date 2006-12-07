@@ -34,6 +34,7 @@ import java.math.BigDecimal;
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.bean.Shop;
+import org.riverock.commerce.bean.price.ShopItem;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
@@ -130,8 +131,8 @@ public class ShopDaoImpl implements ShopDao {
 
     /**
      *
-     * @param shop
-     * @return
+     * @param shop shop object to create
+     * @return PK value
      */
     public Long createShop(Shop shop) {
         PreparedStatement ps = null;
@@ -341,5 +342,96 @@ public class ShopDaoImpl implements ShopDao {
         finally {
             DatabaseManager.close( db_, rs, ps );
         }
+    }
+
+    public ShopItem getShopItem(Long shotItemId) {
+        String sql =
+            "select ID_ITEM, ID_SHOP, IS_GROUP, ID, ID_MAIN, ITEM, ABSOLETE, CURRENCY, QUANTITY, ADD_DATE, IS_SPECIAL, " +
+            "       IS_MANUAL, ID_STORAGE_STATUS, PRICE " +
+            "from   WM_PRICE_LIST where ID_ITEM=?";
+
+        if (shotItemId==null)
+            return null;
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DatabaseAdapter db = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            ps = db.prepareStatement(sql);
+            ps.setLong(1, shotItemId);
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return fillShopItem(rs);
+            }
+            return null;
+        }
+        catch( Throwable e ) {
+            final String es = "Error get shop item";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close(db, rs, ps);
+            rs = null;
+            ps = null;
+        }
+    }
+
+    private static ShopItem fillShopItem(ResultSet rs) throws java.sql.SQLException {
+        ShopItem item = new ShopItem();
+
+        long tempLong;
+        int tempBoolean;
+        String tempString;
+        int tempInt;
+        java.sql.Timestamp tempTimestamp = null;
+
+        tempLong = rs.getLong( "ID_ITEM");
+        item.setItemId( tempLong );
+        tempLong = rs.getLong( "ID_SHOP");
+        if (!rs.wasNull())
+            item.setShopId( tempLong );
+        tempBoolean = rs.getInt( "IS_GROUP");
+        if (!rs.wasNull())
+            item.setGroup( tempBoolean==1 );
+        else
+            item.setGroup( false );
+        tempLong = rs.getLong( "ID");
+        if (!rs.wasNull())
+            item.setId( tempLong );
+        tempLong = rs.getLong( "ID_MAIN");
+        item.setIdMain( tempLong );
+        tempString = rs.getString( "ITEM" );
+        if (!rs.wasNull())
+            item.setItem( tempString );
+        tempInt = rs.getInt( "ABSOLETE");
+        item.setAbsolete( tempInt );
+        tempString = rs.getString( "CURRENCY" );
+        if (!rs.wasNull())
+            item.setCurrency( tempString );
+        tempLong = rs.getLong( "QUANTITY");
+        if (!rs.wasNull())
+            item.setQuantity( tempLong );
+        tempTimestamp = rs.getTimestamp( "ADD_DATE" );
+        if (!rs.wasNull())
+            item.setAddDate( tempTimestamp );
+        tempBoolean = rs.getInt( "IS_SPECIAL");
+        if (!rs.wasNull())
+            item.setSpecial( tempBoolean==1 );
+        else
+            item.setSpecial( false );
+        tempBoolean = rs.getInt( "IS_MANUAL");
+        if (!rs.wasNull())
+            item.setManual( tempBoolean==1 );
+        else
+            item.setManual( false );
+        tempLong = rs.getLong( "ID_STORAGE_STATUS");
+        item.setIdStorageStatus( tempLong );
+
+        item.setPrice( RsetTools.getBigDecimal(rs, "PRICE") );
+
+        return item;
     }
 }

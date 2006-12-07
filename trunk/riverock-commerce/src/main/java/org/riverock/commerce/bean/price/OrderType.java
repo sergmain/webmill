@@ -48,7 +48,7 @@ public class OrderType implements Serializable {
     /**
      * Field shopOrdertListList
      */
-    private List<ShopOrderType> shopOrdertListList = new ArrayList<ShopOrderType>();
+    private List<ShopOrder> shopOrdertListList = new ArrayList<ShopOrder>();
 
     public Long getOrderId() {
         return orderId;
@@ -66,14 +66,14 @@ public class OrderType implements Serializable {
         this.serverName = serverName;
     }
 
-    public List<ShopOrderType> getShopOrdertListList() {
+    public List<ShopOrder> getShopOrdertListList() {
         if (shopOrdertListList==null) {
-            shopOrdertListList = new ArrayList<ShopOrderType>();
+            shopOrdertListList = new ArrayList<ShopOrder>();
         }
         return shopOrdertListList;
     }
 
-    public void setShopOrdertListList(List<ShopOrderType> shopOrdertListList) {
+    public void setShopOrdertListList(List<ShopOrder> shopOrdertListList) {
         this.shopOrdertListList = shopOrdertListList;
     }
 }
