@@ -236,6 +236,10 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 "where catalog.catalogId=:catalogId")
             .setLong("catalogId", catalogId)
             .uniqueResult();
+
+        if (log.isDebugEnabled() && bean!=null) {
+            log.debug("Metadata: " + bean.getMetadata());
+        }
         session.getTransaction().commit();
         return bean;
     }
@@ -362,6 +366,11 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         bean.setTemplateId(catalogItem.getTemplateId());
         bean.setTopCatalogId(catalogItem.getTopCatalogId());
         bean.setKeyMessage(catalogItem.getKeyMessage());
+
+        if (log.isDebugEnabled()) {
+            log.debug("Metadata: " + catalogItem.getMetadata());
+        }
+
         bean.setMetadata(catalogItem.getMetadata());
         bean.setOrderField(catalogItem.getOrderField());
         bean.setPortletRole(catalogItem.getPortletRole());
