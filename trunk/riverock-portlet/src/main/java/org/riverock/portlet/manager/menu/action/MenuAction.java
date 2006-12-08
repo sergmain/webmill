@@ -159,6 +159,9 @@ public class MenuAction implements Serializable {
         log.info("Save changes menu item action.");
 
         if (getSessionObject() != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Metadata: " + getSessionObject().getMenuItem().getMetadata());
+            }
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().updateCatalogItem(getSessionObject().getMenuItem());
             cleadDataProviderObject();
             loadCurrentObject();
