@@ -138,9 +138,6 @@ public class Shop implements Serializable {
     @Column(name="COMMAS_COUNT")
     private int digitsAfterComma;
 
-    @Transient
-    private CurrencyPrecisionList precisionList = new CurrencyPrecisionList();
-
     public int getDigitsAfterComma() {
         return digitsAfterComma;
     }
@@ -206,6 +203,9 @@ public class Shop implements Serializable {
     }
 
     public String getShopNameForPriceList() {
+        if (shopNameForPriceList==null) {
+            shopNameForPriceList="";
+        }
         return shopNameForPriceList;
     }
 
@@ -283,14 +283,6 @@ public class Shop implements Serializable {
 
     public void setNeedRecalc(boolean needRecalc) {
         isNeedRecalc = needRecalc;
-    }
-
-    public CurrencyPrecisionList getPrecisionList() {
-        return precisionList;
-    }
-
-    public void setPrecisionList(CurrencyPrecisionList precisionList) {
-        this.precisionList = precisionList;
     }
 
     public double getDiscount() {

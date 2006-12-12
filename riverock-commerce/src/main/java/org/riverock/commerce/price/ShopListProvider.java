@@ -23,23 +23,18 @@
  */
 package org.riverock.commerce.price;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.commerce.bean.ClassQueryItemImpl;
+import org.riverock.commerce.bean.Shop;
+import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.common.tools.StringTools;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portlet.member.PortletGetList;
 
 /**
  * User: SergeMaslyukov
@@ -62,54 +57,24 @@ public class ShopListProvider implements PortletGetList {
 
     public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug( "Get list of Shop. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog );
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db_ = null;
-
+        }
         Long siteId = provider.getPortalCatalogDao().getSiteId(idSiteCtxLangCatalog);
+        List<Shop> shops = CommerceDaoFactory.getShopDao().getShopList(siteId);
         List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement( 
-                "SELECT b.ID_SHOP, b.CODE_SHOP, b.NAME_SHOP " +
-                "FROM   WM_PRICE_SHOP_LIST b " +
-                "where  b.ID_SITE=?"
-            );
+        for (Shop shop : shops) {
+            Long id = shop.getShopId();
+            String name = "" + id + ", " + shop.getShopCode() + ", " + shop.getShopName();
 
-            RsetTools.setLong( ps, 1, siteId );
-
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Long id = RsetTools.getLong( rs, "ID_SHOP" );
-                String name = "" + id + ", " +
-                    RsetTools.getString( rs, "CODE_SHOP" ) + ", " +
-                    RsetTools.getString( rs, "NAME_SHOP" );
-
-                ClassQueryItem item =
-                    new ClassQueryItemImpl( id, StringTools.truncateString( name, 60 ) );
-
-                if (idContext!=null && idContext.equals( item.getIndex() )) {
-                    item.setSelected(true);
-                }
-
-                v.add( item );
+            ClassQueryItem item = new ClassQueryItemImpl( id, StringTools.truncateString( name, 60 ) );
+            if (idContext!=null && idContext.equals( item.getIndex() )) {
+                item.setSelected(true);
             }
-            return v;
 
+            v.add( item );
         }
-        catch (Exception e) {
-            log.error( "Get list of Shop. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog, e );
-            return null;
-        }
-        finally {
-            DatabaseManager.close( db_, rs, ps );
-            rs = null;
-            ps = null;
-            db_ = null;
-        }
+        return v;
     }
 
 }

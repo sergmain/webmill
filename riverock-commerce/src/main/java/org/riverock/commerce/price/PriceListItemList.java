@@ -253,9 +253,10 @@ public final class PriceListItemList {
     }
 
     private static int getPrecisionValue(Shop shop, Long idCurrency) {
-        CurrencyPrecision prec = shop.getPrecisionList().getCurrencyPrecision(idCurrency);
-        if (prec == null)
+        CurrencyPrecision prec = new CurrencyPrecisionList(shop.getShopId()).getCurrencyPrecision(idCurrency);
+        if (prec == null) {
             return 2;
+        }
 
         return prec.getPrecision() != null ? prec.getPrecision() : 0;
     }
