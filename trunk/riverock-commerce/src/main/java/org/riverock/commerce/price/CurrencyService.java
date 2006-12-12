@@ -23,21 +23,17 @@
  */
 package org.riverock.commerce.price;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 
 import org.riverock.commerce.bean.CurrencyCurs;
-import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.bean.CustomCurrency;
+import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
+import org.riverock.commerce.tools.HibernateUtils;
 
 /**
  * Author: mill
@@ -56,45 +52,6 @@ public final class CurrencyService {
 
     public static StandardCurrencyCurs getStandardCurrencyCurs( Long idStandardCurrency ) {
         return CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(idStandardCurrency);
-    }
-
-    public static List<StandardCurrency> getStandardCurrencyList( DatabaseAdapter db_ ) throws PriceException {
-
-        String sql_ =
-            "SELECT ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED " +
-            "FROM   WM_CASH_CURRENCY_STD ";
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = db_.prepareStatement( sql_ );
-
-            rs = ps.executeQuery();
-
-            List<StandardCurrency> currencies = new ArrayList<StandardCurrency>();
-            while( rs.next() ) {
-                StandardCurrency currency = new StandardCurrency();
-
-                currency.setStandardCurrencyCode( RsetTools.getString( rs, "CONVERT_CURRENCY" ) );
-                currency.setStandardCurrencyName( RsetTools.getString( rs, "NAME_STD_CURR" ) );
-                currency.setStandardCurrencyId( RsetTools.getLong( rs, "ID_STD_CURR" ) );
-
-                currency.setCurrentCurs( getStandardCurrencyCurs( currency.getStandardCurrencyId() ) );
-
-                currencies.add( currency );
-            }
-            return currencies;
-        }
-        catch( Exception exc ) {
-            String es = "Error getStandardCurrencyList()";
-            log.error( es, exc );
-            throw new PriceException( es, exc );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
     }
 
     public static CurrencyItem getCurrencyItemByCode( CustomCurrency list, String nameCurrency ) {

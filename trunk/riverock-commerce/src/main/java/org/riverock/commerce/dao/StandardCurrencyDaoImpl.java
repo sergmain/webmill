@@ -33,9 +33,11 @@ import java.sql.Timestamp;
 import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 
 import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
+import org.riverock.commerce.tools.HibernateUtils;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
@@ -55,37 +57,13 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
      * @return List<StandardCurrency>
      */
     public List<StandardCurrency> getStandardCurrencyList() {
-        List<StandardCurrency> list = new ArrayList<StandardCurrency>();
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-
-            ps = db_.prepareStatement(
-                "select ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED " +
-                "from   WM_CASH_CURRENCY_STD " +
-                "where  IS_DELETED=0 "
-            );
-
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                StandardCurrency currency = initStandardCurrencyBean(rs);
-                list.add(currency);
-            }
-            return list;
-        }
-        catch (Throwable e) {
-            final String es = "Error create list of standard currencies";
-            log.error(es, e);
-            throw new RuntimeException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db_, rs, ps);
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<StandardCurrency> list = session.createQuery(
+            "select stdCurr from org.riverock.commerce.bean.StandardCurrency stdCurr ")
+            .list();
+        session.getTransaction().commit();
+        return list;
     }
 
     public Long createStandardCurrency(StandardCurrency standardCurrencyBean) {
@@ -355,4 +333,5 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
         currency.setStandardCurrencyCode( RsetTools.getString(rs, "CONVERT_CURRENCY") );
         return currency;
     }
+
 }

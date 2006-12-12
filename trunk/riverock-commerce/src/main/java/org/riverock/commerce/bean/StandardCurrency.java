@@ -48,9 +48,6 @@ public class StandardCurrency implements Serializable {
     private boolean isDeleted;
 
     @Transient
-    private StandardCurrencyCurs currentCurs;
-
-    @Transient
     private List<StandardCurrencyCurs> curses = new ArrayList<StandardCurrencyCurs>();
 
     public List<StandardCurrencyCurs> getCurses() {
@@ -91,13 +88,5 @@ public class StandardCurrency implements Serializable {
 
     public void setStandardCurrencyName(String standardCurrencyName) {
         this.standardCurrencyName = standardCurrencyName;
-    }
-
-    public StandardCurrencyCurs getCurrentCurs() {
-        return currentCurs;
-    }
-
-    public void setCurrentCurs(StandardCurrencyCurs currentCurs) {
-        this.currentCurs = currentCurs;
     }
 }
