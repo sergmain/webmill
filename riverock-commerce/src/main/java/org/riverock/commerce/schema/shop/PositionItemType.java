@@ -149,4 +149,8 @@ public class PositionItemType {
         this.idGroupTop = value;
     }
 
+    public String toString() {
+        return "[idGroupCurrent:"+idGroupCurrent+",idGroupTop:"+idGroupTop+",positionName:"+positionName+"]";
+    }
+
 }

@@ -23,13 +23,14 @@
  */
 package org.riverock.commerce.shop;
 
+import java.math.BigDecimal;
+
 import junit.framework.TestCase;
 
 import org.riverock.common.startup.StartupApplication;
 import org.riverock.commerce.schema.import_price.PriceListItemType;
 import org.riverock.commerce.schema.import_price.PriceListType;
 import org.riverock.commerce.schema.import_price.PricesType;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * User: Admin
@@ -53,8 +54,6 @@ public class TestCaseShop extends TestCase {
     public Long idRuSiteLanguage;
     public Long idRuLanguage;
     public Long idRuLangCatalog;
-
-    private DatabaseAdapter db_ = null;
 
     Long idTemplateIndex;
     String nameIndexTemplate = "index_template";
@@ -97,7 +96,7 @@ public class TestCaseShop extends TestCase {
         item1.setItemID( new Long( 211 ) );
         item1.setNameItem( "test item " + item1.getItemID() );
         item1.setParentID( new Long( 0 ) );
-        item1.setPrice( new Double( 23.34 ) );
+        item1.setPrice( new BigDecimal( 23.34 ) );
         shopData.getItem().add( item1 );
 
         PriceListItemType item2 = new PriceListItemType();
@@ -107,7 +106,7 @@ public class TestCaseShop extends TestCase {
         item2.setItemID( new Long( 212 ) );
         item2.setNameItem( "test item " + item2.getItemID() );
         item2.setParentID( new Long( 0 ) );
-        item2.setPrice( new Double( 4.34 ) );
+        item2.setPrice( new BigDecimal( 4.34 ) );
         shopData.getItem().add( item2 );
 
         PriceListItemType item21 = new PriceListItemType();
@@ -117,7 +116,7 @@ public class TestCaseShop extends TestCase {
         item21.setItemID( new Long( 212 ) );
         item21.setNameItem( "test item " + item21.getItemID() );
         item21.setParentID( new Long( 0 ) );
-        item21.setPrice( new Double( 4.34 ) );
+        item21.setPrice( new BigDecimal( 4.34 ) );
         shopData.getItem().add( item21 );
 
         PriceListItemType item3 = new PriceListItemType();
@@ -127,7 +126,7 @@ public class TestCaseShop extends TestCase {
         item3.setItemID( new Long( 10 ) );
         item3.setNameItem( "test item " + item3.getItemID() );
         item3.setParentID( new Long( 0 ) );
-        item3.setPrice( new Double( 15.34 ) );
+        item3.setPrice( new BigDecimal( 15.34 ) );
         shopData.getItem().add( item3 );
 
         PriceListItemType item4 = new PriceListItemType();
@@ -137,7 +136,7 @@ public class TestCaseShop extends TestCase {
         item4.setItemID( new Long( 510 ) );
         item4.setNameItem( "test item " + item4.getItemID() );
         item4.setParentID( new Long( 10 ) );
-        item4.setPrice( new Double( 11.34 ) );
+        item4.setPrice( new BigDecimal( 11.34 ) );
         shopData.getItem().add( item4 );
         shopListData.getPriceList().add( shopData );
 
@@ -200,14 +199,6 @@ public class TestCaseShop extends TestCase {
     public void tearDown()
         throws Exception {
         System.out.println( "start tearDown()" );
-
-        if ( testAbstract != null ) {
-            if ( testAbstract.db_ != null) {
-                testAbstract.db_.commit();
-            }
-            DatabaseAdapter.close( testAbstract.db_ );
-            testAbstract.db_ = null;
-        }
     }
 
 */

@@ -77,6 +77,10 @@ public class PriceListType {
         return this.item;
     }
 
+    public void setItem(List<PriceListItemType> items) {
+        this.item = items;
+    }
+
     /**
      * Gets the value of the shopCode property.
      * 

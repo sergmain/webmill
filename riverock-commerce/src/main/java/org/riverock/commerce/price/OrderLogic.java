@@ -373,7 +373,7 @@ public final class OrderLogic {
 
         for (ShopOrder shopOrder : order.getShopOrders()) {
             for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
-                if( idItem.equals( item.getShopItem().getItemId() ) )
+                if( idItem.equals( item.getShopItem().getShopItemId() ) )
                     return true;
             }
         }
@@ -416,7 +416,7 @@ public final class OrderLogic {
 
                     shopOrder = shopOrderTemp;
                     for (ShopOrderItem orderItem : shopOrderTemp.getShopOrderItems()) {
-                        if( orderItem.getShopItem().getItemId().equals( idItem ) ) {
+                        if( orderItem.getShopItem().getShopItemId().equals( idItem ) ) {
                             if( log.isDebugEnabled() ) {
                                 log.debug( "Нужное наименвание найдено, old count " + orderItem.getCountItem() + ". Устанавливаем новое количество " + count );
                             }
@@ -499,7 +499,7 @@ public final class OrderLogic {
             throw new Exception( "Error add item to order. Item is null" );
 
         if( log.isDebugEnabled() )
-            log.debug( "Add new count of item. id_item - " + item.getShopItem().getItemId() + " count - " + item.getCountItem() );
+            log.debug( "Add new count of item. id_item - " + item.getShopItem().getShopItemId() + " count - " + item.getCountItem() );
 
         PreparedStatement ps = null;
 
@@ -529,7 +529,7 @@ public final class OrderLogic {
             ps = dbDyn.prepareStatement( sql_ );
             RsetTools.setLong( ps, 1, seqValue );
             RsetTools.setLong( ps, 2, idOrder );
-            RsetTools.setLong( ps, 3, item.getShopItem().getItemId() );
+            RsetTools.setLong( ps, 3, item.getShopItem().getShopItemId() );
             RsetTools.setInt( ps, 4, item.getCountItem() );
             ps.setString( 5, item.getShopItem().getItem() );
             RsetTools.setBigDecimal( ps, 6, item.getShopItem().getPrice() );
@@ -563,7 +563,7 @@ public final class OrderLogic {
 
         for (ShopOrder shopOrder : order.getShopOrders()) {
             for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
-                if( idItem.equals( item.getShopItem().getItemId() ) ) {
+                if( idItem.equals( item.getShopItem().getShopItemId() ) ) {
                     item.setCountItem( count );
                     isNotInOrder = false;
                     break;
@@ -614,7 +614,7 @@ public final class OrderLogic {
             Iterator<ShopOrderItem> it = shopOrder.getShopOrderItems().iterator();
             while (it.hasNext()) {
                 ShopOrderItem item = it.next();
-                if( id_item.equals( item.getShopItem().getItemId() ) ) {
+                if( id_item.equals( item.getShopItem().getShopItemId() ) ) {
                     it.remove();
                     isDeleted = true;
                     break;

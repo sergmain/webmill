@@ -23,22 +23,15 @@
  */
 package org.riverock.commerce.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.util.List;
 import java.util.ArrayList;
-import java.math.BigDecimal;
 
-import org.apache.log4j.Logger;
+import org.hibernate.Session;
 
 import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.ShopItem;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
-import org.riverock.common.tools.RsetTools;
+import org.riverock.commerce.tools.HibernateUtils;
+import org.riverock.commerce.price.PriceGroupItem;
 
 /**
  * @author Sergei Maslyukov
@@ -48,85 +41,51 @@ import org.riverock.common.tools.RsetTools;
  *         $Id: PriceCurrency.java 950 2006-09-01 18:11:51Z serg_main $
  */
 public class ShopDaoImpl implements ShopDao {
-    private final static Logger log = Logger.getLogger( ShopDaoImpl.class );
 
     public Shop getShop(Long shopId) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement(
-                "select ID_SHOP, NAME_SHOP, IS_CLOSE, IS_PROCESS_INVOICE, ID_TYPE_SHOP_1, ID_TYPE_SHOP_2, " +
-                "       NAME_SHOP_FOR_PRICE_LIST, IS_NEED_RECALC, ORDER_EMAIL, ID_SITE, CODE_SHOP, " +
-                "       LAST_DATE_UPLOAD, DATE_CALC_QUANTITY, NEW_ITEM_DAYS, IS_ACTIVATE_EMAIL_ORDER, " +
-                "       ID_CURRENCY, IS_DEFAULT_CURRENCY, IS_NEED_PROCESSING, COMMAS_COUNT, DISCOUNT, " +
-                "       HEADER_STRING, FOOTER_STRING, ID_ORDER_CURRENCY " +
-                "from   WM_PRICE_SHOP_LIST " +
-                "where  ID_SHOP = ?"
-            );
-            RsetTools.setLong( ps, 1, shopId );
-            rs = ps.executeQuery();
-
-            if( rs.next() ) {
-                Shop bean;
-                bean = initShopBean(rs);
-
-                return bean;
-            }
-            return null;
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        Shop bean = (Shop)session.createQuery(
+            "select shop from org.riverock.commerce.bean.Shop shop " +
+                "where shop.shopId=:shopId")
+            .setLong("shopId", shopId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        if (bean!=null) {
+            bean.getPrecisionList().initCurrencyPrecision(bean.getShopId());
         }
-        catch( Throwable e ) {
-            final String es = "Exception create shop object";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db_, rs, ps );
-        }
+        return bean;
     }
 
-    private Shop initShopBean(ResultSet rs) throws SQLException {
-        Shop bean = new Shop();
-        bean.setShopId( RsetTools.getLong( rs, "ID_SHOP" )  );
-        bean.setSiteId( RsetTools.getLong( rs, "ID_SITE" ) );
-        bean.setProcessInvoice(RsetTools.getInt( rs, "IS_PROCESS_INVOICE", 0) == 1);
-        bean.setNeedProcessing(RsetTools.getInt( rs, "IS_NEED_PROCESSING", 0) == 1);
-        bean.setNeedRecalc(RsetTools.getInt( rs, "IS_NEED_RECALC", 0) == 1) ;
-
-        bean.setShopName(RsetTools.getString( rs, "NAME_SHOP" ));
-        bean.setShopNameForPriceList(RsetTools.getString( rs, "NAME_SHOP_FOR_PRICE_LIST", "" ));
-
-        bean.setFooter(RsetTools.getString( rs, "FOOTER_STRING" ));
-        bean.setHeader(RsetTools.getString( rs, "HEADER_STRING" ));
-        bean.setDateUpload(RsetTools.getTimestamp( rs, "LAST_DATE_UPLOAD" ));
-        bean.setDateCalcQuantity(RsetTools.getTimestamp( rs, "DATE_CALC_QUANTITY" ));
-        bean.setNewItemDays(RsetTools.getInt( rs, "NEW_ITEM_DAYS", 0));
-        bean.setDigitsAfterComma(RsetTools.getInt( rs, "COMMAS_COUNT", 0));
-
-        bean.setDefaultCurrencyId(RsetTools.getLong( rs, "ID_CURRENCY" ));
-        bean.setInvoiceCurrencyId(RsetTools.getLong( rs, "ID_ORDER_CURRENCY" ));
-        bean.setDiscount(RsetTools.getDouble( rs, "DISCOUNT", 0.0));
-
-        if( bean.getDiscount() < 0 ) {
-            bean.setDiscount(0);
+    public Shop getShop(Long shopId, Long siteId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        Shop bean = (Shop)session.createQuery(
+            "select shop from org.riverock.commerce.bean.Shop shop " +
+                "where shop.shopId=:shopId and shop.siteId=:siteId")
+            .setLong("shopId", shopId)
+            .setLong("siteId", siteId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        if (bean!=null) {
+            bean.getPrecisionList().initCurrencyPrecision(bean.getShopId());
         }
-
-        if( bean.getDiscount() >= 100 ) {
-            bean.setDiscount(99);
-        }
-
-
-        bean.setOpened(RsetTools.getInt( rs, "IS_CLOSE", 0)==0);
-
-//        bean.setDefaultCurrency(RsetTools.getInt( rs, "IS_DEFAULT_CURRENCY", 0)==0);
-
-        bean.setShopCode(RsetTools.getString( rs, "CODE_SHOP" ));
-        bean.setId_type_shop_1(RsetTools.getLong( rs, "ID_TYPE_SHOP_1" ));
-        bean.setId_type_shop_2(RsetTools.getLong( rs, "ID_TYPE_SHOP_2" ));
-
-        bean.getPrecisionList().initCurrencyPrecision(bean.getShopId() );
         return bean;
+    }
+
+    public List<Shop> getShopList(Long siteId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<Shop> list = session.createQuery(
+            "select shop from org.riverock.commerce.bean.Shop shop " +
+                "where shop.isClosed=false and shop.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+        session.getTransaction().commit();
+        for (Shop shop : list) {
+            shop.getPrecisionList().initCurrencyPrecision(shop.getShopId());
+        }
+        return list;
     }
 
     /**
@@ -135,303 +94,158 @@ public class ShopDaoImpl implements ShopDao {
      * @return PK value
      */
     public Long createShop(Shop shop) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter adapter = null;
+        if (shop==null) {
+            return null;
+        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
         try {
-            adapter = DatabaseAdapter.getInstance();
-
-            CustomSequence seq = new CustomSequence();
-            seq.setSequenceName( "seq_WM_PRICE_SHOP_LIST" );
-            seq.setTableName( "WM_PRICE_SHOP_LIST" );
-            seq.setColumnName( "ID_SHOP" );
-            Long id = adapter.getSequenceNextValue( seq );
-
-            String sql_ =
-                "insert into WM_PRICE_SHOP_LIST"+
-                "(ID_SHOP, IS_CLOSE, IS_PROCESS_INVOICE, " +
-                "       NAME_SHOP_FOR_PRICE_LIST, IS_NEED_RECALC, ID_SITE, CODE_SHOP, " +
-                "       ID_CURRENCY, IS_DEFAULT_CURRENCY, IS_NEED_PROCESSING, COMMAS_COUNT, DISCOUNT, " +
-                "       HEADER_STRING, FOOTER_STRING, ID_ORDER_CURRENCY, NAME_SHOP ) "+
-                "values "+
-                "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setLong(1, id );
-
-            // TODO is_closed == (!isOpened)
-            ps.setInt(2, shop.isOpened()?0:1 );
-            ps.setInt(3, shop.isProcessInvoice()?1:0 );
-            ps.setString(4, shop.getShopNameForPriceList() );
-            ps.setInt(5, shop.isNeedRecalc()?1:0 );
-            ps.setLong(6, shop.getSiteId() );
-            ps.setString(7, shop.getShopCode() );
-            ps.setLong(8, shop.getDefaultCurrencyId() );
-            ps.setInt(9, shop.isDefaultCurrency()?1:0 );
-            ps.setInt(10, shop.isNeedProcessing()?1:0 );
-            ps.setInt(11, shop.getDigitsAfterComma() );
-            ps.setBigDecimal(12, new BigDecimal(shop.getDiscount()) );
-            ps.setString(13, shop.getShopCode() );
-            ps.setString(14, shop.getShopCode() );
-            ps.setLong(15, shop.getDefaultCurrencyId() );
-            ps.setString(16, shop.getShopName() );
-
-            ps.executeUpdate();
-
-            adapter.commit();
-            return id;
-        } catch (Throwable e) {
-            try {
-                if (adapter!=null)
-                    adapter.rollback();
-            }
-            catch(Throwable th) {
-                // catch rollback error
-            }
-            String es = "Error create shop";
-            log.error(es, e);
-            throw new IllegalStateException( es, e);
-        } finally {
-            DatabaseManager.close(adapter, rs, ps);
+            session.save(shop);
+            return shop.getShopId();
+        }
+        finally {
+            session.flush();
+            session.getTransaction().commit();
         }
     }
 
     public void updateShop(Shop shop) {
-        if (shop ==null) {
+        if (shop ==null || shop.getShopId()==null) {
             return;
         }
 
-        String sql_ =
-            "update WM_PRICE_SHOP_LIST "+
-            "set "+
-            "    IS_CLOSE=? , " +
-                "IS_PROCESS_INVOICE=? , " +
-            "    NAME_SHOP_FOR_PRICE_LIST=? , " +
-                "IS_NEED_RECALC=? , " +
-                "ID_SITE=? , " +
-                "CODE_SHOP=? , " +
-            "    ID_CURRENCY=? , " +
-                "IS_DEFAULT_CURRENCY=? , " +
-                "IS_NEED_PROCESSING=? , " +
-                "COMMAS_COUNT=? , " +
-                "DISCOUNT=? , " +
-            "    HEADER_STRING=? , " +
-                "FOOTER_STRING=? , " +
-                "ID_ORDER_CURRENCY=? , " +
-                "NAME_SHOP=? "+
-            "where ID_SHOP=?";
-
-        PreparedStatement ps = null;
-        DatabaseAdapter adapter = null;
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
         try {
-            adapter = DatabaseAdapter.getInstance();
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps = adapter.prepareStatement(sql_);
-
-            // TODO is_closed == (!isOpened)
-            ps.setInt(1, shop.isOpened()?0:1 );
-            ps.setInt(2, shop.isProcessInvoice()?1:0 );
-            ps.setString(3, shop.getShopNameForPriceList() );
-            ps.setInt(4, shop.isNeedRecalc()?1:0 );
-            ps.setLong(5, shop.getSiteId() );
-            ps.setString(6, shop.getShopCode() );
-            ps.setLong(7, shop.getDefaultCurrencyId() );
-            ps.setInt(8, shop.isDefaultCurrency()?1:0 );
-            ps.setInt(9, shop.isNeedProcessing()?1:0 );
-            ps.setInt(10, shop.getDigitsAfterComma() );
-            ps.setBigDecimal(11, new BigDecimal(shop.getDiscount()) );
-            ps.setString(12, shop.getShopCode() );
-            ps.setString(13, shop.getShopCode() );
-            ps.setLong(14, shop.getDefaultCurrencyId() );
-            ps.setString(15, shop.getShopName() );
-
-            // prepare PK
-            ps.setLong(16, shop.getShopId() );
-
-            int i = ps.executeUpdate();
-            if (log.isDebugEnabled()) {
-                log.debug("count of updated records; " + i+", PK: " + shop.getShopId());
-            }
-
-            adapter.commit();
+            session.update(shop);
         }
-        catch (Exception e) {
-            try {
-                if( adapter != null )
-                    adapter.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error update shop";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-       }
-       finally {
-            DatabaseManager.close(adapter, ps);
-       }
+        finally {
+            session.flush();
+            session.getTransaction().commit();
+        }
     }
 
     public void deleteShop(Long shopId) {
         if (shopId==null) {
             return;
         }
-
-        DatabaseAdapter dbDyn = null;
-        try {
-            dbDyn = DatabaseAdapter.getInstance();
-
-            DatabaseManager.runSQL(
-                dbDyn,
-                "update WM_PRICE_SHOP_LIST set IS_CLOSE=1 where ID_SHOP=?",
-                new Object[]{shopId}, new int[]{Types.DECIMAL}
-            );
-
-            dbDyn.commit();
-        }
-        catch( Exception e ) {
-            try {
-                if( dbDyn != null )
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error set 'close' status of shop ";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn);
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        session.createQuery(
+            "update from org.riverock.commerce.bean.Shop shop " +
+                "set shop.isClosed=true " +
+                "where shop.shopId=:shopId")
+            .setLong("shopId", shopId)
+            .executeUpdate();
+        session.getTransaction().commit();
     }
 
-    public List<Shop> getShopList(Long siteId) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement(
-                "select ID_SHOP, NAME_SHOP, IS_CLOSE, IS_PROCESS_INVOICE, ID_TYPE_SHOP_1, ID_TYPE_SHOP_2, " +
-                "       NAME_SHOP_FOR_PRICE_LIST, IS_NEED_RECALC, ORDER_EMAIL, ID_SITE, CODE_SHOP, " +
-                "       LAST_DATE_UPLOAD, DATE_CALC_QUANTITY, NEW_ITEM_DAYS, IS_ACTIVATE_EMAIL_ORDER, " +
-                "       ID_CURRENCY, IS_DEFAULT_CURRENCY, IS_NEED_PROCESSING, COMMAS_COUNT, DISCOUNT, " +
-                "       HEADER_STRING, FOOTER_STRING, ID_ORDER_CURRENCY " +
-                "from   WM_PRICE_SHOP_LIST " +
-                "where  ID_SITE = ?"
-            );
-            RsetTools.setLong( ps, 1, siteId );
-            rs = ps.executeQuery();
-
-            List<Shop> list = new ArrayList<Shop>();
-            while ( rs.next() ) {
-                Shop bean = initShopBean(rs);
-                list.add(bean);
-            }
-            return list;
-        }
-        catch( Throwable e ) {
-            final String es = "Error get list of shops";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db_, rs, ps );
-        }
-    }
-
-    public ShopItem getShopItem(Long shotItemId) {
-        String sql =
-            "select ID_ITEM, ID_SHOP, IS_GROUP, ID, ID_MAIN, ITEM, ABSOLETE, CURRENCY, QUANTITY, ADD_DATE, IS_SPECIAL, " +
-            "       IS_MANUAL, ID_STORAGE_STATUS, PRICE " +
-            "from   WM_PRICE_LIST where ID_ITEM=?";
-
-        if (shotItemId==null)
-            return null;
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            ps = db.prepareStatement(sql);
-            ps.setLong(1, shotItemId);
-
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                return fillShopItem(rs);
-            }
+    public ShopItem getShopItem(Long shopItemId) {
+        if (shopItemId==null) {
             return null;
         }
-        catch( Throwable e ) {
-            final String es = "Error get shop item";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db, rs, ps);
-            rs = null;
-            ps = null;
-        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        ShopItem bean = (ShopItem)session.createQuery(
+            "select shopItem from org.riverock.commerce.bean.ShopItem shopItem " +
+                "where shopItem.shopItemId=:shopItemId")
+            .setLong("shopItemId", shopItemId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return bean;
     }
 
-    private static ShopItem fillShopItem(ResultSet rs) throws java.sql.SQLException {
-        ShopItem item = new ShopItem();
+    public ShopItem getShopItem(Long shopId, Long itemId) {
+        if (shopId==null || itemId==null) {
+            return null;
+        }
 
-        long tempLong;
-        int tempBoolean;
-        String tempString;
-        int tempInt;
-        java.sql.Timestamp tempTimestamp = null;
-
-        tempLong = rs.getLong( "ID_ITEM");
-        item.setItemId( tempLong );
-        tempLong = rs.getLong( "ID_SHOP");
-        if (!rs.wasNull())
-            item.setShopId( tempLong );
-        tempBoolean = rs.getInt( "IS_GROUP");
-        if (!rs.wasNull())
-            item.setGroup( tempBoolean==1 );
-        else
-            item.setGroup( false );
-        tempLong = rs.getLong( "ID");
-        if (!rs.wasNull())
-            item.setId( tempLong );
-        tempLong = rs.getLong( "ID_MAIN");
-        item.setIdMain( tempLong );
-        tempString = rs.getString( "ITEM" );
-        if (!rs.wasNull())
-            item.setItem( tempString );
-        tempInt = rs.getInt( "ABSOLETE");
-        item.setObsolete( tempInt );
-        tempString = rs.getString( "CURRENCY" );
-        if (!rs.wasNull())
-            item.setCurrency( tempString );
-        tempLong = rs.getLong( "QUANTITY");
-        if (!rs.wasNull())
-            item.setQuantity( tempLong );
-        tempTimestamp = rs.getTimestamp( "ADD_DATE" );
-        if (!rs.wasNull())
-            item.setAddDate( tempTimestamp );
-        tempBoolean = rs.getInt( "IS_SPECIAL");
-        if (!rs.wasNull())
-            item.setSpecial( tempBoolean==1 );
-        else
-            item.setSpecial( false );
-        tempBoolean = rs.getInt( "IS_MANUAL");
-        if (!rs.wasNull())
-            item.setManual( tempBoolean==1 );
-        else
-            item.setManual( false );
-        tempLong = rs.getLong( "ID_STORAGE_STATUS");
-        item.setIdStorageStatus( tempLong );
-
-        item.setPrice( RsetTools.getBigDecimal(rs, "PRICE") );
-
-        return item;
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        ShopItem bean = (ShopItem)session.createQuery(
+            "select shopItem from org.riverock.commerce.bean.ShopItem shopItem " +
+                "where shopItem.shopId=:shopId and shopItem.itemId=:itemId")
+            .setLong("shopId", shopId)
+            .setLong("itemId", itemId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return bean;
     }
+
+    public List<PriceGroupItem> getGroupList( Long idGroup, Long idShop, Long idSite ) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+//        "select a.ITEM, a.ID " +
+//        "from   WM_PRICE_LIST a, WM_PRICE_SHOP_LIST b " +
+//        "where  a.ID_SHOP=b.ID_SHOP and a.ABSOLETE=0 and " +
+//        "       b.ID_SITE=? and a.ID_MAIN=? and a.ID_SHOP=? and a.IS_GROUP=1 " +
+//        "order by a.ITEM asc ";
+
+        List<Object[]> list = session.createQuery(
+            "select shopItem.item, shopItem.itemId " +
+                "from  org.riverock.commerce.bean.ShopItem shopItem, " +
+                "      org.riverock.commerce.bean.Shop shop " +
+                "where shopItem.shopId=shop.shopId and shopItem.obsolete=false and " +
+                "      shop.siteId=:siteId and shopItem.parentItemId=:parentItemId and shopItem.shopId=:shopId and " +
+                "      shopItem.isGroup=true and shopItem.obsolete=false " +
+                "order by shopItem.item asc")
+            .setLong("parentItemId", idGroup)
+            .setLong("siteId", idSite)
+            .setLong("shopId", idShop)
+            .list();
+        session.getTransaction().commit();
+        List<PriceGroupItem> v = new ArrayList<PriceGroupItem>(list.size());
+        for (Object[] objects : list) {
+            PriceGroupItem item = new PriceGroupItem( (String)objects[0], (Long)objects[1] );
+            v.add(item);
+        }
+        return v;
+    }
+
+    public List<ShopItem> getShopItemList(Long shopId, Long parentItemId, String sortBy, int sortDirection) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        String sql = "select shopItem " +
+            "from  org.riverock.commerce.bean.ShopItem shopItem " +
+            "where shopItem.parentItemId=:parentItemId and shopItem.shopId=:shopId and " +
+            "      shopItem.isGroup=false and shopItem.obsolete=false ";
+
+//        sql +=
+//            "select a.* " +
+//                "from   WM_PRICE_LIST a " +
+//                "where  a.ID_MAIN=? and a.ID_SHOP=? and a.ABSOLETE=0 and a.IS_GROUP=0 ";
+//
+        
+        if ("item".equals(sortBy)) {
+            sql += (" order by shopItem.item " + (sortDirection == 0 ? "ASC" : "DESC"));
+        }
+        else if ("price".equals(sortBy)) {
+            sql += (" order by shopItem.price " + (sortDirection == 0 ? "ASC" : "DESC"));
+        }
+
+        List<ShopItem> list = session.createQuery(sql)
+            .setLong("parentItemId", parentItemId)
+            .setLong("shopId", shopId)
+            .list();
+        session.getTransaction().commit();
+        return list;
+    }
+
+/*
+    public List<ShopItem> getShopItemList(Long siteId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<ShopItem> list = session.createQuery(
+            "select shop from org.riverock.commerce.bean.ShopItem shopItems " +
+                "where shop.isOpened=false =:siteId")
+            .setLong("siteId", siteId)
+            .list();
+        session.getTransaction().commit();
+        return list;
+    }
+*/
+
 }

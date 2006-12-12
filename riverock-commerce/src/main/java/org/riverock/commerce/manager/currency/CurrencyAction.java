@@ -32,6 +32,7 @@ import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.bean.Currency;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -159,7 +160,7 @@ public class CurrencyAction implements Serializable {
             standardCurrencyBean=CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency(bean.getStandardCurrencyId());
         }
 
-        CurrencyCurs standardCurs =null;
+        StandardCurrencyCurs standardCurs =null;
         if (standardCurrencyBean!=null) {
             standardCurs =CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(standardCurrencyBean.getStandardCurrencyId());
         }
@@ -171,13 +172,7 @@ public class CurrencyAction implements Serializable {
         else {
             realCurs=(curs !=null? curs.getCurs():null);
         }
-/*
-        if (realCurs==null) {
-            realCurs=new BigDecimal(1);
-        }
-*/
-
-        setSessionBean( new CurrencyExtendedBean(bean,standardCurrencyBean, realCurs, curs, standardCurs) );
+        setSessionBean( new CurrencyExtendedBean(bean, standardCurrencyBean, realCurs, curs, standardCurs) );
     }
 
     private void setSessionBean(CurrencyExtendedBean currencyExtendedBean) {

@@ -46,7 +46,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.XmlTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.commerce.price.ImportPriceList;
 import org.riverock.commerce.schema.import_price.PricesType;
 import org.riverock.commerce.tools.ContentTypeTools;
@@ -71,7 +70,6 @@ public final class UploadPricePortlet implements Portlet {
 
     public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
 
-        DatabaseAdapter db_ = null;
         try {
             boolean isMultiPart = PortletFileUpload.isMultipartContent(actionRequest);
             if (log.isDebugEnabled()) {
@@ -83,8 +81,6 @@ public final class UploadPricePortlet implements Portlet {
                 actionResponse.setRenderParameter( ERROR_TEXT, "Request is not multi-part");
                 return;
             }
-
-            db_ = DatabaseAdapter.getInstance();
 
             PricesType prices = null;
             try {
@@ -133,7 +129,7 @@ public final class UploadPricePortlet implements Portlet {
                     log.debug("#55.01.15 idSite -  " + siteId);
                 }
 
-                ImportPriceList.process(prices, siteId, db_);
+                ImportPriceList.process(prices, siteId);
             }
             catch (Exception e) {
                 log.error("Exception store price data in DB", e);
@@ -152,9 +148,6 @@ public final class UploadPricePortlet implements Portlet {
                 "General exception inport price-list " + getErrorMessage(e)
             );
             actionResponse.setRenderParameter(ERROR_URL, "загрузить повторно");
-        }
-        finally {
-            DatabaseAdapter.close(db_);
         }
     }
 

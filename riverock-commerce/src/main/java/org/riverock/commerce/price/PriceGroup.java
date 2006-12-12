@@ -23,9 +23,6 @@
  */
 package org.riverock.commerce.price;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.PortletURL;
@@ -33,12 +30,10 @@ import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.commerce.schema.shop.GroupListType;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.schema.shop.GroupItemType;
+import org.riverock.commerce.schema.shop.GroupListType;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * $Author$
@@ -48,15 +43,17 @@ import org.riverock.commerce.schema.shop.GroupItemType;
 public final class PriceGroup {
     private final static Logger log = Logger.getLogger( PriceGroup.class );
 
-    public static GroupListType getInstance( DatabaseAdapter db_, ShopPageParam shopParam, RenderResponse renderResponse )
+    public static GroupListType getInstance(ShopPageParam shopParam, RenderResponse renderResponse)
         throws PriceException {
-        List<PriceGroupItem> groupVector = getInstance( db_, shopParam.id_group, shopParam.id_shop, shopParam.idSite );
+        List<PriceGroupItem> groupVector = CommerceDaoFactory.getShopDao().getGroupList( shopParam.id_group, shopParam.id_shop, shopParam.idSite );
 
-        if( groupVector == null || groupVector.isEmpty() )
+        if( groupVector.isEmpty() ) {
             return null;
+        }
 
-        if( log.isDebugEnabled() )
+        if( log.isDebugEnabled() ) {
             log.debug( "move to GroupListType" );
+        }
 
         GroupListType group = new GroupListType();
         for (PriceGroupItem item : groupVector) {
@@ -81,6 +78,7 @@ public final class PriceGroup {
 
         return group;
     }
+/*
 
     public static List<PriceGroupItem> getInstance( DatabaseAdapter db_, Long idGroup, Long idShop, Long idSite )
         throws PriceException {
@@ -137,4 +135,5 @@ public final class PriceGroup {
 
         return v;
     }
+*/
 }

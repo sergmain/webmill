@@ -23,431 +23,102 @@
  */
 package org.riverock.commerce.price;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
+import org.hibernate.Session;
 
-
-import org.apache.log4j.Logger;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
-import org.riverock.common.tools.DateTools;
-import org.riverock.common.tools.RsetTools;
+import org.riverock.commerce.bean.ImportShopItem;
+import org.riverock.commerce.bean.ShopItem;
 
 /**
  * User: Admin
  * Date: Dec 29, 2002
  * Time: 9:12:53 PM
- *
+ * <p/>
  * $Id$
  */
-public class ImportPriceProcess
-{
-    private static Logger log = Logger.getLogger( ImportPriceProcess.class );
+public class ImportPriceProcess {
 
-    private static void moveItemToPrice(DatabaseAdapter dbDyn, Long idSite)
-        throws Exception
-    {
+    private static void moveItemToPrice(Session session, Long idSite) throws Exception {
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            // крутим цикл по WM_PRICE_IMPORT_TABLE
-            ps = dbDyn.prepareStatement(
-                "select IS_GROUP, ID, ID_MAIN, NAME, PRICE, CURRENCY, b.ID_SHOP "+
-                "from WM_PRICE_IMPORT_TABLE a, WM_PRICE_SHOP_LIST b "+
-                "where a.SHOP_CODE=b.CODE_SHOP and b.ID_SITE=?"
-            );
-            RsetTools.setLong(ps, 1, idSite);
-            rs = ps.executeQuery();
+        List<Object[]> importItems = session.createQuery(
+            "select import, shop.shopId " +
+                "from  org.riverock.commerce.bean.ImportShopItem import, " +
+                "      org.riverock.commerce.bean.Shop shop " +
+                "where import.shopCode=shop.shopCode and shop.siteId=:siteId")
+            .setLong("siteId", idSite)
+            .list();
 
-            while (rs.next())
-            {
-                Long id_shop_ = RsetTools.getLong( rs, "ID_SHOP" );
+        Set<Long> shopIds = new HashSet<Long>();
+        for (Object[] importItem : importItems) {
+            ImportShopItem importShopItem = (ImportShopItem)importItem[0];
+            Long shopId = (Long)importItem[1];
+            shopIds.add(shopId);
 
-                PreparedStatement ps1 = null;
-                ResultSet rs1 = null;
-                try
-                {
-                    ps1 = dbDyn.prepareStatement(
-                        "select ID, ID_SHOP, ID_ITEM "+
-                        "from   WM_PRICE_LIST a "+
-                        "where  ID=? and ID_SHOP=?"
-                    );
-                    RsetTools.setLong(ps1, 1, RsetTools.getLong(rs, "ID") );
-                    RsetTools.setLong(ps1, 2, id_shop_ );
-                    rs1 = ps1.executeQuery();
+            ShopItem item = (ShopItem)session.createQuery(
+                "select item " +
+                    "from  org.riverock.commerce.bean.ShopItem item " +
+                    "where item.shopId=:shopId and item.itemId=:itemId ")
+                .setLong("shopId", shopId)
+                .setLong("itemId", importShopItem.getItemId())
+                .uniqueResult();
 
-                    if (rs1.next())
-                    {
-                        PreparedStatement ps2 = null;
-                        ResultSet rs2 = null;
-                        try
-                        {
-                            ps2 = dbDyn.prepareStatement(
-                                "update WM_PRICE_LIST " +
-                                "set    IS_GROUP=?, ID_MAIN=?, PRICE=?, ITEM=?, CURRENCY=?, ABSOLETE=0 "+
-                                "where  ID_ITEM=?"
-                            );
-                            RsetTools.setLong(ps2, 1, RsetTools.getLong(rs, "IS_GROUP") );
-                            RsetTools.setLong(ps2, 2, RsetTools.getLong(rs, "ID_MAIN") );
-                            RsetTools.setDouble(ps2, 3, RsetTools.getDouble(rs, "PRICE") );
-                            ps2.setString(4, RsetTools.getString(rs, "NAME") );
-                            ps2.setString(5, RsetTools.getString(rs, "CURRENCY") );
-                            RsetTools.setLong(ps2, 6, RsetTools.getLong(rs1, "ID_ITEM") );
-
-                            ps2.executeUpdate();
-                        }
-                        catch(Exception e)
-                        {
-                            log.error("error mark for delete", e);
-                            throw e;
-                        }
-                        finally
-                        {
-                            DatabaseManager.close(rs2, ps2);
-                            rs2 = null;
-                            ps2 = null;
-                        }
-                    }
-                    else
-                    {
-                        PreparedStatement ps2 = null;
-                        try
-                        {
-                            CustomSequence seq = new CustomSequence();
-                            seq.setSequenceName("seq_WM_PRICE_LIST");
-                            seq.setTableName( "WM_PRICE_LIST");
-                            seq.setColumnName( "ID_ITEM" );
-                            long id = dbDyn.getSequenceNextValue( seq );
-
-                            ps2 = dbDyn.prepareStatement(
-                                "insert into WM_PRICE_LIST "+
-                                "(id_item,is_group,id,id_main,item,price,currency," +
-                                "absolete,id_shop,ADD_DATE)"+
-                                "values "+
-                                "(?, ?, ?, ?, ?, ?, ?, 0, ?,  "+dbDyn.getNameDateBind()+" )"
-                            );
-                            ps2.setLong(1, id );
-                            RsetTools.setLong(ps2, 2, RsetTools.getLong(rs, "IS_GROUP") );
-                            RsetTools.setLong(ps2, 3, RsetTools.getLong(rs, "ID") );
-                            RsetTools.setLong(ps2, 4, RsetTools.getLong(rs, "ID_MAIN") );
-                            ps2.setString(5, RsetTools.getString(rs, "NAME") );
-                            RsetTools.setDouble(ps2, 6, RsetTools.getDouble(rs, "PRICE") );
-                            ps2.setString(7, RsetTools.getString(rs, "CURRENCY") );
-                            RsetTools.setLong(ps2, 8, RsetTools.getLong(rs, "ID_SHOP") );
-                            dbDyn.bindDate(ps2, 9, DateTools.getCurrentTime());
-//                            ps2.setTimestamp(9, new Timestamp( System.currentTimeMillis() ) );
-
-                            ps2.executeUpdate();
-                        }
-                        catch(Exception e)
-                        {
-                            log.error("error mark for delete", e);
-                            throw e;
-                        }
-                        finally
-                        {
-                            DatabaseManager.close(ps2);
-                            ps2 = null;
-                        }
-                    }
-                }
-                catch(Exception e)
-                {
-                    log.error("error mark for delete", e);
-                    throw e;
-                }
-                finally
-                {
-                    DatabaseManager.close(rs1, ps1);
-                    rs1 = null;
-                    ps1 = null;
-                }
+            if (item!=null) {
+                item.setGroup(importShopItem.isGroup());
+                item.setParentItemId(importShopItem.getParentItemId());
+                item.setPrice(importShopItem.getPrice());
+                item.setCurrency(importShopItem.getCurrencyCode());
+                item.setObsolete(false);
+                item.setItem(importShopItem.getName());
+            }
+            else {
+                item = new ShopItem();
+                item.setGroup(importShopItem.isGroup());
+                item.setItemId( importShopItem.getItemId());
+                item.setParentItemId(importShopItem.getParentItemId());
+                item.setItem(importShopItem.getName());
+                item.setPrice(importShopItem.getPrice());
+                item.setCurrency(importShopItem.getCurrencyCode());
+                item.setObsolete(false);
+                item.setShopId(shopId);
+                item.setAddDate( new Date() );
+                session.save(item);
             }
         }
-        catch(Exception e)
-        {
-            log.error("error mark for delete", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
 
+        // set date/time of upload
+        session.createQuery(
+            "update org.riverock.commerce.bean.Shop shop set shop.dateUpload=:dateUpload " +
+                "where shop.shopId in (:shopIds)")
+            .setTimestamp("dateUpload", new Date())
+            .setParameterList("shopIds", shopIds)
+            .executeUpdate();
 
     }
 
-    private static void markForDelete(DatabaseAdapter dbDyn, Long idSite)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        String sql_ = null;
-        try
-        {
-            // ”дал€ем дерево ненужных групп
-            // сначала помечаем все €вные наименовани€ и группы
-            if (dbDyn.getFamily()!=DatabaseManager.MYSQL_FAMALY)
-            {
-                sql_ =
-                    "update WM_PRICE_IMPORT_TABLE set FOR_DELETE=1 "+
-                    "where IS_TO_LOAD='NO' and SHOP_CODE in (" +
-                    "select CODE_SHOP from WM_PRICE_SHOP_LIST where ID_SITE=? )";
+    public static void process(Session session, Long idSite) throws Exception {
 
-                ps = dbDyn.prepareStatement( sql_ );
-                RsetTools.setLong(ps, 1, idSite);
-                ps.executeUpdate();
-            }
-            else
-            {
-                String sqlCheck = "";
-                boolean isFound = false;
+        // Mark all records, which was uploaded first time
+        session.createSQLQuery(
+            "update WM_PRICE_IMPORT_TABLE set IS_NEW=1 where ID not in " +
+                "(select z1.ID from WM_PRICE_LIST z1, WM_PRICE_SHOP_LIST x1 " +
+                "where SHOP_CODE = x1.CODE_SHOP and " +
+                "z1.ID_SHOP = x1.ID_SHOP and x1.ID_SITE=:siteId)")
+            .setLong("siteId", idSite)
+            .executeUpdate();
+        
+        // in all shops, for all items, set attribute 'obsolete' to true
+        session.createSQLQuery(
+            "update WM_PRICE_LIST set ABSOLETE=1 where ID_SHOP in " +
+                "(select z1.ID_SHOP from WM_PRICE_SHOP_LIST z1, WM_PRICE_IMPORT_TABLE x1 " +
+                "where z1.ID_SITE=:siteId and z1.CODE_SHOP=x1.SHOP_CODE)")
+            .setLong("siteId", idSite)
+            .executeUpdate();
 
-                PreparedStatement ps2 = null;
-                ResultSet rs2 = null;
-                boolean isFirst = true;
-                try
-                {
-                    ps2 = dbDyn.prepareStatement(
-                        "select CODE_SHOP from WM_PRICE_SHOP_LIST where ID_SITE=?"
-                    );
-                    RsetTools.setLong(ps2, 1, idSite);
+        moveItemToPrice(session, idSite);
 
-                    rs2 = ps2.executeQuery();
-
-                    while( rs2.next() ) {
-                        isFound = true;
-                        if (isFirst)
-                            isFirst = false;
-                        else
-                            sqlCheck += ",";
-
-                        sqlCheck += ("'"+RsetTools.getString(rs2, "CODE_SHOP")+"'");
-                    }
-
-                }
-                catch( Exception e )
-                {
-                    log.error("error mark for delete", e);
-                    throw e;
-                }
-                finally
-                {
-                    DatabaseManager.close(rs2, ps2);
-                    rs2 = null;
-                    ps2 = null;
-                }
-
-                if (isFound)
-                {
-                    sql_ =
-                        "update WM_PRICE_IMPORT_TABLE set FOR_DELETE=1 "+
-                        "where IS_TO_LOAD='NO' and SHOP_CODE in ( "+sqlCheck+" )";
-
-                    if (log.isDebugEnabled())
-                        log.debug("sql "+sql_);
-
-                    ps = dbDyn.prepareStatement(sql_);
-                    ps.executeUpdate();
-                    ps.close();
-                    ps = null;
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            log.error("sql "+sql_);
-            log.error("error mark for delete", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close(ps);
-            ps = null;
-        }
-
-        // «атем выбираем все помеченные дл€ удалени€ элементы
-        // и производим удаление подчиненных
-        ResultSet rs = null;
-        try
-        {
-            ps = dbDyn.prepareStatement(
-                "select a.ID "+
-                "from   WM_PRICE_IMPORT_TABLE a, WM_PRICE_IMPORT_TABLE b, WM_PRICE_SHOP_LIST c "+
-                "where  a.ID_MAIN = b.ID and b.FOR_DELETE=1 and a.FOR_DELETE=0 and "+
-                "       a.SHOP_CODE=c.CODE_SHOP and c.ID_SITE=?"
-            );
-            RsetTools.setLong(ps, 1, idSite);
-            rs = ps.executeQuery();
-
-            while (rs.next())
-            {
-                if (dbDyn.getFamily()!=DatabaseManager.MYSQL_FAMALY)
-                {
-
-                    PreparedStatement ps1 = null;
-                    try
-                    {
-                        ps1 = dbDyn.prepareStatement(
-                            "update WM_PRICE_IMPORT_TABLE set FOR_DELETE=1 where ID_MAIN in "+
-                            "(select ID from WM_PRICE_IMPORT_TABLE z1, WM_PRICE_SHOP_LIST x1 "+
-                            "where z1.FOR_DELETE = 1 and z1.SHOP_CODE = x1.CODE_SHOP and x1.ID_SITE = ?)"+
-                            "and FOR_DELETE=0 and SHOP_CODE in "+
-                            "(select CODE_SHOP from WM_PRICE_SHOP_LIST where ID_SITE=?)"
-                        );
-                        RsetTools.setLong(ps1, 1, idSite );
-                        ps1.executeUpdate();
-                    }
-                    finally
-                    {
-                        DatabaseManager.close(ps1);
-                        ps1 = null;
-                    }
-                }
-                else
-                {
-
-                }
-            }
-
-        }
-        catch(Exception e)
-        {
-            log.error("error mark for delete", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
-
-    }
-
-    public static void process( DatabaseAdapter dbDyn, Long idSite )
-        throws Exception
-    {
-
-        try
-        {
-            dbDyn.createStatement().executeUpdate(
-                "update WM_PRICE_IMPORT_TABLE set SHOP_CODE = UPPER(SHOP_CODE)"
-            );
-
-        // delete tree of unused groups
-        // 1st mark all concrete items and groups
-            markForDelete( dbDyn, idSite );
-
-            PreparedStatement ps = null;
-            try
-            {
-                // удал€ем все что пометили
-                ps = dbDyn.prepareStatement(
-                    "delete FROM WM_PRICE_IMPORT_TABLE where FOR_DELETE=1 and "+
-                    "SHOP_CODE in (select CODE_SHOP from WM_PRICE_SHOP_LIST where ID_SITE=?)"
-                );
-                RsetTools.setLong(ps, 1, idSite);
-                ps.executeUpdate();
-            }
-            catch(Exception e)
-            {
-                log.error("error mark for delete", e);
-                throw e;
-            }
-            finally
-            {
-                DatabaseManager.close(ps);
-                ps = null;
-            }
-
-            try
-            {
-                // ѕомечаем записи, загружаемые первый раз
-                ps = dbDyn.prepareStatement(
-
-                    "update WM_PRICE_IMPORT_TABLE set IS_NEW=1 where ID not in "+
-                    "(select z1.ID from WM_PRICE_LIST z1, WM_PRICE_SHOP_LIST x1 "+
-                    "where SHOP_CODE = x1.CODE_SHOP and " +
-                    "z1.ID_SHOP = x1.ID_SHOP and x1.ID_SITE=?)"
-                );
-                RsetTools.setLong(ps, 1, idSite);
-                ps.executeUpdate();
-            }
-            catch(Exception e)
-            {
-                log.error("error mark for delete", e);
-                throw e;
-            }
-            finally
-            {
-                DatabaseManager.close(ps);
-                ps = null;
-            }
-
-            try
-            {
-                // во всех прайс-листах, которые закачиваем, устанавливаем атрибут '”старел'
-                ps = dbDyn.prepareStatement(
-                    "update WM_PRICE_LIST set ABSOLETE=1 where ID_SHOP in "+
-                    "(select z1.ID_SHOP from WM_PRICE_SHOP_LIST z1, WM_PRICE_IMPORT_TABLE x1 "+
-                    "where z1.ID_SITE=? and z1.CODE_SHOP=x1.SHOP_CODE)"
-                );
-                RsetTools.setLong(ps, 1, idSite);
-                ps.executeUpdate();
-            }
-            catch(Exception e)
-            {
-                log.error( "error mark for delete", e );
-                throw e;
-            }
-            finally
-            {
-                DatabaseManager.close(ps);
-                ps = null;
-            }
-
-
-
-            moveItemToPrice( dbDyn, idSite );
-
-            try
-            {
-                ps = dbDyn.prepareStatement(
-                    "update WM_PRICE_SHOP_LIST " +
-                    "set    LAST_DATE_UPLOAD="+dbDyn.getNameDateBind()+" " +
-                    "where  ID_SITE=? and CODE_SHOP in " +
-                    "(select distinct x1.SHOP_CODE from WM_PRICE_IMPORT_TABLE x1 )"
-                );
-                dbDyn.bindDate(ps, 1, DateTools.getCurrentTime());
-                RsetTools.setLong(ps, 2, idSite);
-                ps.executeUpdate();
-            }
-            catch(Exception e)
-            {
-                log.error("", e);
-                throw e;
-            }
-            finally
-            {
-                DatabaseManager.close(ps);
-                ps = null;
-            }
-
-
-        //    delete from WM_price_import_table where id_shop=shopID;
-        // «начени€ обновлены
-
-        }
-        catch( Exception e ) {
-            log.error("Error inport price-list",e);
-            throw e;
-        }
     }
 }

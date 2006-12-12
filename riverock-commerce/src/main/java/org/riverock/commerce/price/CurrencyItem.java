@@ -33,7 +33,6 @@ import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.common.tools.DateTools;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * User: Admin
@@ -96,28 +95,34 @@ public class CurrencyItem {
                 " can not calculated. Curs for standard currency not entered");
         }
 
-        CurrencyCurs curs = null;
+        Date cursDate=null;
+        BigDecimal cursValue=null;
         if (this.isUseStandard()) {
             for (StandardCurrency stdItem : stdCurrency) {
                 if (stdItem.getStandardCurrencyId().equals(this.getStandardCurrencyId())) {
-                    curs = stdItem.getCurrentCurs();
+                    cursValue = stdItem.getCurrentCurs().getCurs()!=null?stdItem.getCurrentCurs().getCurs():null;
+                    cursDate = stdItem.getCurrentCurs().getCreated()!=null?stdItem.getCurrentCurs().getCreated():null;
                     break;
                 }
             }
-            if (curs == null)
+            if (cursDate == null) {
                 throw new Exception("Error get curs for standard currency. Local currency - " + this.getCurrencyName());
-        } else
-            curs = this.getCurrencyCurrentCurs();
+            }
+        }
+        else {
+            cursValue = this.getCurrencyCurrentCurs().getCurs()!=null?this.getCurrencyCurrentCurs().getCurs():null;
+            cursDate = this.getCurrencyCurrentCurs().getDate()!=null?this.getCurrencyCurrentCurs().getDate():null;
+        }
 
-        this.setRealCurs(curs.getCurs()!=null?curs.getCurs():null);
-        this.setRealDateChange(curs.getDate());
+        this.setRealCurs(cursValue);
+        this.setRealDateChange(cursDate);
         this.setRealInit(true);
     }
 
     public CurrencyItem() {
     }
 
-    public CurrencyItem(DatabaseAdapter db_, Currency item) {
+    public CurrencyItem(Currency item) {
         this.setCurrencyCode(item.getCurrencyCode());
         this.setCurrencyName(item.getCurrencyName());
         this.setCurrencyId(item.getCurrencyId());
@@ -126,7 +131,7 @@ public class CurrencyItem {
         this.setUsed(item.isUsed());
         this.setUseStandard(item.isUseStandard());
         this.setPercent(item.getPercent());
-        this.setCurrencyCurrentCurs(CurrencyService.getCurrentCurs(db_, this.getCurrencyId(), this.getSiteId()));
+        this.setCurrencyCurrentCurs(CurrencyService.getCurrentCurs(this.getCurrencyId(), this.getSiteId()));
         if (this.getCurrencyCurrentCurs() == null) {
             log.warn("Current curs is null");
         }

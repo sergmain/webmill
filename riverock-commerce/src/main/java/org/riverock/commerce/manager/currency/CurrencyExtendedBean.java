@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.bean.Currency;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
 
 /**
  * @author Sergei Maslyukov
@@ -45,12 +46,12 @@ public class CurrencyExtendedBean implements Serializable {
     private BigDecimal realCurs=null;
 
     private CurrencyCurs curs =null;
-    private CurrencyCurs standardCurs =null;
+    private StandardCurrencyCurs standardCurs =null;
 
     public CurrencyExtendedBean() {
     }
 
-    public CurrencyExtendedBean(Currency currency, StandardCurrency standardCurrencyBean, BigDecimal realCurs, CurrencyCurs curs, CurrencyCurs standardCurs) {
+    public CurrencyExtendedBean(Currency currency, StandardCurrency standardCurrencyBean, BigDecimal realCurs, CurrencyCurs curs, StandardCurrencyCurs standardCurs) {
         this.currency = currency;
         this.standardCurrencyBean = standardCurrencyBean;
         this.realCurs = realCurs;
@@ -89,7 +90,7 @@ public class CurrencyExtendedBean implements Serializable {
         return curs;
     }
 
-    public CurrencyCurs getCurrentStandardCurs() {
+    public StandardCurrencyCurs getCurrentStandardCurs() {
         return standardCurs;
     }
 }

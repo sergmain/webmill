@@ -84,6 +84,23 @@ public final class TreeUtils {
         }
     }
 
+    /**
+     * преобразуем дерево в плоский лист
+     * @param nodes дерево
+     * @return List
+     */
+    public static List<TreeItem> toPlainList(List<TreeItem> nodes) {
+        List<TreeItem> result = new ArrayList<TreeItem>();
+        if (nodes==null) {
+            return result;
+        }
+        for (TreeItem treeItem : nodes) {
+            result.add(treeItem);
+            result.addAll(toPlainList(treeItem.getSubTree()));
+        }
+        return result;
+    }
+
     public static List<TreeItem> rebuildTree( final List<TreeItem> source) {
 
         List<TreeItem> treeItems = new LinkedList<TreeItem>(source);

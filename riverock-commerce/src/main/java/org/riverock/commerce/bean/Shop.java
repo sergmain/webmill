@@ -67,7 +67,7 @@ public class Shop implements Serializable {
     private Long siteId = null;
 
     @Column(name="IS_CLOSE")
-    private boolean isOpened;
+    private boolean isClosed;
 
     @Column(name="NAME_SHOP")
     private String shopName;
@@ -91,7 +91,7 @@ public class Shop implements Serializable {
     private Date dateCalcQuantity;
 
     @Column(name="NEW_ITEM_DAYS")
-    private int newItemDays;
+    private Integer newItemDays;
 
     /**
      * Defautl currency for shop
@@ -165,12 +165,12 @@ public class Shop implements Serializable {
         this.siteId = siteId;
     }
 
-    public boolean isOpened() {
-        return isOpened;
+    public boolean isClosed() {
+        return isClosed;
     }
 
-    public void setOpened(boolean opened) {
-        this.isOpened = opened;
+    public void setClosed(boolean closed) {
+        this.isClosed = closed;
     }
 
     public String getShopName() {
@@ -229,11 +229,11 @@ public class Shop implements Serializable {
         this.dateCalcQuantity = dateCalcQuantity;
     }
 
-    public int getNewItemDays() {
+    public Integer getNewItemDays() {
         return newItemDays;
     }
 
-    public void setNewItemDays(int newItemDays) {
+    public void setNewItemDays(Integer newItemDays) {
         this.newItemDays = newItemDays;
     }
 
@@ -298,7 +298,15 @@ public class Shop implements Serializable {
     }
 
     public void setDiscount(double discount) {
-        this.discount = discount;
+        if( discount < 0 ) {
+            this.discount = 0;
+        }
+        else if( discount >= 100 ) {
+            this.discount = 99;
+        }
+        else {
+            this.discount = discount;
+        }
     }
 
     public Long getId_type_shop_1() {

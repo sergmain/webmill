@@ -23,23 +23,19 @@
  */
 package org.riverock.commerce.price;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.portlet.RenderResponse;
 import javax.portlet.PortletURL;
+import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.commerce.schema.shop.PricePositionType;
+import org.riverock.commerce.bean.ShopItem;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.schema.shop.PositionItemType;
+import org.riverock.commerce.schema.shop.PricePositionType;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * Построение иерархии категорий товаров начиная от текущей и до корня вверх
@@ -50,98 +46,64 @@ import org.riverock.commerce.schema.shop.PositionItemType;
 public class PriceListPosition {
     private static Logger log = Logger.getLogger( PriceListPosition.class );
 
-    public static PricePositionType getInstance(DatabaseAdapter db_, ShopPageParam shopParam_, RenderResponse renderResponse)
-        throws PriceException
-    {
+    public static PricePositionType getInstance(ShopPageParam shopParam, RenderResponse renderResponse)
+        throws PriceException {
 
-        if (log.isDebugEnabled())
-            log.debug("idGroup "+shopParam_.id_group);
+        if (log.isDebugEnabled()) {
+            log.debug("idGroup "+shopParam.id_group);
+        }
 
         PricePositionType position = new PricePositionType();
-        if (shopParam_.id_group==null)
+        if (shopParam.id_group==null) {
             return null;
+        }
 
-        String sql_ = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
+        Long topId = shopParam.id_group;
+        while(true) {
+            ShopItem shopItem = CommerceDaoFactory.getShopDao().getShopItem(shopParam.id_shop, topId);
+            if (shopItem!=null) {
+                PortletURL portletURL = renderResponse.createRenderURL();
 
-        Long id_top = shopParam_.id_group;
-        Long id_curr = null;
+                portletURL.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
+                portletURL.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP, shopItem.getItemId().toString());
+                portletURL.setParameters(shopParam.currencyURL);
+                portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
 
-        try {
-
-            sql_ =
-                "select ID, ID_MAIN, ITEM " +
-                "from   WM_PRICE_LIST " +
-                "where  ID=? and ID_SHOP=? and ABSOLETE=0 and IS_GROUP=1";
-
-            while (true)
-            {
-                st = db_.prepareStatement(sql_);
-                RsetTools.setLong(st, 1, id_top);
-                RsetTools.setLong(st, 2, shopParam_.id_shop);
-                rs = st.executeQuery();
-
-                if (rs.next())
-                {
-                    id_curr = RsetTools.getLong(rs, "ID");
-                    id_top = RsetTools.getLong(rs, "ID_MAIN");
-
-                    PortletURL portletURL = renderResponse.createRenderURL();
-
-                    portletURL.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
-                    portletURL.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP, id_curr.toString());
-                    portletURL.setParameters(shopParam_.currencyURL);
-                    portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam_.id_shop.toString() );
-
-                    if (shopParam_.sortBy != null){
-                        portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_BY, shopParam_.sortBy);
-                        portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_DIRECT, ""+shopParam_.sortDirect);
-                    }
-                    PositionItemType positionItem = new PositionItemType();
-
-                    positionItem.setPositionName( RsetTools.getString(rs, "ITEM") );
-                    positionItem.setPositionUrl( portletURL.toString() );
-                    positionItem.setIdGroupCurrent(id_curr);
-                    positionItem.setIdGroupTop(id_top);
-
-                    position.getPositionItem().add(positionItem);
+                if (shopParam.sortBy != null){
+                    portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy);
+                    portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_DIRECT, ""+shopParam.sortDirect);
                 }
-                else
-                    break;
+                PositionItemType positionItem = new PositionItemType();
 
-                DatabaseManager.close(rs, st);
-                rs = null;
-                st = null;
+                positionItem.setPositionName( shopItem.getItem() );
+                positionItem.setPositionUrl( portletURL.toString() );
+                positionItem.setIdGroupCurrent(shopItem.getItemId());
+                positionItem.setIdGroupTop(shopItem.getParentItemId());
+
+                position.getPositionItem().add(positionItem);
             }
+            else {
+                break;
+            }
+            topId = shopItem.getParentItemId();
         }
-        catch (Exception e) {
-            final String es = "Error build pricelist position";
-            log.error(es, e);
-            throw new PriceException(es, e);
-        }
-        finally {
-            DatabaseManager.close(rs, st);
-            rs = null;
-            st = null;
-        }
-
-        if (position.getPositionItem().isEmpty()) {
-            return null;
-        }
-
         List<PositionItemType> v = new ArrayList<PositionItemType>();
 
         if (log.isDebugEnabled()) {
-            log.debug("Count of position  - " + position.getPositionItem().isEmpty());
+            log.debug("Count of position: " + position.getPositionItem().size());
         }
 
-        Long id = 0l;
+        if (position.getPositionItem().isEmpty()) {
+            return position;
+        }
+
+        Long id = 0L;
         int maxLoop = 100;
-        while (true || --maxLoop>0) {
+        while (--maxLoop>0) {
             for (PositionItemType item : position.getPositionItem()) {
-                if (log.isDebugEnabled())
-                    log.debug("Position id_curr - " + item.getIdGroupCurrent() + " id_top " + item.getIdGroupTop());
+                if (log.isDebugEnabled()) {
+                    log.debug("Position id_curr: " + item.getIdGroupCurrent() + ", id_top: " + item.getIdGroupTop());
+                }
 
                 if (item.getIdGroupTop().equals( id )) {
                     v.add(item);
@@ -150,11 +112,13 @@ public class PriceListPosition {
 
                 item = null;
             }
-            if (shopParam_.id_group.equals(id) )
+            if (shopParam.id_group.equals(id) ) {
                 break;
+            }
         }
-        if (maxLoop==0)
+        if (maxLoop==0) {
             throw new PriceException("Error build price position, max loop count processed");
+        }
 
         position.getPositionItem().clear();
         position.getPositionItem().addAll( v );
@@ -164,12 +128,12 @@ public class PriceListPosition {
 
         portletURL.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
         portletURL.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP, "0");
-        portletURL.setParameters(shopParam_.currencyURL);
-        portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam_.id_shop.toString());
+        portletURL.setParameters(shopParam.currencyURL);
+        portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString());
 
-        if (shopParam_.sortBy != null) {
-            portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_BY, shopParam_.sortBy);
-            portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_DIRECT, ""+shopParam_.sortDirect);
+        if (shopParam.sortBy != null) {
+            portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy);
+            portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_DIRECT, ""+shopParam.sortDirect);
         }
         position.setTopLevelUrl( portletURL.toString() );
 

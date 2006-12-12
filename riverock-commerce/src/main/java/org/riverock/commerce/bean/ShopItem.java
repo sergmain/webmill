@@ -27,6 +27,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+
 /**
  * Class ShopItem.
  * 
@@ -34,76 +42,63 @@ import java.util.Date;
  * Date: 02.12.2006
  * Time: 19:37:32
  */
+@Entity
+@Table(name="wm_price_list")
+@TableGenerator(
+    name="TABLE_PRICE_LIST",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_price_shop_list",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class ShopItem implements Serializable {
+// ID_ITEM, ID_SHOP, IS_GROUP, ID, ID_MAIN, ITEM, ABSOLETE, CURRENCY,
+// QUANTITY, ADD_DATE, IS_SPECIAL, IS_MANUAL, ID_STORAGE_STATUS, PRICE
 
-    /**
-     * Field itemId
-     */
-    private java.lang.Long itemId;
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PRICE_LIST")
+    @Column(name="ID_ITEM")
+    private java.lang.Long shopItemId;
 
-    /**
-     * Field shopId
-     */
+    @Column(name="ID_SHOP")
     private java.lang.Long shopId;
 
-    /**
-     * Field isGroup
-     */
+    @Column(name="IS_GROUP")
     private boolean isGroup = false;
 
-    /**
-     * Field idMain
-     */
-    private java.lang.Long idMain = 0L;
+    @Column(name="ID")
+    private java.lang.Long itemId;
 
-    /**
-     * Field isSpecial
-     */
+    @Column(name="ID_MAIN")
+    private java.lang.Long parentItemId;
+
+    @Column(name="IS_SPECIAL")
     private boolean isSpecial = false;
 
-    /**
-     * Field isManual
-     */
+    @Column(name="IS_MANUAL")
     private boolean isManual = false;
 
-    /**
-     * Field idStorageStatus
-     */
+    @Column(name="ID_STORAGE_STATUS")
     private java.lang.Long idStorageStatus = 0L;
 
-    /**
-     * Field id
-     */
-    private java.lang.Long id;
-
-    /**
-     * Field item
-     */
+    @Column(name="ITEM")
     private java.lang.String item;
 
-    /**
-     * Field absolete
-     */
-    private java.lang.Integer obsolete = 0;
+    @Column(name="ABSOLETE")
+    private boolean obsolete = false;
 
-    /**
-     * Field currency
-     */
+    @Column(name="CURRENCY")
     private java.lang.String currency;
 
-    /**
-     * Field quantity
-     */
+    @Column(name="QUANTITY")
     private Long quantity;
 
-    /**
-     * Field addDate
-     */
+    @Column(name="ADD_DATE")
     private java.util.Date addDate;
 
-    /**
-     * Field price
-     */
+    @Column(name="PRICE")
     private BigDecimal price;
 
     public boolean isGroup() {
@@ -130,12 +125,12 @@ public class ShopItem implements Serializable {
         isManual = manual;
     }
 
-    public Long getItemId() {
-        return itemId;
+    public Long getShopItemId() {
+        return shopItemId;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setShopItemId(Long shopItemId) {
+        this.shopItemId = shopItemId;
     }
 
     public Long getShopId() {
@@ -146,12 +141,15 @@ public class ShopItem implements Serializable {
         this.shopId = shopId;
     }
 
-    public Long getIdMain() {
-        return idMain;
+    public Long getParentItemId() {
+        if (parentItemId==null) {
+            parentItemId=0L;
+        }
+        return parentItemId;
     }
 
-    public void setIdMain(Long idMain) {
-        this.idMain = idMain;
+    public void setParentItemId(Long parentItemId) {
+        this.parentItemId = parentItemId;
     }
 
     public Long getIdStorageStatus() {
@@ -162,12 +160,12 @@ public class ShopItem implements Serializable {
         this.idStorageStatus = idStorageStatus;
     }
 
-    public Long getId() {
-        return id;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
     public String getItem() {
@@ -178,11 +176,11 @@ public class ShopItem implements Serializable {
         this.item = item;
     }
 
-    public Integer getObsolete() {
+    public boolean getObsolete() {
         return obsolete;
     }
 
-    public void setObsolete(Integer obsolete) {
+    public void setObsolete(boolean obsolete) {
         this.obsolete = obsolete;
     }
 
@@ -211,6 +209,9 @@ public class ShopItem implements Serializable {
     }
 
     public BigDecimal getPrice() {
+        if (price==null) {
+            price=BigDecimal.ZERO;
+        }
         return price;
     }
 

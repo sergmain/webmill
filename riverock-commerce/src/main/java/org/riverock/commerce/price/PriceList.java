@@ -191,7 +191,7 @@ public class PriceList {
             log.debug( "Check loop #" + idx );
             for (ShopOrder shopOrder : invoice.getShopOrders()) {
                 for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
-                    log.debug( "id_item - " + item.getShopItem().getItemId() + ", isInDb - " + item.getInDb() );
+                    log.debug( "id_item - " + item.getShopItem().getShopItemId() + ", isInDb - " + item.getInDb() );
                 }
             }
             log.debug( "" );
@@ -243,14 +243,14 @@ public class PriceList {
                             log.debug( "item object - " + item );
                             log.debug( "item isInDb - " + item.getInDb() );
                             log.debug( "check item with id - " + idItem );
-                            log.debug( "status compare id_item - " + ( item.getShopItem().getItemId() == idItem ) );
+                            log.debug( "status compare id_item - " + ( item.getShopItem().getShopItemId() == idItem ) );
                         }
 
                         if( log.isDebugEnabled() ) {
                             controllLoop( 2, invoice);
                         }
 
-                        if( item.getShopItem().getItemId() == idItem ) {
+                        if( item.getShopItem().getShopItemId() == idItem ) {
                             item.setInDb( true );
 
                             if( log.isDebugEnabled() )
@@ -327,7 +327,7 @@ public class PriceList {
 
                             if( log.isDebugEnabled() ) {
                                 log.debug( "do continue" );
-                                log.debug( "item idItem " + item.getShopItem().getItemId() + " inDb " + item.getInDb() );
+                                log.debug( "item idItem " + item.getShopItem().getShopItemId() + " inDb " + item.getInDb() );
                             }
 
                             if( log.isDebugEnabled() ) {
@@ -353,13 +353,13 @@ public class PriceList {
                 for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
                     if( log.isDebugEnabled() ) {
                         log.debug( "item object - " + item );
-                        log.debug( "item idItem " + item.getShopItem().getItemId() );
+                        log.debug( "item idItem " + item.getShopItem().getShopItemId() );
                         log.debug( "item inDb - " + item.getInDb() );
                     }
 
                     if( Boolean.FALSE.equals( item.getInDb() ) ) {
                         if( log.isDebugEnabled() ) {
-                            log.debug( "item not in db " + item.getShopItem().getItemId() );
+                            log.debug( "item not in db " + item.getShopItem().getShopItemId() );
                         }
 
                         OrderLogic.addItem( dbDyn, invoice.getOrderId(), item );
