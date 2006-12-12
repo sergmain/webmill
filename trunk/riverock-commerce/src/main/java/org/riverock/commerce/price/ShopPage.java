@@ -41,7 +41,6 @@ import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
-import org.riverock.commerce.bean.CurrencyPrecision;
 import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.schema.shop.ShopPageType;
 import org.riverock.webmill.container.ContainerConstants;
@@ -159,16 +158,6 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             if ((shopParam.id_currency == null) && (shop.isDefaultCurrency())){
                 shopParam.currencyURL.clear();
                 shopParam.id_currency = shop.getDefaultCurrencyId();
-            }
-
-            if (shop.getPrecisionList() != null) {
-                CurrencyPrecision item = shop.getPrecisionList().getCurrencyPrecision(shopParam.id_currency);
-                if (item != null) {
-                    shopParam.precision = item;
-                }
-            }
-            else {
-                    log.warn("Precision not defined. Use default - 2 digit.");
             }
 
             shopParam.sortBy = PortletService.getString(renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");

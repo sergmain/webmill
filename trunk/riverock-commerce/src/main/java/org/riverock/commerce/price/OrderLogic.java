@@ -726,10 +726,11 @@ public final class OrderLogic {
                     // если код валюты наименования совпадает с валютой в которой выводить заказ
                     int precisionValue = 2;
                     CurrencyPrecision precision = null;
+
+                    CurrencyPrecisionList currencyPrecisionList = new CurrencyPrecisionList(shop.getShopId());
                     if( item.getCurrencyItem().getCurrencyId().equals( shop.getInvoiceCurrencyId() ) ) {
                         item.setResultCurrency( item.getCurrencyItem() );
-
-                        precision = getPrecisionValue( shop.getPrecisionList(), currencyItem.getCurrencyId() );
+                        precision = getPrecisionValue( currencyPrecisionList, currencyItem.getCurrencyId() );
                         if( precision != null && precision.getPrecision() != null ) {
                             precisionValue = precision.getPrecision();
                         }
@@ -743,7 +744,7 @@ public final class OrderLogic {
                         }
                     }
                     else {
-                        precision = getPrecisionValue( shop.getPrecisionList(), shop.getInvoiceCurrencyId() );
+                        precision = getPrecisionValue( currencyPrecisionList, shop.getInvoiceCurrencyId() );
                         if( precision != null && precision.getPrecision() != null )
                             precisionValue = precision.getPrecision();
 

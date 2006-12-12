@@ -42,22 +42,17 @@ import java.util.ArrayList;
 public class CurrencyPrecisionList implements Serializable {
     private static Logger log = Logger.getLogger( CurrencyPrecisionList.class );
 
-    private List<CurrencyPrecision> precisionsList = new ArrayList<CurrencyPrecision>();
+    private List<CurrencyPrecision> precisionsList;
+
+    public CurrencyPrecisionList(Long shopId) {
+        this.precisionsList = CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(shopId);
+    }
 
     public List<CurrencyPrecision> getPrecisionsList() {
         if (precisionsList==null) {
             precisionsList = new ArrayList<CurrencyPrecision>();
         }
         return precisionsList;
-    }
-
-    public void setPrecisionsList(List<CurrencyPrecision> precisionsList) {
-        this.precisionsList = precisionsList;
-    }
-
-    public void initCurrencyPrecision(Long idShop) {
-        this.getPrecisionsList().clear();
-        this.getPrecisionsList().addAll( CommerceDaoFactory.getCurrencyPrecisionDao().getCurrencyPrecisionList(idShop) );
     }
 
     public CurrencyPrecision getCurrencyPrecision( Long idCurrency ) {

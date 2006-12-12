@@ -51,9 +51,6 @@ public class ShopDaoImpl implements ShopDao {
             .setLong("shopId", shopId)
             .uniqueResult();
         session.getTransaction().commit();
-        if (bean!=null) {
-            bean.getPrecisionList().initCurrencyPrecision(bean.getShopId());
-        }
         return bean;
     }
 
@@ -67,9 +64,6 @@ public class ShopDaoImpl implements ShopDao {
             .setLong("siteId", siteId)
             .uniqueResult();
         session.getTransaction().commit();
-        if (bean!=null) {
-            bean.getPrecisionList().initCurrencyPrecision(bean.getShopId());
-        }
         return bean;
     }
 
@@ -82,9 +76,6 @@ public class ShopDaoImpl implements ShopDao {
             .setLong("siteId", siteId)
             .list();
         session.getTransaction().commit();
-        for (Shop shop : list) {
-            shop.getPrecisionList().initCurrencyPrecision(shop.getShopId());
-        }
         return list;
     }
 
