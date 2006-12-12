@@ -23,18 +23,13 @@
  */
 package org.riverock.commerce.dao;
 
-import org.apache.log4j.Logger;
-import org.riverock.commerce.bean.CurrencyPrecision;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.hibernate.Session;
+
+import org.riverock.commerce.bean.CurrencyPrecision;
+import org.riverock.commerce.tools.HibernateUtils;
 
 /**
  * User: SergeMaslyukov
@@ -47,67 +42,27 @@ public class CurrencyPrecisionDaoImpl implements CurrencyPrecisionDao {
     private static Logger log = Logger.getLogger( CurrencyPrecisionDaoImpl.class );
 
     public CurrencyPrecision getCurrencyPrecision(Long currencyPrecisionId) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db=null;
-        try {
-            db=DatabaseAdapter.getInstance();
-
-            String sql_ =
-                "select ID_PRICE_SHOP_PRECISION, ID_CURRENCY, ID_SHOP, PRECISION_SHOP " +
-                "from   WM_PRICE_SHOP_PRECISION " +
-                "where  ID_PRICE_SHOP_PRECISION=?";
-
-            ps = db.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, currencyPrecisionId);
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return initCurrencyPrecision(rs);
-            }
-            return null;
-        }
-        catch (Exception e) {
-            String es = "Error get currency precision";
-            log.error(es, e);
-            throw new IllegalStateException(e);
-        }
-        finally {
-            DatabaseManager.close( db, rs, ps );
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        CurrencyPrecision item = (CurrencyPrecision)session.createQuery(
+            "select currencyPrec from org.riverock.commerce.bean.CurrencyPrecision currencyPrec " +
+                "where currencyPrec.currencyPrecisionId=:currencyPrecisionId")
+            .setLong("currencyPrecisionId", currencyPrecisionId)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return item;
     }
 
     public List<CurrencyPrecision> getCurrencyPrecisionList(Long shopId) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db=null;
-        try {
-            db=DatabaseAdapter.getInstance();
-            
-            String sql_ =
-                "select ID_PRICE_SHOP_PRECISION, ID_CURRENCY, ID_SHOP, PRECISION_SHOP " +
-                "from   WM_PRICE_SHOP_PRECISION " +
-                "where  ID_SHOP=?";
-
-            ps = db.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, shopId);
-            rs = ps.executeQuery();
-
-            List<CurrencyPrecision> list = new ArrayList<CurrencyPrecision>();
-            while (rs.next()) {
-                CurrencyPrecision prec = initCurrencyPrecision(rs);
-                list.add( prec );
-            }
-            return list;
-        }
-        catch (Exception e) {
-            String es = "Error get currency precision list";
-            log.error(es, e);
-            throw new IllegalStateException(e);
-        }
-        finally {
-            DatabaseManager.close( db, rs, ps );
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List item = session.createQuery(
+            "select currencyPrec from org.riverock.commerce.bean.CurrencyPrecision currencyPrec " +
+                "where currencyPrec.shopId=:shopId")
+            .setLong("shopId", shopId)
+            .list();
+        session.getTransaction().commit();
+        return item;
     }
 
     public void updateCurrencyPrecision(Long currencyPrecisionId, Integer currencyPrecision) {
@@ -115,44 +70,18 @@ public class CurrencyPrecisionDaoImpl implements CurrencyPrecisionDao {
             log.info("currencyPrecisionId: "+currencyPrecisionId+", currencyPrecision: " + currencyPrecision);
             return;
         }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        CurrencyPrecision item = (CurrencyPrecision)session.createQuery(
+            "select currencyPrec from org.riverock.commerce.bean.CurrencyPrecision currencyPrec " +
+                "where currencyPrec.currencyPrecisionId=:currencyPrecisionId")
+            .setLong("currencyPrecisionId", currencyPrecisionId)
+            .uniqueResult();
 
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-
-            DatabaseManager.runSQL(
-                db,
-                "update WM_PRICE_SHOP_PRECISION set PRECISION_SHOP=? where ID_PRICE_SHOP_PRECISION=?",
-                new Object[]{currencyPrecision, currencyPrecisionId}, new int[]{Types.DECIMAL, Types.DECIMAL}
-            );
-
-            db.commit();
+        if (item!=null) {
+            item.setPrecision(currencyPrecision);
+            session.update(item);
         }
-        catch( Exception e ) {
-            try {
-                if( db != null )
-                    db.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error update currency precision";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db);
-        }
+        session.getTransaction().commit();
     }
-
-    private CurrencyPrecision initCurrencyPrecision(ResultSet rs) throws SQLException {
-        CurrencyPrecision prec = new CurrencyPrecision();
-
-        prec.setCurrencyPrecisionId( RsetTools.getLong(rs, "ID_PRICE_SHOP_PRECISION"));
-        prec.setCurrencyId(RsetTools.getLong(rs, "ID_CURRENCY"));
-        prec.setShopId(RsetTools.getLong(rs, "ID_SHOP"));
-        prec.setPrecision(RsetTools.getInt(rs, "PRECISION_SHOP"));
-        return prec;
-    }
-
 }

@@ -23,10 +23,13 @@
  */
 package org.riverock.commerce.price;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.bean.CustomCurrency;
-import org.riverock.sql.cache.SqlStatement;
+import org.riverock.commerce.bean.Currency;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 
 /**
  * User: serg_main
@@ -39,10 +42,6 @@ import org.riverock.sql.cache.SqlStatement;
 public class CurrencyManager {
     private static Logger log = Logger.getLogger(CurrencyManager.class);
 
-    static {
-        SqlStatement.registerRelateClass(CurrencyManager.class, CurrencyList.class);
-    }
-
     private CustomCurrency currencyList = null;
 
     public CustomCurrency getCurrencyList() {
@@ -52,11 +51,22 @@ public class CurrencyManager {
     public CurrencyManager() {
     }
 
-    private final static Object syncDebug = new Object();
+    public static CustomCurrency getCustomCurrencies(Long idSite) {
+        CustomCurrency list = new CustomCurrency();
+        List<Currency> currList = CommerceDaoFactory.getCurrencyDao().getCurrencyList(idSite);
+        for (Currency item : currList) {
+            list.getCurrencies().add( new CurrencyItem(item) );
+            list.setStandardCurrencies( CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrencyList() );
+        }
+        for (CurrencyItem item : list.getCurrencies()) {
+            item.fillRealCurrencyData( list.getStandardCurrencies() );
+        }
+        return list;
+    }
 
     public static CurrencyManager getInstance(Long idSite) throws PriceException {
         CurrencyManager currencyManager = new CurrencyManager();
-        currencyManager.currencyList = CurrencyList.getInstance(idSite).list;
+        currencyManager.currencyList = getCustomCurrencies(idSite);
 
         long mills = 0; // System.currentTimeMillis();
 

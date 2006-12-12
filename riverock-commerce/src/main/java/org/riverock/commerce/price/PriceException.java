@@ -29,7 +29,7 @@ package org.riverock.commerce.price;
  *
  */
 
-public class PriceException extends Exception{
+public class PriceException extends RuntimeException{
 
     public PriceException(){
         super();

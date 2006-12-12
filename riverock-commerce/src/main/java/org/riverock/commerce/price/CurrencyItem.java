@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.common.tools.DateTools;
 
 /**
@@ -82,7 +83,7 @@ public class CurrencyItem {
         this.currencyCurrentCurs = currencyCurrentCurs;
     }
 
-    public void fillRealCurrencyData(List<StandardCurrency> stdCurrency) throws Exception {
+    public void fillRealCurrencyData(List<StandardCurrency> stdCurrency) {
         if (!this.isUseStandard() && this.getCurrencyCurrentCurs()==null) {
             this.setRealCurs(new BigDecimal(0));
             this.setRealDateChange(DateTools.getCurrentTime());
@@ -91,7 +92,7 @@ public class CurrencyItem {
         }
 
         if (this.isUseStandard() && (stdCurrency == null || stdCurrency.isEmpty())) {
-            throw new Exception("Curs for currency " + this.getCurrencyName() +
+            throw new PriceException("Curs for currency " + this.getCurrencyName() +
                 " can not calculated. Curs for standard currency not entered");
         }
 
@@ -100,13 +101,14 @@ public class CurrencyItem {
         if (this.isUseStandard()) {
             for (StandardCurrency stdItem : stdCurrency) {
                 if (stdItem.getStandardCurrencyId().equals(this.getStandardCurrencyId())) {
-                    cursValue = stdItem.getCurrentCurs().getCurs()!=null?stdItem.getCurrentCurs().getCurs():null;
-                    cursDate = stdItem.getCurrentCurs().getCreated()!=null?stdItem.getCurrentCurs().getCreated():null;
+                    StandardCurrencyCurs stdCurs = CurrencyService.getStandardCurrencyCurs( stdItem.getStandardCurrencyId() );
+                    cursValue = stdCurs!=null?stdCurs.getCurs():null;
+                    cursDate = stdCurs!=null?stdCurs.getCreated():null;
                     break;
                 }
             }
             if (cursDate == null) {
-                throw new Exception("Error get curs for standard currency. Local currency - " + this.getCurrencyName());
+                throw new PriceException("Error get curs for standard currency. Local currency - " + this.getCurrencyName());
             }
         }
         else {

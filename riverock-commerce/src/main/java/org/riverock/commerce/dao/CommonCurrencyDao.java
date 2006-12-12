@@ -25,7 +25,6 @@ package org.riverock.commerce.dao;
 
 import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrencyCurs;
-import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author Sergei Maslyukov
