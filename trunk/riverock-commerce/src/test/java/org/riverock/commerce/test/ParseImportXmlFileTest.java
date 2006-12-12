@@ -21,44 +21,35 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.dao;
+package org.riverock.commerce.test;
 
+import java.io.FileInputStream;
 import java.util.List;
 
-import org.riverock.commerce.bean.Shop;
-import org.riverock.commerce.bean.ShopItem;
-import org.riverock.commerce.price.PriceGroupItem;
+import org.riverock.common.tools.XmlTools;
+import org.riverock.common.collections.TreeUtils;
+import org.riverock.commerce.schema.import_price.PricesType;
+import org.riverock.commerce.schema.import_price.PriceListType;
+import org.riverock.commerce.schema.import_price.PriceListItemType;
+import org.riverock.commerce.price.ImportPriceList;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 01.09.2006
- *         Time: 21:44:58
+ *         Date: 11.12.2006
+ *         Time: 21:15:05
  *         <p/>
  *         $Id$
  */
-public interface ShopDao {
-    Shop getShop(Long shopId);
-    Shop getShop(Long shopId, Long siteId);
+public class ParseImportXmlFileTest {
 
-    Long createShop(Shop shop);
+    public static void main(String[] args) throws Exception {
+        PricesType prices = XmlTools.getObjectFromXml(PricesType.class, new FileInputStream(args[0]));
+        for (PriceListType price : prices.getPriceList()) {
 
-    void updateShop(Shop shop);
-
-    void deleteShop(Long shopId);
-
-    List<Shop> getShopList(Long siteId);
-
-    /**
-     * get shopItem record by PK
-     * 
-     * @param shopItemId PK
-     * @return
-     */
-    ShopItem getShopItem(Long shopItemId);
-
-    ShopItem getShopItem(Long shopId, Long itemId);
-
-    List<PriceGroupItem> getGroupList( Long idGroup, Long idShop, Long idSite );
-
-    List<ShopItem> getShopItemList(Long shopId, Long parentItemId, String sortBy, int sortDirection);
+            List<PriceListItemType> items = (List) TreeUtils.rebuildTree((List)price.getItem());
+            items = (List)TreeUtils.toPlainList((List) ImportPriceList.deleteUselessItem(items));
+            price.setItem(items);
+        }
+        int i=0;
+    }
 }

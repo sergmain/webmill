@@ -251,7 +251,7 @@ public class SignFile {
 
 //        TransferFileContent tf = new TransferFileContent();
 //        Base64 base64 = new Base64();
-        org.riverock.generic.startup.StartupApplication.init();
+        org.riverock.common.startup.StartupApplication.init();
 
         checkClass("org.bouncycastle.jce.provider.BouncyCastleProvider");
         checkClass("org.bouncycastle.jceX509KeyUsage");

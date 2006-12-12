@@ -26,13 +26,15 @@ package org.riverock.commerce.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 
 import org.riverock.commerce.bean.CurrencyCurs;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
+import org.riverock.commerce.tools.HibernateUtils;
 import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 
 /**
  * @author Sergei Maslyukov
@@ -45,137 +47,110 @@ public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
     private final static Logger log = Logger.getLogger( CommonCurrencyDaoImpl.class );
 
     public CurrencyCurs getCurrentCurs(Long currencyId, Long siteId) {
-        DatabaseAdapter db = null;
+        Session session=null;
         try {
-            db = DatabaseAdapter.getInstance();
-            return getCurrentCurs(db, currencyId, siteId);
-        }
-        catch (Exception e) {
-            final String es = "Exception get current curs for currency";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db);
-        }
-    }
+            session = HibernateUtils.getSession();
+            session.beginTransaction();
+            Timestamp stamp = (Timestamp)session.createQuery(
+                "select max(f.date) " +
+                    "from  org.riverock.commerce.bean.CurrencyCurs f, " +
+                    "      org.riverock.commerce.bean.Currency b " +
+                    "where f.currencyId=b.currencyId and b.siteId=:siteId and f.currencyId=:currencyId")
+                .setLong("siteId", siteId)
+                .setLong("currencyId", currencyId)
+                .uniqueResult();
 
-    public CurrencyCurs getCurrentCurs(DatabaseAdapter db, Long currencyId, Long siteId) {
-        String sql_ =
-            "select max(f.DATE_CHANGE) LAST_DATE " +
-            "from   WM_CASH_CURR_VALUE f, WM_CASH_CURRENCY b " +
-            "where  f.ID_CURRENCY=b.ID_CURRENCY and b.ID_SITE=? and f.ID_CURRENCY=? ";
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = db.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, siteId );
-            RsetTools.setLong( ps, 2, currencyId );
-
-            rs = ps.executeQuery();
-
-            Timestamp stamp=null;
-            if( rs.next() ) {
-                stamp = RsetTools.getTimestamp( rs, "LAST_DATE" );
-            }
+//        String sql_ =
+//            "select max(f.DATE_CHANGE) LAST_DATE " +
+//            "from   WM_CASH_CURR_VALUE f, WM_CASH_CURRENCY b " +
+//            "where  f.ID_CURRENCY=b.ID_CURRENCY and b.ID_SITE=? and f.ID_CURRENCY=? ";
 
             if (stamp==null) {
                 return null;
             }
 
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
+            List curses = session.createQuery(
+                "select a " +
+                    "from  org.riverock.commerce.bean.CurrencyCurs a, " +
+                    "      org.riverock.commerce.bean.Currency b " +
+                    "where a.currencyId=b.currencyId and b.siteId=:siteId and a.currencyId=:currencyId and a.date=:dateChange " +
+                    "order by a.currencyCursId desc")
+                .setLong("siteId", siteId)
+                .setLong("currencyId", currencyId)
+                .setTimestamp("dateChange", stamp)
+                .list();
 
-            sql_ =
-                "select  a.ID_CURRENCY, a.DATE_CHANGE, a.CURS " +
-                    "from    WM_CASH_CURR_VALUE a, WM_CASH_CURRENCY b " +
-                    "where   a.ID_CURRENCY=b.ID_CURRENCY and " +
-                    "        b.ID_SITE=? and " +
-                    "        a.ID_CURRENCY=? and " +
-                    "        DATE_CHANGE=?";
-
-            ps = db.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, siteId );
-            RsetTools.setLong( ps, 2, currencyId );
-            ps.setTimestamp(3, stamp );
-
-            rs = ps.executeQuery();
-
-            if( rs.next() ) {
-                CurrencyCurs curs = new CurrencyCurs();
-
-                curs.setCurs( RsetTools.getBigDecimal( rs, "CURS" ) );
-                curs.setDate( RsetTools.getTimestamp(rs, "DATE_CHANGE") );
-                curs.setCurrencyId( currencyId );
-
-                return curs;
+            if (curses.isEmpty()) {
+                return null;
             }
-            return null;
-        }
-        catch( Exception e ) {
-            final String es = "Exception get current curs";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
+
+            return (CurrencyCurs)curses.get(0);
         }
         finally {
-            DatabaseManager.close( rs, ps );
+            if (session!=null) {
+                session.getTransaction().commit();
+            }
         }
     }
 
-    public CurrencyCurs getStandardCurrencyCurs(Long currencyId) {
-        DatabaseAdapter db = null;
+    public StandardCurrencyCurs getStandardCurrencyCurs(Long standardCurrencyId) {
+        Session session=null;
         try {
-            db = DatabaseAdapter.getInstance();
-            return getStandardCurrencyCurs(db, currencyId);
-        }
-        catch (Exception e) {
-            final String es = "Exception get currentcurs of standard currency";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db);
-        }
-    }
+            session = HibernateUtils.getSession();
+            session.beginTransaction();
+            Timestamp stamp = (Timestamp)session.createQuery(
+                "select max(z1.created) " +
+                    "from  org.riverock.commerce.bean.StandardCurrencyCurs z1, " +
+                    "      org.riverock.commerce.bean.StandardCurrency a2 " +
+                    "where z1.isDeleted=false and z1.standardCurrencyId=a2.standardCurrencyId and " +
+                    "      z1.standardCurrencyId=:standardCurrencyId")
+                .setLong("standardCurrencyId", standardCurrencyId)
+                .uniqueResult();
 
-    public CurrencyCurs getStandardCurrencyCurs( DatabaseAdapter db, Long standardCurrencyId ) {
-        String sql_ =
-            "select max(z1.DATE_CHANGE) LAST_DATE " +
-            "from   WM_CASH_CURS_STD z1, WM_CASH_CURRENCY_STD a2 " +
-            "where  z1.IS_DELETED=0 and " +
-            "       z1.ID_STD_CURR=a2.ID_STD_CURR and " +
-            "       z1.ID_STD_CURR=?";
+//        String sql_ =
+//            "select max(z1.DATE_CHANGE) LAST_DATE " +
+//            "from   WM_CASH_CURS_STD z1, WM_CASH_CURRENCY_STD a2 " +
+//            "where  z1.IS_DELETED=0 and " +
+//            "       z1.ID_STD_CURR=a2.ID_STD_CURR and " +
+//            "       z1.ID_STD_CURR=?";
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = db.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, standardCurrencyId );
-
-            rs = ps.executeQuery();
-
-            Timestamp stamp = null;
-            if( rs.next() ) {
-                stamp = RsetTools.getTimestamp( rs, "LAST_DATE" );
-            }
             if (stamp==null) {
                 return null;
             }
 
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
+//            sql_ =
+//                "select  a2.*, a1.VALUE_CURS CURS, a1.DATE_CHANGE " +
+//                    "from    WM_CASH_CURS_STD a1, WM_CASH_CURRENCY_STD a2 " +
+//                    "where   a1.IS_DELETED=0 and " +
+//                    "        a1.ID_STD_CURR=a2.ID_STD_CURR and " +
+//                    "        a1.ID_STD_CURR=? and " +
+//                    "        a1.DATE_CHANGE= " + db.getNameDateBind();
 
-            sql_ =
-                "select  a2.*, a1.VALUE_CURS CURS, a1.DATE_CHANGE " +
-                    "from    WM_CASH_CURS_STD a1, WM_CASH_CURRENCY_STD a2 " +
-                    "where   a1.IS_DELETED=0 and " +
-                    "        a1.ID_STD_CURR=a2.ID_STD_CURR and " +
-                    "        a1.ID_STD_CURR=? and " +
-                    "        a1.DATE_CHANGE= " + db.getNameDateBind();
+            List curses = session.createQuery(
+                "select a1 " +
+                    "from  org.riverock.commerce.bean.StandardCurrencyCurs a1, " +
+                    "      org.riverock.commerce.bean.StandardCurrency a2 " +
+                    "where a1.isDeleted=false and a1.standardCurrencyId=a2.standardCurrencyId and " +
+                    "      a1.standardCurrencyId=:standardCurrencyId and " +
+                    "      a1.created=:dateChange " +
+                    "order by a1.standardCurrencyCursId desc")
+                .setLong("standardCurrencyId", standardCurrencyId)
+                .setTimestamp("dateChange", stamp)
+                .list();
 
+            if (curses.isEmpty()) {
+                return null;
+            }
+
+            return (StandardCurrencyCurs)curses.get(0);
+        }
+        finally {
+            if (session!=null) {
+                session.getTransaction().commit();
+            }
+        }
+
+/*
             ps = db.prepareStatement( sql_ );
             RsetTools.setLong( ps, 1, standardCurrencyId );
             db.bindDate( ps, 2, stamp );
@@ -192,14 +167,6 @@ public class CommonCurrencyDaoImpl implements CommonCurrencyDao {
                 return curs;
             }
             return null;
-        }
-        catch( Exception e ) {
-            final String es = "Exception get currentcurs of standard currency";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-        }
+*/
     }
 }

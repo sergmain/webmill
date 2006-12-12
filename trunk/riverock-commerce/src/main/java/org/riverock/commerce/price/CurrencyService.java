@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.bean.CustomCurrency;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -49,12 +50,12 @@ import org.riverock.generic.db.DatabaseManager;
 public final class CurrencyService {
     private final static Logger log = Logger.getLogger( CurrencyService.class );
 
-    public static CurrencyCurs getCurrentCurs( DatabaseAdapter db_, Long idCurrency, Long idSite ) {
-        return CommerceDaoFactory.getCommonCurrencyDao().getCurrentCurs(db_, idCurrency, idSite);
+    public static CurrencyCurs getCurrentCurs( Long idCurrency, Long idSite ) {
+        return CommerceDaoFactory.getCommonCurrencyDao().getCurrentCurs(idCurrency, idSite);
     }
 
-    public static CurrencyCurs getStandardCurrencyCurs( DatabaseAdapter db_, Long idStandardCurrency ) {
-        return CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(db_, idStandardCurrency);
+    public static StandardCurrencyCurs getStandardCurrencyCurs( Long idStandardCurrency ) {
+        return CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(idStandardCurrency);
     }
 
     public static List<StandardCurrency> getStandardCurrencyList( DatabaseAdapter db_ ) throws PriceException {
@@ -78,7 +79,7 @@ public final class CurrencyService {
                 currency.setStandardCurrencyName( RsetTools.getString( rs, "NAME_STD_CURR" ) );
                 currency.setStandardCurrencyId( RsetTools.getLong( rs, "ID_STD_CURR" ) );
 
-                currency.setCurrentCurs( getStandardCurrencyCurs( db_, currency.getStandardCurrencyId() ) );
+                currency.setCurrentCurs( getStandardCurrencyCurs( currency.getStandardCurrencyId() ) );
 
                 currencies.add( currency );
             }

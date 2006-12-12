@@ -545,7 +545,7 @@ public final class InvoicePortlet implements Portlet {
                         out.write( "</td>\n" );
                         out.write( "<form method=\"GET\" action=\"" + PortletService.ctx( renderRequest ) + "\">\n" );
                         out.write( addForm );
-                        out.write( ServletTools.getHiddenItem( "set_id_item", item.getShopItem().getItemId() ) );
+                        out.write( ServletTools.getHiddenItem( "set_id_item", item.getShopItem().getShopItemId() ) );
                         out.write( ServletTools.getHiddenItem( "action", "set" ) );
                         out.write( "<td class=\"priceData\" align=\"right\">" );
                         out.write( NumberTools.truncate( item.getResultPrice(), currentPrecision ).toString() );
@@ -568,7 +568,7 @@ public final class InvoicePortlet implements Portlet {
                         out.write( "</form>\n" );
                         out.write( "<form method=\"GET\" action=\"" + PortletService.ctx( renderRequest ) + "\">\n" );
                         out.write( addForm );
-                        out.write( ServletTools.getHiddenItem( "del_id_item", item.getShopItem().getItemId() ) );
+                        out.write( ServletTools.getHiddenItem( "del_id_item", item.getShopItem().getShopItemId() ) );
                         out.write( ServletTools.getHiddenItem( "action", "del" ) );
                         out.write( "<td class=\"priceData\" align=\"center\">" );
                         out.write( "<input type=\"submit\" value=\"" );

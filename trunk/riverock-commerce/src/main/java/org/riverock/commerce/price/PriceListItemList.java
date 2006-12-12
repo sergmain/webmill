@@ -25,11 +25,10 @@ package org.riverock.commerce.price;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ResourceBundle;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -37,139 +36,112 @@ import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.NumberTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.XmlTools;
-import org.riverock.commerce.tools.SiteUtils;
-import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.CurrencyPrecision;
 import org.riverock.commerce.bean.Invoice;
+import org.riverock.commerce.bean.Shop;
+import org.riverock.commerce.bean.ShopItem;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.schema.shop.HiddenParamType;
 import org.riverock.commerce.schema.shop.ItemListType;
 import org.riverock.commerce.schema.shop.PriceFieldNameType;
 import org.riverock.commerce.schema.shop.PriceItemType;
+import org.riverock.commerce.tools.SiteUtils;
+import org.riverock.common.tools.NumberTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
- *
  * $Author$
- *
+ * <p/>
  * $Id$
- *
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class PriceListItemList {
-    private final static Logger log = Logger.getLogger( PriceListItemList.class );
+    private final static Logger log = Logger.getLogger(PriceListItemList.class);
 
     // dont edit return type - name must be with package
-    private static HiddenParamType getHidden(String name, String value)
-    {
+    private static HiddenParamType getHidden(String name, String value) {
         HiddenParamType hidden = new HiddenParamType();
         hidden.setHiddenParamName(name);
         hidden.setHiddenParamValue(value);
         return hidden;
     }
 
-    private final static Object syncObj  = new Object();
+    private final static Object syncObj = new Object();
+
     public static ItemListType getInstance(
-        DatabaseAdapter db_, ShopPageParam shopParam,
-        RenderRequest renderRequest, RenderResponse renderResponse, ResourceBundle bundle )
+        ShopPageParam shopParam, RenderRequest renderRequest, RenderResponse renderResponse, ResourceBundle bundle)
         throws PriceException {
 
-        if (shopParam.id_currency==null) {
+        if (shopParam.id_currency == null) {
             throw new PriceException("currency for this shop not defined");
         }
-
-        String sql_ = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
 
         ItemListType items = new ItemListType();
         PriceFieldNameType fieldName = new PriceFieldNameType();
         fieldName.setNameItem("Наименование");
         fieldName.setNamePrice("Цена");
         fieldName.setNameCurrency("Валюта");
+        fieldName.setNameToInvoice( bundle.getString("price.to_invoice") );
 
         items.setPriceFieldName(fieldName);
-        try
-        {
-            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-
-            fieldName.setNameToInvoice(
-                bundle.getString("price.to_invoice")
-            );
-            sql_ =
-                "select a.* " +
-                "from   WM_PRICE_LIST a " +
-                "where  a.ID_MAIN=? and a.ID_SHOP=? and a.ABSOLETE=0 and a.IS_GROUP=0 ";
-
-            if ("item".equals(shopParam.sortBy)) {
-                sql_ += ("order by a.ITEM " + (shopParam.sortDirect == 0 ? "ASC" : "DESC"));
-            }
-            else if ("price".equals(shopParam.sortBy)) {
-                sql_ += ("order by a.PRICE " + (shopParam.sortDirect == 0 ? "ASC" : "DESC"));
+        try {
+            Long siteId = new Long(renderRequest.getPortalContext().getProperty(ContainerConstants.PORTAL_PROP_SITE_ID));
+            Shop shop = CommerceDaoFactory.getShopDao().getShop(shopParam.id_shop, siteId);
+            if (shop==null) {
+                return items;
             }
 
-            if (log.isDebugEnabled())
-                log.debug("sql "+sql_);
-
-            ps = db_.prepareStatement(sql_);
-
-            if (log.isDebugEnabled())
-                log.debug("shopParam.id_group "+shopParam.id_group+", " +
-                    "shopParam.id_shop "+shopParam.id_shop
+            List<ShopItem> shopItems = CommerceDaoFactory.getShopDao().getShopItemList(shop.getShopId(), shopParam.id_group, shopParam.sortBy, shopParam.sortDirect);
+            if (log.isDebugEnabled()) {
+                log.debug("shopParam.id_group " + shopParam.id_group + ", " +
+                    "shopParam.id_shop " + shopParam.id_shop
                 );
-
-            RsetTools.setLong(ps, 1, shopParam.id_group);
-            RsetTools.setLong(ps, 2, shopParam.id_shop);
-
-            rs = ps.executeQuery();
+            }
 
             PortletSession session = renderRequest.getPortletSession();
             Invoice order = (Invoice) session.getAttribute(ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE);
-            Shop shop = CommerceDaoFactory.getShopDao().getShop(shopParam.id_shop);
-            while (rs.next()) {
-                Long idPk = RsetTools.getLong(rs, "ID_ITEM");
+
+            for (ShopItem shopItem : shopItems) {
+                Long idPk = shopItem.getShopItemId();
 
                 PriceItemType item = new PriceItemType();
-                item.setItemID(RsetTools.getLong(rs, "ID"));
-                item.setItemName(RsetTools.getString(rs, "ITEM"));
+                item.setItemID(shopItem.getItemId());
+                item.setItemName(shopItem.getItem());
 
                 item.setItemToInvoice(
                     shopParam.isProcessInvoice ?
-                    renderResponse.createRenderURL().toString() :
-                    null
+                        renderResponse.createRenderURL().toString() :
+                        null
                 );
 
                 item.setItemToInvoiceCountParam(
                     shopParam.isProcessInvoice ?
-                    ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP :
-                    null
+                        ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP :
+                        null
                 );
 
                 item.setItemInBasket(OrderLogic.isItemInBasket(idPk, order) ? "InBasket" : null);
 
-                String currencyCode = RsetTools.getString(rs, "CURRENCY");
-                if (log.isDebugEnabled())
-                    log.debug("currencyCode "+ currencyCode);
+                String currencyCode = shopItem.getCurrency();
+                if (log.isDebugEnabled()) {
+                    log.debug("currencyCode " + currencyCode);
+                }
 
-                final CurrencyManager currencyManager = CurrencyManager.getInstance( siteId );
+                final CurrencyManager currencyManager = CurrencyManager.getInstance(siteId);
                 CurrencyItem currencyItem = CurrencyService.getCurrencyItemByCode(
                     currencyManager.getCurrencyList(), currencyCode
                 );
 
                 if (log.isDebugEnabled())
-                    log.debug("currencyItem "+currencyItem);
+                    log.debug("currencyItem " + currencyItem);
 
                 BigDecimal resultPrice = BigDecimal.ZERO;
-                if (currencyItem!=null) {
+                if (currencyItem != null) {
 
-                    currencyItem.fillRealCurrencyData( currencyManager.getCurrencyList().getStandardCurrencies() );
+                    currencyItem.fillRealCurrencyData(currencyManager.getCurrencyList().getStandardCurrencies());
 
-                    BigDecimal rsetPrice = RsetTools.getBigDecimal(rs, "PRICE", BigDecimal.ZERO);
+                    BigDecimal rsetPrice = shopItem.getPrice();
 
                     if (log.isDebugEnabled()) {
                         log.debug("currencyItem.getCurrencyId()" + currencyItem.getCurrencyId() + ", " +
@@ -182,7 +154,8 @@ public final class PriceListItemList {
 
                         precisionValue = getPrecisionValue(shop, currencyItem.getCurrencyId());
                         resultPrice = NumberTools.truncate(rsetPrice, precisionValue);
-                    } else {
+                    }
+                    else {
                         precisionValue = getPrecisionValue(shop, shopParam.id_currency);
 
                         CurrencyItem targetCurrency =
@@ -221,12 +194,12 @@ public final class PriceListItemList {
                                 " result price - " + resultPrice);
                         }
                     }
-                    item.setItemPrice( NumberTools.truncate(resultPrice, precisionValue).toString() );
+                    item.setItemPrice(NumberTools.truncate(resultPrice, precisionValue).toString());
                 }
                 else {
                     item.setItemPrice("unknown");
                 }
-                
+
                 item.setItemDescription(null);
 
                 PriceItemImage image = PriceItemImage.getInstance(shopParam.idSite);
@@ -236,7 +209,7 @@ public final class PriceListItemList {
 
                 if (shopParam.isProcessInvoice) {
                     item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam.id_shop));
-                    item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + RsetTools.getLong(rs, "ID_MAIN")));
+                    item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + shopItem.getParentItemId()));
                     item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_CURRENCY_SHOP, "" + shopParam.id_currency));
                     item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ADD_ID_ITEM, "" + idPk));
                     item.getHiddenParam().add(getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
@@ -245,11 +218,11 @@ public final class PriceListItemList {
                 }
 
                 if (log.isDebugEnabled()) {
-                    synchronized(syncObj) {
+                    synchronized (syncObj) {
                         try {
-                            XmlTools.writeToFile(item, SiteUtils.getTempDir()+File.separatorChar+"schema-currency-item.xml");
+                            XmlTools.writeToFile(item, SiteUtils.getTempDir() + File.separatorChar + "schema-currency-item.xml");
                         }
-                        catch(Throwable e) {
+                        catch (Throwable e) {
                             log.error("Exception write item to debug file", e);
                         }
                     }
@@ -260,7 +233,7 @@ public final class PriceListItemList {
         catch (SQLException e) {
             String es = "Error  execute sql ";
             log.error(es, e);
-            throw new PriceException(es+e.getMessage());
+            throw new PriceException(es + e.getMessage());
         }
         catch (UnsupportedEncodingException e) {
             String es = "Error get localized string ";
@@ -272,11 +245,6 @@ public final class PriceListItemList {
             log.error(es, e);
             throw new PriceException(es, e);
         }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
 
         if (items.getPriceItem().isEmpty())
             return null;
@@ -284,12 +252,12 @@ public final class PriceListItemList {
         return items;
     }
 
-    private static int getPrecisionValue( Shop shop, Long idCurrency ) {
-        CurrencyPrecision prec = shop.getPrecisionList().getCurrencyPrecision( idCurrency );
-        if (prec==null)
+    private static int getPrecisionValue(Shop shop, Long idCurrency) {
+        CurrencyPrecision prec = shop.getPrecisionList().getCurrencyPrecision(idCurrency);
+        if (prec == null)
             return 2;
 
-        return prec.getPrecision()!=null ?prec.getPrecision() :0;
+        return prec.getPrecision() != null ? prec.getPrecision() : 0;
     }
 
 }

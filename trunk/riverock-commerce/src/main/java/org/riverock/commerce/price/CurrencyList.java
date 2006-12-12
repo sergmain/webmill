@@ -74,7 +74,7 @@ public class CurrencyList {
             db_ = DatabaseAdapter.getInstance();
             List<Currency> currList = CommerceDaoFactory.getCurrencyDao().getCurrencyList(idSite);
             for (Currency item : currList) {
-                list.getCurrencies().add( new CurrencyItem(db_, item) );
+                list.getCurrencies().add( new CurrencyItem(item) );
                 list.setStandardCurrencies( CurrencyService.getStandardCurrencyList(db_) );
             }
         }

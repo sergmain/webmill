@@ -38,8 +38,6 @@ import javax.portlet.RenderResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
@@ -114,9 +112,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 
     public PortletResultContent getInstance() throws PortletException {
 
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
             PortletSession session = renderRequest.getPortletSession();
             Invoice order = (Invoice) session.getAttribute( ShopPortlet.ORDER_SESSION , PortletSession.APPLICATION_SCOPE);
 
@@ -220,18 +216,14 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
                 );
             }
 
-            shopPage.setPricePosition( PriceListPosition.getInstance(db_, shopParam, renderResponse) );
+            shopPage.setPricePosition( PriceListPosition.getInstance(shopParam, renderResponse) );
             shopPage.setCurrentBasket( ShopBasket.getInstance(order, shopParam, renderRequest, renderResponse, resourceBundle ) );
-            shopPage.setGroupList( PriceGroup.getInstance(db_, shopParam, renderResponse) );
-            shopPage.setItemList( PriceListItemList.getInstance(db_, shopParam, renderRequest, renderResponse, resourceBundle ) );
+            shopPage.setGroupList( PriceGroup.getInstance(shopParam, renderResponse) );
+            shopPage.setItemList( PriceListItemList.getInstance(shopParam, renderRequest, renderResponse, resourceBundle ) );
         } catch (Throwable e) {
             String es = "Error in getInstance()";
             log.error(es, e);
             throw new PortletException(es, e);
-        }
-        finally {
-            DatabaseManager.close(db_);
-            db_ = null;
         }
         return this;
     }

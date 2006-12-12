@@ -28,6 +28,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 
+import javax.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.TableGenerator;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Transient;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 31.08.2006
@@ -35,18 +44,48 @@ import java.math.BigDecimal;
  *         <p/>
  *         $Id$
  */
+@Entity
+@Table(name="wm_cash_currency")
+@TableGenerator(
+    name="TABLE_CASH_CURRENCY",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_cash_currency",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class Currency implements Serializable {
-
     private static final long serialVersionUID = 55957005501L;
 
+//ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_CASH_CURRENCY")
+    @Column(name="ID_CURRENCY")
     private Long currencyId = null;
+
+    @Column(name="ID_STANDART_CURS")
     private Long standardCurrencyId =null;
+
+    @Column(name="ID_SITE")
     private Long siteId =null;
+
+    @Column(name="PERCENT_VALUE")
     private BigDecimal percent =null;
+
+    @Column(name="NAME_CURRENCY")
     private String currencyName = null;
+
+    @Column(name="CURRENCY")
     private String currencyCode = null;
+
+    @Column(name="IS_USED")
     private boolean isUsed = false;
+
+    @Column(name="IS_USE_STANDART")
     private boolean isUseStandard = false;
+
+    @Transient
     private List<CurrencyCurs> curses = new ArrayList<CurrencyCurs>();
 
     public Currency() {

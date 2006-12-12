@@ -24,6 +24,7 @@
 package org.riverock.commerce.dao;
 
 import org.riverock.commerce.bean.CurrencyCurs;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.generic.db.DatabaseAdapter;
 
 /**
@@ -36,9 +37,5 @@ import org.riverock.generic.db.DatabaseAdapter;
 public interface CommonCurrencyDao {
     CurrencyCurs getCurrentCurs(Long currencyId, Long siteId);
 
-    CurrencyCurs getCurrentCurs(DatabaseAdapter db, Long currencyId, Long siteId);
-
-    CurrencyCurs getStandardCurrencyCurs(Long currencyId);
-
-    CurrencyCurs getStandardCurrencyCurs( DatabaseAdapter db, Long standardCurrencyId );
+    StandardCurrencyCurs getStandardCurrencyCurs(Long standardCurrencyId);
 }

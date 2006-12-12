@@ -37,7 +37,7 @@
      <h:inputText id="shop-code-field" value="#{shopSessionBean.shopBean.shopCode}" size="30"/>
 
      <h:outputText value="#{msg.is_opened}"/>
-     <h:selectBooleanCheckbox id="select_is_used_checkbox" value="#{shopSessionBean.shopBean.opened}"/>
+     <h:selectBooleanCheckbox id="select_is_used_checkbox" value="#{shopSessionBean.shopBean.closed}"/>
 
      <h:outputText value="#{msg.digit_after_comma}"/>
      <h:inputText id="digit-after-comma-field" value="#{shopSessionBean.shopBean.digitsAfterComma}" size="10"/>

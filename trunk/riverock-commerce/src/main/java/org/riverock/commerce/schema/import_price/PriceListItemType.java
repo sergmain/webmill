@@ -8,11 +8,17 @@
 
 package org.riverock.commerce.schema.import_price;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlType;import javax.xml.bind.annotation.XmlTransient;
+
+import org.riverock.interfaces.common.TreeItem;
 
 
 /**
@@ -63,7 +69,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "PriceListItemType", propOrder = {
     "nameItem"
 })
-public class PriceListItemType {
+public class PriceListItemType implements TreeItem {
 
     @XmlElement(name = "NameItem", required = true)
     protected String nameItem;
@@ -78,7 +84,11 @@ public class PriceListItemType {
     @XmlAttribute
     protected Long parentID;
     @XmlAttribute(required = true)
-    protected double price;
+    protected BigDecimal price;
+//    protected @double price;
+
+    @XmlTransient
+    private List<PriceListItemType> subTree = new ArrayList<PriceListItemType>();
 
     /**
      * Gets the value of the nameItem property.
@@ -232,7 +242,7 @@ public class PriceListItemType {
      * Gets the value of the price property.
      * 
      */
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -240,8 +250,26 @@ public class PriceListItemType {
      * Sets the value of the price property.
      * 
      */
-    public void setPrice(double value) {
+    public void setPrice(BigDecimal value) {
         this.price = value;
     }
 
+    public Long getTopId() {
+        return parentID;
+    }
+
+    public Long getId() {
+        return itemID;
+    }
+
+    public List<TreeItem> getSubTree() {
+        if (subTree==null) {
+            subTree = new ArrayList<PriceListItemType>();
+        }
+        return (List)subTree;
+    }
+
+    public void setSubTree(List<TreeItem> list) {
+        this.subTree = (List)list;
+    }
 }

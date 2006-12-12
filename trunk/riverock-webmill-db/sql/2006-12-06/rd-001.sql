@@ -19,3 +19,19 @@ insert into wm_portal_ids
 /
 
 
+insert into wm_portal_ids
+(select 'wm_price_list' name, max(ID_ITEM)+1 max_value from wm_price_list)
+/
+
+
+insert into wm_portal_ids
+(select 'wm_price_import_table' name, max(ID_UPLOAD_PRICE)+1 max_value from wm_price_import_table)
+/
+
+
+insert into wm_portal_ids
+(select 'wm_cash_currency' name, max(ID_CURRENCY)+1 max_value from wm_cash_currency)
+/
+
+
+

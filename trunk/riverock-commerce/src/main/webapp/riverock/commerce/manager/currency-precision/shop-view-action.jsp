@@ -43,8 +43,8 @@
 
      <h:outputText value="#{msg.is_opened}"/>
      <h:panelGroup>
-         <t:graphicImage value="/images/yes.gif" rendered="#{currencyPrecisionSessionBean.shopExtendedBean.shop.opened}" border="0"/>
-         <t:graphicImage value="/images/no.gif" rendered="#{!currencyPrecisionSessionBean.shopExtendedBean.shop.opened}" border="0"/>
+         <t:graphicImage value="/images/yes.gif" rendered="#{currencyPrecisionSessionBean.shopExtendedBean.shop.closed}" border="0"/>
+         <t:graphicImage value="/images/no.gif" rendered="#{!currencyPrecisionSessionBean.shopExtendedBean.shop.closed}" border="0"/>
      </h:panelGroup>
 
      <h:outputText value="#{msg.shop_name_for_price_list}"/>
