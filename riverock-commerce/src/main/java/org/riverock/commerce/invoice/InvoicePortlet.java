@@ -23,42 +23,29 @@
  */
 package org.riverock.commerce.invoice;
 
-import java.io.File;
 import java.io.PrintWriter;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.ResourceBundle;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.Portlet;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletException;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.PortletURL;
+import javax.portlet.*;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.commerce.bean.Invoice;
+import org.riverock.commerce.bean.Shop;
+import org.riverock.commerce.bean.ShopOrder;
+import org.riverock.commerce.bean.ShopOrderItem;
+import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.commerce.price.OrderLogic;
+import org.riverock.commerce.price.ShopPortlet;
+import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.ServletTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.common.tools.XmlTools;
-import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.User;
-import org.riverock.commerce.price.OrderLogic;
-import org.riverock.commerce.price.PriceList;
-import org.riverock.commerce.price.ShopPortlet;
-import org.riverock.commerce.bean.ShopOrderItem;
-import org.riverock.commerce.bean.ShopOrder;
-import org.riverock.commerce.tools.ContentTypeTools;
-import org.riverock.commerce.tools.SiteUtils;
-import org.riverock.commerce.bean.Shop;
-import org.riverock.commerce.bean.Invoice;
-import org.riverock.commerce.dao.CommerceDaoFactory;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -75,6 +62,7 @@ public final class InvoicePortlet implements Portlet {
     private final static Logger log = Logger.getLogger( InvoicePortlet.class );
 
     public final static String CTX_TYPE_INVOICE = "mill.invoice";
+    private static final String COMPLETE_SEND_ORDER = "complete-send-order";
 
     public InvoicePortlet() {
     }
@@ -85,44 +73,78 @@ public final class InvoicePortlet implements Portlet {
         this.portletConfig = portletConfig;
     }
 
-    public void processAction( ActionRequest actionRequest, ActionResponse actionResponse ) {
-    }
-
     public void destroy() {
     }
 
-    private final static Object syncObj = new Object();
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
+        String action = PortletService.getString(actionRequest, "action", null);
 
-    public void render( RenderRequest renderRequest, RenderResponse renderResponse )
-        throws PortletException {
-        OrderLogic.process( renderRequest );
+        if ( log.isDebugEnabled() ) {
+            log.debug( "Action: " + action );
+        }
 
-        ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
+        if ( action== null ) {
+            return;
+        }
+
+        PortletSession session = actionRequest.getPortletSession();
+        Invoice order = (Invoice)session.getAttribute( ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE );
+
+        if ( order == null ) {
+            return;
+        }
+
+        Long siteId = new Long( actionRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+
+        if ( action.equals( "set" ) ) {
+            Long shopItemId = PortletService.getLong( actionRequest, "set_id_item" );
+            int count = PortletService.getInt( actionRequest, ShopPortlet.NAME_INVOICE_NEW_COUNT_PARAM, 0 );
+
+            if ( log.isDebugEnabled() ) {
+                log.debug( "shopItemId - " + shopItemId );
+                log.debug( "count - " + count );
+            }
+
+            // set new quantity of item in backet
+            CommerceDaoFactory.getOrderDao().setNewQuantity(siteId, order.getUserOrderId(), shopItemId, count );
+
+        } else if ( action.equals( "del" ) ) {
+            Long shopItemId = PortletService.getLong( actionRequest, "del_id_item" );
+            if ( log.isDebugEnabled() ) {
+                log.debug( "id_item - " + shopItemId );
+            }
+            // delete item from basket
+            CommerceDaoFactory.getOrderDao().deleteShopItem(siteId, order.getUserOrderId(), shopItemId );
+        }
+        else if ( "send".equals( action )) {
+            AuthSession authSession = (AuthSession)actionRequest.getUserPrincipal();
+            if (authSession!=null) {
+                ResourceBundle bundle = portletConfig.getResourceBundle( actionRequest.getLocale() );
+                // send order
+                sendInvoice(bundle, authSession, order, actionResponse);
+            }
+        }
+    }
+
+    public void render( RenderRequest renderRequest, RenderResponse renderResponse ) throws PortletException {
+
         PrintWriter out = null;
         try {
+            Shop shop = OrderLogic.prepareCurrenctRequest( renderRequest );
+            ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
+
             ContentTypeTools.setContentType( renderResponse, ContentTypeTools.CONTENT_TYPE_UTF8 );
             out = renderResponse.getWriter();
 
             PortletSession session = renderRequest.getPortletSession();
             Invoice order = (Invoice)session.getAttribute( ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE );
 
-            if ( order == null )
+            if ( order == null ) {
                 return;
-
-            Shop shop = (Shop)session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
+            }
 
             AuthSession authSession = (AuthSession)renderRequest.getUserPrincipal();
-            Integer shopGroupId = PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 );
-
-            boolean isActivateEmailOrder = false;
-            String orderEmail = null;
-
-            // Todo uncomment and implement
-/*
-            boolean isRegisterAllowed = portalInfo.getSites().getIsRegisterAllowed();
-            boolean isActivateEmailOrder = portalInfo.getSites().getIsActivateEmailOrder();
-            String orderEmail = portalInfo.getSites().getOrderEmail();
-*/
+            int shopGroupId = PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 );
 
             if ( authSession != null ) {
                 if ( log.isDebugEnabled() ) {
@@ -134,29 +156,7 @@ public final class InvoicePortlet implements Portlet {
                     log.debug( "AuthSession not null. getLoginStatus() - " + authSession.checkAccess( renderRequest.getServerName() ) );
 
                 if ( ( authSession != null ) && ( authSession.checkAccess( renderRequest.getServerName() ) ) ) {
-                    DatabaseAdapter dbDyn = null;
-                    try {
-                        dbDyn = DatabaseAdapter.getInstance();
-
-                        if ( log.isDebugEnabled() )
-                            log.debug( "Update order with new authSession" );
-
-                        OrderLogic.updateAuthSession( dbDyn, order, authSession );
-                        dbDyn.commit();
-                    }
-                    catch( Exception e1 ) {
-                        try {
-                            dbDyn.rollback();
-                        }
-                        catch( Exception e02 ) {
-                            // catch rollback error
-                        }
-                        throw e1;
-                    }
-                    finally {
-                        DatabaseAdapter.close( dbDyn );
-                        dbDyn = null;
-                    }
+                    OrderLogic.updateAuthSession(order, authSession );
                 }
             }
 
@@ -169,237 +169,8 @@ public final class InvoicePortlet implements Portlet {
                     PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ) ) +
                 ServletTools.getHiddenItem( ShopPortlet.NAME_ID_SHOP_PARAM, shop.getShopId() );
 
-
-            String action = PortletService.getString(renderRequest, "action", null);
-
-            if ( log.isDebugEnabled() )
-                log.debug( "Action - " + action );
-
-            if ( action != null ) {
-
-                if ( log.isDebugEnabled() )
-                    log.debug( "Action is NOT null" );
-
-                if ( action.equals( "set" ) ) {
-                    Long id_item = PortletService.getLong( renderRequest, "set_id_item" );
-                    int count = PortletService.getInt( renderRequest, ShopPortlet.NAME_INVOICE_NEW_COUNT_PARAM, 0 );
-
-                    if ( log.isDebugEnabled() ) {
-                        log.debug( "action - set" );
-                        log.debug( "id_item - " + id_item );
-                        log.debug( "count - " + count );
-                    }
-
-                    // set new quantity of item in backet
-                    DatabaseAdapter dbDyn = null;
-                    try {
-                        dbDyn = DatabaseAdapter.getInstance();
-                        Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-                        OrderLogic.setItem( dbDyn, order, id_item, count, siteId );
-                        dbDyn.commit();
-                    }
-                    catch( Exception e1 ) {
-                        try {
-                            dbDyn.rollback();
-                        }
-                        catch( Exception e02 ) {
-                            // catch roolback error
-                        }
-                        throw e1;
-                    }
-                    finally {
-                        DatabaseAdapter.close( dbDyn );
-                        dbDyn = null;
-                    }
-                } else if ( action.equals( "del" ) ) {
-                    Long id_item = PortletService.getLong( renderRequest, "del_id_item" );
-                    if ( log.isDebugEnabled() ) {
-                        log.debug( "action - del" );
-                        log.debug( "id_item - " + id_item );
-                    }
-
-                    // delete item from basket
-                    DatabaseAdapter dbDyn = null;
-                    try {
-                        dbDyn = DatabaseAdapter.getInstance();
-                        OrderLogic.delItem( dbDyn, order, id_item );
-                    }
-                    catch( Exception e1 ) {
-                        log.error( "Error delete item from basket", e1 );
-                        out.write( ExceptionTools.getStackTrace( e1, 100, "<br>" ) );
-                        try {
-                            dbDyn.rollback();
-                        }
-                        catch( Exception e02 ) {
-                            // catch rollback error
-                        }
-                        throw e1;
-                    }
-                    finally {
-                        DatabaseAdapter.close( dbDyn );
-                        dbDyn = null;
-                    }
-                }
-            }
-
-            {
-                // synchronize session with DB
-                DatabaseAdapter dbDyn = null;
-                try {
-                    dbDyn = DatabaseAdapter.getInstance();
-                    PriceList.synchronizeOrderWithDb( dbDyn, order );
-                    dbDyn.commit();
-                }
-                catch( Exception e1 ) {
-                    log.error( "Error delete item from basket", e1 );
-                    out.write( ExceptionTools.getStackTrace( e1, 100, "<br>" ) );
-                    try {
-                        dbDyn.rollback();
-                    }
-                    catch( Exception e02 ) {
-                        // catch rollback error
-                    }
-                    throw e1;
-                }
-                finally {
-                    DatabaseAdapter.close( dbDyn );
-                    dbDyn = null;
-                }
-            }
-
-            if ( authSession != null && "send".equals( action ) ) {
-                // send order
-
-                String s = bundle.getString( "reg.send_order.1" );
-                String orderCustomString =
-                    MessageFormat.format( s, "" + order.getOrderId());
-
-                User ui = authSession.getUser();
-                String orderAdminString =
-                    "Заказчик: " + ui.getLastName() + ' ' + ui.getFirstName() + ' ' + ui.getMiddleName() + "\n\n" +
-                    orderCustomString;
-
-                int idx=0;
-                for (ShopOrder shopOrder : order.getShopOrders()) {
-                    idx++;
-                    if ( shopOrder.getShopOrderItems().size()>0 ) {
-                        ShopOrderItem itemTemp = shopOrder.getShopOrderItems().get(0);
-                        Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
-
-                        s = bundle.getString( "reg.send_order.shop-header" );
-                        orderCustomString +=
-                            MessageFormat.format( s,
-                                "" + shopOrder.getShopId(),
-                                shopBean.getShopName(),
-                                shopBean.getShopCode(),
-                                itemTemp.getResultCurrency().getCurrencyName());
-
-                        for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
-                            BigDecimal itemFullPrice =
-                                NumberTools.multiply(
-                                    item.getResultPrice(), item.getCountItem(), item.getPrecisionResult()
-                                );
-
-                            s = bundle.getString( "reg.send_order.2" );
-                            orderCustomString +=
-                                MessageFormat.format( s,
-                                    "" + idx,
-                                    item.getShopItem().getItem(),
-                                    NumberTools.truncate( item.getResultPrice(), item.getPrecisionResult() ),
-                                    item.getResultCurrency().getCurrencyName(),
-                                    "" + item.getCountItem(),
-                                    NumberTools.truncate( itemFullPrice, item.getPrecisionResult() ),
-                                    "",
-                                    "" + shopOrder.getShopId(),
-                                    "" + item.getOriginId());
-                        }
-                    }
-                }
-
-                if ( log.isDebugEnabled() )
-                    log.debug( "Your order N" + order.getOrderId() + "\n" + orderCustomString );
-
-                if ( Boolean.TRUE.equals( isActivateEmailOrder ) ) {
-                    if ( log.isDebugEnabled() ) {
-                        synchronized (syncObj) {
-                            XmlTools.writeToFile( order, SiteUtils.getTempDir() + File.separatorChar + "order.xml" );
-                        }
-                    }
-                    String currentCurrency = "";
-                    int currentPrecision = 0;
-                    for (ShopOrder shopOrder : order.getShopOrders()) {
-                        ShopOrderItem itemTemp = shopOrder.getShopOrderItems().get(0);
-                        Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
-
-                        s = bundle.getString( "reg.send_order.shop-header" );
-                        orderAdminString +=
-                            MessageFormat.format( s,
-                                "" + shopOrder.getShopId(),
-                                shopBean.getShopName(),
-                                shopBean.getShopCode(),
-                                itemTemp.getResultCurrency().getCurrencyName());
-
-                        BigDecimal orderSumm = new BigDecimal(0);
-                        boolean isFirst=true;
-                        idx=0;
-                        for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
-                            idx++;
-                            if ( isFirst ) {
-                                isFirst=false;
-                                currentCurrency = item.getResultCurrency().getCurrencyName();
-                                if ( item.getPrecisionResult() != null ) {
-                                    currentPrecision = item.getPrecisionResult();
-                                }
-                            }
-
-                            BigDecimal itemFullPrice =
-                                NumberTools.multiply(
-                                    item.getResultPrice(), item.getCountItem(), item.getPrecisionResult()
-                                );
-
-                            orderSumm = orderSumm.add(itemFullPrice);
-
-                            s = bundle.getString( "reg.send_order.2" );
-                            orderAdminString +=
-                                MessageFormat.format( s,
-                                    "" + idx,
-                                    item.getShopItem().getItem(),
-                                    NumberTools.truncate( item.getResultPrice(), currentPrecision ),
-                                    item.getResultCurrency().getCurrencyName(),
-                                    "" + item.getCountItem(),
-                                    NumberTools.truncate( itemFullPrice, currentPrecision ),
-                                    "",
-                                    "" + shopOrder.getShopId(),
-                                    "" + item.getOriginId());
-                        }
-                        orderAdminString +=
-                            "Итого на сумму: " +
-                            NumberTools.truncate( NumberTools.truncate( orderSumm, currentPrecision ), currentPrecision ) +
-                            " " + currentCurrency + "\n\n";
-                    }
-                    if ( log.isDebugEnabled() )
-                        log.debug( "send admin order: your order N" + order.getOrderId() + "\n" + orderAdminString );
-                }
-
-                if (true) {
-                    throw new IllegalStateException("Need switch to user Portal mail service");
-                }
-/*
-                MailMessage.sendMessage( orderCustomString,
-                    order.getAuthSession().getUserInfo().getEmail(),
-                    orderEmail,
-                    "Your order N" + order.getOrderId(),
-                    GenericConfig.getMailSMTPHost() );
-
-
-                if ( Boolean.TRUE.equals( isActivateEmailOrder ) ) {
-                    MailMessage.sendMessage( orderAdminString,
-                        orderEmail,
-                        orderEmail,
-                        "Order N" + order.getOrderId(),
-                        GenericConfig.getMailSMTPHost() );
-                }
-*/
+            String statusSend = PortletService.getString(renderRequest, COMPLETE_SEND_ORDER, "");
+            if ("true".equalsIgnoreCase(statusSend)) {
 
                 PortletURL url = renderResponse.createRenderURL();
                 url.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
@@ -408,14 +179,14 @@ public final class InvoicePortlet implements Portlet {
                 String shopUrl = "<a href=\"" +url.toString()+ "\">";
 
                 String str = null;
-                Object args1[] = {PortletService.url( "mill.index", renderRequest, renderResponse )};
+                Object args1[] = {url.toString()};
 
                 final String sendOrderName = "invoice.order-send-complete";
-                s = bundle.getString( sendOrderName );
+                String s = bundle.getString( sendOrderName );
                 if ( s != null ) {
                     str = MessageFormat.format( s, args1 );
                 } else {
-                    str = "Ваш заказ N" + order.getOrderId() + " успешно отослан. " + shopUrl + "Продолжить</a>";
+                    str = "Ваш заказ N" + order.getUserOrderId() + " успешно отослан. " + shopUrl + "Продолжить</a>";
                 }
 
                 args1 = null;
@@ -423,6 +194,7 @@ public final class InvoicePortlet implements Portlet {
                 session.removeAttribute( ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE );
                 return;
             }
+
 /*
             if ( order.getAuthSession() == null ) {
 
@@ -487,7 +259,8 @@ public final class InvoicePortlet implements Portlet {
             out.write( bundle.getString( "invoice.your_select" ) );
 
             out.write( "<table border=\"0\" cellpadding=\"2px\" cellspacing=\"2px\">\n" );
-            for (ShopOrder shopOrder : order.getShopOrders()) {
+            List<ShopOrder> shopOrders = CommerceDaoFactory.getOrderDao().getShopOrders(order.getUserOrderId());
+            for (ShopOrder shopOrder : shopOrders) {
                 if ( shopOrder.getShopOrderItems().size()>0 ) {
                     Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
                     out.write( "<tr>\n<td colspan=\"6\" align=\"left\" border=\"0\">\n" );
@@ -602,7 +375,8 @@ public final class InvoicePortlet implements Portlet {
             }
             out.write( "</table>\n" );
 
-
+/*
+            // button for send invoice
             if ( !order.getShopOrders().isEmpty() && authSession!=null &&
                  !StringUtils.isBlank( orderEmail ) && isActivateEmailOrder ) {
 
@@ -617,6 +391,7 @@ public final class InvoicePortlet implements Portlet {
                 out.write( "</form>" );
 
             }
+*/
         }
         catch( Exception e ) {
             final String es = "Error procesing invoice";
@@ -630,9 +405,155 @@ public final class InvoicePortlet implements Portlet {
         }
     }
 
-    private void addParameters(PortletURL url, Long currencyId, Integer shopGroupId, Long shopId) {
+    private void addParameters(PortletURL url, Long currencyId, int shopGroupId, Long shopId) {
         url.setParameter(ShopPortlet.NAME_ID_CURRENCY_SHOP , ""+currencyId);
-        url.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP,  shopGroupId.toString());
+        url.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP,  ""+shopGroupId);
         url.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM , shopId.toString());
+    }
+
+    private void sendInvoice(ResourceBundle bundle, AuthSession authSession, Invoice order, ActionResponse actionResponse) {
+
+        // Todo rewrite from constans
+        final boolean isActivateEmailOrder = false;
+
+        String s = bundle.getString( "reg.send_order.1" );
+        String orderCustomString = MessageFormat.format( s, "" + order.getUserOrderId());
+
+        User ui = authSession.getUser();
+        String orderAdminString =
+            "Заказчик: " + StringTools.getUserName(ui.getMiddleName(), ui.getFirstName(), ui.getLastName()) +
+             "\n\n" + orderCustomString;
+
+        List<ShopOrder> shopOrders = CommerceDaoFactory.getOrderDao().getShopOrders(order.getUserOrderId());
+
+        for (ShopOrder shopOrder : shopOrders) {
+            orderCustomString = processUserEmail(shopOrder, bundle, orderCustomString);
+
+            if ( log.isDebugEnabled() ) {
+                log.debug( "Your order N" + order.getUserOrderId() + "\n" + orderCustomString );
+            }
+
+            if ( Boolean.TRUE.equals( isActivateEmailOrder ) ) {
+                orderAdminString = processAdminEmail(shopOrder, bundle, orderAdminString);
+            }
+        }
+
+        if ( log.isDebugEnabled() ) {
+            log.debug( "send admin order: your order N" + order.getUserOrderId() + "\n" + orderAdminString );
+        }
+
+        actionResponse.setRenderParameter(COMPLETE_SEND_ORDER, "true");
+
+        throw new IllegalStateException("Need switch to user Portal mail service");
+/*
+                MailMessage.sendMessage( orderCustomString,
+                    order.getAuthSession().getUserInfo().getEmail(),
+                    orderEmail,
+                    "Your order N" + order.getUserOrderId(),
+                    GenericConfig.getMailSMTPHost() );
+
+
+                if ( Boolean.TRUE.equals( isActivateEmailOrder ) ) {
+                    MailMessage.sendMessage( orderAdminString,
+                        orderEmail,
+                        orderEmail,
+                        "Order N" + order.getUserOrderId(),
+                        GenericConfig.getMailSMTPHost() );
+                }
+*/
+
+    }
+
+    private String processUserEmail(ShopOrder shopOrder, ResourceBundle bundle, String orderCustomString) {
+        String s;
+        if ( shopOrder.getShopOrderItems().size()>0 ) {
+            ShopOrderItem itemTemp = shopOrder.getShopOrderItems().get(0);
+            Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
+
+            s = bundle.getString( "reg.send_order.shop-header" );
+            orderCustomString +=
+                MessageFormat.format( s,
+                    "" + shopOrder.getShopId(),
+                    shopBean.getShopName(),
+                    shopBean.getShopCode(),
+                    itemTemp.getResultCurrency().getCurrencyName());
+
+            int idx=1;
+            for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
+                BigDecimal itemFullPrice =
+                    NumberTools.multiply(
+                        item.getResultPrice(), item.getCountItem(), item.getPrecisionResult()
+                    );
+
+                s = bundle.getString( "reg.send_order.2" );
+                orderCustomString +=
+                    MessageFormat.format( s,
+                        "" + idx++,
+                        item.getShopItem().getItem(),
+                        NumberTools.truncate( item.getResultPrice(), item.getPrecisionResult() ),
+                        item.getResultCurrency().getCurrencyName(),
+                        "" + item.getCountItem(),
+                        NumberTools.truncate( itemFullPrice, item.getPrecisionResult() ),
+                        "",
+                        "" + shopOrder.getShopId(),
+                        "" + item.getOriginId());
+            }
+        }
+        return orderCustomString;
+    }
+
+    private String processAdminEmail(ShopOrder shopOrder, ResourceBundle bundle, String orderAdminString) {
+        String s;
+        ShopOrderItem itemTemp = shopOrder.getShopOrderItems().get(0);
+        Shop shopBean = CommerceDaoFactory.getShopDao().getShop(shopOrder.getShopId());
+
+        s = bundle.getString( "reg.send_order.shop-header" );
+        orderAdminString +=
+            MessageFormat.format( s,
+                "" + shopOrder.getShopId(),
+                shopBean.getShopName(),
+                shopBean.getShopCode(),
+                itemTemp.getResultCurrency().getCurrencyName());
+
+        BigDecimal orderSumm = new BigDecimal(0);
+        boolean isFirst=true;
+        int index=0;
+        String currentCurrency = "";
+        int currentPrecision = 0;
+        for (ShopOrderItem item : shopOrder.getShopOrderItems()) {
+            index++;
+            if ( isFirst ) {
+                isFirst=false;
+                currentCurrency = item.getResultCurrency().getCurrencyName();
+                if ( item.getPrecisionResult() != null ) {
+                    currentPrecision = item.getPrecisionResult();
+                }
+            }
+
+            BigDecimal itemFullPrice =
+                NumberTools.multiply(
+                    item.getResultPrice(), item.getCountItem(), item.getPrecisionResult()
+                );
+
+            orderSumm = orderSumm.add(itemFullPrice);
+
+            s = bundle.getString( "reg.send_order.2" );
+            orderAdminString +=
+                MessageFormat.format( s,
+                    "" + index,
+                    item.getShopItem().getItem(),
+                    NumberTools.truncate( item.getResultPrice(), currentPrecision ),
+                    item.getResultCurrency().getCurrencyName(),
+                    "" + item.getCountItem(),
+                    NumberTools.truncate( itemFullPrice, currentPrecision ),
+                    "",
+                    "" + shopOrder.getShopId(),
+                    "" + item.getOriginId());
+        }
+        orderAdminString +=
+            "Total summ of invoice: " +
+                NumberTools.truncate( NumberTools.truncate( orderSumm, currentPrecision ), currentPrecision ) +
+                " " + currentCurrency + "\n\n";
+        return orderAdminString;
     }
 }

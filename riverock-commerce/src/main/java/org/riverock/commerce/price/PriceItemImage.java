@@ -27,6 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.FileInputStream;
 
 import org.apache.log4j.Logger;
 
@@ -126,8 +127,9 @@ public class PriceItemImage {
 //            ps = db_.prepareStatement( sql_ );
 
             RsetTools.setLong( ps, 1, idSite );
-
-            rs = ps.executeQuery();
+            FileInputStream fis= new FileInputStream("a");
+            fis.close();
+                rs = ps.executeQuery();
             while( rs.next() ) {
                 image.put( RsetTools.getLong( rs, "ID_ITEM" ), RsetTools.getString( rs, "IMAGE_FILE_NAME" ) );
             }

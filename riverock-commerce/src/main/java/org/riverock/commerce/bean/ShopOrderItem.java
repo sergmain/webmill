@@ -26,6 +26,8 @@ package org.riverock.commerce.bean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.*;
+
 import org.riverock.commerce.price.CurrencyItem;
 
 /**
@@ -35,49 +37,71 @@ import org.riverock.commerce.price.CurrencyItem;
  * Date: 02.12.2006
  * Time: 19:37:32
  */
+@Entity
+@Table(name="wm_price_order")
+@TableGenerator(
+    name="TABLE_PRICE_ORDER",
+    table="wm_portal_ids",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_price_order",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class ShopOrderItem implements Serializable {
 
-    /**
-     * Field countItem
-     */
+// ID_PRICE_ORDER_V2, ID_ORDER_V2, ID_ITEM, COUNT, ITEM, PRICE, CURRENCY, ARTIKUL, 
+// IS_DELETED, PRICE_RESULT, CODE_CURRENCY_RESULT, NAME_CURRENCY_RESULT, PRECISION_CURRENCY_RESULT
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PRICE_ORDER")
+    @Column(name="ID_PRICE_ORDER_V2")
+    private Long shopOrderItemId;
+
     private java.lang.Integer countItem;
 
-    /**
-     * Field isInDb
-     */
-    private java.lang.Boolean isInDb;
+    @Column(name="ID_ORDER_V2")
+    private Long userOrderId;
 
-    /**
-     * Field originId
-     */
+    @Column(name="ID_SHOP")
+    private boolean isInDb;
+
+    @Column(name="ID_SHOP")
     private java.lang.Long originId;
 
-    /**
-     * Field resultPrice
-     */
+    @Column(name="ID_SHOP")
     private BigDecimal resultPrice;
 
-    /**
-     * Field precisionResult
-     */
+    @Column(name="ID_SHOP")
     private java.lang.Integer precisionResult;
 
-    /**
-     * Field discount
-     */
+    @Column(name="ID_SHOP")
     private Discount discount;
 
-    /**
-     * Field currencyItem
-     */
+    @Column(name="ID_SHOP")
     private CurrencyItem currencyItem;
 
-    /**
-     * Field resultCurrency
-     */
+    @Column(name="ID_SHOP")
     private CurrencyItem resultCurrency;
 
+    @Column(name="ID_SHOP")
     private ShopItem shopItem;
+
+    public Long getShopOrderItemId() {
+        return shopOrderItemId;
+    }
+
+    public void setShopOrderItemId(Long shopOrderItemId) {
+        this.shopOrderItemId = shopOrderItemId;
+    }
+
+    public Long getUserOrderId() {
+        return userOrderId;
+    }
+
+    public void setUserOrderId(Long userOrderId) {
+        this.userOrderId = userOrderId;
+    }
 
     public ShopItem getShopItem() {
         return shopItem;
@@ -95,11 +119,11 @@ public class ShopOrderItem implements Serializable {
         this.countItem = countItem;
     }
 
-    public Boolean getInDb() {
+    public boolean getInDb() {
         return isInDb;
     }
 
-    public void setInDb(Boolean inDb) {
+    public void setInDb(boolean inDb) {
         isInDb = inDb;
     }
 

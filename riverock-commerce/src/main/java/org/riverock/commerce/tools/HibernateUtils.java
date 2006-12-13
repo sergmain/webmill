@@ -32,14 +32,7 @@ import org.hibernate.Session;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.AnnotationConfiguration;
 
-import org.riverock.commerce.bean.CurrencyCurs;
-import org.riverock.commerce.bean.CurrencyPrecision;
-import org.riverock.commerce.bean.Shop;
-import org.riverock.commerce.bean.StandardCurrency;
-import org.riverock.commerce.bean.StandardCurrencyCurs;
-import org.riverock.commerce.bean.ImportShopItem;
-import org.riverock.commerce.bean.ShopItem;
-import org.riverock.commerce.bean.Currency;
+import org.riverock.commerce.bean.*;
 
 /**
  * @author Sergei Maslyukov
@@ -57,6 +50,7 @@ public class HibernateUtils {
         CurrencyPrecision.class,
         Shop.class,
         ShopItem.class,
+        UserOrder.class,
         ImportShopItem.class,
         StandardCurrency.class,
         StandardCurrencyCurs.class

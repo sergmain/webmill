@@ -43,6 +43,9 @@ import org.riverock.commerce.price.PriceGroupItem;
 public class ShopDaoImpl implements ShopDao {
 
     public Shop getShop(Long shopId) {
+        if (shopId==null) {
+            return null;
+        }
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
         Shop bean = (Shop)session.createQuery(
@@ -199,6 +202,7 @@ public class ShopDaoImpl implements ShopDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
+        // Todo init isItemInBasket flag
         String sql = "select shopItem " +
             "from  org.riverock.commerce.bean.ShopItem shopItem " +
             "where shopItem.parentItemId=:parentItemId and shopItem.shopId=:shopId and " +
@@ -224,19 +228,4 @@ public class ShopDaoImpl implements ShopDao {
         session.getTransaction().commit();
         return list;
     }
-
-/*
-    public List<ShopItem> getShopItemList(Long siteId) {
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<ShopItem> list = session.createQuery(
-            "select shop from org.riverock.commerce.bean.ShopItem shopItems " +
-                "where shop.isOpened=false =:siteId")
-            .setLong("siteId", siteId)
-            .list();
-        session.getTransaction().commit();
-        return list;
-    }
-*/
-
 }

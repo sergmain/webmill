@@ -27,13 +27,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.*;
 
 /**
  * Class ShopItem.
@@ -100,6 +94,17 @@ public class ShopItem implements Serializable {
 
     @Column(name="PRICE")
     private BigDecimal price;
+
+    @Transient
+    private boolean isItemInBasket;
+
+    public boolean isItemInBasket() {
+        return isItemInBasket;
+    }
+
+    public void setItemInBasket(boolean itemInBasket) {
+        isItemInBasket = itemInBasket;
+    }
 
     public boolean isGroup() {
         return isGroup;

@@ -34,6 +34,11 @@ public class CommerceDaoFactory {
     private final static CommonCurrencyDao COMMON_CURRENCY_DAO = new CommonCurrencyDaoImpl();
     private final static ShopDao SHOP_DAO = new ShopDaoImpl();
     private final static CurrencyPrecisionDao CURRENCY_PRECISION_DAO = new CurrencyPrecisionDaoImpl();
+    private final static OrderDao ORDER_DAO = new OrderDaoImpl();
+
+    public static OrderDao getOrderDao() {
+        return ORDER_DAO;
+    }
 
     public static StandardCurrencyDao getStandardCurrencyDao() {
         return STANDARD_CURRENCY_DAO;
