@@ -89,7 +89,7 @@ public class PriceCurrency {
             if (item.isUsed() ) {
                 CurrencyItemType ic = new CurrencyItemType();
 
-                ic.setCurrencyCurs(item.getRealCurs());
+                ic.setCurrencyCurs(item.getRealCurs().toPlainString());
                 ic.setCurrencyID(item.getCurrencyId());
                 ic.setCurrencyName(item.getCurrencyName());
 

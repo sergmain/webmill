@@ -32,6 +32,7 @@ import javax.portlet.RenderResponse;
 import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.invoice.InvoicePortlet;
 import org.riverock.commerce.schema.shop.CurrentBasketType;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -49,14 +50,19 @@ public final class ShopBasket {
         final RenderRequest renderRequest, final RenderResponse renderResponse,
         final ResourceBundle bundle) {
 
-        if (order == null || OrderLogic.getCountItem(order)==0)
+        if (order == null) {
             return null;
+        }
+        int count = CommerceDaoFactory.getOrderDao().countItemsInUserOrder(order.getUserOrderId());
+        if (count==0) {
+            return null;
+        }
 
         CurrentBasketType basket = new CurrentBasketType();
 
         basket.setCurrentBasketName( bundle.getString( "price.invoice" ) );
 
-        basket.setItemInBasket( OrderLogic.getCountItem(order) );
+        basket.setItemInBasket( count );
 
         PortletURL portletURL = renderResponse.createRenderURL();
         portletURL.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, InvoicePortlet.CTX_TYPE_INVOICE );

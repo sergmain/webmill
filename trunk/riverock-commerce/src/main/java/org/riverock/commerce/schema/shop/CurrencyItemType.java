@@ -52,7 +52,7 @@ public class CurrencyItemType {
     @XmlElement(name = "CurrencyID")
     protected long currencyID;
     @XmlElement(name = "CurrencyCurs")
-    protected BigDecimal currencyCurs;
+    protected String currencyCurs;
     @XmlAttribute
     protected String selectCurrentCurrency;
 
@@ -100,7 +100,7 @@ public class CurrencyItemType {
      * Gets the value of the currencyCurs property.
      * 
      */
-    public BigDecimal getCurrencyCurs() {
+    public String getCurrencyCurs() {
         return currencyCurs;
     }
 
@@ -108,7 +108,7 @@ public class CurrencyItemType {
      * Sets the value of the currencyCurs property.
      * 
      */
-    public void setCurrencyCurs(BigDecimal value) {
+    public void setCurrencyCurs(String value) {
         this.currencyCurs = value;
     }
 

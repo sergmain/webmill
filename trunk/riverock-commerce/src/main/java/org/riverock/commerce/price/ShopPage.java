@@ -43,6 +43,7 @@ import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.schema.shop.ShopPageType;
+import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -59,9 +60,9 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
     private final static Logger log = Logger.getLogger( ShopPage.class );
 
     private ShopPageType shopPage = new ShopPageType();
-    private Shop shop = null;
     private String itemDirect = "ASC";
     private String priceDirect = "ASC";
+    private Shop shop;
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
     private PortletConfig portletConfig = null;
@@ -106,7 +107,8 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
         return null;
     }
 
-    public ShopPage() {
+    public ShopPage(Shop shop) {
+        this.shop=shop;
     }
 
     public PortletResultContent getInstance() throws PortletException {
@@ -114,12 +116,6 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
         try {
             PortletSession session = renderRequest.getPortletSession();
             Invoice order = (Invoice) session.getAttribute( ShopPortlet.ORDER_SESSION , PortletSession.APPLICATION_SCOPE);
-
-            shop = (Shop) session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
-
-            if (shop == null) {
-                throw new PortletException("shop session not initialized");
-            }
 
             if (shop.getDefaultCurrencyId() == null) {
                 throw new PortletException("Default currency not defined.<br>Login and configure shop.");

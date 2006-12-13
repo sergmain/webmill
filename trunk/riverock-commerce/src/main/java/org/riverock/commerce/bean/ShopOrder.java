@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
-import org.riverock.commerce.bean.ShopOrderItem;
-
 /**
  * Часть заказа, относящаяся к
  * определенному магазину

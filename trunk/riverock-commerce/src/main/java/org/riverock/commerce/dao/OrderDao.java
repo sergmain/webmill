@@ -21,45 +21,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.commerce.bean;
+package org.riverock.commerce.dao;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.io.Serializable;
+
+import org.hibernate.Session;
+
+import org.riverock.commerce.bean.UserOrder;
+import org.riverock.commerce.bean.ShopOrder;
 
 /**
- * Заказ, объединяющий все
- * наименования из разных магазов
- * 
- * @version $Revision$ $Date$
+ * User: SergeMaslyukov
+ * Date: 13.12.2006
+ * Time: 22:41:38
+ * <p/>
+ * $Id$
  */
-public class Invoice implements Serializable {
+public interface OrderDao {
+    Long createUserOrder(Long userId, Date createDate);
+    
+    void bindUserToUserOrder(Session session, Long userOrderId, Long userId);
 
-    /**
-     * Field userOrderId
-     */
-    private Long userOrderId;
+    UserOrder getUserOrder(Session session, Long userOrderId);
 
-//    private List<ShopOrder> shopOrders = new ArrayList<ShopOrder>();
+    void deleteUserOrder(Session session, Long userOrderId);
 
-    public Long getUserOrderId() {
-        return userOrderId;
-    }
+    void setNewQuantity(Long siteId, Long userOrderId, Long shopItemId, int count);
 
-    public void setUserOrderId(Long userOrderId) {
-        this.userOrderId = userOrderId;
-    }
+    void deleteShopItem(Long siteId, Long userOrderId, Long shopItemId);
 
-/*
-    public List<ShopOrder> getShopOrders() {
-        if (shopOrders ==null) {
-            shopOrders = new ArrayList<ShopOrder>();
-        }
-        return shopOrders;
-    }
+    List<ShopOrder> getShopOrders(Long userOrderId);
 
-    public void setShopOrders(List<ShopOrder> shopOrders) {
-        this.shopOrders = shopOrders;
-    }
-*/
+    int countItemsInUserOrder(Long userOrderId);
 }

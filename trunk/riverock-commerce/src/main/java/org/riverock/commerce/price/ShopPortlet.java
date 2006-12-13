@@ -32,6 +32,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
+import org.riverock.commerce.bean.Shop;
 
 /**
  * User: SergeMaslyukov
@@ -41,7 +42,7 @@ import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
  */
 public final class ShopPortlet extends GenericWebmillPortlet {
     public final static String CTX_TYPE_SHOP = "mill.shop";
-    public final static String CURRENT_SHOP = "MILL.CURRENT_SHOP";
+    public final static String CURRENT_SHOP_ID = "MILL.CURRENT_SHOP_ID";
     public final static String ORDER_SESSION = "MILL.ORDER_SESSION";
     public final static String ID_SHOP_SESSION = "MILL.ID_SHOP_SESSION";
     public final static String NAME_INVOICE_NEW_COUNT_PARAM = "mill.invoice.count";
@@ -59,8 +60,12 @@ public final class ShopPortlet extends GenericWebmillPortlet {
     }
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
-        OrderLogic.process( renderRequest );
-        ShopPage shopPage = new ShopPage();
+        Shop shop = OrderLogic.prepareCurrenctRequest( renderRequest );
+        if (shop == null) {
+            throw new PortletException("Current shop not initialized");
+        }
+
+        ShopPage shopPage = new ShopPage( shop);
         doRender(renderRequest, renderResponse, shopPage);
     }
 }

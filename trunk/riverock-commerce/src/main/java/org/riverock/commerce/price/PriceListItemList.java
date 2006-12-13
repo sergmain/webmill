@@ -28,14 +28,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.commerce.bean.CurrencyPrecision;
-import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.bean.ShopItem;
 import org.riverock.commerce.dao.CommerceDaoFactory;
@@ -57,7 +55,6 @@ import org.riverock.webmill.container.ContainerConstants;
 public final class PriceListItemList {
     private final static Logger log = Logger.getLogger(PriceListItemList.class);
 
-    // dont edit return type - name must be with package
     private static HiddenParamType getHidden(String name, String value) {
         HiddenParamType hidden = new HiddenParamType();
         hidden.setHiddenParamName(name);
@@ -95,44 +92,32 @@ public final class PriceListItemList {
                 "shopParam.id_shop " + shopParam.id_shop
             );
         }
-
-        PortletSession session = renderRequest.getPortletSession();
-        Invoice order = (Invoice) session.getAttribute(ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE);
-
+        CurrencyPrecisionList currencyPrecisionList = new CurrencyPrecisionList(shop.getShopId());
+        final CurrencyManager currencyManager = CurrencyManager.getInstance(siteId);
         for (ShopItem shopItem : shopItems) {
-            Long idPk = shopItem.getShopItemId();
 
             PriceItemType item = new PriceItemType();
             item.setItemID(shopItem.getItemId());
             item.setItemName(shopItem.getItem());
-
             item.setItemToInvoice(
-                shopParam.isProcessInvoice ?
-                    renderResponse.createRenderURL().toString() :
-                    null
+                shopParam.isProcessInvoice ?renderResponse.createRenderURL().toString() :null
             );
-
             item.setItemToInvoiceCountParam(
-                shopParam.isProcessInvoice ?
-                    ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP :
-                    null
+                shopParam.isProcessInvoice ?ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP :null
             );
 
-            item.setItemInBasket(OrderLogic.isItemInBasket(idPk, order) ? "InBasket" : null);
+            item.setItemInBasket(shopItem.isItemInBasket() ? "InBasket" : null);
 
             String currencyCode = shopItem.getCurrency();
             if (log.isDebugEnabled()) {
                 log.debug("currencyCode " + currencyCode);
             }
-
-            final CurrencyManager currencyManager = CurrencyManager.getInstance(siteId);
             CurrencyItem currencyItem = CurrencyService.getCurrencyItemByCode(
                 currencyManager.getCurrencyList(), currencyCode
             );
-
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("currencyItem " + currencyItem);
-
+            }
             BigDecimal resultPrice = BigDecimal.ZERO;
             if (currencyItem != null) {
 
@@ -149,11 +134,11 @@ public final class PriceListItemList {
                     item.setItemCurrencyID(currencyItem.getCurrencyId());
                     item.setItemNameCurrency(currencyItem.getCurrencyName());
 
-                    precisionValue = getPrecisionValue(shop, currencyItem.getCurrencyId());
+                    precisionValue = getPrecisionValue(currencyPrecisionList, currencyItem.getCurrencyId());
                     resultPrice = NumberTools.truncate(rsetPrice, precisionValue);
                 }
                 else {
-                    precisionValue = getPrecisionValue(shop, shopParam.id_currency);
+                    precisionValue = getPrecisionValue(currencyPrecisionList, shopParam.id_currency);
 
                     CurrencyItem targetCurrency =
                         CurrencyService.getCurrencyItem(currencyManager.getCurrencyList(), shopParam.id_currency);
@@ -179,11 +164,8 @@ public final class PriceListItemList {
                         }
                     }
 
-                    BigDecimal crossCurs =
-                        currencyItem.getRealCurs().divide(targetCurrency.getRealCurs());
-
-                    resultPrice =
-                        NumberTools.truncate(rsetPrice, precisionValue).multiply(crossCurs);
+                    BigDecimal crossCurs = currencyItem.getRealCurs().divide(targetCurrency.getRealCurs());
+                    resultPrice = NumberTools.truncate(rsetPrice, precisionValue).multiply(crossCurs);
 
                     if (log.isDebugEnabled()) {
                         log.debug("crossCurs - " + crossCurs + " price - " +
@@ -199,30 +181,21 @@ public final class PriceListItemList {
 
             item.setItemDescription(null);
 
+/*
             PriceItemImage image = PriceItemImage.getInstance(shopParam.idSite);
             if (image != null) {
-                item.setItemImageFileName(image.getItemImage(idPk));
+                item.setItemImageFileName(image.getItemImage(shopItem.getShopItemId()));
             }
+*/
 
             if (shopParam.isProcessInvoice) {
                 item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam.id_shop));
                 item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + shopItem.getParentItemId()));
                 item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ID_CURRENCY_SHOP, "" + shopParam.id_currency));
-                item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ADD_ID_ITEM, "" + idPk));
+                item.getHiddenParam().add(getHidden(ShopPortlet.NAME_ADD_ID_ITEM, "" + shopItem.getShopItemId()));
                 item.getHiddenParam().add(getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
                 item.getHiddenParam().add(getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy));
                 item.getHiddenParam().add(getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect));
-            }
-
-            if (log.isDebugEnabled()) {
-                synchronized (syncObj) {
-                    try {
-                        XmlTools.writeToFile(item, SiteUtils.getTempDir() + File.separatorChar + "schema-currency-item.xml");
-                    }
-                    catch (Throwable e) {
-                        log.error("Exception write item to debug file", e);
-                    }
-                }
             }
             items.getPriceItem().add(item);
         }
@@ -233,8 +206,8 @@ public final class PriceListItemList {
         return items;
     }
 
-    private static int getPrecisionValue(Shop shop, Long idCurrency) {
-        CurrencyPrecision prec = new CurrencyPrecisionList(shop.getShopId()).getCurrencyPrecision(idCurrency);
+    private static int getPrecisionValue(CurrencyPrecisionList currencyPrecisionList, Long idCurrency) {
+        CurrencyPrecision prec = currencyPrecisionList.getCurrencyPrecision(idCurrency);
         if (prec == null) {
             return 2;
         }
