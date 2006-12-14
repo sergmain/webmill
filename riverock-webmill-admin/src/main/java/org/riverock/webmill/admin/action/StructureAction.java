@@ -26,14 +26,20 @@ package org.riverock.webmill.admin.action;
 
 import java.io.File;
 import java.io.Serializable;
+import java.sql.Connection;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 
 import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DbConnectionProvider;
 import org.riverock.generic.system.DbStructureImport;
 import org.riverock.webmill.admin.StructureSessionBean;
+import org.riverock.webmill.utils.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -68,20 +74,34 @@ public class StructureAction implements Serializable {
 
         log.debug("structure file name: " +strucruteFileName);
 
-        DatabaseAdapter db=null;
         try {
-            db = DatabaseAdapter.getInstance();
             structureSessionBean.setErrorMessage(null);
+
+            String family;
+            String name = "java:comp/env/dbFamily";
+            try {
+                InitialContext ic = new InitialContext();
+                family = (String) ic.lookup(name);
+            }
+            catch (NamingException e) {
+                String es = "Error get value of DB family from JNDI. JNDI env: " + name;
+                log.error(es, e);
+                throw new IllegalArgumentException(es, e);
+            }
+
+            Session session = HibernateUtils.getSession();
+            session.beginTransaction();
+
+            Connection connection = session.connection();
+            DatabaseAdapter db  = DbConnectionProvider.openConnect(connection, family);
             DbStructureImport.importStructure(strucruteFileName, false, db);
-            db.commit();
+
+            session.getTransaction().commit();
         }
         catch (Throwable e) {
             String es = "Error create db structure";
             log.error(es, e);
             structureSessionBean.setErrorMessage(e.toString());
-        }
-        finally {
-            DatabaseManager.close(db);
         }
 
         return "create-structure-result";

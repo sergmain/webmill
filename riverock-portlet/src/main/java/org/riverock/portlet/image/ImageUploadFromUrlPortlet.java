@@ -42,10 +42,10 @@ import javax.portlet.RenderResponse;
 
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.time.DateFormatUtils;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.common.utils.DateUtils;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
@@ -173,7 +173,7 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
             is = null;
             url = null;
 
-            out.write( DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale(), TimeZone.getDefault() ) + "<br>" );
+            out.write( DateFormatUtils.format(System.currentTimeMillis(), "dd-MMMM-yyyy HH:mm:ss:SS", TimeZone.getDefault(), renderRequest.getLocale() ) + "<br>" );
 
 //            ps = dbDyn.prepareStatement( "insert into WM_IMAGE_DIR " +
 //                "( id_image_dir, ID_FIRM, is_group, id, id_main, name_file, description )" +
@@ -190,7 +190,7 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
             out.write( "Загрузка данных прошла без ошибок<br>" +
                 "Загружен файл " + newFileName + "<br>" +
-                DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale(), TimeZone.getDefault() ) + "<br>" +
+                DateFormatUtils.format(System.currentTimeMillis(), "dd-MMMM-yyyy HH:mm:ss:SS", TimeZone.getDefault(), renderRequest.getLocale() ) + "<br>" +
                 "<br>" +
                 "<p><a href=\"" + PortletService.url( "mill.image.index", renderRequest, renderResponse ) +
                 "\">Загрузить данные повторно</a></p><br>" +

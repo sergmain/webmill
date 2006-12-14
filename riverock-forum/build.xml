@@ -37,7 +37,7 @@
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-module.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
+        <pathelement location="${local-lib.dir}/${riverock-sql-parser.lib}"/>
         <pathelement location="${local-lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
@@ -123,6 +123,7 @@
             </lib>
             <lib dir="${local-lib.dir}">
                 <patternset includes="${riverock-generic.lib}"/>
+                <patternset includes="${riverock-sql-parser.lib}"/>
             </lib>
         </war>
     </target>

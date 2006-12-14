@@ -30,7 +30,9 @@
     <target name="full_build_module">
         <ant antfile="riverock-interfaces/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-common/build.xml" target="full_build_module"  inheritall="false" />
+<!--
         <ant antfile="riverock-sql-parser/build.xml" target="full_build_module"  inheritall="false" />
+-->
         <ant antfile="riverock-generic/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-sso/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-webmill-container/build.xml" target="full_build_module"  inheritall="false" />
