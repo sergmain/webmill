@@ -41,9 +41,7 @@ import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
-import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.schema.shop.ShopPageType;
-import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -115,7 +113,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 
         try {
             PortletSession session = renderRequest.getPortletSession();
-            Invoice order = (Invoice) session.getAttribute( ShopPortlet.ORDER_SESSION , PortletSession.APPLICATION_SCOPE);
+            Long userOrderId = (Long) session.getAttribute( ShopPortlet.USER_ORDER_ID, PortletSession.APPLICATION_SCOPE);
 
             if (shop.getDefaultCurrencyId() == null) {
                 throw new PortletException("Default currency not defined.<br>Login and configure shop.");
@@ -202,7 +200,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             }
 
             shopPage.setPricePosition( PriceListPosition.getInstance(shopParam, renderResponse) );
-            shopPage.setCurrentBasket( ShopBasket.getInstance(order, shopParam, renderRequest, renderResponse, resourceBundle ) );
+            shopPage.setCurrentBasket( ShopBasket.getInstance(userOrderId, shopParam, renderRequest, renderResponse, resourceBundle ) );
             shopPage.setGroupList( PriceGroup.getInstance(shopParam, renderResponse) );
             shopPage.setItemList( PriceListItemList.getInstance(shopParam, renderRequest, renderResponse, resourceBundle ) );
         } catch (Throwable e) {

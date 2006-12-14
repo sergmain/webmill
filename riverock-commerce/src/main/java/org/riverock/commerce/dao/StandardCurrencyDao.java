@@ -27,6 +27,7 @@ import java.util.List;
 import java.math.BigDecimal;
 
 import org.riverock.commerce.bean.StandardCurrency;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
 
 /**
  * @author Sergei Maslyukov
@@ -45,4 +46,6 @@ public interface StandardCurrencyDao {
     StandardCurrency getStandardCurrency(Long standardCurrencyId);
 
     void addStandardCurrencyCurs(Long standardCurrencyId, BigDecimal currentCurs);
+
+    List<StandardCurrencyCurs> getStandardCurrencyCurses(Long standardCurrencyId);
 }

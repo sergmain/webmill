@@ -32,7 +32,6 @@ import java.io.FileInputStream;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
-import org.riverock.sql.cache.SqlStatement;
 
 /**
  * User: Admin
@@ -108,14 +107,6 @@ public class PriceItemImage {
             "from   WM_PRICE_LIST a, WM_PRICE_SHOP_LIST b, WM_IMAGE_PRICE_ITEMS c, WM_IMAGE_DIR d " +
             "where  c.ID_IMAGE_DIR = d.ID_IMAGE_DIR and a.ID_SHOP=b.ID_SHOP and " +
             "       b.ID_SITE=? and a.ID_ITEM=c.ID_ITEM ";
-
-        try {
-            SqlStatement.registerSql( sql_, PriceItemImage.class );
-        }
-        catch( Throwable e ) {
-            log.error( "Exception in registerSql, sql\n" + sql_, e );
-            // Todo throw RuntimeException
-        }
     }
 
     private PriceItemImage( Long idSite )

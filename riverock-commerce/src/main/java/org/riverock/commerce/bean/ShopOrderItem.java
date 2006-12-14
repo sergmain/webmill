@@ -28,8 +28,6 @@ import java.math.BigDecimal;
 
 import javax.persistence.*;
 
-import org.riverock.commerce.price.CurrencyItem;
-
 /**
  * Class ShopOrderItem.
  *
@@ -50,42 +48,61 @@ import org.riverock.commerce.price.CurrencyItem;
 )
 public class ShopOrderItem implements Serializable {
 
-// ID_PRICE_ORDER_V2, ID_ORDER_V2, ID_ITEM, COUNT, ITEM, PRICE, CURRENCY, ARTIKUL, 
-// IS_DELETED, PRICE_RESULT, CODE_CURRENCY_RESULT, NAME_CURRENCY_RESULT, PRECISION_CURRENCY_RESULT
+// , , , , , , CURRENCY, ARTIKUL,
+// IS_DELETED, , , ,
 
     @Id
     @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PRICE_ORDER")
     @Column(name="ID_PRICE_ORDER_V2")
     private Long shopOrderItemId;
 
-    private java.lang.Integer countItem;
+    @Column(name="COUNT")
+    private Integer countItem;
 
     @Column(name="ID_ORDER_V2")
     private Long userOrderId;
 
-    @Column(name="ID_SHOP")
-    private boolean isInDb;
-
-    @Column(name="ID_SHOP")
-    private java.lang.Long originId;
-
-    @Column(name="ID_SHOP")
+    @Column(name="PRICE_RESULT")
     private BigDecimal resultPrice;
 
-    @Column(name="ID_SHOP")
-    private java.lang.Integer precisionResult;
+    @Column(name="PRECISION_CURRENCY_RESULT")
+    private Integer precisionResult;
 
-    @Column(name="ID_SHOP")
-    private Discount discount;
+    @Column(name="CODE_CURRENCY_RESULT")
+    private String resultCurrencyCode;
 
-    @Column(name="ID_SHOP")
-    private CurrencyItem currencyItem;
+    @Column(name="NAME_CURRENCY_RESULT")
+    private String resultCurrencyName;
 
-    @Column(name="ID_SHOP")
-    private CurrencyItem resultCurrency;
+    @Column(name="ID_ITEM")
+    private Long shopItemId;
 
-    @Column(name="ID_SHOP")
-    private ShopItem shopItem;
+    @Column(name="ITEM")
+    private String shopItemName;
+
+    public String getResultCurrencyCode() {
+        return resultCurrencyCode;
+    }
+
+    public void setResultCurrencyCode(String resultCurrencyCode) {
+        this.resultCurrencyCode = resultCurrencyCode;
+    }
+
+    public String getResultCurrencyName() {
+        return resultCurrencyName;
+    }
+
+    public void setResultCurrencyName(String resultCurrencyName) {
+        this.resultCurrencyName = resultCurrencyName;
+    }
+
+    public String getShopItemName() {
+        return shopItemName;
+    }
+
+    public void setShopItemName(String shopItemName) {
+        this.shopItemName = shopItemName;
+    }
 
     public Long getShopOrderItemId() {
         return shopOrderItemId;
@@ -103,12 +120,12 @@ public class ShopOrderItem implements Serializable {
         this.userOrderId = userOrderId;
     }
 
-    public ShopItem getShopItem() {
-        return shopItem;
+    public Long getShopItemId() {
+        return shopItemId;
     }
 
-    public void setShopItem(ShopItem shopItem) {
-        this.shopItem = shopItem;
+    public void setShopItemId(Long shopItemId) {
+        this.shopItemId = shopItemId;
     }
 
     public Integer getCountItem() {
@@ -117,22 +134,6 @@ public class ShopOrderItem implements Serializable {
 
     public void setCountItem(Integer countItem) {
         this.countItem = countItem;
-    }
-
-    public boolean getInDb() {
-        return isInDb;
-    }
-
-    public void setInDb(boolean inDb) {
-        isInDb = inDb;
-    }
-
-    public Long getOriginId() {
-        return originId;
-    }
-
-    public void setOriginId(Long originId) {
-        this.originId = originId;
     }
 
     public BigDecimal getResultPrice() {
@@ -149,29 +150,5 @@ public class ShopOrderItem implements Serializable {
 
     public void setPrecisionResult(Integer precisionResult) {
         this.precisionResult = precisionResult;
-    }
-
-    public Discount getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
-    }
-
-    public CurrencyItem getCurrencyItem() {
-        return currencyItem;
-    }
-
-    public void setCurrencyItem(CurrencyItem currencyItem) {
-        this.currencyItem = currencyItem;
-    }
-
-    public CurrencyItem getResultCurrency() {
-        return resultCurrency;
-    }
-
-    public void setResultCurrency(CurrencyItem resultCurrency) {
-        this.resultCurrency = resultCurrency;
     }
 }

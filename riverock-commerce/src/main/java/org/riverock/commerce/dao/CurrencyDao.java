@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.riverock.commerce.bean.Currency;
+import org.riverock.commerce.bean.CurrencyCurs;
 
 /**
  * @author Sergei Maslyukov
@@ -37,7 +38,7 @@ import org.riverock.commerce.bean.Currency;
  */
 public interface CurrencyDao {
 
-    void addCurrencyCurs(Long currencyId, BigDecimal curs);
+    Long addCurrencyCurs(Long currencyId, BigDecimal curs);
 
     void updateCurrency(Currency currency);
 
@@ -48,4 +49,6 @@ public interface CurrencyDao {
     Long createCurrency(Currency currency);
 
     List<Currency> getCurrencyList(Long siteId);
+
+    List<CurrencyCurs> getCurrencyCurses(Long currencyId);
 }

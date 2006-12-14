@@ -42,8 +42,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.commerce.price.PriceGroup;
 import org.riverock.commerce.price.PriceGroupItem;
 import org.riverock.commerce.price.ShopPageParam;
 import org.riverock.commerce.price.ShopPortlet;
@@ -241,7 +239,8 @@ public final class PriceEditImage extends HttpServlet {
                         out.write("</tr>\r\n");
                         out.write("</table>");
                     }
-                    DatabaseManager.close(rs, ps);
+                    rs.close();
+                    ps.close();
                     rs = null;
                     ps = null;
 
@@ -357,7 +356,8 @@ public final class PriceEditImage extends HttpServlet {
                         out.write("Error create image list - " + ExceptionTools.getStackTrace(e, 20, "<br>"));
                     }
                     finally {
-                        DatabaseManager.close(rs, ps);
+                        rs=null;
+                        ps=null;
                         rs = null;
                         ps = null;
                     }

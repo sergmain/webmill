@@ -23,25 +23,15 @@
  */
 package org.riverock.commerce.dao;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.sql.Timestamp;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
-import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
+import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.commerce.tools.HibernateUtils;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
-import org.riverock.common.tools.RsetTools;
 
 /**
  * @author Sergei Maslyukov
@@ -49,7 +39,6 @@ import org.riverock.common.tools.RsetTools;
  *         Time: 20:45:52
  */
 public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
-    private final static Logger log = Logger.getLogger( StandardCurrencyDaoImpl.class );
 
     /**
      * list of curs for currency not initialized
@@ -66,133 +55,42 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
         return list;
     }
 
-    public Long createStandardCurrency(StandardCurrency standardCurrencyBean) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            CustomSequence seq = new CustomSequence();
-            seq.setSequenceName( "seq_WM_CASH_CURRENCY_STD" );
-            seq.setTableName( "WM_CASH_CURRENCY_STD" );
-            seq.setColumnName( "ID_STD_CURR" );
-            Long id = adapter.getSequenceNextValue( seq );
-
-            String sql_ =
-                "insert into WM_CASH_CURRENCY_STD"+
-                "(ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED)"+
-                "values"+
-                "( ?,  ?,  ?,  ?)";
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setLong(1, id );
-            ps.setString(2, standardCurrencyBean.getStandardCurrencyName() );
-            ps.setString(3, standardCurrencyBean.getStandardCurrencyCode() );
-            ps.setInt(4, 0 );
-
-            ps.executeUpdate();
-
-            adapter.commit();
-            return id;
-        } catch (Throwable e) {
-            try {
-                if (adapter!=null)
-                    adapter.rollback();
-            }
-            catch(Throwable th) {
-                // catch rollback error
-            }
-            String es = "Error create standard currency";
-            log.error(es, e);
-            throw new IllegalStateException( es, e);
-        } finally {
-            DatabaseManager.close(adapter, rs, ps);
-        }
+    public Long createStandardCurrency(StandardCurrency standardCurrency) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        session.save(standardCurrency);
+        session.getTransaction().commit();
+        return standardCurrency.getStandardCurrencyId();
     }
 
-    public void updateStandardCurrency(StandardCurrency standardCurrencyBean) {
-        String sql_ =
-            "update WM_CASH_CURRENCY_STD "+
-            "set"+
-            "    NAME_STD_CURR=?, " +
-            "    CONVERT_CURRENCY=?, " +
-            "    IS_DELETED=? "+
-            "where ID_STD_CURR=?";
-
-        PreparedStatement ps = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setString(1, standardCurrencyBean.getStandardCurrencyName() );
-            ps.setString(2, standardCurrencyBean.getStandardCurrencyCode() );
-            ps.setInt(3, standardCurrencyBean.isDeleted()?1:0 );
-            // prepare PK
-            ps.setLong(4, standardCurrencyBean.getStandardCurrencyId() );
-
-            ps.executeUpdate();
-
-            adapter.commit();
+    public void updateStandardCurrency(StandardCurrency standardCurrency) {
+        if (standardCurrency==null) {
+            return;
         }
-        catch (Exception e) {
-            try {
-                if( adapter != null )
-                    adapter.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error update standard currency";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-       }
-       finally {
-            DatabaseManager.close(adapter, ps);
-       }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        session.update(standardCurrency);
+        session.getTransaction().commit();
     }
 
     public void deleteStandardCurrency(Long standardCurrencyId) {
         if (standardCurrencyId==null) {
             return;
         }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        session.createQuery
+            ("delete org.riverock.commerce.bean.StandardCurrencyCurs stdCurs where stdCurs.standardCurrencyId=:standardCurrencyId ")
+            .setLong("standardCurrencyId", standardCurrencyId)
+            .executeUpdate();
 
-        DatabaseAdapter dbDyn = null;
-        try {
-            dbDyn = DatabaseAdapter.getInstance();
+        session.createQuery
+            ("delete org.riverock.commerce.bean.StandardCurrencyCurs stdCurrency " +
+                "where stdCurrency.standardCurrencyId=:standardCurrencyId ")
+            .setLong("standardCurrencyId", standardCurrencyId)
+            .executeUpdate();
 
-            DatabaseManager.runSQL(
-                dbDyn,
-                "delete from WM_CASH_CURS_STD where ID_STD_CURS=?",
-                new Object[]{standardCurrencyId}, new int[]{Types.DECIMAL}
-            );
-
-            DatabaseManager.runSQL(
-                dbDyn,
-                "update WM_CASH_CURRENCY_STD set IS_DELETED=1 where ID_STD_CURR=?",
-                new Object[]{standardCurrencyId}, new int[]{Types.DECIMAL}
-            );
-
-            dbDyn.commit();
-        }
-        catch( Exception e ) {
-            try {
-                if( dbDyn != null )
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error delete standard currency";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn);
-        }
+        session.getTransaction().commit();
     }
 
     public StandardCurrency getStandardCurrency(Long standardCurrencyId) {
@@ -200,138 +98,43 @@ public class StandardCurrencyDaoImpl implements StandardCurrencyDao {
             return null;
         }
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
+        StandardCurrency bean = (StandardCurrency)session.createQuery(
+            "select stdCurr from org.riverock.commerce.bean.StandardCurrency stdCurr " +
+                "where stdCurr.standardCurrencyId=:standardCurrencyId ")
+            .setLong("standardCurrencyId", standardCurrencyId)
+            .uniqueResult();
 
-            ps = db_.prepareStatement(
-                "select ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED " +
-                "from   WM_CASH_CURRENCY_STD " +
-                "where  IS_DELETED=0 and ID_STD_CURR=? "
-            );
-            RsetTools.setLong(ps, 1, standardCurrencyId );
+        session.getTransaction().commit();
+        return bean;
+    }
+    
+    public void addStandardCurrencyCurs(Long standardCurrencyId, BigDecimal curs) {
 
-            rs = ps.executeQuery();
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
-            if (rs.next()) {
-                StandardCurrency standardCurrencyBean = initStandardCurrencyBean(rs);
-                standardCurrencyBean.setCurses( getStandardCurrencyCurses(db_, standardCurrencyId) );
-                return standardCurrencyBean;
-            }
-            return null;
-        }
-        catch (Throwable e) {
-            final String es = "Error get standard currency";
-            log.error(es, e);
-            throw new RuntimeException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db_, rs, ps);
-        }
+        StandardCurrencyCurs bean = new StandardCurrencyCurs();
+        bean.setCreated( new Date() );
+        bean.setCurs(curs);
+        bean.setDeleted(false);
+        bean.setStandardCurrencyId(standardCurrencyId);
+        session.save(bean);
+        session.getTransaction().commit();
     }
 
-    public void addStandardCurrencyCurs(Long standardCurrencyId, BigDecimal currentCurs) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            CustomSequence seq = new CustomSequence();
-            seq.setSequenceName( "seq_WM_CASH_CURS_STD" );
-            seq.setTableName( "WM_CASH_CURS_STD" );
-            seq.setColumnName( "ID_STD_CURS" );
-            Long id = adapter.getSequenceNextValue( seq );
-
-            String sql_ =
-                "insert into WM_CASH_CURS_STD"+
-                "(ID_STD_CURS, DATE_CHANGE, VALUE_CURS, IS_DELETED, ID_STD_CURR)"+
-                "values"+
-                "( ?,  ?,  ?,  ?, ?)";
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setLong(1, id );
-            ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()) );
-            ps.setBigDecimal(3, currentCurs );
-            ps.setInt(4, 0 );
-            ps.setLong(5, standardCurrencyId );
-
-            ps.executeUpdate();
-
-            adapter.commit();
-        } catch (Throwable e) {
-            try {
-                if (adapter!=null)
-                    adapter.rollback();
-            }
-            catch(Throwable th) {
-                // catch rollback error
-            }
-            String es = "Error add standard currency curs";
-            log.error(es, e);
-            throw new IllegalStateException( es, e);
-        } finally {
-            DatabaseManager.close(adapter, rs, ps);
-        }
+    public List<StandardCurrencyCurs> getStandardCurrencyCurses(Long standardCurrencyId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<StandardCurrencyCurs> list = session.createQuery(
+            "select stdCurrCurs from org.riverock.commerce.bean.StandardCurrencyCurs stdCurrCurs " +
+                "where stdCurrCurs.standardCurrencyId=:standardCurrencyId " +
+                "order by stdCurrCurs.created desc")
+            .setLong("standardCurrencyId", standardCurrencyId)
+            .list();
+        session.getTransaction().commit();
+        return list;
     }
-
-    private List<StandardCurrencyCurs> getStandardCurrencyCurses(DatabaseAdapter db_, Long standardCurrencyId) {
-        List<StandardCurrencyCurs> list = new ArrayList<StandardCurrencyCurs>();
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-
-            ps = db_.prepareStatement(
-                "select ID_STD_CURS, DATE_CHANGE, VALUE_CURS, IS_DELETED, ID_STD_CURR " +
-                "from   WM_CASH_CURS_STD " +
-                "where ID_STD_CURR=? and IS_DELETED=0 " +
-                "order by DATE_CHANGE DESC "
-            );
-
-            ps.setLong(1, standardCurrencyId);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                StandardCurrencyCurs curs = initStandardCurrencyCurs(rs);
-                list.add(curs);
-            }
-            return list;
-        }
-        catch (Throwable e) {
-            final String es = "Error create list of standard currencies";
-            log.error(es, e);
-            throw new RuntimeException( es, e );
-        }
-        finally {
-            DatabaseManager.close( rs, ps);
-        }
-    }
-
-    private StandardCurrencyCurs initStandardCurrencyCurs(ResultSet rs) throws SQLException {
-        StandardCurrencyCurs curs = new StandardCurrencyCurs();
-
-        curs.setCurs( rs.getBigDecimal("VALUE_CURS") );
-        if (rs.wasNull()) {
-            return null;
-        }
-        curs.setCreated( RsetTools.getTimestamp(rs, "DATE_CHANGE") );
-
-        return curs;
-    }
-
-    private StandardCurrency initStandardCurrencyBean(ResultSet rs) throws SQLException {
-        StandardCurrency currency = new StandardCurrency();
-
-        currency.setStandardCurrencyId( RsetTools.getLong(rs, "ID_STD_CURR"));
-        currency.setStandardCurrencyName( RsetTools.getString(rs, "NAME_STD_CURR") );
-        currency.setStandardCurrencyCode( RsetTools.getString(rs, "CONVERT_CURRENCY") );
-        return currency;
-    }
-
 }

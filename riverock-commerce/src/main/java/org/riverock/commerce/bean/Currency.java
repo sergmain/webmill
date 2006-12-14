@@ -24,18 +24,15 @@
 package org.riverock.commerce.bean;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.ArrayList;
 import java.math.BigDecimal;
 
-import javax.persistence.Table;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.TableGenerator;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Transient;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * @author Sergei Maslyukov
@@ -85,9 +82,6 @@ public class Currency implements Serializable {
     @Column(name="IS_USE_STANDART")
     private boolean isUseStandard = false;
 
-    @Transient
-    private List<CurrencyCurs> curses = new ArrayList<CurrencyCurs>();
-
     public Currency() {
     }
 
@@ -97,10 +91,9 @@ public class Currency implements Serializable {
         this.currencyCode = currency.getCurrencyCode();
         this.isUsed = currency.isUsed();
         this.isUseStandard = currency.isUseStandard();
-        this.curses = currency.getCurses();
         this.standardCurrencyId = currency.getStandardCurrencyId();
         this.siteId = currency.getSiteId();
-        this.percent = currency.getPercent();
+        setPercent(currency.getPercent());
     }
 
     public BigDecimal getPercent() {
@@ -108,7 +101,12 @@ public class Currency implements Serializable {
     }
 
     public void setPercent(BigDecimal percent) {
-        this.percent = percent;
+        if (percent==null) {
+            this.percent = BigDecimal.ZERO;
+        }
+        else {
+            this.percent = percent;
+        }
     }
 
     public Long getSiteId() {
@@ -141,14 +139,6 @@ public class Currency implements Serializable {
 
     public void setUsed(boolean used) {
         isUsed = used;
-    }
-
-    public List<CurrencyCurs> getCurses() {
-        return curses;
-    }
-
-    public void setCurses(List<CurrencyCurs> curses) {
-        this.curses = curses;
     }
 
     public Long getCurrencyId() {

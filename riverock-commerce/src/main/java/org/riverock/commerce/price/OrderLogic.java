@@ -61,17 +61,17 @@ public final class OrderLogic {
     }
 
     private static void prepareInvoice(Shop shop, PortletSession session, RenderRequest renderRequest, AuthSession authSession) {
-        Invoice order = null;
+        Long userOrderId = null;
         // если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
         // если заказа в сессии нет, то создаем
         if( shop != null && shop.getShopId() != null ) {
-            order = (Invoice) getFromSession(session, ShopPortlet.ORDER_SESSION);
+            userOrderId = (Long) getFromSession(session, ShopPortlet.USER_ORDER_ID);
 
             if( log.isDebugEnabled() ) {
-                log.debug( "order object - " + order );
+                log.debug( "order object - " + userOrderId);
             }
 
-            if( order == null ) {
+            if( userOrderId == null ) {
                 if( log.isDebugEnabled() ) {
                     log.debug( "Create new order" );
                 }
@@ -79,19 +79,18 @@ public final class OrderLogic {
                 ShopOrder shopOrder = new ShopOrder();
                 shopOrder.setShopId( shop.getShopId() );
 
-                order = new Invoice();
-                order.setUserOrderId( initAuthSession(( AuthSession ) renderRequest.getUserPrincipal() ) );
+                userOrderId = createUserOrder(( AuthSession ) renderRequest.getUserPrincipal() );
             }
 
             // если заказ создан ранее и юзер прошел авторизацию,
             // помещаем авторизационные данные в заказ
-            if ( order != null && authSession != null ) {
+            if ( userOrderId != null && authSession != null ) {
                 if( authSession.checkAccess( renderRequest.getServerName() ) ) {
                     if( log.isDebugEnabled() ) {
                         log.debug( "updateAuthSession" );
                     }
 
-                    updateAuthSession(order, authSession );
+                    updateAuthSession(userOrderId, authSession );
                 }
             }
 
@@ -103,8 +102,8 @@ public final class OrderLogic {
             if( log.isDebugEnabled() )
                 log.debug( "set new count of item. id_item - " + id_item + " count - " + count );
 
-            removeFromSession(session, ShopPortlet.ORDER_SESSION);
-            setInSession(session, ShopPortlet.ORDER_SESSION, order );
+            removeFromSession(session, ShopPortlet.USER_ORDER_ID);
+            setInSession(session, ShopPortlet.USER_ORDER_ID, userOrderId);
         }
     }
 
@@ -193,19 +192,19 @@ public final class OrderLogic {
         return session.getAttribute( key, PortletSession.APPLICATION_SCOPE );
     }
 
-    private static Long initAuthSession(final AuthSession authSession) {
+    private static Long createUserOrder(final AuthSession authSession) {
         Long userId = authSession != null && authSession.getUser() != null ? authSession.getUser().getUserId() : null;
         return CommerceDaoFactory.getOrderDao().createUserOrder(userId, new Date());
     }
 
-    public static void updateAuthSession(final Invoice order, final AuthSession authSession) {
+    public static void updateAuthSession(final Long userOrderId, final AuthSession authSession) {
         Session hibernateSession = HibernateUtils.getSession();
         hibernateSession.beginTransaction();
 
         if( authSession != null ) {
             Long userId = authSession.getUser().getUserId();
             if( userId != null ) {
-                CommerceDaoFactory.getOrderDao().bindUserToUserOrder(hibernateSession, order.getUserOrderId(), userId);
+                CommerceDaoFactory.getOrderDao().bindUserToUserOrder(hibernateSession, userOrderId, userId);
             }
             else {
                 throw new IllegalStateException("userId not found for user login: " +authSession.getUserLogin());
@@ -265,22 +264,20 @@ public final class OrderLogic {
             ShopItem shopItem = CommerceDaoFactory.getShopDao().getShopItem(shopItemId);
             if (shopItem!=null) {
                 ShopOrderItem item = new ShopOrderItem();
-                item.setShopItem(shopItem);
+                item.setShopItemId(shopItem.getShopItemId());
                 item.setUserOrderId(userOrderId);
                 
                 final CurrencyManager currencyManager = CurrencyManager.getInstance( siteId );
 
-                CurrencyItem currencyItem = CurrencyService.getCurrencyItemByCode( currencyManager.getCurrencyList(), item.getShopItem().getCurrency() );
+                CurrencyItem currencyItem = CurrencyService.getCurrencyItemByCode( currencyManager.getCurrencyList(), shopItem.getCurrency() );
                 currencyItem.fillRealCurrencyData( currencyManager.getCurrencyList().getStandardCurrencies() );
 
-                item.setCurrencyItem( currencyItem );
-
-                Shop shop = CommerceDaoFactory.getShopDao().getShop(item.getShopItem().getShopId());
+                Shop shop = CommerceDaoFactory.getShopDao().getShop(shopItem.getShopId());
 
                 if( log.isDebugEnabled() ) {
-                    log.debug( "currencyCode " + item.getShopItem().getCurrency() );
+                    log.debug( "currencyCode " + shopItem.getCurrency() );
                     log.debug( "currencyItem " + currencyItem );
-                    log.debug( "item.price " + item.getShopItem().getPrice() );
+                    log.debug( "item.price " + shopItem.getPrice() );
                     if( currencyItem != null ) {
                         log.debug( "currencyItem.isRealInit " + currencyItem.isRealInit() );
                         log.debug( "currencyItem.getRealCurs " + currencyItem.getRealCurs() );
@@ -295,12 +292,12 @@ public final class OrderLogic {
                     BigDecimal resultPrice = new BigDecimal(0);
 
                     if( log.isDebugEnabled() ) {
-                        log.debug( "item idShop - " + item.getShopItem().getShopId() );
+                        log.debug( "item idShop - " + shopItem.getShopId() );
                         log.debug( "shop idShop - " + shop.getShopId() );
-                        log.debug( "item idCurrency - " + item.getCurrencyItem().getCurrencyId() );
+                        log.debug( "currencyItem.getCurrencyId: " + currencyItem.getCurrencyId() );
                         log.debug( "shop idOrderCurrency - " + shop.getInvoiceCurrencyId() );
                         log.debug( "код валюты наименования совпадает с валютой в которой выводить заказ - " +
-                            ( item.getCurrencyItem().getCurrencyId() == shop.getInvoiceCurrencyId() ) );
+                            ( currencyItem.getCurrencyId().equals( shop.getInvoiceCurrencyId() )) );
                     }
 
                     // если код валюты наименования совпадает с валютой в которой выводить заказ
@@ -308,15 +305,17 @@ public final class OrderLogic {
                     CurrencyPrecision precision = null;
 
                     CurrencyPrecisionList currencyPrecisionList = new CurrencyPrecisionList(shop.getShopId());
-                    if( item.getCurrencyItem().getCurrencyId().equals( shop.getInvoiceCurrencyId() ) ) {
-                        item.setResultCurrency( item.getCurrencyItem() );
+                    if( currencyItem.getCurrencyId().equals( shop.getInvoiceCurrencyId() ) ) {
+                        item.setResultCurrencyCode( currencyItem.getCurrencyCode() );
+                        item.setResultCurrencyName( currencyItem.getCurrencyName() );
+
                         precision = getPrecisionValue( currencyPrecisionList, currencyItem.getCurrencyId() );
                         if( precision != null && precision.getPrecision() != null ) {
                             precisionValue = precision.getPrecision();
                         }
 
-                        if( item.getShopItem().getPrice() != null )
-                            resultPrice = NumberTools.truncate( item.getShopItem().getPrice(), precisionValue );
+                        if( shopItem.getPrice() != null )
+                            resultPrice = NumberTools.truncate( shopItem.getPrice(), precisionValue );
                         else {
                             if( log.isDebugEnabled() ) {
                                 log.info( "price is null" );
@@ -331,22 +330,23 @@ public final class OrderLogic {
                         CurrencyItem defaultCurrency =
                             CurrencyService.getCurrencyItem( currencyManager.getCurrencyList(), shop.getInvoiceCurrencyId() );
 
-                        item.setResultCurrency( defaultCurrency );
+                        item.setResultCurrencyCode( defaultCurrency.getCurrencyCode() );
+                        item.setResultCurrencyName( defaultCurrency.getCurrencyName() );
 
                         if( log.isDebugEnabled() ) {
-                            log.debug("currency: " + item.getCurrencyItem());
+                            log.debug("currency: " + currencyItem);
                             log.debug("default currency: " + defaultCurrency);
                         }
-                        BigDecimal crossCurs = item.getCurrencyItem().getRealCurs().divide(defaultCurrency.getRealCurs());
+                        BigDecimal crossCurs = currencyItem.getRealCurs().divide(defaultCurrency.getRealCurs());
 
-                        if( item.getShopItem().getPrice() != null ) {
+                        if( shopItem.getPrice() != null ) {
                             resultPrice =
-                                NumberTools.truncate( item.getShopItem().getPrice(), precisionValue )
+                                NumberTools.truncate( shopItem.getPrice(), precisionValue )
                                 .multiply( crossCurs );
 
                             if( log.isDebugEnabled() ) {
                                 log.debug( "crossCurs - " + crossCurs + " price - " +
-                                    NumberTools.truncate( item.getShopItem().getPrice(), precisionValue ) +
+                                    NumberTools.truncate( shopItem.getPrice(), precisionValue ) +
                                     " result price - " + resultPrice );
                             }
                         }

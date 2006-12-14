@@ -29,7 +29,6 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.commerce.bean.Invoice;
 import org.riverock.commerce.invoice.InvoicePortlet;
 import org.riverock.commerce.schema.shop.CurrentBasketType;
 import org.riverock.commerce.dao.CommerceDaoFactory;
@@ -46,14 +45,14 @@ import org.riverock.webmill.container.ContainerConstants;
 public final class ShopBasket {
 
     public static CurrentBasketType getInstance(
-        final Invoice order, final ShopPageParam shopParam,
+        final Long userOrderId, final ShopPageParam shopParam,
         final RenderRequest renderRequest, final RenderResponse renderResponse,
         final ResourceBundle bundle) {
 
-        if (order == null) {
+        if (userOrderId == null) {
             return null;
         }
-        int count = CommerceDaoFactory.getOrderDao().countItemsInUserOrder(order.getUserOrderId());
+        int count = CommerceDaoFactory.getOrderDao().countItemsInUserOrder(userOrderId);
         if (count==0) {
             return null;
         }

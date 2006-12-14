@@ -35,6 +35,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 
+import org.hibernate.validator.NotNull;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 01.09.2006
@@ -68,6 +70,7 @@ public class CurrencyCurs implements Serializable {
     private Date date;
 
     @Column(name="CURS")
+    @NotNull
     private BigDecimal curs;
 
     public Long getCurrencyCursId() {

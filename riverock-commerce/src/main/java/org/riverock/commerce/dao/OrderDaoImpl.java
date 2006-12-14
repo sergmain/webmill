@@ -92,7 +92,10 @@ public class OrderDaoImpl implements OrderDao {
                 "where userOrder.userOrderId=:userOrderId ")
             .setLong("userOrderId", userOrderId)
             .uniqueResult();
-        
+        if (bean!=null) {
+
+        }
+
         session.getTransaction().commit();
     }
 
