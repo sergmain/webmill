@@ -23,23 +23,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.generic.db;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+package org.riverock.generic.config;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 04.07.2006
- *         Time: 12:10:25
+ *         Date: 14.12.2006
+ *         Time: 17:07:33
+ *         <p/>
+ *         $Id$
  */
-public interface DbConnection {
-    PreparedStatement prepareStatement(String sql_) throws SQLException;
+public class ConfigException extends RuntimeException {
 
-    Statement createStatement() throws SQLException;
+    public ConfigException() {
+        super();
+    }
 
-    void commit() throws SQLException;
+    public ConfigException(String s) {
+        super(s);
+    }
 
-    void rollback() throws SQLException;
+    public ConfigException(String s, Throwable cause){
+        super(s, cause);
+    }
 }

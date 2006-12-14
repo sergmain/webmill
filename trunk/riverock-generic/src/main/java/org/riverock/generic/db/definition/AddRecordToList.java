@@ -107,18 +107,18 @@ public class AddRecordToList implements DefinitionProcessingInterface {
                 log.debug("value " + insertValue);
             }
 
-            ps = db_.prepareStatement(sql);
+            ps = db_.getConnection().prepareStatement(sql);
             ps.setLong(1, seqValue);
             ps.setString(2, insertValue);
 
             ps.executeUpdate();
 
-            db_.commit();
+            db_.getConnection().commit();
         }
         catch (Exception e) {
             try {
                 if (db_ != null) {
-                    db_.rollback();
+                    db_.getConnection().rollback();
                 }
             }
             catch (Exception e1) {

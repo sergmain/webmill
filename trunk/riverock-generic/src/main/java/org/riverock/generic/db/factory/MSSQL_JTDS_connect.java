@@ -31,7 +31,6 @@ import org.riverock.generic.annotation.schema.db.*;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 
-import javax.sql.DataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.sql.*;
@@ -60,27 +59,12 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
         return 0;
     }
 
-    public MSSQL_JTDS_connect() {
-        super();
-    }
-
-    public boolean getIsClosed()
-        throws SQLException {
-        if (conn == null)
-            return true;
-        return conn.isClosed();
+    public MSSQL_JTDS_connect(Connection conn) {
+        super(conn);
     }
 
     public int getMaxLengthStringField() {
         return 4000;
-    }
-
-    protected DataSource createDataSource() throws SQLException {
-        return null;
-    }
-
-    public String getDriverClass() {
-        return "net.sourceforge.jtds.jdbc.Driver";
     }
 
     public boolean getIsBatchUpdate() {
@@ -236,7 +220,7 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
 
         Statement st = null;
         try {
-            st = this.conn.createStatement();
+            st = this.getConnection().createStatement();
             st.execute(sql);
             int count = st.getUpdateCount();
             if (log.isDebugEnabled())
@@ -269,7 +253,7 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
 
         Statement st = null;
         try {
-            st = this.conn.createStatement();
+            st = this.getConnection().createStatement();
             st.execute(sql);
             int count = st.getUpdateCount();
             if (log.isDebugEnabled())
@@ -302,7 +286,7 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
 
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -387,9 +371,9 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter {
 
         Statement ps = null;
         try {
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.executeUpdate(sql);
-            this.conn.commit();
+            this.getConnection().commit();
         }
         catch (SQLException e) {
             throw e;
@@ -517,7 +501,7 @@ ALTER TABLE table
 */
 
     public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
-        return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
+        return DatabaseManager.getViewList(getConnection(), schemaPattern, tablePattern);
     }
 
     public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
@@ -542,7 +526,7 @@ ALTER TABLE table
 
         Statement ps = null;
         try {
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.execute(sql_);
 //            ps.execute();
         }
@@ -594,7 +578,7 @@ ALTER TABLE table
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
 
             rs = ps.executeQuery();
 
@@ -623,7 +607,7 @@ ALTER TABLE table
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = conn.prepareStatement("select max(" + sequence.getColumnName() + ") max_id from " + sequence.getTableName());
+            ps = getConnection().prepareStatement("select max(" + sequence.getColumnName() + ") max_id from " + sequence.getTableName());
 
             rs = ps.executeQuery();
 

@@ -26,7 +26,7 @@
 package org.riverock.generic.test;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.utils.DbUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,8 +43,9 @@ public class TempUpdateMainListNews
     public static void main(String s[])
         throws Exception
     {
-        org.riverock.common.startup.StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "HSQLDB" );
+        org.riverock.generic.utils.StartupApplication.init();
+        DatabaseAdapter db_=null;
+//        db_ = DatabaseAdapter.getInstance( "HSQLDB" );
 
         String sql_ =
             "select ID_NEWS from WM_NEWS_LIST";
@@ -53,13 +54,13 @@ public class TempUpdateMainListNews
         ResultSet rs = null;
         try
         {
-            ps = db_.prepareStatement(sql_);
+            ps = db_.getConnection().prepareStatement(sql_);
 
             rs = ps.executeQuery();
 
             while (rs.next())
             {
-                Long id = RsetTools.getLong(rs, "ID_NEWS");
+                Long id = DbUtils.getLong(rs, "ID_NEWS");
 
 
                 String sql_temp_ =
@@ -74,7 +75,7 @@ public class TempUpdateMainListNews
                 PreparedStatement ps1 = null;
                 try
                 {
-                    ps1 = db_.prepareStatement(sql_temp_);
+                    ps1 = db_.getConnection().prepareStatement(sql_temp_);
                     ps1.setLong(1, id.longValue() );
                     ps1.executeUpdate();
                 }
@@ -97,10 +98,7 @@ public class TempUpdateMainListNews
             ps = null;
         }
 
-        db_.commit();
-
-        DatabaseAdapter.close( db_ );
-        db_ = null;
+        db_.getConnection().commit();
 
     }
 }

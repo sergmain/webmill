@@ -31,12 +31,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.sql.Blob;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-
-import javax.sql.DataSource;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -49,29 +48,12 @@ import org.riverock.generic.annotation.schema.db.DbDataFieldData;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
 
 /**
- *
- *
  * $Id$
  */
 public class SAPconnect extends DatabaseAdapter {
 
-    public boolean getIsClosed()
-        throws SQLException {
-        if (conn == null)
-            return true;
-        return conn.isClosed();
-    }
-
     public int getMaxLengthStringField() {
         return 2000;
-    }
-
-    protected DataSource createDataSource() throws SQLException {
-        return null;
-    }
-
-    public String getDriverClass() {
-        return "com.sap.dbtech.jdbc.DriverSapDB";
     }
 
     public boolean getIsBatchUpdate() {
@@ -129,7 +111,7 @@ public class SAPconnect extends DatabaseAdapter {
     }
 
     public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
-        return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
+        return DatabaseManager.getViewList(getConnection(), schemaPattern, tablePattern);
     }
 
     public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
@@ -145,13 +127,13 @@ public class SAPconnect extends DatabaseAdapter {
         if (view == null ||
             view.getName() == null || view.getName().length() == 0 ||
             view.getText() == null || view.getText().length() == 0
-        )
+            )
             return;
 
         String sql_ = "create VIEW " + view.getName() + " as " + view.getText();
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
             ps.executeUpdate();
         }
         finally {
@@ -215,7 +197,7 @@ public class SAPconnect extends DatabaseAdapter {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
 
             rs = ps.executeQuery();
 
@@ -257,7 +239,7 @@ public class SAPconnect extends DatabaseAdapter {
     public boolean testExceptionIndexUniqueKey(Exception e, String index) {
         if ((e instanceof SQLException) &&
             ((e.toString().indexOf("ORA-00001") != -1) &&
-            (e.toString().indexOf(index) != -1)))
+                (e.toString().indexOf(index) != -1)))
 
             return true;
 
@@ -296,7 +278,7 @@ public class SAPconnect extends DatabaseAdapter {
         return 3;
     }
 
-    public SAPconnect() {
-        super();
+    public SAPconnect(Connection conn) {
+        super(conn);
     }
 }

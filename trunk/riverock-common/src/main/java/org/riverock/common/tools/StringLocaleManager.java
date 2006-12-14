@@ -33,14 +33,11 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * 
  * $Revision$
  * $Date$
  * $RCSfile$
- *
  */
-public class StringLocaleManager
-{
+public class StringLocaleManager {
 
     /**
      * The ResourceBundle for this StringLocaleManager.
@@ -49,8 +46,7 @@ public class StringLocaleManager
     private ResourceBundle bundle;
     private Locale currentLocale;
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         bundle = null;
         currentLocale = null;
 
@@ -66,16 +62,14 @@ public class StringLocaleManager
      * @param packageName Name of package to create StringLocaleManager for.
      */
 
-    private StringLocaleManager(String packageName, Locale loc)
-    {
+    private StringLocaleManager(String packageName, Locale loc) {
         currentLocale = loc;
         String bundleName = packageName + ".LocalStrings";
         bundle = ResourceBundle.getBundle(bundleName, loc);
     }
 
     public String getStr(String key)
-            throws UnsupportedEncodingException
-    {
+        throws UnsupportedEncodingException {
         String s = getString(key);
         String charset = LocaleCharset.getCharset(currentLocale);
 
@@ -83,8 +77,7 @@ public class StringLocaleManager
     }
 
     public String getStr(String key, Object[] args)
-            throws UnsupportedEncodingException
-    {
+        throws UnsupportedEncodingException {
         String s = getString(key, args);
         String charset = LocaleCharset.getCharset(currentLocale);
 
@@ -97,10 +90,8 @@ public class StringLocaleManager
      *
      * @param key
      */
-    public String getString(String key)
-    {
-        if (key == null)
-        {
+    public String getString(String key) {
+        if (key == null) {
             String msg = "key is null";
 
             throw new NullPointerException(msg);
@@ -108,12 +99,10 @@ public class StringLocaleManager
 
         String str = null;
 
-        try
-        {
+        try {
             str = bundle.getString(key);
         }
-        catch (MissingResourceException mre)
-        {
+        catch (MissingResourceException mre) {
             str = "cannot find message associated with key : " + key;
             mre.printStackTrace();
         }
@@ -129,8 +118,7 @@ public class StringLocaleManager
      * @param args
      */
 
-    public String getString(String key, Object[] args)
-    {
+    public String getString(String key, Object[] args) {
         String iString = null;
         String value = getString(key);
 
@@ -138,14 +126,11 @@ public class StringLocaleManager
         // VM's don't do an automatic toString() on the passed in
         // objects and barf out
 
-        try
-        {
+        try {
             // ensure the arguments are not null so pre 1.2 VM's don't barf
             Object nonNullArgs[] = args;
-            for (int i = 0; i < args.length; i++)
-            {
-                if (args[i] == null)
-                {
+            for (int i = 0; i < args.length; i++) {
+                if (args[i] == null) {
                     if (nonNullArgs == args) nonNullArgs = (Object[]) args.clone();
                     nonNullArgs[i] = "null";
                 }
@@ -153,12 +138,10 @@ public class StringLocaleManager
 
             iString = MessageFormat.format(value, nonNullArgs);
         }
-        catch (IllegalArgumentException iae)
-        {
+        catch (IllegalArgumentException iae) {
             StringBuilder buf = new StringBuilder();
             buf.append(value);
-            for (int i = 0; i < args.length; i++)
-            {
+            for (int i = 0; i < args.length; i++) {
                 buf.append(" arg[" + i + "]=" + args[i]);
             }
             iString = buf.toString();
@@ -175,8 +158,7 @@ public class StringLocaleManager
      * @param arg
      */
 
-    public String getString(String key, Object arg)
-    {
+    public String getString(String key, Object arg) {
         Object[] args = new Object[]{arg};
         return getString(key, args);
     }
@@ -191,8 +173,7 @@ public class StringLocaleManager
      * @param arg2
      */
 
-    public String getString(String key, Object arg1, Object arg2)
-    {
+    public String getString(String key, Object arg1, Object arg2) {
         Object[] args = new Object[]{arg1, arg2};
         return getString(key, args);
     }
@@ -209,8 +190,7 @@ public class StringLocaleManager
      */
 
     public String getString(String key, Object arg1, Object arg2,
-                            Object arg3)
-    {
+                            Object arg3) {
         Object[] args = new Object[]{arg1, arg2, arg3};
         return getString(key, args);
     }
@@ -228,8 +208,7 @@ public class StringLocaleManager
      */
 
     public String getString(String key, Object arg1, Object arg2,
-                            Object arg3, Object arg4)
-    {
+                            Object arg3, Object arg4) {
         Object[] args = new Object[]{arg1, arg2, arg3, arg4};
         return getString(key, args);
     }
@@ -241,17 +220,14 @@ public class StringLocaleManager
     private static Map<String, StringLocaleManager> managers = new HashMap<String, StringLocaleManager>();
 
 
-    public synchronized static void clear()
-    {
+    public synchronized static void clear() {
         managers.clear();
     }
 
-    public synchronized static StringLocaleManager getManager(String packageName, Locale loc)
-    {
+    public synchronized static StringLocaleManager getManager(String packageName, Locale loc) {
         StringLocaleManager mgr = (StringLocaleManager) managers.get(packageName + "_" + loc.toString());
 
-        if (mgr == null)
-        {
+        if (mgr == null) {
             mgr = new StringLocaleManager(packageName, loc);
             managers.put(packageName + "_" + loc.toString(), mgr);
         }

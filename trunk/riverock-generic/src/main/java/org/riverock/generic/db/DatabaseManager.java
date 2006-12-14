@@ -39,9 +39,9 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.annotation.schema.db.*;
+import org.riverock.generic.utils.Utils;
+import org.riverock.generic.utils.DbUtils;
 
 /**
  * User: Admin
@@ -78,20 +78,6 @@ public final class DatabaseManager {
         dataType.put(NUMBER_TYPE, NUMBER_TYPE_VALUE);
         dataType.put(STRING_TYPE, STRING_TYPE_VALUE);
         dataType.put(DATE_TYPE, DATE_TYPE_VALUE);
-    }
-
-    public static void close(final DatabaseAdapter db_) {
-        DatabaseAdapter.close(db_);
-    }
-
-    public static void close(final DatabaseAdapter db_, final ResultSet rs, final PreparedStatement ps) {
-        close(rs, ps);
-        DatabaseAdapter.close(db_);
-    }
-
-    public static void close(final DatabaseAdapter db_, final PreparedStatement ps) {
-        close(ps);
-        DatabaseAdapter.close(db_);
     }
 
     public static void close(final ResultSet rs, final Statement st) {
@@ -135,7 +121,7 @@ public final class DatabaseManager {
             return;
         }
 
-        DbPrimaryKey checkPk = DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName());
+        DbPrimaryKey checkPk = DatabaseStructureManager.getPrimaryKey(db_.getConnection(), table.getSchema(), table.getName());
 
         if (checkPk != null && checkPk.getColumns().size() != 0) {
             String s = "primary key already exists";
@@ -186,7 +172,7 @@ public final class DatabaseManager {
 
         Statement ps = null;
         try {
-            ps = db_.createStatement();
+            ps = db_.getConnection().createStatement();
             ps.execute(sql_);
         }
         catch (SQLException e) {
@@ -220,7 +206,7 @@ public final class DatabaseManager {
 
         Statement ps = null;
         try {
-            ps = db_.createStatement();
+            ps = db_.getConnection().createStatement();
             ps.execute(sql_);
         }
         catch (SQLException e) {
@@ -445,7 +431,7 @@ public final class DatabaseManager {
         DatabaseMetaData db = db_.getConnection().getMetaData();
         String dbSchema = db.getUserName();
 
-        ArrayList list = DatabaseStructureManager.getTableList(db_.conn, dbSchema, "%");
+        ArrayList list = DatabaseStructureManager.getTableList(db_.getConnection(), dbSchema, "%");
         final int initialCapacity = list.size();
         for (int i = 0; i < initialCapacity; i++) {
             DbTable table = (DbTable) list.get(i);
@@ -462,9 +448,9 @@ public final class DatabaseManager {
         schema.getSequences().addAll(db_.getSequnceList(dbSchema));
 
         for (DbTable table : schema.getTables()) {
-            table.getFields().addAll(DatabaseStructureManager.getFieldsList(db_.conn, table.getSchema(), table.getName(), db_.getFamily()));
-            table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName()));
-            table.getImportedKeys().addAll(DatabaseStructureManager.getImportedKeys(db_.conn, table.getSchema(), table.getName()));
+            table.getFields().addAll(DatabaseStructureManager.getFieldsList(db_.getConnection(), table.getSchema(), table.getName(), db_.getFamily()));
+            table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(db_.getConnection(), table.getSchema(), table.getName()));
+            table.getImportedKeys().addAll(DatabaseStructureManager.getImportedKeys(db_.getConnection(), table.getSchema(), table.getName()));
         }
 
         for (DbView view : schema.getViews()) {
@@ -659,10 +645,10 @@ public final class DatabaseManager {
 
                 if (log.isDebugEnabled()) log.debug("insert bigtext. sql 2 - " + sql_);
 
-                byte b[] = StringTools.getBytesUTF(insertString);
+                byte b[] = Utils.getBytesUTF(insertString);
 
-                ps1 = dbDyn.prepareStatement(sql_);
-                while ((pos = StringTools.getStartUTF(b, maxByte, pos)) != -1) {
+                ps1 = dbDyn.getConnection().prepareStatement(sql_);
+                while ((pos = Utils.getStartUTF(b, maxByte, pos)) != -1) {
                     if (log.isDebugEnabled()) log.debug("Name sequence - " + "seq_" + nameTargetTable);
 
                     CustomSequence seq = new CustomSequence();
@@ -700,7 +686,7 @@ public final class DatabaseManager {
                             content.getQueryArea().getPrimaryKeyMask().trim().length()==0)
                             throw new Exception("date mask for primary key not specified");
 
-                        primaryKeyValue = RsetTools.getStringDate(rs, content.getQueryArea().getPrimaryKey(),
+                        primaryKeyValue = DbUtils.getStringDate(rs, content.getQueryArea().getPrimaryKey(),
                             content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 */
                             throw new Exception("Type of PK 'date' for big_text not implemented");
@@ -744,7 +730,7 @@ public final class DatabaseManager {
             String sql_ = "delete from " + nameTargetTable + " where " + pkName + "=?";
             if (log.isDebugEnabled()) log.debug("#13.07.01 " + sql_);
 
-            ps = dbDyn.prepareStatement(sql_);
+            ps = dbDyn.getConnection().prepareStatement(sql_);
 
             Integer type = dataType.get(pkType.getType().toLowerCase());
             if (type==null) {
@@ -766,7 +752,7 @@ public final class DatabaseManager {
                             content.getQueryArea().getPrimaryKeyMask().trim().length()==0)
                             throw new Exception("date mask for primary key not specified");
 
-                        primaryKeyValue = RsetTools.getStringDate(rs, content.getQueryArea().getPrimaryKey(),
+                        primaryKeyValue = DbUtils.getStringDate(rs, content.getQueryArea().getPrimaryKey(),
                             content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 */
                     throw new Exception("Type of PK 'date' for big_text not implemented");
@@ -806,19 +792,19 @@ public final class DatabaseManager {
 
         StringBuilder text = new StringBuilder();
         try {
-            ps = db_.prepareStatement(sql_);
+            ps = db_.getConnection().prepareStatement(sql_);
 
             if (log.isDebugEnabled())
                 log.debug("11.03.01");
 
-            RsetTools.setLong(ps, 1, id_);
+            DbUtils.setLong(ps, 1, id_);
             rset = ps.executeQuery();
 
             while (rset.next()) {
                 if (log.isDebugEnabled()) {
                     log.debug("11.03.01 " + text);
                 }
-                text.append(RsetTools.getString(rset, field_));
+                text.append(DbUtils.getString(rset, field_));
             }
         } finally {
             DatabaseManager.close(rset, ps);
@@ -990,20 +976,20 @@ public final class DatabaseManager {
                             log.debug("drop table " + table.getName());
                         }
                         db_.dropTable(table);
-                        db_.commit();
+                        db_.getConnection().commit();
 
                         if (log.isDebugEnabled())
                             log.debug("create table " + table.getName());
 
                         db_.createTable(table);
-                        db_.commit();
+                        db_.getConnection().commit();
                     } else {
                         log.error("Error create table " + table.getName(), e);
                         throw e;
                     }
                 }
                 DatabaseStructureManager.setDataTable(db_, table, millSchema.getBigTextTable());
-                db_.commit();
+                db_.getConnection().commit();
             } else {
                 if (log.isDebugEnabled())
                     log.debug("skip table " + table.getName());
@@ -1020,7 +1006,7 @@ public final class DatabaseManager {
                 return null;
 
             DbKeyActionRule rule = new DbKeyActionRule();
-            rule.setRuleType(RsetTools.getInt(rs, "UPDATE_RULE"));
+            rule.setRuleType(DbUtils.getInteger(rs, "UPDATE_RULE"));
 
             switch (rule.getRuleType().intValue()) {
                 case DatabaseMetaData.importedKeyNoAction:
@@ -1062,7 +1048,7 @@ public final class DatabaseManager {
                 return null;
 
             DbKeyActionRule rule = new DbKeyActionRule();
-            rule.setRuleType(RsetTools.getInt(rs, "DELETE_RULE"));
+            rule.setRuleType(DbUtils.getInteger(rs, "DELETE_RULE"));
 
             switch (rule.getRuleType().intValue()) {
                 case DatabaseMetaData.importedKeyNoAction:
@@ -1104,7 +1090,7 @@ public final class DatabaseManager {
                 return null;
 
             DbKeyActionRule rule = new DbKeyActionRule();
-            rule.setRuleType(RsetTools.getInt(rs, "DEFERRABILITY"));
+            rule.setRuleType(DbUtils.getInteger(rs, "DEFERRABILITY"));
 
             switch (rule.getRuleType().intValue()) {
                 case DatabaseMetaData.importedKeyInitiallyDeferred:
@@ -1136,10 +1122,10 @@ public final class DatabaseManager {
 
         try {
             if (params == null) {
-                stmt = db.createStatement();
+                stmt = db.getConnection().createStatement();
                 n = stmt.executeUpdate(query);
             } else {
-                pstm = db.prepareStatement(query);
+                pstm = db.getConnection().prepareStatement(query);
                 for (int i = 0; i < params.length; i++) {
                     if (params[i] != null)
                         pstm.setObject(i + 1, params[i], types[i]);
@@ -1177,10 +1163,10 @@ public final class DatabaseManager {
 
         try {
             if (params == null) {
-                stmt = db.createStatement();
+                stmt = db.getConnection().createStatement();
                 rs = stmt.executeQuery(sql);
             } else {
-                pstm = db.prepareStatement(sql);
+                pstm = db.getConnection().prepareStatement(sql);
                 for (int i = 0; i < params.length; i++) {
                     if (types==null) {
                         pstm.setObject(i + 1, params[i]);
@@ -1224,10 +1210,10 @@ public final class DatabaseManager {
         List<Long> list = new ArrayList<Long>();
         try {
             if (params == null) {
-                stmt = db.createStatement();
+                stmt = db.getConnection().createStatement();
                 rs = stmt.executeQuery(sql);
             } else {
-                pstm = db.prepareStatement(sql);
+                pstm = db.getConnection().prepareStatement(sql);
                 for (int i = 0; i < params.length; i++) {
                     if (types==null) {
                         pstm.setObject(i + 1, params[i]);
@@ -1268,10 +1254,10 @@ public final class DatabaseManager {
         List<Long> list = new ArrayList<Long>();
         try {
             if (param == null) {
-                stmt = adapter.createStatement();
+                stmt = adapter.getConnection().createStatement();
                 rs = stmt.executeQuery(sql);
             } else {
-                pstm = adapter.prepareStatement(sql);
+                pstm = adapter.getConnection().prepareStatement(sql);
                 for (int i = 0; i < param.length; i++)
                     pstm.setObject(i + 1, param[i]);
 

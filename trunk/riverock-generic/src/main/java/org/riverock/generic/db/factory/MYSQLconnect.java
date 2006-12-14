@@ -33,12 +33,11 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.sql.Blob;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-
-import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -78,26 +77,12 @@ public final class MYSQLconnect extends DatabaseAdapter {
         return 0;
     }
 
-    public MYSQLconnect() {
-        super();
-    }
-
-//    public boolean isNeedUpdateBracket = false;
-
-    public boolean getIsClosed() throws SQLException {
-        return conn == null || conn.isClosed();
+    public MYSQLconnect(Connection conn) {
+        super(conn);
     }
 
     public int getMaxLengthStringField() {
         return 65535;
-    }
-
-    protected DataSource createDataSource() {
-        return null;
-    }
-
-    public String getDriverClass() {
-        return "com.mysql.jdbc.Driver";
     }
 
     public boolean getIsBatchUpdate() {
@@ -267,7 +252,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -301,7 +286,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 //            stmt = conn.createStatement();
 //            stmt.executeUpdate("DROP TABLE statement_test");
 
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.executeUpdate(sql);
 
 //            ps = this.conn.prepareStatement(sql);
@@ -333,7 +318,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -431,7 +416,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
         Statement ps = null;
         try {
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.executeUpdate(sql);
         }
         catch (SQLException e) {
@@ -552,7 +537,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = conn.prepareStatement("select max(" + sequence.getColumnName() + ") max_id from " + sequence.getTableName());
+            ps = getConnection().prepareStatement("select max(" + sequence.getColumnName() + ") max_id from " + sequence.getTableName());
 
             rs = ps.executeQuery();
 

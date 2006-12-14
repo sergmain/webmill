@@ -60,9 +60,6 @@ public final class XmlTools {
 
             Source inSrc = new StreamSource(new StringReader(str));
             return unmarshaller.unmarshal(inSrc, classType).getValue();
-//
-//            InputSource inSrc = new InputSource(new StringReader(str));
-//            return Unmarshaller.unmarshal(classType, inSrc);
         }
         catch (Exception e) {
             log.error("Error get object from xml string\n" + str, e);

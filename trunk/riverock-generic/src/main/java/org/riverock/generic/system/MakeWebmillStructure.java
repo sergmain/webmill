@@ -46,7 +46,7 @@ public class MakeWebmillStructure {
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance( nameConnection );
+//            db_ = DatabaseAdapter.getInstance( nameConnection );
             DbSchema schema = DatabaseManager.getDbStructure(db_ );
 
 /*
@@ -65,15 +65,15 @@ public class MakeWebmillStructure {
             return schema;
         }
         finally {
-            DatabaseAdapter.close(db_);
-            db_ = null;
+//            DatabaseAdapter.close(db_);
+//            db_ = null;
         }
     }
 
     public static void main(String args[])
         throws Exception
     {
-        org.riverock.common.startup.StartupApplication.init();
+        org.riverock.generic.utils.StartupApplication.init();
 
         makeSchema("MYSQL", "webmill-schema.xml");
 //        makeSchema("MSSQL-JTDS", "webmill-schema-mssql.xml");

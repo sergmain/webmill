@@ -33,43 +33,40 @@ import org.apache.log4j.PropertyConfigurator;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigService;
 import org.riverock.common.config.PropertiesProvider;
-//import org.riverock.common.config.GenericConfig;
 
 /**
  * $Id$
  */
 
-public final class StartupApplication
-{
-    private final static Logger log = Logger.getLogger( StartupApplication.class );
+public final class StartupApplication {
+    private final static Logger log = Logger.getLogger(StartupApplication.class);
 
     private static boolean isInit = false;
 
     private final static String DEFAULT_DIR_NAME = "mill";
-    public static void init() throws ConfigException{
+
+    public static void init() throws ConfigException {
         init(DEFAULT_DIR_NAME, "mill.log4j.properties", "jsmithy");
     }
+
     public static void init(String defaultNameDir, String log4jFileName, String configPrefix)
-        throws ConfigException
-    {
-        if (!isInit)
-        {
+        throws ConfigException {
+        if (!isInit) {
             PropertiesProvider.setApplicationPath(
                 System.getProperties().getProperty("user.dir")
             );
 
             PropertiesProvider.setConfigPath(
                 PropertiesProvider.getApplicationPath() +
-                (PropertiesProvider.getApplicationPath().endsWith(File.separator)?"":File.separator) +
-                defaultNameDir
+                    (PropertiesProvider.getApplicationPath().endsWith(File.separator) ? "" : File.separator) +
+                    defaultNameDir
             );
 
-            PropertiesProvider.setIsServletEnv( false );
+            PropertiesProvider.setIsServletEnv(false);
 
             String millLogPath = PropertiesProvider.getConfigPath() + File.separatorChar + "log";
             File tempDir = new File(millLogPath);
-            if (!tempDir.exists())
-            {
+            if (!tempDir.exists()) {
                 tempDir.mkdir();
             }
             System.setProperty("mill.logging.path", millLogPath);
@@ -78,13 +75,11 @@ public final class StartupApplication
             PropertyConfigurator.configure(
                 PropertiesProvider.getConfigPath() + File.separatorChar + log4jFileName
             );
-            log.info("Application path: " + PropertiesProvider.getApplicationPath() );
+            log.info("Application path: " + PropertiesProvider.getApplicationPath());
 
             isInit = true;
         }
         ConfigService.initLocale();
-//        GenericConfig.setConfigPrefix(configPrefix);
-//        GenericConfig.getTZ();
     }
 
 }
