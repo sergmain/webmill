@@ -68,19 +68,9 @@
 
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
+
+        <pathelement location="${lib.dir}/${hibernate.lib}"/>
     </path>
-
-<!--
-    <fileset dir="${lib.dir}/" id="web-inf-lib" >
-        <include name="${riverock-sql-parser.lib}"/>
-        <include name="${riverock-generic.lib}"/>
-        <include name="${riverock-common.lib}"/>
-
-        <include name="${log4j.lib}"/>
-        <include name="${castor.lib}"/>
-        <include name="${portlet.lib}"/>
-    </fileset>
--->
 
     <target name="full_build_module">
         <antcall target="full_clean"/>

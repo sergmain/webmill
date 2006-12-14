@@ -35,6 +35,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.News;
@@ -49,7 +50,6 @@ import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.resource.PortletResourceBundleWithLocale;
-import org.riverock.common.utils.DateUtils;
 
 /**
  * $Id$
@@ -183,8 +183,8 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
                 newsItemType.setNewsItemId(news.getNewsId());
                 newsItemType.setNewsText(news.getNewsText());
                 newsItemType.setNewsText(news.getNewsText());
-                newsItemType.setNewsDate(DateUtils.getStringDate(news.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), TimeZone.getDefault()));
-                newsItemType.setNewsTime(DateUtils.getStringDate(news.getPostDate(), "HH:mm", renderRequest.getLocale(), TimeZone.getDefault()));
+                newsItemType.setNewsDate(DateFormatUtils.format(news.getPostDate(), "dd.MMM.yyyy", TimeZone.getDefault(), renderRequest.getLocale()));
+                newsItemType.setNewsTime(DateFormatUtils.format(news.getPostDate(), "HH:mm", TimeZone.getDefault(), renderRequest.getLocale()));
 
                 newsGroupType.getNewsItem().add(newsItemType);
             }

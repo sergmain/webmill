@@ -28,8 +28,8 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.time.DateFormatUtils;
 
-import org.riverock.common.utils.DateUtils;
 import org.riverock.interfaces.portal.bean.News;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.tools.ContentTypeTools;
@@ -85,8 +85,8 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
         //TODO need use site specific TimeZone
         TimeZone timeZone = TimeZone.getDefault();
 
-        String newsDate = DateUtils.getStringDate(news.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), timeZone);
-        String newsTime = DateUtils.getStringDate(news.getPostDate(), "HH:mm", renderRequest.getLocale(), timeZone);
+        String newsDate = DateFormatUtils.format(news.getPostDate(), "dd.MMM.yyyy", timeZone, renderRequest.getLocale());
+        String newsTime = DateFormatUtils.format(news.getPostDate(), "HH:mm", timeZone, renderRequest.getLocale());
 
         StringBuilder s = new StringBuilder().
             append( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n").
@@ -116,8 +116,8 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
 
         //TODO need use site specific TimeZone
         TimeZone timeZone = TimeZone.getDefault();
-        String newsDate = DateUtils.getStringDate(news.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), timeZone);
-        String newsTime = DateUtils.getStringDate(news.getPostDate(), "HH:mm", renderRequest.getLocale(), timeZone);
+        String newsDate = DateFormatUtils.format(news.getPostDate(), "dd.MMM.yyyy", timeZone, renderRequest.getLocale());
+        String newsTime = DateFormatUtils.format(news.getPostDate(), "HH:mm", timeZone, renderRequest.getLocale());
 
         String root = PortletMetadataService.getMetadata( renderRequest, "xml-root-name", rootElement );
 
