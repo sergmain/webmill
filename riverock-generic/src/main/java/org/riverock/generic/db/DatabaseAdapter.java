@@ -26,51 +26,47 @@
 package org.riverock.generic.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.common.exception.DatabaseException;
 import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
+import org.riverock.generic.annotation.schema.db.CustomSequence;
+import org.riverock.generic.annotation.schema.db.DbDataFieldData;
+import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
+import org.riverock.generic.annotation.schema.db.DbSequence;
 import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.annotation.schema.db.DbView;
-import org.riverock.generic.annotation.schema.db.DbSequence;
-import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
-import org.riverock.generic.annotation.schema.db.DbField;
-import org.riverock.generic.annotation.schema.db.DbDataFieldData;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
 
 /**
  * $Revision$ $Date$
  */
-public abstract class DatabaseAdapter implements DbConnection {
-    private final static Logger log = Logger.getLogger(DatabaseAdapter.class);
+public abstract class DatabaseAdapter {
+    private Connection conn = null;
 
-    protected Connection conn = null;
-    protected Map<String, String> tables = new HashMap<String, String>();
+    private DatabaseConnectionType dc = null;
 
-    protected boolean isDriverLoaded = false;
-    protected DatabaseConnectionType dc = null;
-    protected DataSource dataSource = null;
-    private static final String DRIVER_DATASOURCE_TIPE = "DRIVER";
-    private static final String JNDI_DATASOURCE_TIPE = "JNDI";
-    private static final String NONE_DATASOURCE_TIPE = "NONE";
+    public DatabaseAdapter(Connection conn) {
+        this.setConnection(conn);
+    }
 
-    public DatabaseAdapter() {
+    public Connection getConnection() {
+        return conn;
+    }
+
+    public void setConnection(Connection conn) {
+        this.conn = conn;
+    }
+
+    public DatabaseConnectionType getDc() {
+        return dc;
+    }
+
+    public void setDc(DatabaseConnectionType dc) {
+        this.dc = dc;
     }
 
     public abstract int getFamily();
@@ -79,58 +75,11 @@ public abstract class DatabaseAdapter implements DbConnection {
 
     public abstract int getSubVersion();
 
-    public Connection getConnection() {
-        return conn;
-    }
-
-    public PreparedStatement prepareStatement(final String sql_) throws SQLException {
-        return DatabaseRuntimeService.prepareStatement(conn, dc, tables, sql_);
-    }
-
-    public Statement createStatement() throws SQLException {
-        return conn.createStatement();
-    }
-
-    public void commit() throws SQLException {
-        DatabaseRuntimeService.commit(conn, dc, tables);
-    }
-
-    public void rollback() throws SQLException {
-        DatabaseRuntimeService.rollback(conn, dc, tables);
-    }
-
-    protected void finalize() throws Throwable {
-        if (conn != null) {
-            try {
-                conn.close();
-            }
-            catch (Exception e) {
-                //catch close connection error
-            }
-            conn = null;
-        }
-        if (tables!=null) {
-            tables.clear();
-            tables = null;
-        }
-        dc = null;
-
-        super.finalize();
-    }
-
     public abstract boolean getIsBatchUpdate();
 
     public abstract boolean getIsNeedUpdateBracket();
 
     public abstract boolean getIsByteArrayInUtf8();
-
-    /**
-     * return status of DB - closed or not
-     *
-     * @return boolean. true - connection is closed. false - connection is opened
-     * @throws SQLException
-     */
-    public abstract boolean getIsClosed() throws SQLException;
 
     public abstract String getClobField(ResultSet rs, String nameFeld) throws SQLException;
 
@@ -237,164 +186,4 @@ public abstract class DatabaseAdapter implements DbConnection {
      * @return - int. Max size of char field
      */
     public abstract int getMaxLengthStringField();
-
-    protected abstract DataSource createDataSource() throws SQLException;
-
-    public abstract String getDriverClass();
-
-    private final static Object syncObject = new Object();
-    protected void init(DatabaseConnectionType dc_) throws DatabaseException, SQLException {
-        dc = dc_;
-
-        try {
-            if (dc == null) {
-                log.fatal("DatabaseConnection not initialized");
-                throw new DatabaseException("#21.001 DatabaseConnection not initialized.");
-            }
-
-            if (!isDriverLoaded) {
-                synchronized (syncObject) {
-                    if (!isDriverLoaded) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("dc.getDataSourceType(): "+ dc.getDataSourceType() );
-                        }
-                        if (dc.getDataSourceType().equals(DRIVER_DATASOURCE_TIPE)) {
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Start create connection pooling with driver");
-                                }
-                        }
-                        else if (dc.getDataSourceType().equals(JNDI_DATASOURCE_TIPE)) {
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Start create connection pooling with JNDI");
-                                }
-                                try {
-                                    Context envCtx = null;
-                                    try {
-                                        Context initCtx = new InitialContext();
-                                        envCtx = (Context) initCtx.lookup("java:comp/env");
-                                    } catch (Throwable e) {
-                                        log.info("JNDI context java:comp/env not found, will try search in root context");
-                                    }
-
-                                    // Look up our datasource
-                                    if (envCtx==null) {
-                                        envCtx = new InitialContext();
-                                        dataSource=(DataSource) envCtx.lookup(dc.getDataSourceName());
-                                    }
-                                    else {
-                                        boolean isError=false;
-                                        try {
-                                            dataSource=(DataSource) envCtx.lookup(dc.getDataSourceName());
-                                        }
-                                        catch (NamingException e) {
-                                            isError=true;
-                                        }
-                                        if (isError) {
-                                            envCtx = new InitialContext();
-                                            dataSource=(DataSource) envCtx.lookup(dc.getDataSourceName());
-                                        }
-                                    }
-                                }
-                                catch (NamingException e) {
-                                    final String es = "Error get value from JDNI context";
-                                    log.error(es, e);
-                                    throw new DatabaseException(es, e);
-                                }
-
-                        }
-                        else if (dc.getDataSourceType().equals(NONE_DATASOURCE_TIPE)){
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Start create connection pooling with simple mnaager");
-                                }
-                                Class.forName(getDriverClass());
-                        }
-
-                        isDriverLoaded = true;
-
-                    }
-                }
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Family - " + dc.getFamily());
-                log.debug("ConnectString - " + dc.getConnectString());
-                log.debug("username - " + dc.getUsername());
-                log.debug("password - " + dc.getPassword());
-                log.debug("isAutoCommit - " + dc.isIsAutoCommit());
-            }
-
-            if (dc.getDataSourceType().equals(DRIVER_DATASOURCE_TIPE)) {
-                    conn = dataSource.getConnection();
-            }
-            else if (dc.getDataSourceType().equals(JNDI_DATASOURCE_TIPE)) {
-                    conn = dataSource.getConnection();
-            }
-            else if (dc.getDataSourceType().equals(NONE_DATASOURCE_TIPE)) {
-                    conn = DriverManager.getConnection(dc.getConnectString(), dc.getUsername(), dc.getPassword());
-            }
-            if (log.isDebugEnabled()) {
-                log.debug("dc: " + dc);
-                log.debug("Connection: " + conn);
-            }
-            conn.setAutoCommit(dc.isIsAutoCommit()!=null?dc.isIsAutoCommit():false);
-        }
-        catch (Exception e) {
-            final String es = "Expeption create new Connection";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-    }
-
-    public static DatabaseAdapter getInstance() throws DatabaseException {
-        return getInstance(GenericConfig.getDefaultConnectionName());
-    }
-
-    /**
-     * @param connectionName - String. Name of connection config.
-     * @return - DatabaseAdapter
-     * @throws DatabaseException
-     */
-    public static DatabaseAdapter getInstance(final String connectionName)
-        throws DatabaseException {
-        if (connectionName == null) {
-            log.error("Call DatabaseAdapter.getInstance(final boolean isDynamic, final String connectionName) with connectionName==null");
-            return null;
-        }
-
-        DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
-        if (dc == null) {
-            String es = "DatabaseConnection definition for connection name '" + connectionName + "' not found.";
-            log.fatal(es);
-            throw new DatabaseException(es);
-        }
-
-        return DbConnectionProvider.openConnect(dc);
-    }
-
-    /**
-     * Close connect to DB. If DatabaseAdapter is not 'dynamic', connection will not be closed
-     *
-     * @param db_ - DatabaseAdapter.
-     */
-    public static void close(final DatabaseAdapter db_) {
-        if (db_ == null)
-            return;
-
-        try {
-            db_.rollback();
-        }
-        catch (Exception e) {
-            // catch rollback error
-        }
-
-        try {
-            if (db_.conn!=null) {
-                db_.conn.close();
-                db_.conn = null;
-            }
-        }
-        catch (Exception e) {
-            // catch close error
-        }
-    }
 }

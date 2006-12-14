@@ -72,7 +72,7 @@ public class GetMainDbDefinitionItem {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = db_.prepareStatement(sqlString);
+            ps = db_.getConnection().prepareStatement(sqlString);
             ps.setLong(1, id);
 
             rs = ps.executeQuery();

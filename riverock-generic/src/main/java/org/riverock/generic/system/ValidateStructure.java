@@ -34,12 +34,12 @@ import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.common.tools.XmlTools;
 import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.annotation.schema.db.DbView;
 import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.annotation.schema.db.DbImportedKeyList;
 import org.riverock.generic.annotation.schema.db.DbField;
+import org.riverock.generic.utils.Utils;
 
 /**
  * Author: mill
@@ -103,14 +103,15 @@ public class ValidateStructure {
     private static void validateStructure(DbSchema millSchema, String nameConnection) throws Exception {
         System.out.println("Connection - " + nameConnection);
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(nameConnection);
+        DatabaseAdapter db_=null;
+//        db_ = DatabaseAdapter.getInstance(nameConnection);
         DbSchema schema = DatabaseManager.getDbStructure(db_);
 
         String nameFile = "test-schema.xml";
         String outputSchemaFile = GenericConfig.getGenericDebugDir() + nameFile;
         System.out.println("Marshal data to file " + nameFile);
 
-        XmlTools.writeToFile(schema, outputSchemaFile);
+        Utils.writeToFile(schema, outputSchemaFile);
 
         for (DbTable table : millSchema.getTables()) {
             if (!DatabaseManager.isSkipTable(table.getName())) {
@@ -185,24 +186,21 @@ public class ValidateStructure {
         processAllView(db_, millSchema);
         processForeignKey(db_, millSchema);
 
-        db_.commit();
+        db_.getConnection().commit();
         DbSchema schemaResult = DatabaseManager.getDbStructure(db_);
         System.out.println("Marshal data to file");
-        XmlTools.writeToFile(schemaResult, GenericConfig.getGenericDebugDir() + "schema-result-" + nameConnection + ".xml");
-        DatabaseAdapter.close(db_);
+        Utils.writeToFile(schemaResult, GenericConfig.getGenericDebugDir() + "schema-result-" + nameConnection + ".xml");
+//        DatabaseAdapter.close(db_);
     }
 
     public static void main(String args[]) throws Exception {
         long mills = System.currentTimeMillis();
-        org.riverock.common.startup.StartupApplication.init();
+        org.riverock.generic.utils.StartupApplication.init();
 
         System.out.println("Unmarshal data from file");
         FileInputStream stream = new FileInputStream(GenericConfig.getGenericDebugDir() + "webmill-schema.xml");
-        InputSource inSrc = new InputSource(
-            stream
-        );
-        DbSchema millSchema =
-            XmlTools.getObjectFromXml(DbSchema.class, stream);
+        InputSource inSrc = new InputSource( stream );
+        DbSchema millSchema = Utils.getObjectFromXml(DbSchema.class, stream);
 
 //        validateStructure(millSchema, "ORACLE_MILL_TEST");
         validateStructure(millSchema, "HSQLDB");

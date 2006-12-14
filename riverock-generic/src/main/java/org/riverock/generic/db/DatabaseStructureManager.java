@@ -45,11 +45,10 @@ import javax.xml.datatype.DatatypeFactory;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
 import org.riverock.generic.annotation.schema.db.*;
+import org.riverock.generic.utils.Utils;
+import org.riverock.generic.utils.DbUtils;
 
 /**
  * @author SergeMaslyukov
@@ -180,7 +179,7 @@ public class DatabaseStructureManager {
 
             PreparedStatement ps = null;
             try {
-                ps = adapter.conn.prepareStatement(sql);
+                ps = adapter.getConnection().prepareStatement(sql);
                 ps.executeUpdate();
             }
             catch (SQLException exc) {
@@ -222,7 +221,7 @@ public class DatabaseStructureManager {
         String sql_ = "ALTER TABLE " + table.getName() + " DROP COLUMN " + field.getName();
         PreparedStatement ps = null;
         try {
-            ps = adapter.conn.prepareStatement(sql_);
+            ps = adapter.getConnection().prepareStatement(sql_);
             ps.executeUpdate();
         }
         finally {
@@ -241,7 +240,7 @@ public class DatabaseStructureManager {
         String sql_ = "drop VIEW " + view.getName();
         PreparedStatement ps = null;
         try {
-            ps = adapter.conn.prepareStatement(sql_);
+            ps = adapter.getConnection().prepareStatement(sql_);
             ps.executeUpdate();
         }
         finally {
@@ -317,7 +316,7 @@ public class DatabaseStructureManager {
                 ResultSet rs = null;
                 DbField field=null;
                 try {
-                    ps = adapter.conn.prepareStatement(sql_);
+                    ps = adapter.getConnection().prepareStatement(sql_);
 
                     int fieldPtr = 0;
                     int k=0;
@@ -527,10 +526,10 @@ public class DatabaseStructureManager {
                     if (log.isDebugEnabled())
                         log.debug("insert bigtext. sql 2 - " + sql_);
 
-                    byte b[] = StringTools.getBytesUTF(tempData);
+                    byte b[] = Utils.getBytesUTF(tempData);
 
-                    ps1 = adapter.conn.prepareStatement(sql_);
-                    while ((pos = StringTools.getStartUTF(b, maxByte, pos)) != -1) {
+                    ps1 = adapter.getConnection().prepareStatement(sql_);
+                    while ((pos = Utils.getStartUTF(b, maxByte, pos)) != -1) {
                         if (log.isDebugEnabled())
                             log.debug("Name sequence - " + big.getSequenceName());
 
@@ -737,10 +736,10 @@ public class DatabaseStructureManager {
 
                 field.setName(metaField.getString("COLUMN_NAME"));
                 field.setDataType(metaField.getString("TYPE_NAME"));
-                field.setJavaType(RsetTools.getInt(metaField, "DATA_TYPE", Integer.MIN_VALUE));
-                field.setSize(RsetTools.getInt(metaField, "COLUMN_SIZE"));
-                field.setDecimalDigit(RsetTools.getInt(metaField, "DECIMAL_DIGITS"));
-                field.setNullable(RsetTools.getInt(metaField, "NULLABLE"));
+                field.setJavaType(DbUtils.getInteger(metaField, "DATA_TYPE", Integer.MIN_VALUE));
+                field.setSize(DbUtils.getInteger(metaField, "COLUMN_SIZE"));
+                field.setDecimalDigit(DbUtils.getInteger(metaField, "DECIMAL_DIGITS"));
+                field.setNullable(DbUtils.getInteger(metaField, "NULLABLE"));
                 String defValue = metaField.getString("COLUMN_DEF");
 
                 field.setDefaultValue(defValue == null ? null : defValue.trim());
@@ -831,7 +830,7 @@ public class DatabaseStructureManager {
         }
         catch (Exception e) {
             System.out.println("schemaPattern: " + schemaPattern + ", tablePattern: " + tablePattern);
-            System.out.println(ExceptionTools.getStackTrace(e, 100));
+            e.printStackTrace(System.out);
         }
         finally {
             if (metaField != null) {
@@ -878,7 +877,7 @@ public class DatabaseStructureManager {
                     impPk.setFkTableName(columnNames.getString("FKTABLE_NAME"));
                     impPk.setFkColumnName(columnNames.getString("FKCOLUMN_NAME"));
 
-                    impPk.setKeySeq(RsetTools.getInt(columnNames, "KEY_SEQ"));
+                    impPk.setKeySeq(DbUtils.getInteger(columnNames, "KEY_SEQ"));
 
                     impPk.setPkName(columnNames.getString("PK_NAME"));
                     impPk.setFkName(columnNames.getString("FK_NAME"));
@@ -995,7 +994,7 @@ public class DatabaseStructureManager {
                 pkColumn.setSchemaName(metaData.getString("TABLE_SCHEM"));
                 pkColumn.setTableName(metaData.getString("TABLE_NAME"));
                 pkColumn.setColumnName(metaData.getString("COLUMN_NAME"));
-                pkColumn.setKeySeq(RsetTools.getInt(metaData, "KEY_SEQ"));
+                pkColumn.setKeySeq(DbUtils.getInteger(metaData, "KEY_SEQ"));
                 pkColumn.setPkName(metaData.getString("PK_NAME"));
 
                 if (log.isDebugEnabled()) {

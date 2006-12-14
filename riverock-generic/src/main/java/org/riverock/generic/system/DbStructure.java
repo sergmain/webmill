@@ -43,6 +43,7 @@ import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
+import org.riverock.generic.utils.StartupApplication;
 
 /**
  * Author: mill
@@ -55,16 +56,13 @@ public class DbStructure
 {
 //    private static Logger cat = Logger.getLogger("org.riverock.system.DbStructure");
 
-    public DbStructure()
-    {
+    public DbStructure() {
 
     }
 
-    public static void main(String args[])
-        throws Exception
-    {
+    public static void main(String args[]) throws Exception {
 
-        org.riverock.common.startup.StartupApplication.init();
+        StartupApplication.init();
 
 
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "SAPDB_DBA");
@@ -74,7 +72,8 @@ public class DbStructure
 //        schema.setViews( db_.getViewList( "SA", "%"));
 //        schema.setTables(db_.getTableList("SA", "%"));
 
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "ORACLE");
+        DatabaseAdapter dbOra=null;
+//        dbOra = DatabaseAdapter.getInstance( "ORACLE");
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "IBM-DB2");
 
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
@@ -143,7 +142,8 @@ public class DbStructure
         Source inSrc = new StreamSource(new FileInputStream( GenericConfig.getGenericDebugDir()+"schema-mill.xml" ));
         DbSchema millSchema = unmarshaller.unmarshal(inSrc, DbSchema.class).getValue();
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
+        DatabaseAdapter db_=null;
+//        db_ = DatabaseAdapter.getInstance( "ORACLE" );
 
         if (!(db_ instanceof org.riverock.generic.db.factory.ORAconnect))
         {
@@ -214,8 +214,8 @@ public class DbStructure
             }
             DatabaseManager.createWithReplaceAllView(db_, millSchema);
         }
-        DatabaseAdapter.close( db_ );
-        DatabaseAdapter.close( dbOra );
+//        DatabaseAdapter.close( db_ );
+//        DatabaseAdapter.close( dbOra );
     }
 
 }

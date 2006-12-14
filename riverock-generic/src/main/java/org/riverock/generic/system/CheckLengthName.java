@@ -31,7 +31,7 @@ import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.annotation.schema.db.DbView;
 import org.riverock.generic.config.GenericConfig;
-import org.riverock.common.tools.XmlTools;
+import org.riverock.generic.utils.Utils;
 
 /**
  * Author: mill
@@ -44,31 +44,28 @@ import org.riverock.common.tools.XmlTools;
  * ѕроверка имен таблиц и view на превышение 18 символов. ƒанное ограничение есть в IBM DB2,
  * в остальных базах длина имен таблиц и view может быть больше
  */
-public class CheckLengthName
-{
-//    private static Logger cat = Logger.getLogger("org.riverock.system.CheckLengthName");
+public class CheckLengthName {
 
-    public CheckLengthName(){}
+    public CheckLengthName() {
+    }
 
-    public static void main(String args[])
-        throws Exception
-    {
-        org.riverock.common.startup.StartupApplication.init();
+    public static void main(String args[]) throws Exception {
+        org.riverock.generic.utils.StartupApplication.init();
 
         System.out.println("Unmarshal data from file");
         FileInputStream stream = new FileInputStream(GenericConfig.getGenericDebugDir() + "webmill-schema.xml");
-        DbSchema millSchema = XmlTools.getObjectFromXml(DbSchema.class, stream);
+        DbSchema millSchema = Utils.getObjectFromXml(DbSchema.class, stream);
 
         for (DbTable table : millSchema.getTables()) {
-            if (table.getName().length()>18)
-                System.out.println("Name of table '"+table.getName()+
-                    "' is wrong. Exceed "+(table.getName().length()-18)+" of chars");
+            if (table.getName().length() > 18)
+                System.out.println("Name of table '" + table.getName() +
+                    "' is wrong. Exceed " + (table.getName().length() - 18) + " of chars");
         }
 
         for (DbView view : millSchema.getViews()) {
-            if (view.getName().length()>18)
-                System.out.println("Name of view '"+view.getName()+
-                    "' is wrong. Exceed "+(view.getName().length()-18)+" of chars");
+            if (view.getName().length() > 18)
+                System.out.println("Name of view '" + view.getName() +
+                    "' is wrong. Exceed " + (view.getName().length() - 18) + " of chars");
         }
     }
 }

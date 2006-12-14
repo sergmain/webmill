@@ -39,16 +39,13 @@ public class TestDefinitionProcessing
     public static void main(String[] s)
         throws Exception
     {
-        org.riverock.common.startup.StartupApplication.init();
+        org.riverock.generic.utils.StartupApplication.init();
 
         String nameConnection = "ORACLE";
 //        String nameConnection = "HSQLDB";
 //        String nameConnection = "MSSQL-JTDS";
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
+//        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
 
 //        DefinitionService.validateDatabaseStructure( db_ );
-        db_.commit();
-        DatabaseAdapter.close(db_);
-        db_ = null;
     }
 }

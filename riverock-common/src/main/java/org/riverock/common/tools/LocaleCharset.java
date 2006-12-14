@@ -36,13 +36,11 @@ import java.util.Map;
  * http://www.servlets.com/book</a> for more information.
  * Used by Sun Microsystems with permission.
  */
-public class LocaleCharset
-{
+public class LocaleCharset {
 
     private static Map<String, String> map = null;
 
-    static
-    {
+    static {
         map = new HashMap<String, String>();
 
         map.put("ar", "ISO-8859-6");
@@ -97,8 +95,7 @@ public class LocaleCharset
      * @return the preferred charset
      */
 
-    public static String getCharset(Locale loc)
-    {
+    public static String getCharset(Locale loc) {
         String charset;
 
         // Try for an full name match (may include country)

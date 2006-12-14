@@ -38,7 +38,7 @@
         <pathelement location="${lib.dir}/${riverock-module.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
+        <pathelement location="${local-lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
@@ -91,7 +91,6 @@
 
     <patternset id="war.lib">
         <include name="${riverock-sql-parser.lib}"/>
-        <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
         <include name="${riverock-forum.lib}"/>
         <include name="${riverock-module.lib}"/>
@@ -121,6 +120,9 @@
             </fileset>
             <lib dir="${lib.dir}">
                 <patternset refid="war.lib"/>
+            </lib>
+            <lib dir="${local-lib.dir}">
+                <patternset includes="${riverock-generic.lib}"/>
             </lib>
         </war>
     </target>

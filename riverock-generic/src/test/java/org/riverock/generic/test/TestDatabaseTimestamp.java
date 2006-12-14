@@ -26,7 +26,7 @@
 package org.riverock.generic.test;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.common.tools.DateTools;
+import org.riverock.generic.utils.Utils;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -62,33 +62,34 @@ public class TestDatabaseTimestamp
     {
         Timestamp t = new Timestamp( System.currentTimeMillis() );
 
-        org.riverock.common.startup.StartupApplication.init();
+        org.riverock.generic.utils.StartupApplication.init();
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE_PORT" );
+        DatabaseAdapter db_=null;
+//        db_ = DatabaseAdapter.getInstance( "ORACLE_PORT" );
 
         System.out.println("#1 insert");
-        String stringDate = DateTools.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH, TimeZone.getDefault());
+        String stringDate = Utils.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH, TimeZone.getDefault());
 //            DateUtils.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH);
 
         System.out.println( stringDate );
-        PreparedStatement ps = db_.prepareStatement(
+        PreparedStatement ps = db_.getConnection().prepareStatement(
             "insert into A_TIMESTAMP(d) values( (select to_date(?, 'dd.mm.yyyy hh24:mi:ss') from dual))"
         );
         ps.setString(1, stringDate);
 
         ps.executeUpdate();
-        db_.commit();
+        db_.getConnection().commit();
 
         t = new Timestamp(
-            DateTools.getDateWithMask("2003-04-09 15:28:12.0", "yyyy-MM-dd HH:mm:ss.SSS").getTime()
+            Utils.getDateWithMask("2003-04-09 15:28:12.0", "yyyy-MM-dd HH:mm:ss.SSS").getTime()
         );
         System.out.println("#2 insert");
-        ps = db_.prepareStatement(
+        ps = db_.getConnection().prepareStatement(
             "insert into A_TIMESTAMP values(?)"
         );
 //        ps.setTimestamp( 1, t);
         Time time = new Time( t.getTime() );
-        Date date = new Date( t.getDate() );
+        Date date = new Date( t.getTime() );
         long mills = t.getTime();
         mills = mills%(3600*24*1000);
         ps.setDate(1, date);
@@ -96,11 +97,7 @@ public class TestDatabaseTimestamp
         ps.setLong(2, 0);
 
         ps.executeUpdate();
-        db_.commit();
-
-
-        DatabaseAdapter.close( db_ );
-        db_ = null;
+        db_.getConnection().commit();
 
 
     }

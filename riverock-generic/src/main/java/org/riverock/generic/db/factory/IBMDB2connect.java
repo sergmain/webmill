@@ -33,16 +33,14 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.sql.Blob;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-import javax.sql.DataSource;
-
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.DbView;
@@ -54,6 +52,7 @@ import org.riverock.generic.annotation.schema.db.DbSequence;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.generic.annotation.schema.db.DbImportedPKColumn;
 import org.riverock.generic.annotation.schema.db.DbDataFieldData;
+import org.riverock.generic.utils.Utils;
 
 /**
  * IBM DB2 connection
@@ -78,27 +77,12 @@ public class IBMDB2connect extends DatabaseAdapter {
         return 0;
     }
 
-    public IBMDB2connect() {
-        super();
-    }
-
-    public boolean getIsClosed()
-        throws SQLException {
-        if (conn == null)
-            return true;
-        return conn.isClosed();
+    public IBMDB2connect(Connection conn) {
+        super(conn);
     }
 
     public int getMaxLengthStringField() {
         return 2000;
-    }
-
-    protected DataSource createDataSource() throws SQLException {
-        return null;
-    }
-
-    public String getDriverClass() {
-        return "com.ibm.db2.jcc.DB2Driver";
     }
 
     public boolean getIsBatchUpdate() {
@@ -149,7 +133,7 @@ public class IBMDB2connect extends DatabaseAdapter {
                 isFirst = !isFirst;
 
             sql += " \"" + field.getName() + "\"";
-            switch (field.getJavaType().intValue()) {
+            switch (field.getJavaType()) {
 
                 case Types.NUMERIC:
                 case Types.DECIMAL:
@@ -250,9 +234,9 @@ public class IBMDB2connect extends DatabaseAdapter {
 
         Statement ps = null;
         try {
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.executeUpdate(sql);
-            this.conn.commit();
+            this.getConnection().commit();
         }
         catch (SQLException e) {
             log.error("SqlCode " + e.getErrorCode());
@@ -293,7 +277,7 @@ public class IBMDB2connect extends DatabaseAdapter {
 
         Statement ps = null;
         try {
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.executeUpdate(sql);
         }
         catch (SQLException e) {
@@ -326,7 +310,7 @@ public class IBMDB2connect extends DatabaseAdapter {
 
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -369,7 +353,7 @@ public class IBMDB2connect extends DatabaseAdapter {
     }
 
     public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
-        return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
+        return DatabaseManager.getViewList(getConnection(), schemaPattern, tablePattern);
     }
 
     public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
@@ -391,12 +375,12 @@ public class IBMDB2connect extends DatabaseAdapter {
         String sql_ =
             "CREATE VIEW " + view.getName() +
             " AS " +
-            StringTools.replaceStringArray(view.getText(),
+            Utils.replaceStringArray(view.getText(),
                 new String[][]{{"||", "+"}, {"\n", " "}}).trim();
 
         Statement ps = null;
         try {
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.execute(sql_);
 //            ps.execute();
         }
@@ -452,7 +436,7 @@ public class IBMDB2connect extends DatabaseAdapter {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
 
             rs = ps.executeQuery();
 
@@ -481,7 +465,7 @@ public class IBMDB2connect extends DatabaseAdapter {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = conn.prepareStatement("select max(" + sequence.getColumnName() + ") max_id from " + sequence.getTableName());
+            ps = getConnection().prepareStatement("select max(" + sequence.getColumnName() + ") max_id from " + sequence.getTableName());
 
             rs = ps.executeQuery();
 

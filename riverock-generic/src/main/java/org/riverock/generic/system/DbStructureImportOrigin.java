@@ -27,8 +27,8 @@ package org.riverock.generic.system;
 
 import java.io.File;
 
-import org.riverock.common.config.PropertiesProvider;
-import org.riverock.common.startup.StartupApplication;
+import org.riverock.generic.utils.StartupApplication;
+import org.riverock.generic.config.PropertiesProvider;
 
 /**
  * Author: mill

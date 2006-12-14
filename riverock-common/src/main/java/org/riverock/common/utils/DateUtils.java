@@ -30,8 +30,6 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 
-//import org.riverock.common.tools.CurrentTimeZone;
-
 /**
  * @deprecated you must specify concrete timeZone
  * $Id$
@@ -46,18 +44,18 @@ public class DateUtils {
      * @param loc
      * @return String
      */
-    public static String getStringDate(java.util.Date date, String mask, Locale loc, TimeZone tz) {
+    public static String getStringDate(java.util.Date date, String mask, TimeZone tz, Locale loc) {
         return DateFormatUtils.format(date, mask, tz, loc);
     }
 
     /**
      * @deprecated  use org.apache.commons.lang.time.DateFormatUtils.format(System.currentTimeMillis(), mask, tz, loc);
      * @param mask
-     * @param loc
      * @param tz
+     * @param loc
      * @return
      */
-    public static String getCurrentDate(String mask, Locale loc, TimeZone tz) {
+    public static String getCurrentDate(String mask, TimeZone tz, Locale loc) {
         return DateFormatUtils.format(System.currentTimeMillis(), mask, tz, loc);
     }
 

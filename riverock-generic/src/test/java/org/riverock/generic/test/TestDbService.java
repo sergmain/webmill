@@ -43,10 +43,12 @@ public class TestDbService
     public static void main(String s[])
         throws Exception
     {
-        org.riverock.common.startup.StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "MSSQL-JTDS" );
+        org.riverock.generic.utils.StartupApplication.init();
+        DatabaseAdapter db_=null;
+//        db_ = DatabaseAdapter.getInstance( "MSSQL-JTDS" );
         DbSchema schema = DatabaseManager.getDbStructure(db_ );
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "ORACLE" );
+        DatabaseAdapter dbOra=null;
+//        dbOra = DatabaseAdapter.getInstance( "ORACLE" );
         DbSchema schemaOracle = DatabaseManager.getDbStructure(dbOra );
 
         DbTable sourceTableOracle =

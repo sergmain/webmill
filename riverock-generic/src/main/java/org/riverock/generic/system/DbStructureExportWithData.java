@@ -25,7 +25,7 @@
  */
 package org.riverock.generic.system;
 
-import org.riverock.common.startup.StartupApplication;
+import org.riverock.generic.utils.StartupApplication;
 
 /**
  * Export data from DB to XML file

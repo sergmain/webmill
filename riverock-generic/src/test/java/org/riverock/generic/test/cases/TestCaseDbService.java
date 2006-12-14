@@ -29,9 +29,9 @@ import junit.framework.TestCase;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.XmlTools;
 import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.annotation.schema.db.DbTable;
+import org.riverock.generic.utils.Utils;
 
 /**
  * User: Admin
@@ -50,8 +50,9 @@ public class TestCaseDbService extends TestCase
     public void testCloneTableDescription()
         throws Exception
     {
-        org.riverock.common.startup.StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
+        org.riverock.generic.utils.StartupApplication.init();
+        DatabaseAdapter db_=null;
+//        db_ = DatabaseAdapter.getInstance( "ORACLE" );
         DbSchema schema = DatabaseManager.getDbStructure(db_ );
 
         DbTable sourceTable = DatabaseManager.getTableFromStructure( schema, "WM_PRICE_SHOP_LIST");
@@ -61,8 +62,8 @@ public class TestCaseDbService extends TestCase
 //        XmlTools.writeToFile(sourceTable, GenericConfig.getGenericDebugDir()+"clone-src.xml");
 //        XmlTools.writeToFile(targetTable, GenericConfig.getGenericDebugDir()+"clone-trg.xml");
 
-        byte[] sourceByte = XmlTools.getXml( sourceTable, null );
-        byte[] targetByte = XmlTools.getXml( targetTable, null );
+        byte[] sourceByte = Utils.getXml( sourceTable, null );
+        byte[] targetByte = Utils.getXml( targetTable, null );
 
         assertFalse("clone DbTable is failed",
             !new String(sourceByte).equals(new String( targetByte))

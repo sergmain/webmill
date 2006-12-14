@@ -33,7 +33,7 @@ import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.XmlTools;
+import org.riverock.generic.utils.Utils;
 
 /**
  * User: Admin
@@ -49,14 +49,15 @@ public class TestMarshal extends TestCase {
 
     private DbSchema makeSchema(String nameConnection, String nameOutputFiel)
         throws Exception {
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(nameConnection);
+        DatabaseAdapter db_=null;
+//        db_ = DatabaseAdapter.getInstance(nameConnection);
         DbSchema schema = DatabaseManager.getDbStructure(db_);
 
         String encoding = "utf-8";
         String outputSchemaFile = GenericConfig.getGenericDebugDir() + nameOutputFiel;
         System.out.println("Marshal data to file " + outputSchemaFile);
 
-        XmlTools.writeToFile(schema, outputSchemaFile, encoding);
+        Utils.writeToFile(schema, outputSchemaFile, encoding);
 
         return schema;
     }
@@ -64,13 +65,13 @@ public class TestMarshal extends TestCase {
     private String fileName = "webmill-schema-test.xml";
 
     public void doTest() throws Exception {
-        org.riverock.common.startup.StartupApplication.init();
+        org.riverock.generic.utils.StartupApplication.init();
 
         makeSchema("ORACLE", fileName);
 
         System.out.println("Unmarshal data from file");
         FileInputStream stream = new FileInputStream(GenericConfig.getGenericDebugDir() + fileName);
-        XmlTools.getObjectFromXml(DbSchema.class, stream);
+        Utils.getObjectFromXml(DbSchema.class, stream);
     }
 
     public static void main(String args[])

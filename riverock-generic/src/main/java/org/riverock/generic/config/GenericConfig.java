@@ -34,8 +34,6 @@ import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.config.ConfigException;
-import org.riverock.common.config.ConfigObject;
 import org.riverock.generic.annotation.schema.config.DatabaseConnectionType;
 import org.riverock.generic.annotation.schema.config.DateTimeSavingType;
 import org.riverock.generic.annotation.schema.config.GenericConfigType;

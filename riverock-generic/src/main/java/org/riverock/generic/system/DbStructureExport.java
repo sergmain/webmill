@@ -30,16 +30,16 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.annotation.schema.db.DbView;
 import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.config.PropertiesProvider;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.common.startup.StartupApplication;
-import org.riverock.common.tools.XmlTools;
+import org.riverock.generic.utils.Utils;
+import org.riverock.generic.utils.StartupApplication;
 
 /**
  * Author: mill
@@ -69,7 +69,7 @@ public class DbStructureExport {
 
 
         DatabaseAdapter dbOra = null;
-        dbOra = DatabaseAdapter.getInstance("MYSQL");
+//        dbOra = DatabaseAdapter.getInstance("MYSQL");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "HSQLDB");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE_TEST");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
@@ -93,7 +93,7 @@ public class DbStructureExport {
 //        DatabaseManager.runSQL( dbOra, "delete from WM_PRICE_USER_DISCOUNT where id_user in (select id_user from WM_LIST_USER where is_deleted=1)", null, null);
 
 
-        dbOra.commit();
+        dbOra.getConnection().commit();
 
         DbSchema schema = DatabaseManager.getDbStructure( dbOra );
 
@@ -138,7 +138,7 @@ public class DbStructureExport {
             "\\sandbox\\riverock\\trunk\\riverock-webmill-db\\xml\\webmill-schema.xml";
 
         FileInputStream stream = new FileInputStream(fileNameBigText);
-        DbSchema schemaBigTable = XmlTools.getObjectFromXml(DbSchema.class, stream);
+        DbSchema schemaBigTable = Utils.getObjectFromXml(DbSchema.class, stream);
 
         schema.getBigTextTable().addAll( schemaBigTable.getBigTextTable() );
 
@@ -155,6 +155,6 @@ public class DbStructureExport {
         schema.getViews().addAll( views );
 
         System.out.println("Marshal data to file "+fileName);
-        XmlTools.writeToFile(schema, fileName);
+        Utils.writeToFile(schema, fileName);
     }
 }

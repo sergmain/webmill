@@ -37,7 +37,7 @@ import org.riverock.generic.annotation.schema.db.DbSchema;
 import org.riverock.generic.annotation.schema.db.DbTable;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.common.startup.StartupApplication;
+import org.riverock.generic.utils.StartupApplication;
 
 /**
  * Author: mill
@@ -74,7 +74,6 @@ public class DbStructureCreateTable {
         throws Exception {
         DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance(dbAlias);
             System.out.println("db connect - " + db_.getClass().getName());
 
             JAXBContext jaxbContext = JAXBContext.newInstance ( DbSchema.class.getPackage().getName() );
@@ -114,9 +113,8 @@ public class DbStructureCreateTable {
         }
         finally {
             if (db_ != null) {
-                db_.commit();
+                db_.getConnection().commit();
             }
-            DatabaseAdapter.close(db_);
         }
     }
 }

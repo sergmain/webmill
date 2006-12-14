@@ -35,18 +35,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import oracle.jdbc.OracleResultSet;
-import oracle.jdbc.pool.OracleConnectionCacheImpl;
-import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 import oracle.sql.CLOB;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.DbView;
@@ -58,6 +54,7 @@ import org.riverock.generic.annotation.schema.db.DbDataFieldData;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
 import org.riverock.generic.annotation.schema.db.DbPrimaryKey;
 import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
+import org.riverock.generic.utils.DbUtils;
 
 /**
  * Класс ORAconnect прденазначен для коннекта к оракловской базе данных.
@@ -67,13 +64,6 @@ import org.riverock.generic.annotation.schema.db.DbPrimaryKeyColumn;
 @SuppressWarnings({"UnusedAssignment"})
 public class ORAconnect extends DatabaseAdapter {
     private final static Logger log = Logger.getLogger(ORAconnect.class);
-
-    public boolean getIsClosed()
-        throws SQLException {
-        if (conn == null)
-            return true;
-        return conn.isClosed();
-    }
 
     public int getMaxLengthStringField() {
         return 4000;
@@ -167,7 +157,7 @@ public class ORAconnect extends DatabaseAdapter {
                     case Types.CHAR:
                     case Types.VARCHAR:
                         if (!val.equalsIgnoreCase("null")) {
-                            val = "'"+val+"'";
+                            val = "'" + val + "'";
                         }
                         break;
                     case Types.DATE:
@@ -225,7 +215,7 @@ public class ORAconnect extends DatabaseAdapter {
 
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -272,7 +262,7 @@ DEFERRABLE INITIALLY DEFERRED
 
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -295,7 +285,7 @@ DEFERRABLE INITIALLY DEFERRED
         String sql = "drop sequence  " + nameSequence;
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -367,7 +357,7 @@ DEFERRABLE INITIALLY DEFERRED
                 case Types.CHAR:
                 case Types.VARCHAR:
                     if (!val.equalsIgnoreCase("null")) {
-                        val = "'"+val+"'";
+                        val = "'" + val + "'";
                     }
                     break;
                 case Types.DATE:
@@ -392,9 +382,9 @@ DEFERRABLE INITIALLY DEFERRED
 
         Statement ps = null;
         try {
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.executeUpdate(sql);
-            this.conn.commit();
+            this.getConnection().commit();
         }
         catch (SQLException e) {
             throw e;
@@ -437,35 +427,35 @@ DEFERRABLE INITIALLY DEFERRED
     }
 
     public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
-        return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
+        return DatabaseManager.getViewList(getConnection(), schemaPattern, tablePattern);
     }
 
     public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
         String sql_ =
             "select SEQUENCE_NAME, MIN_VALUE, TO_CHAR(MAX_VALUE) MAX_VALUE, " +
-            "INCREMENT_BY, CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER " +
-            "from SYS.ALL_SEQUENCES " +
-            "where SEQUENCE_OWNER=?";
+                "INCREMENT_BY, CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER " +
+                "from SYS.ALL_SEQUENCES " +
+                "where SEQUENCE_OWNER=?";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<DbSequence> v = new ArrayList<DbSequence>();
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
 
             ps.setString(1, schemaPattern);
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 DbSequence seq = new DbSequence();
-                seq.setName(RsetTools.getString(rs, "SEQUENCE_NAME"));
-                seq.setMinValue(RsetTools.getInt(rs, "MIN_VALUE"));
-                seq.setMaxValue(RsetTools.getString(rs, "MAX_VALUE"));
-                seq.setIncrementBy(RsetTools.getInt(rs, "INCREMENT_BY"));
-                seq.setIsCycle(RsetTools.getString(rs, "CYCLE_FLAG").equals("Y") ? Boolean.TRUE : Boolean.FALSE);
-                seq.setIsOrder(RsetTools.getString(rs, "ORDER_FLAG").equals("Y") ? Boolean.TRUE : Boolean.FALSE);
-                seq.setCacheSize(RsetTools.getInt(rs, "CACHE_SIZE"));
-                seq.setLastNumber(RsetTools.getLong(rs, "LAST_NUMBER"));
+                seq.setName(DbUtils.getString(rs, "SEQUENCE_NAME"));
+                seq.setMinValue(DbUtils.getInteger(rs, "MIN_VALUE"));
+                seq.setMaxValue(DbUtils.getString(rs, "MAX_VALUE"));
+                seq.setIncrementBy(DbUtils.getInteger(rs, "INCREMENT_BY"));
+                seq.setIsCycle(DbUtils.getString(rs, "CYCLE_FLAG").equals("Y") ? Boolean.TRUE : Boolean.FALSE);
+                seq.setIsOrder(DbUtils.getString(rs, "ORDER_FLAG").equals("Y") ? Boolean.TRUE : Boolean.FALSE);
+                seq.setCacheSize(DbUtils.getInteger(rs, "CACHE_SIZE"));
+                seq.setLastNumber(DbUtils.getLong(rs, "LAST_NUMBER"));
                 v.add(seq);
             }
         }
@@ -485,7 +475,7 @@ DEFERRABLE INITIALLY DEFERRED
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
 
             ps.setString(1, view.getSchema());
             ps.setString(2, view.getName());
@@ -499,7 +489,7 @@ DEFERRABLE INITIALLY DEFERRED
 //                return getClobField(rs, "TEXT", 0x10000);
                 return getStream(rs, "TEXT", 0x10000);
 //                InputStream stream=resultset.getAsciiStream(1);
-//                return RsetTools.getString(rs, "TEXT", null);
+//                return DbUtils.getString(rs, "TEXT", null);
             }
         }
         finally {
@@ -515,13 +505,13 @@ DEFERRABLE INITIALLY DEFERRED
         if (view == null ||
             view.getName() == null || view.getName().length() == 0 ||
             view.getText() == null || view.getText().length() == 0
-        )
+            )
             return;
 
         String sql_ = "create VIEW " + view.getName() + " as " + view.getText();
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
             ps.executeUpdate();
         }
         finally {
@@ -552,18 +542,18 @@ DEFERRABLE INITIALLY DEFERRED
 */
         String sql_ =
             "CREATE SEQUENCE " + seq.getName() + " " +
-            "START WITH " + seq.getLastNumber() + " " +
-            "INCREMENT BY " + seq.getIncrementBy() + " " +
-            "MINVALUE " + seq.getMinValue() + " " +
-            "MAXVALUE " + seq.getMaxValue() + " " +
-            (seq.getCacheSize() == 0 ? "NOCACHE" : "CACHE " + seq.getCacheSize()) + " " +
-            (Boolean.TRUE.equals(seq.isIsCycle()) ? "CYCLE" : "NOCYCLE") + " " +
-            (Boolean.TRUE.equals(seq.isIsOrder()) ? "ORDER" : "") + " ";
+                "START WITH " + seq.getLastNumber() + " " +
+                "INCREMENT BY " + seq.getIncrementBy() + " " +
+                "MINVALUE " + seq.getMinValue() + " " +
+                "MAXVALUE " + seq.getMaxValue() + " " +
+                (seq.getCacheSize() == 0 ? "NOCACHE" : "CACHE " + seq.getCacheSize()) + " " +
+                (Boolean.TRUE.equals(seq.isIsCycle()) ? "CYCLE" : "NOCYCLE") + " " +
+                (Boolean.TRUE.equals(seq.isIsOrder()) ? "ORDER" : "") + " ";
 
         PreparedStatement ps = null;
 
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
             ps.executeUpdate();
         }
         catch (Exception e) {
@@ -628,7 +618,7 @@ DEFERRABLE INITIALLY DEFERRED
         // Fetch data
         if ((length = instream.read(buffer)) != -1) {
             flag = true;
-            String dbCharset = dc.getDatabaseCharset();
+            String dbCharset = getDc().getDatabaseCharset();
             if (dbCharset == null) {
                 log.warn("DatabaseCharset element not defined. We will use 'utf8' charset instead");
                 dbCharset = "utf8";
@@ -675,7 +665,7 @@ DEFERRABLE INITIALLY DEFERRED
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
 
             rs = ps.executeQuery();
 
@@ -708,7 +698,7 @@ DEFERRABLE INITIALLY DEFERRED
 
         if ((e instanceof SQLException) &&
             ((e.toString().indexOf("ORA-00001") != -1) &&
-            (e.toString().indexOf(index) != -1)))
+                (e.toString().indexOf(index) != -1)))
 
             return true;
 
@@ -759,35 +749,6 @@ DEFERRABLE INITIALLY DEFERRED
 
     }
 
-    protected DataSource createDataSource() throws SQLException {
-        DataSource ds = null;
-        OracleConnectionPoolDataSource pool = new OracleConnectionPoolDataSource();
-        pool.setURL(dc.getConnectString());
-        pool.setUser(dc.getUsername());
-        pool.setPassword(dc.getPassword());
-        // Initialize the Connection Cache
-        ds = new OracleConnectionCacheImpl(pool);
-
-        // Set Max Limit for the Cache
-        ((OracleConnectionCacheImpl) ds).setMaxLimit(5);
-
-        // Set Min Limit for the Cache
-        ((OracleConnectionCacheImpl) ds).setMinLimit(1);
-
-        // Set Caching Scheme as DYNAMIC_SCHEME
-        // Caching Schema means that once the connection active size becomes 5,
-        // the next request for Connection will be served by creating a new pooled
-        // connection instance and close the connection automatically when it is
-        // no longer in use.
-        ((OracleConnectionCacheImpl) ds).setCacheScheme(OracleConnectionCacheImpl.DYNAMIC_SCHEME);
-
-        return ds;
-    }
-
-    public String getDriverClass() {
-        return "oracle.jdbc.OracleDriver";
-    }
-
     public int getFamily() {
         return DatabaseManager.ORACLE_FAMALY;
     }
@@ -800,8 +761,8 @@ DEFERRABLE INITIALLY DEFERRED
         return 1;
     }
 
-    public ORAconnect() {
-        super();
+    public ORAconnect(Connection conn) {
+        super(conn);
     }
 
 }

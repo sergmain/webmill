@@ -29,49 +29,38 @@ import java.io.File;
 import java.io.FileFilter;
 
 /**
- *
- *  $Id$
- *
+ * $Id$
  */
-public class ExtensionFileFilter implements FileFilter
-{
+public class ExtensionFileFilter implements FileFilter {
 
     private String ext[] = null;
 
-    public ExtensionFileFilter(String ext_)
-    {
-        if (ext_!=null)
-        {
+    public ExtensionFileFilter(String ext_) {
+        if (ext_ != null) {
             ext = new String[1];
             ext[0] = ext_;
         }
     }
 
-    public ExtensionFileFilter(String ext_[])
-    {
-        if (ext_!=null)
-        {
-            ext = new String[ ext_.length ];
-            for (int i =0; i<ext_.length; i++)
-            {
+    public ExtensionFileFilter(String ext_[]) {
+        if (ext_ != null) {
+            ext = new String[ext_.length];
+            for (int i = 0; i < ext_.length; i++) {
                 ext[i] = ext_[i];
             }
         }
     }
 
-    public boolean accept(File file_)
-    {
-        if (file_==null)
+    public boolean accept(File file_) {
+        if (file_ == null)
             return false;
 
         if (file_.isDirectory())
             return false;
 
-        if (ext!= null)
-        {
-            for (int i=0; i< ext.length; i++)
-            {
-                if (file_.getName().toLowerCase().endsWith( ext[i] ))
+        if (ext != null) {
+            for (int i = 0; i < ext.length; i++) {
+                if (file_.getName().toLowerCase().endsWith(ext[i]))
                     return true;
             }
         }

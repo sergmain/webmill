@@ -36,8 +36,8 @@ import org.riverock.generic.annotation.schema.db.DbView;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.common.startup.StartupApplication;
-import org.riverock.common.tools.XmlTools;
+import org.riverock.generic.utils.Utils;
+import org.riverock.generic.utils.StartupApplication;
 
 /**
  * Author: mill
@@ -55,22 +55,20 @@ public class DbStructureImport {
     public static void importStructure(String fileName, boolean isData, String dbAlias) throws Exception {
         DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance(dbAlias);
+//            db_ = DatabaseAdapter.getInstance(dbAlias);
             importStructure(fileName, isData, db_);
         }
         finally {
             if (db_ != null) {
-                db_.commit();
+                db_.getConnection().commit();
             }
-            DatabaseAdapter.close(db_);
-            db_ = null;
         }
     }
 
     public static void importStructure(String fileName, boolean isData, DatabaseAdapter db_) throws Exception {
         log.debug("Unmarshal data from file " + fileName);
         FileInputStream stream = new FileInputStream(fileName);
-        DbSchema millSchema = XmlTools.getObjectFromXml(DbSchema.class, stream);
+        DbSchema millSchema = Utils.getObjectFromXml(DbSchema.class, stream);
 
         for (DbTable table : millSchema.getTables()) {
             if (table.getName().toLowerCase().startsWith("tb_"))

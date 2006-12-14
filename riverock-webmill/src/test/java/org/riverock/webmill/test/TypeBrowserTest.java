@@ -1,7 +1,6 @@
 /*
- * org.riverock.generic - Database connectivity classes, part of Webmill portal
- * For more information about Webmill portal, please visit project site
- * http://webmill.askmore.info
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
  *
  * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
@@ -9,39 +8,41 @@
  * http://www.riverock.org
  *
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * version 2 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
+ * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.generic.test;
+package org.riverock.webmill.test;
 
-import org.riverock.common.startup.StartupApplication;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.exception.DatabaseException;
-import org.riverock.common.html.TypeBrowser;
-
-import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+
+import org.hsqldb.util.DatabaseManager;
+
+import org.riverock.common.startup.StartupApplication;
+import org.riverock.common.html.TypeBrowser;
 
 /**
- * User: SergeMaslyukov
- * Date: 08.09.2006
- * Time: 23:29:47
- * <p/>
- * $Id$
+ * @author Sergei Maslyukov
+ *         Date: 14.12.2006
+ *         Time: 15:43:11
+ *         <p/>
+ *         $Id$
  */
 public class TypeBrowserTest {
 
@@ -59,12 +60,14 @@ public class TypeBrowserTest {
     public static void main(String[] args) throws Exception {
         StartupApplication.init();
 
-        DatabaseAdapter db=null;
-        db=DatabaseAdapter.getInstance();
-
-        Long count = DatabaseManager.getLongValue(db, "select count(*) from test.a_useragent", null, null);
-
-        PreparedStatement ps = db.prepareStatement("select * from test.a_useragent");
+//        DatabaseAdapter db=null;
+//        db=DatabaseAdapter.getInstance();
+//
+        Long count=null;
+//        count = DatabaseManager.getLongValue(db, "select count(*) from test.a_useragent", null, null);
+//
+        PreparedStatement ps=null;
+//        ps = db.prepareStatement("select * from test.a_useragent");
         ResultSet rs = ps.executeQuery();
 
         int unknown=0;
@@ -84,12 +87,12 @@ public class TypeBrowserTest {
         System.out.println("real count unknown = " + set.size());
 
         ArrayList<String> list = new ArrayList<String>(set);
-        
+
         Collections.sort(list, new StringComparator());
         for (String s : list) {
             System.out.println("s = " + s);
         }
-        DatabaseManager.close(db, rs, ps);
+//        DatabaseManager.close(db, rs, ps);
 
     }
 }

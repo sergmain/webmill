@@ -34,11 +34,11 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.MainTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.annotation.schema.db.*;
+import org.riverock.generic.utils.Utils;
 
 /**
  * User: Admin
@@ -248,7 +248,7 @@ public final class DefinitionService {
                 PreparedStatement ps = null;
                 ResultSet rs = null;
                 try {
-                    ps = db_.prepareStatement(sql_);
+                    ps = db_.getConnection().prepareStatement(sql_);
 
                     ps.setLong(1, item.getIdDbDefinition());
                     ps.setString(2, item.getNameDefinition());
@@ -627,7 +627,7 @@ public final class DefinitionService {
                                     if (className == null)
                                         throw new Exception("Definition - " + defItem.getNameDef() + ", action '" + CUSTOM_CLASS_ACTION_TYPE + "' must have parameter 'class_name'");
 
-                                    Object obj = MainTools.createCustomObject(className);
+                                    Object obj = Utils.createCustomObject(className);
                                     if (obj == null)
                                         throw new Exception("Definition - " + defItem.getNameDef() + ", action '" + CUSTOM_CLASS_ACTION_TYPE + "', obj is null");
 
@@ -643,7 +643,7 @@ public final class DefinitionService {
                                     }
                                     Statement st = null;
                                     try {
-                                        st = db_.createStatement();
+                                        st = db_.getConnection().createStatement();
                                         st.execute(sql);
                                     }
                                     catch (Exception e) {
@@ -680,7 +680,7 @@ public final class DefinitionService {
                                     String nameTable = getString(action.getActionParameters(), "name_table");
                                     if (nameTable != null) {
                                         db_.dropTable(nameTable);
-                                        db_.commit();
+                                        db_.getConnection().commit();
                                     } else
                                         log.error("Definition - " + defItem.getNameDef() + ", action '" + DROP_TABLE_TYPE + "' must have parameter 'name_table'");
 
@@ -792,7 +792,7 @@ public final class DefinitionService {
                     if (mainDef == null)
                         mainDef = new MainDbDefinitionList();
 
-                    GetMainDbDefinitionItem tempItem = GetMainDbDefinitionItem.getInstance(db_, RsetTools.getLong(rs, "ID_DB_DEFINITION"));
+                    GetMainDbDefinitionItem tempItem = GetMainDbDefinitionItem.getInstance(db_, DbUtils.getLong(rs, "ID_DB_DEFINITION"));
                     mainDef.addMainDbDefinition(tempItem.item);
                 }
             }

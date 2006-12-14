@@ -33,6 +33,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.sql.Blob;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
@@ -78,33 +79,12 @@ public class HSQLDBconnect extends DatabaseAdapter {
         return 7;
     }
 
-    public HSQLDBconnect() {
-        super();
-    }
-
-//    public boolean isNeedUpdateBracket = false;
-
-    public boolean getIsClosed()
-        throws SQLException {
-        if (conn == null)
-            return true;
-        return conn.isClosed();
+    public HSQLDBconnect(Connection conn) {
+        super(conn);
     }
 
     public int getMaxLengthStringField() {
         return 1000000;
-    }
-
-    protected DataSource createDataSource() throws SQLException {
-        return null;
-    }
-
-    public String getDriverClass() {
-        return "org.hsqldb.jdbcDriver";
-    }
-
-    protected void finalize() throws Throwable {
-        super.finalize();
     }
 
     public boolean getIsBatchUpdate() {
@@ -260,7 +240,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
 
         Statement ps = null;
         try {
-            ps = this.conn.createStatement();
+            ps = this.getConnection().createStatement();
             ps.execute(sql);
         }
         catch (SQLException e) {
@@ -297,7 +277,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
 //        }
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -326,7 +306,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
 
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -418,7 +398,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
 
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql);
+            ps = this.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -450,7 +430,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
     }
 
     public List<DbView> getViewList(String schemaPattern, String tablePattern) throws Exception {
-        return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
+        return DatabaseManager.getViewList(getConnection(), schemaPattern, tablePattern);
     }
 
     public List<DbSequence> getSequnceList(String schemaPattern) throws Exception {
@@ -472,7 +452,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
         String sql_ = "create VIEW " + view.getName() + " as " + view.getText();
         PreparedStatement ps = null;
         try {
-            ps = this.conn.prepareStatement(sql_);
+            ps = this.getConnection().prepareStatement(sql_);
             ps.executeUpdate();
         }
         finally {
@@ -526,7 +506,7 @@ public class HSQLDBconnect extends DatabaseAdapter {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = conn.prepareStatement("select max(" + sequence.getColumnName() + ") max_id from " + sequence.getTableName());
+            ps = getConnection().prepareStatement("select max(" + sequence.getColumnName() + ") max_id from " + sequence.getTableName());
 
             rs = ps.executeQuery();
 

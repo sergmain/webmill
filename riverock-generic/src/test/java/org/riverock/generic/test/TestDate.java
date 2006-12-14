@@ -25,13 +25,13 @@
  */
 package org.riverock.generic.test;
 
-import org.riverock.common.tools.DateTools;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+
+import org.riverock.generic.utils.Utils;
 
 /**
  * User: Admin
@@ -45,20 +45,16 @@ public class TestDate
     public static void main(String args[])
         throws Exception
     {
-        org.riverock.common.startup.StartupApplication.init();
+        org.riverock.generic.utils.StartupApplication.init();
 
         String mask = "dd.MMM.yyyy HH:mm:ss";
 
         Calendar cal = GregorianCalendar.getInstance();
-        String currDate =
-            DateTools.getStringDate(
-                new GregorianCalendar(), mask, Locale.ENGLISH
-            );
-//            DateUtils.getCurrentDate( mask );
+        String currDate = Utils.getStringDate( new GregorianCalendar(), mask, Locale.ENGLISH );
 
         System.out.println("current date/time "+currDate);
 
-        currDate = DateTools.getStringDate( cal, mask );
+        currDate = Utils.getStringDate( cal, mask );
         System.out.println(currDate);
 
         Date date = cal.getTime();
@@ -66,7 +62,7 @@ public class TestDate
         Calendar cal1 = new GregorianCalendar();
         cal1.setTime( date );
 
-        System.out.println( DateTools.getStringDate( cal1, mask, new Locale("en", "US") ) );
+        System.out.println( Utils.getStringDate( cal1, mask, new Locale("en", "US") ) );
 
 //        Locale loc = new Locale("en_US");
         Locale loc = new Locale("en", "US","Test");

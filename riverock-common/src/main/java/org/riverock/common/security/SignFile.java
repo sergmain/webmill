@@ -25,18 +25,15 @@
  */
 package org.riverock.common.security;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.Provider;
 import java.security.Security;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 import java.util.TimeZone;
+import java.util.zip.GZIPOutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -46,10 +43,10 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.MainTools;
 import org.riverock.common.annotation.schema.transfer.TransferFileConfigType;
 import org.riverock.common.annotation.schema.transfer.TransferFileContentType;
 import org.riverock.common.annotation.schema.transfer.TransferFileListType;
+import org.riverock.common.tools.MainTools;
 import org.riverock.common.utils.DateUtils;
 
 public class SignFile {

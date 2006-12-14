@@ -25,9 +25,6 @@
  */
 package org.riverock.generic.test.sandbox;
 
-import org.riverock.common.tools.DateTools;
-import org.riverock.common.utils.DateUtils;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,6 +32,10 @@ import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import java.util.Date;
+
+import org.apache.commons.lang.time.DateFormatUtils;
+
+import org.riverock.generic.utils.Utils;
 
 /**
  * Author: mill
@@ -59,7 +60,7 @@ public class TimestampTest
         Date date = new Date();
         System.out.println("date = " + date);
 
-         System.out.println("date = " + DateTools.getStringDate(new Date(), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getTimeZone(  "Europe/Moscow" )) );
+         System.out.println("date = " + Utils.getStringDate(new Date(), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getTimeZone(  "Europe/Moscow" )) );
 
         SimpleDateFormat df = new SimpleDateFormat("dd.MMMMM.yyyy HH:mm:ss", Locale.ENGLISH);
         SimpleTimeZone pdt = new SimpleTimeZone(8 * 60 * 60 * 1000, "Europe/Moscow");
@@ -74,16 +75,15 @@ public class TimestampTest
         String s = df.format( t );
         System.out.println( s );
 
-        s = DateTools.getStringDate(new Date(), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getTimeZone(  "Europe/Moscow" ));
+        s = Utils.getStringDate(new Date(), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getTimeZone(  "Europe/Moscow" ));
 
-        org.riverock.common.startup.StartupApplication.init();
+        org.riverock.generic.utils.StartupApplication.init();
 
-        s = DateTools.getStringDate(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getDefault());
-//            DateUtils.getStringDate(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH);
+        s = Utils.getStringDate(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getDefault());
 
         System.out.println( s );
 
-        t = DateTools.getCurrentTime();
+        t = Utils.getCurrentTime();
         System.out.println( "#1.1 "+t );
 
         SimpleDateFormat df1 = new SimpleDateFormat("dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH);
@@ -101,13 +101,12 @@ public class TimestampTest
         System.out.println( s );
 */
 
-        s = DateTools.getStringDate(
+        s = Utils.getStringDate(
             new Timestamp(System.currentTimeMillis()), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getDefault());
-//            DateUtils.getStringDate(new Timestamp(System.currentTimeMillis()), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH);
 
         System.out.println( s );
 
-        System.out.println( "current time "+ DateUtils.getCurrentDate("dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getDefault()) );
+        System.out.println( "current time "+ DateFormatUtils.format(System.currentTimeMillis(), "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH) );
 
         printZoneInfo();
     }
