@@ -42,8 +42,8 @@ import org.riverock.commerce.bean.Shop;
  */
 public final class ShopPortlet extends GenericWebmillPortlet {
     public final static String CTX_TYPE_SHOP = "mill.shop";
-    public final static String CURRENT_SHOP_ID = "MILL.CURRENT_SHOP_ID";
-    public final static String ORDER_SESSION = "MILL.ORDER_SESSION";
+    public final static String CURRENT_SHOP_ID = "WEBMILL.COMMERCE.CURRENT_SHOP_ID";
+    public final static String USER_ORDER_ID = "WEBMILL.COMMERCE.ORDER_SESSION";
     public final static String ID_SHOP_SESSION = "MILL.ID_SHOP_SESSION";
     public final static String NAME_INVOICE_NEW_COUNT_PARAM = "mill.invoice.count";
     public final static String NAME_SHOP_SORT_BY = "mill.shop.sort";

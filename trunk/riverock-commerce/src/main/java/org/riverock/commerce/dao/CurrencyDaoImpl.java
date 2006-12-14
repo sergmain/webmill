@@ -24,22 +24,14 @@
 package org.riverock.commerce.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Types;
-import java.sql.Timestamp;
-import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.hibernate.Session;
 
 import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.bean.CurrencyCurs;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.annotation.schema.db.CustomSequence;
-import org.riverock.common.tools.RsetTools;
+import org.riverock.commerce.tools.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -49,7 +41,6 @@ import org.riverock.common.tools.RsetTools;
  *         $Id$
  */
 public class CurrencyDaoImpl implements CurrencyDao {
-    private final static Logger log = Logger.getLogger( CurrencyDaoImpl.class );
 
     /**
      * list of curs for currency not initialized
@@ -57,187 +48,53 @@ public class CurrencyDaoImpl implements CurrencyDao {
      * @return List<Currency>
      */
     public List<Currency> getCurrencyList(Long siteId) {
-        List<Currency> list = new ArrayList<Currency>();
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-
-            ps = db_.prepareStatement(
-                "select ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE " +
-                "from   WM_CASH_CURRENCY " +
-                "where  ID_SITE=? "
-            );
-            ps.setLong(1, siteId);
-
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Currency bean = initCurrencyBean(rs);
-                list.add(bean);
-            }
-            return list;
-        }
-        catch (Throwable e) {
-            final String es = "Error create list of currencies";
-            log.error(es, e);
-            throw new RuntimeException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db_, rs, ps);
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<Currency> list = session.createQuery(
+            "select currency from org.riverock.commerce.bean.Currency currency " +
+                "where currency.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+        session.getTransaction().commit();
+        return list;
     }
 
     public Long createCurrency(Currency currency) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            CustomSequence seq = new CustomSequence();
-            seq.setSequenceName( "seq_WM_CASH_CURRENCY" );
-            seq.setTableName( "WM_CASH_CURRENCY" );
-            seq.setColumnName( "ID_CURRENCY" );
-            Long id = adapter.getSequenceNextValue( seq );
-
-            String sql_ =
-                "insert into WM_CASH_CURRENCY"+
-                "(ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE) "+
-                "values "+
-                "( ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setLong(1, id );
-            ps.setString(2, currency.getCurrencyCode() );
-            ps.setInt(3, currency.isUsed()?1:0 );
-            ps.setString(4, currency.getCurrencyName() );
-            ps.setInt(5, currency.isUseStandard()?1:0 );
-            ps.setLong(6, currency.getStandardCurrencyId() );
-            ps.setLong(7, currency.getSiteId() );
-            ps.setBigDecimal(8, currency.getPercent() );
-
-            ps.executeUpdate();
-
-            adapter.commit();
-            return id;
-        } catch (Throwable e) {
-            try {
-                if (adapter!=null)
-                    adapter.rollback();
-            }
-            catch(Throwable th) {
-                // catch rollback error
-            }
-            String es = "Error create currency";
-            log.error(es, e);
-            throw new IllegalStateException( es, e);
-        } finally {
-            DatabaseManager.close(adapter, rs, ps);
-        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        session.save(currency);
+        session.getTransaction().commit();
+        return currency.getCurrencyId();
     }
 
     public void updateCurrency(Currency currency) {
         if (currency ==null) {
             return;
         }
-        
-        String sql_ =
-            "update WM_CASH_CURRENCY "+
-            "set "+
-            "    NAME_CURRENCY=?, " +
-            "    CURRENCY=?, " +
-            "    IS_USED=?, " +
-            "    IS_USE_STANDART=?, " +
-            "    ID_STANDART_CURS=?, " +
-            "    ID_SITE=?, " +
-            "    PERCENT_VALUE=? "+
-            "where ID_CURRENCY=?";
-
-        PreparedStatement ps = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setString(1, currency.getCurrencyName() );
-            ps.setString(2, currency.getCurrencyCode() );
-            ps.setInt(3, currency.isUsed()?1:0 );
-            ps.setInt(4, currency.isUseStandard()?1:0 );
-            ps.setLong(5, currency.getStandardCurrencyId() );
-            ps.setLong(6, currency.getSiteId() );
-            ps.setBigDecimal(7, currency.getPercent() );
-
-            // prepare PK
-            ps.setLong(8, currency.getCurrencyId() );
-
-            int i = ps.executeUpdate();
-            if (log.isDebugEnabled()) {
-                log.debug("count of updated records; " + i+", PK: " + currency.getCurrencyId());
-            }
-
-            adapter.commit();
-        }
-        catch (Exception e) {
-            try {
-                if( adapter != null )
-                    adapter.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error update currency";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-       }
-       finally {
-            DatabaseManager.close(adapter, ps);
-       }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        session.update(currency);
+        session.getTransaction().commit();
     }
 
     public void deleteCurrency(Long currencyId) {
         if (currencyId==null) {
             return;
         }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        session.createQuery
+            ("delete org.riverock.commerce.bean.CurrencyCurs curs where curs.currencyId=:currencyId ")
+            .setLong("currencyId", currencyId)
+            .executeUpdate();
 
-        DatabaseAdapter dbDyn = null;
-        try {
-            dbDyn = DatabaseAdapter.getInstance();
+        session.createQuery
+            ("delete org.riverock.commerce.bean.Currency currency " +
+                "where currency.currencyId=:currencyId ")
+            .setLong("currencyId", currencyId)
+            .executeUpdate();
 
-            DatabaseManager.runSQL(
-                dbDyn,
-                "delete from WM_CASH_CURR_VALUE where ID_CURRENCY=?",
-                new Object[]{currencyId}, new int[]{Types.DECIMAL}
-            );
-
-            DatabaseManager.runSQL(
-                dbDyn,
-                "delete from WM_CASH_CURRENCY where ID_CURRENCY=?",
-                new Object[]{currencyId}, new int[]{Types.DECIMAL}
-            );
-
-            dbDyn.commit();
-        }
-        catch( Exception e ) {
-            try {
-                if( dbDyn != null )
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error delete currency";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn);
-        }
+        session.getTransaction().commit();
     }
 
     public Currency getCurrency(Long currencyId) {
@@ -245,147 +102,41 @@ public class CurrencyDaoImpl implements CurrencyDao {
             return null;
         }
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
 
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
+        Currency bean = (Currency)session.createQuery(
+            "select currency from org.riverock.commerce.bean.Currency currency " +
+                "where currency.currencyId=:currencyId ")
+            .setLong("currencyId", currencyId)
+            .uniqueResult();
 
-            ps = db_.prepareStatement(
-                "select ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE " +
-                "from   WM_CASH_CURRENCY " +
-                "where  ID_CURRENCY=? "
-            );
-            RsetTools.setLong(ps, 1, currencyId );
-
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                Currency currency = initCurrencyBean(rs);
-                currency.setCurses( getCurrencyCurses(db_, currencyId) );
-                return currency;
-            }
-            return null;
-        }
-        catch (Throwable e) {
-            final String es = "Error get currency";
-            log.error(es, e);
-            throw new RuntimeException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db_, rs, ps);
-        }
-    }
-
-    public void addCurrencyCurs(Long currencyId, BigDecimal currentCurs) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            CustomSequence seq = new CustomSequence();
-            seq.setSequenceName( "seq_WM_CASH_CURR_VALUE" );
-            seq.setTableName( "WM_CASH_CURR_VALUE" );
-            seq.setColumnName( "ID_CURVAL" );
-            Long id = adapter.getSequenceNextValue( seq );
-
-            String sql_ =
-                "insert into WM_CASH_CURR_VALUE"+
-                "(ID_CURVAL, DATE_CHANGE, CURS, ID_CURRENCY)"+
-                "values"+
-                "( ?, ?, ?, ?)";
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setLong(1, id );
-            ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()) );
-            ps.setBigDecimal(3, currentCurs );
-            ps.setLong(4, currencyId );
-
-            ps.executeUpdate();
-
-            adapter.commit();
-        } catch (Throwable e) {
-            try {
-                if (adapter!=null)
-                    adapter.rollback();
-            }
-            catch(Throwable th) {
-                // catch rollback error
-            }
-            String es = "Error add currency curs";
-            log.error(es, e);
-            throw new IllegalStateException( es, e);
-        } finally {
-            DatabaseManager.close(adapter, rs, ps);
-        }
-    }
-
-    private List<CurrencyCurs> getCurrencyCurses(DatabaseAdapter db_, Long currencyId) {
-        List<CurrencyCurs> list = new ArrayList<CurrencyCurs>();
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-
-            ps = db_.prepareStatement(
-                "select ID_CURRENCY, DATE_CHANGE, CURS, ID_CURVAL " +
-                "from   WM_CASH_CURR_VALUE " +
-                "where  ID_CURRENCY=? " +
-                "order by DATE_CHANGE DESC "
-            );
-
-            ps.setLong(1, currencyId);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                CurrencyCurs curs = initCurrencyCurs(rs);
-                list.add(curs);
-            }
-            return list;
-        }
-        catch (Throwable e) {
-            final String es = "Error create list of currencies";
-            log.error(es, e);
-            throw new RuntimeException( es, e );
-        }
-        finally {
-            DatabaseManager.close( rs, ps);
-        }
-    }
-
-    private CurrencyCurs initCurrencyCurs(ResultSet rs) throws SQLException {
-        CurrencyCurs curs = new CurrencyCurs();
-
-        // ID_CURRENCY, DATE_CHANGE, CURS, ID_CURVAL
-        curs.setCurs( rs.getBigDecimal("CURS") );
-        if (rs.wasNull()) {
-            return null;
-        }
-        curs.setDate( RsetTools.getTimestamp(rs, "DATE_CHANGE") );
-        
-        curs.setCurrencyCursId(rs.getLong("ID_CURVAL") );
-        curs.setCurrencyId(rs.getLong("ID_CURRENCY") );
-
-        return curs;
-    }
-
-    private Currency initCurrencyBean(ResultSet rs) throws SQLException {
-        Currency bean = new Currency();
-
-        // ID_CURRENCY, CURRENCY, IS_USED, NAME_CURRENCY, IS_USE_STANDART, ID_STANDART_CURS, ID_SITE, PERCENT_VALUE
-        bean.setCurrencyId( RsetTools.getLong(rs, "ID_CURRENCY"));
-        bean.setCurrencyName( RsetTools.getString(rs, "NAME_CURRENCY") );
-        bean.setCurrencyCode( RsetTools.getString(rs, "CURRENCY") );
-        bean.setUsed( RsetTools.getInt(rs, "IS_USED", 0)==1);
-        bean.setUseStandard( RsetTools.getInt(rs, "IS_USE_STANDART", 0)==1);
-        bean.setStandardCurrencyId( RsetTools.getLong(rs, "ID_STANDART_CURS"));
-        bean.setSiteId( RsetTools.getLong(rs, "ID_SITE"));
-        bean.setPercent( RsetTools.getBigDecimal(rs, "PERCENT_VALUE", new BigDecimal(0.0)) );
-
+        session.getTransaction().commit();
         return bean;
+    }
+
+    public Long addCurrencyCurs(Long currencyId, BigDecimal curs) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        CurrencyCurs bean = new CurrencyCurs();
+        bean.setCurrencyId(currencyId);
+        bean.setCurs(curs);
+        bean.setDate(new Date());
+        session.save(bean);
+        session.getTransaction().commit();
+        return bean.getCurrencyCursId();
+    }
+
+    public List<CurrencyCurs> getCurrencyCurses(Long currencyId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<CurrencyCurs> list = session.createQuery(
+            "select currenyCurs from org.riverock.commerce.bean.CurrencyCurs currenyCurs " +
+                "where currenyCurs.currencyId=:currencyId " +
+                "order by currenyCurs.date desc")
+            .setLong("currencyId", currencyId)
+            .list();
+        session.getTransaction().commit();
+        return list;
     }
 }

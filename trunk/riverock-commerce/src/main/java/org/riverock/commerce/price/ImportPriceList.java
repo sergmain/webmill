@@ -23,23 +23,19 @@
  */
 package org.riverock.commerce.price;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
+import org.riverock.commerce.bean.ImportShopItem;
 import org.riverock.commerce.schema.import_price.PriceListItemType;
 import org.riverock.commerce.schema.import_price.PriceListType;
 import org.riverock.commerce.schema.import_price.PricesType;
 import org.riverock.commerce.tools.HibernateUtils;
-import org.riverock.commerce.bean.ImportShopItem;
-import org.riverock.common.tools.RsetTools;
 import org.riverock.common.collections.TreeUtils;
-import org.riverock.generic.db.DatabaseManager;
 
 /**
  * $Id$

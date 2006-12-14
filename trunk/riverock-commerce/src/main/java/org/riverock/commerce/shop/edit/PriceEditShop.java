@@ -160,7 +160,7 @@ public class PriceEditShop extends HttpServlet
                         }
                         finally
                         {
-//                            DatabaseManager.close(st);
+//                            st.close();
 //                            st = null;
                         }
                     }

@@ -1,17 +1,14 @@
 package org.riverock.commerce.bean;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.ArrayList;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Transient;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * User: SergeMaslyukov
@@ -46,17 +43,6 @@ public class StandardCurrency implements Serializable {
 
     @Column(name = "IS_DELETED")
     private boolean isDeleted;
-
-    @Transient
-    private List<StandardCurrencyCurs> curses = new ArrayList<StandardCurrencyCurs>();
-
-    public List<StandardCurrencyCurs> getCurses() {
-        return curses;
-    }
-
-    public void setCurses(List<StandardCurrencyCurs> curses) {
-        this.curses = curses;
-    }
 
     public boolean isDeleted() {
         return isDeleted;

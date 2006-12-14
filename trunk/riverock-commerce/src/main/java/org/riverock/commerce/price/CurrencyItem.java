@@ -179,14 +179,6 @@ public class CurrencyItem {
         currency.setUsed(used);
     }
 
-    public List<CurrencyCurs> getCurses() {
-        return currency.getCurses();
-    }
-
-    public void setCurses(List<CurrencyCurs> curses) {
-        currency.setCurses(curses);
-    }
-
     public Long getCurrencyId() {
         return currency.getCurrencyId();
     }

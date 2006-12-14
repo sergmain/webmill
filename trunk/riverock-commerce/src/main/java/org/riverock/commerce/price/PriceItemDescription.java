@@ -31,7 +31,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
-import org.riverock.sql.cache.SqlStatement;
 
 /**
  * User: Admin
@@ -97,14 +96,6 @@ public class PriceItemDescription {
             "select a.ID_ITEM, a.TEXT " +
             "from   WM_PRICE_ITEM_DESCRIPTION a, WM_PRICE_LIST b, WM_PRICE_SHOP_LIST c " +
             "where  a.ID_ITEM=b.ID_ITEM and b.ID_SHOP=c.ID_SHOP and c.ID_SITE=?";
-
-        try {
-            SqlStatement.registerSql( sql_, PriceItemDescription.class );
-        }
-        catch( Throwable e ) {
-            log.error( "Exception in registerSql, sql\n" + sql_, e );
-            //Todo throw RuntimeException
-        }
     }
 
     public PriceItemDescription() {
