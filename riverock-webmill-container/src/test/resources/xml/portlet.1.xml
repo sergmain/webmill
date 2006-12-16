@@ -24,7 +24,6 @@
   -->
 <portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns:portlet="http://java.sun.com/xml/ns/portlet"
 xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd /opt/SUNWps/dtd/portlet.xsd" version="1.0">
 <portlet>
     <portlet-name>AJAXInvoiceViewerPortlet</portlet-name>

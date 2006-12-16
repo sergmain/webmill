@@ -29,22 +29,19 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 
+import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
-import org.apache.commons.lang.CharEncoding;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
@@ -67,22 +64,21 @@ import org.riverock.webmill.utils.PortletUtils;
 public class PortalInstanceImpl implements PortalInstance  {
     private final static Logger log = Logger.getLogger(PortalInstanceImpl.class);
 
-    public static final String PORTAL_INFO = "WebMill/@WEBMILL_RELEASE@";
-
-    static final String copyright =
+    private static final PortalVersion portalVersion = new PortalVersion( getPortalVersion() );
+    private static final String PORTAL_INFO = "WebMill/"+getPortalVersion();
+    private static String PORTAL_VERSION = null;
+    private static final String COPYRIGHT =
         "<!--\n" +
-        "  Portal: "+ PORTAL_INFO +"\n" +
-        "   Build: @WEBMILL_BUILD@\n" +
+        "  Portal: "+PORTAL_INFO +"\n"+
         "Homepage: http://webmill.riverock.org\n" +
         "-->\n";
 
     private static final int NUM_LINES = 300;
 
-    private static final String PORTAL_VERSION_INFO = "@WEBMILL_RELEASE@";
-    private static final PortalVersion portalVersion = new PortalVersion( PORTAL_VERSION_INFO );
     private ServletConfig portalServletConfig = null;
     private PortletContainer portletContainer = null;
     private Collection<String> supportedList = null;
+    private static final String UNKNOWN_PORTAL_VERSON = "0.0.1";
 
     public void destroy() {
         portalServletConfig = null;
@@ -105,7 +101,43 @@ public class PortalInstanceImpl implements PortalInstance  {
     }
 
     public String getPortalName() {
-        return PORTAL_INFO;
+        return PORTAL_INFO + getPortalVersion();
+    }
+
+    private static String getPortalVersion() {
+        if (PORTAL_VERSION!=null) {
+            return PORTAL_VERSION;
+        }
+        synchronized(PortalInstanceImpl.class) {
+            if (PORTAL_VERSION!=null) {
+                return PORTAL_VERSION;
+            }
+            Properties pr = new Properties();
+            try {
+                pr.load(PortalInstanceImpl.class.getResourceAsStream("/org/riverock/webmill/portal/webmill.properties"));
+                String version = pr.getProperty("portal.version");
+                if (StringUtils.isBlank(version)) {
+                    String es = "Value for property 'portal.version' not found";
+                    log.error(es);
+//                    throw new IllegalStateException(es);
+                    PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
+                }
+                else {
+                    if (version.equals("${pom.version}")) {
+                        PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
+                    }
+                    else {
+                        PORTAL_VERSION = version;
+                    }
+                }
+            } catch (IOException e) {
+                String es = "Error load webmill.properties files.";
+                log.error(es, e);
+                PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
+//                throw new IllegalStateException(es, e);
+            }
+        }
+        return PORTAL_VERSION;
     }
 
     public static PortalInstanceImpl getInstance( ServletConfig servletConfig ) {
@@ -524,7 +556,7 @@ public class PortalInstanceImpl implements PortalInstance  {
     }
 
     public static String getCopyright() {
-        return copyright;
+        return COPYRIGHT;
     }
 
     public Collection<String> getSupportedLocales(){

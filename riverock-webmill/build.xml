@@ -75,20 +75,6 @@
         <pathelement location="${lib.dir}/${hibernate-annotation.lib}"/>
     </path>
 
-<!--
-    <fileset dir="${lib.dir}/" id="web-inf-lib" >
-        <include name="${riverock-sso.lib}"/>
-        <include name="${riverock-sql-parser.lib}"/>
-        <include name="${riverock-interfaces.lib}"/>
-        <include name="${riverock-generic.lib}"/>
-        <include name="${riverock-common.lib}"/>
-
-        <include name="${log4j.lib}"/>
-        <include name="${castor.lib}"/>
-        <include name="${portlet.lib}"/>
-    </fileset>
--->
-
     <target name="full_build_module">
         <antcall target="full_clean"/>
         <antcall target="war"/>
@@ -199,23 +185,7 @@
             <fileset dir="${build-release-dir}">
             </fileset>
         </war>
-
-
     </target>
-
-<!--
-    <target name="make-release-files" depends="build-release-properties">
-        <tar tarfile="${build-release-full-name}.tar" basedir="${build.dir}" longfile="gnu" includes="">
-            <exclude name="**/*.java"/>
-            <exclude name="${main.lib}"/>
-            <exclude name="classes/**"/>
-            <exclude name="java/**"/>
-        </tar>
-        <gzip zipfile="${build-release-full-name}.tar.gz" src="${build-release-full-name}.tar"/>
-        <delete file="${build-release-full-name}.tar"/>
-    </target>
-
--->
 
     <target name="replace_properties">
         <property name="path-to-ctx" value="org/riverock/webmill"/>
@@ -312,8 +282,6 @@
 
     <patternset id="war.lib">
         <include name="${riverock-sso.lib}"/>
-        <!--<include name="${riverock-sql-parser.lib}"/>-->
-        <!--<include name="${riverock-generic.lib}"/>-->
         <include name="${riverock-common.lib}"/>
         <include name="${riverock-webmill.lib}"/>
 

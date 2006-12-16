@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT allows (maximized?, minimized?, detached?, moving?, resizing?, closed?)>
+<!ELEMENT cache (expires, shared)>
+<!ELEMENT closed EMPTY>
+<!ELEMENT config-param (param-name, param-value)>
+<!ELEMENT configure EMPTY>
+<!ATTLIST configure
+	output (fragment | document) #IMPLIED
+>
+<!ELEMENT context-param (param-name, param-value)>
+<!ELEMENT default-locale (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT detached EMPTY>
+<!ELEMENT edit EMPTY>
+<!ATTLIST edit
+	output (fragment | document) #IMPLIED
+>
+<!ELEMENT expires (#PCDATA)>
+<!ELEMENT help EMPTY>
+<!ATTLIST help
+	output (fragment | document) #IMPLIED
+>
+<!ELEMENT keywords (#PCDATA)>
+<!ELEMENT language (title, title-short?, description?, keywords?)>
+<!ATTLIST language
+	locale CDATA #REQUIRED
+>
+<!ELEMENT markup (view, configure?, edit?, help?)>
+<!ATTLIST markup
+	name CDATA #REQUIRED
+>
+<!ELEMENT maximized EMPTY>
+<!ELEMENT minimized EMPTY>
+<!ELEMENT moving EMPTY>
+<!ELEMENT param-name (#PCDATA)>
+<!ELEMENT param-value (#PCDATA)>
+<!ELEMENT portlet (portlet-name, cache?, allows?, supports)>
+<!ATTLIST portlet
+	id   CDATA  #REQUIRED
+    href CDATA  #REQUIRED
+    major-version CDATA #IMPLIED
+    minor-version CDATA #IMPLIED
+>
+
+<!ELEMENT portlet-app (portlet-app-name, portlet+)>
+<!ATTLIST portlet-app
+    uid CDATA  #REQUIRED
+    major-version CDATA #IMPLIED
+    minor-version CDATA #IMPLIED
+>
+<!ELEMENT portlet-app-name (#PCDATA)>
+<!ELEMENT portlet-name (#PCDATA)>
+<!ELEMENT resizing EMPTY>
+<!ELEMENT shared (#PCDATA)>
+<!ELEMENT supports (markup+)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT title-short (#PCDATA)>
+<!ELEMENT view EMPTY>
+<!ATTLIST view
+	output (fragment | document) #IMPLIED
+>
+
+<!ELEMENT concrete-portlet-app (portlet-app-name, context-param*, concrete-portlet+)>
+<!ATTLIST concrete-portlet-app
+    uid CDATA  #REQUIRED
+>
+<!ELEMENT concrete-portlet (portlet-name, default-locale, language+, config-param*)>
+<!ATTLIST concrete-portlet
+	id   CDATA  #IMPLIED
+	href CDATA  #REQUIRED
+>
+<!ELEMENT portlet-app-def (portlet-app, concrete-portlet-app+)>
