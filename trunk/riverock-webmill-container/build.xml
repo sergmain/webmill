@@ -38,7 +38,6 @@
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
 
         <pathelement location="${lib.dir}/${jsp-api.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
@@ -63,13 +62,6 @@
         <antcall target="jar"/>
         <copy file="${build.dir}\${main.lib}" todir="${tomcat-home}/shared/lib"/>
         <antcall target="start.apache"/>
-    </target>
-
-    <target name="delete_existing_files">
-        <property name="path-to-ctx" value="org/riverock/webmill/portlet"/>
-        <delete file="${build.dest}/${path-to-ctx}/ContextNavigator.class"/>
-        <delete file="${build.dest}/${path-to-ctx}/impl/PortletContextImpl.class"/>
-        <delete file="${build.dest}/${path-to-ctx}/impl/PortletContextImpl$PortalVersion.class"/>
     </target>
 
     <target name="compile" depends="prepare">

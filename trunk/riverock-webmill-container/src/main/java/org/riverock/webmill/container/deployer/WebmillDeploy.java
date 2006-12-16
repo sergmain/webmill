@@ -40,7 +40,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import org.riverock.common.xml.EntityResolverImpl;
+import org.riverock.webmill.container.xml.EntityResolverImpl;
 
 /**
  * Makes a web application Deploy-ready for Webmill.

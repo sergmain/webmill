@@ -32,8 +32,6 @@ import java.util.Collections;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.hsqldb.util.DatabaseManager;
-
 import org.riverock.common.startup.StartupApplication;
 import org.riverock.common.html.TypeBrowser;
 
