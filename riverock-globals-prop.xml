@@ -36,9 +36,6 @@
     <property name="tomcat-home" value="c:/opt/Tomcat5.5"/>
 
     <property name="castor.lib" value="castor-0.9.9.1-xml.jar"/>
-    <property name="castor-core.lib" value="castor-0.9.9.1-xml.jar"/>
-    <property name="castor-schema.lib" value="castor-0.9.9.1-xml.jar"/>
-
 
     <property name="xerces.lib" value="xerces-2.8.0.jar"/>
     <property name="xml-api.lib" value="xml-apis-2.8.0.jar"/>
@@ -88,7 +85,7 @@
     <property name="activation.lib" value="activation-1.1.jar"/>
 
     <property name="hypersonic.lib" value="hsqldb-1.8.0.4.jar"/>
-    <property name="mysql-jdbc.lib" value="mysql-connector-java-3.0.14-production-bin.jar"/>
+    <property name="mysql-jdbc.lib" value="mysql-connector-java-5.0.3-bin.jar"/>
 
     <!--# apache's common library-->
     <property name="commons-httpclient.lib" value="commons-httpclient-3.0.jar"/>
@@ -105,46 +102,19 @@
     <property name="riverock-webmill.lib" value="riverock-webmill-${webmill-portal-release-version}.jar"/>
     <property name="riverock-webmill-admin.lib" value="riverock-webmill-admin-${webmill-portal-release-version}.jar"/>
 
-    <property name="riverock-generic.lib" value="riverock-generic-4.0.4.jar"/>
     <property name="riverock-interfaces.lib" value="riverock-interfaces-1.0.3.jar"/>
     <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
     <property name="riverock-sso.lib" value="riverock-sso-4.0.4.jar"/>
-    <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
     <property name="riverock-portlet.lib" value="riverock-portlet-4.0.0.jar"/>
     <property name="riverock-module.lib" value="riverock-module-1.0.0.jar"/>
     <property name="riverock-forum.lib" value="riverock-forum-1.0.0.jar"/>
     <property name="riverock-webmill-container.lib" value="riverock-webmill-container-1.0.0.jar"/>
     <property name="riverock-commerce.lib" value="riverock-commerce-1.0.0.jar"/>
 
+    <property name="riverock-generic.lib" value="riverock-generic-4.0.4.jar"/>
+    <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
 
-    <path id="classpath-core">
-        <pathelement location="${lib.dir}/${xerces.lib}"/>
-        <pathelement location="${lib.dir}/${xml-api.lib}"/>
-
-        <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${commons-logging.lib}"/>
-        <pathelement location="${lib.dir}/${castor-core.lib}"/>
-        <pathelement location="${lib.dir}/1.4/ojdbc14.jar"/>
-        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-schema-support.lib}" />
-        
-        <pathelement location="${lib.dir}/${activation.lib}" />
-        <pathelement location="${lib.dir}/${jaxb-api.lib}" />
-        <pathelement location="${lib.dir}/${jaxb-impl.lib}" />
-        <pathelement location="${lib.dir}/${jsr173_1.0_api.lib}" />
-    </path>
-
-
-    <path id="classpath-schema">
-        <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${commons-logging.lib}"/>
-        <pathelement location="${lib.dir}/${castor-schema.lib}"/>
-        <pathelement location="${lib.dir}/${xerces.lib}"/>
-        <pathelement location="${lib.dir}/${xml-api.lib}"/>
-    </path>
-
+    <property name="dbrevision.lib" value="dbrevision-0.9.9-SNAPSHOT.jar"/>
 
     <property name="src.dir" value="src"/>
     <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>

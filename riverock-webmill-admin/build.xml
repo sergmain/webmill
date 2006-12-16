@@ -45,9 +45,9 @@
     <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
 
     <path id="classpath-base">
+        <pathelement location="${lib.dir}/${dbrevision.lib}"/>
+
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
 
@@ -122,8 +122,8 @@
     </patternset>
 
     <patternset id="war.lib">
-        <include name="${riverock-sql-parser.lib}"/>
-        <include name="${riverock-generic.lib}"/>
+        <include name="${dbrevision.lib}"/>
+
         <include name="${riverock-common.lib}"/>
         <include name="${riverock-webmill.lib}"/>
         <include name="${riverock-webmill-admin.lib}"/>
@@ -137,7 +137,6 @@
         <include name="${commons-digester.lib}"/>
 
         <include name="${log4j.lib}"/>
-        <include name="${castor.lib}"/>
 
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>

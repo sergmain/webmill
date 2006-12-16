@@ -35,11 +35,11 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 import org.riverock.common.config.PropertiesProvider;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DbConnectionProvider;
-import org.riverock.generic.system.DbStructureImport;
 import org.riverock.webmill.admin.StructureSessionBean;
 import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.dbrevision.db.DatabaseAdapter;
+import org.riverock.dbrevision.db.DbConnectionProvider;
+import org.riverock.dbrevision.system.DbStructureImport;
 
 /**
  * @author Sergei Maslyukov

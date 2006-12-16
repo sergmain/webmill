@@ -35,11 +35,6 @@
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${mail.lib}"/>
-<!--        <pathelement location="${lib.dir}/${log4j.lib}"/>-->
-<!--        <pathelement location="${lib.dir}/${common-logging.lib}"/>-->
-<!--        <pathelement location="${lib.dir}/${castor.lib}"/>-->
-<!--        <pathelement location="${lib.dir}/${xerces.lib}"/>-->
-<!--        <pathelement location="${lib.dir}/${xml-api.lib}"/>-->
     </path>
 
     <target name="full_build_module">
