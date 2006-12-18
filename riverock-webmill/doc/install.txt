@@ -19,6 +19,7 @@ $Id$
 
 "семейство" ДБ
     <Environment name="dbFamily" type="java.lang.String" value="mysql"/>
+    <Environment name="hibernate_family" value="org.hibernate.dialect.MySQLDialect" type="java.lang.String"/>
 
 
 3. В файл %TOMCAT_HOME%/conf/tomcat-users.xml добавить роль 'webmill-init' и присвоить эту роль пользователю, которым вы планируете пройти авторизацию. Например так: 

@@ -20,6 +20,7 @@ Config of DataSource
 
 "family" of DB:
     <Environment name="dbFamily" type="java.lang.String" value="mysql"/>
+    <Environment name="hibernate_family" value="org.hibernate.dialect.MySQLDialect" type="java.lang.String"/>
 
 
 3. Add in file %TOMCAT_HOME%/conf/tomcat-users.xml a role 'webmill-init' and bind this role to user. For example: 

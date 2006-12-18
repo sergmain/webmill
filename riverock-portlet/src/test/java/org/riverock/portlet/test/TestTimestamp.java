@@ -40,6 +40,7 @@ import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.time.DateFormatUtils;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.utils.DateUtils;
@@ -79,7 +80,7 @@ public class TestTimestamp
 
         org.riverock.common.startup.StartupApplication.init();
 
-        s = DateUtils.getStringDate(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getDefault());
+        s = DateFormatUtils.format(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH );
         System.out.println( s );
 
         t = DateTools.getCurrentTime();
@@ -100,10 +101,10 @@ public class TestTimestamp
         System.out.println( s );
 */
 
-        s = DateUtils.getStringDate(new Timestamp(System.currentTimeMillis()), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getDefault());
+        s = DateFormatUtils.format(new Timestamp(System.currentTimeMillis()), "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH);
         System.out.println( s );
 
-        System.out.println( "current time "+DateUtils.getCurrentDate("dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getDefault()) );
+        System.out.println( "current time "+DateFormatUtils.format(System.currentTimeMillis(), "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH) );
 
         printZoneInfo();
     }

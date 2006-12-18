@@ -39,6 +39,7 @@ import java.text.ParseException;
 
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.time.DateFormatUtils;
 
 import org.riverock.common.utils.DateUtils;
 import org.riverock.common.tools.DateTools;
@@ -71,7 +72,7 @@ public class TestDatabaseTimestamp
         Timestamp t = new Timestamp( System.currentTimeMillis() );
 
         System.out.println("#1 insert");
-        String stringDate = DateUtils.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH, TimeZone.getDefault());
+        String stringDate = DateFormatUtils.format(t, "dd.MM.yyyy HH:mm:ss", TimeZone.getDefault(), Locale.ENGLISH );
         System.out.println( stringDate );
         PreparedStatement ps = conn.prepareStatement(
             "insert into A_TIMESTAMP(d) values( (select to_date(?, 'dd.mm.yyyy hh24:mi:ss') from dual))"
