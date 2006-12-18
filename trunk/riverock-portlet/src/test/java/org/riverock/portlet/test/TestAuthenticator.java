@@ -21,6 +21,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
+package org.riverock.portlet.test;
+
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+
+import org.apache.log4j.Logger;
 
 /**
  * Author: mill
@@ -29,26 +35,13 @@
  *
  * $Id$
  */
+public class TestAuthenticator extends Authenticator {
 
-package org.riverock.portlet.test;
-
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-
-import org.apache.log4j.Logger;
-
-
-public class TestAuthenticator extends Authenticator
-{
-    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestAuthenticator" );
-
-    public TestAuthenticator()
-    {
+    public TestAuthenticator() {
     }
 
-    public PasswordAuthentication getPasswordAuthentication()
-    {
-        char[] pass = { 'v', 'b', 'k', 'k', 'g', 'f', 'h', 'j', 'k', 'm' };
+    public PasswordAuthentication getPasswordAuthentication() {
+        char[] pass = {'1', '2', '3'};
         return new PasswordAuthentication("mill", pass);
     }
 

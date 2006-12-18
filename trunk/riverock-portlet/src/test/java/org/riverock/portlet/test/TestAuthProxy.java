@@ -42,14 +42,16 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-public class TestAuthProxy extends TestCase
+public class TestAuthProxy /*extends TestCase*/
 {
     public TestAuthProxy(){}
 
+/*
     public TestAuthProxy(String testName)
     {
         super(testName);
     }
+*/
 
     public static void main(String[] s)
         throws Exception

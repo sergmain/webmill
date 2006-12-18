@@ -44,7 +44,7 @@ import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
-public class TestCaseNews extends TestCase implements TestCaseInterface
+public class TestCaseNews /*extends TestCase */
 {
     private static Logger log = Logger.getLogger(TestCaseNews.class);
 
@@ -67,10 +67,12 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
     private TestCaseSiteAbstract testAbstract = null;
 
+/*
     public TestCaseNews(String testName)
     {
         super(testName);
     }
+*/
 
     public void tearDown()
         throws Exception
@@ -90,6 +92,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 */
     }
 
+/*
     public void doTest()
         throws Exception
     {
@@ -132,6 +135,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
         testAbstract = new TestCaseSiteAbstract();
         testAbstract.testWithMSSQLConnection( this );
     }
+*/
 
     public void insertTestData()
         throws Exception
@@ -568,9 +572,11 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
         for (NewsGroupType groupResult : resultBlock.getNewsGroup()) {
             for (NewsGroupType groupOrigin : newsBlock.getNewsGroup()) {
+/*
                 if (groupOrigin.getNewsGroupId()==groupResult.getNewsGroupId())
                     assertFalse("Wrong number of item in group",
                         groupOrigin.getMaxNews().intValue()<groupResult.getNewsItem().size());
+*/
             }
         }
 

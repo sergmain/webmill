@@ -9,9 +9,8 @@
     <url>http://webmill.riverock.org</url>
     <repositories>
         <repository>
-            <id>java.net</id>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
-            <layout>legacy</layout>
+            <id>Riverock repo</id>
+            <url>http://riverock.sourceforge.net/repo</url>
         </repository>
     </repositories>
 

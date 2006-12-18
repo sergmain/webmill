@@ -15,6 +15,10 @@
         </repository>
     </repositories>
 
+    <scm>
+    	<url>http://riverock.svn.sourceforge.net/viewvc/riverock</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
