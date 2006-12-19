@@ -1,34 +1,11 @@
-<!--
-  ~ org.riverock.module - Abstract layer for web module
-  ~
-  ~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
-  ~
-  ~ Riverock - The Open-source Java Development Community
-  ~ http://www.riverock.org
-  ~
-  ~
-  ~ This library is free software; you can redistribute it and/or
-  ~ modify it under the terms of the GNU Lesser General Public
-  ~ License as published by the Free Software Foundation; either
-  ~ version 2.1 of the License, or (at your option) any later version.
-  ~
-  ~ This library is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ Lesser General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU Lesser General Public
-  ~ License along with this library; if not, write to the Free Software
-  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.riverock</groupId>
-    <artifactId>riverock-module</artifactId>
+    <artifactId>riverock-webmill</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>Abstract layer for write portlet applications.</name>
+    <version>5.6.2-SNAPSHOT</version>
+    <name>Webmill portal</name>
     <url>http://webmill.riverock.org</url>
     <licenses>
         <license>
@@ -57,13 +34,15 @@
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>provided </scope>
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-webmill-container</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>provided </scope>
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
@@ -71,12 +50,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -100,11 +73,12 @@
             <version>2.0.4</version>
             <scope>provided </scope>
         </dependency>
-<!--
-        <pathelement location="${lib.dir}/${commons-codec.lib}"/>
-        <pathelement location="${lib.dir}/${xerces.lib}"/>
-        <pathelement location="${lib.dir}/${xml-api.lib}"/>
--->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
@@ -117,12 +91,6 @@
             <artifactId>portlet-api</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
@@ -159,8 +127,51 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>3.2.1.ga</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.2.1.ga</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

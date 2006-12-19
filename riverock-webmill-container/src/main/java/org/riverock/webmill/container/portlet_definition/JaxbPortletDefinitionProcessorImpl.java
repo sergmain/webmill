@@ -27,6 +27,7 @@ import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * User: SergeMaslyukov
@@ -37,9 +38,13 @@ import java.io.File;
  */
 public class JaxbPortletDefinitionProcessorImpl implements PortletDefinitionProcessor {
     public PortletApplication process(File portletFile) throws PortletContainerException {
+        System.out.println("Start unmarshal portlet file: " + portletFile);
+        return ProcessAs_v1_0.processAs_v1_0(portletFile);
+    }
 
-        PortletApplication portletApplication = ProcessAs_v1_0.processAs_v1_0(portletFile);
-        return portletApplication;
+    public PortletApplication process(InputStream inputStream) throws PortletContainerException {
+        System.out.println("Start unmarshal portlet file from input stream.");
+        return ProcessAs_v1_0.processAs_v1_0(inputStream);
     }
 
 }
