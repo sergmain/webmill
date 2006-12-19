@@ -13,8 +13,11 @@
     <module>riverock-common</module>
     <module>riverock-sso</module>
     <module>riverock-webmill-container</module>
-<!--
     <module>riverock-webmill</module>
--->
+    <module>riverock-webmill-war</module>
+    <module>riverock-module</module>
+    <module>riverock-portlet</module>
+    <module>riverock-forum</module>
+    <module>riverock-commerce</module>
   </modules>
 </project>

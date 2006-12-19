@@ -84,7 +84,7 @@ public class TestCaseShop extends TestCase {
         super( testName );
     }
 
-    public void insertTestData() throws Exception {
+    private void insertTestData() throws Exception {
         PricesType shopListData = new PricesType();
         PriceListType shopData = new PriceListType();
         shopData.setShopCode( shopCode );
@@ -190,6 +190,10 @@ public class TestCaseShop extends TestCase {
             testAbstract.db_, shopParam, renderRequest, renderResponse, bundle );
 */
 
+    }
+
+    public void testStub() {
+        
     }
 
     public void doTest() throws Exception {

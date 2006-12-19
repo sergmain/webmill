@@ -100,11 +100,6 @@
             <version>2.0.4</version>
             <scope>provided </scope>
         </dependency>
-<!--
-        <pathelement location="${lib.dir}/${commons-codec.lib}"/>
-        <pathelement location="${lib.dir}/${xerces.lib}"/>
-        <pathelement location="${lib.dir}/${xml-api.lib}"/>
--->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
