@@ -119,7 +119,6 @@ public class PortalInstanceImpl implements PortalInstance  {
                 if (StringUtils.isBlank(version)) {
                     String es = "Value for property 'portal.version' not found";
                     log.error(es);
-//                    throw new IllegalStateException(es);
                     PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
                 }
                 else {
@@ -134,7 +133,6 @@ public class PortalInstanceImpl implements PortalInstance  {
                 String es = "Error load webmill.properties files.";
                 log.error(es, e);
                 PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
-//                throw new IllegalStateException(es, e);
             }
         }
         return PORTAL_VERSION;
