@@ -30,10 +30,12 @@ import org.riverock.webmill.container.portlet_definition.portlet_api_v1.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.FileInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -47,21 +49,35 @@ import java.util.ArrayList;
 public class ProcessAs_v1_0 {
     public static PortletApplication processAs_v1_0(File portletFile) throws PortletContainerException {
         try {
-            System.out.println("Start unmarshal portlet file: " + portletFile);
-            JAXBContext jaxbContext = JAXBContext.newInstance ("org.riverock.webmill.container.portlet_definition.portlet_api_v1");
-
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            Source source =  new StreamSource( new FileInputStream(portletFile) );
-            JAXBElement<PortletAppType> bookingElement = unmarshaller.unmarshal( source, PortletAppType.class);
-
-            PortletAppType portletApplication = bookingElement.getValue();
-
-            return initPortletApplication(portletApplication);
+            FileInputStream inputStream = new FileInputStream(portletFile);
+            return processInputStream(inputStream);
             
         } catch (Exception e) {
             e.printStackTrace();
             throw new PortletContainerException("Error", e);
         }
+    }
+
+    public static PortletApplication processAs_v1_0(InputStream inputStream) throws PortletContainerException {
+        try {
+            return processInputStream(inputStream);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PortletContainerException("Error", e);
+        }
+    }
+
+    private static PortletApplication processInputStream(InputStream inputStream) throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance ("org.riverock.webmill.container.portlet_definition.portlet_api_v1");
+
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        Source source =  new StreamSource(inputStream);
+        JAXBElement<PortletAppType> bookingElement = unmarshaller.unmarshal( source, PortletAppType.class);
+
+        PortletAppType portletApplication = bookingElement.getValue();
+
+        return initPortletApplication(portletApplication);
     }
 
     private static PortletApplication initPortletApplication(PortletAppType portletApp) {

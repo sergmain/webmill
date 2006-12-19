@@ -23,10 +23,9 @@
  */
 package org.riverock.webmill.container.portlet_definition;
 
-import junit.framework.TestCase;
+import java.io.InputStream;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import junit.framework.TestCase;
 
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
@@ -39,7 +38,7 @@ import org.riverock.webmill.container.portlet.bean.Preferences;
  * <p/>
  * $Id$
  */
-public class TestPortletDefinitionProcessor /* extends TestCase */ {
+public class TestPortletDefinitionProcessor extends TestCase {
     private static class TestItem {
         private String fileName=null;
         private int countPortlets;
@@ -54,32 +53,24 @@ public class TestPortletDefinitionProcessor /* extends TestCase */ {
         PortletDefinitionProcessor processor = new JaxbPortletDefinitionProcessorImpl();
 
         TestItem[] files = {
-            new TestItem("../riverock-portlet/src/main/webapp/WEB-INF/portlet.xml", 24),
-            new TestItem("src/test/resources/xml/portlet.1.xml", 1),
-            new TestItem("src/test/resources/xml/portlet.2.xml", 1),
-            new TestItem("src/test/resources/xml/portlet.3.xml", 17),
-            new TestItem("src/test/resources/xml/portlet.4.xml", 61),
-            new TestItem("src/test/resources/xml/portlet.5.xml", 26),
-            new TestItem("src/test/resources/xml/portlet.6.xml", 4),
-            new TestItem("../riverock-commerce/src/main/webapp/WEB-INF/portlet.xml", 5)
+            new TestItem("/xml/portlet.1.xml", 1),
+            new TestItem("/xml/portlet.2.xml", 1),
+            new TestItem("/xml/portlet.3.xml", 17),
+            new TestItem("/xml/portlet.4.xml", 61),
+            new TestItem("/xml/portlet.5.xml", 26),
+            new TestItem("/xml/portlet.6.xml", 4),
         };
 
         for (TestItem file : files) {
             System.out.println("file = " + file.fileName);
-            File portletFile = new File(file.fileName);
-            if (!portletFile.exists()) {
-                throw new FileNotFoundException(portletFile.getAbsolutePath());
-            }
-            PortletApplication portletApplication = processor.process(portletFile);
-/*
+
+            InputStream is = TestPortletDefinitionProcessor.class.getResourceAsStream(file.fileName); 
+            PortletApplication portletApplication = processor.process(is);
             assertEquals(file.countPortlets, portletApplication.getPortlet().size());
-*/
         }
 
-//        File file = new File("portlet.2.xml");
-        File file = new File("doc/xml/portlet.6.xml");
-
-        PortletApplication application = processor.process( file );
+        InputStream is = TestPortletDefinitionProcessor.class.getResourceAsStream("/xml/portlet.6.xml");
+        PortletApplication application = processor.process( is );
 
         PortletDefinition definition = application.getPortlet().get(0);
         Preferences portletPreferences = definition.getPreferences();

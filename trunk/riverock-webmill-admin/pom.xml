@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>riverock</groupId>
-    <artifactId>riverock-webmill</artifactId>
+    <groupId>org.riverock</groupId>
+    <artifactId>riverock-webmill-admin</artifactId>
     <packaging>war</packaging>
-    <version>5.6.2-SNAPSHOT</version>
-    <name>Webmill portal</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Admin application for Webmill portal</name>
     <url>http://webmill.riverock.org</url>
     <licenses>
         <license>
@@ -15,12 +15,13 @@
     </licenses>
     <repositories>
         <repository>
+            <id>Riverock repo local</id>
+            <url>http://test.askmore/repo</url>
+        </repository>
+        <repository>
             <id>Riverock repo</id>
             <url>http://riverock.sourceforge.net/repo</url>
         </repository>
-<!--
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
--->
         <repository>
             <id>ibiblio.org</id>
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
@@ -32,34 +33,26 @@
         </repository>
     </repositories>
 
-    <distributionManagement>
-      <relocation>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-      </relocation>
-    </distributionManagement>
-
     <dependencies>
         <dependency>
-            <groupId>riverock</groupId>
+            <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>riverock</groupId>
-            <artifactId>riverock-webmill-container</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <optional>true</optional>
+            <groupId>org.riverock</groupId>
+            <artifactId>riverock-webmill</artifactId>
+            <version>5.6.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>riverock</groupId>
+            <groupId>org.riverock</groupId>
             <artifactId>riverock-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>riverock</groupId>
-            <artifactId>riverock-sso</artifactId>
+            <groupId>org.riverock</groupId>
+            <artifactId>dbrevision</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
@@ -68,6 +61,49 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.8.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-resolver</groupId>
+                    <artifactId>xml-resolver</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.myfaces</groupId>
+            <artifactId>tomahawk</artifactId>
+            <version>1.1.4-SNAPSHOT-hacked</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-impl</artifactId>
+            <version>1.1.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-el</groupId>
+                    <artifactId>commons-el</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-api</artifactId>
+            <version>1.1.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-el</groupId>
+                    <artifactId>commons-el</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -112,12 +148,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2</version>
@@ -153,6 +183,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.1.1</version>
@@ -177,7 +212,7 @@
 
     </dependencies>
     <build>
-        <finalName>ROOT</finalName>
+        <finalName>riverock-webmill-admin</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
