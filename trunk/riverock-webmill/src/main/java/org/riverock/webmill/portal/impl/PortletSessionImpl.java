@@ -84,6 +84,9 @@ public class PortletSessionImpl implements PortletSession, HttpSession {
 
     /**
      * Constructs an instance.
+     * @param httpSession http sesstion
+     * @param portletContext portlet context
+     * @param namespace namespace
      */
     public PortletSessionImpl(HttpSession httpSession, PortletContext portletContext, Namespace namespace) {
         if (log.isDebugEnabled()) {

@@ -27,16 +27,19 @@ package org.riverock.webmill.portal;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
@@ -64,6 +67,7 @@ import org.riverock.webmill.utils.PortletUtils;
 public class PortalInstanceImpl implements PortalInstance  {
     private final static Logger log = Logger.getLogger(PortalInstanceImpl.class);
 
+    private static final String WEBMILL_PROPERTIES = "/org/riverock/webmill/portal/webmill.properties";
     private static final PortalVersion portalVersion = new PortalVersion( getPortalVersion() );
     private static final String PORTAL_INFO = "WebMill/"+getPortalVersion();
     private static String PORTAL_VERSION = null;
@@ -79,6 +83,8 @@ public class PortalInstanceImpl implements PortalInstance  {
     private PortletContainer portletContainer = null;
     private Collection<String> supportedList = null;
     private static final String UNKNOWN_PORTAL_VERSON = "0.0.1";
+
+    private static final Collection<String> destroyedPortletName = new ConcurrentLinkedQueue<String>();
 
     public void destroy() {
         portalServletConfig = null;
@@ -114,7 +120,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             }
             Properties pr = new Properties();
             try {
-                pr.load(PortalInstanceImpl.class.getResourceAsStream("/org/riverock/webmill/portal/webmill.properties"));
+                pr.load(PortalInstanceImpl.class.getResourceAsStream(WEBMILL_PROPERTIES));
                 String version = pr.getProperty("portal.version");
                 if (StringUtils.isBlank(version)) {
                     String es = "Value for property 'portal.version' not found";
@@ -563,6 +569,21 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     public void registerPortlet(String fullPortletName) {
         PortalUtils.registerPortletName(fullPortletName);
+//        synchronized(destroyedPortletName) {
+            destroyedPortletName.remove(fullPortletName);
+//        }
+    }
+
+    public static List<String> destroyedPortlet() {
+//        synchronized(destroyedPortletName) {
+            return (List)Arrays.asList( destroyedPortletName.toArray() );
+//        }
+    }
+
+    public void destroyPortlet(String fullPortletName) {
+//        synchronized(destroyedPortletName) {
+            destroyedPortletName.add(fullPortletName);
+//        }
     }
 
 }

@@ -26,6 +26,8 @@ package org.riverock.webmill.portal.namespace;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author SergeMaslyukov
@@ -35,14 +37,18 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class NamespaceFactory {
     private static ConcurrentMap<String, Namespace> namespaces = new ConcurrentHashMap<String, Namespace>();
+    private static ConcurrentMap<String, List<Namespace>> namespaceByPortletName = new ConcurrentHashMap<String, List<Namespace>>();
     private static int index = 1;
 
     /**
-     * The getNamespace method must return a valid identifier as defined in the 3.8 Identifier
+     * The getNamespaces method must return a valid identifier as defined in the 3.8 Identifier
      * Section of the Java Language Specification Second Edition.
      *
-     * @param fullPortletName
-     * @return Namespace
+     * @param fullPortletName full portlet name. Format: [["application-id":]"portlet-id":]"portlet-name
+     * <br>For example: webmill:login-portlet-id:login-portlet
+     * @param templateName template name
+     * @param tempalteItemIndex intex if item in template 
+     * @return namespace
      */
     public static Namespace getNamespace( String fullPortletName, String templateName, int tempalteItemIndex ) {
         String n = "idx-" + tempalteItemIndex + "_" + templateName + '_' + fullPortletName;
@@ -59,7 +65,31 @@ public class NamespaceFactory {
 
             namespace = new NamespaceImpl( "ns"+(index++) );
             namespaces.put( n, namespace );
+            List<Namespace> namespaces = namespaceByPortletName.get(fullPortletName);
+            if (namespaces==null) {
+                namespaces = new ArrayList<Namespace>();
+                namespaceByPortletName.put(fullPortletName, namespaces);
+            }
+            namespaces.add(namespace);
             return namespace;
         }
+    }
+
+    /**
+     * Get all namespaces for portlet name
+     * @param fullPortletName portlet name
+     * @return list of namespaces
+     */
+    public static List<Namespace> getNamespaces(String fullPortletName) {
+        List<Namespace> list = new ArrayList<Namespace>();
+        List<Namespace> namespaces = namespaceByPortletName.get(fullPortletName);
+        if (namespaces!=null) {
+            list.addAll(namespaces);
+        }
+        return list;
+    }
+
+    public static NamespaceMapper getNamespaceMapper() {
+        return new NamespaceMapperImpl();
     }
 }

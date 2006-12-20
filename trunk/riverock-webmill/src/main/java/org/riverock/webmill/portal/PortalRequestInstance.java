@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +39,7 @@ import javax.portlet.PortalContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
@@ -54,7 +56,6 @@ import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
@@ -68,8 +69,10 @@ import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
-import org.riverock.webmill.portal.preference.PortletPreferencePersistencerImpl;
+import org.riverock.webmill.portal.namespace.NamespaceMapper;
+import org.riverock.webmill.portal.preference.PreferenceFactory;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.sso.a3.AuthTools;
 
 /**
  * User: Admin
@@ -280,16 +283,22 @@ public final class PortalRequestInstance {
 
                 switch (templateItem.getTypeObject().getType()) {
                     case PortalTemplateItemType.PORTLET_TYPE:
+                        if (httpRequest.isRequestedSessionIdValid()) {
+                            checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
+                        }
                         element.initPortlet(templateItem.getValueAsPortletName(), this, new HashMap<String, List<String>>(), new ArrayList<String>(), null);
                         break;
 
                     case PortalTemplateItemType.DYNAMIC_TYPE:
+                        if (httpRequest.isRequestedSessionIdValid()) {
+                            checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
+                        }
                         element.initPortlet(
                             requestContext.getDefaultPortletName(),
                             this,
                             requestContext.getExtendedCatalogItem().getPortletMetadata(),
                             requestContext.getExtendedCatalogItem().getRoleList(),
-                            new PortletPreferencePersistencerImpl(requestContext.getExtendedCatalogItem().getCatalogId())
+                            PreferenceFactory.getPortletPreferencePersistencer(requestContext.getExtendedCatalogItem().getCatalogId())
                         );
                         break;
                     case PortalTemplateItemType.FILE_TYPE:
@@ -309,6 +318,35 @@ public final class PortalRequestInstance {
             if (log.isInfoEnabled()) {
                 log.info("init PortalRequestInstance for " + (System.currentTimeMillis() - startMills) + " milliseconds");
             }
+        }
+    }
+
+    /**
+     * remove form session all attributes, which are corresponded to destroyed portlet
+     * @param destroyedPortletNames name of destroyed portlet
+     * @param session http session
+     */
+    private void checkDestroyedPortlet(List<String> destroyedPortletNames, HttpSession session) {
+        if (session==null) {
+            return;
+        }
+        try {
+            NamespaceMapper nm = NamespaceFactory.getNamespaceMapper();
+            List<String> attrs = Collections.list(session.getAttributeNames());
+            for (String portletName : destroyedPortletNames) {
+                List<Namespace> namespaces = NamespaceFactory.getNamespaces(portletName);
+                for (Namespace namespace : namespaces) {
+                    for (String attr : attrs) {
+                        String realAttrName = nm.decode(namespace,  attr);
+                        if (realAttrName!=null) {
+                            session.removeAttribute(attr);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Throwable e) {
+            log.error("Error remove attributed",e);
         }
     }
 

@@ -62,6 +62,12 @@ public class NamespaceMapperImpl implements NamespaceMapper {
         return buffer.toString();
     }
 
+    /**
+     * decode name of http session attribute to portlet session attribute
+     * @param namespace namespace
+     * @param name portlet name
+     * @return decoded name of attributes
+     */
     public String decode(Namespace namespace, String name) {
         if (!name.startsWith(WEBMILL_PREFIX)) {
             return null;
