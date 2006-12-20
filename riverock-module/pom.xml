@@ -57,13 +57,13 @@
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>provided </scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-webmill-container</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>provided </scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>

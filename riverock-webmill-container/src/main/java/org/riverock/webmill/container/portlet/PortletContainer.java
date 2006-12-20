@@ -138,7 +138,7 @@ public final class PortletContainer implements Serializable {
     public void destroy(String uniqueName) {
         System.out.println("Undeploy uniqueName: " + uniqueName);
         synchronized(syncObect) {
-            Iterator<Map.Entry<String,PortletWebApplication>> iterator = portletItems.entrySet().iterator();
+            Iterator<Map.Entry<String, PortletWebApplication>> iterator = portletItems.entrySet().iterator();
             while (iterator.hasNext()) {
                 PortletWebApplication portletWebApplication = iterator.next().getValue();
 
@@ -153,6 +153,7 @@ public final class PortletContainer implements Serializable {
             if (portletEntries != null) {
                 for (PortletEntry portletEntry : portletEntries) {
                     try {
+                        portalInstance.destroyPortlet(portletEntry.getPortletDefinition().getFullPortletName());
                         destroyPortlet(portletEntry, uniqueName);
                     }
                     catch (Throwable th) {

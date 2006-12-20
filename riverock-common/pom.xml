@@ -26,7 +26,7 @@
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

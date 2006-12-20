@@ -38,4 +38,6 @@ public interface PortalInstance {
     public Collection<String> getSupportedLocales();
 
     void registerPortlet(String fullPortletName);
+
+    void destroyPortlet(String fullPortletName);
 }
