@@ -95,20 +95,23 @@ public final class LoginPlainPortlet implements Portlet {
             }
 
             PortletURL portletUrl = renderResponse.createActionURL();
-            portletUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_PLAIN );
+//            portletUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_PLAIN );
 
-            out.write( "<form method=\"POST\" action=\"" + portletUrl + "\" >\n" );
+            out.write( "<form method=\"POST\" action=\"" + portletUrl.toString() + "\" >\n" );
 
             String srcURL;
             if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
                 srcURL = PortletService.getString(renderRequest, LoginUtils.NAME_TOURL_PARAM, null);
             } else {
-                srcURL = PortletService.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse );
+                PortletURL toUrl = renderResponse.createActionURL();
+                toUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ContainerConstants.CTX_TYPE_INDEX );
+                srcURL = toUrl.toString();
             }
 
             srcURL = StringUtils.replace( srcURL, "%3D", "=" );
             srcURL = StringUtils.replace( srcURL, "%26", "&" );
 
+            out.write( ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_PLAIN ) );
             out.write( ServletTools.getHiddenItem( LoginUtils.NAME_TOURL_PARAM, srcURL ) );
 
             if ( log.isDebugEnabled() ) {
