@@ -27,10 +27,14 @@ import java.util.ListResourceBundle;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Properties;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.io.IOUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -112,14 +116,39 @@ public abstract class CustomXmlResourceBundle extends ListResourceBundle {
     }
 
     public PairList digestXmlFile() throws IOException, SAXException {
+        InputStream stream;
+//        stream = CustomXmlResourceBundle.class.getResourceAsStream( getFileName() );
+//        dumpInputStream(stream);
+        stream = CustomXmlResourceBundle.class.getResourceAsStream( getFileName() );
+        return digestXmlFile( stream );
+    }
 
-        InputStream stream = this.getClass().getResourceAsStream( getFileName() );
-        PairList pairList = null;
+    private void dumpInputStream(InputStream stream) {
+        try {
+            String s = System.getProperty("java.io.tmpdi");
+            if (s==null) {
+                System.out.println("Can not get temp path from system properties");
+                return;
+            }
+            if (s.endsWith("\\") || s.endsWith("//")) {
+                s += "xml-res";
+            }
+            else {
+                s += (File.separator+"xml-res");
+            }
+            File directory = new File(s);
+            directory.mkdirs();
+            File temp = File.createTempFile("xml-res-"+System.currentTimeMillis(), ".xml", directory);
 
-        pairList = digestXmlFile( stream );
-
-
-        return pairList;
+            FileOutputStream fos = new FileOutputStream(temp);
+            IOUtils.copy(stream, fos);
+            fos.flush();
+            fos.close();
+            fos=null;
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     public static PairList digestXmlFile( InputStream stream ) throws IOException, SAXException {
