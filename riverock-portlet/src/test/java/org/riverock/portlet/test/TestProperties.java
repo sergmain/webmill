@@ -41,34 +41,32 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.common.tools.DateTools;
+import org.riverock.common.startup.StartupApplication;
 
-public class TestProperties
-{
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.test.TestProperties");
+public class TestProperties {
+    private static Logger cat = Logger.getLogger(TestProperties.class);
 
-    public TestProperties()
-    {
+    public TestProperties() {
     }
 
     public static void main(String args[])
-        throws Exception
-    {
+        throws Exception {
 
-        org.riverock.common.startup.StartupApplication.init();
+        StartupApplication.init();
 
         Timestamp t = DateTools.getCurrentTime();
         Properties prop = System.getProperties();
 
         Enumeration e = prop.keys();
-        for (; e.hasMoreElements() ;) {
+        for (; e.hasMoreElements();) {
 
-            String s =(String) e.nextElement();
-            String s1 = (String)prop.get( s );
-            System.out.println("Prop: "+s+", value - "+ s1 );
+            String s = (String) e.nextElement();
+            String s1 = (String) prop.get(s);
+            System.out.println("Prop: " + s + ", value - " + s1);
         }
 
-        System.out.println( System.getProperty("java.io.tmpdir"));
-        System.out.println( System.getProperty("file.encoding"));
+        System.out.println(System.getProperty("java.io.tmpdir"));
+        System.out.println(System.getProperty("file.encoding"));
 
         String i = "»»» “ÂÒÚ";
 
@@ -82,10 +80,10 @@ public class TestProperties
         byte b[] = i.getBytes();
         char c[] = new char[b.length];
 
-        for (int j=0; j<b.length; j++)
-            c[j] = (char)b[j];
+        for (int j = 0; j < b.length; j++)
+            c[j] = (char) b[j];
 //        i.
-        System.out.println( c );
+        System.out.println(c);
 
     }
 

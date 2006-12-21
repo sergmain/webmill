@@ -45,13 +45,9 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  */
 public class ImageCaptchaServlet extends HttpServlet {
 
-
     public void init(ServletConfig servletConfig) throws ServletException {
-
         super.init(servletConfig);
-
     }
-
 
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
 
