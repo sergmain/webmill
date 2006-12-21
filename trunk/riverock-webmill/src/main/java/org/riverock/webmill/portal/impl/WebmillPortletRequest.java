@@ -59,7 +59,6 @@ import org.riverock.webmill.portal.action.PortalActionExecutorImpl;
 import org.riverock.webmill.portal.mail.PortalMailServiceProviderImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
-import org.riverock.webmill.portal.namespace.NamespaceMapperImpl;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.user.PortalUserManagerImpl;
 
@@ -74,6 +73,8 @@ import org.riverock.webmill.portal.user.PortalUserManagerImpl;
  */
 public class WebmillPortletRequest extends ServletRequestWrapper implements HttpServletRequest, PortletRequest {
     private final static Logger log = Logger.getLogger( WebmillPortletRequest.class );
+
+    private static final NamespaceMapper mapper = NamespaceFactory.getNamespaceMapper();
 
     protected HttpServletRequest httpRequest = null;
     protected HttpServletResponse httpResponse = null;
@@ -99,7 +100,6 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     private Map<String, List<String>> portletProperties = null;
     private PortletDefinition portletDefinition=null;
     private Namespace namespace=null;
-    private NamespaceMapper mapper = NamespaceFactory.getNamespaceMapper();
 
     protected boolean included = false;
     protected String includedQueryString = null;
@@ -995,8 +995,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     private boolean isPortletModeAllowedByPortal(PortletMode mode) {
         Enumeration supportedModes = portalContext.getSupportedPortletModes();
         while (supportedModes.hasMoreElements()) {
-            if (supportedModes.nextElement().toString().equals(
-                    (mode.toString()))) {
+            if (supportedModes.nextElement().toString().equals((mode.toString()))) {
                 return true;
             }
         }

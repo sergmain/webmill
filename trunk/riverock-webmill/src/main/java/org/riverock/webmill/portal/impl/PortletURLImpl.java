@@ -333,6 +333,9 @@ public final class PortletURLImpl implements PortletURL {
 
         // if url pointed to other portlet, change value of contextId with id of targer's portlet
         contextId = prepareContextId(contextId);
+        if (contextId==null && isActionReqeust) {
+            log.warn("In some cases action request with contextId==null may produce unexpected error");
+        }
 
         url.append(
             CtxRequestContextPocessor.encodeUrl(

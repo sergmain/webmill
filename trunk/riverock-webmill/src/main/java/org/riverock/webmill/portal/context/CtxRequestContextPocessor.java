@@ -86,7 +86,13 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
 
         if (isActionReqeust) {
             if (contextId==null) {
-                throw new IllegalArgumentException("For action request, contextId must be not null");
+                log.warn("portletName: " + portletName);
+                log.warn("templateName: " + templateName);
+                log.warn("locale: " + locale!=null?locale.toString():"null");
+                log.warn("isActionReqeust: " + isActionReqeust);
+                log.warn("namespace: " + namespace!=null?namespace.getNamespace():"null");
+                log.warn("contextId: " + contextId);
+//                throw new IllegalArgumentException("For action request, contextId must be not null");
             }
         }
 
@@ -119,7 +125,7 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
             b.append(contextId);
         }
 
-        b.append( "/ctx" );
+        b.append( ContainerConstants.URI_CTX_MANAGER );
 
         return b;
     }
@@ -254,10 +260,12 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
             log.debug("     contextId: " + bean.getContextId() );
         }
 
+/*
         if (requestState.isActionRequest() && bean.getContextId()==null) {
             log.error("For action request, contextId must not be null");
             return null;
         }
+*/
 
         if (bean.getDefaultPortletName()==null) {
             return null;

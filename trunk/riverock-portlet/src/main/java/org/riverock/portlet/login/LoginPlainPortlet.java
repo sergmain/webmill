@@ -111,7 +111,7 @@ public final class LoginPlainPortlet implements Portlet {
             srcURL = StringUtils.replace( srcURL, "%3D", "=" );
             srcURL = StringUtils.replace( srcURL, "%26", "&" );
 
-            out.write( ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_PLAIN ) );
+//            out.write( ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_PLAIN ) );
             out.write( ServletTools.getHiddenItem( LoginUtils.NAME_TOURL_PARAM, srcURL ) );
 
             if ( log.isDebugEnabled() ) {
