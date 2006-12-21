@@ -31,41 +31,41 @@
  */
 package org.riverock.portlet.test;
 
-import org.riverock.common.tools.DateTools;
-import org.riverock.common.utils.DateUtils;
-import org.riverock.common.startup.StartupApplication;
-
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
-public class TestDate
-{
-    public static void main(String args[])
-        throws Exception
-    {
-        StartupApplication.init();
+import org.apache.commons.lang.time.DateFormatUtils;
 
+import org.riverock.common.tools.DateTools;
+
+public class TestDate {
+    public static void main(String args[]) throws Exception {
+        
         String mask = "dd.MMM.yyyy HH:mm:ss";
 
         Calendar cal = GregorianCalendar.getInstance();
-        String currDate = DateUtils.getCurrentDate( mask, TimeZone.getDefault() );
-        System.out.println("current date/time "+currDate);
+        String currDate = DateFormatUtils.format(System.currentTimeMillis(), mask, TimeZone.getDefault());
+        System.out.println("current date/time " + currDate);
 
-        currDate = DateTools.getStringDate( cal, mask );
+        currDate = DateTools.getStringDate(cal, mask);
         System.out.println(currDate);
 
         Date date = cal.getTime();
 
         Calendar cal1 = new GregorianCalendar();
-        cal1.setTime( date );
+        cal1.setTime(date);
 
-        System.out.println( DateTools.getStringDate( cal1, mask, new Locale("en", "US") ) );
+        System.out.println(DateTools.getStringDate(cal1, mask, new Locale("en", "US")));
 
 //        Locale loc = new Locale("en_US");
-        Locale loc = new Locale("en", "US","Test");
+        Locale loc = new Locale("en", "US", "Test");
 //        Locale loc = Locale.UK;
 
-        SimpleDateFormat df = new SimpleDateFormat(mask,  loc);
+        SimpleDateFormat df = new SimpleDateFormat(mask, loc);
         df.setTimeZone(cal1.getTimeZone());
         System.out.println(df.format(cal1.getTime()));
     }

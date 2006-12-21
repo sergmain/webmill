@@ -33,39 +33,19 @@ import org.xml.sax.SAXException;
 
 import org.riverock.common.resource.CustomXmlResourceBundle;
 
+import junit.framework.TestCase;
+
 /**
  * @author smaslyukov
  *         Date: 10.08.2005
  *         Time: 21:59:10
  *         $Id$
  */
-public class ResourceBundleTest {
+public class ResourceBundleTest extends TestCase {
+    private static final String XML_RESOURCE = "/xml/resources/SiteHamradio_ru.xml";
 
-    public static void main( String[] args ) throws Exception {
-
-        Locale locale = new Locale("ru","RU");
-        System.out.println( "locale = " + locale );
-
-
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream stream = ResourceBundleTest.class.getResourceAsStream( "/org/riverock/portlet/resource/SiteHamradio_ru_RU.xml" );
-
-        CustomXmlResourceBundle.PairList pairList;
-        Digester digester = new Digester();
-        digester.setValidating(false);
-
-        digester.addObjectCreate("resource", CustomXmlResourceBundle.PairList.class);
-
-        digester.addObjectCreate("resource/pair", CustomXmlResourceBundle.Pair.class);
-        digester.addSetProperties("resource/pair", "key", "key");
-        digester.addSetProperties("resource/pair", "value", "value");
-        digester.addSetNext("resource/pair", "addPair");
-
-        pairList = (CustomXmlResourceBundle.PairList)digester.parse(stream);
-
-        ResourceBundle bundle = ResourceBundle.getBundle( "org.riverock.portlet.resource.SiteHamradio", locale );
-
-        System.out.println( "nex: " + bundle.getString( "main.next" ) );
-
+    public void testResourceBundleParser() throws Exception {
+        InputStream stream = ResourceBundleTest.class.getResourceAsStream( XML_RESOURCE );
+        CustomXmlResourceBundle.PairList pairList = CustomXmlResourceBundle.digestXmlFile( stream );
     }
 }
