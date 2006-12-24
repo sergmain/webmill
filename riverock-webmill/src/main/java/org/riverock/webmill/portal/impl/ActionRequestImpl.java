@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
-import javax.portlet.PortalContext;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletPreferences;
 import javax.servlet.ServletContext;
@@ -45,6 +44,7 @@ import org.riverock.common.contenttype.ContentTypeManager;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * User: Admin
@@ -74,10 +74,11 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
         final String contextPath,
         final PortletPreferences portletPreferences,
         final Map<String, List<String>> portletProperties,
-        final PortalContext portalContext,
         final PortletContext portletContext,
         final PortletDefinition portletDefinition,
-        final Namespace namespace) {
+        final Namespace namespace,
+        final PortalInfo portalInfo
+        ) {
 
         super(
             servletContext, portalRequestInstance.getHttpRequest(), portletPreferences,
@@ -85,7 +86,7 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
             portletContext, portletDefinition, namespace
         );
 
-        prepareRequest(parameters, portalRequestInstance, contextPath, portalContext);
+        prepareRequest(parameters, portalRequestInstance, contextPath, portalInfo);
         requestBodyFile = portalRequestInstance.getRequestBodyFile();
         isMultiPartRequest = portalRequestInstance.isMultiPartRequest();
 

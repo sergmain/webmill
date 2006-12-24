@@ -29,7 +29,6 @@ import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.portlet.PortletContainer;
 
 /**
@@ -39,19 +38,20 @@ import org.riverock.webmill.container.portlet.PortletContainer;
  */
 public final class RequestContextParameter {
     private HttpServletRequest request = null;
-    private PortalInfo portalInfo = null;
     private PortletContainer portletContainer = null;
     private Locale predictedLocale = null;
     private boolean isMultiPartRequest = false;
     private File requestBodyFile = null;
+    private Long siteId;
 
-    public RequestContextParameter(HttpServletRequest request, PortalInfo portalInfo, PortletContainer portletContainer, boolean isMultiPartRequest, File requestBodyFile) {
+    public RequestContextParameter(HttpServletRequest request, PortletContainer portletContainer, boolean isMultiPartRequest, File requestBodyFile, Long siteId) {
+        this.siteId = siteId;
         this.request = request;
-        this.portalInfo = portalInfo;
         this.portletContainer = portletContainer;
-        this.predictedLocale = RequestContextUtils.prepareLocale(this);
         this.isMultiPartRequest = isMultiPartRequest;
         this.requestBodyFile = requestBodyFile;
+
+        this.predictedLocale = RequestContextUtils.prepareLocale(this);
     }
 
     public File getRequestBodyFile() {
@@ -70,12 +70,11 @@ public final class RequestContextParameter {
         return request;
     }
 
-    public PortalInfo getPortalInfo() {
-        return portalInfo;
-    }
-
     public PortletContainer getPortletContainer() {
         return portletContainer;
     }
 
+    public Long getSiteId() {
+        return siteId;
+    }
 }

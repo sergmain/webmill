@@ -46,6 +46,7 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplate;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
@@ -54,6 +55,7 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.context.RequestContextParameter;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * @author Sergei Maslyukov
@@ -177,15 +179,12 @@ public final class ExtendedCatalogItemBean {
         catalogItem.locale = StringTools.getLocale( siteLanguage.getCustomLanguage() );
 
         if (log.isDebugEnabled()) {
-            log.debug("portalInfo: " + factoryParameter.getPortalInfo());
-            if (factoryParameter.getPortalInfo() != null) {
-                log.debug("portalInfo.getSiteId(): " + factoryParameter.getPortalInfo().getSiteId());
-            }
+            log.debug("siteId: " + factoryParameter.getSiteId());
             log.debug("siteLanguage: " + siteLanguage);
             log.debug("siteLanguage.getSiteId(): " + siteLanguage.getSiteId());
         }
 
-        if (!factoryParameter.getPortalInfo().getSiteId().equals(siteLanguage.getSiteId())) {
+        if (!factoryParameter.getSiteId().equals(siteLanguage.getSiteId())) {
             log.error("Requested context with id " + ctx.getCatalogId() + " is from others site. Process as 'index' page");
             return null;
         }
@@ -218,7 +217,8 @@ public final class ExtendedCatalogItemBean {
             return null;
         }
         
-        PortalTemplate template = factoryParameter.getPortalInfo().getPortalTemplateManager().getTemplate( templateName, locale.toString());
+        PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
+        PortalTemplate template = portalInfo.getPortalTemplateManager().getTemplate( templateName, locale.toString());
         if (template==null) {
             return null;
         }

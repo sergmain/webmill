@@ -32,11 +32,13 @@ import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletMode;
+import javax.portlet.PortalContext;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.portlet.PortletContainer;
@@ -44,14 +46,12 @@ import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.impl.ActionRequestImpl;
-import org.riverock.webmill.portal.impl.ActionResponseImpl;
-import org.riverock.webmill.portal.impl.RenderRequestImpl;
-import org.riverock.webmill.portal.impl.RenderResponseImpl;
+import org.riverock.webmill.portal.impl.*;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.preference.PortletPreferencePersistencer;
 import org.riverock.webmill.portal.preference.PortletPreferencesImpl;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * User: SergeMaslyukov
@@ -285,6 +285,7 @@ public final class PageElement {
                 false
             );
 
+            PortalInfo portalInfo = PortalInfoImpl.getInstance( portalRequestInstance.getHttpRequest().getServerName() );
             actionRequest = new ActionRequestImpl(
                 actionRequestParamMap,
                 portalRequestInstance,
@@ -292,10 +293,10 @@ public final class PageElement {
                 contextPath,
                 portletPreferences,
                 portletEntry.getPortletProperties(),
-                portalRequestInstance.getPortalContext(),
                 portletEntry.getPortletConfig().getPortletContext(),
                 portletEntry.getPortletDefinition(),
-                namespace
+                namespace,
+                portalInfo
             );
             actionRequest.setAttribute(
                 ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
@@ -378,6 +379,7 @@ public final class PageElement {
                 }
             }
 
+            PortalInfo portalInfo = PortalInfoImpl.getInstance( portalRequestInstance.getHttpRequest().getServerName() );
             renderRequest = new RenderRequestImpl(
                 renderRequestParamMap,
                 portalRequestInstance,
@@ -386,10 +388,10 @@ public final class PageElement {
                 contextPath,
                 portletPreferences,
                 portletEntry.getPortletProperties(),
-                portalRequestInstance.getPortalContext(),
                 portletEntry.getPortletConfig().getPortletContext(),
                 portletEntry.getPortletDefinition(),
-                namespace
+                namespace,
+                portalInfo
             );
 
             // set portlet specific attribute
@@ -405,6 +407,9 @@ public final class PageElement {
             // Todo after rewrite(delete) member portlet, you can delete next line
             renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
+            PortalContext portalContext = new PortalContextImpl(
+                portalRequestInstance.getPortalInfoName(), portalRequestInstance.getHttpRequest().getContextPath(), portalInfo
+            );
             renderResponse = new RenderResponseImpl(
                 portalRequestInstance,
                 renderRequest,
@@ -412,7 +417,8 @@ public final class PageElement {
                 namespace,
                 portletEntry.getPortletProperties(),
                 parameters.getRequestState(),
-                portletEntry.getPortletDefinition().getFullPortletName()
+                portletEntry.getPortletDefinition().getFullPortletName(),
+                portalContext
             );
             PortletUtils.setContentType(renderResponse);
 
@@ -453,7 +459,6 @@ public final class PageElement {
 
         try {
             if (log.isDebugEnabled()) {
-                log.debug("portalContext: " + portalRequestInstance.getPortalContext() );
                 log.debug("Start init page element. Portlet name: '" + portletName + "'");
             }
 

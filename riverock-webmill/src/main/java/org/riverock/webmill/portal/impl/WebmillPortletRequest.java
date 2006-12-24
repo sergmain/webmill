@@ -49,6 +49,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.common.config.PropertiesProvider;
 import org.riverock.common.tools.servlet.RequestDispatcherImpl;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
@@ -849,17 +850,18 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
     protected void prepareRequest(
         final Map<String, List<String>> parameters, final PortalRequestInstance portalRequestInstance,
-        final String contextPath,
-        final PortalContext portalContext ) {
+        final String contextPath, final PortalInfo portalInfo
+    ) {
 
-        this.portalContext = portalContext;
-        this.contextPath = contextPath;
-        this.parameters = Collections.unmodifiableMap( parameters );
-        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext, namespace);
         this.httpRequest = portalRequestInstance.getHttpRequest();
+        this.contextPath = contextPath;
         this.auth = portalRequestInstance.getAuth();
         this.locale = portalRequestInstance.getLocale();
         this.preferredLocale = portalRequestInstance.getPreferredLocales();
+        this.parameters = Collections.unmodifiableMap( parameters );
+
+        this.portalContext = new PortalContextImpl(portalRequestInstance.getPortalInfoName(), httpRequest.getContextPath(), portalInfo);
+        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext, namespace);
 
         Cookie[] c = httpRequest.getCookies();
         if (c!=null) {
@@ -873,7 +875,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER, portalRequestInstance.getPortalDaoProvider() );
 
         this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getRequestContext().getTemplateName() );
-        this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );
+        this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalInfo );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
 
         // PORTAL_QUERY_STRING_ATTRIBUTE constants can be deleted
@@ -888,7 +890,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         PortalMailServiceProviderImpl mailServiceProvider = new PortalMailServiceProviderImpl(
             portalContext.getProperty( ContainerConstants.PORTAL_PROP_SMTP_HOST ),
-            portalRequestInstance.getPortalInfo().getSite().getAdminEmail()
+            portalInfo.getSite().getAdminEmail()
         );
         this.setAttribute(
             ContainerConstants.PORTAL_PORTAL_MAIL_SERVICE_PROVIDER,
@@ -913,20 +915,19 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute(
             ContainerConstants.PORTAL_PORTAL_USER_MANAGER,
             new PortalUserManagerImpl(
-                portalRequestInstance.getPortalInfo().getSite().getSiteId(),
-                portalRequestInstance.getPortalInfo().getCompanyId(),
+                portalInfo.getSite().getSiteId(),
+                portalInfo.getCompanyId(),
                 mailServiceProvider,
                 portletPreferences,
                 classLoader
             )
         );
-//        public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId,
-// String applicationPath, String virtualHostUrl, String portalContext) {
+
         this.setAttribute(
             ContainerConstants.PORTAL_PORTAL_ACTION_EXECUTOR,
             new PortalActionExecutorImpl(
                 classLoader,
-                portalRequestInstance.getPortalInfo().getSite().getSiteId(),
+                portalInfo.getSite().getSiteId(),
                 PropertiesProvider.getApplicationPath(),
                 buildVirtualHostUrl(httpRequest),
                 portalContext.getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH )
@@ -938,7 +939,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         StringBuilder sb = new StringBuilder();
         sb.append(req.getScheme()).append("://").append(req.getServerName());
         if (req.getServerPort()!=80) {
-            sb.append(req.getServerPort());
+            sb.append(':').append(req.getServerPort());
         }
         return sb.toString();
     }

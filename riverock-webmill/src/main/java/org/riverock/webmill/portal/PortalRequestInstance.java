@@ -35,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.portlet.PortalContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,7 +65,6 @@ import org.riverock.webmill.portal.context.RequestContextParameter;
 import org.riverock.webmill.portal.context.RequestState;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
-import org.riverock.webmill.portal.impl.PortalContextImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
@@ -96,8 +94,11 @@ public final class PortalRequestInstance {
     long startMills;
 
     private RequestContext requestContext = null;
-    private PortalInfo portalInfo = null;
-    /** array of preffered locales from http request */
+//    private PortalInfo portalInfo = null;
+
+    /**
+     * array of preffered locales from http request
+     */
     private Locale[] preferredLocales = null;
 
     private HttpServletRequest httpRequest = null;
@@ -110,7 +111,8 @@ public final class PortalRequestInstance {
     private String errorString = null;
     private String redirectUrl = null;
 
-    private PortalContext portalContext = null;
+
+//    private PortalContext portalContext = null;
 
     /** File with request data, if request is multipart */
     private File requestBodyFile = null;
@@ -120,6 +122,8 @@ public final class PortalRequestInstance {
     private PortletContainer portletContainer = null;
 
     private File tempPath = null;
+
+    private String portalInfoName = null;
 
     public void destroy() {
         for (PageElement pageElement : getPageElementList()) {
@@ -138,7 +142,6 @@ public final class PortalRequestInstance {
         xslt = null;
         template = null;
         requestContext = null;
-        portalInfo = null;
         preferredLocales = null;
         httpRequest = null;
         httpResponse = null;
@@ -151,7 +154,6 @@ public final class PortalRequestInstance {
         cookieManager = null;
         errorString = null;
         redirectUrl = null;
-        portalContext = null;
         MainTools.deleteFile( requestBodyFile );
         requestBodyFile = null;
         portalDaoProvider = null;
@@ -175,7 +177,8 @@ public final class PortalRequestInstance {
         String portalInfoName
         ) throws PortalException {
 
-        startMills = System.currentTimeMillis();
+        this.startMills = System.currentTimeMillis();
+        this.portalInfoName = portalInfoName;
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
 
         if (log.isInfoEnabled()) {
@@ -214,20 +217,22 @@ public final class PortalRequestInstance {
                 ClassLoader cl = portletContainer.getClass().getClassLoader();
                 log.debug("portlet container class loader:\n" + classLoader +"\nhash: "+ cl.hashCode() );
             }
-            this.portalInfo = PortalInfoImpl.getInstance( httpRequest.getServerName());
-            this.portalContext = new PortalContextImpl(portalInfoName, httpRequest.getContextPath(), portalInfo);
             this.preferredLocales = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
 
+            PortalInfo portalInfo = PortalInfoImpl.getInstance( httpRequest.getServerName() );
+            if (portalInfo.getSiteId()==null) {
+                throw new IllegalArgumentException("siteId is null");
+            }
             RequestContextParameter factoryParameter =
-                new RequestContextParameter(httpRequest, portalInfo, portletContainer, isMultiPartRequest, requestBodyFile );
+                new RequestContextParameter(httpRequest, portletContainer, isMultiPartRequest, requestBodyFile, portalInfo.getSiteId() );
 
             this.requestContext = RequestContextFactory.createRequestContext( factoryParameter );
             if (requestContext==null) {
                 throw new IllegalArgumentException("General error for access portal page");
             }
 
-            initTemplate();
-            initXslt();
+            initTemplate(portalInfo);
+            initXslt(portalInfo);
 
             // init page element list
             int i = 0;
@@ -369,10 +374,6 @@ public final class PortalRequestInstance {
         return false;
     }
 
-    public PortalContext getPortalContext() {
-        return portalContext;
-    }
-
     public List<PageElement> getPageElementList() {
         return pageElementList;
     }
@@ -467,13 +468,9 @@ public final class PortalRequestInstance {
         return httpResponse;
     }
 
-    public PortalInfo getPortalInfo() {
-        return portalInfo;
-    }
+    private void initTemplate(PortalInfo portalInfo) throws PortalException {
 
-    private void initTemplate() throws PortalException {
-
-        template = getPortalInfo().getPortalTemplateManager().getTemplate( requestContext.getTemplateName(), getLocale().toString() );
+        template = portalInfo.getPortalTemplateManager().getTemplate( requestContext.getTemplateName(), getLocale().toString() );
 
         if (template == null) {
             String errorString = "Template '" + requestContext.getTemplateName() + "', locale " + getLocale().toString() + ", not found";
@@ -484,14 +481,14 @@ public final class PortalRequestInstance {
 
     }
 
-    private void initXslt() throws PortalException {
+    private void initXslt(PortalInfo portalInfo) throws PortalException {
         // prepare Xsl objects
-        if (getPortalInfo().getXsltTransformerManager() == null) {
+        if (portalInfo.getXsltTransformerManager() == null) {
             String errorString = "XSL template not defined";
             log.error(errorString);
             throw new PortalException(errorString);
         }
-        xslt = getPortalInfo().getXsltTransformerManager().getXslt(getLocale().toString());
+        xslt = portalInfo.getXsltTransformerManager().getXslt(getLocale().toString());
         if (xslt == null) {
             String errorString = "XSLT for locale " + getLocale().toString() + " not defined.";
             log.error(errorString);
@@ -547,4 +544,7 @@ public final class PortalRequestInstance {
         }
     }
 
+    public String getPortalInfoName() {
+        return portalInfoName;
+    }
 }

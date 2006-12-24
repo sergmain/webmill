@@ -27,6 +27,8 @@ package org.riverock.webmill.portal.context;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * $Id$
@@ -39,8 +41,10 @@ public class IndexRequestContextProcessor implements RequestContextProcessor {
 
     public RequestContext parseRequest(RequestContextParameter factoryParameter) {
 
+        PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
+
         // process current request as 'index'
-        MenuLanguage menu = factoryParameter.getPortalInfo().getMenu(factoryParameter.getPredictedLocale().toString());
+        MenuLanguage menu = portalInfo.getMenu(factoryParameter.getPredictedLocale().toString());
         if (menu==null){
             log.error( "Menu for locale: "+factoryParameter.getPredictedLocale().toString() +" not defined" );
             return new RequestContext();
