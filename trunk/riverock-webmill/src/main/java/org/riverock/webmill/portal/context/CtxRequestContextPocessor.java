@@ -44,6 +44,8 @@ import org.riverock.webmill.portal.PortletParameters;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * $Id$
@@ -260,26 +262,19 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
             log.debug("     contextId: " + bean.getContextId() );
         }
 
-/*
-        if (requestState.isActionRequest() && bean.getContextId()==null) {
-            log.error("For action request, contextId must not be null");
-            return null;
-        }
-*/
-
         if (bean.getDefaultPortletName()==null) {
             return null;
         }
         Long ctxId;
         if (bean.getContextId()!=null) {
             ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(
-                factoryParameter.getPortalInfo().getSiteId(), bean.getLocale(), bean.getDefaultPortletName(),
+                factoryParameter.getSiteId(), bean.getLocale(), bean.getDefaultPortletName(),
                 bean.getTemplateName(), bean.getContextId()
             );
         }
         else {
             ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(
-                factoryParameter.getPortalInfo().getSiteId(), bean.getLocale(), bean.getDefaultPortletName(),
+                factoryParameter.getSiteId(), bean.getLocale(), bean.getDefaultPortletName(),
                 bean.getTemplateName());
         }
         if (log.isDebugEnabled()) {
@@ -294,7 +289,7 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
         }
         bean.setExtendedCatalogItem( extendedBean );
 
-        RequestContextUtils.initParametersMap(bean, factoryParameter);
+        RequestContextUtils.initParametersMap(bean, factoryParameter, PortalInfoImpl.getInstance( factoryParameter.getSiteId() ));
 
         // prepare parameters for others portlets
         prepareParameters( bean.getParameters(), factoryParameter.getRequest().getServletPath() );

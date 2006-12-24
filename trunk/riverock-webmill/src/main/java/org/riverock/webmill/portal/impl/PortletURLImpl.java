@@ -75,11 +75,12 @@ public final class PortletURLImpl implements PortletURL {
     private boolean isActionReqeust = false;
     private Namespace namespace = null;
     private String portletName = null;
+    private PortalContext portalContext = null;
 
     public PortletURLImpl(
         PortalRequestInstance portalRequestInstance, RenderRequest renderRequest,
         boolean isActionReqeust, Namespace namespace, RequestState requestState,
-        String portletName ) {
+        String portletName, PortalContext portalContext) {
         this.portalRequestInstance = portalRequestInstance;
         this.portletRequest = renderRequest;
         this.secure = portalRequestInstance.getHttpRequest().isSecure();
@@ -88,6 +89,7 @@ public final class PortletURLImpl implements PortletURL {
         this.mode = requestState.getPortletMode();
         this.namespace = namespace;
         this.portletName = portletName;
+        this.portalContext = portalContext;
     }
 
     /**
@@ -111,7 +113,6 @@ public final class PortletURLImpl implements PortletURL {
      * @see javax.portlet.PortletRequest#isWindowStateAllowed
      */
     public void setWindowState( WindowState windowState ) throws WindowStateException {
-        PortalContext portalContext = portalRequestInstance.getPortalContext();
         Enumeration supportedWindowStates = portalContext.getSupportedWindowStates();
         if (windowState != null)
         {

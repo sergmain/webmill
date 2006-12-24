@@ -35,6 +35,7 @@ import java.util.Map;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.PortalContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.ServletResponseWrapper;
@@ -75,6 +76,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     private Map<String, List<String>> portletProperties = null;
 
     private ServletResponseWrapper servletResponse = null;
+    private PortalContext portalContext = null;
 
     /**
      * Portlet title
@@ -121,7 +123,8 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     public RenderResponseImpl( PortalRequestInstance portalRequestInstance, 
         RenderRequest renderRequest, HttpServletResponse response, Namespace namespace,
-        Map<String, List<String>> portletProperties, RequestState requestState, String portletName ) {
+        Map<String, List<String>> portletProperties, RequestState requestState, String portletName,
+        PortalContext portalContext ) {
         super(response);
         this.requestState = requestState;
         this.portalRequestInstance = portalRequestInstance;
@@ -130,6 +133,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         this.namespace = namespace;
         this.portletName = portletName;
         this.servletResponse = new ServletResponseWrapper( new ServletResponseWrapperInclude( portalRequestInstance.getLocale() ) );
+        this.portalContext = portalContext;
     }
 
     /**
@@ -522,7 +526,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
      * @return a portlet render URL
      */
     public PortletURL createRenderURL() {
-        return new PortletURLImpl( portalRequestInstance, renderRequest, false, namespace, requestState, portletName );
+        return new PortletURLImpl( portalRequestInstance, renderRequest, false, namespace, requestState, portletName, portalContext);
     }
 
     /**
@@ -540,7 +544,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
      * @return a portlet action URL
      */
     public PortletURL createActionURL() {
-        return new PortletURLImpl( portalRequestInstance, renderRequest, true, namespace, requestState, portletName );
+        return new PortletURLImpl( portalRequestInstance, renderRequest, true, namespace, requestState, portletName, portalContext);
     }
 
     /**

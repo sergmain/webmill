@@ -61,11 +61,11 @@ public final class PageRequestContextProcessor implements RequestContextProcesso
         String pageName = path.substring( idxSlash+1 );
 
         Long ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(
-            factoryParameter.getPortalInfo().getSiteId(), locale, pageName
+            factoryParameter.getSiteId(), locale, pageName
         );
 
         if (log.isDebugEnabled())  {
-            log.debug("siteId: " + factoryParameter.getPortalInfo().getSiteId() );
+            log.debug("siteId: " + factoryParameter.getSiteId() );
             log.debug("locale: " + locale.toString() );
             log.debug("pageName: " + pageName);
             log.debug("ctxId: " + ctxId);

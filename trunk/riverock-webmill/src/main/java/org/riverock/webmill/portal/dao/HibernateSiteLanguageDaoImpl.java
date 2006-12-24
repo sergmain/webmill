@@ -44,13 +44,16 @@ import org.riverock.webmill.utils.HibernateUtils;
  */
 public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
     public List<SiteLanguage> getSiteLanguageList(Long siteId) {
+        if (siteId==null) {
+            throw new IllegalArgumentException("siteId is null");
+        }
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        Query query = session.createQuery(
+        List<SiteLanguageBean> cssList = (List)session.createQuery(
             "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-            "where siteLanguage.siteId = :site_id");
-        query.setLong("site_id", siteId);
-        List<SiteLanguageBean> cssList = query.list();
+            "where siteLanguage.siteId = :site_id")
+            .setLong("site_id", siteId)
+            .list();
         session.getTransaction().commit();
         return (List)cssList;
     }

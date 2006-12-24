@@ -136,8 +136,9 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     public static PortalInfoImpl getInstance(String serverName) {
         Long id = SiteList.getSiteId(serverName);
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("ServerName:" + serverName + ", siteId: " + id);
+        }
 
         return getInstance(id);
     }

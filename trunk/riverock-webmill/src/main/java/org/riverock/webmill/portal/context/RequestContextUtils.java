@@ -46,6 +46,7 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortletParameters;
@@ -54,6 +55,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * $Id$
@@ -64,9 +66,11 @@ public final class RequestContextUtils {
 
     static Locale prepareLocale( RequestContextParameter factoryParameter) {
         // Todo - filter preferredLocale with locale defined for this site
-        Locale tempLocale = getPreferredLocaleFromRequest( factoryParameter.getRequest(), factoryParameter.getPortalInfo().getSiteId() );
-        if (tempLocale==null)
-            tempLocale = factoryParameter.getPortalInfo().getDefaultLocale();
+        Locale tempLocale = getPreferredLocaleFromRequest( factoryParameter.getRequest(), factoryParameter.getSiteId() );
+        if (tempLocale==null) {
+            PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
+            tempLocale = portalInfo.getDefaultLocale();
+        }
 
         Locale realLocale = StringTools.getLocale( PortletUtils.getString(factoryParameter.getRequest(), ContainerConstants.NAME_LANG_PARAM, tempLocale.toString()) );
         if ( log.isDebugEnabled() )
@@ -251,22 +255,23 @@ public final class RequestContextUtils {
         bean.setDefaultPortletName( bean.getExtendedCatalogItem().getFullPortletName() );
         bean.setDefaultRequestState( new RequestState() );
 
-        initParametersMap(bean, factoryParameter);
+        PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
+        initParametersMap(bean, factoryParameter, portalInfo);
 
         return bean;
     }
 
-    static void initParametersMap( RequestContext bean, RequestContextParameter factoryParameter) {
-        PortalTemplate template = factoryParameter.getPortalInfo().getPortalTemplateManager().getTemplate(
-            bean.getExtendedCatalogItem().getTemplateId()
+    static void initParametersMap(RequestContext requestContext, RequestContextParameter factoryParameter, PortalInfo portalInfo) {
+        PortalTemplate template = portalInfo.getPortalTemplateManager().getTemplate(
+            requestContext.getExtendedCatalogItem().getTemplateId()
         );
 
         if (template == null) {
-            String errorString = "Template with id " + bean.getExtendedCatalogItem().getTemplateId() + " not found";
+            String errorString = "Template with id " + requestContext.getExtendedCatalogItem().getTemplateId() + " not found";
             log.warn(errorString);
             throw new IllegalStateException(errorString);
         }
-        bean.setTemplateName( template.getTemplateName() );
+        requestContext.setTemplateName( template.getTemplateName() );
         // looking for dynamic portlet.
         int i=0;
         if (log.isDebugEnabled()) {
@@ -286,79 +291,79 @@ public final class RequestContextUtils {
                     log.debug("    template name: " +template.getTemplateName());
                     log.debug("    namespace: " +namespace.getNamespace());
                     log.debug("    portlet: " +portletName);
-                    log.debug("    default namespace: " +bean.getDefaultNamespace());
-                    log.debug("    default portlet: " +bean.getExtendedCatalogItem().getFullPortletName());
+                    log.debug("    default namespace: " +requestContext.getDefaultNamespace());
+                    log.debug("    default portlet: " +requestContext.getExtendedCatalogItem().getFullPortletName());
                     log.debug("");
                 }
 
-                if ( bean.getDefaultNamespace()!=null) {
-                    if ( bean.getDefaultNamespace().equals( namespace.getNamespace() ) ) {
+                if ( requestContext.getDefaultNamespace()!=null) {
+                    if ( requestContext.getDefaultNamespace().equals( namespace.getNamespace() ) ) {
                         if (log.isDebugEnabled()) {
-                            log.debug("    Create parameter for NS "+namespace.getNamespace() +", action state: " +bean.getDefaultRequestState());
+                            log.debug("    Create parameter for NS "+namespace.getNamespace() +", action state: " +requestContext.getDefaultRequestState());
                         }
-                        requestState = initParameterForDefaultPortlet(factoryParameter, bean);
+                        requestState = initParameterForDefaultPortlet(factoryParameter, requestContext, portalInfo);
                     }
                     else {
                         requestState = new RequestState();
                         PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, List<String>>() );
-                        bean.getParameters().put( namespace.getNamespace(), portletParameters );
+                        requestContext.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
                 else {
-                    String tempPortletName = bean.getExtendedCatalogItem().getFullPortletName();
+                    String tempPortletName = requestContext.getExtendedCatalogItem().getFullPortletName();
                     if (tempPortletName !=null && tempPortletName.equals(portletName)) {
-                        requestState = initParameterForDefaultPortlet(factoryParameter, bean);
+                        requestState = initParameterForDefaultPortlet(factoryParameter, requestContext, portalInfo);
                     }
                     else {
                         requestState = new RequestState();
                         PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, List<String>>() );
-                        bean.getParameters().put( namespace.getNamespace(), portletParameters );
+                        requestContext.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
             } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                 //noinspection UnusedAssignment
                 Namespace namespace = NamespaceFactory.getNamespace(
-                    bean.getExtendedCatalogItem().getFullPortletName(), template.getTemplateName(), i++
+                    requestContext.getExtendedCatalogItem().getFullPortletName(), template.getTemplateName(), i++
                 );
-                bean.setDefaultNamespace( namespace.getNamespace() );
-                requestState = initParameterForDefaultPortlet(factoryParameter, bean);
+                requestContext.setDefaultNamespace( namespace.getNamespace() );
+                requestState = initParameterForDefaultPortlet(factoryParameter, requestContext, portalInfo);
             }
             else {
                 continue;
             }
-            if (PortletService.getBooleanParam(bean.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.always_process_as_action, false)) {
+            if (PortletService.getBooleanParam(requestContext.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.always_process_as_action, false)) {
                 log.debug("Set explicitly action status for portlet");
                 requestState.setActionRequest(true);
             }
         }
     }
 
-    public static RequestState initParameterForDefaultPortlet(RequestContextParameter factoryParameter, RequestContext bean) {
+    public static RequestState initParameterForDefaultPortlet(RequestContextParameter factoryParameter, RequestContext requestContext, PortalInfo portalInfo) {
         // prepare dynamic parameters
         PortletParameters portletParameters;
         if (factoryParameter.isMultiPartRequest()) {
-            portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), factoryParameter.getRequestBodyFile() );
+            portletParameters = new PortletParameters( requestContext.getDefaultNamespace(), requestContext.getDefaultRequestState(), factoryParameter.getRequestBodyFile() );
         }
         else {
-            Map<String, List<String>> httpRequestParameter = prepareParameters(factoryParameter.getRequest(), factoryParameter.getPortalInfo().getSite().getPortalCharset());
+            Map<String, List<String>> httpRequestParameter = prepareParameters(factoryParameter.getRequest(), portalInfo.getSite().getPortalCharset());
 
             // init id of concrete portlet instance with value
-            if (bean.getConcretePortletIdValue()!=null) {
-                String nameId = PortletService.getStringParam( bean.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.name_portlet_id );
+            if (requestContext.getConcretePortletIdValue()!=null) {
+                String nameId = PortletService.getStringParam( requestContext.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.name_portlet_id );
                 if ( log.isDebugEnabled() ) {
                     log.debug( "nameId: "+nameId );
-                    log.debug( "Id: "+bean.getConcretePortletIdValue() );
+                    log.debug( "Id: "+requestContext.getConcretePortletIdValue() );
                     log.debug( "httpRequestParameter: "+httpRequestParameter );
                 }
                 if (nameId!=null) {
-                    MapWithParameters.putInStringList(httpRequestParameter, nameId, bean.getConcretePortletIdValue().toString() );
+                    MapWithParameters.putInStringList(httpRequestParameter, nameId, requestContext.getConcretePortletIdValue().toString() );
                 }
             }
 
-            portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), httpRequestParameter );
+            portletParameters = new PortletParameters( requestContext.getDefaultNamespace(), requestContext.getDefaultRequestState(), httpRequestParameter );
         }
-        bean.getParameters().put( bean.getDefaultNamespace(), portletParameters );
-        return bean.getDefaultRequestState();
+        requestContext.getParameters().put( requestContext.getDefaultNamespace(), portletParameters );
+        return requestContext.getDefaultRequestState();
     }
 
     private static Map<String, List<String>> prepareParameters( final HttpServletRequest request, final String portalCharset ) {

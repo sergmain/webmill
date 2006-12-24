@@ -68,7 +68,7 @@ public final class PageidRequestContextProcessor implements RequestContextProces
             pageId = path.substring(idxSlash + 1, idx);
 
         if (log.isDebugEnabled())  {
-            log.debug("siteId: " + factoryParameter.getPortalInfo().getSiteId() );
+            log.debug("siteId: " + factoryParameter.getSiteId() );
             log.debug("locale: " + locale.toString() );
             log.debug("pageId: " + pageId);
         }
