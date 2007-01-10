@@ -80,9 +80,31 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      */
     private List<PortalTemplateParameter> parameters;
 
+    private String toStringValue=null;
+
     public PortalTemplateItemImpl() {
         super();
         parameters = new ArrayList<PortalTemplateParameter>();
+    }
+
+    public String toString() {
+        if (toStringValue==null) {
+            synchronized(this) {
+                if (toStringValue==null) {
+                    String s = new StringBuilder()
+                        .append("[").append(portalTemplateItemType.toString()).append(",")
+                        .append(value).append(",").append(code).append(",").append(xmlRoot).append(",")
+                        .append(role).append(",").append(getParameters()).append("]").toString();
+
+                    toStringValue = s;
+                }
+            }
+        }
+        return toStringValue;
+    }
+
+    public int hashCode() {
+        return toString().hashCode();
     }
 
     /**
@@ -137,6 +159,9 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      * @return returns a reference to the Collection.
      */
     public List<PortalTemplateParameter> getParameters() {
+        if (parameters==null) {
+            parameters = new ArrayList<PortalTemplateParameter>();
+        }
         return parameters;
     }
 

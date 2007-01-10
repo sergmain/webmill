@@ -76,16 +76,16 @@ import org.riverock.sso.a3.AuthTools;
  * User: Admin
  * Date: Aug 26, 2003
  * Time: 4:40:19 PM
- * 
+ * <p/>
  * $Id$
  */
 public final class PortalRequestInstance {
-    private final static Logger log = Logger.getLogger( PortalRequestInstance.class );
+    private final static Logger log = Logger.getLogger(PortalRequestInstance.class);
 
     private List<PageElement> pageElementList = new ArrayList<PageElement>();
 
     private static final int WEBPAGE_BUFFER_SIZE = 15000;
-    private static final int MAX_REQUEST_BODY_SIZE = 25*1024*1024; // 25Mb
+    private static final int MAX_REQUEST_BODY_SIZE = 25 * 1024 * 1024; // 25Mb
 
     ByteArrayOutputStream byteArrayOutputStream = null;
     XsltTransformer xslt = null;
@@ -111,10 +111,11 @@ public final class PortalRequestInstance {
     private String errorString = null;
     private String redirectUrl = null;
 
-
 //    private PortalContext portalContext = null;
 
-    /** File with request data, if request is multipart */
+    /**
+     * File with request data, if request is multipart
+     */
     private File requestBodyFile = null;
     private boolean isMultiPartRequest = false;
 
@@ -154,7 +155,7 @@ public final class PortalRequestInstance {
         cookieManager = null;
         errorString = null;
         redirectUrl = null;
-        MainTools.deleteFile( requestBodyFile );
+        MainTools.deleteFile(requestBodyFile);
         requestBodyFile = null;
         portalDaoProvider = null;
         portletContainer = null;
@@ -170,12 +171,12 @@ public final class PortalRequestInstance {
     }
 
     PortalRequestInstance(
-        HttpServletRequest request_, 
-        HttpServletResponse response_, 
-        ServletConfig portalServletConfig, 
+        HttpServletRequest request_,
+        HttpServletResponse response_,
+        ServletConfig portalServletConfig,
         PortletContainer portletContainer,
         String portalInfoName
-        ) throws PortalException {
+    ) throws PortalException {
 
         this.startMills = System.currentTimeMillis();
         this.portalInfoName = portalInfoName;
@@ -192,42 +193,42 @@ public final class PortalRequestInstance {
         try {
             initTempPath();
 
-            org.apache.commons.fileupload.RequestContext uploadRequestContext = new ServletRequestContext( httpRequest );
-            this.isMultiPartRequest = FileUpload.isMultipartContent( uploadRequestContext );
+            org.apache.commons.fileupload.RequestContext uploadRequestContext = new ServletRequestContext(httpRequest);
+            this.isMultiPartRequest = FileUpload.isMultipartContent(uploadRequestContext);
             if (isMultiPartRequest) {
-                requestBodyFile = PortletUtils.storeBodyRequest( httpRequest, MAX_REQUEST_BODY_SIZE );
+                requestBodyFile = PortletUtils.storeBodyRequest(httpRequest, MAX_REQUEST_BODY_SIZE);
             }
             if (log.isDebugEnabled()) {
-                log.debug( "isMultiPartRequest: " + isMultiPartRequest );
-                log.debug( "requestBodyFile: " + requestBodyFile );
-                if (isMultiPartRequest && requestBodyFile!=null) {
-                    log.debug( "requestBodyFile: " + requestBodyFile.getAbsolutePath() );
-                    log.debug( "requestBodyFile length: " + requestBodyFile.length() );
-                    log.debug( "content length: " + httpRequest.getContentLength() );
+                log.debug("isMultiPartRequest: " + isMultiPartRequest);
+                log.debug("requestBodyFile: " + requestBodyFile);
+                if (isMultiPartRequest && requestBodyFile != null) {
+                    log.debug("requestBodyFile: " + requestBodyFile.getAbsolutePath());
+                    log.debug("requestBodyFile length: " + requestBodyFile.length());
+                    log.debug("content length: " + httpRequest.getContentLength());
                 }
             }
 
 
             this.auth = AuthTools.getAuthSession(httpRequest);
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            this.portalDaoProvider = new PortalDaoProviderImpl( auth, classLoader);
+            this.portalDaoProvider = new PortalDaoProviderImpl(auth, classLoader);
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
-                log.debug("portal requet instance class loader:\n" + classLoader +"\nhash: "+ classLoader.hashCode() );
+                log.debug("portal requet instance class loader:\n" + classLoader + "\nhash: " + classLoader.hashCode());
                 ClassLoader cl = portletContainer.getClass().getClassLoader();
-                log.debug("portlet container class loader:\n" + classLoader +"\nhash: "+ cl.hashCode() );
+                log.debug("portlet container class loader:\n" + classLoader + "\nhash: " + cl.hashCode());
             }
             this.preferredLocales = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
 
-            PortalInfo portalInfo = PortalInfoImpl.getInstance( httpRequest.getServerName() );
-            if (portalInfo.getSiteId()==null) {
+            PortalInfo portalInfo = PortalInfoImpl.getInstance(httpRequest.getServerName());
+            if (portalInfo.getSiteId() == null) {
                 throw new IllegalArgumentException("siteId is null");
             }
             RequestContextParameter factoryParameter =
-                new RequestContextParameter(httpRequest, portletContainer, isMultiPartRequest, requestBodyFile, portalInfo.getSiteId() );
+                new RequestContextParameter(httpRequest, portletContainer, isMultiPartRequest, requestBodyFile, portalInfo.getSiteId());
 
-            this.requestContext = RequestContextFactory.createRequestContext( factoryParameter );
-            if (requestContext==null) {
+            this.requestContext = RequestContextFactory.createRequestContext(factoryParameter);
+            if (requestContext == null) {
                 throw new IllegalArgumentException("General error for access portal page");
             }
 
@@ -243,23 +244,24 @@ public final class PortalRequestInstance {
                 PortletParameters portletParameters = null;
                 if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
                     portletName = templateItem.getValueAsPortletName();
-                    
-                    namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++);
+
+                    namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++, templateItem);
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
-                    if (portletParameters==null) {
+                    if (portletParameters == null) {
                         portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, List<String>>());
                     }
-                } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
+                }
+                else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                     portletName = requestContext.getDefaultPortletName();
-                    namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++);
+                    namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++, templateItem);
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
 
-                    if (portletParameters==null) {
+                    if (portletParameters == null) {
                         throw new IllegalStateException(
                             "portletParameters object is null, " +
-                                "namespace: " + namespace.getNamespace() +", " +
+                                "namespace: " + namespace.getNamespace() + ", " +
                                 "portletName: " + portletName
                         );
                     }
@@ -328,11 +330,12 @@ public final class PortalRequestInstance {
 
     /**
      * remove form session all attributes, which are corresponded to destroyed portlet
+     *
      * @param destroyedPortletNames name of destroyed portlet
-     * @param session http session
+     * @param session               http session
      */
     private void checkDestroyedPortlet(List<String> destroyedPortletNames, HttpSession session) {
-        if (session==null) {
+        if (session == null) {
             return;
         }
         try {
@@ -342,8 +345,8 @@ public final class PortalRequestInstance {
                 List<Namespace> namespaces = NamespaceFactory.getNamespaces(portletName);
                 for (Namespace namespace : namespaces) {
                     for (String attr : attrs) {
-                        String realAttrName = nm.decode(namespace,  attr);
-                        if (realAttrName!=null) {
+                        String realAttrName = nm.decode(namespace, attr);
+                        if (realAttrName != null) {
                             session.removeAttribute(attr);
                         }
                     }
@@ -351,20 +354,20 @@ public final class PortalRequestInstance {
             }
         }
         catch (Throwable e) {
-            log.error("Error remove attributed",e);
+            log.error("Error remove attributed", e);
         }
     }
 
     private boolean checkTemplateItemRole(PortalTemplateItem templateItem) {
-        if (templateItem==null || StringUtils.isBlank( templateItem.getRole() ) ) {
+        if (templateItem == null || StringUtils.isBlank(templateItem.getRole())) {
             return true;
         }
 
-        if (auth==null) {
+        if (auth == null) {
             return false;
         }
 
-        StringTokenizer st = new StringTokenizer( templateItem.getRole(), ", ", false);
+        StringTokenizer st = new StringTokenizer(templateItem.getRole(), ", ", false);
         while (st.hasMoreTokens()) {
             String role = st.nextToken();
             if (isUserInRole(role)) {
@@ -405,12 +408,12 @@ public final class PortalRequestInstance {
             log.debug("PortalRequestInstance.isUserInRole()");
             log.debug("    role: " + role);
         }
-        if (role==null) {
+        if (role == null) {
             return false;
         }
 
         Boolean access = userRoles.get(role);
-        if (access!=null) {
+        if (access != null) {
             return access;
         }
 
@@ -423,7 +426,7 @@ public final class PortalRequestInstance {
             log.debug("    auth: " + auth);
         }
 
-        if (httpRequest.getServerName()==null || auth==null) {
+        if (httpRequest.getServerName() == null || auth == null) {
             return role.equals(PortalConstants.WEBMILL_ANONYMOUS_ROLE);
         }
 
@@ -432,8 +435,8 @@ public final class PortalRequestInstance {
             return false;
         }
 
-        boolean status = auth.checkAccess( httpRequest.getServerName() );
-        if ( !status ) {
+        boolean status = auth.checkAccess(httpRequest.getServerName());
+        if (!status) {
             userRoles.put(role, false);
             return false;
         }
@@ -443,14 +446,14 @@ public final class PortalRequestInstance {
             return true;
         }
 
-        boolean roleRefAccess = auth.isUserInRole( role );
+        boolean roleRefAccess = auth.isUserInRole(role);
         userRoles.put(role, roleRefAccess);
 
         return roleRefAccess;
     }
 
     public Locale getLocale() {
-        if (requestContext==null)
+        if (requestContext == null)
             return null;
         else
             return requestContext.getLocale();
@@ -470,14 +473,14 @@ public final class PortalRequestInstance {
 
     private void initTemplate(PortalInfo portalInfo) throws PortalException {
 
-        template = portalInfo.getPortalTemplateManager().getTemplate( requestContext.getTemplateName(), getLocale().toString() );
+        template = portalInfo.getPortalTemplateManager().getTemplate(requestContext.getTemplateName(), getLocale().toString());
 
         if (template == null) {
             String errorString = "Template '" + requestContext.getTemplateName() + "', locale " + getLocale().toString() + ", not found";
             log.warn(errorString);
             throw new PortalException(errorString);
         }
-        log.debug( "template:\n" + template.toString());
+        log.debug("template:\n" + template.toString());
 
     }
 
@@ -531,11 +534,12 @@ public final class PortalRequestInstance {
     private void initTempPath() {
         // init temp path for current request
         try {
-            tempPath=(File)httpRequest.getAttribute("javax.servlet.context.tempdir");
-        } catch (Throwable e) {
+            tempPath = (File) httpRequest.getAttribute("javax.servlet.context.tempdir");
+        }
+        catch (Throwable e) {
             log.error("error get temp path from request attributes, set to java.io.temp", e);
         }
-        if (tempPath==null ){
+        if (tempPath == null) {
             tempPath = new File(System.getProperty("java.io.tmpdir"));
         }
         if (!tempPath.exists()) {

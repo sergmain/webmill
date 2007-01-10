@@ -36,15 +36,19 @@ public class PortalTemplateParameterImpl implements PortalTemplateParameter {
     /**
      * Field _name
      */
-    private java.lang.String _name;
+    private String _name;
 
     /**
      * Field _value
      */
-    private java.lang.String _value;
+    private String _value;
 
     public PortalTemplateParameterImpl() {
         super();
+    }
+
+    public String toString() {
+        return "[" + _name + ":" + _value + "]";
     }
 
     /**
@@ -70,16 +74,16 @@ public class PortalTemplateParameterImpl implements PortalTemplateParameter {
      *
      * @param name the value of field 'name'.
      */
-    public void setName(java.lang.String name) {
+    public void setName(String name) {
         this._name = name;
-    } //-- void setName(java.lang.String) 
+    }
 
     /**
      * Sets the value of field 'value'.
      *
      * @param value the value of field 'value'.
      */
-    public void setValue(java.lang.String value) {
+    public void setValue(String value) {
         this._value = value;
-    } //-- void setValue(java.lang.String) 
+    }  
 }
