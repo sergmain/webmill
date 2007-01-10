@@ -4,7 +4,7 @@
     <groupId>org.riverock</groupId>
     <artifactId>riverock-webmill</artifactId>
     <packaging>jar</packaging>
-    <version>5.6.2-SNAPSHOT</version>
+    <version>5.6.2</version>
     <name>Webmill portal</name>
     <url>http://webmill.riverock.org</url>
     <licenses>

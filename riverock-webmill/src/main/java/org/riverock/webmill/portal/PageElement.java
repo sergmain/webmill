@@ -277,6 +277,14 @@ public final class PageElement {
                 actionRequestParamMap.putAll(parameters.getParameters());
             }
 
+            if (log.isDebugEnabled()) {
+                log.debug("portletMetadata: " + portletMetadata);
+                log.debug("portletEntry: " + portletEntry);
+                if (portletEntry!=null) {
+                    log.debug("portletEntry.getPortletDefinition(): " + portletEntry.getPortletDefinition());
+                }
+            }
+            
             this.portletPreferences = new PortletPreferencesImpl(
                 new HashMap<String, List<String>>(portletMetadata),
                 persistencer,
@@ -462,6 +470,10 @@ public final class PageElement {
                 log.debug("Start init page element. Portlet name: '" + portletName + "'");
             }
 
+            if (log.isDebugEnabled()) {
+                log.debug("Start create instance of portlet '" + portletName + "'");
+            }
+
             portletEntry = portletContainer.getPortletInstance(portletName);
 
             if (portletEntry == null) {
@@ -476,7 +488,7 @@ public final class PageElement {
             }
 
             if ( portletEntry.getIsWait() ) {
-                log.error( "portlet permanent unavailable for "+portletEntry.getInterval()+" seconds");
+                log.error( "portlet unavailable for "+portletEntry.getInterval()+" seconds");
                 errorString = portletUnavailable(portletName);
                 return;
             }
@@ -492,9 +504,7 @@ public final class PageElement {
 
             isXml = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_xml, Boolean.FALSE);
 
-            if (log.isDebugEnabled())
-                log.debug("Start create instance of portlet '" + portletName + "'");
-
+/*
             portletEntry = portletContainer.getPortletInstance(portletName);
 
             if (portletEntry.getIsPermanent()) {
@@ -510,6 +520,7 @@ public final class PageElement {
             if (log.isDebugEnabled()) {
                 log.debug("Error message of create portlet instance: " + errorString);
             }
+*/
 
             contextPath = getContextPath(portalRequestInstance);
 
