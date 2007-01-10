@@ -162,8 +162,9 @@ public final class PortalRequestProcessor {
 
             // PortletParameters not null only for action portlet.
             // For all others portlet from template PortletParameters can be null
-            if (pageElement.getParameters()!=null && !pageElement.getParameters().getRequestState().isActionRequest())
+            if (pageElement.getParameters()!=null && !pageElement.getParameters().getRequestState().isActionRequest()) {
                 continue;
+            }
 
             TemplateItemBaseClass.processActionTemplateItem(pageElement);
 
