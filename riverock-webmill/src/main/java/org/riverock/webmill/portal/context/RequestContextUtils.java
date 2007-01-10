@@ -286,7 +286,7 @@ public final class RequestContextUtils {
             if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
                 String portletName = templateItem.getValueAsPortletName();
 
-                Namespace namespace = NamespaceFactory.getNamespace(portletName, template.getTemplateName(), i++);
+                Namespace namespace = NamespaceFactory.getNamespace(portletName, template.getTemplateName(), i++, templateItem);
                 if (log.isDebugEnabled()) {
                     log.debug("    template name: " +template.getTemplateName());
                     log.debug("    namespace: " +namespace.getNamespace());
@@ -323,8 +323,8 @@ public final class RequestContextUtils {
             } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                 //noinspection UnusedAssignment
                 Namespace namespace = NamespaceFactory.getNamespace(
-                    requestContext.getExtendedCatalogItem().getFullPortletName(), template.getTemplateName(), i++
-                );
+                    requestContext.getExtendedCatalogItem().getFullPortletName(), template.getTemplateName(), i++,
+                    templateItem);
                 requestContext.setDefaultNamespace( namespace.getNamespace() );
                 requestState = initParameterForDefaultPortlet(factoryParameter, requestContext, portalInfo);
             }

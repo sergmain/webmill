@@ -29,6 +29,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.riverock.interfaces.portal.template.PortalTemplateItem;
+
 /**
  * @author SergeMaslyukov
  *         Date: 08.03.2006
@@ -47,11 +49,13 @@ public class NamespaceFactory {
      * @param fullPortletName full portlet name. Format: [["application-id":]"portlet-id":]"portlet-name
      * <br>For example: webmill:login-portlet-id:login-portlet
      * @param templateName template name
-     * @param tempalteItemIndex intex if item in template 
+     * @param tempalteItemIndex intex if item in template
+     * @param templateItem
      * @return namespace
      */
-    public static Namespace getNamespace( String fullPortletName, String templateName, int tempalteItemIndex ) {
-        String n = "idx-" + tempalteItemIndex + "_" + templateName + '_' + fullPortletName;
+    public static Namespace getNamespace(String fullPortletName, String templateName, int tempalteItemIndex, PortalTemplateItem templateItem) {
+//        String n = "idx-" + tempalteItemIndex + "_" + templateName + '_' + fullPortletName;
+        String n = "idx-" + templateItem.hashCode() + "_" + templateName + '_' + fullPortletName;
 
         Namespace namespace = namespaces.get(n);
         if (namespace!=null) {

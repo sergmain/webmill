@@ -23,8 +23,6 @@
  */
 package org.riverock.commerce.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -34,7 +32,6 @@ import org.hibernate.Session;
 import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.commerce.tools.HibernateUtils;
-import org.riverock.common.tools.RsetTools;
 
 /**
  * @author Sergei Maslyukov
