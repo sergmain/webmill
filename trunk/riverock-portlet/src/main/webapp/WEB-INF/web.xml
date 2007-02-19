@@ -193,14 +193,12 @@
 			<param-name>log-config-file</param-name>
 			<param-value>config\log4j.properties</param-value>
 		</init-param>
+<!--
 		<init-param>
 			<param-name>generic-config-file</param-name>
 			<param-value>config\config-generic.xml</param-value>
 		</init-param>
-		<init-param>
-			<param-name>cache-config-file</param-name>
-			<param-value>config\config-cache.xml</param-value>
-		</init-param>
+-->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>

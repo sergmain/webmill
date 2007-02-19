@@ -61,7 +61,7 @@ public class ConfigObject {
         ConfigObject config = new ConfigObject();
         File configFile = null;
         if (PropertiesProvider.getIsServletEnv()) {
-            boolean isLocal = "true".equalsIgnoreCase((String) PropertiesProvider.getParameter(LOCAL_CONFIG_PARAM_NAME));
+            boolean isLocal = "true".equalsIgnoreCase(PropertiesProvider.getParameter(LOCAL_CONFIG_PARAM_NAME));
             if (isLocal) {
                 config.nameConfigFile =
                     PropertiesProvider.getApplicationPath() +
@@ -69,7 +69,8 @@ public class ConfigObject {
                         "WEB-INF" +
                         File.separatorChar +
                         PropertiesProvider.getParameter(nameConfigParam);
-            } else {
+            }
+            else {
                 if (log.isDebugEnabled()) {
                     ClassLoader cl = Thread.currentThread().getContextClassLoader();
                     log.debug("classLoader: " + cl + "\nhash: " + cl.hashCode());
