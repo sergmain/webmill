@@ -46,10 +46,10 @@ import org.riverock.interfaces.common.TreeItem;
  *         $Id$
  */
 @Entity
-@Table(name="wm_portal_catalog")
+@Table(name="WM_PORTAL_CATALOG")
 @TableGenerator(
     name="TABLE_PORTAL_CATALOG",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_portal_catalog",

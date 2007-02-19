@@ -37,10 +37,11 @@ import java.io.Serializable;
  * $Id$
  */
 @javax.persistence.Entity
-@Table(name="wm_news_list")
+@Table(name="WM_NEWS_LIST")
+//@Table(name="wm_news_list")
 @TableGenerator(
     name="TABLE_NEWS_LIST",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_news_list",

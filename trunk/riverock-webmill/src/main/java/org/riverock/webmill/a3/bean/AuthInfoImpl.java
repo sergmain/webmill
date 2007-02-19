@@ -41,10 +41,11 @@ import org.riverock.interfaces.sso.a3.AuthInfo;
  *  $Id$
  */
 @Entity
-@Table(name="wm_auth_user")
+@Table(name="WM_AUTH_USER")
+//@Table(name="wm_auth_user")
 @TableGenerator(
     name="TABLE_AUTH_USER",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_auth_user",

@@ -43,10 +43,10 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
  *         $Id$
  */
 @Entity
-@Table(name="wm_portal_site_language")
+@Table(name="WM_PORTAL_SITE_LANGUAGE")
 @TableGenerator(
     name="TABLE_SITE_LANGUAGE",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_portal_site_language",

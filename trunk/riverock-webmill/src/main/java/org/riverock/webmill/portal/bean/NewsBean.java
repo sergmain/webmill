@@ -39,10 +39,11 @@ import java.sql.Blob;
  * $Id$
  */
 @Entity
-@Table(name="wm_news_item")
+//@Table(name="wm_news_item")
+@Table(name="WM_NEWS_ITEM")
 @TableGenerator(
     name="TABLE_NEWS_ITEM",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_news_item",
