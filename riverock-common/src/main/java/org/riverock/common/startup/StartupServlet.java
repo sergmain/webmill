@@ -184,7 +184,8 @@ public final class StartupServlet extends HttpServlet {
         else {
             logConfigFile = getLogConfigFileFromJNDI(logConfigFile);
         }
-        System.out.println("logConfigFile = " + logConfigFile);
+        logConfigFile = logConfigFile.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
+        System.out.println("logConfigFile: " + logConfigFile);
 
         if (logConfigFile!=null) {
             // configure log4j
@@ -196,15 +197,19 @@ public final class StartupServlet extends HttpServlet {
     }
 
     public final void destroy() {
-       LogManager.shutdown();
-    }
-
-    private static String getLogConfigFileFormConfig() {
-        return PropertiesProvider.getParameter( LOG_CONFIG_FILE_PARAM_NAME );
+        try {
+            LogManager.shutdown();
+        } catch (Throwable e) {
+            e.printStackTrace(); 
+        }
     }
 
     private static String getLogPathFromConfig() {
         return PropertiesProvider.getParameter( LOG_PATH_PARAM_NAME );
+    }
+
+    private static String getLogConfigFileFormConfig() {
+        return PropertiesProvider.getParameter( LOG_CONFIG_FILE_PARAM_NAME );
     }
 
     private static String getLogConfigFileFromJNDI(String logConfigFile) {
@@ -212,9 +217,6 @@ public final class StartupServlet extends HttpServlet {
         try {
             InitialContext ic = new InitialContext();
             logConfigFile = (String) ic.lookup( name ); 
-	    logConfigFile = logConfigFile.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
-
-            System.out.println("millLogConfigFile - " + logConfigFile);
         }
         catch (NamingException e) {
             System.out.println("Error get name of logConfigFile. JNDI name " + name);
