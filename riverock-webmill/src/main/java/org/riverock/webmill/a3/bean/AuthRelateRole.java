@@ -42,10 +42,11 @@ import javax.persistence.Column;
  *         $Id$
  */
 @Entity
-@Table(name="wm_auth_relate_accgroup")
+@Table(name="WM_AUTH_RELATE_ACCGROUP")
+//@Table(name="wm_auth_relate_accgroup")
 @TableGenerator(
     name="TABLE_AUTH_RELATE_ROLE",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_auth_relate_accgroup",

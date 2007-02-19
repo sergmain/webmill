@@ -45,10 +45,10 @@ import org.riverock.interfaces.portal.bean.Xslt;
  *         Time: 17:21:17
  */
 @Entity
-@Table(name="wm_portal_xslt")
+@Table(name="WM_PORTAL_XSLT")
 @TableGenerator(
     name="TABLE_XSLT",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_portal_xslt",

@@ -43,10 +43,11 @@ import org.riverock.interfaces.portal.user.UserMetadataItem;
  *         Time: 20:21:04
  */
 @Entity
-@Table(name="wm_list_user_metadata")
+@Table(name="WM_LIST_USER_METADATA")
+//@Table(name="wm_list_user_metadata")
 @TableGenerator(
     name="TABLE_LIST_USER_METADATA",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_list_user_metadata",

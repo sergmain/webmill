@@ -45,10 +45,10 @@ import org.riverock.interfaces.portal.bean.Holding;
  *         $Id$
  */
 @Entity
-@Table(name="wm_list_holding")
+@Table(name="WM_LIST_HOLDING")
 @TableGenerator(
     name="TABLE_LIST_HOLDING",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_list_holding",

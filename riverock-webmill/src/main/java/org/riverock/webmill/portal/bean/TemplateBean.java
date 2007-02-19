@@ -46,10 +46,11 @@ import org.riverock.interfaces.portal.bean.Template;
  *         $Id$
  */
 @Entity
-@Table(name="wm_portal_template")
+@Table(name="WM_PORTAL_TEMPLATE")
+//@Table(name="wm_portal_template")
 @TableGenerator(
     name="TABLE_PORTAL_TEMPLATE",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_portal_template",

@@ -44,10 +44,11 @@ import org.riverock.common.tools.StringTools;
  *         Time: 15:28:27
  */
 @Entity
-@Table(name="wm_list_user")
+@Table(name="WM_LIST_USER")
+//@Table(name="wm_list_user")
 @TableGenerator(
     name="TABLE_LIST_USER",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_list_user",

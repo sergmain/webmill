@@ -42,10 +42,10 @@ import javax.persistence.Column;
  *         $Id$
  */
 @Entity
-@Table(name="wm_list_r_holding_company")
+@Table(name="WM_LIST_R_HOLDING_COMPANY")
 @TableGenerator(
     name="TABLE_RELATION_HOLDING_COMPANY",
-    table="wm_portal_ids",
+    table="WM_PORTAL_IDS",
     pkColumnName = "sequence_name",
     valueColumnName = "sequence_next_value",
     pkColumnValue = "wm_list_r_holding_company",
