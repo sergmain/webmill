@@ -66,4 +66,4 @@
     </h:form>
 </f:view>
 <br/>
-<a href="<%= request.getContextPath() %>/db.xml" target="_blank">Export DB as XML file</a>
+<a href="<%= request.getContextPath() %>/db.gz" target="_blank">Export DB as GZip`ed XML data</a>
