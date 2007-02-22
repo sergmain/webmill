@@ -28,13 +28,20 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.webmill.admin.resource.Manager" var="manager"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Company" var="msg"/>
 
-<h:commandButton id="structure-list-action" action="structure" value="#{manager.structure_button}"
-                 styleClass="top-button-action"/>
-<h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
-                 styleClass="top-button-action"/>
-<h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
-                 styleClass="top-button-action"/>
-<h:commandButton id="db-list-action" action="db" value="#{manager.db_button}"
-                 styleClass="top-button-action"/>
+<t:dataTable id="companyDataTable"
+             var="companyBean"
+             value="#{companyService.companyList}"
+             preserveDataModel="true">
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="#{msg.header_table_company_name}"/>
+        </f:facet>
+        <t:commandLink action="#{companyAction.selectCompany}" immediate="true" >
+            <h:outputText value="#{companyBean.name}"/>
+            <t:updateActionListener property="#{companySessionBean.currentCompanyId}" value="#{companyBean.id}"/>
+        </t:commandLink>
+    </h:column>
+
+</t:dataTable>
