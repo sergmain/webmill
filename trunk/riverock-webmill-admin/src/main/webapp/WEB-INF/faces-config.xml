@@ -118,6 +118,13 @@
         </managed-property>
     </managed-bean>
 
+    <!-- DB section -->
+    <managed-bean>
+        <managed-bean-name>dbAction</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.action.DbAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
     <!-- User section -->
     <managed-bean>
         <managed-bean-name>portalUserSessionBean</managed-bean-name>
@@ -204,6 +211,22 @@
         <navigation-case>
             <from-outcome>site</from-outcome>
             <to-view-id>/riverock/admin/site/site.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <!-- DB navigation rules -->
+    <navigation-rule>
+        <from-view-id>/riverock/admin/db/db.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>db-add</from-outcome>
+            <to-view-id>/riverock/admin/db/db-add.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>db</from-outcome>
+            <to-view-id>/riverock/admin/db/db.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
 

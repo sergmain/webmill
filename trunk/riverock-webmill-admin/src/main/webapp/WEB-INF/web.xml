@@ -188,6 +188,11 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>DbExportServlet</servlet-name>
+        <servlet-class>org.riverock.webmill.admin.servlet.DbExportServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
     <!-- virtual path mapping -->
     <servlet-mapping>
@@ -198,6 +203,10 @@
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DbExportServlet</servlet-name>
+        <url-pattern>/db.xml</url-pattern>
     </servlet-mapping>
 
     <!-- Set the default session timeout (in minutes) -->

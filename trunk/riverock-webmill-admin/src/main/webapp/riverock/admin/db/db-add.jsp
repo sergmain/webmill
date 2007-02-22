@@ -28,7 +28,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.webmill.admin.resource.Structure" var="msg"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Company" var="msg"/>
 <f:loadBundle basename="org.riverock.webmill.admin.resource.Manager" var="manager"/>
 
 <style type="text/css">
@@ -41,31 +41,27 @@
         height: 24px;
     }
 
-    .structure-button-action {
+    .company-button-action {
         width: 150px;
         height: 22px;
     }
 </style>
 
 <f:view>
+    <h:form id="add_company_form">
 
-    <h:form id="company_form">
+        <h:panelGrid columns="1" rendered="#{!empty companySessionBean.company}">
 
-        <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
-                         styleClass="top-button-action"/>
-        <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
-                         styleClass="top-button-action"/>
-        <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
-                         styleClass="top-button-action"/>
-        <h:commandButton id="db-list-action" action="db" value="#{manager.db_button}"
-                         styleClass="top-button-action"/>
+            <f:subview id="subviewCompanyInfo">
+                <jsp:include page="db-add-edit.jsp"/>
+            </f:subview>
 
-        <h:panelGrid columns="1">
-
-            <h:commandButton value="#{msg.action_create_db_structure}"
-                             action="#{structureAction.createDbStructure}"
-                             styleClass="structure-button-action"
-                />
+            <h:panelGroup id="editDeleteControls">
+                <h:commandButton value="#{msg.action_add_process}" action="#{companyAction.processAddCompany}"
+                                 styleClass="company-button-action"/>
+                <h:commandButton value="#{msg.action_add_cancel}" action="#{companyAction.cancelAddCompany}"
+                                 styleClass="company-button-action"/>
+            </h:panelGroup>
 
         </h:panelGrid>
 

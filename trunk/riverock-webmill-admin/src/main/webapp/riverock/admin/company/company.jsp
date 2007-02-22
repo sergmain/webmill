@@ -57,6 +57,8 @@
                          styleClass="top-button-action"/>
         <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
                          styleClass="top-button-action"/>
+        <h:commandButton id="db-list-action" action="db" value="#{manager.db_button}"
+                         styleClass="top-button-action"/>
 
         <h:panelGrid columns="1">
 

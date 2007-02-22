@@ -26,15 +26,27 @@
 
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.webmill.admin.resource.Manager" var="manager"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Company" var="msg"/>
 
-<h:commandButton id="structure-list-action" action="structure" value="#{manager.structure_button}"
-                 styleClass="top-button-action"/>
-<h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
-                 styleClass="top-button-action"/>
-<h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
-                 styleClass="top-button-action"/>
-<h:commandButton id="db-list-action" action="db" value="#{manager.db_button}"
-                 styleClass="top-button-action"/>
+<h:outputText value="Company info"/>
+<h:panelGrid columns="2">
+    <h:outputText value="#{msg['company_name']}"/>
+    <h:inputText id="company-name-field" value="#{companySessionBean.company.name}"/>
+
+    <h:outputText value="#{msg.company_short_name}"/>
+    <h:inputText id="company-short-name-field" value="#{companySessionBean.company.shortName}"/>
+
+    <h:outputText value="#{msg.company_address}"/>
+    <h:inputText id="company-address-field" value="#{companySessionBean.company.address}"/>
+
+    <h:outputText value="#{msg.company_ceo}"/>
+    <h:inputText id="company-ceo-field" value="#{companySessionBean.company.ceo}"/>
+
+    <h:outputText value="#{msg.company_cfo}"/>
+    <h:inputText id="company-cfo-field" value="#{companySessionBean.company.cfo}"/>
+
+    <h:outputText value="#{msg.company_website}"/>
+    <h:inputText id="company-website-field" value="#{companySessionBean.company.website}"/>
+</h:panelGrid>
+ 	

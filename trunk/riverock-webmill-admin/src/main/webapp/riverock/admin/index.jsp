@@ -45,7 +45,7 @@
 <f:view>
     <h:form id="foo">
 
-        <h:panelGrid columns="4">
+        <h:panelGrid columns="5">
 
             <h:commandButton id="structure-list-action" action="structure" value="#{manager.structure_button}"
                              styleClass="top-button-action"/>
@@ -54,6 +54,8 @@
             <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
                              styleClass="top-button-action"/>
             <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
+                             styleClass="top-button-action"/>
+            <h:commandButton id="db-list-action" action="db" value="#{manager.db_button}"
                              styleClass="top-button-action"/>
 
         </h:panelGrid>
