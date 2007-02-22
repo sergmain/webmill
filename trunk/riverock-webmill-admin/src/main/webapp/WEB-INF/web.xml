@@ -206,7 +206,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DbExportServlet</servlet-name>
-        <url-pattern>/db.xml</url-pattern>
+        <url-pattern>/db.gz</url-pattern>
     </servlet-mapping>
 
     <!-- Set the default session timeout (in minutes) -->
@@ -215,6 +215,10 @@
     </session-config>
 
     <!-- Establish the default MIME type mappings -->
+    <mime-mapping>
+        <extension>gz</extension>
+        <mime-type>application/x-gzip</mime-type>
+    </mime-mapping>
     <mime-mapping>
         <extension>txt</extension>
         <mime-type>text/plain</mime-type>
