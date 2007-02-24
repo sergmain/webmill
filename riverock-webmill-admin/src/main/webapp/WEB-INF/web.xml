@@ -206,7 +206,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DbExportServlet</servlet-name>
-        <url-pattern>/db.gz</url-pattern>
+        <url-pattern>/db.zip</url-pattern>
     </servlet-mapping>
 
     <!-- Set the default session timeout (in minutes) -->
@@ -215,6 +215,10 @@
     </session-config>
 
     <!-- Establish the default MIME type mappings -->
+    <mime-mapping>
+        <extension>zip</extension>
+        <mime-type>application/zip</mime-type>
+    </mime-mapping>
     <mime-mapping>
         <extension>gz</extension>
         <mime-type>application/x-gzip</mime-type>
@@ -258,7 +262,10 @@
         </web-resource-collection>
         <auth-constraint>
             <!-- NOTE:  This role is not present in the default users file -->
+<!--
             <role-name>webmill-init</role-name>
+-->
+            <role-name>manager</role-name>
         </auth-constraint>
     </security-constraint>
 
@@ -271,7 +278,10 @@
     <!-- Security roles referenced by this web application -->
     <security-role>
         <description>The role that is required to log in to the Webmill portal initializer application</description>
+<!--
         <role-name>webmill-init</role-name>
+-->
+        <role-name>manager</role-name>
     </security-role>
 
 </web-app>

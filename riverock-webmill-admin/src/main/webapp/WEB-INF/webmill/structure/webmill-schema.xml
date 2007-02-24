@@ -11,6 +11,7 @@ riverock-database-structure.xsd">
 		<Fields name="SEARCH_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
 		<Fields name="WORD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
 	</Tables>
+
 	<Tables schema="TEST" name="WM_PORTLET_WEBCLIP" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_PORTLET_ARTICLE" columnName="ID_WEBCLIP" keySeq="1" pkName="ID_WEBCLIP_WPW_PK"/>
@@ -19,24 +20,12 @@ riverock-database-structure.xsd">
 		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
 		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
 		<Fields name="WEBCLIP_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="WEBCLIP_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTLET_WEBCLIP" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_WPW_FK" pkName="ID_SITE_SLS_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-	<Tables schema="TEST" name="WM_PORTLET_WEBCLIP_DATA" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_PORTLET_WEBCLIP_DATA" columnName="ID_WEBCLIP_DATA" keySeq="1" pkName="ID_WEBCLIP_DATA_WPWD_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_WEBCLIP_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_WEBCLIP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
-		<Fields name="WEBCLIP_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTLET_WEBCLIP" pkColumnName="ID_WEBCLIP" fkSchemaName="TEST" fkTableName="WM_PORTLET_WEBCLIP_DATA" fkColumnName="ID_WEBCLIP" keySeq="1" fkName="ID_WEBCLIP_WPWD_FK" pkName="ID_WEBCLIP_WPW_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
-
 
 	<Tables schema="TEST" name="WM_AUTH_ACCESS_GROUP" type="TABLE">
 		<PrimaryKey>
@@ -497,9 +486,9 @@ riverock-database-structure.xsd">
 		<Fields name="SHOP_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
 		<Fields name="ID_UPLOAD_PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
 	</Tables>
-	<Tables schema="TEST" name="PRICE_ITEM_DESCRIPTION" type="TABLE">
+	<Tables schema="TEST" name="WM_PRICE_ITEM_DESCRIPTION" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="PRICE_ITEM_DESCRIPTION" columnName="ID_PRICE_ITEM_DESCRIPTION" keySeq="1" pkName="ID_ITEMDSC_PID_PK"/>
+			<columns schemaName="TEST" tableName="WM_PRICE_ITEM_DESCRIPTION" columnName="ID_PRICE_ITEM_DESCRIPTION" keySeq="1" pkName="ID_ITEMDSC_PID_PK"/>
 		</PrimaryKey>
 		<Fields name="ID_PRICE_ITEM_DESCRIPTION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
@@ -512,7 +501,7 @@ riverock-database-structure.xsd">
 		<Fields name="ID_PRICE_ITEM_DESC_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_PRICE_ITEM_DESCRIPTION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
 		<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="PRICE_ITEM_DESCRIPTION" pkColumnName="ID_PRICE_ITEM_DESCRIPTION" fkSchemaName="TEST" fkTableName="WM_PRICE_ITEM_DESC_DATA" fkColumnName="ID_PRICE_ITEM_DESCRIPTION" keySeq="1" fkName="ID_PRICE_ITEM_DESC_PIDD_FK" pkName="ID_ITEMDSC_PID_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_ITEM_DESCRIPTION" pkColumnName="ID_PRICE_ITEM_DESCRIPTION" fkSchemaName="TEST" fkTableName="WM_PRICE_ITEM_DESC_DATA" fkColumnName="ID_PRICE_ITEM_DESCRIPTION" keySeq="1" fkName="ID_PRICE_ITEM_DESC_PIDD_FK" pkName="ID_ITEMDSC_PID_PK">
 			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
@@ -742,9 +731,9 @@ riverock-database-structure.xsd">
 		<Fields name="OID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
 		<Fields name="ID_TYPE_OBJECT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 	</Tables>
-	<Tables schema="TEST" name="PRICE_STORAGE_ORDER" type="TABLE">
+	<Tables schema="TEST" name="WM_PRICE_STORAGE_ORDER" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="PRICE_STORAGE_ORDER" columnName="ID_PRICE_STORAGE_ORDER" keySeq="1" pkName="ID_SRG_ORD_PSO_PK"/>
+			<columns schemaName="TEST" tableName="WM_PRICE_STORAGE_ORDER" columnName="ID_PRICE_STORAGE_ORDER" keySeq="1" pkName="ID_SRG_ORD_PSO_PK"/>
 		</PrimaryKey>
 		<Fields name="ID_PRICE_STORAGE_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
@@ -753,13 +742,13 @@ riverock-database-structure.xsd">
 		<Fields name="ORDER_ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 		<Fields name="IS_PROCESSED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 	</Tables>
-	<Tables schema="TEST" name="PRICE_STORAGE_ORDER_ITEMS" type="TABLE">
+	<Tables schema="TEST" name="WM_PRICE_STORAGE_ORDER_ITEMS" type="TABLE">
 		<PrimaryKey/>
 		<Fields name="ID_PRICE_STORAGE_ORDER_ITEMS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
 		<Fields name="QUANTITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
 		<Fields name="ID_PRICE_STORAGE_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="PRICE_STORAGE_ORDER" pkColumnName="ID_PRICE_STORAGE_ORDER" fkSchemaName="TEST" fkTableName="PRICE_STORAGE_ORDER_ITEMS" fkColumnName="ID_PRICE_STORAGE_ORDER" keySeq="1" fkName="ID_PRICE_STORAGE_ORDER_PSOI_FK" pkName="ID_SRG_ORD_PSO_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_STORAGE_ORDER" pkColumnName="ID_PRICE_STORAGE_ORDER" fkSchemaName="TEST" fkTableName="WM_PRICE_STORAGE_ORDER_ITEMS" fkColumnName="ID_PRICE_STORAGE_ORDER" keySeq="1" fkName="ID_PRICE_STORAGE_ORDER_PSOI_FK" pkName="ID_SRG_ORD_PSO_PK">
 			<DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
@@ -834,18 +823,6 @@ riverock-database-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-	<Tables schema="TEST" name="WM_PORTAL_CSS_DATA" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_PORTAL_CSS_DATA" columnName="ID_SITE_CONTENT_CSS_DATA" keySeq="1" pkName="ID_CNT_CSS_SCCD_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_SITE_CONTENT_CSS_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_SITE_CONTENT_CSS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
-		<Fields name="CSS_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_CSS" pkColumnName="ID_SITE_CONTENT_CSS" fkSchemaName="TEST" fkTableName="WM_PORTAL_CSS_DATA" fkColumnName="ID_SITE_CONTENT_CSS" keySeq="1" fkName="ID_CONTENT_CSS_SCCD_FK" pkName="ID_CNT_CSS_SCC_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
 	<Tables schema="TEST" name="WM_PORTLET_ARTICLE" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_PORTLET_ARTICLE" columnName="ID_SITE_CTX_ARTICLE" keySeq="1" pkName="ID_CTX_ATCL_SCA_PK"/>
@@ -866,18 +843,6 @@ riverock-database-structure.xsd">
 		<Fields name="ARTICLE_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTLET_ARTICLE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPORT_LANG_SCA_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
-	<Tables schema="TEST" name="WM_PORTLET_ARTICLE_DATA" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_PORTLET_ARTICLE_DATA" columnName="ID_SITE_CTX_ARTICLE_DATA" keySeq="1" pkName="ID_ARTCDAT_SCAD_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_SITE_CTX_ARTICLE_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_SITE_CTX_ARTICLE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
-		<Fields name="ARTICLE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTLET_ARTICLE" pkColumnName="ID_SITE_CTX_ARTICLE" fkSchemaName="TEST" fkTableName="WM_PORTLET_ARTICLE_DATA" fkColumnName="ID_SITE_CTX_ARTICLE" keySeq="1" fkName="ID_SITE_CTX_ARTICLE_SCAD_FK" pkName="ID_CTX_ATCL_SCA_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
@@ -1062,18 +1027,6 @@ riverock-database-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-	<Tables schema="TEST" name="WM_PORTAL_XSLT_DATA" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_PORTAL_XSLT_DATA" columnName="ID_SITE_XSLT_DATA" keySeq="1" pkName="ID_XSLT_DAT_SXD_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_SITE_XSLT_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_SITE_XSLT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
-		<Fields name="XSLT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_XSLT" pkColumnName="ID_SITE_XSLT" fkSchemaName="TEST" fkTableName="WM_PORTAL_XSLT_DATA" fkColumnName="ID_SITE_XSLT" keySeq="1" fkName="ID_SITE_XSLT_SXD_FK" pkName="ID_SITE_XSLT_SX_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
 	<Tables schema="" name="WM_FORUM" type="TABLE">
 		<PrimaryKey>
 			<columns catalogName="" schemaName="" tableName="WM_FORUM" columnName="FORUM_ID" keySeq="1" pkName="FORUM_ID_WF_PK"/>
@@ -1194,7 +1147,6 @@ where   a04.is_root = 1
 	</Views>
 -->
 	<Sequences name="SEQ_WM_PRICE_QUERY_TABLE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="29"/>
-	<Sequences name="SEQ_WM_PORTAL_XSLT_DATA" minValue="1" maxValue="9999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="270"/>
 	<Sequences name="SEQ_WM_PORTAL_XSLT" minValue="1" maxValue="99999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="28"/>
 
 
@@ -1287,24 +1239,6 @@ where   a04.is_root = 1
 		<SequenceName xmlns="">SEQ_WM_NEWS_ITEM_TEXT</SequenceName>
 	</BigTextTable>
 	<BigTextTable>
-		<MasterTable xmlns="">WM_PORTAL_CSS</MasterTable>
-		<SlaveTable xmlns="">WM_PORTAL_CSS_DATA</SlaveTable>
-		<MasterPkField xmlns="">ID_SITE_CONTENT_CSS</MasterPkField>
-		<SlavePkField xmlns="">ID_SITE_CONTENT_CSS_DATA</SlavePkField>
-		<SlaveFkField xmlns="">ID_SITE_CONTENT_CSS</SlaveFkField>
-		<StorageField xmlns="">CSS_DATA</StorageField>
-		<SequenceName xmlns="">SEQ_WM_PORTAL_CSS_DATA</SequenceName>
-	</BigTextTable>
-	<BigTextTable>
-		<MasterTable xmlns="">WM_PORTLET_ARTICLE</MasterTable>
-		<SlaveTable xmlns="">WM_PORTLET_ARTICLE_DATA</SlaveTable>
-		<MasterPkField xmlns="">ID_SITE_CTX_ARTICLE</MasterPkField>
-		<SlavePkField xmlns="">ID_SITE_CTX_ARTICLE_DATA</SlavePkField>
-		<SlaveFkField xmlns="">ID_SITE_CTX_ARTICLE</SlaveFkField>
-		<StorageField xmlns="">ARTICLE_DATA</StorageField>
-		<SequenceName xmlns="">SEQ_WM_PORTLET_ARTICLE_DATA</SequenceName>
-	</BigTextTable>
-	<BigTextTable>
 		<MasterTable xmlns="">WM_PORTLET_FAQ_LIST</MasterTable>
 		<SlaveTable xmlns="">WM_PORTLET_FAQ_ANSWER</SlaveTable>
 		<MasterPkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</MasterPkField>
@@ -1321,24 +1255,6 @@ where   a04.is_root = 1
 		<SlaveFkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</SlaveFkField>
 		<StorageField xmlns="">QUESTION</StorageField>
 		<SequenceName xmlns="">SEQ_WM_PORTLET_FAQ_QUESTION</SequenceName>
-	</BigTextTable>
-	<BigTextTable>
-		<MasterTable xmlns="">WM_PORTAL_XSLT</MasterTable>
-		<SlaveTable xmlns="">WM_PORTAL_XSLT_DATA</SlaveTable>
-		<MasterPkField xmlns="">ID_SITE_XSLT</MasterPkField>
-		<SlavePkField xmlns="">ID_SITE_XSLT_DATA</SlavePkField>
-		<SlaveFkField xmlns="">ID_SITE_XSLT</SlaveFkField>
-		<StorageField xmlns="">XSLT</StorageField>
-		<SequenceName xmlns="">SEQ_WM_PORTAL_XSLT_DATA</SequenceName>
-	</BigTextTable>
-	<BigTextTable>
-		<MasterTable>WM_PORTLET_WEBCLIP</MasterTable>
-		<SlaveTable>WM_PORTLET_WEBCLIP_DATA</SlaveTable>
-		<MasterPkField>ID_WEBLIP</MasterPkField>
-		<SlavePkField>ID_WEBCLIP_DATA</SlavePkField>
-		<SlaveFkField>ID_WEBCLIP</SlaveFkField>
-		<StorageField>WEBCLIP_DATA</StorageField>
-		<SequenceName>SEQ_WM_PORTLET_WEBCLIP_DATA</SequenceName>
 	</BigTextTable>
 
 </riverock-db-stuct:SchemaElement>

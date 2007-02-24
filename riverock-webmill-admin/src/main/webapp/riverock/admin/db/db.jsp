@@ -63,7 +63,11 @@
         <h:panelGrid columns="1">
         </h:panelGrid>
 
+        <f:verbatim>
+            <br/>
+            <a href="<%= request.getContextPath() %>/db.zip" target="_blank">Export DB as Zip`ed XML data</a>
+        </f:verbatim>
+        <
+
     </h:form>
 </f:view>
-<br/>
-<a href="<%= request.getContextPath() %>/db.gz" target="_blank">Export DB as GZip`ed XML data</a>
