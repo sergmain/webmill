@@ -120,9 +120,18 @@
 
     <!-- DB section -->
     <managed-bean>
+        <managed-bean-name>uploadedFileBean</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.bean.UploadedFileBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>dbAction</managed-bean-name>
         <managed-bean-class>org.riverock.webmill.admin.action.DbAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>uploadedFileBean</property-name>
+            <value>#{uploadedFileBean}</value>
+        </managed-property>
     </managed-bean>
 
     <!-- User section -->
@@ -220,6 +229,10 @@
         <navigation-case>
             <from-outcome>db-add</from-outcome>
             <to-view-id>/riverock/admin/db/db-add.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>upload</from-outcome>
+            <to-view-id>/riverock/admin/db/upload.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>

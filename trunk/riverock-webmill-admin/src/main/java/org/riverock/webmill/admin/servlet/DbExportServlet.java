@@ -33,6 +33,10 @@ public class DbExportServlet extends HttpServlet {
     private static final int BUFFER_SIZE = 2048;
     private static final String APPLICATION_ZIP_CONTENT_TYPE = "application/zip";
     private static final String DB_ZIP = "db.zip";
+    
+    public static final String DB_SCHEMA_XML = "schema.xml";
+    public static final String JAVA_COMP_ENV_DB_FAMILY = "java:comp/env/dbFamily";
+    public static final String DB_FILE_PREFIX = "db-";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -40,7 +44,18 @@ public class DbExportServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String family;
-        String name = "java:comp/env/dbFamily";
+        family = getDbFamily();
+
+        try {
+            processDB(family, response);
+        } catch (Exception e) {
+            throw new RuntimeException("Error export db", e);
+        }
+    }
+
+    public static String getDbFamily() {
+        String family;
+        String name = JAVA_COMP_ENV_DB_FAMILY;
         try {
             InitialContext ic = new InitialContext();
             family = (String) ic.lookup(name);
@@ -50,12 +65,7 @@ public class DbExportServlet extends HttpServlet {
             log.error(es, e);
             throw new IllegalArgumentException(es, e);
         }
-
-        try {
-            processDB(family, response);
-        } catch (Exception e) {
-            throw new RuntimeException("Error export db", e);
-        }
+        return family;
     }
 
     private void processDB(String family, HttpServletResponse response) throws Exception {
@@ -75,14 +85,14 @@ public class DbExportServlet extends HttpServlet {
         FileOutputStream fileOutputStream = new FileOutputStream(resultFile);
         ZipOutputStream out = new ZipOutputStream(fileOutputStream);
 
-        zipFile(out, schema, "schema.xml", null);
+        zipFile(out, schema, DB_SCHEMA_XML, null);
         for (DbTable table : schema.getTables()) {
             if (isSkipTable(table.getName()))  {
                 continue;
             }
             DbDataTable data = DatabaseStructureManager.getDataTable(db.getConnection(), table, db.getFamily());
             table.setData(data);
-            zipFile(out, table, "db-"+table.getName()+".xml", "TableData");
+            zipFile(out, table, DB_FILE_PREFIX +table.getName()+".xml", "TableData");
             data = null;
             table.setData(null);
         }

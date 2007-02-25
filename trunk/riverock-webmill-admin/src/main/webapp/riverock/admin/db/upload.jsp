@@ -49,7 +49,7 @@
 
 <f:view>
 
-    <h:form id="company_form" enctype="multipart/form-data">
+    <h:form id="company_form">
 
         <h:commandButton id="structure-list-action" action="structure" value="#{manager.structure_button}"
                          styleClass="top-button-action"/>
@@ -63,12 +63,16 @@
         <h:panelGrid columns="1">
         </h:panelGrid>
 
-        <br/>
-        <a href="<%= request.getContextPath() %>/db.zip" target="_blank">Export DB as Zip`ed XML data</a>
-        <br/>
+    </h:form>
 
+        <f:verbatim>
+            <br/>
+            <a href="<%= request.getContextPath() %>/db.zip" target="_blank">Export DB as Zip`ed XML data</a>
+        </f:verbatim>
+
+    <h:form id="company_form">
         <t:inputFileUpload id="fileupload"
-                           value="#{uploadedFileBean.uploadedFile}"
+                           value="#{dbAction.uploadedFile}"
                            storage="file"
                            styleClass="fileUploadInput"
                            required="false"

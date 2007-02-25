@@ -20,6 +20,7 @@ riverock-database-structure.xsd">
 		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
 		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
 		<Fields name="WEBCLIP_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields size="5" nullable="1" name="VERSION" javaType="3" javaStringType="java.sql.Types.DECIMAL" defaultValue="0" decimalDigit="0" dataType="NUMBER" /> 
 		<Fields name="WEBCLIP_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTLET_WEBCLIP" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_WPW_FK" pkName="ID_SITE_SLS_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
@@ -1098,9 +1099,11 @@ riverock-database-structure.xsd">
 		<Fields name="M_ICONID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="M_T_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="M_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="M_CONTENT" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000" decimalDigit="0" nullable="0"/>
+		<Fields name="M_CONTENT" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000" decimalDigit="0" nullable="1"/>
 		<Fields name="M_U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="M_TIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0" decimalDigit="0" nullable="0"/>
+		<Fields size="5" nullable="0" name="COUNT_EDITED" javaType="3" javaStringType="java.sql.Types.DECIMAL" defaultValue="0" decimalDigit="0" dataType="NUMBER"/>
+		<Fields size="7" nullable="1" name="LAST_EDITED_TIME" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" dataType="DATE"/>
 	</Tables>
 	<Tables schema="" name="WM_FORUM_USER" type="TABLE">
 		<PrimaryKey>
@@ -1108,7 +1111,7 @@ riverock-database-structure.xsd">
 		</PrimaryKey>
 		<Fields name="U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="U_AVATAR_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="U_SIGN" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="0"/>
+		<Fields name="U_SIGN" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
 		<Fields name="U_POST" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="U_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0" decimalDigit="0" nullable="0"/>
 		<Fields name="U_LASTIP" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="0"/>
@@ -1180,7 +1183,6 @@ where   a04.is_root = 1
 	<Sequences name="SEQ_WM_PRICE_RELATE_USER_ORDER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_PRICE_ORDER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_PRICE_SHOP_PRECISION" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="94"/>
-	<Sequences name="SEQ_WM_PORTAL_TEMPLATE_MEMBER" minValue="1" maxValue="9999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="15"/>
 	<Sequences name="SEQ_WM_PORTAL_CATALOG_LANGUAGE" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="238"/>
 	<Sequences name="SEQ_WM_PORTAL_TEMPLATE_DATA" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="24"/>
 	<Sequences name="SEQ_WM_PORTAL_TEMPLATE" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="382"/>
