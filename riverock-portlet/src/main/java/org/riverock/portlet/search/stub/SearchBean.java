@@ -38,8 +38,7 @@ import javax.persistence.Column;
  *         $Id$
  */
 @Entity
-@Table(name="WM_PORTLET_SEARCH")
-//@Table(name="wm_portlet_search")
+@Table(name="wm_portlet_search")
 public class SearchBean implements Serializable {
                          
     @Column(name="ID_SITE")
