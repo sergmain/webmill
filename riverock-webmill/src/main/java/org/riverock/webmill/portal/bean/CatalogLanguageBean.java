@@ -43,7 +43,8 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
  *         $Id$
  */
 @Entity
-@Table(name="WM_PORTAL_CATALOG_LANGUAGE")
+//@Table(name="WM_PORTAL_CATALOG_LANGUAGE")
+@Table(name="wm_portal_catalog_language")
 @TableGenerator(
     name="TABLE_PORTAL_CATALOG_LANGUAGE",
     table="WM_PORTAL_IDS",

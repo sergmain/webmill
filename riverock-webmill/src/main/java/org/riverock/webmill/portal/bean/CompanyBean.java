@@ -43,7 +43,8 @@ import org.riverock.interfaces.portal.bean.Company;
  *         $Id$
  */
 @Entity
-@Table(name="WM_LIST_COMPANY")
+//@Table(name="WM_LIST_COMPANY")
+@Table(name="wm_list_company")
 @TableGenerator(
     name="TABLE_LIST_COMPANY",
     table="WM_PORTAL_IDS",

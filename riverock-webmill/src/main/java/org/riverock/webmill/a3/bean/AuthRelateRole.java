@@ -42,8 +42,8 @@ import javax.persistence.Column;
  *         $Id$
  */
 @Entity
-@Table(name="WM_AUTH_RELATE_ACCGROUP")
-//@Table(name="wm_auth_relate_accgroup")
+//@Table(name="WM_AUTH_RELATE_ACCGROUP")
+@Table(name="wm_auth_relate_accgroup")
 @TableGenerator(
     name="TABLE_AUTH_RELATE_ROLE",
     table="WM_PORTAL_IDS",
