@@ -42,8 +42,8 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
  *         Time: 17:56:55
  */
 @Entity
-//@Table(name="WM_PORTAL_VIRTUAL_HOST")
-@Table(name="wm_portal_virtual_host")
+@Table(name="WM_PORTAL_VIRTUAL_HOST")
+//@Table(name="wm_portal_virtual_host")
 @TableGenerator(
     name="TABLE_VIRTUAL_HOST",
     table="WM_PORTAL_IDS",
