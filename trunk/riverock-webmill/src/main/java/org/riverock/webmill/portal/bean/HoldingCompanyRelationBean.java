@@ -42,7 +42,8 @@ import javax.persistence.Column;
  *         $Id$
  */
 @Entity
-@Table(name="WM_LIST_R_HOLDING_COMPANY")
+//@Table(name="WM_LIST_R_HOLDING_COMPANY")
+@Table(name="wm_list_r_holding_company")
 @TableGenerator(
     name="TABLE_RELATION_HOLDING_COMPANY",
     table="WM_PORTAL_IDS",

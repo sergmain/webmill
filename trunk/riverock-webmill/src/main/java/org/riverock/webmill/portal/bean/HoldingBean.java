@@ -45,7 +45,8 @@ import org.riverock.interfaces.portal.bean.Holding;
  *         $Id$
  */
 @Entity
-@Table(name="WM_LIST_HOLDING")
+//@Table(name="WM_LIST_HOLDING")
+@Table(name="wm_list_holding")
 @TableGenerator(
     name="TABLE_LIST_HOLDING",
     table="WM_PORTAL_IDS",

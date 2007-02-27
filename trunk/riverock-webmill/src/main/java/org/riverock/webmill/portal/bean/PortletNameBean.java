@@ -44,7 +44,8 @@ import org.riverock.interfaces.portal.bean.PortletName;
  *         $Id$
  */
 @Entity
-@Table(name="WM_PORTAL_PORTLET_NAME")
+//@Table(name="WM_PORTAL_PORTLET_NAME")
+@Table(name="wm_portal_portlet_name")
 @TableGenerator(
     name="TABLE_PORTLET_NAME",
     table="WM_PORTAL_IDS",

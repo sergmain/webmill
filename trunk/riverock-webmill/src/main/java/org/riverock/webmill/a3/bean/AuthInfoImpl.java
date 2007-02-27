@@ -41,8 +41,8 @@ import org.riverock.interfaces.sso.a3.AuthInfo;
  *  $Id$
  */
 @Entity
-@Table(name="WM_AUTH_USER")
-//@Table(name="wm_auth_user")
+//@Table(name="WM_AUTH_USER")
+@Table(name="wm_auth_user")
 @TableGenerator(
     name="TABLE_AUTH_USER",
     table="WM_PORTAL_IDS",

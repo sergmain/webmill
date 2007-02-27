@@ -46,7 +46,8 @@ import org.riverock.interfaces.common.TreeItem;
  *         $Id$
  */
 @Entity
-@Table(name="WM_PORTAL_CATALOG")
+//@Table(name="WM_PORTAL_CATALOG")
+@Table(name="wm_portal_catalog")
 @TableGenerator(
     name="TABLE_PORTAL_CATALOG",
     table="WM_PORTAL_IDS",
