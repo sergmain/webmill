@@ -46,8 +46,8 @@ import org.riverock.interfaces.portal.bean.Css;
  *         $Id$
  */
 @Entity
-//@Table(name="WM_PORTAL_CSS")
-@Table(name="wm_portal_css")
+@Table(name="WM_PORTAL_CSS")
+//@Table(name="wm_portal_css")
 @TableGenerator(
     name="TABLE_CSS",
     table="WM_PORTAL_IDS",

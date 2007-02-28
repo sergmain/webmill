@@ -47,8 +47,8 @@ import org.riverock.interfaces.portal.bean.Site;
  *         $Id$
  */
 @Entity
-//@Table(name="WM_PORTAL_LIST_SITE")
-@Table(name="wm_portal_list_site")
+@Table(name="WM_PORTAL_LIST_SITE")
+//@Table(name="wm_portal_list_site")
 @TableGenerator(
     name="TABLE_SITE",
     table="WM_PORTAL_IDS",

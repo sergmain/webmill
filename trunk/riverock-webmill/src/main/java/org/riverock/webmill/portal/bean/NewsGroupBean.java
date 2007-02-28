@@ -37,8 +37,8 @@ import java.io.Serializable;
  * $Id$
  */
 @javax.persistence.Entity
-//@Table(name="WM_NEWS_LIST")
-@Table(name="wm_news_list")
+@Table(name="WM_NEWS_LIST")
+//@Table(name="wm_news_list")
 @TableGenerator(
     name="TABLE_NEWS_LIST",
     table="WM_PORTAL_IDS",

@@ -39,8 +39,8 @@ import java.sql.Blob;
  * $Id$
  */
 @Entity
-@Table(name="wm_news_item")
-//@Table(name="WM_NEWS_ITEM")
+@Table(name="WM_NEWS_ITEM")
+//@Table(name="wm_news_item")
 @TableGenerator(
     name="TABLE_NEWS_ITEM",
     table="WM_PORTAL_IDS",

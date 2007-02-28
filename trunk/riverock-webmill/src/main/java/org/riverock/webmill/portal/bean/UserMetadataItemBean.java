@@ -43,8 +43,8 @@ import org.riverock.interfaces.portal.user.UserMetadataItem;
  *         Time: 20:21:04
  */
 @Entity
-//@Table(name="WM_LIST_USER_METADATA")
-@Table(name="wm_list_user_metadata")
+@Table(name="WM_LIST_USER_METADATA")
+//@Table(name="wm_list_user_metadata")
 @TableGenerator(
     name="TABLE_LIST_USER_METADATA",
     table="WM_PORTAL_IDS",

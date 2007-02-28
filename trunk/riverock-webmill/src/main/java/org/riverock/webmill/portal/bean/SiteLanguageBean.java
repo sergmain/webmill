@@ -43,8 +43,8 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
  *         $Id$
  */
 @Entity
-//@Table(name="WM_PORTAL_SITE_LANGUAGE")
-@Table(name="wm_portal_site_language")
+@Table(name="WM_PORTAL_SITE_LANGUAGE")
+//@Table(name="wm_portal_site_language")
 @TableGenerator(
     name="TABLE_SITE_LANGUAGE",
     table="WM_PORTAL_IDS",

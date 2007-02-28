@@ -43,8 +43,8 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
  *         $Id$
  */
 @Entity
-//@Table(name="WM_AUTH_ACCESS_GROUP")
-@Table(name="wm_auth_access_group")
+@Table(name="WM_AUTH_ACCESS_GROUP")
+//@Table(name="wm_auth_access_group")
 @TableGenerator(
     name="TABLE_AUTH_ROLE",
     table="WM_PORTAL_IDS",

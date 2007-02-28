@@ -44,8 +44,8 @@ import org.riverock.common.tools.StringTools;
  *         Time: 15:28:27
  */
 @Entity
-//@Table(name="WM_LIST_USER")
-@Table(name="wm_list_user")
+@Table(name="WM_LIST_USER")
+//@Table(name="wm_list_user")
 @TableGenerator(
     name="TABLE_LIST_USER",
     table="WM_PORTAL_IDS",

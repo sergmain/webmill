@@ -45,7 +45,8 @@ import javax.persistence.Version;
  * $Id$
  */
 @Entity
-@Table(name="wm_portlet_webclip")
+@Table(name="WM_PORTLET_WEBCLIP")
+//@Table(name="wm_portlet_webclip")
 @TableGenerator(
     name="TABLE_PORTLET_WEBCLIP",
     table="WM_PORTAL_IDS",
