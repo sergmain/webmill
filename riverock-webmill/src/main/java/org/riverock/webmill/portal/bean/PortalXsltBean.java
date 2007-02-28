@@ -45,8 +45,8 @@ import org.riverock.interfaces.portal.bean.Xslt;
  *         Time: 17:21:17
  */
 @Entity
-//@Table(name="WM_PORTAL_XSLT")
-@Table(name="wm_portal_xslt")
+@Table(name="WM_PORTAL_XSLT")
+//@Table(name="wm_portal_xslt")
 @TableGenerator(
     name="TABLE_XSLT",
     table="WM_PORTAL_IDS",

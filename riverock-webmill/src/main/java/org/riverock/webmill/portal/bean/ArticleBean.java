@@ -15,8 +15,8 @@ import java.sql.Blob;
  * $Id$
  */
 @Entity
-//@Table(name="WM_PORTLET_ARTICLE")
-@Table(name="wm_portlet_article")
+@Table(name="WM_PORTLET_ARTICLE")
+//@Table(name="wm_portlet_article")
 @TableGenerator(
     name="TABLE_PORTLET_ARTICLE",
     table="WM_PORTAL_IDS",
