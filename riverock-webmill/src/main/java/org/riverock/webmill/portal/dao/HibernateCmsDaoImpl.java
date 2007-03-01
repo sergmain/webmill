@@ -29,8 +29,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -174,7 +176,12 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             Blob blob = bean.getNewsBlob();
             if (blob!=null) {
                 try {
-                    bean.setNewsText( new String(blob.getBytes(1, (int)blob.length())) );
+                    bean.setNewsText( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error get list of News";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
                 }
                 catch (SQLException e) {
                     String es = "Error get news text";
@@ -218,7 +225,12 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             Blob blob = news.getNewsBlob();
             if (blob!=null) {
                 try {
-                    news.setNewsText( new String(blob.getBytes(1, (int)blob.length())) );
+                    news.setNewsText( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error get News";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
                 }
                 catch (SQLException e) {
                     String es = "Error get news text";
@@ -241,7 +253,14 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             bean.setPostDate(new Date());
         }
         if (StringUtils.isNotBlank(bean.getNewsText())) {
-            bean.setNewsBlob( Hibernate.createBlob(bean.getNewsText().getBytes()));
+            try {
+                bean.setNewsBlob( Hibernate.createBlob(bean.getNewsText().getBytes(CharEncoding.UTF_8)));
+            }
+            catch (UnsupportedEncodingException e) {
+                String es = "Error create News";
+                log.error(es, e);
+                throw new DatabaseException(es, e);
+            }
         }
         else {
             bean.setNewsBlob(null);
@@ -268,7 +287,14 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             bean.setDeleted(news.isDeleted());
             bean.setNewsAnons(news.getNewsAnons());
             if (StringUtils.isNotBlank(news.getNewsText())) {
-                bean.setNewsBlob( Hibernate.createBlob(news.getNewsText().getBytes()));
+                try {
+                    bean.setNewsBlob( Hibernate.createBlob(news.getNewsText().getBytes(CharEncoding.UTF_8)));
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error update News";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
             }
             else {
                 bean.setNewsBlob(null);
@@ -379,7 +405,12 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             Blob blob = article.getArticleBlob();
             if (blob!=null) {
                 try {
-                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length())) );
+                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error get Article by code.";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
                 }
                 catch (SQLException e) {
                     String es = "Error get article data";
@@ -413,7 +444,12 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             Blob blob = article.getArticleBlob();
             if (blob!=null) {
                 try {
-                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length())) );
+                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error get list of Articles";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
                 }
                 catch (SQLException e) {
                     String es = "Error get article data";
@@ -443,7 +479,12 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             Blob blob = article.getArticleBlob();
             if (blob!=null) {
                 try {
-                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length())) );
+                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error get Article";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
                 }
                 catch (SQLException e) {
                     String es = "Error get article data";
@@ -466,7 +507,14 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             bean.setPostDate(new Date());
         }
         if (StringUtils.isNotBlank(bean.getArticleData())) {
-            bean.setArticleBlob( Hibernate.createBlob(bean.getArticleData().getBytes()));
+            try {
+                bean.setArticleBlob( Hibernate.createBlob(bean.getArticleData().getBytes(CharEncoding.UTF_8)));
+            }
+            catch (UnsupportedEncodingException e) {
+                String es = "Error create Article";
+                log.error(es, e);
+                throw new DatabaseException(es, e);
+            }
         }
         else {
             bean.setArticleBlob(null);
@@ -501,7 +549,14 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             bean.setPlain(article.isPlain());
             bean.setSiteLanguageId(article.getSiteLanguageId());
             if (StringUtils.isNotBlank(article.getArticleData())) {
-                bean.setArticleBlob( Hibernate.createBlob(article.getArticleData().getBytes()));
+                try {
+                    bean.setArticleBlob( Hibernate.createBlob(article.getArticleData().getBytes(CharEncoding.UTF_8)));
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error update Article";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
             }
             else {
                 bean.setArticleBlob(null);
