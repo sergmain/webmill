@@ -173,11 +173,15 @@ public final class PortletContainer implements Serializable {
                 "Portlet entry unique name: "+portletEntry.getUniqueName()+", real unique name: " + uniqueName);
         }
 
-        System.out.println("Undeploy portlet context in classLoader: " + portletEntry.getClassLoader() +"\nhashCode: " + portletEntry.getClassLoader().hashCode() );
-
-
         contentCache.invalidate( portletEntry.getPortletDefinition().getFullPortletName() );
         portletInstanceMap.remove( portletEntry.getPortletDefinition().getFullPortletName() );
+
+        if (portletEntry.getClassLoader()!=null) {
+            System.out.println("Undeploy portlet context in classLoader: " + portletEntry.getClassLoader() +"\nhashCode: " + portletEntry.getClassLoader().hashCode() );
+        }
+        else {
+            System.out.println("Undeploy terminated, classLoader is null");
+        }
 
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {

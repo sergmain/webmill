@@ -27,8 +27,10 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -63,10 +65,15 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             Blob blob = css.getCssBlob();
             if (blob!=null) {
                 try {
-                    css.setCss( new String(blob.getBytes(1, (int)blob.length())) );
+                    css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
                 }
                 catch (SQLException e) {
                     String es = "Error get CSS";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error get current CSS";
                     log.error(es, e);
                     throw new DatabaseException(es, e);
                 }
@@ -86,10 +93,15 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             Blob blob = css.getCssBlob();
             if (blob!=null) {
                 try {
-                    css.setCss( new String(blob.getBytes(1, (int)blob.length())) );
+                    css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
                 }
                 catch (SQLException e) {
                     String es = "Error get CSS";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error get list of CSS";
                     log.error(es, e);
                     throw new DatabaseException(es, e);
                 }
@@ -116,9 +128,14 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             Blob blob = css.getCssBlob();
             if (blob!=null) {
                 try {
-                    css.setCss( new String(blob.getBytes(1, (int)blob.length())) );
+                    css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
                 }
                 catch (SQLException e) {
+                    String es = "Error get CSS";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
+                catch (UnsupportedEncodingException e) {
                     String es = "Error get CSS";
                     log.error(es, e);
                     throw new DatabaseException(es, e);
@@ -144,7 +161,14 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         bean.setDate(css.getDate());
         bean.setSiteId(css.getSiteId());
         if (StringUtils.isNotBlank(css.getCss())) {
-            bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes()));
+            try {
+                bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes(CharEncoding.UTF_8)));
+            }
+            catch (UnsupportedEncodingException e) {
+                String es = "Error create CSS";
+                log.error(es, e);
+                throw new DatabaseException(es, e);
+            }
         }
         else {
             bean.setCssBlob(null);
@@ -175,7 +199,14 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             bean.setDate(css.getDate());
             bean.setSiteId(css.getSiteId());
             if (StringUtils.isNotBlank(css.getCss())) {
-                bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes()));
+                try {
+                    bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes(CharEncoding.UTF_8)));
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error update CSS";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
+                }
             }
             else {
                 bean.setCssBlob(null);
