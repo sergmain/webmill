@@ -98,13 +98,10 @@ public class DbAction  implements Serializable {
                     log.debug("Marshall schema to object");
                     DbSchema schema = Utils.getObjectFromXml(DbSchema.class, inputStream);
 
-/*
-                    if (db.getFamily()== DatabaseManager.MYSQL_FAMALY) {
-                        for (DbTable dbTable : schema.getTables()) {
-                            dbTable.setName( dbTable.getName().toLowerCase() );
-                        }
+                    log.debug("Table for processing:");
+                    for (DbTable dbTable : schema.getTables()) {
+                        log.debug( "    table name: "+ dbTable.getName() );
                     }
-*/
 
                     log.debug("Import DB structure");
                     DbStructureImport.importStructure(schema, db, false);

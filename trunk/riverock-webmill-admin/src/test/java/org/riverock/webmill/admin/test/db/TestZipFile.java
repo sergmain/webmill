@@ -49,6 +49,7 @@ public class TestZipFile {
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
 
                 DbSchema schema = Utils.getObjectFromXml(DbSchema.class, inputStream);
+                int i=0;
             }
         }
         zip.close();
