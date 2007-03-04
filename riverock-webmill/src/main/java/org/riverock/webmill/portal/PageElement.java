@@ -140,6 +140,11 @@ public final class PageElement {
     }
 
     public void processActionPortlet() {
+        if (portletEntry==null) {
+            log.debug("portletEntry is null. terminate execution of processActionPortlet().");
+            return;
+        }
+
         initAction();
 
         if (exception!=null || errorString!=null) {
@@ -269,68 +274,75 @@ public final class PageElement {
     }
 
     void initAction() {
-        if ( parameters!=null && parameters.getRequestState().isActionRequest() ) {
-            Map<String, List<String>> actionRequestParamMap = new HashMap<String, List<String>>();
-            // The portlet-container must not propagate parameters received
-            // in an action request to subsequent render requests of the portlet.
-            if (parameters.getParameters()!=null) {
-                actionRequestParamMap.putAll(parameters.getParameters());
-            }
+        try {
+            if ( parameters!=null && parameters.getRequestState().isActionRequest() ) {
 
-            if (log.isDebugEnabled()) {
-                log.debug("portletMetadata: " + portletMetadata);
-                log.debug("portletEntry: " + portletEntry);
-                if (portletEntry!=null) {
-                    log.debug("portletEntry.getPortletDefinition(): " + portletEntry.getPortletDefinition());
-                }
-            }
-            
-            this.portletPreferences = new PortletPreferencesImpl(
-                new HashMap<String, List<String>>(portletMetadata),
-                persistencer,
-                portletEntry.getPortletDefinition().getPreferences(),
-                isStandardPortletMode(parameters.getRequestState().getPortletMode()),
-                false
-            );
-
-            PortalInfo portalInfo = PortalInfoImpl.getInstance( portalRequestInstance.getHttpRequest().getServerName() );
-            actionRequest = new ActionRequestImpl(
-                actionRequestParamMap,
-                portalRequestInstance,
-                portletEntry.getServletConfig().getServletContext(),
-                contextPath,
-                portletPreferences,
-                portletEntry.getPortletProperties(),
-                portletEntry.getPortletConfig().getPortletContext(),
-                portletEntry.getPortletDefinition(),
-                namespace,
-                portalInfo
-            );
-            actionRequest.setAttribute(
-                ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
-                new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
-            );
-            actionRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
-
-            actionResponse = new ActionResponseImpl(
-                portalRequestInstance.getHttpResponse(),
-                renderParameters,
-                portletEntry.getPortletProperties()
-            );
-
-            if (log.isDebugEnabled()) {
-
-                Enumeration e = actionRequest.getParameterNames();
-                if (e.hasMoreElements()) {
-                    for (; e.hasMoreElements();) {
-                        String s = (String) e.nextElement();
-                        log.debug("actionRequest attr - " + s + ", value - " + actionRequest.getParameter(s));
+                if (log.isDebugEnabled()) {
+                    log.debug("portletMetadata: " + portletMetadata);
+                    log.debug("portletEntry: " + portletEntry);
+                    if (portletEntry!=null) {
+                        log.debug("portletEntry.getPortletDefinition(): " + portletEntry.getPortletDefinition());
                     }
                 }
-                else {
-                    log.debug("actionRequest map is empty");
+
+                Map<String, List<String>> actionRequestParamMap = new HashMap<String, List<String>>();
+                // The portlet-container must not propagate parameters received
+                // in an action request to subsequent render requests of the portlet.
+                if (parameters.getParameters()!=null) {
+                    actionRequestParamMap.putAll(parameters.getParameters());
+                }
+
+                this.portletPreferences = new PortletPreferencesImpl(
+                    new HashMap<String, List<String>>(portletMetadata),
+                    persistencer,
+                    portletEntry.getPortletDefinition().getPreferences(),
+                    isStandardPortletMode(parameters.getRequestState().getPortletMode()),
+                    false
+                );
+
+                PortalInfo portalInfo = PortalInfoImpl.getInstance( portalRequestInstance.getHttpRequest().getServerName() );
+                actionRequest = new ActionRequestImpl(
+                    actionRequestParamMap,
+                    portalRequestInstance,
+                    portletEntry.getServletConfig().getServletContext(),
+                    contextPath,
+                    portletPreferences,
+                    portletEntry.getPortletProperties(),
+                    portletEntry.getPortletConfig().getPortletContext(),
+                    portletEntry.getPortletDefinition(),
+                    namespace,
+                    portalInfo
+                );
+                actionRequest.setAttribute(
+                    ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
+                    new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
+                );
+                actionRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
+
+                actionResponse = new ActionResponseImpl(
+                    portalRequestInstance.getHttpResponse(),
+                    renderParameters,
+                    portletEntry.getPortletProperties()
+                );
+
+                if (log.isDebugEnabled()) {
+
+                    Enumeration e = actionRequest.getParameterNames();
+                    if (e.hasMoreElements()) {
+                        for (; e.hasMoreElements();) {
+                            String s = (String) e.nextElement();
+                            log.debug("actionRequest attr - " + s + ", value - " + actionRequest.getParameter(s));
+                        }
+                    }
+                    else {
+                        log.debug("actionRequest map is empty");
+                    }
                 }
             }
+        }
+        catch (Exception e) {
+            errorString = portletUnavailable(fullPortletName);
+            log.error(errorString, e);
         }
     }
 
