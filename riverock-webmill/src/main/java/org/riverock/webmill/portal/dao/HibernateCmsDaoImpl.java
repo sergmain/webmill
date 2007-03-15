@@ -169,7 +169,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         List<NewsBean> beans = session.createQuery(
             "select news " +
                 "from  org.riverock.webmill.portal.bean.NewsBean news " +
-                "where news.isDeleted=false and news.newsGroupId=:newsGroupId ")
+                "where news.isDeleted=false and news.newsGroupId=:newsGroupId " +
+                "order by news.postDate desc")
             .setLong("newsGroupId", newsGroupId)
             .list();
         for (NewsBean bean : beans) {
