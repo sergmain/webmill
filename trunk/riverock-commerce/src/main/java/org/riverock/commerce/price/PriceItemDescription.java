@@ -46,7 +46,7 @@ public class PriceItemDescription {
     private Map<Long, String> description = new HashMap<Long, String>();
 
     public String getItemDescription( long id ) {
-        return ( String ) description.get( id );
+        return description.get( id );
     }
 
     public void reinit() {
@@ -66,13 +66,13 @@ public class PriceItemDescription {
 
     private static long lastReadData = 0;
     private final static long LENGTH_TIME_PERIOD = 10000;
-    private static Object syncObject = new Object();
+    private final static Object syncObject = new Object();
 
     public static PriceItemDescription getInstance( Long siteId )
         throws PriceException {
         PriceItemDescription desc = null;
         if( siteId != null )
-            desc = ( PriceItemDescription ) descMap.get( siteId );
+            desc = descMap.get( siteId );
 
 
         synchronized( syncObject ) {

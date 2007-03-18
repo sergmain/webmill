@@ -25,8 +25,10 @@ package org.riverock.commerce.manager.currency;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.riverock.commerce.bean.Currency;
+import org.riverock.commerce.bean.CurrencyCurs;
 
 /**
  * @author Sergei Maslyukov
