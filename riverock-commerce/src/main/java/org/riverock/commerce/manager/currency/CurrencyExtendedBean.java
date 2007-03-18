@@ -25,6 +25,7 @@ package org.riverock.commerce.manager.currency;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.riverock.commerce.bean.CurrencyCurs;
 import org.riverock.commerce.bean.StandardCurrency;
@@ -47,6 +48,7 @@ public class CurrencyExtendedBean implements Serializable {
 
     private CurrencyCurs curs =null;
     private StandardCurrencyCurs standardCurs =null;
+    private List<CurrencyCurs> curses = null;
 
     public CurrencyExtendedBean() {
     }
@@ -57,6 +59,14 @@ public class CurrencyExtendedBean implements Serializable {
         this.realCurs = realCurs;
         this.curs = curs;
         this.standardCurs = standardCurs;
+    }
+
+    public List<CurrencyCurs> getCurses() {
+        return curses;
+    }
+
+    public void setCurses(List<CurrencyCurs> curses) {
+        this.curses = curses;
     }
 
     public String getStandardCurrencyName() {

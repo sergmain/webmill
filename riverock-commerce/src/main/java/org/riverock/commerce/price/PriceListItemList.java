@@ -144,25 +144,14 @@ public final class PriceListItemList {
                         CurrencyService.getCurrencyItem(currencyManager.getCurrencyList(), shopParam.id_currency);
 
                     if (log.isDebugEnabled()) {
-                        log.debug("targetCurrency " + targetCurrency);
                         log.debug("item " + item);
-                    }
-                    item.setItemCurrencyID(targetCurrency.getCurrencyId());
-                    item.setItemNameCurrency(targetCurrency.getCurrencyName());
-
-                    if (log.isDebugEnabled()) {
-                        synchronized (syncObj) {
-                            try {
-                                XmlTools.writeToFile(targetCurrency, SiteUtils.getTempDir() +
-                                    File.separatorChar + "schema-currency-default.xml");
-                            }
-                            catch (Throwable e) {
-                                log.error("Error write targetCurrency to debug file", e);
-                            }
-
+                        log.debug("targetCurrency " + targetCurrency);
+                        if (targetCurrency!=null) {
                             log.debug("default curs - " + targetCurrency.getRealCurs());
                         }
                     }
+                    item.setItemCurrencyID(targetCurrency.getCurrencyId());
+                    item.setItemNameCurrency(targetCurrency.getCurrencyName());
 
                     BigDecimal crossCurs = currencyItem.getRealCurs().divide(targetCurrency.getRealCurs());
                     resultPrice = NumberTools.truncate(rsetPrice, precisionValue).multiply(crossCurs);

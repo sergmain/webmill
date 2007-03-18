@@ -31,7 +31,7 @@
 
 <t:dataTable id="currencyCursDataTable"
         var="currencyCurs"
-        value="#{currencySessionBean.currencyExtendedBean.currencyBean.curses}"
+        value="#{currencySessionBean.currencyExtendedBean.curses}"
         rows="15"
     >
 
@@ -39,7 +39,7 @@
        <f:facet name="header">
           <h:outputText value="#{msg.table_curs_created}" />
        </f:facet>
-       <h:outputText value="#{currencyCurs.created}">
+       <h:outputText value="#{currencyCurs.date}">
            <f:convertDateTime type="both" dateStyle="short" timeStyle="short"/>
        </h:outputText>
    </h:column>

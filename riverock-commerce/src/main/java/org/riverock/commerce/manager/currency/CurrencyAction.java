@@ -157,12 +157,12 @@ public class CurrencyAction implements Serializable {
 
         StandardCurrency standardCurrencyBean=null;
         if (bean.isUseStandard() && bean.getStandardCurrencyId()!=null) {
-            standardCurrencyBean=CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency(bean.getStandardCurrencyId());
+            standardCurrencyBean = CommerceDaoFactory.getStandardCurrencyDao().getStandardCurrency(bean.getStandardCurrencyId());
         }
 
         StandardCurrencyCurs standardCurs =null;
         if (standardCurrencyBean!=null) {
-            standardCurs =CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(standardCurrencyBean.getStandardCurrencyId());
+            standardCurs = CommerceDaoFactory.getCommonCurrencyDao().getStandardCurrencyCurs(standardCurrencyBean.getStandardCurrencyId());
         }
 
         BigDecimal realCurs;
@@ -176,6 +176,13 @@ public class CurrencyAction implements Serializable {
     }
 
     private void setSessionBean(CurrencyExtendedBean currencyExtendedBean) {
+        if (currencyExtendedBean!=null) {
+            currencyExtendedBean.setCurses(
+                    CommerceDaoFactory.getCurrencyDao().getCurrencyCurses(
+                            currencyExtendedBean.getCurrencyBean().getCurrencyId()
+                    )
+            );
+        }
         currencySessionBean.setCurrencyExtendedBean(currencyExtendedBean);
     }
 }
