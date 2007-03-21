@@ -25,6 +25,7 @@ package org.riverock.portlet.webclip;
 
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
@@ -62,23 +63,33 @@ public class WebclipPortlet implements Portlet {
     public void processAction (ActionRequest request, ActionResponse response) throws PortletException, IOException {
         log.debug("Start processAction()");
 
-        Long webclipId = getWebclipId(request);
-        Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        if (webclipId==null) {
-            webclipId=createWebclip(request, siteId);
+        try {
+            Long webclipId = getWebclipId(request);
+            Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+            if (webclipId==null) {
+                webclipId=createWebclip(request, siteId);
+            }
+            if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.SAVE_ACTION))) {
+                log.debug("    process 'save' action");
+                setNewHrefPrefix(request, request.getParameter(WebclipConstants.NEW_HREF_PREFIX_PARAM));
+                setHrefStartPart(request, request.getParameter(WebclipConstants.HREF_START_PAGE_PARAM));
+                setUrl(request, request.getParameter(WebclipConstants.SOURCE_URL_PARAM));
+            }
+            else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.REFRESH_ACTION))) {
+                log.debug("    process 'refresh' action");
+                refreshWebclipData(request, webclipId, siteId);
+            }
+            else {
+                throw new RuntimeException("Unknown action type");
+            }
         }
-        if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.SAVE_ACTION))) {
-            log.debug("    process 'save' action");
-            setNewHrefPrefix(request, request.getParameter(WebclipConstants.NEW_HREF_PREFIX_PARAM));
-            setHrefStartPart(request, request.getParameter(WebclipConstants.HREF_START_PAGE_PARAM));
-            setUrl(request, request.getParameter(WebclipConstants.SOURCE_URL_PARAM));
+        catch (Error e) {
+            response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
+            throw e;
         }
-        else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.REFRESH_ACTION))) {
-            log.debug("    process 'refresh' action");
-            refreshWebclipData(request, webclipId, siteId);
-        }
-        else {
-            throw new RuntimeException("Unknown action type");
+        catch (Exception e) {
+            response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
+            throw new PortletException("processAction error", e);
         }
     }
 
@@ -90,6 +101,10 @@ public class WebclipPortlet implements Portlet {
         request.setAttribute(WebclipConstants.SOURCE_URL_PARAM, getUrl(request));
         request.setAttribute(WebclipConstants.HREF_START_PAGE_PARAM, getHrefStartPart(request));
         request.setAttribute(WebclipConstants.NEW_HREF_PREFIX_PARAM, getNewHrefPrefix(request));
+
+        // set error of process action
+        request.setAttribute(WebclipConstants.WEBCLIP_ERROR_MESSAGE, PortletService.getString(request, WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, "") );
+
         portletConfig.getPortletContext().getRequestDispatcher(WebclipConstants.RIVEROCK_WEBLICP_INDEX_JSP).include(request, response);
     }
 
@@ -182,6 +197,7 @@ public class WebclipPortlet implements Portlet {
             } catch (Throwable th) {
                 String es = "Error get content from URL: " + url;
                 log.error(es, th);
+                throw new RuntimeException(es, th);
             }
         }
     }

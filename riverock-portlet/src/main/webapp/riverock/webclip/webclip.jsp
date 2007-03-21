@@ -149,6 +149,8 @@ function displayInvoice() {
     %>
 </table>
 
+<c:out value="${webclipErrorMessage}" escapeXml="true"/>
+
 <c:out value="${webclipBean.webclipData}" escapeXml="false"/>
 
 

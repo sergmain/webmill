@@ -48,8 +48,11 @@ public class WebclipConstants {
     static final String SOURCE_URL_PARAM = "sourceUrl";
     static final String NEW_HREF_PREFIX_PARAM = "newHrefPrefix";
     static final String HREF_START_PAGE_PARAM = "hrefStartPart";
-    static final int DEFAULT_READ_TIMEOUT = 20000;
+    static final String WEBCLIP_ERROR_MESSAGE_PARAM = "webclipErrorMessage";
+    static final String WEBCLIP_ERROR_MESSAGE = "webclip_error_message";
 
+
+    static final int DEFAULT_READ_TIMEOUT = 20000;
 
     static final int TABLE_NODE_TYPE = 1;
     static final int DIV_NODE_TYPE = 2;
