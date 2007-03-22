@@ -35,6 +35,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortalContext;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.MainTools;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
@@ -88,6 +89,7 @@ public final class PageElement {
     private PortletPreferences portletPreferences=null;
     private PortletPreferencePersistencer persistencer=null;
     private Map<String, List<String>> portletMetadata=null;
+    private List<String> roleList = null;
 
     /**
      * renderParameter used for set parameters in action
@@ -140,6 +142,8 @@ public final class PageElement {
     }
 
     public void processActionPortlet() {
+        initPortlet();
+
         if (portletEntry==null) {
             log.debug("portletEntry is null. terminate execution of processActionPortlet().");
             return;
@@ -180,6 +184,7 @@ public final class PageElement {
     }
 
     public void renderPortlet() {
+        initPortlet();
         initRender();
 
         if (exception!=null || errorString!=null) {
@@ -237,21 +242,32 @@ public final class PageElement {
                 log.debug( "portletBytes - " + portletBytes );
             }
 
-            if ( isXml ) {
-                // write all without XML header - <? ..... ?>
-                int idx = MainTools.indexOf( portletBytes, (byte)'>' );
-                if ( idx==-1 ){
-                    final String es = "Array of bytes with xml'ized data is wrong - not start with <?xml ...?> ";
-                    log.error(es);
-                    errorString = es;
-                    return;
-                }
-                else
-                    data = PortalRequestProcessor.setData(
-                        MainTools.getBytes( portletBytes, idx+1 ), false, true );
+            if (portletBytes==null || portletBytes.length==0) {
+                data = PortalRequestProcessor.setData( "", false, false );
             }
             else {
-                data = PortalRequestProcessor.setData( portletBytes, false, false );
+                if ( isXml ) {
+                    // write all without XML header - <? ..... ?>
+                    int idx = MainTools.indexOf( portletBytes, (byte)'>' );
+                    if ( idx==-1 ){
+                        if ( StringUtils.isNotBlank(new String(portletBytes) )) {
+                            final String es = "Array of bytes with xml'ized data is wrong - not start with <?xml ...?> ";
+                            log.error(es);
+                            errorString = es;
+                            return;
+                        }
+                        else {
+                            data = PortalRequestProcessor.setData( "", false, false );
+                        }
+                    }
+                    else {
+                        data = PortalRequestProcessor.setData(
+                                MainTools.getBytes( portletBytes, idx+1 ), false, true );
+                    }
+                }
+                else {
+                    data = PortalRequestProcessor.setData( portletBytes, false, false );
+                }
             }
 
             // cache content
@@ -471,37 +487,38 @@ public final class PageElement {
         return portletMode==PortletMode.VIEW ||portletMode==PortletMode.EDIT ||portletMode==PortletMode.HELP; 
     }
 
-    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance, Map<String, List<String>> portletMetadata, List<String> roleList, PortletPreferencePersistencer persistencer ) {
+    void initPageElementInstance( final String portletName,  final PortalRequestInstance portalRequestInstance, List<String> roleList, PortletPreferencePersistencer persistencer ) {
         this.portalRequestInstance = portalRequestInstance;
         this.fullPortletName = portletName;
         this.persistencer = persistencer;
-        this.portletMetadata = portletMetadata;
+        this.roleList = roleList;
+    }
 
+    private void initPortlet() {
         try {
             if (log.isDebugEnabled()) {
-                log.debug("Start init page element. Portlet name: '" + portletName + "'");
+                log.debug("Start init page element. Portlet name: '" + fullPortletName + "'");
+                log.debug("Start create instance of portlet '" + fullPortletName + "'");
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Start create instance of portlet '" + portletName + "'");
-            }
-
-            portletEntry = portletContainer.getPortletInstance(portletName);
+            // load portlet preferences
+            portletMetadata = persistencer.load();
+            portletEntry = portletContainer.getPortletInstance(fullPortletName);
 
             if (portletEntry == null) {
-                errorString = portletUnavailable(portletName);
+                errorString = portletUnavailable(fullPortletName);
                 return;
             }
 
             if ( portletEntry.getIsPermanent() ) {
                 log.error( "portlet permanent unavailable, message: " + portletEntry.getExceptionMessage() );
-                errorString = portletUnavailable(portletName);
+                errorString = portletUnavailable(fullPortletName);
                 return;
             }
 
             if ( portletEntry.getIsWait() ) {
                 log.error( "portlet unavailable for "+portletEntry.getInterval()+" seconds");
-                errorString = portletUnavailable(portletName);
+                errorString = portletUnavailable(fullPortletName);
                 return;
             }
 
@@ -510,29 +527,11 @@ public final class PageElement {
             }
 
             if (portletEntry.getPortletDefinition() == null) {
-                errorString = "Definition for portlet '" + portletName + "' not found.";
+                errorString = "Definition for portlet '" + fullPortletName + "' not found.";
                 return;
             }
 
             isXml = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_xml, Boolean.FALSE);
-
-/*
-            portletEntry = portletContainer.getPortletInstance(portletName);
-
-            if (portletEntry.getIsPermanent()) {
-                errorString = "Portlet '" + portletName + "' permanently unavailable.";
-            }
-            else if (portletEntry.getInterval() > 0) {
-                errorString = "Portlet '" + portletName + "' unavailable for " + portletEntry.getInterval() + " seconds.";
-            }
-            if (portletEntry.getPortlet() == null) {
-                errorString = "Portlet '" + portletName + "' not created for unknown reason.";
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Error message of create portlet instance: " + errorString);
-            }
-*/
 
             contextPath = getContextPath(portalRequestInstance);
 
@@ -583,7 +582,7 @@ public final class PageElement {
 
         }
         catch (Throwable e) {
-            errorString = portletUnavailable(portletName);
+            errorString = portletUnavailable(fullPortletName);
             log.error(errorString, e);
         }
     }

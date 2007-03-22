@@ -26,6 +26,7 @@ package org.riverock.webmill.portal.preference;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author Sergei Maslyukov
@@ -33,5 +34,6 @@ import java.util.Map;
  *         Time: 20:43:00
  */
 public interface PortletPreferencePersistencer {
+    Map<String, List<String>> load();
     void store(Map<String, List<String>> preferences);
 }

@@ -26,13 +26,16 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 import java.util.Map;
-import java.io.StringWriter;
+import java.util.HashMap;
+import java.io.*;
 
 import org.hibernate.Session;
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.common.collections.MapWithParameters;
 
 /**
  * @author Sergei Maslyukov
@@ -48,6 +51,41 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
 
     public HibernatePreferencesDaoImpl() {
         classLoader=Thread.currentThread().getContextClassLoader();
+    }
+
+    public Map<String, List<String>> load(Long catalogId) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+
+            if (catalogId==null) {
+                return new HashMap<String, List<String>>();
+            }
+
+            Session session = HibernateUtils.getSession();
+            session.beginTransaction();
+
+            try {
+                CatalogBean bean = (CatalogBean)session.createQuery(
+                    "select catalog " +
+                        "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
+                        "where catalog.catalogId=:catalogId")
+                    .setLong("catalogId", catalogId)
+                    .uniqueResult();
+
+                if (bean==null) {
+                    return new HashMap<String, List<String>>();
+                }
+
+                return initMetadata(bean.getMetadata());
+            }
+            finally {
+                session.getTransaction().commit();
+            }
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void store(Map<String, List<String>> preferences, Long catalogId) {
@@ -92,6 +130,45 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
+    private static Map<String, List<String>> initMetadata( String metadata ) {
+        if (log.isDebugEnabled()) {
+            log.debug("metadata: " + metadata);
+        }
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        if (metadata==null) {
+            return map;
+        }
+
+        BufferedReader reader = new BufferedReader( new InputStreamReader( new ByteArrayInputStream(metadata.getBytes())) );
+        try {
+            String s;
+            while ((s=reader.readLine())!=null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Line int metadata: " + s);
+                }
+                int idx = s.indexOf('=');
+                if (idx==-1) {
+                    continue;
+                }
+                String key = s.substring(0, idx).trim();
+                String value = s.substring(idx+1).trim();
+                if (log.isDebugEnabled()) {
+                    log.debug("    key: " + key +", " +value);
+                }
+
+                if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)) {
+                    MapWithParameters.putInStringList(map, key, value);
+                }
+            }
+            return map;
+        }
+        catch( IOException e ) {
+            String es = "Error load properties";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
         }
     }
 }

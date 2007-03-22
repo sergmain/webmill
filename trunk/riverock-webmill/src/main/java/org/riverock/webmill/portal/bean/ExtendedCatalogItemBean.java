@@ -24,38 +24,31 @@
  */
 package org.riverock.webmill.portal.bean;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.StringTools;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplate;
-import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.context.RequestContextParameter;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * @author Sergei Maslyukov
@@ -70,7 +63,6 @@ public final class ExtendedCatalogItemBean {
     private Locale locale = null;
     private Long concretePortletIdValue = null;
     private Long templateId = null;
-    private Map<String, List<String>> portletMetadata = null;
     private List<String> roleList = null;
     private String fullPortletName=null;
     private Long catalogId=null;
@@ -100,10 +92,6 @@ public final class ExtendedCatalogItemBean {
 
     public List<String> getRoleList() {
         return roleList;
-    }
-
-    public Map<String, List<String>> getPortletMetadata() {
-        return portletMetadata;
     }
 
     public Long getTemplateId() {
@@ -153,7 +141,6 @@ public final class ExtendedCatalogItemBean {
         catalogItem.catalogId = ctx.getCatalogId();
         catalogItem.concretePortletIdValue = ctx.getContextId();
         catalogItem.templateId = ctx.getTemplateId();
-        catalogItem.portletMetadata = initMetadata(ctx);
         List<String> roles = new ArrayList<String>();
         if (StringUtils.isNotBlank(ctx.getPortletRole())) {
             StringTokenizer st = new StringTokenizer(ctx.getPortletRole());
@@ -223,7 +210,6 @@ public final class ExtendedCatalogItemBean {
             return null;
         }
         ExtendedCatalogItemBean extendedCatalogItem = new ExtendedCatalogItemBean();
-        extendedCatalogItem.portletMetadata = new HashMap<String, List<String>>();
         extendedCatalogItem.roleList = new ArrayList<String>();
         extendedCatalogItem.templateId = template.getTemplateId();
         extendedCatalogItem.locale = locale;
@@ -257,63 +243,4 @@ public final class ExtendedCatalogItemBean {
             extendedCatalogItem.setFullPortletName(extendedCatalogItem.portlet.getFullPortletName());
         }
     }
-
-    private static Map<String, List<String>> initMetadata( CatalogItem defaultCtx ) {
-        if (log.isDebugEnabled()) {
-            log.debug("defaultCtx: " + defaultCtx);
-            if (defaultCtx!=null) {
-                log.debug("defaultCtx.getMetadata(): " + defaultCtx.getMetadata());
-            }
-        }
-        Map<String, List<String>> map = new HashMap<String, List<String>>();
-        if (defaultCtx==null || defaultCtx.getMetadata()==null) {
-            return map;
-        }
-
-/*
-        InputStream stream = new ByteArrayInputStream( defaultCtx.getMetadata().getBytes() );
-        try {
-            Properties p = new Properties();
-            p.load( stream );
-            for (Map.Entry entry : p.entrySet()) {
-                map.put((String)entry.getKey(), (String)entry.getValue());
-            }
-            return Collections.unmodifiableMap( map );
-        }
-        catch( IOException e ) {
-            String es = "Error load properties";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-*/
-        BufferedReader reader = new BufferedReader( new InputStreamReader( new ByteArrayInputStream(defaultCtx.getMetadata().getBytes())) );
-        try {
-            String s;
-            while ((s=reader.readLine())!=null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Line int metadata: " + s);
-                }
-                int idx = s.indexOf('=');
-                if (idx==-1) {
-                    continue;
-                }
-                String key = s.substring(0, idx).trim();
-                String value = s.substring(idx+1).trim();
-                if (log.isDebugEnabled()) {
-                    log.debug("    key: " + key +", " +value);
-                }
-
-                if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)) {
-                    MapWithParameters.putInStringList(map, key, value);
-                }
-            }
-            return map;
-        }
-        catch( IOException e ) {
-            String es = "Error load properties";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-    }
-
 }

@@ -27,13 +27,7 @@ package org.riverock.webmill.portal;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -293,17 +287,21 @@ public final class PortalRequestInstance {
                         if (httpRequest.isRequestedSessionIdValid()) {
                             checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
                         }
-                        element.initPortlet(templateItem.getValueAsPortletName(), this, new HashMap<String, List<String>>(), new ArrayList<String>(), null);
+                        element.initPageElementInstance(
+                            templateItem.getValueAsPortletName(),
+                            this,
+                            Collections.EMPTY_LIST,
+                            PreferenceFactory.getStubPortletPreferencePersistencer()
+                        );
                         break;
 
                     case PortalTemplateItemType.DYNAMIC_TYPE:
                         if (httpRequest.isRequestedSessionIdValid()) {
                             checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
                         }
-                        element.initPortlet(
+                        element.initPageElementInstance(
                             requestContext.getDefaultPortletName(),
                             this,
-                            requestContext.getExtendedCatalogItem().getPortletMetadata(),
                             requestContext.getExtendedCatalogItem().getRoleList(),
                             PreferenceFactory.getPortletPreferencePersistencer(requestContext.getExtendedCatalogItem().getCatalogId())
                         );
