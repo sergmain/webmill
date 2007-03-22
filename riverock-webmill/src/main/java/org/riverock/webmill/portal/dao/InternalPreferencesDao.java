@@ -35,5 +35,6 @@ import java.util.Map;
  * $Id$
  */
 public interface InternalPreferencesDao {
+    Map<String, List<String>> load(Long catalogId);
     void store(Map<String, List<String>> preferences, Long catalogId);
 }

@@ -25,8 +25,8 @@
 package org.riverock.webmill.portal.preference;
 
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,17 +36,32 @@ import java.util.Map;
  *         Time: 20:43:07
  */
 public class PortletPreferencePersistencerImpl implements PortletPreferencePersistencer {
-    private final static Logger log = Logger.getLogger( PortletPreferencePersistencerImpl.class );
 
     private Long contextId=null;
+    private Map<String, List<String>> pref=null;
 
     public PortletPreferencePersistencerImpl(Long contextId) {
         this.contextId = contextId;
     }
 
+    public Map<String, List<String>> load() {
+        if (contextId==null) {
+            pref = new HashMap<String, List<String>>();
+        }
+        else if (pref==null) {
+            pref = InternalDaoFactory.getInternalPreferencesDao().load(contextId); 
+        }
+        return pref; 
+    }
+
     public void store(Map<String, List<String>> preferences) {
         if (contextId!=null) {
             InternalDaoFactory.getInternalPreferencesDao().store(preferences, contextId);
+            if (pref!=null) {
+                pref.clear();
+                pref = null;
+            }
+            pref = load();
         }
     }
 }
