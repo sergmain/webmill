@@ -24,6 +24,8 @@
  */
 package org.riverock.webmill.portal.utils;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -35,5 +37,14 @@ public class PortalUtils {
 
     public synchronized static void registerPortletName(String portletName) {
         InternalDaoFactory.getInternalPortletNameDao().registerPortletName(portletName);
+    }
+
+    public static String buildVirtualHostUrl(HttpServletRequest req) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(req.getScheme()).append("://").append(req.getServerName());
+        if (req.getServerPort()!=80) {
+            sb.append(':').append(req.getServerPort());
+        }
+        return sb.toString();
     }
 }

@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.utils.PortalUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -50,8 +51,9 @@ import org.riverock.webmill.port.PortalInfoImpl;
 public class GoogleSitemapServlet extends HttpServlet {
     private final static Logger log = Logger.getLogger( GoogleSitemapServlet.class );
 
+    static final String SITEMAP_DIR = "WEB-INF" + File.separatorChar+ "sitemap" + File.separatorChar;
+
     private static final String SITEMAP_XML = "sitemap.xml.gz";
-    private static final String SITEMAP_DIR = "WEB-INF" + File.separatorChar+ "sitemap" + File.separatorChar;
     private static final int BUFFER_SIZE = 1024;
     private static final String APPLICATION_X_GZIP_CONTENT_TYPE = "application/x-gzip";
 
@@ -79,8 +81,14 @@ public class GoogleSitemapServlet extends HttpServlet {
         }
         File sitemap = new File(path, SITEMAP_XML);
         if (!sitemap.exists()) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
+            GoogleSitemapService.createSitemap(
+                p.getSiteId(), PortalUtils.buildVirtualHostUrl(request), request.getContextPath(), getServletContext().getRealPath("/")
+            );
+            if (!sitemap.exists()) {
+                log.warn("Google sitemap not created for unknown reason");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
         }
 
         InputStream is = new FileInputStream(sitemap);
