@@ -92,7 +92,7 @@ public class GoogleSitemapService {
         if (log.isDebugEnabled()) {
             log.debug("Urls: " +urls);
         }
-        writeToFile(urls,  applicationPath+File.separatorChar+"WEB-INF"+File.separatorChar+"sitemap"+File.separatorChar+siteId);
+        writeToFile(urls, applicationPath+File.separatorChar + GoogleSitemapServlet.SITEMAP_DIR + siteId);
     }
 
     private static void writeToFile(List<Url> urlset, String applicationPath) {
