@@ -337,8 +337,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         }
 
         Long siteLanguageId = getCatalogLanguageItem(catalogItem.getCatalogLanguageId()).getSiteLanguageId();
-        if (isUrlExist(catalogItem.getUrl(), siteLanguageId)) {
-            log.debug("Url '"+catalogItem.getUrl()+"' for siteLanguageId: " + siteLanguageId+" exist");
+        if (!isUpdatable(catalogItem.getUrl(), siteLanguageId, catalogItem.getCatalogId())) {
+            log.debug("Url '"+catalogItem.getUrl()+"' for siteLanguageId: " + siteLanguageId+" and catalogId "+catalogItem.getCatalogId()+" can't assigned.");
             return;
         }
 
@@ -353,6 +353,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             .uniqueResult();
 
         if (bean==null) {
+            log.warn("Catalog item bean is null!");
             session.getTransaction().commit();
             return;
         }
@@ -368,7 +369,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         bean.setKeyMessage(catalogItem.getKeyMessage());
 
         if (log.isDebugEnabled()) {
-            log.debug("Metadata: " + catalogItem.getMetadata());
+            log.debug("contextId: " + catalogItem.getContextId());
+            log.debug("metadata: " + catalogItem.getMetadata());
         }
 
         bean.setMetadata(catalogItem.getMetadata());
@@ -543,20 +545,57 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         if (StringUtils.isBlank(url) || siteLanguageId==null) {
             return false;
         }
+
         String urlReal = url.trim().toLowerCase();
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        List<Long> ids = session.createQuery(
-        "select catalog " +
-            "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
-            "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
-            "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
-            "      catalogLang.siteLanguageId=:siteLanguageId and lower(catalog.url)=:url")
-        .setLong("siteLanguageId", siteLanguageId)
-        .setString("url", urlReal)
-        .list();
+
+        List ids = session.createQuery(
+            "select catalog " +
+                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
+                "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
+                "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
+                "      catalogLang.siteLanguageId=:siteLanguageId and lower(catalog.url)=:url")
+            .setLong("siteLanguageId", siteLanguageId)
+            .setString("url", urlReal)
+            .list();
+
         session.getTransaction().commit();
         return !ids.isEmpty();
+    }
+
+    public boolean isUpdatable(String url, Long siteLanguageId, Long catalogId) {
+        if (StringUtils.isBlank(url)) {
+            return true;
+        }
+        if (siteLanguageId==null || catalogId==null) {
+            throw new RuntimeException("siteLanguageId and catalogId can not be null");
+        }
+        
+        String urlReal = url.trim().toLowerCase();
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        List<Long> ids = session.createQuery(
+            "select catalog.catalogId " +
+                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
+                "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
+                "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
+                "      catalogLang.siteLanguageId=:siteLanguageId and " +
+                "      lower(catalog.url)=:url")
+            .setLong("siteLanguageId", siteLanguageId)
+            .setString("url", urlReal)
+            .list();
+        
+        boolean flag=true;
+        for (Long id : ids) {
+            if (!id.equals(catalogId)) {
+                flag = false;
+            }
+        }
+
+        session.getTransaction().commit();
+        return flag;
     }
 
     public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId) {

@@ -160,11 +160,20 @@ public class MenuAction implements Serializable {
 
         if (getSessionObject() != null) {
             if (log.isDebugEnabled()) {
-                log.debug("Metadata: " + getSessionObject().getMenuItem().getMetadata());
+                if (getSessionObject().getMenuItem()!=null) {
+                    log.debug("Metadata: " + getSessionObject().getMenuItem().getMetadata());
+                    log.debug("contextId: " + getSessionObject().getMenuItem().getContextId());
+                }
+                else {
+                    log.debug("Menu item is null.");
+                }
             }
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().updateCatalogItem(getSessionObject().getMenuItem());
             cleadDataProviderObject();
             loadCurrentObject();
+        }
+        else {
+            log.warn("getSessionObject() is null");
         }
 
         return "menu";

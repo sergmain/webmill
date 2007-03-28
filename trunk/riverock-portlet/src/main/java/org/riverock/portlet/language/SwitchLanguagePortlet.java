@@ -71,7 +71,7 @@ public final class SwitchLanguagePortlet implements Portlet {
             if ( log.isDebugEnabled() ) {
                 for ( Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); ) {
                     String s = (String)e.nextElement();
-                    log.debug( "PortletRequest attr - "+s+", value - "+PortletService.getString(actionRequest, s, null) );
+                    log.debug( "PortletRequest.processAction param: "+s+", value - "+PortletService.getString(actionRequest, s, null) );
                 }
             }
             Long siteLanguageId = PortletService.getLong( actionRequest, NAME_ID_LANGUAGE );
@@ -84,7 +84,7 @@ public final class SwitchLanguagePortlet implements Portlet {
             SiteLanguage siteLanguage = provider.getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
             String languageLocaleName=null;
             if (siteLanguage==null || siteLanguage.getCustomLanguage()==null) {
-                log.warn("locale for soteLanguageId: " + siteLanguageId +" not found");
+                log.warn("locale for siteLanguageId: " + siteLanguageId +" not found");
             }
             else {
                 languageLocaleName = siteLanguage.getCustomLanguage();
