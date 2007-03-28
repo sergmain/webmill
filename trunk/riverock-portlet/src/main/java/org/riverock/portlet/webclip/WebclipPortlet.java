@@ -39,6 +39,7 @@ import java.net.URLConnection;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 
 /**
  * User: SergeMaslyukov
@@ -85,11 +86,11 @@ public class WebclipPortlet implements Portlet {
         }
         catch (Error e) {
             response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
-            throw e;
+//            throw e;
         }
         catch (Exception e) {
             response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
-            throw new PortletException("processAction error", e);
+//            throw new PortletException("processAction error", e);
         }
     }
 
@@ -143,7 +144,7 @@ public class WebclipPortlet implements Portlet {
         return preferences.getValue(WebclipConstants.PROXY_PASSWORD_PREF, null);
     }
 
-    private void refreshWebclipData(PortletRequest request, Long webclipId, Long siteId) {
+    private void refreshWebclipData(PortletRequest request, Long webclipId, Long siteId) throws IOException {
         log.info("Start refreshWebclipData()");
 
         String url = getUrl(request);
@@ -159,7 +160,7 @@ public class WebclipPortlet implements Portlet {
                     throw new RuntimeException("webclip is null");
                 }
             }
-            try {
+
                 URL urlObject = new URL(url);
                 URLConnection urlConnection;
 //                Proxy proxy = prepareProxy(request);
@@ -188,17 +189,13 @@ public class WebclipPortlet implements Portlet {
                 }
                 WebclipUrlProducer producer = new WebclipUrlProducerImpl(getNewHrefPrefix(request), getHrefStartPart(request));
                 WebclipDataProcessor processor = new WebclipDataProcessorImpl(
-                    producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content" );
+                    producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content"
+                );
                 
                 os = new ByteArrayOutputStream();
                 processor.modify(os);
                 webclip.setWebclipData(os.toString(CharEncoding.UTF_8));
                 PortletDaoFactory.getWebclipDao().updateWebclip(webclip);
-            } catch (Throwable th) {
-                String es = "Error get content from URL: " + url;
-                log.error(es, th);
-                throw new RuntimeException(es, th);
-            }
         }
     }
 
