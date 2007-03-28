@@ -26,8 +26,10 @@ package org.riverock.portlet.dao;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Date;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -63,7 +65,12 @@ public class WebclipDaoImpl implements WebclipDao {
             Blob blob = bean.getWebclipBlob();
             if (blob!=null) {
                 try {
-                    bean.setWebclipData( new String(blob.getBytes(1, (int)blob.length())) );
+                    bean.setWebclipData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error get Webclip";
+                    log.error(es, e);
+                    throw new DatabaseException(es, e);
                 }
                 catch (SQLException e) {
                     String es = "Error get Webclip";
@@ -101,7 +108,16 @@ public class WebclipDaoImpl implements WebclipDao {
         bean.setSiteId(siteId);
         bean.setDatePost(new Date());
         if (StringUtils.isNotBlank(webclipData)) {
-            bean.setWebclipBlob( Hibernate.createBlob(webclipData.getBytes()));
+            byte[] bytes;
+            try {
+                bytes = webclipData.getBytes(CharEncoding.UTF_8);
+            }
+            catch (UnsupportedEncodingException e) {
+                String es = "Error convert webclip data to array of bytes";
+                log.error(es, e);
+                throw new RuntimeException(es, e);
+            }
+            bean.setWebclipBlob( Hibernate.createBlob(bytes));
         }
         else {
             bean.setWebclipBlob(null);
@@ -127,7 +143,16 @@ public class WebclipDaoImpl implements WebclipDao {
         if (bean!=null) {
             bean.setDatePost(webclip.getDatePost());
             if (StringUtils.isNotBlank(webclip.getWebclipData())) {
-                bean.setWebclipBlob( Hibernate.createBlob(webclip.getWebclipData().getBytes()));
+                byte[] bytes;
+                try {
+                    bytes = webclip.getWebclipData().getBytes(CharEncoding.UTF_8);
+                }
+                catch (UnsupportedEncodingException e) {
+                    String es = "Error convert webclip data to array of bytes";
+                    log.error(es, e);
+                    throw new RuntimeException(es, e);
+                }
+                bean.setWebclipBlob( Hibernate.createBlob(bytes));
             }
             else {
                 bean.setWebclipBlob(null);

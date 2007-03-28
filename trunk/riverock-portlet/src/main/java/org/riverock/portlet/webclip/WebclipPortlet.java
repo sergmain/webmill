@@ -39,7 +39,6 @@ import java.net.URLConnection;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 
 /**
  * User: SergeMaslyukov
@@ -86,11 +85,9 @@ public class WebclipPortlet implements Portlet {
         }
         catch (Error e) {
             response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
-//            throw e;
         }
         catch (Exception e) {
             response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
-//            throw new PortletException("processAction error", e);
         }
     }
 

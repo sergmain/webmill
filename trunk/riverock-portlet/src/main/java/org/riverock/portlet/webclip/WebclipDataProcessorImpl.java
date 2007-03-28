@@ -147,9 +147,9 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     }
 
     /**
-     * модифицировать урл
+     * modify URL
      *
-     * @param out выходной поток
+     * @param out output stream
      * @throws IOException
 
      */
@@ -158,10 +158,10 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     }
 
     /**
-     * печатаем ноду в рекурсии
+     * recursively print node
      *
-     * @param node Нода
-     * @param out выходной поток
+     * @param node
+     * @param out output stream
      * @throws IOException
      */
     private void print(Node node, OutputStream out) throws IOException {
