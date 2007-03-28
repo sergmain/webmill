@@ -26,8 +26,12 @@ package org.riverock.portlet.webclip;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.httpclient.util.ParameterParser;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.html.dom.HTMLDocumentImpl;
 import org.apache.log4j.Logger;
 import org.cyberneko.html.parsers.DOMFragmentParser;
@@ -55,6 +59,16 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     
     // document's fragment
     private Node fragmentNode = null;
+
+    /**
+     * URI parameter parser
+     */
+    private final static ParameterParser PARAMETER_PARSER = new ParameterParser();
+    private static final char SEPARATOR_HTTP_REQUEST_PARAM = '&';
+    private static final String EDIT_ACTION_NAME = "edit";
+    private static final String ACTION_NAME = "action";
+    private static final String HREF_ATTR = "href";
+    private static final String A_ELEMENT = "A";
 
     /**
      *
@@ -172,28 +186,31 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                 break;
 
             case Node.ELEMENT_NODE: {
-                if (node.getNodeName().equalsIgnoreCase("A")) {
-                    NamedNodeMap attrMap = node.getAttributes();
-                    for (int i = 0; i < attrMap.getLength(); i++) {
-                        Node tempNode = attrMap.item(i);
-                        if (tempNode.getNodeName().equalsIgnoreCase("href")) {
-                            urlProducer.init();
-                            urlProducer.setCurrentHrefValue(tempNode.getNodeValue());
-                            tempNode.setNodeValue( urlProducer.getUrl() );
+                if (!isHrefWithActionEditParam(node)) {
+                    if (node.getNodeName().equalsIgnoreCase(A_ELEMENT)) {
+                        NamedNodeMap attrMap = node.getAttributes();
+                        for (int i = 0; i < attrMap.getLength(); i++) {
+                            Node tempNode = attrMap.item(i);
+                            if (tempNode.getNodeName().equalsIgnoreCase(HREF_ATTR)) {
+                                urlProducer.init();
+                                urlProducer.setCurrentHrefValue(tempNode.getNodeValue());
+                                tempNode.setNodeValue( urlProducer.getUrl() );
+                            }
                         }
                     }
+                    out.write('<');
+                    out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                    Attr attrs[] = sortAttributes(node.getAttributes());
+                    for (Attr attr : attrs) {
+                        out.write(' ');
+                        out.write(attr.getNodeName().getBytes(CharEncoding.UTF_8));
+                        out.write("=\"".getBytes(CharEncoding.UTF_8));
+                        out.write(attr.getNodeValue().getBytes(CharEncoding.UTF_8));
+                        out.write('"');
+                    }
+                    out.write('>');
                 }
-                out.write('<');
-                out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
-                Attr attrs[] = sortAttributes(node.getAttributes());
-                for (Attr attr : attrs) {
-                    out.write(' ');
-                    out.write(attr.getNodeName().getBytes(CharEncoding.UTF_8));
-                    out.write("=\"".getBytes(CharEncoding.UTF_8));
-                    out.write(attr.getNodeValue().getBytes(CharEncoding.UTF_8));
-                    out.write('"');
-                }
-                out.write('>');
+
                 NodeList children = node.getChildNodes();
                 if (children != null) {
                     int len = children.getLength();
@@ -206,7 +223,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
             // handle entity reference nodes
             case Node.ENTITY_REFERENCE_NODE: {
-                out.write('&');
+                out.write(SEPARATOR_HTTP_REQUEST_PARAM);
                 out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
                 out.write(';');
                 break;
@@ -248,6 +265,31 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
         out.flush();
 
+    }
+
+    private boolean isHrefWithActionEditParam(Node node) {
+        if (node==null) {
+            return false;
+        }
+
+        if (node.getNodeName().equalsIgnoreCase(A_ELEMENT)) {
+            NamedNodeMap attrMap = node.getAttributes();
+            for (int i = 0; i < attrMap.getLength(); i++) {
+                Node tempNode = attrMap.item(i);
+                if (tempNode.getNodeName().equalsIgnoreCase(HREF_ATTR)) {
+                    if (StringUtils.isBlank(tempNode.getNodeValue())) {
+                        return false;
+                    }
+                    List<NameValuePair> params = PARAMETER_PARSER.parse(tempNode.getNodeValue(), SEPARATOR_HTTP_REQUEST_PARAM);
+                    for (NameValuePair param : params) {
+                        if (param.getName().equals(ACTION_NAME) && param.getValue().equals(EDIT_ACTION_NAME)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;  
     }
 
     /**
