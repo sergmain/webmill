@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.Session;
 
@@ -78,20 +79,27 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
 
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        List<HoldingBean> bean = session.createQuery(
-            "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
-            "where  holding.id in (:holdingIds)")
-            .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
-            .list();
-        for (HoldingBean holdingBean : bean) {
-            holdingBean.setCompanyIdList(
-                session.createQuery(
-                    "select relate.companyId " +
+        List<Long> list = authSession.getGrantedHoldingIdList();
+        List<HoldingBean> bean;
+        if (!list.isEmpty()) {
+            bean = session.createQuery(
+                "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
+                    "where  holding.id in (:holdingIds)")
+                .setParameterList("holdingIds", list)
+                .list();
+            for (HoldingBean holdingBean : bean) {
+                holdingBean.setCompanyIdList(
+                    session.createQuery(
+                        "select relate.companyId " +
                         "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
                         "where relate.holdingId=:holdingId")
                     .setLong("holdingId", holdingBean.getId())
                     .list()
-            );
+                );
+            }
+        }
+        else {
+            bean = new ArrayList<HoldingBean>();
         }
         session.getTransaction().commit();
         return (List)bean;
