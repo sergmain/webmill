@@ -27,7 +27,7 @@ package org.riverock.portlet.webclip;
  * User: SergeMaslyukov
  * Date: 17.09.2006
  * Time: 17:28:27
- * <p/>                                  newHrefPrefix, String hrefStartPart
+ * <p/>                                 
  * $Id$
  */
 public class WebclipConstants {
@@ -45,6 +45,8 @@ public class WebclipConstants {
     static final String WEBCLIP_BEAN = "webclipBean";
     static final String SAVE_ACTION = "save";
     static final String REFRESH_ACTION = "refresh";
+    static final String SAVE_AND_REFRESH_ACTION = "save-and-refresh";
+
     static final String SOURCE_URL_PARAM = "sourceUrl";
     static final String NEW_HREF_PREFIX_PARAM = "newHrefPrefix";
     static final String HREF_START_PAGE_PARAM = "hrefStartPart";

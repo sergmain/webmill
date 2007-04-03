@@ -123,7 +123,7 @@ function displayInvoice() {
     <form method="POST" action="<c:out value='${portletUrl}'/>">
         <tr>
             <td width="25%"><fmt:message key="webclip_url"/></td>
-            <td colspan="3" width="50%"><input type="text" name="sourceUrl" size="100" value="<c:out value='${sourceUrl}'/>" id="sourceUrlId"></td>
+            <td colspan="3"><input type="text" name="sourceUrl" size="100" value="<c:out value='${sourceUrl}'/>" id="sourceUrlId"></td>
         </tr>
         <tr>                              
             <td width="25%"><fmt:message key="webclip_href_start_page"/></td>
@@ -132,7 +132,9 @@ function displayInvoice() {
             <td width="25%"><input type="text" name="newHrefPrefix" size="30" value="<c:out value='${newHrefPrefix}'/>"></td>
         </tr>
         <tr>
-            <td colspan="4"><input style="width:150px;" type="submit" name="save" value="<fmt:message key='save_webclip_action'/>"></td>
+            <td colspan="4">
+                <input style="width:150px;" type="submit" name="save-and-refresh" value="<fmt:message key='save_and_refresh_webclip_data_action'/>" >
+            </td>
         </tr>
         <tr>
             <td colspan="4"><c:out value='${webclipError}'/></td>
@@ -141,7 +143,11 @@ function displayInvoice() {
             <td colspan="4">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="4"><input style="width:150px;" type="submit" name="refresh" value="<fmt:message key='refresh_webclip_data_action'/>" ></td>
+            <td colspan="4">
+                <input style="width:150px;" type="submit" name="save" value="<fmt:message key='save_webclip_action'/>">
+                &nbsp;&nbsp;
+                <input style="width:150px;" type="submit" name="refresh" value="<fmt:message key='refresh_webclip_data_action'/>" >
+            </td>
         </tr>
     </form>
     <script type="text/javascript">
