@@ -79,6 +79,13 @@ public class WebclipPortlet implements Portlet {
                 log.debug("    process 'refresh' action");
                 refreshWebclipData(request, webclipId, siteId);
             }
+            else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.SAVE_AND_REFRESH_ACTION))) {
+                log.debug("    process 'save-and-refresh' action");
+                setNewHrefPrefix(request, request.getParameter(WebclipConstants.NEW_HREF_PREFIX_PARAM));
+                setHrefStartPart(request, request.getParameter(WebclipConstants.HREF_START_PAGE_PARAM));
+                setUrl(request, request.getParameter(WebclipConstants.SOURCE_URL_PARAM));
+                refreshWebclipData(request, webclipId, siteId);
+            }
             else {
                 throw new RuntimeException("Unknown action type");
             }
