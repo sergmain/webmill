@@ -123,7 +123,7 @@ function displayInvoice() {
     <form method="POST" action="<c:out value='${portletUrl}'/>">
         <tr>
             <td width="25%"><fmt:message key="webclip_url"/></td>
-            <td colspan="3" width="50%"><input type="text" name="sourceUrl" size="100" value="<c:out value='${sourceUrl}'/>"></td>
+            <td colspan="3" width="50%"><input type="text" name="sourceUrl" size="100" value="<c:out value='${sourceUrl}'/>" id="sourceUrlId"></td>
         </tr>
         <tr>                              
             <td width="25%"><fmt:message key="webclip_href_start_page"/></td>
@@ -144,6 +144,9 @@ function displayInvoice() {
             <td colspan="4"><input style="width:150px;" type="submit" name="refresh" value="<fmt:message key='refresh_webclip_data_action'/>" ></td>
         </tr>
     </form>
+    <script type="text/javascript">
+        document.getElementById("sourceUrlId").focus();	
+    </script>
     <%
         }
     %>
