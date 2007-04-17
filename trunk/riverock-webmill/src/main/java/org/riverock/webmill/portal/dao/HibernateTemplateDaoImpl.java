@@ -175,7 +175,21 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
     public Long createTemplate(Template template) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        TemplateBean bean = new TemplateBean();
+
+        TemplateBean bean;
+
+        if (template.isDefaultDynamic()) {
+            bean = (TemplateBean)session.createQuery(
+                    "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                            "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
+                    .setLong("siteLanguageId", template.getSiteLanguageId())
+                    .uniqueResult();
+            if (bean!=null) {
+                bean.setDefaultDynamic(false);
+            }
+        }
+
+        bean = new TemplateBean();
         bean.setDefaultDynamic(template.isDefaultDynamic());
         bean.setSiteLanguageId(template.getSiteLanguageId());
         bean.setTemplateName(template.getTemplateName());
@@ -236,13 +250,17 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        TemplateBean bean = (TemplateBean)session.createQuery(
-            "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
-            .setLong("siteLanguageId", template.getSiteLanguageId())
-            .uniqueResult();
-        if (bean!=null) {
-            bean.setDefaultDynamic(false);
+        TemplateBean bean;
+
+        if (template.isDefaultDynamic()) {
+            bean = (TemplateBean)session.createQuery(
+                    "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                            "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
+                    .setLong("siteLanguageId", template.getSiteLanguageId())
+                    .uniqueResult();
+            if (bean!=null) {
+                bean.setDefaultDynamic(false);
+            }
         }
 
         bean = (TemplateBean)session.createQuery(
