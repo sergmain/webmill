@@ -34,6 +34,7 @@
     <jsp:include page="menu-catalog-description.jsp"/>
 </f:subview>
 
+<h:panelGrid columns="1">
 <h:panelGroup id="operation-menu-catalog-panel">
     <h:commandButton id="edit-menu-catalog-action" action="menu-catalog-edit"
                      value="#{msg['edit_menu_catalog_action']}"
@@ -47,3 +48,10 @@
         >
     </h:commandButton>
 </h:panelGroup>
+
+<h:commandButton id="menu-catalog-change-template-action" action="#{menuCatalogAction.changeTemplateForCatalogLanguageAction}"
+                 value="#{msg['change_template_menu_catalog_action']}"
+                 styleClass="menu-button-action"
+    >
+</h:commandButton>
+</h:panelGrid>

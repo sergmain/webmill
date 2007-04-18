@@ -211,6 +211,17 @@ public class PortalCatalogDaoImpl implements PortalCatalogDao {
         }
     }
 
+    public void changeTemplateForCatalogLanguage(Long catalogLanguageId, Long templateId) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalCatalogDao().changeTemplateForCatalogLanguage(catalogLanguageId, templateId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
     public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {

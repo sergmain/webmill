@@ -53,12 +53,23 @@ public class MenuSessionBean implements Serializable {
     private Long currentMenuCatalogId=null;
     private Long currentSiteId=null;
 
+    // used for cummulative change template for menu items
+    private Long templateId = null;
+
     private SiteExtended siteExtended = null;
     private SiteLanguageBean siteLanguage = null;
     private MenuCatalogBean menuCatalog = null;
     private MenuItemExtended menuItem = null;
     private List<Template> templates=null;
     private Long previousCreatedPortletId=null;
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
+    }
 
     public Long getPreviousCreatedPortletId() {
         return previousCreatedPortletId;

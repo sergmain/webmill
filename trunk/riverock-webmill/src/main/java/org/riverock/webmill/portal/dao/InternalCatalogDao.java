@@ -63,4 +63,6 @@ public interface InternalCatalogDao {
     Long getSiteId(Long catalogLanguageId);
 
     boolean isUrlExist(String url, Long siteLanguageId);
+
+    public void changeTemplateForCatalogLanguage(Long catalogLanguageId, Long templateId);
 }

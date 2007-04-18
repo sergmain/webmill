@@ -68,10 +68,45 @@ public class MenuCatalogAction implements Serializable {
         this.authSessionBean = authSessionBean;
     }
 
-// main select action
+    // main select action
     public String selectMenuCatalog() {
         log.info( "Select menu catalog action." );
         loadCurrentObject();
+
+        return "menu";
+    }
+
+    // changeTemplateForCatalogLanguageAction
+    public String changeTemplateForCatalogLanguageAction() {
+        Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(
+            getSessionObject().getCatalogLanguageId()
+        ).getSiteLanguageId();
+        menuSessionBean.setTemplates(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
+        menuSessionBean.setTemplateId(null);
+
+        return "menu-catalog-change-template";
+    }
+
+    public String processChangeTemplateForCatalogLanguageAction() {
+        log.info( "Save changes of template catalog action." );
+
+        if( getSessionObject() !=null ) {
+            FacesTools.getPortalDaoProvider().getPortalCatalogDao().changeTemplateForCatalogLanguage(
+                    getSessionObject().getCatalogLanguageId(), menuSessionBean.getTemplateId()
+            );
+            cleadDataProviderObject();
+            loadCurrentObject();
+        }
+
+        return "menu";
+    }
+
+    public String cancelChangeTemplateForCatalogLanguageAction() {
+        log.info( "Cancel change template menu catalog action." );
+
+        setSessionObject(null);
+        menuSessionBean.setTemplateId(null);
+        cleadDataProviderObject();
 
         return "menu";
     }
