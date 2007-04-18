@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
-import javax.portlet.RenderRequest;
 import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
@@ -218,7 +217,6 @@ public class MenuDataProvider implements Serializable {
 
         return list;
     }
-
 
     public List<SelectItem> getTemplateList() {
         List<SelectItem> list = new ArrayList<SelectItem>();

@@ -564,6 +564,24 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         return !ids.isEmpty();
     }
 
+    public void changeTemplateForCatalogLanguage(Long catalogLanguageId, Long templateId) {
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+
+        List<CatalogBean> items = session.createQuery(
+            "select catalog " +
+                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
+                "where catalog.catalogLanguageId=:catalogLanguageId")
+            .setLong("catalogLanguageId", catalogLanguageId)
+            .list();
+
+        for (CatalogBean item : items) {
+            item.setTemplateId(templateId);
+        }
+
+        session.getTransaction().commit();
+    }
+
     public boolean isUpdatable(String url, Long siteLanguageId, Long catalogId) {
         if (StringUtils.isBlank(url)) {
             return true;

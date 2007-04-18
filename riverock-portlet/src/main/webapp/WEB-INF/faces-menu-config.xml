@@ -167,6 +167,13 @@
             <to-view-id>/riverock/manager/menu/menu-catalog-delete.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>menu-catalog-change-template</from-outcome>
+            <to-view-id>/riverock/manager/menu/menu-catalog-change-template.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
     <application>
         <locale-config>
             <default-locale>en</default-locale>

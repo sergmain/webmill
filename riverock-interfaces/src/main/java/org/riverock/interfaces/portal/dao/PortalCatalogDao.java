@@ -59,5 +59,5 @@ public interface PortalCatalogDao {
     public void updateCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem);
     public void deleteCatalogLanguageItem(Long catalogLanguageId);
 
-
+    public void changeTemplateForCatalogLanguage(Long catalogLanguageId, Long templateId);
 }
