@@ -575,8 +575,22 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             .setLong("catalogLanguageId", catalogLanguageId)
             .list();
 
+        boolean isFound = false;
         for (CatalogBean item : items) {
             item.setTemplateId(templateId);
+            isFound = true;
+        }
+
+        if (isFound) {
+            CatalogLanguageBean bean = (CatalogLanguageBean)session.createQuery(
+                "select catalogLang " +
+                    "from  org.riverock.webmill.portal.bean.CatalogLanguageBean as catalogLang " +
+                    "where catalogLang.catalogLanguageId=:catalogLanguageId")
+                .setLong("catalogLanguageId", catalogLanguageId)
+                .uniqueResult();
+            if (bean!=null) {
+                reinitMenuCache(bean.getSiteLanguageId());
+            }
         }
 
         session.getTransaction().commit();

@@ -169,6 +169,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
             return;
         }
 
+        boolean isNotEditAHref = true;
         int type = node.getNodeType();
         switch (type) {
             case Node.DOCUMENT_NODE:
@@ -186,7 +187,9 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                 break;
 
             case Node.ELEMENT_NODE: {
-                if (!isHrefWithActionEditParam(node)) {
+                isNotEditAHref = !isHrefWithActionEditParam(node);
+                if (isNotEditAHref) {
+                    
                     if (node.getNodeName().equalsIgnoreCase(A_ELEMENT)) {
                         NamedNodeMap attrMap = node.getAttributes();
                         for (int i = 0; i < attrMap.getLength(); i++) {
@@ -209,15 +212,22 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                         out.write('"');
                     }
                     out.write('>');
+
+                    // Put text of "A HREF" element
+                    NodeList children = node.getChildNodes();
+                    if (children != null) {
+                        int len = children.getLength();
+                        for (int i = 0; i < len; i++) {
+                            print(children.item(i), out);
+                        }
+                    }
+
+                    // Put closed element
+                    out.write("</".getBytes(CharEncoding.UTF_8));
+                    out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                    out.write('>');
                 }
 
-                NodeList children = node.getChildNodes();
-                if (children != null) {
-                    int len = children.getLength();
-                    for (int i = 0; i < len; i++) {
-                        print(children.item(i), out);
-                    }
-                }
                 break;
             }
 
@@ -255,12 +265,6 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                 out.write("?>".getBytes(CharEncoding.UTF_8));
                 break;
             }
-        }
-
-        if (type == Node.ELEMENT_NODE) {
-            out.write("</".getBytes(CharEncoding.UTF_8));
-            out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
-            out.write('>');
         }
 
         out.flush();
