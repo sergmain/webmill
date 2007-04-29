@@ -648,7 +648,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         return bean;
     }
 
-    private final static class MenuItemComparator implements Comparator<CatalogItem> {
+    final static class MenuItemComparator implements Comparator<CatalogItem> {
         public int compare(CatalogItem o1, CatalogItem o2) {
 
             if (o1==null && o2==null)
@@ -658,11 +658,12 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             if (o2==null)
                 return -1;
 
-            // "order by a.ID_TOP_CTX_CATALOG ASC, a.ORDER_FIELD ASC ";
+            // "order by a.ID_TOP_CTX_CATALOG ASC, a.ORDER_FIELD ASC, KEY_MESSAGE ASC ";
             if ( o1.getTopCatalogId().equals( o2 .getTopCatalogId()))
             {
-                if ( o1.getOrderField()==null && o2.getOrderField()==null)
-                    return 0;
+                if ( o1.getOrderField()==null && o2.getOrderField()==null) {
+                    return compareNames(o1, o2);
+                }
 
                 if ( o1.getOrderField()!=null && o2.getOrderField()==null )
                     return -1;
@@ -670,10 +671,31 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 if ( o1.getOrderField()==null && o2.getOrderField()!=null)
                     return 1;
 
-                return o1.getOrderField().compareTo( o2.getOrderField() );
+                // KEY_MESSAGE
+                if (o1.getOrderField().equals( o2.getOrderField()) ){
+                    return compareNames(o1, o2);
+                }
+                else {
+                    return o1.getOrderField().compareTo( o2.getOrderField() );
+                }
             }
-            else
+            else {
                 return o1.getTopCatalogId().compareTo( o2.getTopCatalogId() );
+            }
+        }
+
+        private static int compareNames(CatalogItem o1, CatalogItem o2) {
+            if ( o1.getKeyMessage()==null && o2.getKeyMessage()==null)
+                return 0;
+
+            if ( o1.getKeyMessage()!=null && o2.getKeyMessage()==null )
+                return -1;
+
+            if ( o1.getKeyMessage()==null && o2.getKeyMessage()!=null)
+                return 1;
+
+            int i = o1.getKeyMessage().compareTo(o2.getKeyMessage());
+            return i==0?0:(i>0?1:-1);
         }
     }
 }
