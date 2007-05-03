@@ -116,7 +116,6 @@ public class GoogleSitemapService {
             FileOutputStream fileOutputStream = new FileOutputStream(sitemap);
             GZIPOutputStream gzipOutputStream = new GZIPOutputStream(fileOutputStream);
             marshall(urlset, gzipOutputStream);
-//            marshall(urlset, fileOutputStream);
             gzipOutputStream.flush();
             gzipOutputStream.close();
             gzipOutputStream=null;
@@ -139,6 +138,7 @@ public class GoogleSitemapService {
         log.debug("Start marshall()");
         JAXBContext jc = JAXBContext.newInstance( "org.riverock.webmill.google.sitemap.schema.sitemap" );
         Marshaller m = jc.createMarshaller();
+        
         // create an element for marshalling
         Urlset set = (new ObjectFactory()).createUrlset();
         set.setUrl(urlset);

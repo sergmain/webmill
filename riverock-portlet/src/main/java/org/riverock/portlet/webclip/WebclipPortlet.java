@@ -34,11 +34,15 @@ import javax.portlet.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.InetSocketAddress;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.Date;
 
 /**
  * User: SergeMaslyukov
@@ -69,22 +73,23 @@ public class WebclipPortlet implements Portlet {
             if (webclipId==null) {
                 webclipId=createWebclip(request, siteId);
             }
-            if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.SAVE_ACTION))) {
-                log.debug("    process 'save' action");
-                setNewHrefPrefix(request, request.getParameter(WebclipConstants.NEW_HREF_PREFIX_PARAM));
-                setHrefStartPart(request, request.getParameter(WebclipConstants.HREF_START_PAGE_PARAM));
-                setUrl(request, request.getParameter(WebclipConstants.SOURCE_URL_PARAM));
+            if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.SAVE_PARAM_ACTION))) {
+                log.debug("    process 'save-param' action");
+                saveParamAction(request);
             }
-            else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.REFRESH_ACTION))) {
-                log.debug("    process 'refresh' action");
-                refreshWebclipData(request, webclipId, siteId);
+            else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.PROCESS_CONTENT_ACTION))) {
+                log.debug("    process 'process-content' action");
+                processWebclipData(request, webclipId, siteId);
             }
-            else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.SAVE_AND_REFRESH_ACTION))) {
-                log.debug("    process 'save-and-refresh' action");
-                setNewHrefPrefix(request, request.getParameter(WebclipConstants.NEW_HREF_PREFIX_PARAM));
-                setHrefStartPart(request, request.getParameter(WebclipConstants.HREF_START_PAGE_PARAM));
-                setUrl(request, request.getParameter(WebclipConstants.SOURCE_URL_PARAM));
-                refreshWebclipData(request, webclipId, siteId);
+            else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.SAVE_GET_PROCESS_ACTION))) {
+                log.debug("    process 'save-get-process' action");
+                saveParamAction(request);
+                getOriginContent(request, webclipId, siteId);
+                processWebclipData(request, webclipId, siteId);
+            }
+            else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.GET_ORIGIN_CONTENT_ACTION))) {
+                log.debug("    process 'get-origin-content' action");
+                getOriginContent(request, webclipId, siteId);
             }
             else {
                 throw new RuntimeException("Unknown action type");
@@ -96,6 +101,12 @@ public class WebclipPortlet implements Portlet {
         catch (Exception e) {
             response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
         }
+    }
+
+    private void saveParamAction(ActionRequest request) {
+        setNewHrefPrefix(request, request.getParameter(WebclipConstants.NEW_HREF_PREFIX_PARAM));
+        setHrefStartPart(request, request.getParameter(WebclipConstants.HREF_START_PAGE_PARAM));
+        setUrl(request, request.getParameter(WebclipConstants.SOURCE_URL_PARAM));
     }
 
     public void render(RenderRequest request, RenderResponse response) throws PortletException, IOException {
@@ -148,8 +159,8 @@ public class WebclipPortlet implements Portlet {
         return preferences.getValue(WebclipConstants.PROXY_PASSWORD_PREF, null);
     }
 
-    private void refreshWebclipData(PortletRequest request, Long webclipId, Long siteId) throws IOException {
-        log.info("Start refreshWebclipData()");
+    private void getOriginContent(ActionRequest request, Long webclipId, Long siteId) throws IOException {
+        log.info("Start processWebclipData()");
 
         String url = getUrl(request);
         if (StringUtils.isNotBlank(url)) {
@@ -165,41 +176,82 @@ public class WebclipPortlet implements Portlet {
                 }
             }
 
-                URL urlObject = new URL(url);
-                URLConnection urlConnection;
+            URL urlObject = new URL(url);
+            URLConnection urlConnection;
 //                Proxy proxy = prepareProxy(request);
 //                if (proxy!=null) {
 //                    urlConnection = urlObject.openConnection(proxy);
 //                }
 //                else {
-                    urlConnection = urlObject.openConnection();
+            urlConnection = urlObject.openConnection();
 //                }
-                if (log.isDebugEnabled()) {
-                    log.debug("Current read timeout: " + urlConnection.getReadTimeout());
-                }
-                urlConnection.setReadTimeout(WebclipConstants.DEFAULT_READ_TIMEOUT);
-                InputStream is = urlConnection.getInputStream();
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                byte[] bytes = new byte[1024];
-                int count;
-                while ((count=is.read(bytes)) != -1) {
-                    os.write(bytes, 0, count);
-                }
-                is.close();
+            if (log.isDebugEnabled()) {
+                log.debug("Current read timeout: " + urlConnection.getReadTimeout());
+            }
+            urlConnection.setReadTimeout(WebclipConstants.DEFAULT_READ_TIMEOUT);
+            InputStream is = urlConnection.getInputStream();
 
-                bytes = os.toByteArray();
-                if (log.isDebugEnabled()) {
-                    log.debug("Content from "+url+":\n" + new String(bytes));
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(os);
+
+            byte[] bytes = new byte[1024];
+            int count;
+            while ((count=is.read(bytes)) != -1) {
+                gzipOutputStream.write(bytes, 0, count);
+            }
+            is.close();
+            is = null;
+            
+            gzipOutputStream.flush();
+            gzipOutputStream.close();
+            gzipOutputStream=null;
+
+            PortletDaoFactory.getWebclipDao().setOriginContent(webclip, os.toByteArray());
+        }
+    }
+
+    private void processWebclipData(PortletRequest request, Long webclipId, Long siteId) throws IOException {
+        log.info("Start processWebclipData()");
+
+        String url = getUrl(request);
+        if (StringUtils.isNotBlank(url)) {
+            WebclipBean webclip=getWebclip(webclipId, siteId);
+            if (webclip==null) {
+                Long id = createWebclip(request, siteId);
+                if (id==null) {
+                    throw new RuntimeException("id of new webclip is null");
                 }
-                WebclipUrlProducer producer = new WebclipUrlProducerImpl(getNewHrefPrefix(request), getHrefStartPart(request));
-                WebclipDataProcessor processor = new WebclipDataProcessorImpl(
-                    producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content"
-                );
+                webclip=getWebclip(webclipId, siteId);
+                if (webclip==null) {
+                    throw new RuntimeException("webclip is null");
+                }
+                return;
+            }
+            
+            byte[] bytes = webclip.getZippedOriginContentAsBytes();
+            GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            bytes = new byte[1024];
+            int count;
+            while ((count=gzipInputStream.read(bytes)) != -1) {
+                os.write(bytes, 0, count);
+            }
+            gzipInputStream.close();
+            gzipInputStream = null;
+
+            bytes = os.toByteArray(); 
+
+            WebclipUrlProducer producer = new WebclipUrlProducerImpl(getNewHrefPrefix(request), getHrefStartPart(request));
+            WebclipDataProcessor processor = new WebclipDataProcessorImpl(
+                producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content"
+            );
                 
-                os = new ByteArrayOutputStream();
-                processor.modify(os);
-                webclip.setWebclipData(os.toString(CharEncoding.UTF_8));
-                PortletDaoFactory.getWebclipDao().updateWebclip(webclip);
+            os = new ByteArrayOutputStream();
+
+            processor.modify(os);
+            String webclipData = os.toString(CharEncoding.UTF_8);
+            PortletDaoFactory.getWebclipDao().updateWebclip(webclip, new Date(), webclipData);
         }
     }
 
@@ -337,7 +389,7 @@ public class WebclipPortlet implements Portlet {
         }
         boolean isNew=false;
         if (StringUtils.isBlank(id)) {
-            webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId, null);
+            webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId);
             isNew=true;
         }
         else {
@@ -345,7 +397,7 @@ public class WebclipPortlet implements Portlet {
                 webclipId = Long.parseLong(id);
             } catch (NumberFormatException e) {
                 log.warn("Error parse webclipId: " + id+", will be created new WebclipBean");
-                webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId, null);
+                webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId);
                 isNew=true;
             }
         }
@@ -361,7 +413,7 @@ public class WebclipPortlet implements Portlet {
             }
             if (bean==null) {
                 // create new webclip bean
-                webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId, null);
+                webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId);
                 isNew=true;
             }
         }

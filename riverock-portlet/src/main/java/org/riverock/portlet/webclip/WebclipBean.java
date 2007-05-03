@@ -25,7 +25,9 @@ package org.riverock.portlet.webclip;
 
 import java.util.Date;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
+import java.sql.SQLException;
 
 import javax.persistence.Entity;
 import javax.persistence.TableGenerator;
@@ -37,6 +39,10 @@ import javax.persistence.Column;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.apache.commons.lang.CharEncoding;
+
+import org.riverock.common.exception.DatabaseException;
+
 /**
  * User: SergeMaslyukov
  * Date: 10.09.2006
@@ -46,7 +52,6 @@ import javax.persistence.Version;
  */
 @Entity
 @Table(name="WM_PORTLET_WEBCLIP")
-//@Table(name="wm_portlet_webclip")
 @TableGenerator(
     name="TABLE_PORTLET_WEBCLIP",
     table="WM_PORTAL_IDS",
@@ -66,15 +71,18 @@ public class WebclipBean implements Serializable {
     @Column(name="ID_SITE")
     private Long siteId;
 
+    @Column(name="ZIP_ORIGIN_CONTENT")
+    private Blob zipOriginContent;
+
     @Column(name="WEBCLIP_BLOB")
     private Blob webclipBlob;
 
     @Column(name="DATE_POST")
     private Date datePost;
 
-    @Version
-    @Column(name="VERSION")
-    private int version;
+//    @Version
+//    @Column(name="VERSION")
+//    private int version;
 
     @Transient
     private String webclipData;
@@ -89,6 +97,27 @@ public class WebclipBean implements Serializable {
         this.datePost = datePost;
     }
 
+    public byte[] getZippedOriginContentAsBytes() {
+        if (zipOriginContent!=null) {
+            try {
+                return zipOriginContent.getBytes(1, (int)zipOriginContent.length());
+            }
+            catch (SQLException e) {
+                String es = "Error get zipped origin content as bytes";
+                throw new RuntimeException(es, e);
+            }
+        }
+        return new byte[]{};
+    }
+
+    public Blob getZipOriginContent() {
+        return zipOriginContent;
+    }
+
+    public void setZipOriginContent(Blob zipOriginContent) {
+        this.zipOriginContent = zipOriginContent;
+    }
+
     public Blob getWebclipBlob() {
         return webclipBlob;
     }
@@ -97,13 +126,13 @@ public class WebclipBean implements Serializable {
         this.webclipBlob = webclipBlob;
     }
 
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
+//    public int getVersion() {
+//        return version;
+//    }
+//
+//    public void setVersion(int version) {
+//        this.version = version;
+//    }
 
     public Long getWebclipId() {
         return webclipId;
