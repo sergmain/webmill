@@ -23,6 +23,8 @@
  */
 package org.riverock.portlet.dao;
 
+import java.util.Date;
+
 import org.riverock.portlet.webclip.WebclipBean;
 
 /**
@@ -36,9 +38,11 @@ public interface WebclipDao {
 
     WebclipBean getWebclip(Long siteId, Long webclipId);
 
-    Long createWebclip(Long siteId, String webclipData);
+    Long createWebclip(Long siteId);
 
-    void updateWebclip(WebclipBean webclip);
+    void updateWebclip(WebclipBean webclip, Date postDate, String resultContent);
+
+    void setOriginContent(WebclipBean webclip, byte[] bytes);
 
     void deleteWebclip(Long siteId, Long weblipId);
 }

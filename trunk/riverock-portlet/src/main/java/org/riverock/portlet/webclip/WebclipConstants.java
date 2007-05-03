@@ -43,9 +43,24 @@ public class WebclipConstants {
 
     static final String RIVEROCK_WEBLICP_INDEX_JSP = "/riverock/webclip/webclip.jsp";
     static final String WEBCLIP_BEAN = "webclipBean";
-    static final String SAVE_ACTION = "save";
-    static final String REFRESH_ACTION = "refresh";
-    static final String SAVE_AND_REFRESH_ACTION = "save-and-refresh";
+
+    
+    /**
+     * Save parameters in preferences
+     */
+    static final String SAVE_PARAM_ACTION = "save-param";
+    /**
+     * process content
+     */
+    static final String PROCESS_CONTENT_ACTION = "process-content";
+    /**
+     * Save parameters in preferences, get origin content and process content
+     */
+    static final String SAVE_GET_PROCESS_ACTION = "save-get-process";
+    /**
+     * get origin content
+     */
+    static final String GET_ORIGIN_CONTENT_ACTION = "get-origin-content";
 
     static final String SOURCE_URL_PARAM = "sourceUrl";
     static final String NEW_HREF_PREFIX_PARAM = "newHrefPrefix";

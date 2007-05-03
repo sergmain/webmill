@@ -133,7 +133,9 @@ function displayInvoice() {
         </tr>
         <tr>
             <td colspan="4">
-                <input style="width:150px;" type="submit" name="save-and-refresh" value="<fmt:message key='save_and_refresh_webclip_data_action'/>" >
+                <input style="width:150px;" type="submit" name="save-get-process" value="<fmt:message key='save_get_process_action'/>" >
+                &nbsp;&nbsp;
+                <input style="width:150px;" type="submit" name="process-content" value="<fmt:message key='process_content_action'/>" >
             </td>
         </tr>
         <tr>
@@ -144,9 +146,9 @@ function displayInvoice() {
         </tr>
         <tr>
             <td colspan="4">
-                <input style="width:150px;" type="submit" name="save" value="<fmt:message key='save_webclip_action'/>">
+                <input style="width:150px;" type="submit" name="save-param" value="<fmt:message key='save_param_action'/>">
                 &nbsp;&nbsp;
-                <input style="width:150px;" type="submit" name="refresh" value="<fmt:message key='refresh_webclip_data_action'/>" >
+                <input style="width:150px;" type="submit" name="get-origin-content" value="<fmt:message key='get_origin_content'/>" >
             </td>
         </tr>
     </form>
