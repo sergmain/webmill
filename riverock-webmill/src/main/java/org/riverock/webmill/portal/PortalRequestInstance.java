@@ -43,6 +43,7 @@ import org.riverock.common.html.Header;
 import org.riverock.common.tools.MainTools;
 import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
@@ -58,6 +59,7 @@ import org.riverock.webmill.portal.context.RequestContextFactory;
 import org.riverock.webmill.portal.context.RequestContextParameter;
 import org.riverock.webmill.portal.context.RequestState;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
@@ -120,6 +122,8 @@ public final class PortalRequestInstance {
 
     private String portalInfoName = null;
 
+    private PortalTransformationParameters portalTransformationParameters = new PortalTransformationParameters();
+
     public void destroy() {
         for (PageElement pageElement : getPageElementList()) {
             pageElement.destroy();
@@ -153,6 +157,7 @@ public final class PortalRequestInstance {
         requestBodyFile = null;
         portalDaoProvider = null;
         portletContainer = null;
+        portalTransformationParameters = null;
     }
 
     public PortalRequestInstance() {
@@ -226,6 +231,40 @@ public final class PortalRequestInstance {
                 throw new IllegalArgumentException("General error for access portal page");
             }
 
+            if (requestContext.getExtendedCatalogItem()!=null || requestContext.getContextId()!=null) {
+                CatalogItem catalogItem;
+                if (requestContext.getContextId()!=null) {
+                    catalogItem = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(requestContext.getContextId());
+                }
+                else {
+                    catalogItem = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(requestContext.getExtendedCatalogItem().getCatalogId());
+                }
+
+                if (catalogItem!=null) {
+                    if (StringUtils.isNotBlank(catalogItem.getTitle())) {
+                        this.portalTransformationParameters.setTitle(catalogItem.getTitle());
+                    }
+                    else {
+                        this.portalTransformationParameters.setTitle(catalogItem.getKeyMessage());
+                    }
+                    if (StringUtils.isNotBlank(catalogItem.getKeyword())) {
+                        this.portalTransformationParameters.setKeyword(catalogItem.getKeyword());
+                    }
+                    else {
+                        this.portalTransformationParameters.setKeyword(catalogItem.getKeyMessage());
+                    }
+                    this.portalTransformationParameters.setAuthor(catalogItem.getAuthor());
+                }
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("#10.1 catalogId: " + requestContext.getContextId());
+                log.debug("#10.2 contextId: " + requestContext.getExtendedCatalogItem().getCatalogId());
+                log.debug("#10.3, title: " + portalTransformationParameters.getTitle());
+                log.debug("#10.4, keyword: " + portalTransformationParameters.getKeyword());
+                log.debug("#10.5, author: " + portalTransformationParameters.getAuthor());
+            }
+
             initTemplate(portalInfo);
             initXslt(portalInfo);
 
@@ -259,6 +298,38 @@ public final class PortalRequestInstance {
                                 "portletName: " + portletName
                         );
                     }
+
+/*
+                    // init parameters for XSLT transformation
+                    // init title
+                    if (StringUtils.isNotBlank(requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getTitle())) {
+                        this.portalTransformationParameters.setTitle(requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getTitle());
+                    }
+                    // init keyword
+                    List<String> keywords = requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getKeywords();
+                    if (keywords !=null && !keywords.isEmpty() ) {
+                        String k = "";
+                        boolean isNotFirst = false;
+                        for (String keyword : keywords) {
+                            if (StringUtils.isBlank(keyword)) {
+                                continue;
+                            }
+                            if (isNotFirst) {
+                                k += ',' + keyword;
+                            }
+                            else {
+                                k += keyword;
+                            }
+                        }
+                        if (StringUtils.isNotBlank(k)) {
+                            this.portalTransformationParameters.setKeyword(k);
+                        }
+                    }
+                    // init author
+//                    if (StringUtils.isNotBlank(requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getAuthor())) {
+//                        this.portalTransformationParameters.setAuthor(requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getAuthor());
+//                    }
+*/
                 }
 
                 // chech for template item is not restricted after create namespace
@@ -527,6 +598,10 @@ public final class PortalRequestInstance {
 
     public File getTempPath() {
         return tempPath;
+    }
+
+    public PortalTransformationParameters getPortalTransformationParameters() {
+        return portalTransformationParameters;
     }
 
     private void initTempPath() {
