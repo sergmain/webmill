@@ -61,6 +61,8 @@ public final class PortalRequestProcessor {
 
     /**
      *  Main method for processing pages with portlets
+     * @param portalRequestInstance request instance
+     * @throws Exception on any error
      */
     static void processPortalRequest( PortalRequestInstance portalRequestInstance ) throws Exception {
 
@@ -264,14 +266,7 @@ public final class PortalRequestProcessor {
 
                 // transform and output previous page elements
                 if (outputStream!=null) {
-                    try {
-                        ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
-                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes, portalRequestInstance.getTempPath());
-                        portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
-                    } catch (Exception e) {
-                        log.warn("Error transform page element", e);
-                        portalRequestInstance.byteArrayOutputStream.write("Error transform page element".getBytes());
-                    }
+                    transformContent(outputStream, portalRequestInstance);
                     outputStream = null;
                 }
 
@@ -327,14 +322,19 @@ public final class PortalRequestProcessor {
                         }
                     }
 
+//                    ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
+                    transformContent(outputStream, portalRequestInstance);
+/*
                     try {
-                        ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
-                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes, portalRequestInstance.getTempPath());
+                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes, portalRequestInstance.getTempPath(),
+                            portalRequestInstance.getPortalTransformationParameters()
+                        );
                         portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
                     } catch (Exception e) {
                         log.warn("Error transform page element", e);
                         portalRequestInstance.byteArrayOutputStream.write("Error transform page element".getBytes());
                     }
+*/
                     outputStream = null;
                 }
             }
@@ -351,8 +351,24 @@ public final class PortalRequestProcessor {
         }
     }
 
+    private static void transformContent(ByteArrayOutputStream outputStream, PortalRequestInstance portalRequestInstance) throws IOException {
+        try {
+            ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
+            processTransforming(outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes, portalRequestInstance.getTempPath(),
+                portalRequestInstance.getPortalTransformationParameters()
+            );
+            portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
+        } catch (Exception e) {
+            log.warn("Error transform page element", e);
+            portalRequestInstance.byteArrayOutputStream.write("Error transform page element".getBytes());
+        }
+    }
+
     private static final Object syncObj = new Object();
-    private static void processTransforming(final ByteArrayOutputStream xml, Transformer transformer, ByteArrayOutputStream arrayOutputStream, File tempPath) throws IOException, TransformerException {
+    private static void processTransforming(
+        final ByteArrayOutputStream xml, Transformer transformer, ByteArrayOutputStream arrayOutputStream, File tempPath,
+        PortalTransformationParameters portalTransformationParameters
+    ) throws IOException, TransformerException {
 
         xml.write( "</SiteTemplate>".getBytes() );
 
@@ -385,9 +401,20 @@ public final class PortalRequestProcessor {
         Source xmlSource = new StreamSource( stream );
 
         if (log.isDebugEnabled()) {
-            log.debug("#40.2");
+            log.debug("#40.3, title: " + portalTransformationParameters.getTitle());
+            log.debug("#40.4, keyword: " + portalTransformationParameters.getKeyword());
+            log.debug("#40.5, author: " + portalTransformationParameters.getAuthor());
         }
 
+        if (StringUtils.isNotBlank(portalTransformationParameters.getTitle())) {
+            transformer.setParameter("webmill-portal.title", portalTransformationParameters.getTitle());
+        }
+        if (StringUtils.isNotBlank(portalTransformationParameters.getKeyword())) {
+            transformer.setParameter("webmill-portal.keyword", portalTransformationParameters.getKeyword());
+        }
+        if (StringUtils.isNotBlank(portalTransformationParameters.getAuthor())) {
+            transformer.setParameter("webmill-portal.author", portalTransformationParameters.getAuthor());
+        }
         transformer.transform( xmlSource, new StreamResult( arrayOutputStream ) );
     }
 

@@ -47,12 +47,14 @@ public class PortalXslt implements XsltTransformer {
     private static Logger log = Logger.getLogger(PortalXslt.class);
 
     private Xslt xslt = null;
-    private Transformer transformer = null;
+//    private Transformer transformer = null;
+    private Templates translet = null;
     private final Object transformerSync = new Object();
 
     protected void finalize() throws Throwable {
         xslt = null;
-        transformer = null;
+//        transformer = null;
+        translet = null;
 
         super.finalize();
     }
@@ -71,7 +73,35 @@ public class PortalXslt implements XsltTransformer {
 
         this.xslt = xslt;
         try {
-            createTransformer();
+            Source xslSource = new StreamSource(new StringReader(this.xslt.getXsltData()));
+
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            try {
+                translet = tFactory.newTemplates(xslSource);
+            }
+            catch (TransformerConfigurationException e) {
+                log.error("xslt with error\n"+ this.xslt.getXsltData());
+                log.error("Error create TransformerFactory of XSLT", e);
+                throw e;
+            }
+
+/*
+            if (log.isDebugEnabled()) {
+                log.debug("XsltList. translet - " + translet);
+                log.debug("Start create Transformer");
+            }
+
+            synchronized (transformerSync) {
+                transformer=null;
+                try {
+                    transformer = translet.newTransformer();
+                }
+                catch (TransformerConfigurationException e) {
+                    log.error("Error create transformer", e);
+                    throw e;
+                }
+            }
+*/
         }
         catch (Exception e) {
             String es = "Error create transformer";
@@ -80,43 +110,22 @@ public class PortalXslt implements XsltTransformer {
         }
     }
 
-    private void createTransformer() throws Exception {
-        Source xslSource = new StreamSource(new StringReader(xslt.getXsltData()));
-
-        TransformerFactory tFactory = TransformerFactory.newInstance();
-        Templates translet;
-        try {
-            translet = tFactory.newTemplates(xslSource);
-        }
-        catch (TransformerConfigurationException e) {
-            log.error("xslt with error\n"+xslt.getXsltData());
-            log.error("Error create TransformerFactory of XSLT", e);
-            throw e;
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("XsltList. translet - " + translet);
-            log.debug("Start create Transformer");
-        }
-
-        synchronized (transformerSync) {
-            transformer=null;
-            try {
-                transformer = translet.newTransformer();
-            }
-            catch (javax.xml.transform.TransformerConfigurationException e) {
-                log.error("Error create transformer", e);
-                throw e;
-            }
-        }
-    }
-
     public Transformer getTransformer() {
+        try {
+            return translet.newTransformer();
+        }
+        catch (Exception e) {
+            String es = "Error create transformer";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+/*
         if (transformer!=null) {
             return transformer;
         }
         synchronized (transformerSync) {
             return transformer;
         }
+*/
     }
 }
