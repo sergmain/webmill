@@ -22,6 +22,7 @@ riverock-database-structure.xsd">
 		<Fields name="WEBCLIP_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
 		<Fields size="5" nullable="1" name="VERSION" javaType="3" javaStringType="java.sql.Types.DECIMAL" defaultValue="0" decimalDigit="0" dataType="NUMBER" /> 
 		<Fields name="WEBCLIP_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
+		<Fields name="ZIP_ORIGIN_CONTENT" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTLET_WEBCLIP" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_WPW_FK" pkName="ID_SITE_SLS_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
