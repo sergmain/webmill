@@ -26,6 +26,8 @@ package org.riverock.portlet.dao;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
@@ -83,6 +85,22 @@ public class WebclipDaoImpl implements WebclipDao {
         return bean;
     }
 
+    public List<Long> getAllForSite(Long siteId) {
+
+        if (siteId==null) {
+            return new ArrayList<Long>(0);
+        }
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        List<Long> ids = session.createQuery(
+            "select bean.webclipId from org.riverock.portlet.webclip.WebclipBean as bean " +
+                "where bean.siteId=:siteId")
+            .setLong("siteId", siteId)
+            .list();
+        session.getTransaction().commit();
+        return ids;
+    }
+
     public Long createWebclip(Long siteId) {
 
         Session session = HibernateUtils.getSession();
@@ -90,22 +108,8 @@ public class WebclipDaoImpl implements WebclipDao {
 
         WebclipBean bean = new WebclipBean();
         bean.setSiteId(siteId);
-        bean.setDatePost(new Date());
-//        if (StringUtils.isNotBlank(webclipData)) {
-//            byte[] bytes;
-//            try {
-//                bytes = webclipData.getBytes(CharEncoding.UTF_8);
-//            }
-//            catch (UnsupportedEncodingException e) {
-//                String es = "Error convert webclip data to array of bytes";
-//                log.error(es, e);
-//                throw new RuntimeException(es, e);
-//            }
-//            bean.setWebclipBlob( Hibernate.createBlob(bytes));
-//        }
-//        else {
-            bean.setWebclipBlob(null);
-//        }
+//        bean.setDatePost(new Date());
+        bean.setWebclipBlob(null);
 
         session.save(bean);
         session.flush();
@@ -115,7 +119,7 @@ public class WebclipDaoImpl implements WebclipDao {
         return bean.getWebclipId();
     }
 
-    public void updateWebclip(WebclipBean webclip, Date postDate, String resultContent) {
+    public void updateWebclip(WebclipBean webclip, String resultContent) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
@@ -126,7 +130,6 @@ public class WebclipDaoImpl implements WebclipDao {
             .setLong("siteId", webclip.getSiteId())
             .uniqueResult();
         if (bean!=null) {
-            bean.setDatePost(postDate);
             if (StringUtils.isNotBlank(resultContent)) {
                 byte[] bytes;
                 try {
@@ -157,7 +160,7 @@ public class WebclipDaoImpl implements WebclipDao {
             .setLong("siteId", webclip.getSiteId())
             .uniqueResult();
         if (bean!=null) {
-            bean.setDatePost(webclip.getDatePost());
+            bean.setDatePost( new Date() );
             bean.setZipOriginContent( Hibernate.createBlob(bytes));
         }
         session.getTransaction().commit();
@@ -180,24 +183,5 @@ public class WebclipDaoImpl implements WebclipDao {
 
         session.getTransaction().commit();
     }
-
-/*
-    public int getWebclipVersion(Long siteId, Long webclipId) {
-        if (webclipId==null || siteId==null) {
-            throw new RuntimeException("webclipId and siteId must not null");
-        }
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        Integer version = (Integer)session.createQuery(
-            "select bean.version from org.riverock.portlet.webclip.WebclipBean as bean " +
-                "where bean.webclipId = :webclipId and bean.siteId=:siteId")
-            .setLong("webclipId", webclipId)
-            .setLong("siteId", siteId)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return version;
-    }
-*/
-
 }
 

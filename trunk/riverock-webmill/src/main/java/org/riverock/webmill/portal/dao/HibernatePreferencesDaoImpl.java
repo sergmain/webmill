@@ -133,7 +133,7 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
         }
     }
 
-    private static Map<String, List<String>> initMetadata( String metadata ) {
+    public Map<String, List<String>> initMetadata( String metadata ) {
         if (log.isDebugEnabled()) {
             log.debug("metadata: " + metadata);
         }
