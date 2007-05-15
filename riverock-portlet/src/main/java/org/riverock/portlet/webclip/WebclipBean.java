@@ -23,25 +23,19 @@
  */
 package org.riverock.portlet.webclip;
 
-import java.util.Date;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.TableGenerator;
-import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
-import javax.persistence.Version;
-
-import org.apache.commons.lang.CharEncoding;
-
-import org.riverock.common.exception.DatabaseException;
 
 /**
  * User: SergeMaslyukov
@@ -79,10 +73,6 @@ public class WebclipBean implements Serializable {
 
     @Column(name="DATE_POST")
     private Date datePost;
-
-//    @Version
-//    @Column(name="VERSION")
-//    private int version;
 
     @Transient
     private String webclipData;
@@ -125,14 +115,6 @@ public class WebclipBean implements Serializable {
     public void setWebclipBlob(Blob webclipBlob) {
         this.webclipBlob = webclipBlob;
     }
-
-//    public int getVersion() {
-//        return version;
-//    }
-//
-//    public void setVersion(int version) {
-//        this.version = version;
-//    }
 
     public Long getWebclipId() {
         return webclipId;

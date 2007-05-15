@@ -50,6 +50,7 @@ public class PortalDaoProviderImpl implements PortalDaoProvider {
     private PortalUserDao portalUserDao = null;
     private PortalCmsArticleDao portalCmsArticleDao = null;
     private PortalCmsNewsDao portalCmsNewsDao = null;
+    private PortalPreferencesDao portalPreferencesDao = null;
 
     public PortalDaoProviderImpl(AuthSession authSession, ClassLoader classLoader) {
         this.portalCompanyDao = new PortalCompanyDaoImpl(authSession, classLoader);
@@ -68,6 +69,7 @@ public class PortalDaoProviderImpl implements PortalDaoProvider {
         this.portalUserDao = new PortalUserDaoImpl(authSession, classLoader);
         this.portalCmsArticleDao = new PortalCmsArticleDaoImpl(authSession, classLoader);
         this.portalCmsNewsDao = new PortalCmsNewDaoImpl(authSession, classLoader);
+        this.portalPreferencesDao = new PortalPreferencesDaoImpl(authSession, classLoader);
     }
 
     public PortalCmsArticleDao getPortalCmsArticleDao() {
@@ -76,6 +78,10 @@ public class PortalDaoProviderImpl implements PortalDaoProvider {
 
     public PortalCmsNewsDao getPortalCmsNewsDao() {
         return portalCmsNewsDao;
+    }
+
+    public PortalPreferencesDao getPortalPreferencesDao() {
+        return portalPreferencesDao;
     }
 
     public PortalUserDao getPortalUserDao() {

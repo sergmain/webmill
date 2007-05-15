@@ -37,4 +37,6 @@ import java.util.Map;
 public interface InternalPreferencesDao {
     Map<String, List<String>> load(Long catalogId);
     void store(Map<String, List<String>> preferences, Long catalogId);
+
+    Map<String, List<String>> initMetadata( String metadata );
 }

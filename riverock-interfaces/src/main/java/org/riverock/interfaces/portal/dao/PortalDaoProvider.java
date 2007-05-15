@@ -48,4 +48,5 @@ public interface PortalDaoProvider {
     public PortalUserDao getPortalUserDao();
     public PortalCmsArticleDao getPortalCmsArticleDao();
     public PortalCmsNewsDao getPortalCmsNewsDao();
+    public PortalPreferencesDao getPortalPreferencesDao();
 }

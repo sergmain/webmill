@@ -31,10 +31,12 @@ package org.riverock.portlet.webclip;
  * $Id$
  */
 public class WebclipConstants {
-    static final String WEBCLIP_ID_PREF = "webclip.webclip_id";
-    static final String URL_SOURCE_PREF = "webclip.url";
-    static final String NEW_HREF_PREFIX_PREF = "webclip.new_prefix";
-    static final String HREF_START_PAGE_PREF = "webclip.href_start_page";
+
+    public static final String WEBMILL_WIKI_WEBCLIP = "webmill.wiki-webclip";
+    public static final String WEBCLIP_ID_PREF = "webclip.webclip_id";
+    public static final String URL_SOURCE_PREF = "webclip.url";
+    public static final String NEW_HREF_PREFIX_PREF = "webclip.new_prefix";
+    public static final String HREF_START_PAGE_PREF = "webclip.href_start_page";
 
     static final String PROXY_PORT_PREF = "webclip.proxy_port";
     static final String PROXY_HOST_PREF = "webclip.proxy_host";

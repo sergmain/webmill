@@ -24,6 +24,26 @@
   -->
 <portlet-app version="webmill portlet's deployment descriptor" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
 c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
+    <portlet>
+        <description>Webmill webclip manager portlet</description>
+        <portlet-name>webmill.webclip-manager</portlet-name>
+        <display-name>Webmill webclip manager</display-name>
+        <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+        <init-param>
+            <name>default-view</name>
+            <value>/riverock/webclip/manager/index.jsp</value>
+        </init-param>
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Webmill webclip manager portlet</title>
+            <short-title>Webmill webclip manager portlet</short-title>
+            <keywords>Webmill, webclip, manager, portlet</keywords>
+        </portlet-info>
+    </portlet>
 	<portlet>
         <description>Webmill search stub</description>
         <portlet-name>webmill.search-stub</portlet-name>
