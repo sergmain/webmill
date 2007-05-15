@@ -58,7 +58,7 @@ public class SiteExtended implements Serializable {
         this.company = new CompanyBean(company);
     }
 
-    public Site getSite() {
+    public SiteBean getSite() {
         return site;
     }
 

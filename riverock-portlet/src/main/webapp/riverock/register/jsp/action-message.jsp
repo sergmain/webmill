@@ -29,7 +29,7 @@
 <%@ taglib prefix="fmt" uri="jstl/format" %>
 <%@ taglib prefix="request" uri="/tld/jakarta-request" %>
 
-<%@include file="inc/header.jsp" %>
+<%--<%@include file="inc/header.jsp" %>--%>
 
 <c:set var="locale"><request:attribute name="request-locale"/></c:set>
 <fmt:setLocale value="${locale}" scope="request" />
@@ -72,5 +72,5 @@
 	</tr>		
 </table>				
 				
-<%@include file="inc/footer.jsp"%>
+<%--<%@include file="inc/footer.jsp"%>--%>
 
