@@ -1,0 +1,1 @@
+C:\opt2\jaxb-ri-20070122\bin\xjc.bat riverock-server-monitor.xsd -p org.riverock.portlet.manager.monitor.schema -d ../java

@@ -51,7 +51,7 @@ import org.riverock.webmill.portal.utils.PortalUtils;
 public class GoogleSitemapServlet extends HttpServlet {
     private final static Logger log = Logger.getLogger( GoogleSitemapServlet.class );
 
-    static final String SITEMAP_DIR = "WEB-INF" + File.separatorChar+ "sitemap" + File.separatorChar;
+    static final String SITEMAP_DIR = "WEB-INF" + File.separatorChar+ "webmill-data" + File.separatorChar+ "sitemap" + File.separatorChar;
 
     private static final String SITEMAP_XML = "sitemap.xml.gz";
     private static final int BUFFER_SIZE = 1024;
@@ -64,11 +64,6 @@ public class GoogleSitemapServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
-
-        if ( log.isDebugEnabled() ) {
-            log.debug( "Dynamic status " + p.getSite().getCssDynamic() );
-        }
-
         String sitemapPath = getServletContext().getRealPath("/") + SITEMAP_DIR + p.getSiteId();
 
         File path = new File(sitemapPath);

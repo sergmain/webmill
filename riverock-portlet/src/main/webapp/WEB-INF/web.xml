@@ -41,7 +41,8 @@
             /WEB-INF/faces-menu-config.xml,
             /WEB-INF/faces-news-config.xml,
             /WEB-INF/faces-article-config.xml,
-            /WEB-INF/faces-webclip-manager-config.xml
+            /WEB-INF/faces-webclip-manager-config.xml,
+            /WEB-INF/faces-manager-monitor-config.xml
         </param-value>
 	</context-param>
 	<context-param>
