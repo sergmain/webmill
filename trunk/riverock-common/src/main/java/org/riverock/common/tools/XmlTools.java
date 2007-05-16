@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.io.InputStream;
+import java.io.File;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -139,18 +140,19 @@ public final class XmlTools {
         }
     }
 
-    public static void writeToFile(final Object obj, final String fileName)
-        throws Exception {
-
+    public static void writeToFile(final Object obj, final String fileName) throws Exception {
         writeToFile(obj, fileName, "utf-8");
     }
 
-    public static void writeToFile(final Object obj, final String fileName, final String encoding)
-        throws Exception {
+    public static void writeToFile(final Object obj, final String fileName, final String encoding) throws Exception {
+        writeToFile(obj, new File(fileName), encoding);
+    }
+
+    public static void writeToFile(final Object obj, final File file, final String encoding) throws Exception {
         JAXBContext jaxbContext = JAXBContext.newInstance ( obj.getClass().getPackage().getName() );
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
-        FileOutputStream fos = new FileOutputStream(fileName);
+        FileOutputStream fos = new FileOutputStream(file);
         marshaller.marshal(obj, fos);
     }
 }

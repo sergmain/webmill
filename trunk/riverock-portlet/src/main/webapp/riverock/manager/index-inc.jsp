@@ -106,12 +106,19 @@
 
 </h:panelGrid>
 
-<h:panelGrid columns="1">
+<h:panelGrid columns="2">
 
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
             <h:commandButton id="create-google-sitemap-action" action="#{portalActionExecutor.createGoogleSitemap}" value="Create Google sitemap" styleClass="top-button-action"/>
             <h:outputText value="Create Google sitemap" style="font-size:10px"/>
+        </h:panelGrid>
+    </h:panelGroup>
+
+    <h:panelGroup>
+        <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
+            <h:commandButton id="monitor-server-action" action="manager-monitor" value="#{manager.monitor_button}" styleClass="top-button-action"/>
+            <h:outputText value="#{manager.monitor_info}" style="font-size:10px"/>
         </h:panelGrid>
     </h:panelGroup>
 

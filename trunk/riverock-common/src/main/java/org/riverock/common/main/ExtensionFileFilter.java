@@ -37,31 +37,28 @@ public class ExtensionFileFilter implements FileFilter {
 
     public ExtensionFileFilter(String ext_) {
         if (ext_ != null) {
-            ext = new String[1];
-            ext[0] = ext_;
+            this.ext = new String[1];
+            this.ext[0] = ext_;
         }
     }
 
-    public ExtensionFileFilter(String ext_[]) {
-        if (ext_ != null) {
-            ext = new String[ext_.length];
-            for (int i = 0; i < ext_.length; i++) {
-                ext[i] = ext_[i];
-            }
-        }
-    }
-
-    public boolean accept(File file_) {
-        if (file_ == null)
-            return false;
-
-        if (file_.isDirectory())
-            return false;
-
+    public ExtensionFileFilter(String ext[]) {
         if (ext != null) {
-            for (int i = 0; i < ext.length; i++) {
-                if (file_.getName().toLowerCase().endsWith(ext[i]))
+            this.ext = new String[ext.length];
+            System.arraycopy(ext, 0, this.ext, 0, ext.length);
+        }
+    }
+
+    public boolean accept(File file) {
+        if (file == null || file.isDirectory()) {
+            return false;
+        }
+
+        if (this.ext != null) {
+            for (String anExt : this.ext) {
+                if (file.getName().toLowerCase().endsWith(anExt)) {
                     return true;
+                }
             }
         }
         return false;
