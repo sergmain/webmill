@@ -75,4 +75,6 @@ public class WebclipConstants {
 
     static final int TABLE_NODE_TYPE = 1;
     static final int DIV_NODE_TYPE = 2;
+
+    public static final int MAX_TIME_NOT_REFRESH_DATA = 1000*60*60*3;
 }
