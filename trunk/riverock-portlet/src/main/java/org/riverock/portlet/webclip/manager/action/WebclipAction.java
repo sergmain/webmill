@@ -154,9 +154,10 @@ public class WebclipAction implements Serializable {
         return WEBCLIP_MANAGER;
     }
 
+    private static final String WIKI_URI = "/wiki";
     public static final String meta =
         "webclip.new_prefix=/page/about\n" +
-        "webclip.href_start_page=/wiki\n" +
+        "webclip.href_start_page=" + WIKI_URI + "\n" +
         "webclip.url=";
 
 
@@ -181,6 +182,10 @@ public class WebclipAction implements Serializable {
             PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(WebclipConstants.WEBMILL_WIKI_WEBCLIP);
             CatalogLanguageItem catalogLanguageItem = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItem(webclipSessionBean.getCatalogLanguageId());
             Template template = portalDaoProvider.getPortalTemplateDao().getDefaultDynamicTemplate(catalogLanguageItem.getSiteLanguageId());
+            if (template==null) {
+                result.add("Default template not found.");
+                return WEBCLIP_MANAGER;
+            }
 
             BufferedReader reader = new BufferedReader( new StringReader(webclipSessionBean.getUrls()) );
             String line;
@@ -197,14 +202,25 @@ public class WebclipAction implements Serializable {
                 try {
                     String uri = URIUtil.decode(line);
                     String path = URIUtil.getPath(uri);
-                    File f = new File(URIUtil.getPath(path));
-                    String menuName = f.getName().replace('_', ' ');
+//                    File f = new File(URIUtil.getPath(path));
+
+                    if (path.startsWith(WIKI_URI)) {
+                        path = path.substring(WIKI_URI.length()+1);
+                    }
+                    else {
+                        result.add( "URI for URL "+line+" not start with " + WIKI_URI);
+                        continue;
+                    }
+                    
+                    if (StringUtils.isBlank(path)) {
+                        result.add( "URI for URL "+line+" is empty");
+                        continue;
+                    }
+
+                    String menuName = path.replace('_', ' ');
 
                     MenuItem item = new MenuItem();
                     item.setCatalogLanguageId(webclipSessionBean.getCatalogLanguageId());
-                    if (path.startsWith("/")) {
-                        path = path.substring(1);
-                    }
                     item.setUrl(path);
                     item.setKeyMessage(menuName);
                     item.setContextId(null);
@@ -217,6 +233,7 @@ public class WebclipAction implements Serializable {
                     result.add( processWebclipContent(portalDaoProvider, siteId, catalogItem) );
                 }
                 catch (Throwable e) {
+                    log.error("Error process url '" +line+"'", e);
                     result.add("Error process url '" +line+"', "+ e.toString());
                 }
             }
