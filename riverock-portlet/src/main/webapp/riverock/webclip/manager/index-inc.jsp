@@ -46,7 +46,7 @@
     }
 </style>
 
-<h:panelGrid columns="2" rendered="#{isUserInRole['webmill.portal-manager,webmill.webclip-manager']}">
+<h:panelGrid columns="3" rendered="#{isUserInRole['webmill.portal-manager,webmill.webclip-manager']}">
 
     <h:panelGroup>
         <h:panelGrid>
@@ -60,6 +60,13 @@
             <h:commandButton id="process-all-content-action" action="#{webclipAction.processAllContentAction}" value="#{manager.process_all_content_button}"
                              styleClass="top-button-action"/>
             <h:outputText value="#{manager.process_all_content_info}" style="font-size:10px"/>
+        </h:panelGrid>
+    </h:panelGroup>
+    <h:panelGroup>
+        <h:panelGrid>
+            <h:commandButton id="bulk-create-menus-action" action="webclip-bulk-create-select-catalog" value="#{manager.bulk_create_menus_button}"
+                             styleClass="top-button-action"/>
+            <h:outputText value="#{manager.bulk_create_menus_info}" style="font-size:10px"/>
         </h:panelGrid>
     </h:panelGroup>
 

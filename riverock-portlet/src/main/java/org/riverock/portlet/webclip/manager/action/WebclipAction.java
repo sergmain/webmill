@@ -1,6 +1,9 @@
 package org.riverock.portlet.webclip.manager.action;
 
 import java.io.Serializable;
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -9,20 +12,22 @@ import java.net.ConnectException;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.httpclient.util.URIUtil;
 
-import org.riverock.portlet.cms.article.ArticleSessionBean;
-import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.portlet.webclip.WebclipUtils;
 import org.riverock.portlet.webclip.WebclipBean;
+import org.riverock.portlet.webclip.manager.WebclipSessionBean;
+import org.riverock.portlet.webclip.manager.bean.MenuItem;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.PortletName;
+import org.riverock.interfaces.portal.bean.Template;
 
 /**
  * User: SMaslyukov
@@ -33,13 +38,11 @@ public class WebclipAction implements Serializable {
     private final static Logger log = Logger.getLogger(WebclipAction.class);
     private static final long serialVersionUID = 5077111311L;
 
-    private ArticleSessionBean articleSessionBean = null;
-    private AuthSessionBean authSessionBean = null;
+    private WebclipSessionBean webclipSessionBean = null;
     private List<String> result = null;
     private int countTryWithCounnectionTimeout=0;
     private static final int MAX_COUNT_TRY_WITH_TIMEOUT = 5;
     private static final String WEBCLIP_MANAGER = "webclip-manager";
-    private static final int MAX_TIME_NOT_REFRESH_DATA = 1000*60*60*3;
 
     public WebclipAction() {
     }
@@ -50,20 +53,16 @@ public class WebclipAction implements Serializable {
         return result;
     }
 
-    public void setResult(List result) {
+    public void setResult(List<String> result) {
         this.result = result;
     }
 
-    public ArticleSessionBean getArticleSessionBean() {
-        return articleSessionBean;
+    public WebclipSessionBean getWebclipSessionBean() {
+        return webclipSessionBean;
     }
 
-    public void setArticleSessionBean(ArticleSessionBean articleSessionBean) {
-        this.articleSessionBean = articleSessionBean;
-    }
-
-    public void setAuthSessionBean(AuthSessionBean authSessionBean) {
-        this.authSessionBean = authSessionBean;
+    public void setWebclipSessionBean(WebclipSessionBean webclipSessionBean) {
+        this.webclipSessionBean = webclipSessionBean;
     }
 
     public String clearResult() {
@@ -155,6 +154,83 @@ public class WebclipAction implements Serializable {
         return WEBCLIP_MANAGER;
     }
 
+    public static final String meta =
+        "webclip.new_prefix=/page/about\n" +
+        "webclip.href_start_page=/wiki\n" +
+        "webclip.url=";
+
+
+    public String bulkCreateMenus() {
+
+        result = new ArrayList<String>();
+
+        if (StringUtils.isBlank(webclipSessionBean.getUrls())) {
+            result.add("List of urls is empty");
+            return WEBCLIP_MANAGER;
+        }
+
+        if (webclipSessionBean.getCatalogLanguageId()==null) {
+            result.add("CatalogId is null");
+            return WEBCLIP_MANAGER;
+        }
+
+        Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+
+        try {
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(WebclipConstants.WEBMILL_WIKI_WEBCLIP);
+            CatalogLanguageItem catalogLanguageItem = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItem(webclipSessionBean.getCatalogLanguageId());
+            Template template = portalDaoProvider.getPortalTemplateDao().getDefaultDynamicTemplate(catalogLanguageItem.getSiteLanguageId());
+
+            BufferedReader reader = new BufferedReader( new StringReader(webclipSessionBean.getUrls()) );
+            String line;
+            while ((line=reader.readLine())!=null) {
+                Long webclipId;
+                try {
+                    webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId);
+                }
+                catch (Throwable e) {
+                    result.add("Error create new webclip, "+ e.toString());
+                    continue;
+                }
+                
+                try {
+                    String uri = URIUtil.decode(line);
+                    String path = URIUtil.getPath(uri);
+                    File f = new File(URIUtil.getPath(path));
+                    String menuName = f.getName().replace('_', ' ');
+
+                    MenuItem item = new MenuItem();
+                    item.setCatalogLanguageId(webclipSessionBean.getCatalogLanguageId());
+                    if (path.startsWith("/")) {
+                        path = path.substring(1);
+                    }
+                    item.setUrl(path);
+                    item.setKeyMessage(menuName);
+                    item.setContextId(null);
+                    item.setPortletId(portlet.getPortletId());
+                    item.setTemplateId(template.getTemplateId());
+                    item.setMetadata( meta + line + "\n" + WebclipConstants.WEBCLIP_ID_PREF + '=' + webclipId);
+                    Long menuItemId = portalDaoProvider.getPortalCatalogDao().createCatalogItem(item);
+                    CatalogItem catalogItem = portalDaoProvider.getPortalCatalogDao().getCatalogItem(menuItemId);
+                    result.add( reloadWebclipContent(portalDaoProvider, siteId, catalogItem) );
+                    result.add( processWebclipContent(portalDaoProvider, siteId, catalogItem) );
+                }
+                catch (Throwable e) {
+                    result.add("Error process url '" +line+"', "+ e.toString());
+                }
+            }
+        }
+        catch (Throwable th) {
+            result.add("Error process list of urls, " + th.toString());
+        }
+
+        return WEBCLIP_MANAGER;
+    }
+
+
+    // Private methods
+
     private static class WebclipBeanExtended {
         private WebclipBean webclip=null;
         private String url;
@@ -175,11 +251,11 @@ public class WebclipAction implements Serializable {
         if (w.status!=null){
             return w;
         }
-        w.href = getPreferenceValue(m, msg, w, "href not defined.", "too many hrefs - ", WebclipConstants.HREF_START_PAGE_PREF);
+        w.href = getPreferenceValue(m, msg, w, "href not defined.", "too many hrefs - ", WebclipConstants.NEW_HREF_PREFIX_PREF);
         if (w.status!=null){
             return w;
         }
-        w.prefix = getPreferenceValue(m, msg, w, "prefix not defined.", "too many prefixes - ", WebclipConstants.NEW_HREF_PREFIX_PREF);
+        w.prefix = getPreferenceValue(m, msg, w, "prefix not defined.", "too many prefixes - ", WebclipConstants.HREF_START_PAGE_PREF);
         if (w.status!=null){
             return w;
         }
@@ -226,7 +302,7 @@ public class WebclipAction implements Serializable {
         if (w.status!=null) {
             return w.status;
         }
-        if (w.webclip.getDatePost()!=null && (System.currentTimeMillis() - w.webclip.getDatePost().getTime()) < MAX_TIME_NOT_REFRESH_DATA) {
+        if (w.webclip.getDatePost()!=null && (System.currentTimeMillis() - w.webclip.getDatePost().getTime()) < WebclipConstants.MAX_TIME_NOT_REFRESH_DATA) {
             return msg +"skipped. content not obsolete";
         }
         

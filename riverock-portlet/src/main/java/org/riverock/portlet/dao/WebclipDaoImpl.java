@@ -39,6 +39,7 @@ import org.hibernate.Session;
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.portlet.tools.HibernateUtils;
 import org.riverock.portlet.webclip.WebclipBean;
+import org.riverock.portlet.webclip.WebclipConstants;
 
 /**
  * User: SergeMaslyukov
@@ -108,7 +109,8 @@ public class WebclipDaoImpl implements WebclipDao {
 
         WebclipBean bean = new WebclipBean();
         bean.setSiteId(siteId);
-//        bean.setDatePost(new Date());
+        // work around for MySql default CURRENT_TIMESTAMP for with field
+        bean.setDatePost(new Date(System.currentTimeMillis() - (WebclipConstants.MAX_TIME_NOT_REFRESH_DATA*2)));
         bean.setWebclipBlob(null);
 
         session.save(bean);
