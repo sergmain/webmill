@@ -67,5 +67,7 @@ public class TestEncodeUrl {
 
         File f = new File(URIUtil.getPath(s2));
         System.out.println("f.getName() = " + f.getName());
+
+        System.out.println("Url: " + URIUtil.decode("/page/about/Audi_R8_%28road_car%29"));
     }
 }

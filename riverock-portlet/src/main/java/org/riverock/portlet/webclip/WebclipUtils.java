@@ -13,12 +13,14 @@ import org.apache.log4j.Logger;
 import org.apache.commons.lang.CharEncoding;
 
 import org.riverock.portlet.dao.PortletDaoFactory;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 
 /**
  * User: SMaslyukov
  * Date: 11.05.2007
  * Time: 20:41:34
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class WebclipUtils {
     private static Logger log = Logger.getLogger(WebclipPortlet.class);
 
@@ -56,7 +58,7 @@ public class WebclipUtils {
         PortletDaoFactory.getWebclipDao().setOriginContent(webclip, os.toByteArray());
     }
 
-    public static void processStoredContent(WebclipBean webclip, String hrefPrefix, String hrefStartPart) throws IOException {
+    public static void processStoredContent(WebclipBean webclip, String hrefPrefix, String hrefStartPart, PortalDaoProvider portalDaoProvider, Long siteLanguageId) throws IOException {
         byte[] bytes = webclip.getZippedOriginContentAsBytes();
         GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
 
@@ -73,7 +75,7 @@ public class WebclipUtils {
 
         WebclipUrlProducer producer = new WebclipUrlProducerImpl(hrefPrefix, hrefStartPart);
         WebclipDataProcessor processor = new WebclipDataProcessorImpl(
-            producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content"
+            producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content", portalDaoProvider, siteLanguageId
         );
 
         os = new ByteArrayOutputStream();
