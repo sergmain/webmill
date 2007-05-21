@@ -28,14 +28,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-import org.apache.commons.lang.CharEncoding;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.httpclient.util.ParameterParser;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.ParameterParser;
+import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang.StringUtils;
 import org.apache.html.dom.HTMLDocumentImpl;
 import org.apache.log4j.Logger;
+
 import org.cyberneko.html.parsers.DOMFragmentParser;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -70,8 +71,8 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     /**
      * URI parameter parser
      */
-    private final static ParameterParser PARAMETER_PARSER = new ParameterParser();
-    private static final char SEPARATOR_HTTP_REQUEST_PARAM = '&';
+    public static final char SEPARATOR_HTTP_REQUEST_PARAM = '&';
+    public static final char QUERY_SEPARATOR_HTTP_REQUEST_PARAM = '?';
     private static final String EDIT_ACTION_NAME = "edit";
     private static final String ACTION_NAME = "action";
     private static final String HREF_ATTR = "href";
@@ -319,7 +320,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         return false;
     }
 
-    private boolean isHrefWithActionEditParam(Node node) {
+    private boolean isHrefWithActionEditParam(Node node) throws URIException {
         if (node==null) {
             return false;
         }
@@ -329,11 +330,35 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
             for (int i = 0; i < attrMap.getLength(); i++) {
                 Node tempNode = attrMap.item(i);
                 if (tempNode.getNodeName().equalsIgnoreCase(HREF_ATTR)) {
-                    if (StringUtils.isBlank(tempNode.getNodeValue())) {
+                    String url = tempNode.getNodeValue();
+
+                    if (StringUtils.isBlank(url)) {
                         return false;
                     }
-                    List<NameValuePair> params = PARAMETER_PARSER.parse(tempNode.getNodeValue(), SEPARATOR_HTTP_REQUEST_PARAM);
+                    if (!url.startsWith(WebclipConstants.WIKI_URI)) {
+                        return false;
+                    }
+                    url = URIUtil.decode(url).substring(WebclipConstants.WIKI_URI.length()+1);
+                    if (StringUtils.isBlank(url)) {
+                        return false;
+                    }
+
+                    if (url.indexOf(QUERY_SEPARATOR_HTTP_REQUEST_PARAM)==-1) {
+                        return false;
+                    }
+                    List<NameValuePair> params;
+                    try {
+                        url = URIUtil.decode(url);
+                        params = new ParameterParser().parse(url.substring(url.indexOf(QUERY_SEPARATOR_HTTP_REQUEST_PARAM)+1), SEPARATOR_HTTP_REQUEST_PARAM);
+                    }
+                    catch (StringIndexOutOfBoundsException e) {
+                        log.error("Error parse url with params. URL: " + url);
+                        throw e;
+                    }
                     for (NameValuePair param : params) {
+                        if (param.getName()==null || param.getValue()==null) {
+                            return false;
+                        }
                         if (param.getName().equals(ACTION_NAME) && param.getValue().equals(EDIT_ACTION_NAME)) {
                             return true;
                         }
