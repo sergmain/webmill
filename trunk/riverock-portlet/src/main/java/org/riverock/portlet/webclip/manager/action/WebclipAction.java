@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Locale;
 
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
@@ -156,10 +155,9 @@ public class WebclipAction implements Serializable {
         return WEBCLIP_MANAGER;
     }
 
-    private static final String WIKI_URI = "/wiki";
     public static final String meta =
         "webclip.new_prefix=/page/about\n" +
-        "webclip.href_start_page=" + WIKI_URI + "\n" +
+        "webclip.href_start_page=" + WebclipConstants.WIKI_URI + "\n" +
         "webclip.url=";
 
 
@@ -210,14 +208,20 @@ public class WebclipAction implements Serializable {
                     String uri = URIUtil.decode(line);
                     String path = URIUtil.getPath(uri);
 
-                    if (path.startsWith(WIKI_URI)) {
-                        path = path.substring(WIKI_URI.length()+1);
-                    }
-                    else {
-                        result.add( "URI for URL "+line+" not start with " + WIKI_URI);
+                    // test for blank
+                    if (StringUtils.isBlank(path)) {
                         continue;
                     }
-                    
+
+                    if (path.startsWith(WebclipConstants.WIKI_URI)) {
+                        path = path.substring(WebclipConstants.WIKI_URI.length()+1);
+                    }
+                    else {
+                        result.add( "URI for URL "+line+" not start with " + WebclipConstants.WIKI_URI);
+                        continue;
+                    }
+
+                    // test for blank after remove /wiki
                     if (StringUtils.isBlank(path)) {
                         result.add( "URI for URL "+line+" is empty");
                         continue;
@@ -362,7 +366,8 @@ public class WebclipAction implements Serializable {
             return msg + "zipped content of webclip is empty.";
         }
         try {
-            WebclipUtils.processStoredContent(w.webclip, w.href, w.prefix);
+            CatalogLanguageItem catalogLanguageItem = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItem(catalogItem.getCatalogLanguageId());
+            WebclipUtils.processStoredContent(w.webclip, w.href, w.prefix, portalDaoProvider, catalogLanguageItem.getSiteLanguageId());
         }
         catch (Throwable e) {
             String es = "Error refresh content for webclip, id: "+ w.webclip.getWebclipId()+", url: "+w.url;

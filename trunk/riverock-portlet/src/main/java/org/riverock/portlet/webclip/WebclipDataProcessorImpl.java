@@ -31,7 +31,9 @@ import java.util.List;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.httpclient.util.ParameterParser;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.URIException;
 import org.apache.html.dom.HTMLDocumentImpl;
 import org.apache.log4j.Logger;
 import org.cyberneko.html.parsers.DOMFragmentParser;
@@ -43,6 +45,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.html.HTMLDocument;
 import org.xml.sax.InputSource;
+
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 
 /**
  * @author Sergei Maslyukov
@@ -59,6 +63,9 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     
     // document's fragment
     private Node fragmentNode = null;
+
+    private PortalDaoProvider portalDaoProvider;
+    private Long siteLanguageId;
 
     /**
      * URI parameter parser
@@ -77,8 +84,10 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
      * @param elementType int 1- table element, 2 - div element
      * @param elementId String
      */
-    public WebclipDataProcessorImpl(WebclipUrlProducer urlProducer, byte[] bytes, int elementType, String elementId) {
+    public WebclipDataProcessorImpl(WebclipUrlProducer urlProducer, byte[] bytes, int elementType, String elementId, PortalDaoProvider portalDaoProvider, Long siteLanguageId) {
         this.urlProducer = urlProducer;
+        this.siteLanguageId = siteLanguageId;
+        this.portalDaoProvider = portalDaoProvider;
 
         DOMFragmentParser parser = new DOMFragmentParser();
 
@@ -189,30 +198,35 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
             case Node.ELEMENT_NODE: {
                 isNotEditAHref = !isHrefWithActionEditParam(node);
                 if (isNotEditAHref) {
-                    
+
+                    boolean isPrintAHref=true;
                     if (node.getNodeName().equalsIgnoreCase(A_ELEMENT)) {
                         NamedNodeMap attrMap = node.getAttributes();
                         for (int i = 0; i < attrMap.getLength(); i++) {
                             Node tempNode = attrMap.item(i);
                             if (tempNode.getNodeName().equalsIgnoreCase(HREF_ATTR)) {
-                                urlProducer.init();
-                                urlProducer.setCurrentHrefValue(tempNode.getNodeValue());
-                                tempNode.setNodeValue( urlProducer.getUrl() );
+                                isPrintAHref = checkUrl(tempNode.getNodeValue());
+                                if (isPrintAHref) {
+                                    urlProducer.init();
+                                    urlProducer.setCurrentHrefValue(tempNode.getNodeValue());
+                                    tempNode.setNodeValue( urlProducer.getUrl() );
+                                }
                             }
                         }
                     }
-                    out.write('<');
-                    out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
-                    Attr attrs[] = sortAttributes(node.getAttributes());
-                    for (Attr attr : attrs) {
-                        out.write(' ');
-                        out.write(attr.getNodeName().getBytes(CharEncoding.UTF_8));
-                        out.write("=\"".getBytes(CharEncoding.UTF_8));
-                        out.write(attr.getNodeValue().getBytes(CharEncoding.UTF_8));
-                        out.write('"');
+                    if (isPrintAHref) {
+                        out.write('<');
+                        out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                        Attr attrs[] = sortAttributes(node.getAttributes());
+                        for (Attr attr : attrs) {
+                            out.write(' ');
+                            out.write(attr.getNodeName().getBytes(CharEncoding.UTF_8));
+                            out.write("=\"".getBytes(CharEncoding.UTF_8));
+                            out.write(attr.getNodeValue().getBytes(CharEncoding.UTF_8));
+                            out.write('"');
+                        }
+                        out.write('>');
                     }
-                    out.write('>');
-
                     // Put text of "A HREF" element
                     NodeList children = node.getChildNodes();
                     if (children != null) {
@@ -222,10 +236,21 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                         }
                     }
 
-                    // Put closed element
-                    out.write("</".getBytes(CharEncoding.UTF_8));
-                    out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
-                    out.write('>');
+                    if (isPrintAHref) {
+                        // Put closed element
+                        out.write("</".getBytes(CharEncoding.UTF_8));
+                        out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                        out.write('>');
+                    }
+                }
+                else {
+                    NodeList children = node.getChildNodes();
+                    if (children != null) {
+                        int len = children.getLength();
+                        for (int i = 0; i < len; i++) {
+                            print(children.item(i), out);
+                        }
+                    }
                 }
 
                 break;
@@ -269,6 +294,29 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
         out.flush();
 
+    }
+
+    private boolean checkUrl(final String url) throws URIException {
+        if (StringUtils.isBlank(url)) {
+            return true;
+        }
+        if (!url.startsWith(WebclipConstants.WIKI_URI)) {
+            return true;
+        }
+        String path = URIUtil.decode(url);
+        path = path.substring(WebclipConstants.WIKI_URI.length()+1);
+        if (StringUtils.isBlank(path)) {
+            return true;
+        }
+
+        if (path.indexOf('#')!=-1) {
+            path = path.substring(0, path.indexOf('#'));
+        }
+
+        if (portalDaoProvider.getPortalCatalogDao().getCatalogItemId(siteLanguageId, path)!=null) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isHrefWithActionEditParam(Node node) {

@@ -26,6 +26,10 @@ package org.riverock.portlet.webclip;
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -61,6 +65,21 @@ public class WebclipPortlet implements Portlet {
         try {
             Long webclipId = getWebclipId(request);
             Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+
+            PortalDaoProvider portalDaoProvider = (PortalDaoProvider)request.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+            PortalInfo portalInfo = (PortalInfo)request.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
+            Long siteLanguageId = portalInfo.getSiteLanguageId(request.getLocale());
+            if (siteLanguageId==null) {
+                throw new RuntimeException("siteLanguageId is null for locale "+ request.getLocale().toString());
+            }
+            SiteLanguage siteLanguage = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+            if (siteLanguage==null) {
+                throw new RuntimeException("Not found siteLanguage for siteLanguageId "+siteLanguageId);
+            }
+            if (!siteId.equals(siteLanguage.getSiteId())) {
+                throw new RuntimeException("Wrong siteId. Expected: " + siteId+", real; " + siteLanguage.getSiteId());
+            }
+
             if (webclipId==null) {
                 webclipId=createWebclip(request, siteId);
             }
@@ -70,13 +89,13 @@ public class WebclipPortlet implements Portlet {
             }
             else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.PROCESS_CONTENT_ACTION))) {
                 log.debug("    execute 'process-content' action");
-                processWebclipData(request, webclipId, siteId);
+                processWebclipData(request, webclipId, siteId, portalDaoProvider, siteLanguageId);
             }
             else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.SAVE_GET_PROCESS_ACTION))) {
                 log.debug("    execute 'save-get-process' action");
                 saveParamAction(request);
                 getOriginContent(request, webclipId, siteId);
-                processWebclipData(request, webclipId, siteId);
+                processWebclipData(request, webclipId, siteId, portalDaoProvider, siteLanguageId);
             }
             else if (StringUtils.isNotBlank(request.getParameter(WebclipConstants.GET_ORIGIN_CONTENT_ACTION))) {
                 log.debug("    execute 'get-origin-content' action");
@@ -86,10 +105,8 @@ public class WebclipPortlet implements Portlet {
                 throw new RuntimeException("Unknown action type");
             }
         }
-        catch (Error e) {
-            response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
-        }
-        catch (Exception e) {
+        catch (Throwable e) {
+            log.error("Error", e);
             response.setRenderParameter(WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, e.toString());
         }
     }
@@ -171,7 +188,7 @@ public class WebclipPortlet implements Portlet {
         }
     }
 
-    private void processWebclipData(PortletRequest request, Long webclipId, Long siteId) throws IOException {
+    private void processWebclipData(PortletRequest request, Long webclipId, Long siteId, PortalDaoProvider portalDaoProvider, Long siteLanguageId) throws IOException {
         log.info("Start processWebclipData()");
 
         String url = getUrl(request);
@@ -192,7 +209,7 @@ public class WebclipPortlet implements Portlet {
                 return;
             }
 
-            WebclipUtils.processStoredContent(webclip, hrefPrefix, hrefStartPart);
+            WebclipUtils.processStoredContent(webclip, hrefPrefix, hrefStartPart, portalDaoProvider, siteLanguageId);
         }
     }
 
