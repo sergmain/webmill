@@ -57,6 +57,17 @@ public class PortalCatalogDaoImpl implements PortalCatalogDao {
         }
     }
 
+    public Long getCatalogItemId(Long siteLanguageId, String pageUrl) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(siteLanguageId, pageUrl);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {

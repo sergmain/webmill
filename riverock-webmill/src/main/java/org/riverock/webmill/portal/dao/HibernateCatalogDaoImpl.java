@@ -105,6 +105,26 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         return id;
     }
 
+    public Long getCatalogItemId(Long siteLanguageId, String pageUrl) {
+        if (siteLanguageId==null || pageUrl==null) {
+            return null;
+        }
+
+        Session session = HibernateUtils.getSession();
+        session.beginTransaction();
+        Long id = (Long)session.createQuery(
+            "select catalog.catalogId " +
+                "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
+                "      org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang " +
+                "where catalog.catalogLanguageId=catalogLang.catalogLanguageId and " +
+                "      catalogLang.siteLanguageId=:siteLanguageId and catalog.url=:url")
+            .setLong("siteLanguageId", siteLanguageId)
+            .setString("url", pageUrl)
+            .uniqueResult();
+        session.getTransaction().commit();
+        return id;
+    }
+
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName) {
         if (portletName==null || siteId==null || locale==null || templateName==null) {
             return null;
@@ -196,8 +216,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         return id;
     }
 
-    public Long getCatalogItemId(Long siteId, Locale locale, String pageName) {
-        if (siteId == null || locale==null || pageName==null) {
+    public Long getCatalogItemId(Long siteId, Locale locale, String pageUrl) {
+        if (siteId == null || locale==null || pageUrl==null) {
             return null;
         }
 
@@ -214,7 +234,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 "      catalog.url=:url")
             .setLong("siteId", siteId)
             .setString("customLanguage", locale.toString().toLowerCase())
-            .setString("url", pageName)
+            .setString("url", pageUrl)
             .uniqueResult();
         session.getTransaction().commit();
         return id;

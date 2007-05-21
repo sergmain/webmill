@@ -37,9 +37,11 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
  */
 public interface InternalCatalogDao {
     public Long getCatalogItemId(Long siteLanguageId, Long portletNameId, Long templateId );
+    public Long getCatalogItemId(Long siteLanguageId, String pageUrl);
+
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName );
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName, Long catalogId );
-    public Long getCatalogItemId(Long siteId, Locale locale, String pageName );
+    public Long getCatalogItemId(Long siteId, Locale locale, String pageUrl );
     public Long getCatalogItemId(Long siteId, Locale locale, Long catalogId );
 
     public List<CatalogItem> getCatalogItemList(Long catalogLanguageId);
@@ -65,4 +67,5 @@ public interface InternalCatalogDao {
     boolean isUrlExist(String url, Long siteLanguageId);
 
     public void changeTemplateForCatalogLanguage(Long catalogLanguageId, Long templateId);
+
 }

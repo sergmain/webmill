@@ -1,33 +1,35 @@
 package org.riverock.portlet.webclip.manager.action;
 
-import java.io.Serializable;
 import java.io.BufferedReader;
+import java.io.Serializable;
 import java.io.StringReader;
-import java.io.File;
+import java.net.ConnectException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.net.ConnectException;
+import java.util.Set;
+import java.util.Locale;
 
-import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
-import org.riverock.portlet.tools.FacesTools;
+import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.interfaces.portal.bean.PortletName;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.dao.PortletDaoFactory;
+import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.webclip.WebclipBean;
 import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.portlet.webclip.WebclipUtils;
-import org.riverock.portlet.webclip.WebclipBean;
 import org.riverock.portlet.webclip.manager.WebclipSessionBean;
 import org.riverock.portlet.webclip.manager.bean.MenuItem;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
-import org.riverock.interfaces.portal.bean.CatalogItem;
-import org.riverock.interfaces.portal.bean.PortletName;
-import org.riverock.interfaces.portal.bean.Template;
 
 /**
  * User: SMaslyukov
@@ -188,8 +190,13 @@ public class WebclipAction implements Serializable {
             }
 
             BufferedReader reader = new BufferedReader( new StringReader(webclipSessionBean.getUrls()) );
-            String line;
-            while ((line=reader.readLine())!=null) {
+            String tempLine;
+            Set<String> lines = new HashSet<String>();
+            while ((tempLine=reader.readLine())!=null) {
+                lines.add(tempLine);
+            }
+
+            for (String line : lines) {
                 Long webclipId;
                 try {
                     webclipId = PortletDaoFactory.getWebclipDao().createWebclip(siteId);
@@ -202,7 +209,6 @@ public class WebclipAction implements Serializable {
                 try {
                     String uri = URIUtil.decode(line);
                     String path = URIUtil.getPath(uri);
-//                    File f = new File(URIUtil.getPath(path));
 
                     if (path.startsWith(WIKI_URI)) {
                         path = path.substring(WIKI_URI.length()+1);
@@ -214,6 +220,11 @@ public class WebclipAction implements Serializable {
                     
                     if (StringUtils.isBlank(path)) {
                         result.add( "URI for URL "+line+" is empty");
+                        continue;
+                    }
+
+                    if (portalDaoProvider.getPortalCatalogDao().getCatalogItemId(catalogLanguageItem.getSiteLanguageId(), path)!=null) {
+                        result.add( "Menu with URI "+path+" already exist");
                         continue;
                     }
 
