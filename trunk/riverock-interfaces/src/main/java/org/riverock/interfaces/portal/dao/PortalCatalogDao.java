@@ -36,8 +36,10 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
  */
 public interface PortalCatalogDao {
     public Long getCatalogItemId(Long siteLanguageId, Long portletNameId, Long templateId );
+    public Long getCatalogItemId(Long siteLanguageId, String pageUrl );
+    
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName );
-    public Long getCatalogItemId(Long siteId, Locale locale, String pageName );
+    public Long getCatalogItemId(Long siteId, Locale locale, String pageUrl );
     public Long getCatalogItemId(Long siteId, Locale locale, Long catalogId );
 
     boolean isUrlExist(String url, Long siteLanguageId);
