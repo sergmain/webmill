@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Time: 16:29:34
  */
 public class WebclipSessionBean implements Serializable {
-    private static final long serialVersionUID = 2057005500L;
+    private static final long serialVersionUID = 7557005500L;
 
     private Long catalogLanguageId;
     private String urls;

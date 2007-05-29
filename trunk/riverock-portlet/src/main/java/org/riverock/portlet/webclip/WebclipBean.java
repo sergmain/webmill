@@ -26,7 +26,6 @@ package org.riverock.portlet.webclip;
 import java.io.Serializable;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -71,20 +70,16 @@ public class WebclipBean implements Serializable {
     @Column(name="WEBCLIP_BLOB")
     private Blob webclipBlob;
 
-    @Column(name="DATE_POST")
-    private Date datePost;
+    @Column(name="IS_LOAD_CONTENT")
+    private boolean isLoadContent = false;
+
+    @Column(name="IS_PROCESS_CONTENT")
+    private boolean isProcessContent = false;
 
     @Transient
     private String webclipData;
 
     public WebclipBean() {
-    }
-
-    public WebclipBean(Long siteId, Long webclipId, String webclipData, Date datePost) {
-        this.webclipId = webclipId;
-        this.siteId = siteId;
-        this.webclipData = webclipData;
-        this.datePost = datePost;
     }
 
     public byte[] getZippedOriginContentAsBytes() {
@@ -140,15 +135,23 @@ public class WebclipBean implements Serializable {
         this.webclipData = webclipData;
     }
 
-    public Date getDatePost() {
-        return datePost;
+    public boolean isLoadContent() {
+        return isLoadContent;
     }
 
-    public void setDatePost(Date datePost) {
-        this.datePost = datePost;
+    public void setLoadContent(boolean loadContent) {
+        isLoadContent = loadContent;
+    }
+
+    public boolean isProcessContent() {
+        return isProcessContent;
+    }
+
+    public void setProcessContent(boolean processContent) {
+        isProcessContent = processContent;
     }
 
     public String toString() {
-        return "webclipId: "+webclipId + ", siteId: "+siteId;
+        return "[webclipId: "+webclipId + ", siteId: "+siteId+"]";
     }
 }

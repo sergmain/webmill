@@ -50,6 +50,38 @@
 
     <h:panelGroup>
         <h:panelGrid>
+            <h:commandButton id="bulk-create-menus-action" action="webclip-bulk-create-select-catalog" value="#{manager.bulk_create_menus_button}"
+                             styleClass="top-button-action"/>
+            <h:outputText value="#{manager.bulk_create_menus_info}" style="font-size:10px"/>
+        </h:panelGrid>
+    </h:panelGroup>
+    <h:outputText value="&nbsp;" escape="false"/>
+    <h:panelGroup>
+        <h:panelGrid>
+            <h:commandButton action="#{webclipAction.statisticAction}" value="#{manager.statistic_button}"
+                             styleClass="top-button-action"/>
+            <h:outputText value="#{manager.statistic_info}" style="font-size:10px"/>
+        </h:panelGrid>
+    </h:panelGroup>
+
+    <h:panelGroup>
+        <h:panelGrid>
+            <h:commandButton action="#{webclipAction.markAllForReloadAction}" value="#{manager.mark_all_for_reload_button}"
+                             styleClass="top-button-action"/>
+            <h:outputText value="#{manager.mark_all_for_reload_info}" style="font-size:10px"/>
+        </h:panelGrid>
+    </h:panelGroup>
+    <h:panelGroup>
+        <h:panelGrid>
+            <h:commandButton action="#{webclipAction.markAllForProcessAction}" value="#{manager.mark_all_for_process_button}"
+                             styleClass="top-button-action"/>
+            <h:outputText value="#{manager.mark_all_for_process_content_info}" style="font-size:10px"/>
+        </h:panelGrid>
+    </h:panelGroup>
+    <h:outputText value="&nbsp;" escape="false"/>
+
+    <h:panelGroup>
+        <h:panelGrid>
             <h:commandButton id="reload-all-content-action" action="#{webclipAction.reloadAllContentAction}" value="#{manager.reload_all_content_button}"
                              styleClass="top-button-action"/>
             <h:outputText value="#{manager.reload_all_content_info}" style="font-size:10px"/>
@@ -62,13 +94,7 @@
             <h:outputText value="#{manager.process_all_content_info}" style="font-size:10px"/>
         </h:panelGrid>
     </h:panelGroup>
-    <h:panelGroup>
-        <h:panelGrid>
-            <h:commandButton id="bulk-create-menus-action" action="webclip-bulk-create-select-catalog" value="#{manager.bulk_create_menus_button}"
-                             styleClass="top-button-action"/>
-            <h:outputText value="#{manager.bulk_create_menus_info}" style="font-size:10px"/>
-        </h:panelGrid>
-    </h:panelGroup>
+    <h:outputText value="&nbsp;" escape="false"/>
 
 </h:panelGrid>
 

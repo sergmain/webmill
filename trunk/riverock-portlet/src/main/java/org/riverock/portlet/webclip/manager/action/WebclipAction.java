@@ -28,6 +28,7 @@ import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.portlet.webclip.WebclipUtils;
 import org.riverock.portlet.webclip.manager.WebclipSessionBean;
 import org.riverock.portlet.webclip.manager.bean.MenuItem;
+import org.riverock.portlet.webclip.manager.bean.WebclipStatisticBean;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -37,13 +38,15 @@ import org.riverock.webmill.container.ContainerConstants;
  */
 public class WebclipAction implements Serializable {
     private final static Logger log = Logger.getLogger(WebclipAction.class);
-    private static final long serialVersionUID = 5077111311L;
+    private static final long serialVersionUID = 7577111311L;
 
     private WebclipSessionBean webclipSessionBean = null;
-    private List<String> result = null;
+    private List<String> result = new ArrayList<String>();
     private int countTryWithCounnectionTimeout=0;
     private static final int MAX_COUNT_TRY_WITH_TIMEOUT = 5;
     private static final String WEBCLIP_MANAGER = "webclip-manager";
+    private static final int MAX_TIME_FOR_OPERATION_IN_MINUTES = 3;
+    private static final int MAX_TIME_FOR_OPERATION = MAX_TIME_FOR_OPERATION_IN_MINUTES*60*1000;
 
     public WebclipAction() {
     }
@@ -71,88 +74,186 @@ public class WebclipAction implements Serializable {
         return WEBCLIP_MANAGER;
     }
 
-    // 'Reload; action
-    public String reloadAllContentAction() {
-        log.debug("start reloadAllContentAction().");
+    public String statisticAction() {
+        result = new ArrayList<String>();
+        result.add( "Get statistics." );
 
+        Long siteId = getSiteId();
+        WebclipStatisticBean statisticBean = PortletDaoFactory.getWebclipDao().getStatistic(siteId);
+
+        result.add("");
+        result.add("Total webclips: " + statisticBean.getTotalCount());
+        result.add("Webclips for reloading: " + statisticBean.getForReloadCount());
+        result.add("Webclips for processing: " + statisticBean.getForProcessCount());
+        return WEBCLIP_MANAGER;
+    }
+
+    public String markAllForReloadAction() {
+        result = new ArrayList<String>();
+        result.add( "Start mark all webclips for reloading." );
+        try {
+            PortletDaoFactory.getWebclipDao().markAllForReload(getSiteId());
+            result.add( "All webclips marked for reloading without error." );
+        }
+        catch (Exception e) {
+            result.add( "Error mark all content for reload. "+e.toString() );
+        }
+        return WEBCLIP_MANAGER;
+    }
+
+    public String markAllForProcessAction() {
         result = new ArrayList<String>();
 
-        Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        log.debug("siteId: " + siteId);
-        PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
-        List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
-        log.debug("siteLanguage: " + languages);
-        Map<Long, String> map = new HashMap<Long, String>();
-        for (SiteLanguage language : languages) {
-            List<CatalogLanguageItem> catalogLanguageItems = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItemList(language.getSiteLanguageId());
-            for (CatalogLanguageItem catalogLanguageItem : catalogLanguageItems) {
-                List<CatalogItem> catalogItems = portalDaoProvider.getPortalCatalogDao().getCatalogItemList(catalogLanguageItem.getCatalogLanguageId());
-                for (CatalogItem catalogItem : catalogItems) {
-                    String portletName = map.get(catalogItem.getPortletId());
-                    log.debug("  portletName: "+portletName);
-                    if (portletName==null) {
-                        PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(catalogItem.getPortletId());
-                        if (portlet==null) {
-                            log.debug("  portlet for portletId: "+catalogItem.getPortletId() + " not found");
-                            continue;
+        result.add( "Start mark all webclips for processing." );
+        try {
+            PortletDaoFactory.getWebclipDao().markAllForProcess(getSiteId());
+            result.add( "All webclips marked for processing without error." );
+        }
+        catch (Exception e) {
+            result.add( "Error mark all content for process. "+e.toString() );
+        }
+        return WEBCLIP_MANAGER;
+    }
+
+    // 'Reload' action
+    public String reloadAllContentAction() {
+        log.debug("start reloadAllContentAction().");
+        long startMills = System.currentTimeMillis();
+
+        result = new ArrayList<String>();
+        result.add( "Start reloading webclips." );
+
+        Long siteId = getSiteId();
+        WebclipStatisticBean statisticBean = PortletDaoFactory.getWebclipDao().getStatistic(siteId);
+        try {
+            result.add("Result of work for "+MAX_TIME_FOR_OPERATION_IN_MINUTES+" minutes.");
+
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
+            log.debug("siteLanguage: " + languages);
+            Map<Long, String> map = new HashMap<Long, String>();
+            result.add("Count of languages: " + languages.size());
+            for (SiteLanguage language : languages) {
+                List<CatalogLanguageItem> catalogLanguageItems = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItemList(language.getSiteLanguageId());
+                result.add("Count of catalogs for language '" + language.getCustomLanguage()+"' - "+ catalogLanguageItems.size());
+                for (CatalogLanguageItem catalogLanguageItem : catalogLanguageItems) {
+                    List<CatalogItem> catalogItems = portalDaoProvider.getPortalCatalogDao().getCatalogItemList(catalogLanguageItem.getCatalogLanguageId());
+                    result.add("Count of menu items for catalog '" + catalogLanguageItem.getCatalogCode()+"' - "+ catalogItems.size());
+                    for (CatalogItem catalogItem : catalogItems) {
+                        if ((System.currentTimeMillis()-startMills)> MAX_TIME_FOR_OPERATION) {
+                            result.add("");
+                            result.add("Not all webclips reloaded. Time limit for operation reached.");
+                            return WEBCLIP_MANAGER;
                         }
-                        portletName = portlet.getPortletName();
-                        map.put(catalogItem.getPortletId(), portletName);
-                    }
-                    log.debug("  result portletName: "+portletName);
-                    if (portletName.equals(WebclipConstants.WEBMILL_WIKI_WEBCLIP)) {
-                        result.add( reloadWebclipContent(portalDaoProvider, siteId, catalogItem) );
-                        log.debug("    done reloadWebclipContent()");
-                    }
-                    if (countTryWithCounnectionTimeout> MAX_COUNT_TRY_WITH_TIMEOUT) {
-                        result.add("Too many time outed connections");
-                        return WEBCLIP_MANAGER;
+                        String portletName = map.get(catalogItem.getPortletId());
+                        log.debug("  portletName: "+portletName);
+                        if (portletName==null) {
+                            PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(catalogItem.getPortletId());
+                            if (portlet==null) {
+                                String s = "  portlet for portletId: " + catalogItem.getPortletId() + " not found";
+                                log.debug(s);
+                                result.add(s);
+                                continue;
+                            }
+                            portletName = portlet.getPortletName();
+                            map.put(catalogItem.getPortletId(), portletName);
+                        }
+                        log.debug("  result portletName: "+portletName);
+                        if (portletName.equals(WebclipConstants.WEBMILL_WIKI_WEBCLIP)) {
+                            String msg = reloadWebclipContent(portalDaoProvider, siteId, catalogItem);
+                            if (msg!=null) {
+                                result.add(msg);
+                            }
+                            log.debug("    done reloadWebclipContent()");
+                        }
+                        else {
+                            result.add("Not all webclips reloaded. Time limit for operation reached.");
+                        }
+                        if (countTryWithCounnectionTimeout> MAX_COUNT_TRY_WITH_TIMEOUT) {
+                            result.add("Too many connections time outed.");
+                            return WEBCLIP_MANAGER;
+                        }
                     }
                 }
             }
+            return WEBCLIP_MANAGER;
         }
-        return WEBCLIP_MANAGER;
+        finally {
+            result.add("");
+            result.add("Total webclips: " + statisticBean.getTotalCount());
+            result.add("Webclips for reloading: " + statisticBean.getForReloadCount());
+            result.add("Webclips for processing: " + statisticBean.getForProcessCount());
+            result.add("");
+            statisticBean = PortletDaoFactory.getWebclipDao().getStatistic(siteId);
+            result.add("Left count of webclips for reloading: " + statisticBean.getForReloadCount());
+            result.add("Left count of webclips for processing: " + statisticBean.getForProcessCount());
+        }
     }
 
     // 'Process' actions
     public String processAllContentAction() {
         log.debug("start processAllContentAction().");
+        long startMills = System.currentTimeMillis();
 
         result = new ArrayList<String>();
+        result.add( "Start processing webclips." );
 
-        Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-        log.debug("siteId: " + siteId);
+        Long siteId = getSiteId();
+        WebclipStatisticBean statisticBean = PortletDaoFactory.getWebclipDao().getStatistic(siteId);
 
-        PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
-        List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
-        log.debug("siteLanguage: " + languages);
-        Map<Long, String> map = new HashMap<Long, String>();
-        for (SiteLanguage language : languages) {
-            List<CatalogLanguageItem> catalogLanguageItems = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItemList(language.getSiteLanguageId());
-            for (CatalogLanguageItem catalogLanguageItem : catalogLanguageItems) {
-                List<CatalogItem> catalogItems = portalDaoProvider.getPortalCatalogDao().getCatalogItemList(catalogLanguageItem.getCatalogLanguageId());
-                for (CatalogItem catalogItem : catalogItems) {
-                    String portletName = map.get(catalogItem.getPortletId());
-                    log.debug("  portletName: "+portletName);
-                    if (portletName==null) {
-                        PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(catalogItem.getPortletId());
-                        if (portlet==null) {
-                            log.debug("  portlet for portletId: "+catalogItem.getPortletId() + " not found");
-                            continue;
+        try {
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
+            log.debug("siteLanguage: " + languages);
+            Map<Long, String> map = new HashMap<Long, String>();
+            result.add("Count of languages: " + languages.size());
+            for (SiteLanguage language : languages) {
+                List<CatalogLanguageItem> catalogLanguageItems = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItemList(language.getSiteLanguageId());
+                result.add("Count of catalogs for language '" + language.getCustomLanguage()+"' - "+ catalogLanguageItems.size());
+                for (CatalogLanguageItem catalogLanguageItem : catalogLanguageItems) {
+                    List<CatalogItem> catalogItems = portalDaoProvider.getPortalCatalogDao().getCatalogItemList(catalogLanguageItem.getCatalogLanguageId());
+                    result.add("Count of menu items for catalog '" + catalogLanguageItem.getCatalogCode()+"' - "+ catalogItems.size());
+                    for (CatalogItem catalogItem : catalogItems) {
+                        if ((System.currentTimeMillis()-startMills)> MAX_TIME_FOR_OPERATION) {
+                            result.add("");
+                            result.add("Not all webclips processed. Time limit for operation reached.");
+                            return WEBCLIP_MANAGER;
                         }
-                        portletName = portlet.getPortletName();
-                        map.put(catalogItem.getPortletId(), portletName);
-                    }
-                    log.debug("  result portletName: "+portletName);
-                    if (portletName.equals(WebclipConstants.WEBMILL_WIKI_WEBCLIP)) {
-                        result.add( processWebclipContent(portalDaoProvider, siteId, catalogItem) );
-                        log.debug("    done processAllContentActions()");
+                        String portletName = map.get(catalogItem.getPortletId());
+                        log.debug("  portletName: "+portletName);
+                        if (portletName==null) {
+                            PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(catalogItem.getPortletId());
+                            if (portlet==null) {
+                                log.debug("  portlet for portletId: "+catalogItem.getPortletId() + " not found");
+                                continue;
+                            }
+                            portletName = portlet.getPortletName();
+                            map.put(catalogItem.getPortletId(), portletName);
+                        }
+                        log.debug("  result portletName: "+portletName);
+                        if (portletName.equals(WebclipConstants.WEBMILL_WIKI_WEBCLIP)) {
+                            String msg = processWebclipContent(portalDaoProvider, siteId, catalogItem);
+                            if (msg!=null) {
+                                result.add(msg);
+                            }
+                            log.debug("    done processAllContentActions()");
+                        }
                     }
                 }
             }
-        }
 
-        return WEBCLIP_MANAGER;
+            return WEBCLIP_MANAGER;
+        }
+        finally {
+            result.add("");
+            result.add("Total webclips: " + statisticBean.getTotalCount());
+            result.add("Webclips for reloading: " + statisticBean.getForReloadCount());
+            result.add("Webclips for processing: " + statisticBean.getForProcessCount());
+            result.add("");
+            statisticBean = PortletDaoFactory.getWebclipDao().getStatistic(siteId);
+            result.add("Result count of webclips for reloading: " + statisticBean.getForReloadCount());
+            result.add("Result count of webclips for processing: " + statisticBean.getForProcessCount());
+        }
     }
 
     public static final String meta =
@@ -175,7 +276,7 @@ public class WebclipAction implements Serializable {
             return WEBCLIP_MANAGER;
         }
 
-        Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        Long siteId = getSiteId();
 
         try {
             PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
@@ -298,7 +399,7 @@ public class WebclipAction implements Serializable {
         }
         Long webclipId = new Long(id);
 
-        WebclipBean webclip = PortletDaoFactory.getWebclipDao().getWebclip(siteId, webclipId);
+        WebclipBean webclip = PortletDaoFactory.getWebclipDao().getWebclip(siteId, webclipId, false);
         if (webclip==null) {
             w.status = msg + "webclip for id "+ webclipId+" not found";
             return w;
@@ -331,13 +432,14 @@ public class WebclipAction implements Serializable {
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
 
         WebclipBeanExtended w = getWebclip(portalDaoProvider, siteId, catalogItem, msg);
+        if (!w.webclip.isLoadContent()) {
+            return null;
+        }
+        
         if (w.status!=null) {
             return w.status;
         }
-        if (w.webclip.getDatePost()!=null && (System.currentTimeMillis() - w.webclip.getDatePost().getTime()) < WebclipConstants.MAX_TIME_NOT_REFRESH_DATA) {
-            return msg +"skipped. content not obsolete";
-        }
-        
+
         try {
             WebclipUtils.loadContentFromSource(w.webclip, w.url);
         }
@@ -358,6 +460,9 @@ public class WebclipAction implements Serializable {
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
 
         WebclipBeanExtended w = getWebclip(portalDaoProvider, siteId, catalogItem, msg);
+        if (!w.webclip.isProcessContent()) {
+            return null;
+        }
         if (w.status!=null) {
             return w.status;
         }
@@ -376,4 +481,11 @@ public class WebclipAction implements Serializable {
         }
         return msg + "OK";
     }
+
+    private static Long getSiteId() {
+        Long siteId = new Long(FacesTools.getPortletRequest().getPortalContext().getProperty(ContainerConstants.PORTAL_PROP_SITE_ID));
+        log.debug("siteId: " + siteId);
+        return siteId;
+    }
+
 }

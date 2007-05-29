@@ -59,6 +59,24 @@ import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     private final static Logger log = Logger.getLogger( WebclipDataProcessorImpl.class );
 
+    /**
+     * URI parameter parser
+     */
+    public static final char SEPARATOR_HTTP_REQUEST_PARAM = '&';
+    public static final char QUERY_SEPARATOR_HTTP_REQUEST_PARAM = '?';
+
+    private static final String EDIT_ACTION_NAME = "edit";
+    private static final String ACTION_NAME = "action";
+
+    private static final String HREF_ATTR = "href";
+    private static final String ID_ATTR = "id";
+    private static final String CLASS_ATTR = "class";
+
+    private static final String A_ELEMENT = "A";
+    private static final String DIV_ELEMENT = "DIV";
+    private static final String SPAN_ELEMENT = "SPAN";
+    private static final String TABLE_ELEMENT = "TABLE";
+
     // url producer
     private WebclipUrlProducer urlProducer = null;
     
@@ -68,15 +86,31 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     private PortalDaoProvider portalDaoProvider;
     private Long siteLanguageId;
 
-    /**
-     * URI parameter parser
-     */
-    public static final char SEPARATOR_HTTP_REQUEST_PARAM = '&';
-    public static final char QUERY_SEPARATOR_HTTP_REQUEST_PARAM = '?';
-    private static final String EDIT_ACTION_NAME = "edit";
-    private static final String ACTION_NAME = "action";
-    private static final String HREF_ATTR = "href";
-    private static final String A_ELEMENT = "A";
+    private static class ExcludeElement {
+        public static final int ID_ATTRIBUTE_TYPE = 1;
+        public static final int CLASS_ATTRIBUTE_TYPE = 2;
+        private String name;
+        /**
+         * type of attribute.
+         * 1 - 'id' attr
+         * 2 - 'class' attr 
+         */
+        private int typeOfAttribute;
+        private String value;
+
+        public ExcludeElement(String name, int typeOfAttribute, String value) {
+            this.name = name;
+            this.typeOfAttribute = typeOfAttribute;
+            this.value = value;
+        }
+    }
+
+    private ExcludeElement[] excludes = new ExcludeElement[]{
+        new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "infobox sisterproject"),
+        new ExcludeElement(SPAN_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "noprint plainlinksneverexpand"),
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "noprint plainlinksneverexpand"),
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "siteNotice")
+    };
 
     /**
      *
@@ -84,6 +118,8 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
      * @param bytes контент для модификации урлов
      * @param elementType int 1- table element, 2 - div element
      * @param elementId String
+     * @param portalDaoProvider portal DOA provider
+     * @param siteLanguageId ID of site language
      */
     public WebclipDataProcessorImpl(WebclipUrlProducer urlProducer, byte[] bytes, int elementType, String elementId, PortalDaoProvider portalDaoProvider, Long siteLanguageId) {
         this.urlProducer = urlProducer;
@@ -123,12 +159,12 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         if ( node.getNodeType() == Node.ELEMENT_NODE) {
                 switch (elementType) {
                     case WebclipConstants.TABLE_NODE_TYPE:
-                        if (node.getNodeName().equalsIgnoreCase("table") && getIdAttr(node).equals(elementId)) {
+                        if (node.getNodeName().equalsIgnoreCase(TABLE_ELEMENT) && getIdAttr(node).equals(elementId)) {
                             return node;
                         }
                         break;
                     case WebclipConstants.DIV_NODE_TYPE:
-                        if (node.getNodeName().equalsIgnoreCase("div") && getIdAttr(node).equals(elementId)) {
+                        if (node.getNodeName().equalsIgnoreCase(DIV_ELEMENT) && getIdAttr(node).equals(elementId)) {
                             return node;
                         }
                         break;
@@ -170,16 +206,15 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     /**
      * recursively print node
      *
-     * @param node
+     * @param node node
      * @param out output stream
-     * @throws IOException
+     * @throws IOException on error
      */
     private void print(Node node, OutputStream out) throws IOException {
         if (node == null) {
             return;
         }
 
-        boolean isNotEditAHref = true;
         int type = node.getNodeType();
         switch (type) {
             case Node.DOCUMENT_NODE:
@@ -197,8 +232,12 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                 break;
 
             case Node.ELEMENT_NODE: {
-                isNotEditAHref = !isHrefWithActionEditParam(node);
+                if (isSkipElement(node)) {
+                    break;
+                }
+                boolean isNotEditAHref = !isHrefWithActionEditParam(node);
                 if (isNotEditAHref) {
+
 
                     boolean isPrintAHref=true;
                     if (node.getNodeName().equalsIgnoreCase(A_ELEMENT)) {
@@ -294,28 +333,64 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         }
 
         out.flush();
-
     }
 
+    private boolean isSkipElement(Node node) {
+        for (ExcludeElement exclude : excludes) {
+            if (node.getNodeName().equalsIgnoreCase(exclude.name)) {
+                NamedNodeMap attrMap = node.getAttributes();
+                for (int i = 0; i < attrMap.getLength(); i++) {
+                    Node tempNode = attrMap.item(i);
+                    switch(exclude.typeOfAttribute) {
+                        case ExcludeElement.ID_ATTRIBUTE_TYPE:
+                            if (tempNode.getNodeName().equalsIgnoreCase(ID_ATTR) &&
+                                tempNode.getNodeValue().equals(exclude.value)) {
+                                return true;
+                            }
+                            break;
+                        case ExcludeElement.CLASS_ATTRIBUTE_TYPE:
+                            if (tempNode.getNodeName().equalsIgnoreCase(CLASS_ATTR) &&
+                                tempNode.getNodeValue().equals(exclude.value)) {
+                                return true;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param url URL
+     * @return true - keep URL as is, false - leave only value of URL
+     * @throws URIException on error
+     */
     private boolean checkUrl(final String url) throws URIException {
         if (StringUtils.isBlank(url)) {
             return true;
         }
-        if (!url.startsWith(WebclipConstants.WIKI_URI)) {
+        if (!url.startsWith(WebclipConstants.ROOT_URI)) {
             return true;
         }
-        String path = URIUtil.decode(url);
-        path = path.substring(WebclipConstants.WIKI_URI.length()+1);
-        if (StringUtils.isBlank(path)) {
-            return true;
-        }
+        else {
+            if (!url.startsWith(WebclipConstants.WIKI_URI)) {
+                return false;
+            }
+            String path = URIUtil.decode(url);
+            path = path.substring(WebclipConstants.WIKI_URI.length()+1);
+            if (StringUtils.isBlank(path)) {
+                return true;
+            }
 
-        if (path.indexOf('#')!=-1) {
-            path = path.substring(0, path.indexOf('#'));
-        }
+            if (path.indexOf('#')!=-1) {
+                path = path.substring(0, path.indexOf('#'));
+            }
 
-        if (portalDaoProvider.getPortalCatalogDao().getCatalogItemId(siteLanguageId, path)!=null) {
-            return true;
+            if (portalDaoProvider.getPortalCatalogDao().getCatalogItemId(siteLanguageId, path)!=null) {
+                return true;
+            }
         }
         return false;
     }
@@ -335,10 +410,13 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                     if (StringUtils.isBlank(url)) {
                         return false;
                     }
-                    if (!url.startsWith(WebclipConstants.WIKI_URI)) {
+
+                    url = prepareUrl(url);
+                    if (StringUtils.isBlank(url)) {
                         return false;
                     }
-                    url = URIUtil.decode(url).substring(WebclipConstants.WIKI_URI.length()+1);
+
+                    url = URIUtil.decode(url);
                     if (StringUtils.isBlank(url)) {
                         return false;
                     }
@@ -348,7 +426,8 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                     }
                     List<NameValuePair> params;
                     try {
-                        url = URIUtil.decode(url);
+                        url = StringUtils.replace(URIUtil.decode(url), "&amp;", "&");
+                        //noinspection unchecked
                         params = new ParameterParser().parse(url.substring(url.indexOf(QUERY_SEPARATOR_HTTP_REQUEST_PARAM)+1), SEPARATOR_HTTP_REQUEST_PARAM);
                     }
                     catch (StringIndexOutOfBoundsException e) {
@@ -367,6 +446,21 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
             }
         }
         return false;  
+    }
+
+    private String prepareUrl(String url) {
+        if (url.startsWith(WebclipConstants.ROOT_URI)) {
+            if (url.startsWith(WebclipConstants.WIKI_URI)) {
+               return null;
+            }
+            return url;
+        }
+        else {
+            if (url.toLowerCase().startsWith("http://en.wikipedia.org/w/")) {
+                return url;
+            }
+            return null;
+        }
     }
 
     /**

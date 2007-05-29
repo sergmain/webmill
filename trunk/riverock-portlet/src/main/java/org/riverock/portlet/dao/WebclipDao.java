@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.riverock.portlet.webclip.WebclipBean;
+import org.riverock.portlet.webclip.manager.bean.WebclipStatisticBean;
 
 /**
  * User: SergeMaslyukov
@@ -38,6 +39,7 @@ import org.riverock.portlet.webclip.WebclipBean;
 public interface WebclipDao {
 
     WebclipBean getWebclip(Long siteId, Long webclipId);
+    WebclipBean getWebclip(Long siteId, Long webclipId, boolean isInitWebclipData);
 
     List<Long> getAllForSite(Long siteId);
 
@@ -48,5 +50,11 @@ public interface WebclipDao {
     void setOriginContent(WebclipBean webclip, byte[] bytes);
 
     void deleteWebclip(Long siteId, Long weblipId);
+
+    void markAllForReload(Long siteId);
+
+    void markAllForProcess(Long siteId);
+
+    WebclipStatisticBean getStatistic(Long siteId);
 }
 

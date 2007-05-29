@@ -38,10 +38,10 @@
 
 </h:panelGrid>
 
-<h:panelGrid columns="1">
+<h:panelGrid columns="1" style="width:100%">
     <h:outputText value="#{msg.template_data}"/>
     <h:inputTextarea id="template-data-field" value="#{siteSessionBean.template.templateData}"
-                     rows="20" cols="70"
+                     rows="20" cols="70" style="width:100%"
         />
 </h:panelGrid>
 

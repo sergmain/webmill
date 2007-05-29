@@ -38,10 +38,10 @@
 
 </h:panelGrid>
 
-<h:panelGrid columns="1">
+<h:panelGrid columns="1" style="width:100%">
     <h:outputText value="#{msg.css_data}"/>
     <h:inputTextarea id="css-data-field" value="#{siteSessionBean.css.css}"
-                     rows="20" cols="70"
+                     rows="20" cols="70" style="width:100%"
         />
 </h:panelGrid>
 
