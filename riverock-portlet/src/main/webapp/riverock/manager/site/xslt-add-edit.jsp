@@ -38,10 +38,10 @@
 
 </h:panelGrid>
 
-<h:panelGrid columns="1">
+<h:panelGrid columns="1" style="width:100%">
     <h:outputText value="#{msg.xslt_data}"/>
     <h:inputTextarea id="xslt-data-field" value="#{siteSessionBean.xslt.xsltData}"
-                     rows="20" cols="70"
+                     rows="20" cols="70" style="width:100%"
         />
 </h:panelGrid>
 

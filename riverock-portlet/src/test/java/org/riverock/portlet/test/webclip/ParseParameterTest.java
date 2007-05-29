@@ -6,6 +6,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.ParameterParser;
 import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.portlet.webclip.WebclipDataProcessorImpl;
 
@@ -19,7 +20,9 @@ public class ParseParameterTest {
 
     public static void main(String[] args) throws URIException {
 //        String s = "/w/index.php?title=Template_talk:Niger-Congo-speaking_nations&action=edit";
-        String s = "http://www.dodge.com/sprinter/index.html?context=vehiclePage&type=vehicleLink";
+//        String s = "http://www.dodge.com/sprinter/index.html?context=vehiclePage&type=vehicleLink";
+        String s = "/w/index.php?title=Aminadav_Moshav&amp;action=edit";
+        s = StringUtils.replace(s, "&amp;", "&");
         s = URIUtil.decode(s);
         List<NameValuePair> params = PARAMETER_PARSER.parse(s, WebclipDataProcessorImpl.SEPARATOR_HTTP_REQUEST_PARAM);
         System.out.println("params = " + params);
