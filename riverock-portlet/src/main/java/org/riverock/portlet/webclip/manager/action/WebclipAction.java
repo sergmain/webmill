@@ -345,8 +345,8 @@ public class WebclipAction implements Serializable {
                     item.setMetadata( meta + line + "\n" + WebclipConstants.WEBCLIP_ID_PREF + '=' + webclipId);
                     Long menuItemId = portalDaoProvider.getPortalCatalogDao().createCatalogItem(item);
                     CatalogItem catalogItem = portalDaoProvider.getPortalCatalogDao().getCatalogItem(menuItemId);
-                    result.add( reloadWebclipContent(portalDaoProvider, siteId, catalogItem) );
-                    result.add( processWebclipContent(portalDaoProvider, siteId, catalogItem) );
+                    result.add( reloadWebclipContent(portalDaoProvider, siteId, catalogItem, true) );
+                    result.add( processWebclipContent(portalDaoProvider, siteId, catalogItem, true) );
                 }
                 catch (Throwable e) {
                     log.error("Error process url '" +line+"'", e);
@@ -427,12 +427,16 @@ public class WebclipAction implements Serializable {
     }
 
     private String reloadWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem) {
+        return reloadWebclipContent(portalDaoProvider, siteId, catalogItem, false);
+    }
+
+    private String reloadWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, boolean isForce) {
         log.debug("    start reloadWebclipContent()");
 
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
 
         WebclipBeanExtended w = getWebclip(portalDaoProvider, siteId, catalogItem, msg);
-        if (!w.webclip.isLoadContent()) {
+        if (!isForce && !w.webclip.isLoadContent()) {
             return null;
         }
         
@@ -455,12 +459,16 @@ public class WebclipAction implements Serializable {
     }
 
     private String processWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem) {
+        return processWebclipContent(portalDaoProvider, siteId, catalogItem, false);
+    }
+
+    private String processWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, boolean isForce) {
         log.debug("    start processWebclipContent()");
 
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
 
         WebclipBeanExtended w = getWebclip(portalDaoProvider, siteId, catalogItem, msg);
-        if (!w.webclip.isProcessContent()) {
+        if (!isForce && !w.webclip.isProcessContent()) {
             return null;
         }
         if (w.status!=null) {
