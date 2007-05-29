@@ -76,6 +76,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     private static final String DIV_ELEMENT = "DIV";
     private static final String SPAN_ELEMENT = "SPAN";
     private static final String TABLE_ELEMENT = "TABLE";
+    private static final String H3_ELEMENT = "H3";
 
     // url producer
     private WebclipUrlProducer urlProducer = null;
@@ -105,11 +106,19 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         }
     }
 
-    private ExcludeElement[] excludes = new ExcludeElement[]{
+    private final static ExcludeElement[] excludes = new ExcludeElement[]{
+        new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "infobox sisterproject"),
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "infobox sisterproject"),
         new ExcludeElement(SPAN_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "noprint plainlinksneverexpand"),
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "noprint plainlinksneverexpand"),
-        new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "siteNotice")
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "siteNotice"),
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "magnify"), // 
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "floatleft"), //  commons Logo
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "administrator"), //  admin message about this page
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "contentSub"), //  '(Redirected from Maybach 62S)' msg
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "jump-to-nav"), //  Jump to:
+        new ExcludeElement(H3_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "siteSub"), //  'From Wikipedia, the free encyclopedia' msg
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "dablink") //  disambiguation msg
     };
 
     /**
