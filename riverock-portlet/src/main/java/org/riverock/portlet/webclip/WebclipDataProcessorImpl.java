@@ -107,9 +107,11 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     }
 
     private final static ExcludeElement[] excludes = new ExcludeElement[]{
+        new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "messagebox current"),
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "infobox sisterproject"),
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "infobox sisterproject"),
         new ExcludeElement(SPAN_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "noprint plainlinksneverexpand"),
+        new ExcludeElement(SPAN_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "editsection"),
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "noprint plainlinksneverexpand"),
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "siteNotice"),
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "magnify"), // 
