@@ -389,7 +389,7 @@ public final class PortletURLImpl implements PortletURL {
             portalRequestInstance.getRequestContext().getDefaultPortletName();
             PortletEntry entry;
             try {
-                entry = portalRequestInstance.getPortletContainer().getPortletInstance(porteltNameParam.get(0));
+                entry = portalRequestInstance.getPortalInstance().getPortletContainer().getPortletInstance(porteltNameParam.get(0));
             }
             catch (PortletContainerException e) {
                 String es = "Error get PortletEntry";

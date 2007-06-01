@@ -56,5 +56,15 @@ public interface WebclipDao {
     void markAllForProcess(Long siteId);
 
     WebclipStatisticBean getStatistic(Long siteId);
+
+    long getTotalCount(Long siteId);
+
+    long getNotIndexedCount(Long siteId);
+
+    void markAsIndexed(Long siteId, Long webclipId);
+
+    void markAllForIndexing(Long siteId);
+
+    WebclipBean getFirstForIndexing(Long siteId);
 }
 

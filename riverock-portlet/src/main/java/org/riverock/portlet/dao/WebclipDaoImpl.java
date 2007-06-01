@@ -262,14 +262,7 @@ public class WebclipDaoImpl implements WebclipDao {
         try {
             session.beginTransaction();
             WebclipStatisticBean stat = new WebclipStatisticBean();
-            stat.setTotalCount(
-                (Long)session.createQuery(
-                    "select count(*) " +
-                        "from org.riverock.portlet.webclip.WebclipBean as bean " +
-                        "where bean.siteId=:siteId ")
-                    .setLong("siteId", siteId)
-                    .uniqueResult()
-            );
+            stat.setTotalCount( getTotalCount(siteId, session) ); 
             stat.setForReloadCount(
                 (Long)session.createQuery(
                     "select count(*) " +
@@ -288,6 +281,118 @@ public class WebclipDaoImpl implements WebclipDao {
             );
             session.getTransaction().commit();
             return stat;
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public long getTotalCount(Long siteId) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+            Long count = getTotalCount(siteId, session);
+            session.getTransaction().commit();
+            return count;
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    private long getTotalCount(Long siteId, Session session) {
+        return (Long)session.createQuery(
+            "select count(*) " +
+                "from org.riverock.portlet.webclip.WebclipBean as bean " +
+                "where bean.siteId=:siteId and isIndexed=false")
+            .setLong("siteId", siteId)
+            .uniqueResult();
+    }
+
+    public long getNotIndexedCount(Long siteId) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+            Long l = (Long)session.createQuery(
+                "select count(*) " +
+                    "from org.riverock.portlet.webclip.WebclipBean as bean " +
+                    "where bean.siteId=:siteId and isIndexed=false")
+                .setLong("siteId", siteId)
+                .uniqueResult();
+
+            session.getTransaction().commit();
+            return l;
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public void markAsIndexed(Long siteId, Long webclipId) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+            session.createQuery(
+            "update org.riverock.portlet.webclip.WebclipBean as bean set bean.isIndexed=true " +
+                    "where bean.siteId=:siteId and bean.webclipId=:webclipId ")
+                .setLong("siteId", siteId)
+                .setLong("webclipId", webclipId)
+                .executeUpdate();
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public void markAllForIndexing(Long siteId) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+            session.createQuery(
+            "update org.riverock.portlet.webclip.WebclipBean as bean set bean.isIndexed=false " +
+                    "where bean.siteId=:siteId  ")
+                .setLong("siteId", siteId)
+                .executeUpdate();
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public WebclipBean getFirstForIndexing(Long siteId) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+            WebclipBean bean = (WebclipBean)session.createQuery(
+                "select bean from org.riverock.portlet.webclip.WebclipBean as bean " +
+                    "where bean.webclipId = :webclipId and bean.siteId=:siteId")
+                .setLong("siteId", siteId)
+                .setFirstResult(1)
+                .uniqueResult();
+            if (bean!=null) {
+                Blob blob = bean.getWebclipBlob();
+                if (blob!=null) {
+                    try {
+                        bean.setWebclipData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get Webclip";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get Webclip";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                }
+            }
+            session.getTransaction().commit();
+            return bean;
         }
         finally {
             session.close();

@@ -26,19 +26,19 @@ package org.riverock.webmill.portal;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.CharEncoding;
@@ -48,12 +48,14 @@ import org.apache.log4j.NDC;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
+import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.container.tools.PortletContainerUtils;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.search.PortalIndexerImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.utils.PortletUtils;
 
@@ -63,10 +65,11 @@ import org.riverock.webmill.utils.PortletUtils;
  *         Time: 18:00:18
  *         $Id$
  */
-@SuppressWarnings({"UnusedAssignment"})
+//@SuppressWarnings({"UnusedAssignment"})
 public class PortalInstanceImpl implements PortalInstance  {
     private final static Logger log = Logger.getLogger(PortalInstanceImpl.class);
 
+    private static final String UNKNOWN_PORTAL_VERSON = "0.0.1";
     private static final String WEBMILL_PROPERTIES = "/org/riverock/webmill/portal/webmill.properties";
     private static final PortalVersion portalVersion = new PortalVersion( getPortalVersion() );
     private static final String PORTAL_INFO = "WebMill/"+getPortalVersion();
@@ -81,9 +84,8 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private ServletConfig portalServletConfig = null;
     private PortletContainer portletContainer = null;
+    private PortalIndexer portalIndexer = null;
     private Collection<String> supportedList = null;
-    private static final String UNKNOWN_PORTAL_VERSON = "0.0.1";
-
     private static final Collection<String> destroyedPortletName = new ConcurrentLinkedQueue<String>();
 
     public void destroy() {
@@ -104,6 +106,18 @@ public class PortalInstanceImpl implements PortalInstance  {
             major = new Integer( st.nextToken() );
             minor = new Integer( st.nextToken() );
         }
+    }
+
+    public PortalIndexer getPortalIndexer() {
+        return portalIndexer;
+    }
+
+    public ServletConfig getPortalServletConfig() {
+        return portalServletConfig;
+    }
+
+    public PortletContainer getPortletContainer() {
+        return portletContainer;
     }
 
     public String getPortalName() {
@@ -156,154 +170,12 @@ public class PortalInstanceImpl implements PortalInstance  {
         return portalVersion.minor;
     }
 
-    private static class InternalServletRequestWrapper extends HttpServletRequestWrapper {
-
-        // all methos in HttpServletRequest must invoked only from ContextNavigator
-        // all others invokes are wrong
-        boolean isOk = false;
-
-        public InternalServletRequestWrapper(HttpServletRequest request) {
-            super(request);
-        }
-
-        public Enumeration getAttributeNames() {
-            if ( !isOk ) {
-                log.warn( "!!! Requested getAttributeNames() from http request" );
-                try {
-                    throw new Exception("error");
-                }
-                catch(Exception e) {
-                    log.error("error", e);
-                }
-            }
-            return super.getAttributeNames();
-        }
-
-        public Object getAttribute(String key) {
-            if ( !isOk ) {
-                log.warn( "!!! Requested getAttributeNames() from http request, key: " + key );
-                try {
-                    throw new Exception("error");
-                }
-                catch(Exception e) {
-                    log.error("error", e);
-                }
-            }
-            return super.getAttribute(key);
-        }
-
-        public void setAttribute(String key, Object value) {
-            if ( !isOk ) {
-                log.warn( "!!! Requested getAttributeNames() from http request, key: " + key + ", value: " + value );
-                try {
-                    throw new Exception("error");
-                }
-                catch(Exception e) {
-                    log.error("error", e);
-                }
-            }
-            super.setAttribute(key, value);
-        }
-
-        public void removeAttribute(String key) {
-            if ( !isOk ) {
-                log.warn( "!!! Requested removeAttribute() from http request" );
-                try {
-                    throw new Exception("error");
-                }
-                catch(Exception e) {
-                    log.error("error", e);
-                }
-            }
-            super.removeAttribute(key);
-        }
-    }
-
-    private static class InternalServletResponseWrapper extends HttpServletResponseWrapper {
-
-        // all methos in HttpServletResponse must invoked only from ContextNavigator
-        // all others invokes are wrong
-        boolean isOk = false;
-
-        public InternalServletResponseWrapper( HttpServletResponse httpServletResponse ) {
-            super( httpServletResponse );
-        }
-
-        public ServletResponse getResponse(){
-            if ( !isOk ) {
-                log.warn( "!!! Requested getResponse() from http response" );
-
-                try {
-                    throw new Exception("error");
-                }
-                catch(Exception e) {
-                    log.error("error", e);
-                }
-            }
-            return super.getResponse();
-        }
-
-        public void setResponse(ServletResponse response){
-            if ( !isOk ) {
-                log.warn( "!!! Requested setResponse() from http response" );
-                try {
-                    throw new Exception("error");
-                }
-                catch(Exception e) {
-                    log.error("error", e);
-                }
-            }
-
-            super.setResponse( response );
-        }
-
-        public PrintWriter getWriter() throws IOException {
-            if ( !isOk )
-                log.warn( "!!! Requested getWriter() from http response" );
-
-            return super.getWriter();
-        }
-
-        public ServletOutputStream getOutputStream() throws IOException {
-            if ( !isOk )
-                log.warn( "!!! Requested getOutputStream() from http response" );
-
-            return super.getOutputStream();
-        }
-
-        public void setHeader( String name, String value ) {
-            if ( !isOk )
-                log.warn( "!!! Requested setHeader() from http response" );
-
-            super.setHeader( name, value );
-        }
-
-        public void setContentLength( int length ) {
-            if ( !isOk )
-                log.warn( "!!! Requested setContentLength() from http response" );
-
-            super.setContentLength( length );
-        }
-
-        public void setContentType( String type ) {
-            if ( !isOk )
-                log.warn( "!!! Requested setContentType() from http response" );
-
-            super.setContentType( type );
-        }
-
-        public void addCookie(Cookie cookie) {
-            if ( !isOk )
-                log.warn( "!!! Requested addCookie() from http response" );
-
-            super.addCookie( cookie );
-        }
-    }
 
     private PortalInstanceImpl( ServletConfig servletConfig ) {
         this.portalServletConfig = servletConfig;
         this.portletContainer = PortletContainerFactory.getInstance( this, PortletContainerUtils.getDeployedInPath(servletConfig) );
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
+        this.portalIndexer = new PortalIndexerImpl(this.portletContainer);
     }
 
     private final static Object syncCounter = new Object();
@@ -314,9 +186,11 @@ public class PortalInstanceImpl implements PortalInstance  {
 
         int counter;
         HttpServletRequest request_;
+        HttpServletResponse response_;
 //        request_ = new InternalServletRequestWrapper( httpServletRequest );
+//        response_ = new InternalServletResponseWrapper( httpResponse );
         request_ = httpServletRequest;
-        InternalServletResponseWrapper response_ = new InternalServletResponseWrapper( httpResponse );
+        response_ = httpResponse;
 
         // Prepare Nested Diagnostic Contexts
         synchronized (syncCounter) {
@@ -341,7 +215,7 @@ public class PortalInstanceImpl implements PortalInstance  {
                 initSession(request_);
             }
 
-            portalRequestInstance = new PortalRequestInstance( request_, response_, portalServletConfig, portletContainer, getPortalName() );
+            portalRequestInstance = new PortalRequestInstance( request_, response_, this );
             PortalRequestProcessor.processPortalRequest( portalRequestInstance );
         }
         catch (Throwable e) {
@@ -382,7 +256,7 @@ public class PortalInstanceImpl implements PortalInstance  {
                 if (log.isDebugEnabled()) {
                     log.debug("redirect to new url: " + portalRequestInstance.getRedirectUrl());
                 }
-                response_.isOk = true;
+//                response_.isOk = true;
 
                 setCookie(portalRequestInstance, response_);
 
@@ -412,7 +286,7 @@ public class PortalInstanceImpl implements PortalInstance  {
                 log.debug("pageContent:\n" + pageContent);
             }
 
-            response_.isOk = true;
+//            response_.isOk = true;
             if (portalRequestInstance.getLocale() != null) {
                 response_.setLocale(portalRequestInstance.getLocale());
             }
@@ -435,6 +309,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             out.write(bytesTimeString);
             out.flush();
             out.close();
+            //noinspection UnusedAssignment
             out = null;
 
             if (log.isInfoEnabled())
@@ -509,7 +384,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
     }
 
-    private static void putMainRequestDebug(int counter, HttpServletRequest request_, InternalServletResponseWrapper response_) {
+    private static void putMainRequestDebug(int counter, HttpServletRequest request_, HttpServletResponse response_) {
         log.debug("counter #6 " + counter);
         log.debug("request_ " + request_);
         log.debug("response_ " + response_);
@@ -534,7 +409,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         return new StringBuilder( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
     }
 
-    private static void setCookie( PortalRequestInstance portalRequestInstance, InternalServletResponseWrapper response_ ) {
+    private static void setCookie( PortalRequestInstance portalRequestInstance, HttpServletResponse response_ ) {
         // set Cookie
         CookieManager cookieManager = portalRequestInstance.getCookieManager();
         if (log.isDebugEnabled() ) {
@@ -569,21 +444,16 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     public void registerPortlet(String fullPortletName) {
         PortalUtils.registerPortletName(fullPortletName);
-//        synchronized(destroyedPortletName) {
-            destroyedPortletName.remove(fullPortletName);
-//        }
+        destroyedPortletName.remove(fullPortletName);
     }
 
     public static List<String> destroyedPortlet() {
-//        synchronized(destroyedPortletName) {
-            return (List)Arrays.asList( destroyedPortletName.toArray() );
-//        }
+        //noinspection RedundantCast
+        return (List)Arrays.asList( destroyedPortletName.toArray() );
     }
 
     public void destroyPortlet(String fullPortletName) {
-//        synchronized(destroyedPortletName) {
-            destroyedPortletName.add(fullPortletName);
-//        }
+        destroyedPortletName.add(fullPortletName);
     }
 
 }

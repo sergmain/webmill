@@ -861,7 +861,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.preferredLocale = portalRequestInstance.getPreferredLocales();
         this.parameters = Collections.unmodifiableMap( parameters );
 
-        this.portalContext = new PortalContextImpl(portalRequestInstance.getPortalInfoName(), httpRequest.getContextPath(), portalInfo);
+        this.portalContext = new PortalContextImpl(portalRequestInstance.getPortalInstance().getPortalName(), httpRequest.getContextPath(), portalInfo);
         this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext, namespace);
 
         Cookie[] c = httpRequest.getCookies();
@@ -888,6 +888,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         this.setAttribute( ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE, httpRequest.getRemoteAddr() );
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_INDEXER_ATTRIBUTE, portalRequestInstance.getPortalInstance().getPortalIndexer() );
 
         PortalMailServiceProviderImpl mailServiceProvider = new PortalMailServiceProviderImpl(
             portalContext.getProperty( ContainerConstants.PORTAL_PROP_SMTP_HOST ),
