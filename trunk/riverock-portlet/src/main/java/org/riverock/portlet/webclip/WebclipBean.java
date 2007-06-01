@@ -76,6 +76,9 @@ public class WebclipBean implements Serializable {
     @Column(name="IS_PROCESS_CONTENT")
     private boolean isProcessContent = false;
 
+    @Column(name="IS_INDEXED")
+    private boolean isIndexed = false;
+
     @Transient
     private String webclipData;
 
@@ -149,6 +152,14 @@ public class WebclipBean implements Serializable {
 
     public void setProcessContent(boolean processContent) {
         isProcessContent = processContent;
+    }
+
+    public boolean isIndexed() {
+        return isIndexed;
+    }
+
+    public void setIndexed(boolean indexed) {
+        isIndexed = indexed;
     }
 
     public String toString() {

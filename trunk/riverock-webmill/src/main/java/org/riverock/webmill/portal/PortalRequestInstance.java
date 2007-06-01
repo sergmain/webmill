@@ -27,9 +27,14 @@ package org.riverock.webmill.portal;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -50,7 +55,8 @@ import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.sso.a3.AuthTools;
+import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
@@ -58,15 +64,14 @@ import org.riverock.webmill.portal.context.RequestContext;
 import org.riverock.webmill.portal.context.RequestContextFactory;
 import org.riverock.webmill.portal.context.RequestContextParameter;
 import org.riverock.webmill.portal.context.RequestState;
-import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.preference.PreferenceFactory;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.sso.a3.AuthTools;
 
 /**
  * User: Admin
@@ -99,7 +104,8 @@ public final class PortalRequestInstance {
 
     private HttpServletRequest httpRequest = null;
     private HttpServletResponse httpResponse = null;
-    private ServletConfig portalServletConfig = null;
+    private PortalInstance portalInstance;
+//    private ServletConfig portalServletConfig = null;
     private AuthSession auth = null;
     private ActionRequestImpl actionRequest = null;
     private CookieManager cookieManager = new CookieManagerImpl();
@@ -116,11 +122,11 @@ public final class PortalRequestInstance {
     private boolean isMultiPartRequest = false;
 
     private PortalDaoProvider portalDaoProvider = null;
-    private PortletContainer portletContainer = null;
+//    private PortletContainer portletContainer = null;
 
     private File tempPath = null;
 
-    private String portalInfoName = null;
+//    private String portalInfoName = null;
 
     private PortalTransformationParameters portalTransformationParameters = new PortalTransformationParameters();
 
@@ -144,7 +150,7 @@ public final class PortalRequestInstance {
         preferredLocales = null;
         httpRequest = null;
         httpResponse = null;
-        portalServletConfig = null;
+//        portalServletConfig = null;
         auth = null;
         if (actionRequest != null) {
             actionRequest.destroy();
@@ -156,13 +162,17 @@ public final class PortalRequestInstance {
         MainTools.deleteFile(requestBodyFile);
         requestBodyFile = null;
         portalDaoProvider = null;
-        portletContainer = null;
+//        portletContainer = null;
         portalTransformationParameters = null;
     }
 
     public PortalRequestInstance() {
         startMills = System.currentTimeMillis();
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
+    }
+
+    public PortalInstance getPortalInstance() {
+        return portalInstance;
     }
 
     public PortalDaoProvider getPortalDaoProvider() {
@@ -172,13 +182,15 @@ public final class PortalRequestInstance {
     PortalRequestInstance(
         HttpServletRequest request_,
         HttpServletResponse response_,
-        ServletConfig portalServletConfig,
-        PortletContainer portletContainer,
-        String portalInfoName
+        PortalInstance portalInstance 
+//            ServletConfig portalServletConfig,
+//        PortletContainer portletContainer,
+//        String portalInfoName
     ) throws PortalException {
 
         this.startMills = System.currentTimeMillis();
-        this.portalInfoName = portalInfoName;
+        this.portalInstance = portalInstance;
+//        this.portalInfoName = portalInfoName;
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
 
         if (log.isInfoEnabled()) {
@@ -187,8 +199,8 @@ public final class PortalRequestInstance {
 
         this.httpRequest = request_;
         this.httpResponse = response_;
-        this.portalServletConfig = portalServletConfig;
-        this.portletContainer = portletContainer;
+//        this.portalServletConfig = portalInstance.getPortalServletConfig();
+//        this.portletContainer = portalInstance.getportletContainer();
         try {
             initTempPath();
 
@@ -214,7 +226,7 @@ public final class PortalRequestInstance {
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
                 log.debug("portal requet instance class loader:\n" + classLoader + "\nhash: " + classLoader.hashCode());
-                ClassLoader cl = portletContainer.getClass().getClassLoader();
+                ClassLoader cl = portalInstance.getPortletContainer().getClass().getClassLoader();
                 log.debug("portlet container class loader:\n" + classLoader + "\nhash: " + cl.hashCode());
             }
             this.preferredLocales = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
@@ -224,7 +236,7 @@ public final class PortalRequestInstance {
                 throw new IllegalArgumentException("siteId is null");
             }
             RequestContextParameter factoryParameter =
-                new RequestContextParameter(httpRequest, portletContainer, isMultiPartRequest, requestBodyFile, portalInfo.getSiteId());
+                new RequestContextParameter(httpRequest, portalInstance.getPortletContainer(), isMultiPartRequest, requestBodyFile, portalInfo.getSiteId());
 
             this.requestContext = RequestContextFactory.createRequestContext(factoryParameter);
             if (requestContext == null) {
@@ -338,9 +350,7 @@ public final class PortalRequestInstance {
                     continue;
                 }
 
-                PageElement element = new PageElement(
-                    portletContainer, namespace, templateItem, portletParameters
-                );
+                PageElement element = new PageElement(portalInstance, namespace, templateItem, portletParameters);
 
                 if (log.isDebugEnabled()) {
                     log.debug("TemplateItem, " +
@@ -450,10 +460,12 @@ public final class PortalRequestInstance {
         return pageElementList;
     }
 
+/*
     public ServletConfig getPortalServletConfig() {
         return portalServletConfig;
     }
 
+*/
     public String getErrorString() {
         return errorString;
     }
@@ -528,10 +540,12 @@ public final class PortalRequestInstance {
             return requestContext.getLocale();
     }
 
+/*
     public PortletContainer getPortletContainer() {
         return portletContainer;
     }
 
+*/
     public HttpServletRequest getHttpRequest() {
         return httpRequest;
     }
@@ -621,7 +635,9 @@ public final class PortalRequestInstance {
         }
     }
 
+/*
     public String getPortalInfoName() {
         return portalInfoName;
     }
+*/
 }

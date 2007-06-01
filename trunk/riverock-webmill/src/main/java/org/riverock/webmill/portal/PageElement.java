@@ -42,9 +42,9 @@ import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.bean.SitePortletData;
-import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
+import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.impl.*;
@@ -95,12 +95,13 @@ public final class PageElement {
      * renderParameter used for set parameters in action
      */
     private Map<String, List<String>> renderParameters = new HashMap<String, List<String>>();
-    private PortletContainer portletContainer = null;
+//    private PortletContainer portletContainer = null;
+    private PortalInstance portalInstance;
 
-    public PageElement(PortletContainer portletContainer, Namespace namespace,
+    public PageElement(PortalInstance portalInstance, Namespace namespace,
                        PortalTemplateItem portalTemplateItem, PortletParameters portletParameters
     ) {
-        this.portletContainer = portletContainer;
+        this.portalInstance = portalInstance;
         this.namespace = namespace;
         this.portalTemplateItem = portalTemplateItem;
         this.parameters = portletParameters;
@@ -196,7 +197,7 @@ public final class PageElement {
 
         try {
 
-            SitePortletData cacheData = portletContainer.getContentCache().getContent( portletEntry.getPortletDefinition() );
+            SitePortletData cacheData = portalInstance.getPortletContainer().getContentCache().getContent( portletEntry.getPortletDefinition() );
             if (cacheData != null) {
                 data = cacheData;
                 return;
@@ -271,7 +272,7 @@ public final class PageElement {
             }
 
             // cache content
-            portletContainer.getContentCache().setContent( portletEntry.getPortletDefinition(), data, renderRequest );
+            portalInstance.getPortletContainer().getContentCache().setContent( portletEntry.getPortletDefinition(), data, renderRequest );
         }
         catch( javax.portlet.UnavailableException ue ) {
             PortletContainerFactory.destroy( portletEntry.getPortletDefinition().getPortletName(), portletEntry.getPortalPath() );
@@ -333,7 +334,7 @@ public final class PageElement {
                     ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
                     new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
                 );
-                actionRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
+                actionRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portalInstance.getPortletContainer() );
 
                 actionResponse = new ActionResponseImpl(
                     portalRequestInstance.getHttpResponse(),
@@ -434,7 +435,7 @@ public final class PageElement {
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, portalTemplateItem.getCode());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, portalTemplateItem.getXmlRoot());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
-            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
+            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portalInstance.getPortletContainer() );
             renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, portalTemplateItem.getParameters() );
 
             // todo current implementation not support 'current catalog ID'
@@ -444,7 +445,7 @@ public final class PageElement {
             renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
             PortalContext portalContext = new PortalContextImpl(
-                portalRequestInstance.getPortalInfoName(), portalRequestInstance.getHttpRequest().getContextPath(), portalInfo
+                portalInstance.getPortalName(), portalRequestInstance.getHttpRequest().getContextPath(), portalInfo
             );
             renderResponse = new RenderResponseImpl(
                 portalRequestInstance,
@@ -503,7 +504,7 @@ public final class PageElement {
 
             // load portlet preferences
             portletMetadata = persistencer.load();
-            portletEntry = portletContainer.getPortletInstance(fullPortletName);
+            portletEntry = portalInstance.getPortletContainer().getPortletInstance(fullPortletName);
 
             if (portletEntry == null) {
                 errorString = portletUnavailable(fullPortletName);
@@ -618,7 +619,7 @@ public final class PageElement {
 
     private String getContextPath(final PortalRequestInstance portalRequestInstance) {
         String contextPath;
-        final String portalRealPath = portalRequestInstance.getPortalServletConfig().getServletContext().getRealPath("/");
+        final String portalRealPath = portalRequestInstance.getPortalInstance().getPortalServletConfig().getServletContext().getRealPath("/");
         final String portletRealPath = portletEntry.getServletConfig().getServletContext().getRealPath("/");
         if (log.isDebugEnabled()) {
             log.debug( "portalRealPath: " + portalRealPath );

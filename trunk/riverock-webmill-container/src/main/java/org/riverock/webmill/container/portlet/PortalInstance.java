@@ -25,6 +25,10 @@ package org.riverock.webmill.container.portlet;
 
 import java.util.Collection;
 
+import javax.servlet.ServletConfig;
+
+import org.riverock.interfaces.portal.search.PortalIndexer;
+
 /**
  * @author smaslyukov
  *         Date: 29.07.2005
@@ -40,4 +44,10 @@ public interface PortalInstance {
     void registerPortlet(String fullPortletName);
 
     void destroyPortlet(String fullPortletName);
+
+    PortletContainer getPortletContainer();
+    
+    ServletConfig getPortalServletConfig();
+
+    PortalIndexer getPortalIndexer();
 }

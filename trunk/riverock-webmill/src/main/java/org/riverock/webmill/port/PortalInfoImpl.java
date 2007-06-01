@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
@@ -80,6 +81,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     public Map<String, String> getPortalProperties() {
         return portalProperties;
     }
+
 
     public boolean isCurrentSite(Long siteLanguageId) {
         if (siteLanguageId == null)

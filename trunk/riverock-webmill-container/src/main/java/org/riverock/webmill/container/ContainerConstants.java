@@ -50,6 +50,7 @@ public class ContainerConstants {
     public static final String PORTAL_RESOURCE_BUNDLE_ATTRIBUTE = "org.riverock.webmill.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE";
     public static final String PORTAL_TEMPLATE_NAME_ATTRIBUTE = "org.riverock.webmill.PORTAL_TEMPLATE_NAME_ATTRIBUTE";
 
+    public static final String PORTAL_PORTAL_INDEXER_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTAL_INDEXER_ATTRIBUTE";
     public static final String PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE = "org.riverock.webmill.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE";
     public static final String PORTAL_PORTLET_METADATA_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_METADATA_ATTRIBUTE";
 
@@ -82,6 +83,7 @@ public class ContainerConstants {
     public static final String name_portlet_code_string = "name-portlet-code-string";
     public static final String class_name_get_list = "class-name-get-list";
     public static final String always_process_as_action = "always-process-as-action";
+    public static final String WEBMILL_PORTLET_INDEXER_CLASS_NAME = "webmill.portlet-indexer-class-name";
 
     public static final String PORTAL_PROP_SMTP_HOST = "webmill.smtp-host";
     public static final String PORTAL_PROP_SITE_ID = "webmill.site-id";
