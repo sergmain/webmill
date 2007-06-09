@@ -4,7 +4,7 @@
     <groupId>org.riverock</groupId>
     <artifactId>riverock-webmill</artifactId>
     <packaging>jar</packaging>
-    <version>5.6.4</version>
+    <version>5.7.0</version>
     <name>Webmill portal</name>
     <url>http://webmill.riverock.org</url>
     <licenses>
@@ -30,6 +30,11 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>2.0.0</version>
+        </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>

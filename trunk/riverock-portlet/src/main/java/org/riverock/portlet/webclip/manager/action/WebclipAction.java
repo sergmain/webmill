@@ -436,7 +436,7 @@ public class WebclipAction implements Serializable {
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
 
         WebclipBeanExtended w = getWebclip(portalDaoProvider, siteId, catalogItem, msg);
-        if (!isForce && !w.webclip.isLoadContent()) {
+        if (!isForce && (w==null || w.webclip==null || !w.webclip.isLoadContent())) {
             return null;
         }
         
@@ -468,7 +468,7 @@ public class WebclipAction implements Serializable {
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
 
         WebclipBeanExtended w = getWebclip(portalDaoProvider, siteId, catalogItem, msg);
-        if (!isForce && !w.webclip.isProcessContent()) {
+        if (!isForce && (w==null || w.webclip==null || !w.webclip.isProcessContent())) {
             return null;
         }
         if (w.status!=null) {

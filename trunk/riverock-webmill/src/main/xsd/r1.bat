@@ -1,1 +1,1 @@
-C:\opt2\jaxb-ri-20060801\bin\xjc.bat google-siteindex.xsd -p org.riverock.portlet.google.sitemap.schema.siteindex -d ../java
+C:\opt2\jaxb-ri-20070122\bin\xjc.bat google-siteindex.xsd -p org.riverock.portlet.google.sitemap.schema.siteindex -d ../java
