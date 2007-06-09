@@ -68,15 +68,25 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     private static final String EDIT_ACTION_NAME = "edit";
     private static final String ACTION_NAME = "action";
 
+    private static final String REL_ATTR = "rel";
     private static final String HREF_ATTR = "href";
     private static final String ID_ATTR = "id";
     private static final String CLASS_ATTR = "class";
+    private static final String LONGDESC_ATTR = "longdesc";
 
     private static final String A_ELEMENT = "A";
     private static final String DIV_ELEMENT = "DIV";
     private static final String SPAN_ELEMENT = "SPAN";
     private static final String TABLE_ELEMENT = "TABLE";
     private static final String H3_ELEMENT = "H3";
+    private static final String IMG_ELEMENT = "IMG";
+
+    //  keep URL as is, false - leave only value of URL
+    public static final int NONE_STATUS = 0;
+    public static final int EXTERNAL_URI_STATUS = 1;
+    public static final int INTERNAL_URI_STATUS = 2;
+    public static final int ONLY_TEXT_URI_STATUS = 3;
+
 
     // url producer
     private WebclipUrlProducer urlProducer = null;
@@ -86,10 +96,12 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
     private PortalDaoProvider portalDaoProvider;
     private Long siteLanguageId;
+    private static final String NOFOLLOW_VALUE = "nofollow";
 
     private static class ExcludeElement {
         public static final int ID_ATTRIBUTE_TYPE = 1;
         public static final int CLASS_ATTRIBUTE_TYPE = 2;
+        public static final int LONGDESC_ATTRIBUTE_TYPE = 3;
         private String name;
         /**
          * type of attribute.
@@ -120,7 +132,10 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "contentSub"), //  '(Redirected from Maybach 62S)' msg
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "jump-to-nav"), //  Jump to:
         new ExcludeElement(H3_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "siteSub"), //  'From Wikipedia, the free encyclopedia' msg
-        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "dablink") //  disambiguation msg
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "dablink"), //  disambiguation msg
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "messagebox cleanup metadata plainlinks"), //
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "boilerplate metadata"), //
+        new ExcludeElement(IMG_ELEMENT, ExcludeElement.LONGDESC_ATTRIBUTE_TYPE, "/wiki/Image:Replace_this_image1.svg") // not uploaded image
     };
 
     /**
@@ -249,23 +264,27 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                 boolean isNotEditAHref = !isHrefWithActionEditParam(node);
                 if (isNotEditAHref) {
 
-
-                    boolean isPrintAHref=true;
+                    boolean isNoFollowAttr = false;
+                    int linkStatus = NONE_STATUS;
                     if (node.getNodeName().equalsIgnoreCase(A_ELEMENT)) {
                         NamedNodeMap attrMap = node.getAttributes();
                         for (int i = 0; i < attrMap.getLength(); i++) {
                             Node tempNode = attrMap.item(i);
                             if (tempNode.getNodeName().equalsIgnoreCase(HREF_ATTR)) {
-                                isPrintAHref = checkUrl(tempNode.getNodeValue());
-                                if (isPrintAHref) {
+                                linkStatus = checkUrl(tempNode.getNodeValue());
+                                if (linkStatus==INTERNAL_URI_STATUS) {
                                     urlProducer.init();
                                     urlProducer.setCurrentHrefValue(tempNode.getNodeValue());
                                     tempNode.setNodeValue( urlProducer.getUrl() );
                                 }
                             }
+                            if (tempNode.getNodeName().equalsIgnoreCase(REL_ATTR) &&
+                                tempNode.getNodeValue().equalsIgnoreCase(NOFOLLOW_VALUE)) {
+                                isNoFollowAttr = true;
+                            }
                         }
                     }
-                    if (isPrintAHref) {
+                    if (linkStatus!=ONLY_TEXT_URI_STATUS) {
                         out.write('<');
                         out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
                         Attr attrs[] = sortAttributes(node.getAttributes());
@@ -275,6 +294,9 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                             out.write("=\"".getBytes(CharEncoding.UTF_8));
                             out.write(attr.getNodeValue().getBytes(CharEncoding.UTF_8));
                             out.write('"');
+                        }
+                        if (linkStatus==EXTERNAL_URI_STATUS && !isNoFollowAttr) {
+                            out.write( (' ' +REL_ATTR+"=\""+ NOFOLLOW_VALUE +"\" ").getBytes(CharEncoding.UTF_8));
                         }
                         out.write('>');
                     }
@@ -287,7 +309,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                         }
                     }
 
-                    if (isPrintAHref) {
+                    if (linkStatus!=ONLY_TEXT_URI_STATUS) {
                         // Put closed element
                         out.write("</".getBytes(CharEncoding.UTF_8));
                         out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
@@ -365,6 +387,12 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                                 return true;
                             }
                             break;
+                        case ExcludeElement.LONGDESC_ATTRIBUTE_TYPE:
+                            if (tempNode.getNodeName().equalsIgnoreCase(LONGDESC_ATTR) &&
+                                tempNode.getNodeValue().equals(exclude.value)) {
+                                return true;
+                            }
+                            break;
                     }
                 }
             }
@@ -372,27 +400,30 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         return false;
     }
 
+
     /**
-     *
+     * EXTERNAL_URI_STATUS
+     * INTERNAL_URI_STATUS
+     * ONLY_TEXT_URI_STATUS
      * @param url URL
      * @return true - keep URL as is, false - leave only value of URL
      * @throws URIException on error
      */
-    private boolean checkUrl(final String url) throws URIException {
+    private int checkUrl(final String url) throws URIException {
         if (StringUtils.isBlank(url)) {
-            return true;
+            return ONLY_TEXT_URI_STATUS;
         }
         if (!url.startsWith(WebclipConstants.ROOT_URI)) {
-            return true;
+            return EXTERNAL_URI_STATUS;
         }
         else {
             if (!url.startsWith(WebclipConstants.WIKI_URI)) {
-                return false;
+                return ONLY_TEXT_URI_STATUS;
             }
             String path = URIUtil.decode(url);
             path = path.substring(WebclipConstants.WIKI_URI.length()+1);
             if (StringUtils.isBlank(path)) {
-                return true;
+                return ONLY_TEXT_URI_STATUS;
             }
 
             if (path.indexOf('#')!=-1) {
@@ -400,10 +431,10 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
             }
 
             if (portalDaoProvider.getPortalCatalogDao().getCatalogItemId(siteLanguageId, path)!=null) {
-                return true;
+                return INTERNAL_URI_STATUS;
             }
         }
-        return false;
+        return ONLY_TEXT_URI_STATUS;
     }
 
     private boolean isHrefWithActionEditParam(Node node) throws URIException {

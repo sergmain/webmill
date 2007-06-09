@@ -35,7 +35,7 @@ public class DirectorySearchImpl implements DirectorySearch {
             throw new PortalSearchException(es);
         }
         try {
-            return FSDirectory.getDirectory(path);
+            return FSDirectory.getDirectory(path, false);
         }
         catch (IOException e) {
             String es = "Error get FSDirectory for path " + path.getName();

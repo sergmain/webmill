@@ -156,7 +156,8 @@ public class GoogleSitemapService {
                 url.setLoc(virtualHostUrl+PortletService.pageid(portalContext) + '/' + localeName + '/' + catalogItem.getId());
             else
                 url.setLoc(virtualHostUrl+PortletService.page(portalContext) + '/' + localeName + '/' + catalogItem.getUrl());
-            
+
+            url.setChangefreq("weekly");
             urls.add(url);
             
             if (catalogItem.getSubCatalogItemList()!=null) {
