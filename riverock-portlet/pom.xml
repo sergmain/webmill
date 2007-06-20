@@ -103,17 +103,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.myfaces</groupId>
-            <artifactId>tomahawk</artifactId>
-            <version>1.1.4-SNAPSHOT-hacked</version>
-        </dependency>
-<!--
-        <dependency>
             <groupId>org.apache.myfaces.tomahawk</groupId>
             <artifactId>tomahawk</artifactId>
-            <version>1.1.5</version>
+            <version>1.1.6</version>
         </dependency>
--->
+
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>
             <artifactId>myfaces-impl</artifactId>
