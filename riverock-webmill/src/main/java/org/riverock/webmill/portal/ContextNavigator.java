@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.portal.utils.SiteList;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * $Id$
@@ -70,8 +71,9 @@ public final class ContextNavigator extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("method is POST");
+        }
 
         doGet(request, response);
     }
@@ -81,14 +83,38 @@ public final class ContextNavigator extends HttpServlet {
             log.debug("httpRequest: "+httpRequest+", httpResponse: " +httpResponse);
         }
 
-        Long siteId = SiteList.getSiteId(httpRequest.getServerName());
-        if (siteId==null) {
+        VirtualHost host = SiteList.getVirtualHost(httpRequest.getServerName());
+        if (host==null) {
             throw new ServletException("Site for host "+ httpRequest.getServerName()+" not configured. For configuration use admin section.");
         }
+        if (!host.isDefaultHost()) {
+            host = SiteList.getDefaultVirtualHost(host.getSiteId());
+            if (host==null) {
+                throw new ServletException("Default virtual host for host "+ httpRequest.getServerName()+" not configured. For configuration use admin section.");
+            }
+            StringBuilder sb = new StringBuilder(httpRequest.getScheme())
+                .append("://")
+                .append(host.getHost())
+                .append(':')
+                .append(httpRequest.getServerPort());
+            String uri = httpRequest.getRequestURI();
+            if (uri!=null) {
+                sb.append(uri);
+            }
+            String query = httpRequest.getQueryString();
+            if (query!=null) {
+                sb.append('?').append(query);
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("send redirect to "+sb.toString());
+            }
+            httpResponse.sendRedirect(sb.toString());
+            return;
+        }
 
-        PortalInstanceImpl portalInstance = portalInstanceMap.get(siteId);
+        PortalInstanceImpl portalInstance = portalInstanceMap.get(host.getSiteId());
         if (portalInstance == null) {
-            portalInstance = createNewPortalInsance(siteId);
+            portalInstance = createNewPortalInsance(host.getSiteId());
         }
         portalInstance.process(httpRequest, httpResponse);
     }

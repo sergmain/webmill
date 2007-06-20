@@ -27,6 +27,7 @@ package org.riverock.webmill.admin.dao;
 import java.util.List;
 
 import org.riverock.webmill.admin.bean.*;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * @author Sergei Maslyukov
@@ -60,11 +61,11 @@ public interface WebmillAdminDao {
 
     void deleteUser(UserBean portalUser);
 
-    void updateSiteWithVirtualHost(SiteBean site, List<String> virtualHosts);
+    void updateSiteWithVirtualHost(SiteBean site, List<VirtualHost> virtualHosts);
 
     void deleteSite(Long siteId);
 
-    Long createSiteWithVirtualHost(SiteBean site, List<String> virtualHosts);
+    Long createSiteWithVirtualHost(SiteBean site, List<VirtualHost> virtualHosts);
 
     List<VirtualHostBean> getVirtualHostsFullList();
 

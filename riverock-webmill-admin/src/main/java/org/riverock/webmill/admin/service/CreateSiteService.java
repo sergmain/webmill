@@ -45,6 +45,7 @@ import org.riverock.webmill.admin.dao.WebmillAdminDao;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * @author SergeMaslyukov
@@ -93,17 +94,17 @@ public class CreateSiteService {
                 log.debug("    siteId: " + siteId);
             }
             List<VirtualHostBean> hosts = dao.getVirtualHosts(siteId);
-            for (String hostName : siteExtended.getVirtualHosts()) {
+            for (VirtualHost host : siteExtended.getVirtualHosts()) {
                 boolean isNotExists = true;
-                for (VirtualHostBean host : hosts) {
-                    if (hostName.equalsIgnoreCase(host.getHost())) {
+                for (VirtualHostBean hostBean : hosts) {
+                    if (host.getHost().equalsIgnoreCase(hostBean.getHost())) {
                         isNotExists = false;
                         break;
                     }
                 }
                 if (isNotExists) {
                     VirtualHostBean virtualHost = new VirtualHostBean();
-                    virtualHost.setHost(hostName.toLowerCase());
+                    virtualHost.setHost(host.getHost().toLowerCase());
                     virtualHost.setSiteId(siteId);
                     dao.createVirtualHost(virtualHost);
                 }

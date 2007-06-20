@@ -38,20 +38,23 @@ public class VirtualHostBean implements VirtualHost, Serializable {
     private Long id=null;
     private Long siteId=null;
     private String host=null;
+    private boolean isDefaultHost;
 
     public VirtualHostBean() {
     }
 
-    public VirtualHostBean(Long id, Long siteId, String host) {
+    public VirtualHostBean(Long id, Long siteId, String host, boolean isDefaultHost) {
          this.id = id;
          this.siteId = siteId;
          this.host = host;
+         this.isDefaultHost = isDefaultHost;
     }
 
     public VirtualHostBean(VirtualHost host) {
         this.id = host.getId();
         this.siteId = host.getSiteId();
         this.host = host.getHost();
+        this.isDefaultHost = host.isDefaultHost();
     }
 
     public Long getId() {
@@ -76,5 +79,13 @@ public class VirtualHostBean implements VirtualHost, Serializable {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public boolean isDefaultHost() {
+        return isDefaultHost;
+    }
+
+    public void setDefaultHost(boolean defaultHost) {
+        isDefaultHost = defaultHost;
     }
 }

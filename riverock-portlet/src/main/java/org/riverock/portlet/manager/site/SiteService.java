@@ -45,6 +45,7 @@ import org.riverock.portlet.manager.site.bean.SiteExtended;
 import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
 import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.manager.site.bean.XsltBean;
+import org.riverock.portlet.manager.site.bean.VirtualHostBean;
 import org.riverock.portlet.tools.FacesTools;
 
 /**
@@ -138,9 +139,9 @@ public class SiteService implements Serializable {
         SiteExtended siteExtended = new SiteExtended();
         siteExtended.setSite(FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId));
         List<VirtualHost> virtualHosts = FacesTools.getPortalDaoProvider().getPortalVirtualHostDao().getVirtualHosts(siteExtended.getSite().getSiteId());
-        List<String> hosts = new ArrayList<String>();
+        List<VirtualHostBean> hosts = new ArrayList<VirtualHostBean>();
         for (VirtualHost host : virtualHosts) {
-            hosts.add(host.getHost().toLowerCase());
+            hosts.add( new VirtualHostBean(host) );
         }
         siteExtended.setVirtualHosts(hosts);
         Long companyId = siteExtended.getSite().getCompanyId();

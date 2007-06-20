@@ -42,8 +42,9 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
 public class SiteList {
     private final static Logger log = Logger.getLogger(SiteList.class);
 
-    private Map<String, Long> hashListSite = new HashMap<String, Long>();
-    
+    private Map<String, VirtualHost> hashListSite = new HashMap<String, VirtualHost>();
+    private Map<Long, VirtualHost> mapDefaultHost = new HashMap<Long, VirtualHost>();
+
     private static long lastReadData = 0;
     private final static long LENGTH_TIME_PERIOD = 10000;
     private static SiteList backupObject = null;
@@ -51,7 +52,17 @@ public class SiteList {
     private final static Object syncObject = new Object();
 
     public static Long getSiteId(String serverName) {
-        return SiteList.getInstance().searchSiteId(serverName);
+        VirtualHost virtualHost = SiteList.getInstance().searchHost(serverName);
+
+        return virtualHost!=null?virtualHost.getSiteId():null;
+    }
+
+    public static VirtualHost getVirtualHost(String serverName) {
+        return SiteList.getInstance().searchHost(serverName);
+    }
+
+    public static VirtualHost getDefaultVirtualHost(Long siteId) {
+        return SiteList.getInstance().searchDefaultVirtualHost(siteId);
     }
 
     public SiteList() {
@@ -95,7 +106,10 @@ public class SiteList {
 
                     List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
                     for (VirtualHost host : hosts) {
-                        site.hashListSite.put(host.getHost().toLowerCase(), host.getSiteId());
+                        site.hashListSite.put(host.getHost().toLowerCase(), host);
+                        if (host.isDefaultHost()) {
+                            site.mapDefaultHost.put(host.getSiteId(), host);
+                        }
                     }
 
                     backupObject = site;
@@ -112,17 +126,34 @@ public class SiteList {
         return backupObject;
     }
 
-    private Long searchSiteId(final String serverName) {
-        if (serverName == null) return null;
-        Long siteId = hashListSite.get(serverName.toLowerCase());
-        if (siteId == null && log.isInfoEnabled()) {
+    private VirtualHost searchHost(final String serverName) {
+        if (serverName == null) {
+            return null;
+        }
+        VirtualHost host = hashListSite.get(serverName.toLowerCase());
+        if (host == null && log.isInfoEnabled()) {
             log.info("site with serverName '" + serverName + "' not found");
             log.info("Dump map with current serverNames");
             for (String s : hashListSite.keySet()) {
                 log.info("Value in map: " + s + ", value: " + hashListSite.get(s));
             }
         }
-        return siteId;
+        return host;
+    }
+
+    private VirtualHost searchDefaultVirtualHost(Long siteId) {
+        if (siteId == null) {
+            return null;
+        }
+        VirtualHost host = mapDefaultHost.get(siteId);
+        if (host == null && log.isInfoEnabled()) {
+            log.info("Default virtual host for siteId '" + siteId + "' not found");
+            log.info("Dump map with current serverNames");
+            for (Long id : mapDefaultHost.keySet()) {
+                log.info("Value in map: " + id + ", value: " + mapDefaultHost.get(id));
+            }
+        }
+        return host;
     }
 
 }

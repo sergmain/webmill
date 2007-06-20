@@ -56,62 +56,72 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             log.debug("Start getCssCurrent() for siteId "+siteId);
         }
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.isCurrent=true and css.siteId = :site_id");
-        query.setLong("site_id", siteId);
-        CssBean css = (CssBean)query.uniqueResult();
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.isCurrent=true and css.siteId = :site_id");
+            query.setLong("site_id", siteId);
+            CssBean css = (CssBean)query.uniqueResult();
 
-        if (css!=null) {
-            Blob blob = css.getCssBlob();
-            if (blob!=null) {
-                try {
-                    css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (SQLException e) {
-                    String es = "Error get CSS";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error get current CSS";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
+            if (css!=null) {
+                Blob blob = css.getCssBlob();
+                if (blob!=null) {
+                    try {
+                        css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get CSS";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get current CSS";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
                 }
             }
+            session.getTransaction().commit();
+            return css;
         }
-        session.getTransaction().commit();
-        return css;
+        finally {
+            session.close();
+        }
     }
 
     public List<Css> getCssList(Long siteId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id");
-        query.setLong("site_id", siteId);
-        List<CssBean> cssList = query.list();
-        for (CssBean css : cssList) {
-            Blob blob = css.getCssBlob();
-            if (blob!=null) {
-                try {
-                    css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (SQLException e) {
-                    String es = "Error get CSS";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error get list of CSS";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                if (log.isDebugEnabled())  {
-                    log.debug("Length of CSS is "+css.getCss()!=null?css.getCss().length():0);
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id");
+            query.setLong("site_id", siteId);
+            List<CssBean> cssList = query.list();
+            for (CssBean css : cssList) {
+                Blob blob = css.getCssBlob();
+                if (blob!=null) {
+                    try {
+                        css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get CSS";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get list of CSS";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    if (log.isDebugEnabled())  {
+                        log.debug("Length of CSS is "+css.getCss()!=null?css.getCss().length():0);
+                    }
                 }
             }
+            session.getTransaction().commit();
+            return (List)cssList;
         }
-        session.getTransaction().commit();
-        return (List)cssList;
+        finally {
+            session.close();
+        }
     }
 
     public Css getCss(Long cssId) {
@@ -120,80 +130,50 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
-        query.setLong("css_id", cssId);
-        CssBean css = (CssBean)query.uniqueResult();
-        if (css!=null) {
-            Blob blob = css.getCssBlob();
-            if (blob!=null) {
-                try {
-                    css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (SQLException e) {
-                    String es = "Error get CSS";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error get CSS";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                if (log.isDebugEnabled())  {
-                    log.debug("Length of CSS is "+css.getCss()!=null?css.getCss().length():0);
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
+            query.setLong("css_id", cssId);
+            CssBean css = (CssBean)query.uniqueResult();
+            if (css!=null) {
+                Blob blob = css.getCssBlob();
+                if (blob!=null) {
+                    try {
+                        css.setCss( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get CSS";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get CSS";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    if (log.isDebugEnabled())  {
+                        log.debug("Length of CSS is "+css.getCss()!=null?css.getCss().length():0);
+                    }
                 }
             }
+            session.getTransaction().commit();
+            return css;
         }
-        session.getTransaction().commit();
-        return css;
+        finally {
+            session.close();
+        }
     }
 
     public Long createCss(Css css) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        clearCurrentFlag(css.getSiteId(), session);
-
-        CssBean bean = new CssBean();
-        bean.setCssComment(css.getCssComment());
-        bean.setCurrent(css.isCurrent());
-        bean.setDate(css.getDate());
-        bean.setSiteId(css.getSiteId());
-        if (StringUtils.isNotBlank(css.getCss())) {
-            try {
-                bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes(CharEncoding.UTF_8)));
+            if (css.isCurrent()) {
+                clearCurrentFlag(css.getSiteId(), session);
             }
-            catch (UnsupportedEncodingException e) {
-                String es = "Error create CSS";
-                log.error(es, e);
-                throw new DatabaseException(es, e);
-            }
-        }
-        else {
-            bean.setCssBlob(null);
-        }
-        session.save(bean);
-        session.flush();
 
-        session.getTransaction().commit();
-
-        return bean.getCssId();
-    }
-
-    public void updateCss(Css css) {
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-
-        if (css.isCurrent()) {
-            clearCurrentFlag(css.getSiteId(), session);
-        }
-
-        Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
-        query.setLong("css_id", css.getCssId());
-        CssBean bean = (CssBean)query.uniqueResult();
-        if (bean!=null) {
-            
+            CssBean bean = new CssBean();
             bean.setCssComment(css.getCssComment());
             bean.setCurrent(css.isCurrent());
             bean.setDate(css.getDate());
@@ -203,7 +183,7 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                     bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes(CharEncoding.UTF_8)));
                 }
                 catch (UnsupportedEncodingException e) {
-                    String es = "Error update CSS";
+                    String es = "Error create CSS";
                     log.error(es, e);
                     throw new DatabaseException(es, e);
                 }
@@ -211,29 +191,86 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             else {
                 bean.setCssBlob(null);
             }
+            session.save(bean);
+            session.flush();
+
+            session.getTransaction().commit();
+
+            return bean.getCssId();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
+    }
+
+    public void updateCss(Css css) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            if (css.isCurrent()) {
+                clearCurrentFlag(css.getSiteId(), session);
+            }
+
+            Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
+            query.setLong("css_id", css.getCssId());
+            CssBean bean = (CssBean)query.uniqueResult();
+            if (bean!=null) {
+
+                bean.setCssComment(css.getCssComment());
+                bean.setCurrent(css.isCurrent());
+                bean.setDate(css.getDate());
+                bean.setSiteId(css.getSiteId());
+                if (StringUtils.isNotBlank(css.getCss())) {
+                    try {
+                        bean.setCssBlob( Hibernate.createBlob(css.getCss().getBytes(CharEncoding.UTF_8)));
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error update CSS";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                }
+                else {
+                    bean.setCssBlob(null);
+                }
+            }
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteCss(Long cssId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        session.createQuery
+            session.createQuery
             ("delete org.riverock.webmill.main.CssBean css where css.cssId = :css_id and css.isCurrent=false ")
-            .setLong("css_id", cssId)
-            .executeUpdate();
+                .setLong("css_id", cssId)
+                .executeUpdate();
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteCssForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        session.createQuery("delete org.riverock.webmill.main.CssBean css where css.siteId = :site_id")
-            .setLong("site_id", siteId)
-            .executeUpdate();
-        session.getTransaction().commit();
+        try {
+            session.beginTransaction();
+            session.createQuery("delete org.riverock.webmill.main.CssBean css where css.siteId = :site_id")
+                .setLong("site_id", siteId)
+                .executeUpdate();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     private void clearCurrentFlag(Long siteId, Session session) {

@@ -174,7 +174,7 @@ public class HibernatedWebmillAdminDaoImpl implements WebmillAdminDao {
         return list;
     }
 
-    public void updateSiteWithVirtualHost(SiteBean site, List<String> virtualHosts) {
+    public void updateSiteWithVirtualHost(SiteBean site, List<VirtualHost> virtualHosts) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -182,7 +182,7 @@ public class HibernatedWebmillAdminDaoImpl implements WebmillAdminDao {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Long createSiteWithVirtualHost(SiteBean site, List<String> virtualHosts) {
+    public Long createSiteWithVirtualHost(SiteBean site, List<VirtualHost> virtualHosts) {
         return InternalDaoFactory.getInternalSiteDao().createSite(site, virtualHosts);
     }
 

@@ -172,6 +172,7 @@ public class HoldingAction implements Serializable {
     public String cancelEditHoldingAction() {
         log.info( "Cancel edit holding action." );
 
+        loadCurrentHolding();
         holdingSessionBean.resetStatus();
         return "holding";
     }

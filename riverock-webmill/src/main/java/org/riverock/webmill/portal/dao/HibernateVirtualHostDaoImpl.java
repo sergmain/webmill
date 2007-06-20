@@ -43,59 +43,97 @@ import org.riverock.webmill.portal.bean.VirtualHostBean;
 public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
     public List<VirtualHost> getVirtualHostsFullList() {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        Query query = session.createQuery("select host from org.riverock.webmill.portal.bean.VirtualHostBean as host");
-        List<VirtualHostBean> siteList = query.list();
-        session.getTransaction().commit();
-        return (List)siteList;
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery("select host from org.riverock.webmill.portal.bean.VirtualHostBean as host");
+            List<VirtualHostBean> siteList = query.list();
+            session.getTransaction().commit();
+            return (List)siteList;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public List<VirtualHost> getVirtualHosts(Long siteId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<VirtualHostBean> list = session.createQuery(
-            "select host from org.riverock.webmill.portal.bean.VirtualHostBean as host " +
-            "where host.siteId = :site_id")
-            .setLong("site_id", siteId)
-            .list();
-        session.getTransaction().commit();
-        return (List)list;
+        try {
+            session.beginTransaction();
+            List<VirtualHostBean> list = session.createQuery(
+                "select host from org.riverock.webmill.portal.bean.VirtualHostBean as host " +
+                "where host.siteId = :site_id")
+                .setLong("site_id", siteId)
+                .list();
+            session.getTransaction().commit();
+            return (List)list;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public Long createVirtualHost(VirtualHost virtualHost) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        VirtualHostBean bean = new VirtualHostBean(virtualHost.getId(), virtualHost.getSiteId(), virtualHost.getHost() );
-        session.save(bean);
-        session.flush();
-        session.getTransaction().commit();
-        return bean.getId();
+        try {
+            session.beginTransaction();
+            if (virtualHost.isDefaultHost()) {
+                clearDefaultHostFlag(virtualHost.getSiteId(), session);
+            }
+            VirtualHostBean bean = new VirtualHostBean(virtualHost.getId(), virtualHost.getSiteId(), virtualHost.getHost(), virtualHost.isDefaultHost() );
+            session.save(bean);
+            session.flush();
+            session.getTransaction().commit();
+            return bean.getId();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteVirtualHost(VirtualHost virtualHost) {
-        if (virtualHost==null) {
+        if (virtualHost==null || virtualHost.isDefaultHost()) {
             return;
         }
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        session.createQuery(
+            session.createQuery(
             "delete org.riverock.webmill.portal.bean.VirtualHostBean host where host.id = :id")
-            .setLong("id", virtualHost.getId())
-            .executeUpdate();
+                .setLong("id", virtualHost.getId())
+                .executeUpdate();
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteVirtualHostForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        session.createQuery(
-            "delete org.riverock.webmill.portal.bean.VirtualHostBean host where host.siteId = :site_id")
-            .setLong("site_id", siteId)
-            .executeUpdate();
-        session.getTransaction().commit();
+            session.createQuery(
+            "delete org.riverock.webmill.portal.bean.VirtualHostBean host where host.siteId=:site_id")
+                .setLong("site_id", siteId)
+                .executeUpdate();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
+    private void clearDefaultHostFlag(Long siteId, Session session) {
+        List<VirtualHostBean> hosts = session.createQuery("select host from org.riverock.webmill.portal.bean.VirtualHostBean as host where host.siteId = :siteId")
+            .setLong("siteId", siteId)
+            .list();
+        for (VirtualHostBean host : hosts) {
+            if (host.isDefaultHost()) {
+                host.setDefaultHost(false);
+            }
+        }
+    }
 }

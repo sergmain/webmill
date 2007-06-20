@@ -132,14 +132,15 @@ public class XsltAction implements Serializable {
     }
 
     public String cancelEditXsltAction() {
-        XsltAction.log.info( "Cancel edit xslt action." );
+        log.info( "Cancel edit xslt action." );
 
+        loadCurrentObject();
         return "site";
     }
 
 // Delete actions
     public String deleteXsltAction() {
-        XsltAction.log.info( "delete xslt action." );
+        log.info( "delete xslt action." );
 
         setSessionObject( new XsltBean(dataProvider.getXslt()) );
 
@@ -147,13 +148,13 @@ public class XsltAction implements Serializable {
     }
 
     public String cancelDeleteXsltAction() {
-        XsltAction.log.info( "Cancel delete holding action." );
+        log.info( "Cancel delete holding action." );
 
         return "site";
     }
 
     public String processDeleteXsltAction() {
-        XsltAction.log.info( "Process delete xslt action." );
+        log.info( "Process delete xslt action." );
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalXsltDao().deleteXslt(getSessionObject().getId());

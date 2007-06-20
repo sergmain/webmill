@@ -43,7 +43,6 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
  */
 @Entity
 @Table(name="WM_PORTAL_VIRTUAL_HOST")
-//@Table(name="wm_portal_virtual_host")
 @TableGenerator(
     name="TABLE_VIRTUAL_HOST",
     table="WM_PORTAL_IDS",
@@ -67,13 +66,17 @@ public class VirtualHostBean implements Serializable, VirtualHost {
     @Column(name="NAME_VIRTUAL_HOST")
     private String host = null;
 
+    @Column(name="IS_DEFAULT_HOST")
+    private boolean isDefaultHost = false;
+
     public VirtualHostBean() {
     }
 
-    public VirtualHostBean(Long id, Long siteId, String host) {
+    public VirtualHostBean(Long id, Long siteId, String host, boolean isDefaultHost) {
         this.id = id;
         this.siteId = siteId;
         this.host = host;
+        this.isDefaultHost = isDefaultHost;
     }
 
     public Long getSiteId() {
@@ -98,5 +101,13 @@ public class VirtualHostBean implements Serializable, VirtualHost {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public boolean isDefaultHost() {
+        return isDefaultHost;
+    }
+
+    public void setDefaultHost(boolean defaultHost) {
+        isDefaultHost = defaultHost;
     }
 }

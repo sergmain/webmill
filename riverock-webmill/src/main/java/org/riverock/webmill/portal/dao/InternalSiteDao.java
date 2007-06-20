@@ -27,6 +27,7 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
@@ -44,7 +45,7 @@ public interface InternalSiteDao {
     public void updateSite(Site site);
     public void deleteSite(Long siteId);
 
-    public void updateSite(Site site, List<String> hosts);
+    public void updateSite(Site site, List<VirtualHost> hosts);
 
-    public Long createSite(Site site, List<String> hosts);
+    public Long createSite(Site site, List<VirtualHost> hosts);
 }
