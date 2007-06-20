@@ -71,11 +71,12 @@
                 </f:subview>
 
                 <h:panelGroup id="operation-site-add-panel">
-                    <h:commandButton id="site-add-process-action" action="#{siteAction.processAddSiteAction}"
+                    <t:commandButton id="siteProcessActionButton" action="#{siteAction.processAddSiteAction}"
                                      value="#{msg['process_add_site_action']}"
                                      styleClass="site-button-action"
+                                     forceId="true"
                         >
-                    </h:commandButton>
+                    </t:commandButton>
                     <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                     <h:commandButton id="site-add-cancel-action" action="#{siteAction.cancelAddSiteAction}"
                                      value="#{msg['cancel_add_site_action']}"

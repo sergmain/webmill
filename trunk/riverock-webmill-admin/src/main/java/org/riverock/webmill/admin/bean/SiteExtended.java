@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.riverock.interfaces.portal.bean.VirtualHost;
+
 /**
  * @author SergeMaslyukov
  *         Date: 13.07.2006
@@ -39,7 +41,7 @@ public class SiteExtended implements Serializable {
     private static final long serialVersionUID = 2058005301L;
 
     private SiteBean site = null;
-    private List<String> virtualHosts = null;
+    private List<VirtualHost> virtualHosts = null;
     private CompanyBean company = null;
     private List<SiteLanguageBean> siteLanguage = null;
     private String locales = null;
@@ -47,7 +49,7 @@ public class SiteExtended implements Serializable {
     public SiteExtended(){
     }
 
-    public SiteExtended(SiteBean siteBean, List<String> virtualHosts, CompanyBean company){
+    public SiteExtended(SiteBean siteBean, List<VirtualHost> virtualHosts, CompanyBean company){
         this.site=siteBean;
         this.virtualHosts=virtualHosts;
         this.company=company;
@@ -94,11 +96,11 @@ public class SiteExtended implements Serializable {
         this.site = new SiteBean(site);
     }
 
-    public List<String> getVirtualHosts() {
+    public List<VirtualHost> getVirtualHosts() {
         return virtualHosts;
     }
 
-    public void setVirtualHosts(List<String> virtualHosts) {
+    public void setVirtualHosts(List<VirtualHost> virtualHosts) {
         this.virtualHosts = virtualHosts;
     }
 }

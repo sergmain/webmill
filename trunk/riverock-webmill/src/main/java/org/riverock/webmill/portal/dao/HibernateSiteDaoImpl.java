@@ -95,7 +95,7 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
         return createSite(site, null);
     }
 
-    public Long createSite(Site site, List<String> hosts) {
+    public Long createSite(Site site, List<VirtualHost> hosts) {
         if (log.isDebugEnabled()) {
             log.debug("site: " + site);
             if (site!=null) {
@@ -108,26 +108,26 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
 
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
-        SiteBean bean = new SiteBean(site);
-        session.save(bean);
+        SiteBean siteBean = new SiteBean(site);
+        session.save(site);
 
         if (hosts!=null) {
-            for (String s : hosts) {
-                VirtualHost virtualHost = new VirtualHostBean(null, bean.getSiteId(), s );
-                session.save(virtualHost);
+            for (VirtualHost virtualHost : hosts) {
+                VirtualHostBean host = new VirtualHostBean(null, siteBean.getSiteId(), virtualHost.getHost(), virtualHost.isDefaultHost() );
+                session.save(host);
             }
         }
 
         session.flush();
         session.getTransaction().commit();
-        return bean.getSiteId();
+        return siteBean.getSiteId();
     }
 
     public void updateSite(Site site) {
         updateSite(site, null);
     }
 
-    public void updateSite(Site site, List<String> hosts) {
+    public void updateSite(Site site, List<VirtualHost> hosts) {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
@@ -164,8 +164,8 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
 
             for (VirtualHost virtualHost : list) {
                 boolean isPresent=false;
-                for (String host : hosts) {
-                    if (virtualHost.getHost().equalsIgnoreCase(host)) {
+                for (VirtualHost host : hosts) {
+                    if (virtualHost.getHost().equalsIgnoreCase(host.getHost())) {
                         isPresent=true;
                         break;
                     }
@@ -179,17 +179,21 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                     session.delete(virtualHostBean);
                 }
             }
-            for (String host : hosts) {
-                boolean isPresent=false;
-                for (VirtualHost virtualHost : list) {
-                    if (virtualHost.getHost().equalsIgnoreCase(host)) {
-                        isPresent=true;
+            for (VirtualHost host : hosts) {
+                VirtualHostBean virtualHostTemp=null;
+                for (VirtualHostBean virtualHost : list) {
+                    if (virtualHost.getHost().equalsIgnoreCase(host.getHost())) {
+                        virtualHostTemp=virtualHost;
                         break;
                     }
                 }
-                if (!isPresent) {
-                    VirtualHost hostBean = new VirtualHostBean(null, site.getSiteId(), host );
+                if (virtualHostTemp==null) {
+                    VirtualHost hostBean = new VirtualHostBean(null, site.getSiteId(), host.getHost(), host.isDefaultHost() );
                     session.save(hostBean);
+                }
+                else if (virtualHostTemp.isDefaultHost()!=host.isDefaultHost()) {
+                    virtualHostTemp.setDefaultHost(host.isDefaultHost());
+                    session.save(virtualHostTemp);
                 }
             }
         }

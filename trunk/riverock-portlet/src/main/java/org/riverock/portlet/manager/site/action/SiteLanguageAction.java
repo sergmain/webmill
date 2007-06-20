@@ -136,6 +136,7 @@ public class SiteLanguageAction implements Serializable {
     public String cancelEditSiteLanguageAction() {
         log.debug( "Cancel edit site language action." );
 
+        loadCurrentObject();
         return "site";
     }
 

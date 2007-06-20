@@ -169,6 +169,7 @@ public class MenuCatalogAction implements Serializable {
     public String cancelEditMenuCatalogAction() {
         log.info( "Cancel edit menu catalog action." );
 
+        loadCurrentObject();
         return "menu";
     }
 

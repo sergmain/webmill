@@ -52,7 +52,7 @@
 </style>
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form rendered="#{isUserInRole['webmill.authentic']}" id="siteManagerForm">
 
         <f:subview id="site-top-actions-subview">
             <jsp:include page="site-top-actions.jsp"/>
@@ -71,11 +71,13 @@
                 </f:subview>
 
                 <h:panelGroup id="operation-site-edit-panel">
-                    <h:commandButton id="site-edit-process-action" action="#{siteAction.processEditSiteAction}"
+                    <t:commandButton id="siteProcessActionButton" action="#{siteAction.processEditSiteAction}"
                                      value="#{msg['process_edit_site_action']}"
                                      styleClass="site-button-action"
+                                     forceId="true"
+                                     disabled="#{siteSessionBean.siteExtended.defaultHostCheckedNotOnce}"
                         >
-                    </h:commandButton>
+                    </t:commandButton>
                     <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                     <h:commandButton id="site-edit-cancel-action" action="#{siteAction.cancelEditSiteAction}"
                                      value="#{msg['cancel_edit_site_action']}"

@@ -38,13 +38,13 @@ public class SiteExtended implements Serializable {
     private static final long serialVersionUID = 2058005301L;
 
     private SiteBean site = null;
-    private List<String> virtualHosts = null;
+    private List<VirtualHostBean> virtualHosts = null;
     private CompanyBean company = null;
 
     public SiteExtended(){
     }
 
-    public SiteExtended(SiteBean siteBean, List<String> virtualHosts, CompanyBean company){
+    public SiteExtended(SiteBean siteBean, List<VirtualHostBean> virtualHosts, CompanyBean company){
         this.site=siteBean;
         this.virtualHosts=virtualHosts;
         this.company=company;
@@ -66,11 +66,24 @@ public class SiteExtended implements Serializable {
         this.site = new SiteBean(site);
     }
 
-    public List<String> getVirtualHosts() {
+    public List<VirtualHostBean> getVirtualHosts() {
         return virtualHosts;
     }
 
-    public void setVirtualHosts(List<String> virtualHosts) {
+    public void setVirtualHosts(List<VirtualHostBean> virtualHosts) {
         this.virtualHosts = virtualHosts;
+    }
+
+    public boolean isDefaultHostCheckedNotOnce() {
+        if (virtualHosts==null || virtualHosts.isEmpty()) {
+            return false;
+        }
+        int count=0;
+        for (VirtualHostBean virtualHost : virtualHosts) {
+            if (virtualHost.isDefaultHost()) {
+                count++;
+            }
+        }
+        return count!=1;
     }
 }

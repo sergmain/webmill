@@ -141,7 +141,7 @@ public class NewsAction implements Serializable {
 
     public String cancelEditNewsAction() {
         log.info("Cancel news item action.");
-
+        loadCurrentObject();
         return "news";
     }
 

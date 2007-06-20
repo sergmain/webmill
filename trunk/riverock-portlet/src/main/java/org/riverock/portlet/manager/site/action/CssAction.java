@@ -134,6 +134,7 @@ public class CssAction implements Serializable {
     public String cancelEditCssAction() {
         log.info( "Cancel edit CSS action." );
 
+        loadCurrentObject();
         return "site";
     }
 

@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.riverock.interfaces.portal.dao.PortalSiteDao;
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
@@ -88,7 +89,7 @@ public class PortalSiteDaoImpl implements PortalSiteDao {
         }
     }
 
-    public Long createSiteWithVirtualHost(Site site, List<String> hosts) {
+    public Long createSiteWithVirtualHost(Site site, List<VirtualHost> hosts) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
@@ -110,7 +111,7 @@ public class PortalSiteDaoImpl implements PortalSiteDao {
         }
     }
 
-    public void updateSiteWithVirtualHost(Site site, List<String> hosts) {
+    public void updateSiteWithVirtualHost(Site site, List<VirtualHost> hosts) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );

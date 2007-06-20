@@ -38,6 +38,7 @@ import org.riverock.webmill.admin.bean.SiteBean;
 import org.riverock.webmill.admin.bean.SiteExtended;
 import org.riverock.webmill.admin.bean.VirtualHostBean;
 import org.riverock.webmill.admin.dao.DaoFactory;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * @author SergeMaslyukov
@@ -102,9 +103,9 @@ public class SiteService implements Serializable {
         SiteExtended siteExtended = new SiteExtended();
         siteExtended.setSite(DaoFactory.getWebmillAdminDao().getSite(siteId));
         List<VirtualHostBean> virtualHosts = DaoFactory.getWebmillAdminDao().getVirtualHosts(siteExtended.getSite().getSiteId());
-        List<String> hosts = new ArrayList<String>();
-        for (VirtualHostBean host : virtualHosts) {
-            hosts.add(host.getHost().toLowerCase());
+        List<VirtualHost> hosts = new ArrayList<VirtualHost>();
+        for (VirtualHost host : virtualHosts) {
+            hosts.add( new VirtualHostBean(host) );
         }
         siteExtended.setVirtualHosts(hosts);
         Long companyId = siteExtended.getSite().getCompanyId();

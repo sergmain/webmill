@@ -26,6 +26,7 @@ package org.riverock.interfaces.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * @author Sergei Maslyukov
@@ -37,10 +38,10 @@ public interface PortalSiteDao {
     public Site getSite( Long siteId );
     public Site getSite( String siteName );
     public Long createSite(Site site);
-    public Long createSiteWithVirtualHost(Site site, List<String> hosts);
+    public Long createSiteWithVirtualHost(Site site, List<VirtualHost> hosts);
 
     public void updateSite(Site site);
-    public void updateSiteWithVirtualHost(Site site, List<String> hosts);
+    public void updateSiteWithVirtualHost(Site site, List<VirtualHost> hosts);
 
     public void deleteSite(Long siteId);
 }

@@ -25,6 +25,8 @@ package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -34,6 +36,7 @@ import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.bean.SiteBean;
 import org.riverock.portlet.manager.site.bean.SiteExtended;
+import org.riverock.portlet.manager.site.bean.VirtualHostBean;
 import org.riverock.portlet.tools.FacesTools;
 
 /**
@@ -93,7 +96,7 @@ public class SiteAction implements Serializable {
             }
         }
 
-        SiteExtended siteExtended = new SiteExtended( new SiteBean(), new ArrayList<String>(), null );
+        SiteExtended siteExtended = new SiteExtended( new SiteBean(), new ArrayList<VirtualHostBean>(), null );
         siteSessionBean.setSiteExtended(siteExtended);
 
         return "site-add";
@@ -116,7 +119,7 @@ public class SiteAction implements Serializable {
 
         if( siteSessionBean.getSiteExtended()!=null ) {
             Long siteId = FacesTools.getPortalDaoProvider().getPortalSiteDao().createSiteWithVirtualHost(
-                siteSessionBean.getSiteExtended().getSite(), siteSessionBean.getSiteExtended().getVirtualHosts()
+                siteSessionBean.getSiteExtended().getSite(), (List)siteSessionBean.getSiteExtended().getVirtualHosts()
             );
             siteSessionBean.setSiteExtended(null);
             siteSessionBean.setId(siteId);
@@ -147,8 +150,11 @@ public class SiteAction implements Serializable {
         log.debug( "Save changes site action." );
 
         if( siteSessionBean.getSiteExtended()!=null ) {
+            if (log.isDebugEnabled()) {
+                log.debug("virtual hosts: " +siteSessionBean.getSiteExtended().getVirtualHosts());
+            }
             FacesTools.getPortalDaoProvider().getPortalSiteDao().updateSiteWithVirtualHost(
-                siteSessionBean.getSiteExtended().getSite(), siteSessionBean.getSiteExtended().getVirtualHosts()
+                siteSessionBean.getSiteExtended().getSite(), (List)siteSessionBean.getSiteExtended().getVirtualHosts()
             );
             dataProvider.clearSite();
             loadCurrentSite();
@@ -159,7 +165,7 @@ public class SiteAction implements Serializable {
 
     public String cancelEditSiteAction() {
         log.debug( "Cancel edit site action." );
-
+        loadCurrentSite();
         return "site";
     }
 
@@ -197,7 +203,7 @@ public class SiteAction implements Serializable {
         return "site";
     }
 
-// virtual host actions
+    // virtual host actions
     public void deleteVirtualHostAction() {
         log.debug( "Delete virtual host action." );
 
@@ -210,8 +216,13 @@ public class SiteAction implements Serializable {
             return;
         }
 
-        siteSessionBean.getSiteExtended().getVirtualHosts().remove(host.toLowerCase());
-
+        Iterator<VirtualHostBean> iterator = siteSessionBean.getSiteExtended().getVirtualHosts().iterator();
+        while (iterator.hasNext()) {
+            VirtualHostBean virtualHostBean = iterator.next();
+            if (virtualHostBean.getHost().equalsIgnoreCase(host)) {
+                iterator.remove();
+            }
+        }
     }
 
     public void addVirtualHostAction() {
@@ -227,7 +238,12 @@ public class SiteAction implements Serializable {
             return;
         }
 
-        siteSessionBean.getSiteExtended().getVirtualHosts().add( newHost.toLowerCase() );
+        siteSessionBean.getSiteExtended().getVirtualHosts().add(
+            new VirtualHostBean(
+                newHost.toLowerCase(), null,
+                siteSessionBean.getSiteExtended().getVirtualHosts().isEmpty(), null
+            )
+        );
         siteSessionBean.setNewVirtualHost(null);
     }
 

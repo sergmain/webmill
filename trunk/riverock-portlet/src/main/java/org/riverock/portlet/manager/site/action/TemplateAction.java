@@ -132,14 +132,15 @@ public class TemplateAction implements Serializable {
     }
 
     public String cancelEditTemplateAction() {
-        TemplateAction.log.info( "Cancel edit template action." );
+        log.info( "Cancel edit template action." );
 
+        loadCurrentObject();
         return "site";
     }
 
 // Delete actions
     public String deleteTemplateAction() {
-        TemplateAction.log.info( "delete template action." );
+        log.info( "delete template action." );
 
         setSessionObject( new TemplateBean(dataProvider.getTemplate()) );
 
@@ -147,13 +148,13 @@ public class TemplateAction implements Serializable {
     }
 
     public String cancelDeleteTemplateAction() {
-        TemplateAction.log.info( "Cancel delete holding action." );
+        log.info( "Cancel delete holding action." );
 
         return "site";
     }
 
     public String processDeleteTemplateAction() {
-        TemplateAction.log.info( "Process delete template action." );
+        log.info( "Process delete template action." );
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalTemplateDao().deleteTemplate(getSessionObject().getTemplateId());

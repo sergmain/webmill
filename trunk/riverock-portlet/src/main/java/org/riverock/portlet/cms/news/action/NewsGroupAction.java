@@ -130,7 +130,7 @@ public class NewsGroupAction implements Serializable {
 
     public String cancelEditNewsGroupAction() {
         log.info( "Cancel edit news group action." );
-
+        loadCurrentObject();
         return "news";
     }
 

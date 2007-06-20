@@ -26,6 +26,7 @@ package org.riverock.webmill.admin.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.faces.event.ActionEvent;
 
@@ -36,8 +37,10 @@ import org.riverock.webmill.admin.SiteDataProvider;
 import org.riverock.webmill.admin.SiteSessionBean;
 import org.riverock.webmill.admin.bean.SiteBean;
 import org.riverock.webmill.admin.bean.SiteExtended;
+import org.riverock.webmill.admin.bean.VirtualHostBean;
 import org.riverock.webmill.admin.dao.DaoFactory;
 import org.riverock.webmill.admin.service.CreateSiteService;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * @author SergeMaslyukov
@@ -87,7 +90,7 @@ public class SiteAction implements Serializable {
             }
         }
 
-        SiteExtended siteExtended = new SiteExtended(new SiteBean(), new ArrayList<String>(), null);
+        SiteExtended siteExtended = new SiteExtended(new SiteBean(), new ArrayList<VirtualHost>(), null);
         siteSessionBean.setSiteExtended(siteExtended);
 
         return "site-add";
@@ -207,8 +210,13 @@ public class SiteAction implements Serializable {
             return;
         }
 
-        siteSessionBean.getSiteExtended().getVirtualHosts().remove(host.toLowerCase());
-
+        Iterator<VirtualHost> iterator = siteSessionBean.getSiteExtended().getVirtualHosts().iterator();
+        while (iterator.hasNext()) {
+            VirtualHost virtualHost = iterator.next();
+            if (virtualHost.getHost().equalsIgnoreCase(host)) {
+                iterator.remove();
+            }
+        }
     }
 
     public void addVirtualHostAction() {
@@ -224,7 +232,9 @@ public class SiteAction implements Serializable {
             return;
         }
 
-        siteSessionBean.getSiteExtended().getVirtualHosts().add(newHost.toLowerCase());
+        siteSessionBean.getSiteExtended().getVirtualHosts().add(
+            new VirtualHostBean(null, null, newHost.toLowerCase(), false)
+        );
         siteSessionBean.setNewVirtualHost(null);
     }
 

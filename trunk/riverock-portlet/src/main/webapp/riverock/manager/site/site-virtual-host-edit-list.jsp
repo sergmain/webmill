@@ -54,15 +54,85 @@
         <f:facet name="header">
             <h:outputText value="#{msg.site_host_name}"/>
         </f:facet>
-        <h:outputText id="host-name" value="#{hostBean}"/>
+        <t:selectBooleanCheckbox forceId="true" id="defaultHostCheckbox" onclick="uncheckCheckboxes(this);" value="#{hostBean.defaultHost}"/>
+        <h:outputText id="host-name" value="#{hostBean.host}"/>
     </h:column>
 
     <h:column>
         <f:facet name="header">
         </f:facet>
         <t:commandButton value="#{msg.delete_virtual_host_action}" action="#{siteAction.deleteVirtualHostAction}"
-            styleClass="site-button-action">
-            <t:updateActionListener property="#{siteSessionBean.currentVirtualHost}" value="#{hostBean}"/>
+            styleClass="site-button-action"
+            id="deleteVirtualHostButton"
+            forceId="true" disabled="#{hostBean.defaultHost}">
+            <t:updateActionListener property="#{siteSessionBean.currentVirtualHost}" value="#{hostBean.host}"/>
         </t:commandButton>
     </h:column>
 </t:dataTable>
+
+<f:verbatim>
+<script type="text/javascript" language="JavaScript">
+    function uncheckCheckboxes(checkbox) {
+//        alert('checkbox: ' + checkbox.id+'\nchecked: ' + checkbox.checked);
+        var fields = siteManagerForm.all;
+        var count = countCheckedBoxes(fields);
+        if (count==0) {
+            checkbox.checked=true;
+            return;
+        }
+
+//        var s = '';
+//        alert('#1 count: ');
+        for ( var i = 0; i < fields.length; i++ ) {
+            if (fields[i].id!=undefined && fields[i].id!='') {
+//                s += (fields[i].id + '\n');
+
+                if (checkbox.checked) {
+                    if (fields[i].id.indexOf('defaultHostCheckbox[')==0 ) {
+                        if (fields[i].id!=checkbox.id) {
+                            fields[i].checked=false;
+                            disableButton(fields[i], false);
+                        }
+                        else {
+                            disableButton(fields[i], true);
+                        }
+                    }
+                }
+                else {
+                    if (fields[i].id==checkbox.id) {
+                        disableButton(fields[i], false);
+                    }
+                    else if (fields[i].id.indexOf('defaultHostCheckbox[')==0 && fields[i].checked) {
+                        disableButton(fields[i], true);
+                    }
+                }
+            }
+        }
+        count = countCheckedBoxes(fields);
+        if (count==1) {
+            document.getElementById("siteProcessActionButton").disabled=false;
+        }
+//        alert(s);
+    }
+
+    function disableButton(formObject, isDisableButton) {
+        var idx = formObject.id.substring('defaultHostCheckbox['.length, formObject.id.indexOf(']') );
+        var button = document.getElementById("deleteVirtualHostButton["+idx+']');
+        if (button!=undefined) {
+            button.disabled=isDisableButton;
+        }
+    }
+
+    function countCheckedBoxes(fields) {
+        var count = 0;
+        for ( var i = 0; i < fields.length; i++ ) {
+            if (fields[i].id!=undefined && fields[i].id!='' && fields[i].id.indexOf('defaultHostCheckbox[')==0 &&
+                fields[i].checked) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+</script>
+</f:verbatim>

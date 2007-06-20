@@ -132,7 +132,7 @@ public class ArticleAction implements Serializable {
 
     public String cancelEditArticleAction() {
         log.info("Cancel article action.");
-
+        loadCurrentObject();
         return "article";
     }
 
