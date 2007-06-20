@@ -88,7 +88,7 @@ public class SiteService implements Serializable {
             if (StringUtils.isBlank(companyName)) {
                 companyName = "<empty company name>";
             }
-            list.add(new SelectItem(company.getId().toString(), companyName));
+            list.add(new SelectItem(company.getId(), companyName));
         }
         return list;
     }
