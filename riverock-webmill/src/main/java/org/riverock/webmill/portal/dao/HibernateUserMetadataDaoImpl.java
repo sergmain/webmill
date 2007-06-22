@@ -46,145 +46,165 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
 
     public UserMetadataItem getMetadata(String userLogin, Long siteId, String metadataName) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
-            "select meta " +
-                "from  org.riverock.webmill.portal.bean.UserMetadataItemBean as meta," +
-                "      org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
-                "where auth.userLogin=:userLogin and meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=auth.userId")
-            .setString("userLogin", userLogin)
-            .setString("metadataName", metadataName)
-            .setLong("siteId", siteId)
-            .uniqueResult();
+            UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
+                "select meta " +
+                    "from  org.riverock.webmill.portal.bean.UserMetadataItemBean as meta," +
+                    "      org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                    "where auth.userLogin=:userLogin and meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=auth.userId")
+                .setString("userLogin", userLogin)
+                .setString("metadataName", metadataName)
+                .setLong("siteId", siteId)
+                .uniqueResult();
 
-        session.getTransaction().commit();
-        return bean;
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void setMetadataIntValue(String userLogin, Long siteId, String metadataName, Long intValue) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        UserBean user = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
-            "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
-            "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
-            .setString("userLogin", userLogin)
-            .uniqueResult();
+            UserBean user = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
+                "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
+                .setString("userLogin", userLogin)
+                .uniqueResult();
 
-        if (user==null) {
-            if (log.isDebugEnabled()) {
-                log.info("Login not exist: "+userLogin);
+            if (user==null) {
+                if (log.isDebugEnabled()) {
+                    log.info("Login not exist: "+userLogin);
+                }
+                return;
             }
-            return;
-        }
 
-        UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
-            "select meta from org.riverock.webmill.portal.bean.UserMetadataItemBean as meta " +
-            "where  meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=:userId")
-            .setString("metadataName", metadataName)
-            .setLong("siteId", siteId)
-            .setLong("userId", user.getUserId())
-            .uniqueResult();
+            UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
+                "select meta from org.riverock.webmill.portal.bean.UserMetadataItemBean as meta " +
+                "where  meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=:userId")
+                .setString("metadataName", metadataName)
+                .setLong("siteId", siteId)
+                .setLong("userId", user.getUserId())
+                .uniqueResult();
 
-        if (bean==null) {
-            bean = new UserMetadataItemBean();
-            bean.setSiteId(siteId);
-            bean.setMetadataName(metadataName);
-            bean.setIntValue(intValue);
-            bean.setUserId(user.getUserId());
+            if (bean==null) {
+                bean = new UserMetadataItemBean();
+                bean.setSiteId(siteId);
+                bean.setMetadataName(metadataName);
+                bean.setIntValue(intValue);
+                bean.setUserId(user.getUserId());
+            }
+            else {
+                bean.setIntValue(intValue);
+                bean.setStringValue(null);
+                bean.setDateValue(null);
+            }
+            session.save(bean);
+            session.getTransaction().commit();
         }
-        else {
-            bean.setIntValue(intValue);
-            bean.setStringValue(null);
-            bean.setDateValue(null);
+        finally {
+            session.close();
         }
-        session.save(bean);
-        session.getTransaction().commit();
     }
 
     public void setMetadataStringValue(String userLogin, Long siteId, String metadataName, String stringValue) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        UserBean user = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
-            "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
-            "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
-            .setString("userLogin", userLogin)
-            .uniqueResult();
+            UserBean user = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
+                "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
+                .setString("userLogin", userLogin)
+                .uniqueResult();
 
-        if (user==null) {
-            if (log.isDebugEnabled()) {
-                log.info("Login not exist: "+userLogin);
+            if (user==null) {
+                if (log.isDebugEnabled()) {
+                    log.info("Login not exist: "+userLogin);
+                }
+                return;
             }
-            return;
-        }
 
-        UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
-            "select meta from org.riverock.webmill.portal.bean.UserMetadataItemBean as meta " +
-            "where  meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=:userId")
-            .setString("metadataName", metadataName)
-            .setLong("siteId", siteId)
-            .setLong("userId", user.getUserId())
-            .uniqueResult();
+            UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
+                "select meta from org.riverock.webmill.portal.bean.UserMetadataItemBean as meta " +
+                "where  meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=:userId")
+                .setString("metadataName", metadataName)
+                .setLong("siteId", siteId)
+                .setLong("userId", user.getUserId())
+                .uniqueResult();
 
-        if (bean==null) {
-            bean = new UserMetadataItemBean();
-            bean.setSiteId(siteId);
-            bean.setMetadataName(metadataName);
-            bean.setStringValue(stringValue);
-            bean.setUserId(user.getUserId());
+            if (bean==null) {
+                bean = new UserMetadataItemBean();
+                bean.setSiteId(siteId);
+                bean.setMetadataName(metadataName);
+                bean.setStringValue(stringValue);
+                bean.setUserId(user.getUserId());
+            }
+            else {
+                bean.setStringValue(stringValue);
+                bean.setIntValue(null);
+                bean.setDateValue(null);
+            }
+            session.save(bean);
+            session.getTransaction().commit();
         }
-        else {
-            bean.setStringValue(stringValue);
-            bean.setIntValue(null);
-            bean.setDateValue(null);
+        finally {
+            session.close();
         }
-        session.save(bean);
-        session.getTransaction().commit();
     }
 
     public void setMetadataDateValue(String userLogin, Long siteId, String metadataName, Date dateValue) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        UserBean user = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
-            "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
-            "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
-            .setString("userLogin", userLogin)
-            .uniqueResult();
+            UserBean user = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
+                "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
+                .setString("userLogin", userLogin)
+                .uniqueResult();
 
-        if (user==null) {
-            if (log.isDebugEnabled()) {
-                log.info("Login not exist: "+userLogin);
+            if (user==null) {
+                if (log.isDebugEnabled()) {
+                    log.info("Login not exist: "+userLogin);
+                }
+                return;
             }
-            return;
-        }
 
-        UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
-            "select meta from org.riverock.webmill.portal.bean.UserMetadataItemBean as meta " +
-            "where  meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=:userId")
-            .setString("metadataName", metadataName)
-            .setLong("siteId", siteId)
-            .setLong("userId", user.getUserId())
-            .uniqueResult();
+            UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
+                "select meta from org.riverock.webmill.portal.bean.UserMetadataItemBean as meta " +
+                "where  meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=:userId")
+                .setString("metadataName", metadataName)
+                .setLong("siteId", siteId)
+                .setLong("userId", user.getUserId())
+                .uniqueResult();
 
-        if (bean==null) {
-            bean = new UserMetadataItemBean();
-            bean.setSiteId(siteId);
-            bean.setMetadataName(metadataName);
-            bean.setDateValue(dateValue);
-            bean.setUserId(user.getUserId());
+            if (bean==null) {
+                bean = new UserMetadataItemBean();
+                bean.setSiteId(siteId);
+                bean.setMetadataName(metadataName);
+                bean.setDateValue(dateValue);
+                bean.setUserId(user.getUserId());
+            }
+            else {
+                bean.setDateValue(dateValue);
+                bean.setIntValue(null);
+                bean.setStringValue(null);
+            }
+            session.save(bean);
+            session.getTransaction().commit();
         }
-        else {
-            bean.setDateValue(dateValue);
-            bean.setIntValue(null);
-            bean.setStringValue(null);
+        finally {
+            session.close();
         }
-        session.save(bean);
-        session.getTransaction().commit();
     }
 }

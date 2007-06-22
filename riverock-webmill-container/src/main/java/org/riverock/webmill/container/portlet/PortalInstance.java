@@ -50,4 +50,6 @@ public interface PortalInstance {
     ServletConfig getPortalServletConfig();
 
     PortalIndexer getPortalIndexer();
+
+    ClassLoader getPortalClassLoader();
 }

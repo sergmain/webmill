@@ -33,7 +33,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
             <name>default-view</name>
             <value>/riverock/webclip/manager/index.jsp</value>
         </init-param>
-        <expiration-cache>-1</expiration-cache>
+        <expiration-cache>0</expiration-cache>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>VIEW</portlet-mode>
@@ -107,7 +107,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
         <portlet-name>webmill.webclip</portlet-name>
         <display-name>Webmill webclip portlet</display-name>
         <portlet-class>org.riverock.portlet.webclip.WebclipPortlet</portlet-class>
-        <expiration-cache>-1</expiration-cache>
+        <expiration-cache>0</expiration-cache>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>VIEW</portlet-mode>
@@ -119,11 +119,14 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</portlet-info>
     </portlet>
     <portlet>
-        <description>Wiki webclip portlet. This portlet not supported and can be deleted in future.</description>
+        <description>Wiki webclip portlet.</description>
         <portlet-name>webmill.wiki-webclip</portlet-name>
         <display-name>Wiki webclip portlet</display-name>
         <portlet-class>org.riverock.portlet.webclip.WebclipPortlet</portlet-class>
-        <expiration-cache>-1</expiration-cache>
+        <init-param>
+            <name>webmill.portlet-indexer-class-name</name>
+            <value>org.riverock.portlet.webclip.WebclipIndexer</value>
+        </init-param>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>VIEW</portlet-mode>
@@ -153,8 +156,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
             <name>default-view</name>
             <value>/riverock/manager/index.jsp</value>
         </init-param>
-
-        <expiration-cache>-1</expiration-cache>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>VIEW</portlet-mode>
@@ -174,8 +175,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
             <name>default-view</name>
             <value>/riverock/cms/index.jsp</value>
         </init-param>
-
-        <expiration-cache>-1</expiration-cache>
+        <expiration-cache>0</expiration-cache>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>VIEW</portlet-mode>

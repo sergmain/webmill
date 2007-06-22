@@ -44,20 +44,4 @@
             <to-view-id>/riverock/manager/monitor/index.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
-<!--
-    <navigation-rule>
-        <from-view-id>*</from-view-id>
-        <navigation-case>
-            <from-outcome>reload-all-content-action</from-outcome>
-            <to-view-id>/riverock/webclip/manager/index.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>*</from-view-id>
-        <navigation-case>
-            <from-outcome>reload-all-content-action</from-outcome>
-            <to-view-id>/riverock/webclip/manager/index.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
--->
 </faces-config>

@@ -221,7 +221,7 @@ public final class PortalRequestInstance {
 
 
             this.auth = AuthTools.getAuthSession(httpRequest);
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            ClassLoader classLoader = portalInstance.getPortalClassLoader();
             this.portalDaoProvider = new PortalDaoProviderImpl(auth, classLoader);
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);

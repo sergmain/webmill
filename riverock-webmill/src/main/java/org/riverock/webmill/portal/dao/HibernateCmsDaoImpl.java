@@ -58,142 +58,172 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
 
     public void deleteArticleForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<ArticleBean> beans = session.createQuery(
-            "select article " +
-                "from org.riverock.webmill.portal.bean.ArticleBean as article, " +
-                "     org.riverock.webmill.portal.bean.SiteBean site " +
-                "where article.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
-            .setLong("siteId", siteId)
-            .list();
+        try {
+            session.beginTransaction();
+            List<ArticleBean> beans = session.createQuery(
+                "select article " +
+                    "from org.riverock.webmill.portal.bean.ArticleBean as article, " +
+                    "     org.riverock.webmill.portal.bean.SiteBean site " +
+                    "where article.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+                .setLong("siteId", siteId)
+                .list();
 
-        for (ArticleBean articleBean : beans) {
-            session.delete(articleBean);
+            for (ArticleBean articleBean : beans) {
+                session.delete(articleBean);
+            }
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     public void deleteArticleForSiteLanguage(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<ArticleBean> beans = session.createQuery(
-            "select article " +
-                "from org.riverock.webmill.portal.bean.ArticleBean as article " +
-                "where article.siteLanguageId=:siteLanguageId")
-            .setLong("siteLanguageId", siteLanguageId)
-            .list();
+        try {
+            session.beginTransaction();
+            List<ArticleBean> beans = session.createQuery(
+                "select article " +
+                    "from org.riverock.webmill.portal.bean.ArticleBean as article " +
+                    "where article.siteLanguageId=:siteLanguageId")
+                .setLong("siteLanguageId", siteLanguageId)
+                .list();
 
-        for (ArticleBean articleBean : beans) {
-            session.delete(articleBean);
+            for (ArticleBean articleBean : beans) {
+                session.delete(articleBean);
+            }
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     public void deleteNewsForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<NewsBean> beans = session.createQuery(
-            "select news " +
-                "from  org.riverock.webmill.portal.bean.NewsBean news, " +
-                "      org.riverock.webmill.portal.bean.NewsGroupBean newsGroup, " +
-                "      org.riverock.webmill.portal.bean.SiteBean site " +
-                "where news.newsGroupId=newsGroup.newsGroupId and " +
-                "      newsGroup.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
-            .setLong("siteId", siteId)
-            .list();
+        try {
+            session.beginTransaction();
+            List<NewsBean> beans = session.createQuery(
+                "select news " +
+                    "from  org.riverock.webmill.portal.bean.NewsBean news, " +
+                    "      org.riverock.webmill.portal.bean.NewsGroupBean newsGroup, " +
+                    "      org.riverock.webmill.portal.bean.SiteBean site " +
+                    "where news.newsGroupId=newsGroup.newsGroupId and " +
+                    "      newsGroup.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+                .setLong("siteId", siteId)
+                .list();
 
-        for (NewsBean newsBean : beans) {
-            session.delete(newsBean);
+            for (NewsBean newsBean : beans) {
+                session.delete(newsBean);
+            }
+
+            List<NewsGroupBean> groupBeans = session.createQuery(
+                "select newsGroup " +
+                    "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup, " +
+                    "      org.riverock.webmill.portal.bean.SiteBean site " +
+                    "where newsGroup.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
+                .setLong("siteId", siteId)
+                .list();
+
+            for (NewsGroupBean newsGroupBean : groupBeans) {
+                session.delete(newsGroupBean);
+            }
+
+            session.getTransaction().commit();
         }
-
-        List<NewsGroupBean> groupBeans = session.createQuery(
-            "select newsGroup " +
-                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup, " +
-                "      org.riverock.webmill.portal.bean.SiteBean site " +
-                "where newsGroup.siteLanguageId=site.siteLanguageId and site.siteId=:siteId")
-            .setLong("siteId", siteId)
-            .list();
-
-        for (NewsGroupBean newsGroupBean : groupBeans) {
-            session.delete(newsGroupBean);
+        finally {
+            session.close();
         }
-
-        session.getTransaction().commit();
     }
 
     public void deleteNewsForSiteLanguage(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<NewsBean> beans = session.createQuery(
-            "select news " +
-                "from  org.riverock.webmill.portal.bean.NewsBean news, " +
-                "      org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
-                "where news.newsGroupId=newsGroup.newsGroupId and newsGroup.siteLanguageId=:siteLanguageId")
-            .setLong("siteLanguageId", siteLanguageId)
-            .list();
+        try {
+            session.beginTransaction();
+            List<NewsBean> beans = session.createQuery(
+                "select news " +
+                    "from  org.riverock.webmill.portal.bean.NewsBean news, " +
+                    "      org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                    "where news.newsGroupId=newsGroup.newsGroupId and newsGroup.siteLanguageId=:siteLanguageId")
+                .setLong("siteLanguageId", siteLanguageId)
+                .list();
 
-        for (NewsBean newsBean : beans) {
-            session.delete(newsBean);
+            for (NewsBean newsBean : beans) {
+                session.delete(newsBean);
+            }
+
+            List<NewsGroupBean> groupBeans = session.createQuery(
+                "select newsGroup " +
+                    "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                    "where newsGroup.siteLanguageId=:siteLanguageId")
+                .setLong("siteLanguageId", siteLanguageId)
+                .list();
+
+            for (NewsGroupBean newsGroupBean : groupBeans) {
+                session.delete(newsGroupBean);
+            }
+
+            session.getTransaction().commit();
         }
-
-        List<NewsGroupBean> groupBeans = session.createQuery(
-            "select newsGroup " +
-                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
-                "where newsGroup.siteLanguageId=:siteLanguageId")
-            .setLong("siteLanguageId", siteLanguageId)
-            .list();
-
-        for (NewsGroupBean newsGroupBean : groupBeans) {
-            session.delete(newsGroupBean);
+        finally {
+            session.close();
         }
-
-        session.getTransaction().commit();
     }
 
     public List<NewsGroup> getNewsGroupList(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<NewsGroupBean> groupBeans = session.createQuery(
-            "select newsGroup " +
-                "from  org.riverock.webmill.portal.bean.NewsGroupBean as newsGroup " +
-                "where newsGroup.isDeleted=false and newsGroup.siteLanguageId=:siteLanguageId")
-            .setLong("siteLanguageId", siteLanguageId)
-            .list();
-        session.getTransaction().commit();
-        return (List)groupBeans;
+        try {
+            session.beginTransaction();
+            List<NewsGroupBean> groupBeans = session.createQuery(
+                "select newsGroup " +
+                    "from  org.riverock.webmill.portal.bean.NewsGroupBean as newsGroup " +
+                    "where newsGroup.isDeleted=false and newsGroup.siteLanguageId=:siteLanguageId")
+                .setLong("siteLanguageId", siteLanguageId)
+                .list();
+            session.getTransaction().commit();
+            return (List)groupBeans;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public List<News> getNewsList(Long newsGroupId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<NewsBean> beans = session.createQuery(
-            "select news " +
-                "from  org.riverock.webmill.portal.bean.NewsBean news " +
-                "where news.isDeleted=false and news.newsGroupId=:newsGroupId " +
-                "order by news.postDate desc")
-            .setLong("newsGroupId", newsGroupId)
-            .list();
-        for (NewsBean bean : beans) {
-            Blob blob = bean.getNewsBlob();
-            if (blob!=null) {
-                try {
-                    bean.setNewsText( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error get list of News";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (SQLException e) {
-                    String es = "Error get news text";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
+        try {
+            session.beginTransaction();
+            List<NewsBean> beans = session.createQuery(
+                "select news " +
+                    "from  org.riverock.webmill.portal.bean.NewsBean news " +
+                    "where news.isDeleted=false and news.newsGroupId=:newsGroupId " +
+                    "order by news.postDate desc")
+                .setLong("newsGroupId", newsGroupId)
+                .list();
+            for (NewsBean bean : beans) {
+                Blob blob = bean.getNewsBlob();
+                if (blob!=null) {
+                    try {
+                        bean.setNewsText( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get list of News";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get news text";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
                 }
             }
-        }
 
-        session.getTransaction().commit();
-        return (List)beans;
+            session.getTransaction().commit();
+            return (List)beans;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public NewsGroup getNewsGroup(Long newsGroupId) {
@@ -202,97 +232,74 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        NewsGroupBean newsGroup = (NewsGroupBean)session.createQuery(
-            "select newsGroup " +
-                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
-                "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
-            .setLong("newsGroupId", newsGroupId)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return newsGroup;
+        try {
+            session.beginTransaction();
+            NewsGroupBean newsGroup = (NewsGroupBean)session.createQuery(
+                "select newsGroup " +
+                    "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                    "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
+                .setLong("newsGroupId", newsGroupId)
+                .uniqueResult();
+            session.getTransaction().commit();
+            return newsGroup;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public News getNews(Long newsId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        NewsBean news = (NewsBean)session.createQuery(
-            "select news " +
-                "from  org.riverock.webmill.portal.bean.NewsBean news " +
-                "where news.isDeleted=false and news.newsId=:newsId ")
-            .setLong("newsId", newsId)
-            .uniqueResult();
-        if (news!=null) {
-            Blob blob = news.getNewsBlob();
-            if (blob!=null) {
-                try {
-                    news.setNewsText( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error get News";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (SQLException e) {
-                    String es = "Error get news text";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
+        try {
+            session.beginTransaction();
+            NewsBean news = (NewsBean)session.createQuery(
+                "select news " +
+                    "from  org.riverock.webmill.portal.bean.NewsBean news " +
+                    "where news.isDeleted=false and news.newsId=:newsId ")
+                .setLong("newsId", newsId)
+                .uniqueResult();
+            if (news!=null) {
+                Blob blob = news.getNewsBlob();
+                if (blob!=null) {
+                    try {
+                        news.setNewsText( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get News";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get news text";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
                 }
             }
-        }
 
-        session.getTransaction().commit();
-        return news;
+            session.getTransaction().commit();
+            return news;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public Long createNews(News news) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        NewsBean bean = new NewsBean(news);
-        if (bean.getPostDate()==null) {
-            bean.setPostDate(new Date());
-        }
-        if (StringUtils.isNotBlank(bean.getNewsText())) {
-            try {
-                bean.setNewsBlob( Hibernate.createBlob(bean.getNewsText().getBytes(CharEncoding.UTF_8)));
+            NewsBean bean = new NewsBean(news);
+            if (bean.getPostDate()==null) {
+                bean.setPostDate(new Date());
             }
-            catch (UnsupportedEncodingException e) {
-                String es = "Error create News";
-                log.error(es, e);
-                throw new DatabaseException(es, e);
-            }
-        }
-        else {
-            bean.setNewsBlob(null);
-        }
-        session.save(bean);
-        session.flush();
-
-        session.getTransaction().commit();
-
-        return bean.getNewsId();
-    }
-
-    public void updateNews(News news) {
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-
-        NewsBean bean = (NewsBean)session.createQuery(
-            "select news " +
-                "from  org.riverock.webmill.portal.bean.NewsBean news " +
-                "where news.newsId=:newsId ")
-            .setLong("newsId", news.getNewsId())
-            .uniqueResult();
-        if (bean!=null) {
-            bean.setDeleted(news.isDeleted());
-            bean.setNewsAnons(news.getNewsAnons());
-            if (StringUtils.isNotBlank(news.getNewsText())) {
+            if (StringUtils.isNotBlank(bean.getNewsText())) {
                 try {
-                    bean.setNewsBlob( Hibernate.createBlob(news.getNewsText().getBytes(CharEncoding.UTF_8)));
+                    bean.setNewsBlob( Hibernate.createBlob(bean.getNewsText().getBytes(CharEncoding.UTF_8)));
                 }
                 catch (UnsupportedEncodingException e) {
-                    String es = "Error update News";
+                    String es = "Error create News";
                     log.error(es, e);
                     throw new DatabaseException(es, e);
                 }
@@ -300,15 +307,58 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             else {
                 bean.setNewsBlob(null);
             }
+            session.save(bean);
+            session.flush();
 
-            bean.setNewsGroupId(news.getNewsGroupId());
-            bean.setNewsHeader(news.getNewsHeader());
-            if (news.getPostDate()!=null)
-                bean.setPostDate(news.getPostDate());
-            else
-                bean.setPostDate(new Date() );
+            session.getTransaction().commit();
+
+            return bean.getNewsId();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
+    }
+
+    public void updateNews(News news) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            NewsBean bean = (NewsBean)session.createQuery(
+                "select news " +
+                    "from  org.riverock.webmill.portal.bean.NewsBean news " +
+                    "where news.newsId=:newsId ")
+                .setLong("newsId", news.getNewsId())
+                .uniqueResult();
+            if (bean!=null) {
+                bean.setDeleted(news.isDeleted());
+                bean.setNewsAnons(news.getNewsAnons());
+                if (StringUtils.isNotBlank(news.getNewsText())) {
+                    try {
+                        bean.setNewsBlob( Hibernate.createBlob(news.getNewsText().getBytes(CharEncoding.UTF_8)));
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error update News";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                }
+                else {
+                    bean.setNewsBlob(null);
+                }
+
+                bean.setNewsGroupId(news.getNewsGroupId());
+                bean.setNewsHeader(news.getNewsHeader());
+                if (news.getPostDate()!=null)
+                    bean.setPostDate(news.getPostDate());
+                else
+                    bean.setPostDate(new Date() );
+            }
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteNews(Long newsId) {
@@ -317,31 +367,41 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        NewsBean news = (NewsBean)session.createQuery(
-            "select news " +
-                "from  org.riverock.webmill.portal.bean.NewsBean news " +
-                "where news.isDeleted=false and news.newsId=:newsId ")
-            .setLong("newsId", newsId)
-            .uniqueResult();
-        if (news!=null) {
-            news.setDeleted(true);
-        }
+        try {
+            session.beginTransaction();
+            NewsBean news = (NewsBean)session.createQuery(
+                "select news " +
+                    "from  org.riverock.webmill.portal.bean.NewsBean news " +
+                    "where news.isDeleted=false and news.newsId=:newsId ")
+                .setLong("newsId", newsId)
+                .uniqueResult();
+            if (news!=null) {
+                news.setDeleted(true);
+            }
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public Long createNewsGroup(NewsGroup newsGroup) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        NewsGroupBean bean = new NewsGroupBean(newsGroup);
-        session.save(bean);
-        session.flush();
+            NewsGroupBean bean = new NewsGroupBean(newsGroup);
+            session.save(bean);
+            session.flush();
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
 
-        return bean.getNewsGroupId();
+            return bean.getNewsGroupId();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteNewsGroup(Long newsGroupId) {
@@ -350,41 +410,51 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        NewsGroupBean newsGroup = (NewsGroupBean)session.createQuery(
-            "select newsGroup " +
-                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
-                "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
-            .setLong("newsGroupId", newsGroupId)
-            .uniqueResult();
-        if (newsGroup!=null) {
-            newsGroup.setDeleted(true);
+            NewsGroupBean newsGroup = (NewsGroupBean)session.createQuery(
+                "select newsGroup " +
+                    "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                    "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
+                .setLong("newsGroupId", newsGroupId)
+                .uniqueResult();
+            if (newsGroup!=null) {
+                newsGroup.setDeleted(true);
+            }
+
+            session.getTransaction().commit();
         }
-
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     public void updateNewsGroup(NewsGroup newsGroup) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        NewsGroupBean bean = (NewsGroupBean)session.createQuery(
-            "select newsGroup " +
-                "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
-                "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
-            .setLong("newsGroupId", newsGroup.getNewsGroupId())
-            .uniqueResult();
-        if (bean!=null) {
-            bean.setCountNewsPerGroup(newsGroup.getCountNewsPerGroup());
-            bean.setDeleted(newsGroup.isDeleted());
-            bean.setNewsGroupCode(newsGroup.getNewsGroupCode());
-            bean.setNewsGroupName(newsGroup.getNewsGroupName());
-            bean.setOrderField(newsGroup.getOrderField());
-            bean.setSiteLanguageId(newsGroup.getSiteLanguageId());
+            NewsGroupBean bean = (NewsGroupBean)session.createQuery(
+                "select newsGroup " +
+                    "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
+                    "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
+                .setLong("newsGroupId", newsGroup.getNewsGroupId())
+                .uniqueResult();
+            if (bean!=null) {
+                bean.setCountNewsPerGroup(newsGroup.getCountNewsPerGroup());
+                bean.setDeleted(newsGroup.isDeleted());
+                bean.setNewsGroupCode(newsGroup.getNewsGroupCode());
+                bean.setNewsGroupName(newsGroup.getNewsGroupName());
+                bean.setOrderField(newsGroup.getOrderField());
+                bean.setSiteLanguageId(newsGroup.getSiteLanguageId());
+            }
+
+            session.getTransaction().commit();
         }
-
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     public Article getArticleByCode(Long siteLanguageId, String articleCode) {
@@ -393,36 +463,41 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        ArticleBean article = (ArticleBean)session.createQuery(
-            "select article " +
-                "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
-                "where article.isDeleted=false and article.articleCode=:articleCode and " +
-                "      article.siteLanguageId=:siteLanguageId")
-            .setString("articleCode", articleCode)
-            .setLong("siteLanguageId", siteLanguageId)
-            .uniqueResult();
-        if (article!=null) {
-            Blob blob = article.getArticleBlob();
-            if (blob!=null) {
-                try {
-                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error get Article by code.";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (SQLException e) {
-                    String es = "Error get article data";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
+        try {
+            session.beginTransaction();
+            ArticleBean article = (ArticleBean)session.createQuery(
+                "select article " +
+                    "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
+                    "where article.isDeleted=false and article.articleCode=:articleCode and " +
+                    "      article.siteLanguageId=:siteLanguageId")
+                .setString("articleCode", articleCode)
+                .setLong("siteLanguageId", siteLanguageId)
+                .uniqueResult();
+            if (article!=null) {
+                Blob blob = article.getArticleBlob();
+                if (blob!=null) {
+                    try {
+                        article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get Article by code.";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get article data";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
                 }
             }
-        }
 
-        session.getTransaction().commit();
-        return article;
+            session.getTransaction().commit();
+            return article;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public List<Article> getArticleList(Long siteLanguageId, boolean isXml) {
@@ -432,35 +507,40 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<ArticleBean> beans = session.createQuery(
-            "select article " +
-                "from org.riverock.webmill.portal.bean.ArticleBean as article " +
-                "where article.isDeleted=false and article.isPlain=:isPlain and article.siteLanguageId=:siteLanguageId")
-            .setBoolean("isPlain", !isXml)
-            .setLong("siteLanguageId", siteLanguageId)
-            .list();
+        try {
+            session.beginTransaction();
+            List<ArticleBean> beans = session.createQuery(
+                "select article " +
+                    "from org.riverock.webmill.portal.bean.ArticleBean as article " +
+                    "where article.isDeleted=false and article.isPlain=:isPlain and article.siteLanguageId=:siteLanguageId")
+                .setBoolean("isPlain", !isXml)
+                .setLong("siteLanguageId", siteLanguageId)
+                .list();
 
-        for (ArticleBean article : beans) {
-            Blob blob = article.getArticleBlob();
-            if (blob!=null) {
-                try {
-                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error get list of Articles";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (SQLException e) {
-                    String es = "Error get article data";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
+            for (ArticleBean article : beans) {
+                Blob blob = article.getArticleBlob();
+                if (blob!=null) {
+                    try {
+                        article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get list of Articles";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get article data";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
                 }
             }
+            session.getTransaction().commit();
+            return (List)beans;
         }
-        session.getTransaction().commit();
-        return (List)beans;
+        finally {
+            session.close();
+        }
     }
 
     public Article getArticle(Long articleId) {
@@ -469,92 +549,56 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        ArticleBean article = (ArticleBean)session.createQuery(
-            "select article " +
-                "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
-                "where article.isDeleted=false and article.articleId=:articleId")
-            .setLong("articleId", articleId)
-            .uniqueResult();
-        if (article!=null) {
-            Blob blob = article.getArticleBlob();
-            if (blob!=null) {
-                try {
-                    article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error get Article";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (SQLException e) {
-                    String es = "Error get article data";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
+        try {
+            session.beginTransaction();
+            ArticleBean article = (ArticleBean)session.createQuery(
+                "select article " +
+                    "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
+                    "where article.isDeleted=false and article.articleId=:articleId")
+                .setLong("articleId", articleId)
+                .uniqueResult();
+            if (article!=null) {
+                Blob blob = article.getArticleBlob();
+                if (blob!=null) {
+                    try {
+                        article.setArticleData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get Article";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get article data";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
                 }
             }
-        }
 
-        session.getTransaction().commit();
-        return article;
+            session.getTransaction().commit();
+            return article;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public Long createArticle(Article article) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        ArticleBean bean = new ArticleBean(article);
-        if (bean.getPostDate()==null) {
-            bean.setPostDate(new Date());
-        }
-        if (StringUtils.isNotBlank(bean.getArticleData())) {
-            try {
-                bean.setArticleBlob( Hibernate.createBlob(bean.getArticleData().getBytes(CharEncoding.UTF_8)));
+            ArticleBean bean = new ArticleBean(article);
+            if (bean.getPostDate()==null) {
+                bean.setPostDate(new Date());
             }
-            catch (UnsupportedEncodingException e) {
-                String es = "Error create Article";
-                log.error(es, e);
-                throw new DatabaseException(es, e);
-            }
-        }
-        else {
-            bean.setArticleBlob(null);
-        }
-
-        session.save(bean);
-        session.flush();
-
-        session.getTransaction().commit();
-
-        return bean.getArticleId();
-    }
-
-    public void updateArticle(Article article) {
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-
-        ArticleBean bean = (ArticleBean)session.createQuery(
-            "select article " +
-                "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
-                "where article.articleId=:articleId ")
-            .setLong("articleId", article.getArticleId())
-            .uniqueResult();
-
-        if (bean!=null) {
-            bean.setUserId(article.getUserId());
-            bean.setArticleCode(article.getArticleCode());
-            bean.setArticleName(article.getArticleName());
-            bean.setPostDate(article.getPostDate());
-            bean.setPlain(article.isPlain());
-            bean.setPostDate(article.getPostDate());
-            bean.setPlain(article.isPlain());
-            bean.setSiteLanguageId(article.getSiteLanguageId());
-            if (StringUtils.isNotBlank(article.getArticleData())) {
+            if (StringUtils.isNotBlank(bean.getArticleData())) {
                 try {
-                    bean.setArticleBlob( Hibernate.createBlob(article.getArticleData().getBytes(CharEncoding.UTF_8)));
+                    bean.setArticleBlob( Hibernate.createBlob(bean.getArticleData().getBytes(CharEncoding.UTF_8)));
                 }
                 catch (UnsupportedEncodingException e) {
-                    String es = "Error update Article";
+                    String es = "Error create Article";
                     log.error(es, e);
                     throw new DatabaseException(es, e);
                 }
@@ -562,8 +606,59 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             else {
                 bean.setArticleBlob(null);
             }
+
+            session.save(bean);
+            session.flush();
+
+            session.getTransaction().commit();
+
+            return bean.getArticleId();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
+    }
+
+    public void updateArticle(Article article) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            ArticleBean bean = (ArticleBean)session.createQuery(
+                "select article " +
+                    "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
+                    "where article.articleId=:articleId ")
+                .setLong("articleId", article.getArticleId())
+                .uniqueResult();
+
+            if (bean!=null) {
+                bean.setUserId(article.getUserId());
+                bean.setArticleCode(article.getArticleCode());
+                bean.setArticleName(article.getArticleName());
+                bean.setPostDate(article.getPostDate());
+                bean.setPlain(article.isPlain());
+                bean.setPostDate(article.getPostDate());
+                bean.setPlain(article.isPlain());
+                bean.setSiteLanguageId(article.getSiteLanguageId());
+                if (StringUtils.isNotBlank(article.getArticleData())) {
+                    try {
+                        bean.setArticleBlob( Hibernate.createBlob(article.getArticleData().getBytes(CharEncoding.UTF_8)));
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error update Article";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                }
+                else {
+                    bean.setArticleBlob(null);
+                }
+            }
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteArticle(Long articleId) {
@@ -572,19 +667,24 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        ArticleBean bean = (ArticleBean)session.createQuery(
-            "select article " +
-                "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
-                "where article.articleId=:articleId ")
-            .setLong("articleId", articleId)
-            .uniqueResult();
+            ArticleBean bean = (ArticleBean)session.createQuery(
+                "select article " +
+                    "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
+                    "where article.articleId=:articleId ")
+                .setLong("articleId", articleId)
+                .uniqueResult();
 
-        if (bean!=null) {
-            session.delete(bean);
+            if (bean!=null) {
+                session.delete(bean);
+            }
+
+            session.getTransaction().commit();
         }
-
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 }

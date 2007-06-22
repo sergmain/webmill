@@ -55,16 +55,21 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             log.debug("Start getTemplateInternal() for templateId "+ templateId);
         }
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        TemplateBean bean = (TemplateBean)session.createQuery(
-            "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.templateId=:templateId ")
-            .setLong("templateId", templateId)
-            .uniqueResult();
+        try {
+            session.beginTransaction();
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.templateId=:templateId ")
+                .setLong("templateId", templateId)
+                .uniqueResult();
 
-        prepareBlob(bean);
-        session.getTransaction().commit();
-        return bean;
+            prepareBlob(bean);
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     private static void prepareBlob(TemplateBean bean) {
@@ -90,17 +95,22 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
 
     public Template getTemplate(String templateName, Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        TemplateBean bean = (TemplateBean)session.createQuery(
-            "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.templateName=:templateName and template.siteLanguageId=:siteLanguageId ")
-            .setString("templateName", templateName)
-            .setLong("siteLanguageId", siteLanguageId)
-            .uniqueResult();
+        try {
+            session.beginTransaction();
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.templateName=:templateName and template.siteLanguageId=:siteLanguageId ")
+                .setString("templateName", templateName)
+                .setLong("siteLanguageId", siteLanguageId)
+                .uniqueResult();
 
-        prepareBlob(bean);
-        session.getTransaction().commit();
-        return bean;
+            prepareBlob(bean);
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     /**
@@ -112,21 +122,26 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
      */
     public Template getTemplate(Long  siteId, String templateName, String lang) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        TemplateBean bean = (TemplateBean)session.createQuery(
-            "select template " +
-                "from  org.riverock.webmill.portal.bean.TemplateBean as template, " +
-                "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLang " +
-                "where template.templateName=:templateName and template.siteLanguageId=siteLang.siteLanguageId and " +
-                "      siteLang.customLanguage=:customLanguage and siteLang.siteId=:siteId")
-            .setString("templateName", templateName)
-            .setString("customLanguage", lang)
-            .setLong("siteId", siteId)
-            .uniqueResult();
+        try {
+            session.beginTransaction();
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template " +
+                    "from  org.riverock.webmill.portal.bean.TemplateBean as template, " +
+                    "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLang " +
+                    "where template.templateName=:templateName and template.siteLanguageId=siteLang.siteLanguageId and " +
+                    "      siteLang.customLanguage=:customLanguage and siteLang.siteId=:siteId")
+                .setString("templateName", templateName)
+                .setString("customLanguage", lang)
+                .setLong("siteId", siteId)
+                .uniqueResult();
 
-        // Do not process blob at this point
-        session.getTransaction().commit();
-        return bean;
+            // Do not process blob at this point
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     static String templateLanguageSql =
@@ -137,18 +152,23 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
 
     public List<Template> getTemplateLanguageList(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<TemplateBean> bean = session.createQuery(
-            "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-            "where  template.siteLanguageId=:siteLanguageId")
-            .setLong("siteLanguageId", siteLanguageId)
-            .list();
+        try {
+            session.beginTransaction();
+            List<TemplateBean> bean = session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                "where  template.siteLanguageId=:siteLanguageId")
+                .setLong("siteLanguageId", siteLanguageId)
+                .list();
 
-        for (TemplateBean templateBean : bean) {
-            prepareBlob(templateBean);
+            for (TemplateBean templateBean : bean) {
+                prepareBlob(templateBean);
+            }
+            session.getTransaction().commit();
+            return (List)bean;
         }
-        session.getTransaction().commit();
-        return (List)bean;
+        finally {
+            session.close();
+        }
     }
 
     public List<Template> getTemplateList(Long siteId) {
@@ -156,120 +176,46 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             log.debug("Start getTemplateList(), siteId: " +siteId);
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<TemplateBean> beans = session.createQuery(
-            "select template " +
-                "from  org.riverock.webmill.portal.bean.TemplateBean as template," +
-                "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLanguage " +
-                "where template.siteLanguageId=siteLanguage.siteLanguageId and " +
-                "      siteLanguage.siteId=:siteId")
-            .setLong("siteId", siteId)
-            .list();
-        for (TemplateBean templateBean : beans) {
-            prepareBlob(templateBean);
+        try {
+            session.beginTransaction();
+            List<TemplateBean> beans = session.createQuery(
+                "select template " +
+                    "from  org.riverock.webmill.portal.bean.TemplateBean as template," +
+                    "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLanguage " +
+                    "where template.siteLanguageId=siteLanguage.siteLanguageId and " +
+                    "      siteLanguage.siteId=:siteId")
+                .setLong("siteId", siteId)
+                .list();
+            for (TemplateBean templateBean : beans) {
+                prepareBlob(templateBean);
+            }
+            session.getTransaction().commit();
+            return (List)beans;
         }
-        session.getTransaction().commit();
-        return (List)beans;
+        finally {
+            session.close();
+        }
     }
 
     public Long createTemplate(Template template) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        TemplateBean bean;
+            TemplateBean bean;
 
-        if (template.isDefaultDynamic()) {
-            bean = (TemplateBean)session.createQuery(
-                    "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                            "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
-                    .setLong("siteLanguageId", template.getSiteLanguageId())
-                    .uniqueResult();
-            if (bean!=null) {
-                bean.setDefaultDynamic(false);
+            if (template.isDefaultDynamic()) {
+                bean = (TemplateBean)session.createQuery(
+                        "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                                "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
+                        .setLong("siteLanguageId", template.getSiteLanguageId())
+                        .uniqueResult();
+                if (bean!=null) {
+                    bean.setDefaultDynamic(false);
+                }
             }
-        }
 
-        bean = new TemplateBean();
-        bean.setDefaultDynamic(template.isDefaultDynamic());
-        bean.setSiteLanguageId(template.getSiteLanguageId());
-        bean.setTemplateName(template.getTemplateName());
-        if (StringUtils.isNotBlank(template.getTemplateData())) {
-            try {
-                bean.setTemplateBlob( Hibernate.createBlob(template.getTemplateData().getBytes(CharEncoding.UTF_8)));
-            }
-            catch (UnsupportedEncodingException e) {
-                String es = "Error create Template";
-                log.error(es, e);
-                throw new DatabaseException(es, e);
-            }
-        }
-        else {
-            bean.setTemplateBlob(null);
-        }
-        session.save(bean);
-        session.flush();
-        session.getTransaction().commit();
-        return bean.getTemplateId();
-    }
-
-    public void deleteTemplateForSite(Long siteId) {
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-
-        List<TemplateBean> bean = session.createQuery(
-            "select template " +
-                "from  org.riverock.webmill.portal.bean.TemplateBean as template," +
-                "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLanguage " +
-                "where template.siteLanguageId=siteLanguage.siteLanguageId and " +
-                "      siteLanguage.siteId=:siteId")
-            .setLong("siteId", siteId)
-            .list();
-        for (TemplateBean templateBean : bean) {
-            session.delete(templateBean);
-        }
-        session.getTransaction().commit();
-    }
-
-    public void deleteTemplateForSiteLanguage(Long siteLanguageId) {
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-
-        List<TemplateBean> templateBeans = session.createQuery(
-            "select template " +
-                "from  org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.siteLanguageId=:siteLanguageId")
-            .setLong("siteLanguageId", siteLanguageId)
-            .list();
-        for (TemplateBean templateBean : templateBeans) {
-            session.delete(templateBean);
-        }
-        session.getTransaction().commit();
-    }
-
-    public void updateTemplate(Template template) {
-        Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-
-        TemplateBean bean;
-
-        if (template.isDefaultDynamic()) {
-            bean = (TemplateBean)session.createQuery(
-                    "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                            "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
-                    .setLong("siteLanguageId", template.getSiteLanguageId())
-                    .uniqueResult();
-            if (bean!=null) {
-                bean.setDefaultDynamic(false);
-            }
-        }
-
-        bean = (TemplateBean)session.createQuery(
-            "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.templateId=:templateId ")
-            .setLong("templateId", template.getTemplateId())
-            .uniqueResult();
-
-        if (bean!=null) {
+            bean = new TemplateBean();
             bean.setDefaultDynamic(template.isDefaultDynamic());
             bean.setSiteLanguageId(template.getSiteLanguageId());
             bean.setTemplateName(template.getTemplateName());
@@ -278,7 +224,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                     bean.setTemplateBlob( Hibernate.createBlob(template.getTemplateData().getBytes(CharEncoding.UTF_8)));
                 }
                 catch (UnsupportedEncodingException e) {
-                    String es = "Error update Template";
+                    String es = "Error create Template";
                     log.error(es, e);
                     throw new DatabaseException(es, e);
                 }
@@ -286,37 +232,146 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             else {
                 bean.setTemplateBlob(null);
             }
-
+            session.save(bean);
+            session.flush();
+            session.getTransaction().commit();
+            return bean.getTemplateId();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
+    }
+
+    public void deleteTemplateForSite(Long siteId) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            List<TemplateBean> bean = session.createQuery(
+                "select template " +
+                    "from  org.riverock.webmill.portal.bean.TemplateBean as template," +
+                    "      org.riverock.webmill.portal.bean.SiteLanguageBean siteLanguage " +
+                    "where template.siteLanguageId=siteLanguage.siteLanguageId and " +
+                    "      siteLanguage.siteId=:siteId")
+                .setLong("siteId", siteId)
+                .list();
+            for (TemplateBean templateBean : bean) {
+                session.delete(templateBean);
+            }
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public void deleteTemplateForSiteLanguage(Long siteLanguageId) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            List<TemplateBean> templateBeans = session.createQuery(
+                "select template " +
+                    "from  org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.siteLanguageId=:siteLanguageId")
+                .setLong("siteLanguageId", siteLanguageId)
+                .list();
+            for (TemplateBean templateBean : templateBeans) {
+                session.delete(templateBean);
+            }
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public void updateTemplate(Template template) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            TemplateBean bean;
+
+            if (template.isDefaultDynamic()) {
+                bean = (TemplateBean)session.createQuery(
+                        "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                                "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
+                        .setLong("siteLanguageId", template.getSiteLanguageId())
+                        .uniqueResult();
+                if (bean!=null) {
+                    bean.setDefaultDynamic(false);
+                }
+            }
+
+            bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.templateId=:templateId ")
+                .setLong("templateId", template.getTemplateId())
+                .uniqueResult();
+
+            if (bean!=null) {
+                bean.setDefaultDynamic(template.isDefaultDynamic());
+                bean.setSiteLanguageId(template.getSiteLanguageId());
+                bean.setTemplateName(template.getTemplateName());
+                if (StringUtils.isNotBlank(template.getTemplateData())) {
+                    try {
+                        bean.setTemplateBlob( Hibernate.createBlob(template.getTemplateData().getBytes(CharEncoding.UTF_8)));
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error update Template";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                }
+                else {
+                    bean.setTemplateBlob(null);
+                }
+
+            }
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteTemplate(Long templateId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        TemplateBean bean = (TemplateBean)session.createQuery(
-            "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.templateId=:templateId ")
-            .setLong("templateId", templateId)
-            .uniqueResult();
-        
-        if (bean!=null) {
-            session.delete(bean);
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.templateId=:templateId ")
+                .setLong("templateId", templateId)
+                .uniqueResult();
+
+            if (bean!=null) {
+                session.delete(bean);
+            }
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     public Template getDefaultDynamicTemplate(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        TemplateBean bean = (TemplateBean)session.createQuery(
-            "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
-            .setLong("siteLanguageId", siteLanguageId)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
+                .setLong("siteLanguageId", siteLanguageId)
+                .uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 }

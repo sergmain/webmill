@@ -82,8 +82,12 @@ portlet.
         }
 
         CacheEntry entry = contentCache.get( portletDefinition.getFullPortletName() );
-        if (entry==null)
+        if (entry==null) {
             return null;
+        }
+        if (exp==-1) {
+            return entry.data;
+        }
 
         if (exp <((System.currentTimeMillis()-entry.lastInitTime)/1000) )  {
             contentCache.remove( portletDefinition.getFullPortletName() );
@@ -93,21 +97,19 @@ portlet.
     }
 
     public void setContent( PortletDefinition portletDefinition, SitePortletData data, RenderRequest renderRequest ) {
-        if (data==null || portletDefinition.getExpirationCache()==null)
+        if (data==null || portletDefinition.getExpirationCache()==null) {
             return;
+        }
 
+        // expiration-cache already checked for null
         int expirationTime = portletDefinition.getExpirationCache();
 
         String exp = renderRequest.getProperty( RenderResponse.EXPIRATION_CACHE );
-        try {
-            if (exp!=null)
-                expirationTime = Integer.parseInt( exp );
-        }
-        catch( NumberFormatException e ) {
-            //Todo decide - throw or not exception?
+        if (exp!=null) {
+            expirationTime = Integer.parseInt( exp );
         }
 
-        if (expirationTime<0) {
+        if (expirationTime==0) {
             contentCache.remove( portletDefinition.getFullPortletName() );
             return;
         }

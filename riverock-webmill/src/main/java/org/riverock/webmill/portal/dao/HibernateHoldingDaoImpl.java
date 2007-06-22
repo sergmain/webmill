@@ -50,26 +50,31 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        HoldingBean bean = (HoldingBean)session.createQuery(
-            "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
-            "where  holding.id=:holdingId and holding.id in (:holdingIds)")
-            .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
-            .setLong("holdingId", holdingId)
-            .uniqueResult();
+        try {
+            session.beginTransaction();
+            HoldingBean bean = (HoldingBean)session.createQuery(
+                "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
+                "where  holding.id=:holdingId and holding.id in (:holdingIds)")
+                .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
+                .setLong("holdingId", holdingId)
+                .uniqueResult();
 
-        if (bean!=null) {
-            bean.setCompanyIdList(
-                session.createQuery(
-                    "select relate.companyId " +
-                        "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
-                        "where relate.holdingId=:holdingId")
-                    .setLong("holdingId", holdingId)
-                    .list()
-            );
+            if (bean!=null) {
+                bean.setCompanyIdList(
+                    session.createQuery(
+                        "select relate.companyId " +
+                            "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
+                            "where relate.holdingId=:holdingId")
+                        .setLong("holdingId", holdingId)
+                        .list()
+                );
+            }
+            session.getTransaction().commit();
+            return bean;
         }
-        session.getTransaction().commit();
-        return bean;
+        finally {
+            session.close();
+        }
     }
 
     public List<Holding> getHoldingList( AuthSession authSession ) {
@@ -78,31 +83,36 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<Long> list = authSession.getGrantedHoldingIdList();
-        List<HoldingBean> bean;
-        if (!list.isEmpty()) {
-            bean = session.createQuery(
-                "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
-                    "where  holding.id in (:holdingIds)")
-                .setParameterList("holdingIds", list)
-                .list();
-            for (HoldingBean holdingBean : bean) {
-                holdingBean.setCompanyIdList(
-                    session.createQuery(
-                        "select relate.companyId " +
-                        "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
-                        "where relate.holdingId=:holdingId")
-                    .setLong("holdingId", holdingBean.getId())
-                    .list()
-                );
+        try {
+            session.beginTransaction();
+            List<Long> list = authSession.getGrantedHoldingIdList();
+            List<HoldingBean> bean;
+            if (!list.isEmpty()) {
+                bean = session.createQuery(
+                    "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
+                        "where  holding.id in (:holdingIds)")
+                    .setParameterList("holdingIds", list)
+                    .list();
+                for (HoldingBean holdingBean : bean) {
+                    holdingBean.setCompanyIdList(
+                        session.createQuery(
+                            "select relate.companyId " +
+                            "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
+                            "where relate.holdingId=:holdingId")
+                        .setLong("holdingId", holdingBean.getId())
+                        .list()
+                    );
+                }
             }
+            else {
+                bean = new ArrayList<HoldingBean>();
+            }
+            session.getTransaction().commit();
+            return (List)bean;
         }
-        else {
-            bean = new ArrayList<HoldingBean>();
+        finally {
+            session.close();
         }
-        session.getTransaction().commit();
-        return (List)bean;
     }
 
     public Long processAddHolding( Holding holdingBean, AuthSession authSession ) {
@@ -111,21 +121,26 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        HoldingBean bean = new HoldingBean(holdingBean);
-        session.save(bean);
+        try {
+            session.beginTransaction();
+            HoldingBean bean = new HoldingBean(holdingBean);
+            session.save(bean);
 
-        if (authSession!=null && holdingBean.getCompanyIdList()!=null) {
-            for (Long companyId : holdingBean.getCompanyIdList()) {
-                HoldingCompanyRelationBean relate = new HoldingCompanyRelationBean();
-                relate.setCompanyId(companyId);
-                relate.setHoldingId(bean.getId());
-                session.save(relate);
+            if (authSession!=null && holdingBean.getCompanyIdList()!=null) {
+                for (Long companyId : holdingBean.getCompanyIdList()) {
+                    HoldingCompanyRelationBean relate = new HoldingCompanyRelationBean();
+                    relate.setCompanyId(companyId);
+                    relate.setHoldingId(bean.getId());
+                    session.save(relate);
+                }
             }
+            session.flush();
+            session.getTransaction().commit();
+            return bean.getId();
         }
-        session.flush();
-        session.getTransaction().commit();
-        return bean.getId();
+        finally {
+            session.close();
+        }
     }
 
     public void processSaveHolding( Holding holdingBean, AuthSession authSession ) {
@@ -134,43 +149,48 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        HoldingBean bean = (HoldingBean)session.createQuery(
-            "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
-            "where  holding.id=:holdingId and holding.id in (:holdingIds)")
-            .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
-            .setLong("holdingId", holdingBean.getId())
-            .uniqueResult();
+            HoldingBean bean = (HoldingBean)session.createQuery(
+                "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
+                "where  holding.id=:holdingId and holding.id in (:holdingIds)")
+                .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
+                .setLong("holdingId", holdingBean.getId())
+                .uniqueResult();
 
-        if (bean==null) {
-            session.getTransaction().commit();
-            return;
-        }
-
-        bean.setName(holdingBean.getName());
-        bean.setShortName(holdingBean.getShortName());
-
-        List<HoldingCompanyRelationBean> relate = session.createQuery(
-            "select relate " +
-                "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
-                "where relate.holdingId=:holdingId")
-            .setLong("holdingId", holdingBean.getId())
-            .list();
-
-        for (HoldingCompanyRelationBean holdingCompanyRelationBean : relate) {
-            session.delete(holdingCompanyRelationBean);
-        }
-
-        if (holdingBean.getCompanyIdList()!=null) {
-            for (Long companyId : holdingBean.getCompanyIdList()) {
-                HoldingCompanyRelationBean relateBean = new HoldingCompanyRelationBean();
-                relateBean.setCompanyId(companyId);
-                relateBean.setHoldingId(bean.getId());
-                session.save(relateBean);
+            if (bean==null) {
+                session.getTransaction().commit();
+                return;
             }
+
+            bean.setName(holdingBean.getName());
+            bean.setShortName(holdingBean.getShortName());
+
+            List<HoldingCompanyRelationBean> relate = session.createQuery(
+                "select relate " +
+                    "from  org.riverock.webmill.portal.bean.HoldingCompanyRelationBean as relate " +
+                    "where relate.holdingId=:holdingId")
+                .setLong("holdingId", holdingBean.getId())
+                .list();
+
+            for (HoldingCompanyRelationBean holdingCompanyRelationBean : relate) {
+                session.delete(holdingCompanyRelationBean);
+            }
+
+            if (holdingBean.getCompanyIdList()!=null) {
+                for (Long companyId : holdingBean.getCompanyIdList()) {
+                    HoldingCompanyRelationBean relateBean = new HoldingCompanyRelationBean();
+                    relateBean.setCompanyId(companyId);
+                    relateBean.setHoldingId(bean.getId());
+                    session.save(relateBean);
+                }
+            }
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     public void processDeleteHolding( Holding holdingBean, AuthSession authSession ) {
@@ -179,37 +199,47 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        HoldingBean bean = (HoldingBean)session.createQuery(
-            "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
-            "where  holding.id=:holdingId and holding.id in (:holdingIds)")
-            .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
-            .setLong("holdingId", holdingBean.getId())
-            .uniqueResult();
+            HoldingBean bean = (HoldingBean)session.createQuery(
+                "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
+                "where  holding.id=:holdingId and holding.id in (:holdingIds)")
+                .setParameterList("holdingIds", authSession.getGrantedHoldingIdList())
+                .setLong("holdingId", holdingBean.getId())
+                .uniqueResult();
 
-        if (bean==null) {
-            session.getTransaction().commit();
-            return;
-        }
-        session.createQuery(
+            if (bean==null) {
+                session.getTransaction().commit();
+                return;
+            }
+            session.createQuery(
             "delete org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate " +
-                "where relate.holdingId=:holdingId")
-            .setLong("holdingId", holdingBean.getId())
-            .executeUpdate();
-        session.delete(bean);
+                    "where relate.holdingId=:holdingId")
+                .setLong("holdingId", holdingBean.getId())
+                .executeUpdate();
+            session.delete(bean);
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void setRelateHoldingCompany(Long holdingId, Long companyId ) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        HoldingCompanyRelationBean relateBean = new HoldingCompanyRelationBean();
-        relateBean.setCompanyId(companyId);
-        relateBean.setHoldingId(holdingId);
-        session.save(relateBean);
-        session.getTransaction().commit();
+            HoldingCompanyRelationBean relateBean = new HoldingCompanyRelationBean();
+            relateBean.setCompanyId(companyId);
+            relateBean.setHoldingId(holdingId);
+            session.save(relateBean);
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 }

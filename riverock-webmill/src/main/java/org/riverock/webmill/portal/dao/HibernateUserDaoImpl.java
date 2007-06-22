@@ -48,15 +48,20 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        UserBean bean = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
-            "where  user.userId=:userId and user.companyId in (:companyIds)")
-            .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
-            .setLong("userId", portalUserId)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            UserBean bean = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+                "where  user.userId=:userId and user.companyId in (:companyIds)")
+                .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
+                .setLong("userId", portalUserId)
+                .uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public User getUserByEMail(String eMail) {
@@ -65,26 +70,36 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        UserBean bean = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
-            "where  user.email=:email")
-            .setString("email", eMail)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            UserBean bean = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+                "where  user.email=:email")
+                .setString("email", eMail)
+                .uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public List<User> getUserList(AuthSession authSession) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List list = session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
-            "where  user.isDeleted=false and user.companyId in (:companyIds)")
-            .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
-            .list();
-        session.getTransaction().commit();
-        return list;
+        try {
+            session.beginTransaction();
+            List list = session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+                "where  user.isDeleted=false and user.companyId in (:companyIds)")
+                .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
+                .list();
+            session.getTransaction().commit();
+            return list;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public Long addUser(User portalUserBean) {
@@ -93,13 +108,18 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        UserBean bean = new UserBean(portalUserBean);
-        session.save(bean);
+        try {
+            session.beginTransaction();
+            UserBean bean = new UserBean(portalUserBean);
+            session.save(bean);
 
-        session.flush();
-        session.getTransaction().commit();
-        return bean.getUserId();
+            session.flush();
+            session.getTransaction().commit();
+            return bean.getUserId();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void updateUser(User portalUserBean, AuthSession authSession) {
@@ -108,27 +128,32 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        UserBean bean = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
-            "where  user.userId=:userId and user.isDeleted=false and user.companyId in (:companyIds)")
-            .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
-            .setLong("userId", portalUserBean.getUserId())
-            .uniqueResult();
+            UserBean bean = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+                "where  user.userId=:userId and user.isDeleted=false and user.companyId in (:companyIds)")
+                .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
+                .setLong("userId", portalUserBean.getUserId())
+                .uniqueResult();
 
-        if (bean==null) {
+            if (bean==null) {
+                session.getTransaction().commit();
+                return;
+            }
+            bean.setFirstName(portalUserBean.getFirstName());
+            bean.setMiddleName(portalUserBean.getMiddleName());
+            bean.setLastName(portalUserBean.getLastName());
+            bean.setAddress(portalUserBean.getAddress());
+            bean.setPhone(portalUserBean.getPhone());
+            bean.setEmail(portalUserBean.getEmail());
+
             session.getTransaction().commit();
-            return;
         }
-        bean.setFirstName(portalUserBean.getFirstName());
-        bean.setMiddleName(portalUserBean.getMiddleName());
-        bean.setLastName(portalUserBean.getLastName());
-        bean.setAddress(portalUserBean.getAddress());
-        bean.setPhone(portalUserBean.getPhone());
-        bean.setEmail(portalUserBean.getEmail());
-
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     public void deleteUser(User portalUserBean, AuthSession authSession) {
@@ -138,15 +163,20 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        session.createQuery(
+            session.createQuery(
             "delete org.riverock.webmill.portal.bean.UserBean user " +
-            "where  user.userId=:userId and user.isDeleted=false and user.companyId in (:companyIds)")
-            .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
-            .setLong("userId", portalUserBean.getUserId())
-            .executeUpdate();
-        session.getTransaction().commit();
+                "where  user.userId=:userId and user.isDeleted=false and user.companyId in (:companyIds)")
+                .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
+                .setLong("userId", portalUserBean.getUserId())
+                .executeUpdate();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     /**
@@ -155,13 +185,18 @@ public class HibernateUserDaoImpl implements InternalUserDao {
      */
     public List<User> getUserList_notRestricted() {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List list = session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
-            "where  user.isDeleted=false")
-            .list();
-        session.getTransaction().commit();
-        return list;
+        try {
+            session.beginTransaction();
+            List list = session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+                "where  user.isDeleted=false")
+                .list();
+            session.getTransaction().commit();
+            return list;
+        }
+        finally {
+            session.close();
+        }
     }
 
     /**
@@ -176,14 +211,19 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        UserBean bean = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
-            "where  user.userId=:userId ")
-            .setLong("userId", userId)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            UserBean bean = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+                "where  user.userId=:userId ")
+                .setLong("userId", userId)
+                .uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     /**
@@ -197,25 +237,30 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        UserBean bean = (UserBean)session.createQuery(
-            "select user from org.riverock.webmill.portal.bean.UserBean as user " +
-            "where  user.userId=:userId and user.isDeleted=false")
-            .setLong("userId", user.getUserId())
-            .uniqueResult();
+            UserBean bean = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+                "where  user.userId=:userId and user.isDeleted=false")
+                .setLong("userId", user.getUserId())
+                .uniqueResult();
 
-        if (bean==null) {
+            if (bean==null) {
+                session.getTransaction().commit();
+                return;
+            }
+            bean.setFirstName(user.getFirstName());
+            bean.setMiddleName(user.getMiddleName());
+            bean.setLastName(user.getLastName());
+            bean.setAddress(user.getAddress());
+            bean.setPhone(user.getPhone());
+            bean.setEmail(user.getEmail());
+
             session.getTransaction().commit();
-            return;
         }
-        bean.setFirstName(user.getFirstName());
-        bean.setMiddleName(user.getMiddleName());
-        bean.setLastName(user.getLastName());
-        bean.setAddress(user.getAddress());
-        bean.setPhone(user.getPhone());
-        bean.setEmail(user.getEmail());
-
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 }

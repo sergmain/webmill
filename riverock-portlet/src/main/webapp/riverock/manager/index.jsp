@@ -28,7 +28,7 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t"%>
 
 
-<f:view>
+<f:view >
 <h:form id="foo" rendered="#{isUserInRole['webmill.authentic']}">
 
         <f:subview id="select-index-subview">
