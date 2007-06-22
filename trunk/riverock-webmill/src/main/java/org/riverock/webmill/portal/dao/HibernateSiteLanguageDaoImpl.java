@@ -48,91 +48,126 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
             throw new IllegalArgumentException("siteId is null");
         }
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List<SiteLanguageBean> cssList = (List)session.createQuery(
-            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-            "where siteLanguage.siteId = :site_id")
-            .setLong("site_id", siteId)
-            .list();
-        session.getTransaction().commit();
-        return (List)cssList;
+        try {
+            session.beginTransaction();
+            List<SiteLanguageBean> cssList = (List)session.createQuery(
+                "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where siteLanguage.siteId = :site_id")
+                .setLong("site_id", siteId)
+                .list();
+            session.getTransaction().commit();
+            return (List)cssList;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public SiteLanguage getSiteLanguage(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        Query query = session.createQuery(
-            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-            "where siteLanguage.siteLanguageId = :site_language_id");
-        query.setLong("site_language_id", siteLanguageId);
-        SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery(
+                "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where siteLanguage.siteLanguageId = :site_language_id");
+            query.setLong("site_language_id", siteLanguageId);
+            SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public SiteLanguage getSiteLanguage(Long siteId, String languageLocale) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        Query query = session.createQuery(
-            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-            "where siteLanguage.siteId = :site_id and siteLanguage.customLanguage = :custom_language ");
-        query.setLong("site_id", siteId);
-        query.setString("custom_language", languageLocale);
-        SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery(
+                "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where siteLanguage.siteId = :site_id and siteLanguage.customLanguage = :custom_language ");
+            query.setLong("site_id", siteId);
+            query.setString("custom_language", languageLocale);
+            SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public Long createSiteLanguage(SiteLanguage siteLanguage) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        SiteLanguageBean bean = new SiteLanguageBean(siteLanguage);
-        session.save(bean);
-        session.flush();
-        session.getTransaction().commit();
-        return bean.getSiteLanguageId();
+        try {
+            session.beginTransaction();
+            SiteLanguageBean bean = new SiteLanguageBean(siteLanguage);
+            session.save(bean);
+            session.flush();
+            session.getTransaction().commit();
+            return bean.getSiteLanguageId();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void updateSiteLanguage(SiteLanguage siteLanguage) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        Query query = session.createQuery(
-            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-            "where siteLanguage.siteLanguageId = :site_language_id");
-        query.setLong("site_language_id", siteLanguage.getSiteLanguageId());
-        SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
-        if (bean!=null) {
-            bean.setCustomLanguage(siteLanguage.getCustomLanguage());
-            bean.setNameCustomLanguage(siteLanguage.getNameCustomLanguage());
-            bean.setSiteId(siteLanguage.getSiteId());
+            Query query = session.createQuery(
+                "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where siteLanguage.siteLanguageId = :site_language_id");
+            query.setLong("site_language_id", siteLanguage.getSiteLanguageId());
+            SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
+            if (bean!=null) {
+                bean.setCustomLanguage(siteLanguage.getCustomLanguage());
+                bean.setNameCustomLanguage(siteLanguage.getNameCustomLanguage());
+                bean.setSiteId(siteLanguage.getSiteId());
+            }
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     public void deleteSiteLanguage(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        deleteSiteLanguage(session, siteLanguageId);
+            deleteSiteLanguage(session, siteLanguageId);
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void deleteSiteLanguageForSite(Long siteId) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        Query query = session.createQuery(
-            "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
-            "where siteLanguage.siteId = :site_id");
-        query.setLong("site_id", siteId);
-        List<SiteLanguageBean> list = query.list();
-        for (SiteLanguageBean bean : list) {
-            deleteSiteLanguage(session, bean.getSiteLanguageId());
-            session.delete(bean);
+            Query query = session.createQuery(
+                "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                "where siteLanguage.siteId = :site_id");
+            query.setLong("site_id", siteId);
+            List<SiteLanguageBean> list = query.list();
+            for (SiteLanguageBean bean : list) {
+                deleteSiteLanguage(session, bean.getSiteLanguageId());
+                session.delete(bean);
+            }
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     private static void deleteSiteLanguage(Session session, Long siteLanguageId) {

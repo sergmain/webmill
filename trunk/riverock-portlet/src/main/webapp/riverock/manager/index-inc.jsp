@@ -40,6 +40,10 @@
         height: 20px;
     }
 
+    .top-info-text {
+        font-size:10px;
+    }
+
     .company-button-action {
         width: 150px;
         height: 22px;
@@ -52,73 +56,80 @@
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.auth']}">
             <h:commandButton id="auth-list-action" action="auth" value="#{manager.auth_button}"
                              styleClass="top-button-action"/>
-            <h:outputText value="#{manager.auth_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.auth_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
             <h:commandButton id="role-list-action" action="role" value="#{manager.role_button}"
                              styleClass="top-button-action"/>
-            <h:outputText value="#{manager.role_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.role_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
             <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
                              styleClass="top-button-action"/>
-            <h:outputText value="#{manager.company_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.company_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
             <h:commandButton id="holding-list-action" action="holding" value="#{manager.holding_button}"
                              styleClass="top-button-action"/>
-            <h:outputText value="#{manager.holding_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.holding_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}">
             <h:commandButton id="menu-list-action" action="menu" value="#{manager.menu_button}" styleClass="top-button-action"/>
-            <h:outputText value="#{manager.menu_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.menu_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
             <h:commandButton id="portlet-name-list-action" action="portlet-name" value="#{manager.portlet_name_button}"
                              styleClass="top-button-action"/>
-            <h:outputText value="#{manager.portlet_name_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.portlet_name_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.user-manager']}">
             <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
                              styleClass="top-button-action"/>
-            <h:outputText value="#{manager.portal_user_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.portal_user_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.site,webmill.template,webmill.css,webmill.xslt']}">
             <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}" styleClass="top-button-action"/>
-            <h:outputText value="#{manager.site_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.site_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
 
 
 </h:panelGrid>
 
-<h:panelGrid columns="2">
+<h:panelGrid columns="3">
 
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
             <h:commandButton id="create-google-sitemap-action" action="#{portalActionExecutor.createGoogleSitemap}" value="Create Google sitemap" styleClass="top-button-action"/>
-            <h:outputText value="Create Google sitemap" style="font-size:10px"/>
+            <h:outputText value="Create Google sitemap" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
 
     <h:panelGroup>
         <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
             <h:commandButton id="monitor-server-action" action="manager-monitor" value="#{manager.monitor_button}" styleClass="top-button-action"/>
-            <h:outputText value="#{manager.monitor_info}" style="font-size:10px"/>
+            <h:outputText value="#{manager.monitor_info}" styleClass="top-info-text"/>
+        </h:panelGrid>
+    </h:panelGroup>
+
+    <h:panelGroup>
+        <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager']}">
+            <h:commandButton id="indexer-action" action="manager-indexer" value="#{manager.indexer_button}" styleClass="top-button-action"/>
+            <h:outputText value="#{manager.indexer_info}" styleClass="top-info-text"/>
         </h:panelGrid>
     </h:panelGroup>
 

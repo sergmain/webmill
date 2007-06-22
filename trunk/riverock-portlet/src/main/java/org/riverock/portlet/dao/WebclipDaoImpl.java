@@ -70,6 +70,11 @@ public class WebclipDaoImpl implements WebclipDao {
                 .uniqueResult();
             if (bean!=null) {
                 if (isInitWebclipData) {
+/*
+                    if (bean.getWebclipData()==null) {
+                        System.out.println("WebclipData is null");
+                    }
+*/
                     Blob blob = bean.getWebclipBlob();
                     if (blob!=null) {
                         try {
@@ -304,7 +309,7 @@ public class WebclipDaoImpl implements WebclipDao {
         return (Long)session.createQuery(
             "select count(*) " +
                 "from org.riverock.portlet.webclip.WebclipBean as bean " +
-                "where bean.siteId=:siteId and isIndexed=false")
+                "where bean.siteId=:siteId")
             .setLong("siteId", siteId)
             .uniqueResult();
     }

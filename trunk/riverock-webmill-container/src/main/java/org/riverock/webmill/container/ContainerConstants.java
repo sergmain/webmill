@@ -76,7 +76,6 @@ public class ContainerConstants {
     public static final String PORTAL_INFO_ATTRIBUTE = "org.riverock.webmill.PORTAL_INFO_ATTRIBUTE";
 
     public static final String type_portlet = "type-portlet";
-//    public static final String is_url = "is-url";
     public static final String is_xml = "is-xml";
     public static final String name_portlet_id = "name-portlet-id";
     public static final String locale_name_package = "locale-name-package";

@@ -10,4 +10,6 @@ import java.io.Serializable;
 public interface PortletIndexerShort extends Serializable {
     Object getId();
     String getPortletName();
+    String getClassName();
+    ClassLoader getClassLoader();
 }

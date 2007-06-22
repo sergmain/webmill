@@ -254,29 +254,6 @@ public class TestCaseNews /*extends TestCase */
                     DatabaseManager.close( ps );
                     ps = null;
 
-                    CustomSequence seqNewsItemText = new CustomSequence();
-                    seqNewsItemText.setSequenceName( "SEQ_WM_NEWS_ITEM_TEXT" );
-                    seqNewsItemText.setTableName( "WM_NEWS_ITEM_TEXT" );
-                    seqNewsItemText.setColumnName( "ID_MAIN_NEWS_TEXT" );
-
-                    Long idNewsItemText = new Long(testAbstract.db_.getSequenceNextValue( seqNewsItemText ));
-
-                    assertFalse("Error get new value of sequence for table "+seqNewsItemText.getTableName(), idNewsItemText==null);
-
-                    ps = testAbstract.db_.prepareStatement(
-                        "insert into WM_NEWS_ITEM_TEXT " +
-                        "(ID_MAIN_NEWS_TEXT, ID, TEXT) "+
-                        "values"+
-                        "(?, ?, ?)"
-                    );
-
-                    RsetTools.setLong(ps, 1, idNewsItemText);
-                    RsetTools.setLong(ps, 2, newsItem.getNewsItemId() );
-                    ps.setString(3, newsItem.getNewsText() );
-
-                    i1 = ps.executeUpdate();
-                    assertFalse("Error insert news item text", i1==0);
-
                     testAbstract.db_.commit();
 
                     DatabaseManager.close( ps );

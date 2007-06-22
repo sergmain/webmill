@@ -78,6 +78,9 @@ public final class PortletEntry {
     }
 
     public ClassLoader getClassLoader() {
+        if (classLoader==null) {
+            throw new IllegalArgumentException("Portlet classLoader is null");
+        }
         return classLoader;
     }
 
@@ -85,22 +88,17 @@ public final class PortletEntry {
         return uniqueName;
     }
 
-    public void setClassLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-    }
-
     public ServletConfig getServletConfig() {
         return servletConfig;
-    }
-
-    public void setServletConfig(ServletConfig servletConfig) {
-        this.servletConfig = servletConfig;
     }
 
     PortletEntry(PortletDefinition portletDefinition, PortletConfig portletConfig, Portlet portlet,ServletConfig servletConfig, ClassLoader classLoader, String uniqueName, String portalPath) {
         if (portletDefinition==null) {
             throw new IllegalArgumentException("Portlet definition is null");
         } 
+        if (classLoader==null) {
+            throw new IllegalArgumentException("Portlet classLoader is null");
+        }
         this.portletDefinition = portletDefinition;
         this.portletConfig = portletConfig;
         this.portlet = portlet;
@@ -152,10 +150,6 @@ public final class PortletEntry {
 
     public int getInterval() {
         return interval;
-    }
-
-    protected void setPortlet(Portlet portlet) {
-        this.portlet = portlet;
     }
 
     protected void setPermanent(boolean permanent) {

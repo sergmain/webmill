@@ -36,6 +36,9 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 /**
  * User: SergeMaslyukov
  * Date: 10.09.2006
@@ -65,6 +68,7 @@ public class WebclipBean implements Serializable {
     private Long siteId;
 
     @Column(name="ZIP_ORIGIN_CONTENT")
+    @Cache(usage = CacheConcurrencyStrategy.NONE)
     private Blob zipOriginContent;
 
     @Column(name="WEBCLIP_BLOB")
@@ -80,7 +84,7 @@ public class WebclipBean implements Serializable {
     private boolean isIndexed = false;
 
     @Transient
-    private String webclipData;
+    private String webclipData = null;
 
     public WebclipBean() {
     }

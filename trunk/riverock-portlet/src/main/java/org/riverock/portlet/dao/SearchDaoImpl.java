@@ -52,16 +52,21 @@ public class SearchDaoImpl implements SearchDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        SearchBean bean = new SearchBean();
-        bean.setSiteId(siteId);
-        bean.setSearchDate(new Date());
-        bean.setWord(searchString);
+            SearchBean bean = new SearchBean();
+            bean.setSiteId(siteId);
+            bean.setSearchDate(new Date());
+            bean.setWord(searchString);
 
-        session.save(bean);
-        session.flush();
+            session.save(bean);
+            session.flush();
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 }

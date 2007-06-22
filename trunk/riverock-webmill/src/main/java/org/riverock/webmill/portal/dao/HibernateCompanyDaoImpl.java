@@ -46,14 +46,19 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
 
     public Company getCompany( String companyName ) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        CompanyBean bean = (CompanyBean)session.createQuery(
-            "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.name=:companyName ")
-            .setString("companyName", companyName)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            CompanyBean bean = (CompanyBean)session.createQuery(
+                "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
+                "where  company.name=:companyName ")
+                .setString("companyName", companyName)
+                .uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public Company getCompany( Long companyId, AuthSession authSession ) {
@@ -62,15 +67,20 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        CompanyBean bean = (CompanyBean)session.createQuery(
-            "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.isDeleted=false and company.id=:companyid and company.id in (:companyIds)")
-            .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
-            .setLong("companyid", companyId)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            CompanyBean bean = (CompanyBean)session.createQuery(
+                "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
+                "where  company.isDeleted=false and company.id=:companyid and company.id in (:companyIds)")
+                .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
+                .setLong("companyid", companyId)
+                .uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     public List<Company> getCompanyList( AuthSession authSession ) {
@@ -78,14 +88,19 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
             return null;
         }
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List bean = session.createQuery(
-            "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.isDeleted=false and company.id in (:companyIds)")
-            .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
-            .list();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            List bean = session.createQuery(
+                "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
+                "where  company.isDeleted=false and company.id in (:companyIds)")
+                .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
+                .list();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     /**
@@ -94,13 +109,18 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
      */
     public List<Company> getCompanyList_notRestricted() {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        List bean = session.createQuery(
-            "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.isDeleted=false")
-            .list();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            List bean = session.createQuery(
+                "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
+                "where  company.isDeleted=false")
+                .list();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     /**
@@ -114,14 +134,19 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        CompanyBean bean = (CompanyBean)session.createQuery(
-            "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.isDeleted=false and company.id=:companyid ")
-            .setLong("companyid", companyId)
-            .uniqueResult();
-        session.getTransaction().commit();
-        return bean;
+        try {
+            session.beginTransaction();
+            CompanyBean bean = (CompanyBean)session.createQuery(
+                "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
+                "where  company.isDeleted=false and company.id=:companyid ")
+                .setLong("companyid", companyId)
+                .uniqueResult();
+            session.getTransaction().commit();
+            return bean;
+        }
+        finally {
+            session.close();
+        }
     }
 
     /**
@@ -134,28 +159,33 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        CompanyBean bean = (CompanyBean)session.createQuery(
-            "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.is=:companyId ")
-            .setLong("companyId", company.getId())
-            .uniqueResult();
+            CompanyBean bean = (CompanyBean)session.createQuery(
+                "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
+                "where  company.is=:companyId ")
+                .setLong("companyId", company.getId())
+                .uniqueResult();
 
-        if (bean==null) {
+            if (bean==null) {
+                session.getTransaction().commit();
+                return;
+            }
+            bean.setName(company.getName());
+            bean.setShortName(company.getShortName());
+            bean.setAddress(company.getAddress());
+            bean.setCeo(company.getCeo());
+            bean.setCfo(company.getCfo());
+            bean.setWebsite(company.getWebsite());
+            bean.setInfo(company.getInfo());
+            bean.setDeleted(company.isDeleted());
+
             session.getTransaction().commit();
-            return;
         }
-        bean.setName(company.getName());
-        bean.setShortName(company.getShortName());
-        bean.setAddress(company.getAddress());
-        bean.setCeo(company.getCeo());
-        bean.setCfo(company.getCfo());
-        bean.setWebsite(company.getWebsite());
-        bean.setInfo(company.getInfo());
-        bean.setDeleted(company.isDeleted());
-
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
     /**
@@ -168,32 +198,42 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        session.createQuery(
+            session.createQuery(
             "delete org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.companyId=:companyId")
-            .setLong("companyId", company.getId())
-            .executeUpdate();
-        session.getTransaction().commit();
+                "where  company.companyId=:companyId")
+                .setLong("companyId", company.getId())
+                .executeUpdate();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public Long processAddCompany( Company companyBean, Long holdingId ) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
-        CompanyBean bean = new CompanyBean(companyBean);
-        session.save(bean);
+        try {
+            session.beginTransaction();
+            CompanyBean bean = new CompanyBean(companyBean);
+            session.save(bean);
 
-        if( holdingId != null ) {
-            HoldingCompanyRelationBean relate = new HoldingCompanyRelationBean();
-            relate.setCompanyId(bean.getId());
-            relate.setHoldingId(holdingId);
-            session.save(relate);
+            if( holdingId != null ) {
+                HoldingCompanyRelationBean relate = new HoldingCompanyRelationBean();
+                relate.setCompanyId(bean.getId());
+                relate.setHoldingId(holdingId);
+                session.save(relate);
+            }
+
+            session.flush();
+            session.getTransaction().commit();
+            return bean.getId();
         }
-
-        session.flush();
-        session.getTransaction().commit();
-        return bean.getId();
+        finally {
+            session.close();
+        }
     }
 
     public Long processAddCompany( Company companyBean, String userLogin, Long holdingId, AuthSession authSession ) {
@@ -202,32 +242,37 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        AuthInfoImpl user = (AuthInfoImpl)session.createQuery(
-            "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl as auth " +
-            "where  auth.userLogin=:userLogin ")
-            .setString("userLogin", userLogin)
-            .uniqueResult();
+            AuthInfoImpl user = (AuthInfoImpl)session.createQuery(
+                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl as auth " +
+                "where  auth.userLogin=:userLogin ")
+                .setString("userLogin", userLogin)
+                .uniqueResult();
 
-        if (user==null) {
+            if (user==null) {
+                session.getTransaction().commit();
+                return null;
+            }
+
+            CompanyBean bean = new CompanyBean(companyBean);
+            session.save(bean);
+
+            if( holdingId != null ) {
+                HoldingCompanyRelationBean relate = new HoldingCompanyRelationBean();
+                relate.setCompanyId(bean.getId());
+                relate.setHoldingId(holdingId);
+                session.save(relate);
+            }
+
+            session.flush();
             session.getTransaction().commit();
-            return null;
+            return bean.getId();
         }
-
-        CompanyBean bean = new CompanyBean(companyBean);
-        session.save(bean);
-
-        if( holdingId != null ) {
-            HoldingCompanyRelationBean relate = new HoldingCompanyRelationBean();
-            relate.setCompanyId(bean.getId());
-            relate.setHoldingId(holdingId);
-            session.save(relate);
+        finally {
+            session.close();
         }
-
-        session.flush();
-        session.getTransaction().commit();
-        return bean.getId();
     }
 
     public void processSaveCompany( Company companyBean, AuthSession authSession ) {
@@ -236,29 +281,34 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        CompanyBean company = (CompanyBean)session.createQuery(
-            "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.is=:companyId and companyId in ( :companyIds)")
-            .setParameterList("companyIds", authSession.getGrantedCompanyIdList() )
-            .setLong("companyId", companyBean.getId())
-            .uniqueResult();
+            CompanyBean company = (CompanyBean)session.createQuery(
+                "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
+                "where  company.is=:companyId and companyId in ( :companyIds)")
+                .setParameterList("companyIds", authSession.getGrantedCompanyIdList() )
+                .setLong("companyId", companyBean.getId())
+                .uniqueResult();
 
-        if (company==null) {
+            if (company==null) {
+                session.getTransaction().commit();
+                return;
+            }
+            company.setName(companyBean.getName());
+            company.setShortName(companyBean.getShortName());
+            company.setAddress(companyBean.getAddress());
+            company.setCeo(companyBean.getCeo());
+            company.setCfo(companyBean.getCfo());
+            company.setWebsite(companyBean.getWebsite());
+            company.setInfo(companyBean.getInfo());
+            company.setDeleted(companyBean.isDeleted());
+
             session.getTransaction().commit();
-            return;
         }
-        company.setName(companyBean.getName());
-        company.setShortName(companyBean.getShortName());
-        company.setAddress(companyBean.getAddress());
-        company.setCeo(companyBean.getCeo());
-        company.setCfo(companyBean.getCfo());
-        company.setWebsite(companyBean.getWebsite());
-        company.setInfo(companyBean.getInfo());
-        company.setDeleted(companyBean.isDeleted());
-
-        session.getTransaction().commit();
+        finally {
+            session.close();
+        }
     }
 
 
@@ -268,15 +318,20 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
         }
 
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        session.createQuery(
+            session.createQuery(
             "delete from org.riverock.webmill.portal.bean.CompanyBean as company " +
-            "where  company.is=:companyId and companyId in ( :companyIds)")
-            .setParameterList("companyIds", authSession.getGrantedCompanyIdList() )
-            .setLong("companyId", companyBean.getId())
-            .executeUpdate();
+                "where  company.is=:companyId and companyId in ( :companyIds)")
+                .setParameterList("companyIds", authSession.getGrantedCompanyIdList() )
+                .setLong("companyId", companyBean.getId())
+                .executeUpdate();
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 }

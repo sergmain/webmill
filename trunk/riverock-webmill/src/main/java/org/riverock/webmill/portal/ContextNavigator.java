@@ -25,7 +25,6 @@
 package org.riverock.webmill.portal;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,7 +45,7 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
 public final class ContextNavigator extends HttpServlet {
     private final static Logger log = Logger.getLogger(ContextNavigator.class);
 
-    private ConcurrentMap<Long, PortalInstanceImpl> portalInstanceMap = new ConcurrentHashMap<Long, PortalInstanceImpl>();
+    private final ConcurrentMap<Long, PortalInstanceImpl> portalInstanceMap = new ConcurrentHashMap<Long, PortalInstanceImpl>();
 
     private ServletConfig portalServletConfig = null;
 
@@ -57,13 +56,10 @@ public final class ContextNavigator extends HttpServlet {
     public void destroy() {
         portalServletConfig = null;
 
-        if (portalInstanceMap != null) {
-            for (Map.Entry<Long, PortalInstanceImpl> entry : portalInstanceMap.entrySet()) {
-                entry.getValue().destroy();
-            }
-            portalInstanceMap.clear();
-            portalInstanceMap = null;
+        for (PortalInstanceImpl portalInstance : portalInstanceMap.values()) {
+            portalInstance.destroy();
         }
+        portalInstanceMap.clear();
     }
 
     public ContextNavigator() {
@@ -119,7 +115,7 @@ public final class ContextNavigator extends HttpServlet {
         portalInstance.process(httpRequest, httpResponse);
     }
 
-    private PortalInstanceImpl createNewPortalInsance(Long siteId) {
+    private synchronized PortalInstanceImpl createNewPortalInsance(Long siteId) {
         PortalInstanceImpl portalInstance = portalInstanceMap.get(siteId);
         if (portalInstance != null) {
             return portalInstance;

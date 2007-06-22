@@ -84,27 +84,6 @@ riverock-database-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-	<Tables schema="TEST" name="WM_AUTH_RELATE_RIGHT_ARM" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_AUTH_RELATE_RIGHT_ARM" columnName="ID_RELATE_RIGHT" keySeq="1" pkName="ID_REL_RI_ARRA_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_RELATE_RIGHT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
-		<Fields name="ID_OBJECT_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
-		<Fields name="CODE_RIGHT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="1"/>
-		<Fields name="IS_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
-		<Fields name="IS_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
-		<Fields name="IS_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
-		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_AUTH_ACCESS_GROUP" pkColumnName="ID_ACCESS_GROUP" fkSchemaName="TEST" fkTableName="WM_AUTH_RELATE_RIGHT_ARM" fkColumnName="ID_ACCESS_GROUP" keySeq="1" fkName="ID_ACCESS_GROUP_ARRA_FK" pkName="ID_AG_AAG_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_AUTH_MODULE" pkColumnName="ID_OBJECT_ARM" fkSchemaName="TEST" fkTableName="WM_AUTH_RELATE_RIGHT_ARM" fkColumnName="ID_OBJECT_ARM" keySeq="1" fkName="ID_OBJECT_ARM_ARRA_FK" pkName="ID_OBJECT_AOA_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
 	<Tables schema="TEST" name="WM_AUTH_USER" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_AUTH_USER" columnName="ID_AUTH_USER" keySeq="1" pkName="ID_AUTH_USR_AUN_PK"/>
@@ -1119,39 +1098,7 @@ riverock-database-structure.xsd">
 		<Fields name="U_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0" decimalDigit="0" nullable="0"/>
 		<Fields name="U_LASTIP" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="0"/>
 	</Tables>
-<!--
-	<Views schema="TEST" name="V$_READ_LIST_FIRM" type="VIEW">
-		<Text xmlns="">select distinct aa.id_firm, user_login, id_user, id_auth_user
-from (
-select  a01.id_firm, a01.user_login, a01.id_user, a01.id_auth_user
-from    WM_AUTH_USER a01
-where   a01.is_use_current_firm = 1
-union
-select  d02.ID_COMPANY, a02.user_login, a02.id_user, a02.id_auth_user
-from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_COMPANY d02
-where   a02.IS_HOLDING = 1 and a02.ID_HOLDING = d02.ID_HOLDING
-union
-select  b04.id_firm, a04.user_login, a04.id_user, a04.id_auth_user
-from    WM_AUTH_USER a04, WM_LIST_COMPANY b04
-where   a04.is_root = 1
-) aa
-</Text>
-	</Views>
 
-	<Views schema="TEST" name="V$_READ_LIST_ROAD" type="VIEW">
-		<Text xmlns="">select distinct aa.ID_HOLDING, aa.user_login, aa.id_user, aa.id_auth_user
-from (
-select  a01.ID_HOLDING, a01.user_login, a01.id_user, a01.id_auth_user
-from    WM_AUTH_USER a01
-where   a01.IS_HOLDING = 1
-union
-select  b04.ID_HOLDING, a04.user_login, a04.id_user, a04.id_auth_user
-from    WM_AUTH_USER a04, WM_LIST_HOLDING b04
-where   a04.is_root = 1
-) aa
-</Text>
-	</Views>
--->
 	<Sequences name="SEQ_WM_PRICE_QUERY_TABLE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="29"/>
 	<Sequences name="SEQ_WM_PORTAL_XSLT" minValue="1" maxValue="99999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="28"/>
 
@@ -1170,11 +1117,9 @@ where   a04.is_root = 1
 	<Sequences name="SEQ_WM_LIST_USER_METADATA" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="100"/>
 	<Sequences name="SEQ_WM_LIST_R_GR_COMP_COMP" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="31"/>
 	<Sequences name="SEQ_WM_LIST_R_HOLDING_GR_COMP" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
-	<Sequences name="SEQ_WM_NEWS_ITEM_TEXT" minValue="1" maxValue="99999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="4720"/>
 	<Sequences name="SEQ_WM_NEWS_ITEM_IMAGE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="true" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_NEWS_ITEM" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="4714"/>
 	<Sequences name="SEQ_WM_LIST_GROUP_COMPANY" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="11"/>
-	<Sequences name="SEQ_WM_PORTAL_CSS_DATA" minValue="1" maxValue="999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="148"/>
 	<Sequences name="SEQ_WM_PORTAL_CSS" minValue="1" maxValue="9999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="63"/>
 	<Sequences name="SEQ_WM_AUTH_ACCESS_GROUP" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="84"/>
 	<Sequences name="SEQ_WM_CASH_CURR_VALUE" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="671"/>
@@ -1196,10 +1141,7 @@ where   a04.is_root = 1
 	<Sequences name="SEQ_WM_PORTAL_LIST_SITE" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="389"/>
 	<Sequences name="SEQ_WM_PORTLET_ARTICLE_DATA" minValue="1" maxValue="999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="310"/>
 	<Sequences name="SEQ_WM_AUTH_USER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="322"/>
-	<Sequences name="SEQ_WM_AUTH_RELATE_RIGHT_ARM" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="138"/>
 	<Sequences name="SEQ_WM_AUTH_RELATE_ACCGROUP" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="577"/>
-	<Sequences name="SEQ_WM_AUTH_MODULE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="136"/>
-	<Sequences name="SEQ_WM_AUTH_APPLICATION" minValue="1" maxValue="99999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="47"/>
 	<Sequences name="SEQ_WM_PRICE_ITEM_DESC_DATA" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="7"/>
 	<Sequences name="SEQ_WM_PORTAL_CATALOG" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="2158"/>
 	<Sequences name="SEQ_WM_PORTAL_PORTLET_NAME" minValue="1" maxValue="9999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="41"/>
@@ -1213,9 +1155,6 @@ where   a04.is_root = 1
 	<Sequences name="SEQ_WM_PORTLET_FAQ_LIST" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="45"/>
 	<Sequences name="SEQ_WM_PORTLET_FAQ_QUESTION" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="9"/>
 
-	<Sequences name="SEQ_WM_I18N_ITEM" minValue="1" maxValue="99999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1431"/>
-	<Sequences name="SEQ_WM_I18N_STORAGE" minValue="1" maxValue="99999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="36"/>
-	<Sequences name="SEQ_WM_I18N_MESSAGE" minValue="1" maxValue="99999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="24258"/>
 	<BigTextTable>
 		<MasterTable xmlns="">WM_JOB_POSITION</MasterTable>
 		<SlaveTable xmlns="">WM_JOB_POSITION_DATA</SlaveTable>
@@ -1233,15 +1172,6 @@ where   a04.is_root = 1
 		<SlaveFkField xmlns="">ID_JOB_RESUME</SlaveFkField>
 		<StorageField xmlns="">TEXT_RESUME</StorageField>
 		<SequenceName xmlns="">SEQ_WM_JOB_RESUME_DATA</SequenceName>
-	</BigTextTable>
-	<BigTextTable>
-		<MasterTable xmlns="">WM_NEWS_ITEM</MasterTable>
-		<SlaveTable xmlns="">WM_NEWS_ITEM_TEXT</SlaveTable>
-		<MasterPkField xmlns="">ID</MasterPkField>
-		<SlavePkField xmlns="">ID_MAIN_NEWS_TEXT</SlavePkField>
-		<SlaveFkField xmlns="">ID</SlaveFkField>
-		<StorageField xmlns="">TEXT</StorageField>
-		<SequenceName xmlns="">SEQ_WM_NEWS_ITEM_TEXT</SequenceName>
 	</BigTextTable>
 	<BigTextTable>
 		<MasterTable xmlns="">WM_PORTLET_FAQ_LIST</MasterTable>

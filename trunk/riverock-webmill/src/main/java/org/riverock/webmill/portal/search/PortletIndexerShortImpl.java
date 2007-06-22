@@ -10,10 +10,22 @@ import org.riverock.interfaces.portal.search.PortletIndexerShort;
 public class PortletIndexerShortImpl implements PortletIndexerShort {
     private Object id;
     private String portletName;
+    private String className;
+    private ClassLoader classLoader;
 
-    public PortletIndexerShortImpl(Object id, String portletName) {
+    public PortletIndexerShortImpl(ClassLoader classLoader, String className, Object id, String portletName) {
+        this.classLoader = classLoader;
+        this.className = className;
         this.id = id;
         this.portletName = portletName;
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    public String getClassName() {
+        return className;
     }
 
     public Object getId() {

@@ -63,9 +63,8 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
             }
 
             Session session = HibernateUtils.getSession();
-            session.beginTransaction();
-
             try {
+                session.beginTransaction();
                 CatalogBean bean = (CatalogBean)session.createQuery(
                     "select catalog " +
                         "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
@@ -73,6 +72,7 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
                     .setLong("catalogId", catalogId)
                     .uniqueResult();
 
+                session.getTransaction().commit();
                 if (bean==null) {
                     return new HashMap<String, List<String>>();
                 }
@@ -80,7 +80,7 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
                 return initMetadata(bean.getMetadata());
             }
             finally {
-                session.getTransaction().commit();
+                session.close();
             }
         }
         finally {
@@ -111,22 +111,25 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
             }
 
             Session session = HibernateUtils.getSession();
-            session.beginTransaction();
+            try {
+                session.beginTransaction();
 
-            CatalogBean bean = (CatalogBean)session.createQuery(
-                "select catalog " +
-                    "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
-                    "where catalog.catalogId=:catalogId")
-                .setLong("catalogId", catalogId)
-                .uniqueResult();
+                CatalogBean bean = (CatalogBean)session.createQuery(
+                    "select catalog " +
+                        "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
+                        "where catalog.catalogId=:catalogId")
+                    .setLong("catalogId", catalogId)
+                    .uniqueResult();
 
-            if (bean==null) {
+                if (bean!=null) {
+                    bean.setMetadata(s);
+                }
+
                 session.getTransaction().commit();
-                return;
             }
-            bean.setMetadata(s);
-
-            session.getTransaction().commit();
+            finally {
+                session.close();
+            }
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

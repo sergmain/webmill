@@ -78,9 +78,11 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
             return;
         }
         try {
+/*
             System.out.println(
                 "Create resource bundle for class: " + resourceBundleClass + ", locale: " + locale.toString() +
                 ", class loader: " + classLoader );
+*/
 
             resourceBundle = ResourceBundle.getBundle( resourceBundleClass, locale, classLoader );
         }
@@ -136,11 +138,13 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
                 properties.put( PORTLET_KEYWORDS, keywords.toString() );
             }
 
-            if ( portletInfo.getShortTitle() != null )
+            if ( portletInfo.getShortTitle() != null ) {
                 properties.put( PORTLET_SHORT_TITLE, portletInfo.getShortTitle() );
+            }
 
-            if ( portletInfo.getTitle() != null )
+            if ( portletInfo.getTitle() != null ) {
                 properties.put( PORTLET_TITLE, portletInfo.getTitle() );
+            }
         }
 
     }
@@ -156,9 +160,9 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
             }
         }
 
-        if ( properties != null )
+        if ( properties != null ) {
             keys.addAll( properties.keySet() );
-
+        }
 
         return Collections.enumeration( keys );
     }

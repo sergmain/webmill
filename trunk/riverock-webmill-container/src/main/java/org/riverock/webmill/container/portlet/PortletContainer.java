@@ -113,6 +113,9 @@ public final class PortletContainer implements Serializable {
             try {
                 newPortlet = createPortletInstance(portletName);
             }
+            catch (PortletContainerException e) {
+                throw e;
+            }
             catch (Throwable e) {
                 String es = "Erorr create instance of portlet '" + portletName + "'";
                 e.printStackTrace( System.out );
@@ -214,12 +217,12 @@ public final class PortletContainer implements Serializable {
         }
     }
 
-    private PortletEntry createPortletInstance(final String portletName) throws Exception {
+    private PortletEntry createPortletInstance(final String portletName) throws PortletContainerException {
         PortletWebApplication portletWebApplication = searchPortletItem( portletName );
         if (portletWebApplication == null) {
             String es = "Portlet '"+ portletName + "' not registered.";
             System.out.println( es );
-            throw new PortletContainerException(es);
+            throw new PortletNotRegisteredException(es);
         }
 
         PortletDefinition portletDefinition = portletWebApplication.getPortletDefinition();
