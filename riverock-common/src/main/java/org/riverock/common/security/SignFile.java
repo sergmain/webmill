@@ -34,12 +34,14 @@ import java.security.Provider;
 import java.security.Security;
 import java.util.TimeZone;
 import java.util.zip.GZIPOutputStream;
+import java.util.Locale;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
@@ -47,7 +49,6 @@ import org.riverock.common.annotation.schema.transfer.TransferFileConfigType;
 import org.riverock.common.annotation.schema.transfer.TransferFileContentType;
 import org.riverock.common.annotation.schema.transfer.TransferFileListType;
 import org.riverock.common.tools.MainTools;
-import org.riverock.common.utils.DateUtils;
 
 public class SignFile {
     private static final Object syncDebug = new Object();
@@ -289,7 +290,7 @@ public class SignFile {
         tfc = unmarshaller.unmarshal(source, TransferFileConfigType.class).getValue();
 
         fileList.setDateCreate(
-            DateUtils.getCurrentDate("dd.MM.yyyy HH:mm:ss", TimeZone.getTimeZone("Europe/Moscow"))
+            DateFormatUtils.format(System.currentTimeMillis(), "dd.MM.yyyy HH:mm:ss", TimeZone.getTimeZone("Europe/Moscow"), Locale.ENGLISH)
         );
         fileList.setIsGzip(tfc.isIsGzip());
 
