@@ -37,6 +37,8 @@ import java.net.MalformedURLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.common.tools.ServletTools;
@@ -69,7 +71,7 @@ public final class HttpServletRequestWrapperFromString extends HttpServletReques
     }
 
     public String getPathInfo() {
-        if (StringTools.isEmpty( url.getPath() ) )
+        if (StringUtils.isEmpty( url.getPath() ) )
             return null;
 
         if (url.getPath().startsWith( super.getContextPath() ) ) {
