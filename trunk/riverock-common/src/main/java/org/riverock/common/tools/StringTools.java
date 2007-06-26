@@ -94,15 +94,6 @@ public class StringTools {
     }
 
     /**
-     * @deprecated use org.apache.commons.lang.StringUtils.isEmpty()
-     * @param s String
-     * @return boolean
-     */
-    public static boolean isEmpty( final String s) {
-        return s == null || s.trim().length() == 0;
-    }
-
-    /**
      * преобразует строку вида 'SITE_LIST_SITE' -> 'SiteListSite'
      * @param f String
      * @return результирующая строка
@@ -186,43 +177,6 @@ public class StringTools {
             s.append( str );
 
         return s.toString();
-    }
-
-    /**
-     * @deprecated use decodeXml
-     * @param s String
-     * @return String
-     */
-    public static String toOrigin( final String s) {
-        return StringEscapeUtils.unescapeXml( s );
-    }
-
-
-    /**
-     * @deprecated use StringEscapeUtils.escapeXml( s )
-     * @param s String
-     * @return String
-     */
-    public static String encodeXml( final String s ) {
-        return StringEscapeUtils.escapeXml( s );
-    }
-
-    /**
-     * @deprecated use StringEscapeUtils.unescapeXml( s )
-     * @param s String
-     * @return String
-     */
-    public static String decodeXml( final String s ) {
-        return StringEscapeUtils.unescapeXml( s );
-    }
-
-    /**
-     * @deprecated use encodeXml
-     * @param s String
-     * @return String
-     */
-    public static String prepareEditForm( final String s) {
-        return StringEscapeUtils.escapeXml( s );
     }
 
     public static String prepareToParsingSimple( final String s) {
@@ -366,19 +320,6 @@ public class StringTools {
     }
 
     /**
-     * @deprecated use  org.apache.commons.lang.StringUtils.replace( str_, search_, ins);
-     * Replace substring.
-     * @param str_ - String. Source string
-     * @param search_ - String which will be searching
-     * @param ins - String for replace.
-     *
-     * @return - String. resulting string.
-     */
-    public static String replaceString( final String str_, final String search_, final String ins) {
-        return StringUtils.replace( str_, search_, ins);
-    }
-
-    /**
      * Заменяет один фрагмент строки другим во всей строке. Строки для поиска и замены передаются
      * в виде 2-ух мерного массива.
      *
@@ -484,17 +425,6 @@ public class StringTools {
             return s.substring(0, count_char - 1);
         else
             return s;
-    }
-
-    /**
-     * @deprecated use truncateString(String s, int count_char)
-     * Укорачивает строку до указанного количества символов
-     * @param s - String. Строка для укорочения
-     * @param count_char - int. Количество символов
-     * @return - String. Результирующая строка
-     */
-    public static String truncString( final String s, final int count_char) {
-        return truncateString(s, count_char);
     }
 
     public static String rewriteString( final String s_) {
