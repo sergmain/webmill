@@ -30,6 +30,8 @@ import org.riverock.common.tools.StringTools;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author Serge Maslyukov
  *         Date: 24.04.2005
@@ -42,7 +44,7 @@ public abstract class PortletActionFactoryImpl extends ActionFactoryImpl {
 
     public ActionConfig getActionConfig(ModuleConfig moduleConfig, String factoryCode) throws ActionException {
         String actionConfigFile = moduleConfig.getInitParameter( factoryCode );
-        if (StringTools.isEmpty( actionConfigFile ) ) {
+        if (StringUtils.isEmpty( actionConfigFile ) ) {
             throw new ActionException("Factory code "+factoryCode+ " not found in init parameter of portlet");
         }
 

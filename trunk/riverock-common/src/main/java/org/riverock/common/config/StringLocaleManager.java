@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package org.riverock.common.tools;
+package org.riverock.common.config;
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
@@ -32,12 +32,14 @@ import java.util.ResourceBundle;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.riverock.common.tools.LocaleCharset;
+
 /**
  * $Revision$
  * $Date$
  * $RCSfile$
  */
-public class StringLocaleManager {
+class StringLocaleManager {
 
     /**
      * The ResourceBundle for this StringLocaleManager.
@@ -60,6 +62,7 @@ public class StringLocaleManager {
      * per package will be created.
      *
      * @param packageName Name of package to create StringLocaleManager for.
+     * @param loc locale
      */
 
     private StringLocaleManager(String packageName, Locale loc) {
@@ -88,7 +91,7 @@ public class StringLocaleManager {
     /**
      * Get a string from the underlying resource bundle.
      *
-     * @param key
+     * @param key key
      */
     public String getString(String key) {
         if (key == null) {

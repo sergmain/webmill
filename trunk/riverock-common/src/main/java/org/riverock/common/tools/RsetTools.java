@@ -127,6 +127,7 @@ public final class RsetTools {
     /**
      * ResultSet rs - ResultSet
      * String f - name of field
+     * @return calendar
      */
     public static Calendar getCalendar(final ResultSet rs, final String f)
         throws SQLException {
