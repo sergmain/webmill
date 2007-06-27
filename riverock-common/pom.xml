@@ -21,6 +21,18 @@
         </repository>
     </repositories>
 
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/common</url>
+    </site>
+    <repository>
+      <id>riverock-repository</id>
+      <name>Riverock repository</name>
+      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/repo</url>
+    </repository>
+  </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.riverock</groupId>
