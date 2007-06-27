@@ -30,7 +30,7 @@ import java.util.MissingResourceException;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringLocaleManager;
+import org.riverock.common.config.StringLocaleManager;
 
 /**
  * User: serg_main

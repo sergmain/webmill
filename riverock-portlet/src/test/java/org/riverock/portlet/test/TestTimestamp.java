@@ -43,27 +43,23 @@ import org.apache.log4j.Logger;
 import org.apache.commons.lang.time.DateFormatUtils;
 
 import org.riverock.common.tools.DateTools;
-import org.riverock.common.utils.DateUtils;
 
-public class TestTimestamp
-{
-    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestTimestamp" );
+public class TestTimestamp {
+    private static Logger cat = Logger.getLogger(TestTimestamp.class);
 
-    public TestTimestamp()
-    {
+    public TestTimestamp() {
     }
 
-    private static void printZoneInfo()
-    {
+    private static void printZoneInfo() {
         String zone[] = TimeZone.getAvailableIDs(1 * 60 * 60 * 1000);
-        for (int i=0; i<zone.length; i++)
-            System.out.println("zone info "+zone[i]);
+        for (String aZone : zone) {
+            System.out.println("zone info " + aZone);
+        }
     }
 
     public static void main(String args[])
-        throws Exception
-    {
-        Timestamp t = new Timestamp( System.currentTimeMillis() );
+        throws Exception {
+        Timestamp t = new Timestamp(System.currentTimeMillis());
 
         SimpleDateFormat df = new SimpleDateFormat("dd.MMMMM.yyyy HH:mm:ss", Locale.ENGLISH);
         SimpleTimeZone pdt = new SimpleTimeZone(8 * 60 * 60 * 1000, "Asia/Irkutsk");
@@ -73,23 +69,23 @@ public class TestTimestamp
         pdt.setStartRule(Calendar.MARCH, springDTS, Calendar.SUNDAY, 2 * 60 * 60 * 1000);
         pdt.setEndRule(Calendar.OCTOBER, fallDTS, Calendar.SUNDAY, 2 * 60 * 60 * 1000);
 
-        df.setTimeZone( pdt );
+        df.setTimeZone(pdt);
 
-        String s = df.format( t );
-        System.out.println( s );
+        String s = df.format(t);
+        System.out.println(s);
 
         org.riverock.common.startup.StartupApplication.init();
 
-        s = DateFormatUtils.format(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH );
-        System.out.println( s );
+        s = DateFormatUtils.format(t, "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH);
+        System.out.println(s);
 
         t = DateTools.getCurrentTime();
-        System.out.println( "#1.1 "+t );
+        System.out.println("#1.1 " + t);
 
         SimpleDateFormat df1 = new SimpleDateFormat("dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH);
-        s = df1.format( t );
-        System.out.println( "#1.2 "+s );
-        System.out.println( "#1.3 "+t );
+        s = df1.format(t);
+        System.out.println("#1.2 " + s);
+        System.out.println("#1.3 " + t);
 
 //        System.out.println( "Version "+System.getProperty("java.version") );
 
@@ -102,9 +98,9 @@ public class TestTimestamp
 */
 
         s = DateFormatUtils.format(new Timestamp(System.currentTimeMillis()), "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH);
-        System.out.println( s );
+        System.out.println(s);
 
-        System.out.println( "current time "+DateFormatUtils.format(System.currentTimeMillis(), "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH) );
+        System.out.println("current time " + DateFormatUtils.format(System.currentTimeMillis(), "dd.MMMMM.yyyy HH:mm:ss.SSS", TimeZone.getDefault(), Locale.ENGLISH));
 
         printZoneInfo();
     }
