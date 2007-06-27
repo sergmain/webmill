@@ -75,6 +75,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     private static final String LONGDESC_ATTR = "longdesc";
 
     private static final String A_ELEMENT = "A";
+    private static final String AREA_ELEMENT = "AREA";
     private static final String DIV_ELEMENT = "DIV";
     private static final String SPAN_ELEMENT = "SPAN";
     private static final String TABLE_ELEMENT = "TABLE";
@@ -271,7 +272,8 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
                     boolean isNoFollowAttr = false;
                     UrlStatus linkStatus = UrlStatus.NONE_STATUS;
-                    if (node.getNodeName().equalsIgnoreCase(A_ELEMENT)) {
+                    if (node.getNodeName().equalsIgnoreCase(A_ELEMENT) ||
+                        node.getNodeName().equalsIgnoreCase(AREA_ELEMENT)) {
                         NamedNodeMap attrMap = node.getAttributes();
                         for (int i = 0; i < attrMap.getLength(); i++) {
                             Node tempNode = attrMap.item(i);
