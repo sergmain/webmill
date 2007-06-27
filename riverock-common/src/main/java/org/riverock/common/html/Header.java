@@ -32,14 +32,32 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * utility class for work with http header
+ *
  * $Id$
  */
 public final class Header {
 
+    /**
+     * HTTP header User-Agent
+     */
     public static final String USER_AGENT_HEADER = "User-Agent";
+    /**
+     * HTTP header Accept-Language
+     */
     public static final String ACCEPT_LANGUAGE_HEADER = "Accept-Language";
+    /**
+     * HTTP header Referer
+     */
     public static final String REFERER_HEADER = "Referer";
 
+    /**
+     * Get user agent from ServletRequest
+     *
+     * @param request servlet request
+     *
+     * @return user agent if request instance of HttpServletRequest, otherwise - null
+     */
     public static String getUserAgent( final ServletRequest request ) {
         if ( request instanceof HttpServletRequest )
             return ( (HttpServletRequest)request ).getHeader( USER_AGENT_HEADER );
@@ -47,6 +65,13 @@ public final class Header {
             return null;
     }
 
+    /**
+     * get accepted languages from HTTP header as array
+     *
+     * @param request servlet request
+     *
+     * @return return array of accepted languages. if request is not instance of HttpServletRequest return null
+     */
     public static AcceptLanguageWithLevel[] getAcceptLanguageArray( final ServletRequest request ) {
         if ( request == null || !( request instanceof HttpServletRequest ) )
             return null;
@@ -54,6 +79,13 @@ public final class Header {
         return getAcceptLanguageArray( getAcceptLanguage( request ) );
     }
 
+    /*
+     * get accepted languages from string as array
+     *
+     * @accept request servlet request
+     *
+     * @return array of accepted languages. if request is not instance of HttpServletRequest return null
+     */
     public static AcceptLanguageWithLevel[] getAcceptLanguageArray( final String accept ) {
         List<AcceptLanguageWithLevel> v = getAcceptLanguageAsList( accept );
         AcceptLanguageWithLevel[] array = new AcceptLanguageWithLevel[v.size()];
@@ -65,6 +97,12 @@ public final class Header {
         return array;
     }
 
+    /**
+     * get accepted languages from HTTP header as list
+     *
+     * @param request servlet request
+     * @return list of accepted languages. if request is not instance of HttpServletRequest return null
+     */
     public static List<AcceptLanguageWithLevel> getAcceptLanguageAsList( final ServletRequest request ) {
         if ( request == null || !( request instanceof HttpServletRequest ) )
             return null;
@@ -72,6 +110,13 @@ public final class Header {
         return getAcceptLanguageAsList( getAcceptLanguage( request ) );
     }
 
+    /**
+     * get accepted languages from HTTP header as list of locales
+     *
+     * @param request servlet reqeuest
+     * @return array of accepted languages as locales.
+     * If request is not instance of HttpServletRequest return empty array
+     */
     public static Locale[] getAcceptLanguageAsLocaleListSorted( final ServletRequest request ) {
         if ( request == null || !( request instanceof HttpServletRequest ) )
             return new Locale[]{};
@@ -79,6 +124,13 @@ public final class Header {
         return getAcceptLanguageAsLocaleListSorted( getAcceptLanguage( request ) );
     }
 
+    /**
+     * get accepted languages from HTTP header as list of locales
+     * 
+     * @param headerLocale Accept-Language from HTTP header
+     * @return array of accepted languages as locales.
+     * If request is not instance of HttpServletRequest return empty array
+     */
     public static Locale[] getAcceptLanguageAsLocaleListSorted( final String headerLocale ) {
         if ( headerLocale == null )
             return new Locale[]{};
