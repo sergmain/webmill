@@ -21,6 +21,18 @@
     	<url>http://riverock.svn.sourceforge.net/viewvc/riverock</url>
     </scm>
 
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/interfaces</url>
+    </site>
+    <repository>
+      <id>riverock-repository</id>
+      <name>Riverock repository</name>
+      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/repo</url>
+    </repository>
+  </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
