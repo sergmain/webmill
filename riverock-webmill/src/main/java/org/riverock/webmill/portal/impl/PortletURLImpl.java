@@ -44,7 +44,7 @@ import javax.portlet.WindowStateException;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;

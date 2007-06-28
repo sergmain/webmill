@@ -24,30 +24,28 @@
 package org.riverock.portlet.manager.menu;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.bean.PortletName;
+import org.riverock.interfaces.portal.action.PortalActionExecutor;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
-import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.manager.menu.bean.MenuCatalogBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
 import org.riverock.portlet.manager.menu.bean.SiteExtended;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.bean.PortletWebApplication;
-import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -106,114 +104,25 @@ public class MenuDataProvider implements Serializable {
             return contextList;
         }
 
+        MenuItemBean menuItemTemp = menuSessionBean.getMenuItem().getMenuItem();
+        Long portletId = menuItemTemp.getPortletId();
+
         List<SelectItem> list = new ArrayList<SelectItem>();
+        PortletRequest portletRequest = FacesTools.getPortletRequest();
+        PortalActionExecutor executor =
+            (PortalActionExecutor)portletRequest.getAttribute(ContainerConstants.PORTAL_PORTAL_ACTION_EXECUTOR);
 
-        MenuItemBean menuItem = menuSessionBean.getMenuItem().getMenuItem();
-        Long portletId = menuItem.getPortletId();
-        PortletName bean = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletName(portletId);
-        if (log.isDebugEnabled()) {
-            log.debug("portletId: " + portletId);
-            log.debug("bean: " + bean);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("portletId", portletId);
+        map.put("catalogLanguageId", menuItemTemp.getCatalogLanguageId());
+        map.put("contextId", menuItemTemp.getContextId());
+        map = executor.execute("get-menu-items", map);
+
+        List<ClassQueryItem> items = (List<ClassQueryItem>) map.get("result");
+        for (ClassQueryItem classQueryItem : items) {
+            list.add( new SelectItem(classQueryItem.getIndex(), classQueryItem.getValue()));
         }
-
-        if (bean==null) {
-            return list;
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("namePortlet: "+bean.getPortletName());
-        }
-
-        PortletContainer portletContainer = (PortletContainer)FacesTools.getAttribute( ContainerConstants.PORTAL_CURRENT_CONTAINER );
-        PortletWebApplication portletWebApplication = portletContainer.searchPortletItem( bean.getPortletName() );
-
-        if (log.isDebugEnabled()) {
-            log.debug("portletWebApplication "+portletWebApplication);
-        }
-
-        if ( portletWebApplication ==null ) {
-            return list;
-        }
-
-        String classNameTemp =
-            PortletService.getStringParam(
-                portletWebApplication.getPortletDefinition(), ContainerConstants.class_name_get_list
-            );
-
-        if (classNameTemp==null) {
-            return list;
-        }
-
-        List<ClassQueryItem> v=null;
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( portletWebApplication.getClassLoader() );
-
-            Constructor constructor;
-            try {
-                constructor = Class.forName(classNameTemp, false, portletWebApplication.getClassLoader()).getConstructor();
-            }
-            catch (Exception e) {
-                String es = "Error getConstructor()";
-                log.error(es, e);
-                throw new IllegalStateException(es, e);
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("#12.12.005  constructor is " + constructor);
-            }
-
-            if (constructor != null) {
-                PortletGetList obj;
-                Object o = null;
-                try {
-                    o = constructor.newInstance();
-                    obj = (PortletGetList)o;
-                }
-                catch (ClassCastException e) {
-                    if (o!=null) {
-                        log.error("ClassCastException to PortletGetList.class  from "+o.getClass().getName(), e);
-                    }
-                    else {
-                        log.error("ClassCastException to PortletGetList.class  from null", e);
-                    }
-                    throw e;
-                }
-                catch (Throwable e) {
-                    String es = "Error invoke constructor ";
-                    log.error(es, e);
-                    throw new IllegalStateException(es, e);
-                }
-
-                if (log.isDebugEnabled())
-                {
-                    log.debug("#12.12.008 object " + obj);
-                    log.debug("#12.12.009 localePack  " +
-                        PortletService.getStringParam(
-                            portletWebApplication.getPortletDefinition(), ContainerConstants.locale_name_package
-                        )
-                    );
-                }
-                obj.setPortalDaoProvider(FacesTools.getPortalDaoProvider());
-                v = obj.getList( menuItem.getCatalogLanguageId(), menuItem.getContextId());
-
-                if (v==null) {
-                    return list;
-                }
-
-            }
-
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-
-        if (v!=null) {
-            for (ClassQueryItem classQueryItem : v) {
-                list.add( new SelectItem(classQueryItem.getIndex(), classQueryItem.getValue()));
-            }
-            contextList=list;
-        }
+        contextList=list;
 
         return list;
     }

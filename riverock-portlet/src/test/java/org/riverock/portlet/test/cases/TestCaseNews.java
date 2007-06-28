@@ -42,7 +42,7 @@ import org.riverock.portlet.news.schema.NewsGroupType;
 import org.riverock.portlet.news.schema.NewsItemType;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.interfaces.portlet.PortletResultObject;
 
 public class TestCaseNews /*extends TestCase */
 {

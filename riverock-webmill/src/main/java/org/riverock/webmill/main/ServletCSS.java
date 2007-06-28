@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.interfaces.portal.bean.Css;

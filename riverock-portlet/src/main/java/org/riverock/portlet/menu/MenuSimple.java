@@ -46,10 +46,10 @@ import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.portlet.menu.schema.MenuModuleType;
 import org.riverock.portlet.menu.schema.MenuSimpleType;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
+//import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * $Author$

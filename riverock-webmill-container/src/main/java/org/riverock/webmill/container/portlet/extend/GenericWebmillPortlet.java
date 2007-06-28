@@ -34,8 +34,10 @@ import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultObject;
+import org.riverock.interfaces.portlet.PortletResultContent;
+//import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * User: SergeMaslyukov
@@ -64,9 +66,7 @@ public abstract class GenericWebmillPortlet implements Portlet {
 
     public boolean isXml() {
         String s = portletConfig.getInitParameter( ContainerConstants.is_xml );
-        if (s==null)
-            return false;
-        return new Boolean(s);
+        return s != null && Boolean.valueOf(s);
     }
 
     public void doRender(RenderRequest renderRequest, RenderResponse renderResponse, PortletResultObject beanObject) throws PortletException, IOException
@@ -83,7 +83,7 @@ public abstract class GenericWebmillPortlet implements Portlet {
                 ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE );
 
             beanObject.setParameters( renderRequest, renderResponse, portletConfig );
-            PortletResultContent result = null;
+            PortletResultContent result;
             if ( code==null || code.length()==0 ){
                 String portletId = portletConfig.getInitParameter( ContainerConstants.name_portlet_id );
 
@@ -101,7 +101,7 @@ public abstract class GenericWebmillPortlet implements Portlet {
                 return;
             }
 
-            byte[] bytes = null;
+            byte[] bytes;
             if ( isXml() ) {
                 if (xmlRoot==null) {
                     bytes = result.getXml();

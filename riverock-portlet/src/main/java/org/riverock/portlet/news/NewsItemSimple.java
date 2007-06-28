@@ -33,9 +33,9 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.riverock.interfaces.portal.bean.News;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
 import org.riverock.webmill.container.tools.PortletMetadataService;
 import org.riverock.webmill.container.tools.PortletService;
 

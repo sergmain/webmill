@@ -27,7 +27,7 @@ import javax.portlet.PortletRequest;
 
 import org.riverock.module.web.user.ModuleUser;
 import org.riverock.module.web.user.WebmillModuleUserImpl;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**

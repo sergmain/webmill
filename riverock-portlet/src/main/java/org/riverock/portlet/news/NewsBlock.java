@@ -29,7 +29,7 @@ import org.riverock.portlet.news.schema.NewsBlockType;
 import org.riverock.portlet.news.schema.NewsGroupType;
 import org.riverock.portlet.news.schema.NewsItemType;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultContent;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;

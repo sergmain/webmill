@@ -36,7 +36,7 @@ import javax.portlet.WindowState;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
 
 /**

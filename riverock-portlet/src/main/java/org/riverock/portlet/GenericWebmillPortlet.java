@@ -38,9 +38,9 @@ import javax.portlet.RenderResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.tools.DebugUtils;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**

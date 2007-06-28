@@ -37,7 +37,7 @@ import org.riverock.portlet.register.Constants;
 import org.riverock.portlet.register.PortletErrors;
 import org.riverock.portlet.register.RegisterConstants;
 import org.riverock.portlet.register.RegisterError;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * @author SergeMaslyukov

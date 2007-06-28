@@ -44,7 +44,7 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
 import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.menu.SiteMenu;

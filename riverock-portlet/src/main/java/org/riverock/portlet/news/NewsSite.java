@@ -46,9 +46,9 @@ import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.news.schema.NewsBlockType;
 import org.riverock.portlet.news.schema.NewsItemType;
 import org.riverock.portlet.news.schema.NewsGroupType;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
 import org.riverock.webmill.container.resource.PortletResourceBundleWithLocale;
 
 /**

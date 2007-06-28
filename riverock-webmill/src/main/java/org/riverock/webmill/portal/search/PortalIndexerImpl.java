@@ -10,7 +10,7 @@ import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexerShort;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.PortletContainerException;

@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**

@@ -17,7 +17,7 @@ import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexerShort;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * User: SMaslyukov

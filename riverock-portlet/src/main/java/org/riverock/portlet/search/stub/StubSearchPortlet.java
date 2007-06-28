@@ -23,7 +23,7 @@
  */
 package org.riverock.portlet.search.stub;
 
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

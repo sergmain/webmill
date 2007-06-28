@@ -36,7 +36,7 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.bean.InitParam;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Supports;
@@ -191,60 +191,6 @@ public final class PortletService {
         catch(Exception e) {
             return defValue;
         }
-    }
-
-    public static boolean isSupportMimeType( final PortletDefinition portletType, final String mimeType ) {
-        if (portletType==null || mimeType==null)
-            return false;
-
-        for(Supports supports : portletType.getSupports() ) {
-            String type = supports.getMimeType();
-            if (type!=null && mimeType.equals( type ))
-                return true;
-        }
-        return false;
-    }
-
-    public static String getStringParam( final PortletDefinition v, final String name_ ) {
-        return getStringParam(v, name_, null);
-    }
-
-    public static String getStringParam(final PortletDefinition v, final String name_, final String defaultValue) {
-        if (v == null || name_ == null || name_.trim().length() == 0)
-            return defaultValue;
-
-        for (InitParam init : v.getInitParam()) {
-            if (name_.equals(init.getName())) {
-                return init.getValue() != null ? init.getValue() : defaultValue;
-            }
-        }
-        return defaultValue;
-    }
-
-    public static Boolean getBooleanParam( final PortletDefinition v, final String name_) {
-        return getBooleanParam(v, name_, null);
-    }
-
-    public static Boolean getBooleanParam( final PortletDefinition v, final String name_, final Boolean defaultvalue ) {
-        if (v == null || name_ == null)
-            return defaultvalue;
-
-        for (InitParam init : v.getInitParam()) {
-            if (name_.equals(init.getName()))
-                return Boolean.valueOf(init.getValue());
-        }
-        return defaultvalue;
-    }
-
-    public static Long getLongParam( final List<InitParam> v, final String name_ ) {
-        if (v == null || name_ == null || name_.trim().length() == 0)
-            return null;
-
-        for (InitParam init : v) {
-            if (name_.equals(init.getName()))
-                return new Long(init.getValue());
-        }
-        return null;
     }
 
     public static String getRemoteAddr( PortletRequest request ) {
@@ -469,4 +415,59 @@ public final class PortletService {
     public static String getString( final ResourceBundle bundle, final String key, final Object args[] ) {
         return MessageFormat.format( bundle.getString( key ), args );
     }
+
+    public static boolean isSupportMimeType( final PortletDefinition portletType, final String mimeType ) {
+        if (portletType==null || mimeType==null)
+            return false;
+
+        for(Supports supports : portletType.getSupports() ) {
+            String type = supports.getMimeType();
+            if (type!=null && mimeType.equals( type ))
+                return true;
+        }
+        return false;
+    }
+
+    public static String getStringParam( final PortletDefinition v, final String name_ ) {
+        return getStringParam(v, name_, null);
+    }
+
+    public static String getStringParam(final PortletDefinition v, final String name_, final String defaultValue) {
+        if (v == null || name_ == null || name_.trim().length() == 0)
+            return defaultValue;
+
+        for (InitParam init : v.getInitParam()) {
+            if (name_.equals(init.getName())) {
+                return init.getValue() != null ? init.getValue() : defaultValue;
+            }
+        }
+        return defaultValue;
+    }
+
+    public static Boolean getBooleanParam( final PortletDefinition v, final String name_) {
+        return getBooleanParam(v, name_, null);
+    }
+
+    public static Boolean getBooleanParam( final PortletDefinition v, final String name_, final Boolean defaultvalue ) {
+        if (v == null || name_ == null)
+            return defaultvalue;
+
+        for (InitParam init : v.getInitParam()) {
+            if (name_.equals(init.getName()))
+                return Boolean.valueOf(init.getValue());
+        }
+        return defaultvalue;
+    }
+
+    public static Long getLongParam( final List<InitParam> v, final String name_ ) {
+        if (v == null || name_ == null || name_.trim().length() == 0)
+            return null;
+
+        for (InitParam init : v) {
+            if (name_.equals(init.getName()))
+                return new Long(init.getValue());
+        }
+        return null;
+    }
+
 }

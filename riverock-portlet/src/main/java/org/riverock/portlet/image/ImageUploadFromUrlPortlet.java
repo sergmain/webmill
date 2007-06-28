@@ -49,7 +49,7 @@ import org.riverock.common.tools.StringTools;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * Author: mill

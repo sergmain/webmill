@@ -50,7 +50,7 @@ import org.riverock.common.config.PropertiesProvider;
 import org.riverock.common.tools.servlet.RequestDispatcherImpl;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.portlet.bean.Supports;
@@ -932,7 +932,8 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
                 portalInfo.getSite().getSiteId(),
                 PropertiesProvider.getApplicationPath(),
                 PortalUtils.buildVirtualHostUrl(httpRequest),
-                portalContext.getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH )
+                portalContext.getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH ),
+                portalRequestInstance
             )
         );
     }
