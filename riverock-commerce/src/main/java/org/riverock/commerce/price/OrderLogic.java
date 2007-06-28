@@ -38,7 +38,7 @@ import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.tools.HibernateUtils;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -53,7 +53,7 @@ public final class OrderLogic {
 
     public static Shop prepareCurrenctRequest( final RenderRequest renderRequest ) throws PortletException {
         PortletSession session = renderRequest.getPortletSession( true );
-        Long shopId = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM );
+        Long shopId = PortletUtils.getLong( renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM );
         AuthSession authSession = (AuthSession)renderRequest.getUserPrincipal();
         Shop shop = prepareCurrentShop(shopId, session);
         prepareInvoice(shop, session, renderRequest, authSession);
@@ -94,8 +94,8 @@ public final class OrderLogic {
                 }
             }
 
-            Long id_item = PortletService.getLong( renderRequest, ShopPortlet.NAME_ADD_ID_ITEM );
-            int count = PortletService.getInt( renderRequest, ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP, 0 );
+            Long id_item = PortletUtils.getLong( renderRequest, ShopPortlet.NAME_ADD_ID_ITEM );
+            int count = PortletUtils.getInt( renderRequest, ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP, 0 );
 
             // если при вызове было указано какое либо количество определенного наименования,
             // то помещаем это наименование в заказ

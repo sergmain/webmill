@@ -35,7 +35,7 @@ import org.riverock.commerce.bean.ShopItem;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.schema.shop.PositionItemType;
 import org.riverock.commerce.schema.shop.PricePositionType;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * Построение иерархии категорий товаров начиная от текущей и до корня вверх

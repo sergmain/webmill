@@ -30,7 +30,7 @@ import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.bean.Currency;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 import java.io.Serializable;
 import java.util.List;

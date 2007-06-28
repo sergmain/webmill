@@ -33,7 +33,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * User: Admin
@@ -71,10 +71,10 @@ public final class SwitchLanguagePortlet implements Portlet {
             if ( log.isDebugEnabled() ) {
                 for ( Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); ) {
                     String s = (String)e.nextElement();
-                    log.debug( "PortletRequest.processAction param: "+s+", value - "+PortletService.getString(actionRequest, s, null) );
+                    log.debug( "PortletRequest.processAction param: "+s+", value - "+PortletUtils.getString(actionRequest, s, null) );
                 }
             }
-            Long siteLanguageId = PortletService.getLong( actionRequest, NAME_ID_LANGUAGE );
+            Long siteLanguageId = PortletUtils.getLong( actionRequest, NAME_ID_LANGUAGE );
             if (log.isDebugEnabled()) {
                 log.debug("siteLanguageId: " + siteLanguageId);
             }
@@ -95,11 +95,11 @@ public final class SwitchLanguagePortlet implements Portlet {
 
             String newUrl;
             if (languageLocaleName == null || languageLocaleName.length() == 0) {
-                newUrl = actionResponse.encodeURL(PortletService.ctx( actionRequest ));
+                newUrl = actionResponse.encodeURL(PortletUtils.ctx( actionRequest ));
             }
             else {
                 StringBuilder b =
-                    PortletService.ctxStringBuilder( actionRequest, null, null, StringTools.getLocale(languageLocaleName) )
+                    PortletUtils.ctxStringBuilder( actionRequest, null, null, StringTools.getLocale(languageLocaleName) )
                         .append( '?' )
                         .append( ContainerConstants.NAME_LANG_PARAM )
                         .append( '=' )

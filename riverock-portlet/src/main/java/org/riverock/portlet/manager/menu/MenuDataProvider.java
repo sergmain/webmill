@@ -46,7 +46,7 @@ import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
 import org.riverock.portlet.manager.menu.bean.SiteExtended;
 import org.riverock.portlet.tools.FacesTools;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -90,9 +90,9 @@ public class MenuDataProvider implements Serializable {
                 .getCatalogLanguageItem(menuItem.getMenuItem().getCatalogLanguageId());
             String locale = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguage(bean.getSiteLanguageId()).getCustomLanguage();
             if (menuItem.getMenuItem().getUrl() == null)
-                return PortletService.pageid(renderRequest) + '/' + locale + '/' + menuItem.getMenuItem().getId();
+                return PortletUtils.pageid(renderRequest) + '/' + locale + '/' + menuItem.getMenuItem().getId();
             else
-                return PortletService.page(renderRequest) + '/' + locale + '/' + menuItem.getMenuItem().getUrl();
+                return PortletUtils.page(renderRequest) + '/' + locale + '/' + menuItem.getMenuItem().getUrl();
         }
         return null;
     }

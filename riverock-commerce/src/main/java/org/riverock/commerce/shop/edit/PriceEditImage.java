@@ -49,8 +49,8 @@ import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.commerce.schema.shop.PricePositionType;
 import org.riverock.commerce.schema.shop.PositionItemType;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.common.utils.PortletUtils;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * Author: mill
@@ -95,7 +95,7 @@ public final class PriceEditImage extends HttpServlet {
                     throw new IllegalStateException("You have not enough right to execute this operation");
                 }
 
-                String index_page = PortletService.url("mill.price.index", renderRequest, renderResponse);
+                String index_page = PortletUtils.url("mill.price.index", renderRequest, renderResponse);
 
                 PortletSession session = renderRequest.getPortletSession();
 
@@ -105,7 +105,7 @@ public final class PriceEditImage extends HttpServlet {
                 shopParam.setServerName(renderRequest.getServerName(), siteId);
 
                 if (renderRequest.getParameter(ShopPortlet.NAME_ID_SHOP_PARAM) != null) {
-                    shopParam.id_shop = PortletService.getLong(renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM);
+                    shopParam.id_shop = PortletUtils.getLong(renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM);
                 } else {
                     Long id_ = (Long) session.getAttribute(ShopPortlet.ID_SHOP_SESSION);
                     if (id_ == null) {
@@ -120,10 +120,10 @@ public final class PriceEditImage extends HttpServlet {
 
                 if (auth_.isUserInRole("webmill.upload_image")) {
 
-                    shopParam.id_group = PortletService.getLong(renderRequest, "id_main");
-                    Long id_item = PortletService.getLong(renderRequest, "id_item");
-                    long pageNum = PortletService.getInt(renderRequest, "pageNum", 0);
-                    long countImage = PortletService.getInt(renderRequest, "countImage", itemsPerPage);
+                    shopParam.id_group = PortletUtils.getLong(renderRequest, "id_main");
+                    Long id_item = PortletUtils.getLong(renderRequest, "id_item");
+                    long pageNum = PortletUtils.getInt(renderRequest, "pageNum", 0);
+                    long countImage = PortletUtils.getInt(renderRequest, "countImage", itemsPerPage);
 
                     if (true) throw new Exception("not implemented");
                     PricePositionType pos = null;
@@ -140,7 +140,7 @@ public final class PriceEditImage extends HttpServlet {
                             out.write("<a href=\"");
                             out.write(
 
-                                PortletService.url("mill.price.image", renderRequest, renderResponse) + '&' +
+                                PortletUtils.url("mill.price.image", renderRequest, renderResponse) + '&' +
                                     "id_item=" + id_item
 
                             );
@@ -158,7 +158,7 @@ public final class PriceEditImage extends HttpServlet {
                                 out.write("<a href=\"");
                                 out.write(
 
-                                    PortletService.url("mill.price.image", renderRequest, renderResponse) + '&' +
+                                    PortletUtils.url("mill.price.image", renderRequest, renderResponse) + '&' +
                                         "i=" + item.getIdGroupCurrent()
 
                                 );
@@ -197,7 +197,7 @@ public final class PriceEditImage extends HttpServlet {
                             out.write("<a href=\"");
                             out.write(
 
-                                PortletService.url("mill.price.image", renderRequest, renderResponse) + '&' +
+                                PortletUtils.url("mill.price.image", renderRequest, renderResponse) + '&' +
                                     "id_main=" + itemGroup.id_group + "&id_item=" + id_item
 
                             );
@@ -286,7 +286,7 @@ public final class PriceEditImage extends HttpServlet {
                                 out.write("<br>\r\n");
                                 out.write("<a href=\"");
                                 out.write(
-                                    PortletService.url("mill.price.description", renderRequest, renderResponse) + '&' +
+                                    PortletUtils.url("mill.price.description", renderRequest, renderResponse) + '&' +
                                         "id_item=" + id_item +
                                         "&id_image=" + RsetTools.getLong(rs, "ID_IMAGE_DIR") +
                                         "&action=new_image"
@@ -315,7 +315,7 @@ public final class PriceEditImage extends HttpServlet {
                             out.write("<a href=\"");
                             out.write(
 
-                                PortletService.url("mill.price.image", renderRequest, renderResponse) + '&' +
+                                PortletUtils.url("mill.price.image", renderRequest, renderResponse) + '&' +
                                     "id_main=" + shopParam.id_group + "&pageNum=" + (pageNum - 1) +
                                     "&id_item=" + id_item
 
@@ -335,7 +335,7 @@ public final class PriceEditImage extends HttpServlet {
                             out.write("<a href=\"");
                             out.write(
 
-                                PortletService.url("mill.price.image", renderRequest, renderResponse) + '&' +
+                                PortletUtils.url("mill.price.image", renderRequest, renderResponse) + '&' +
                                     "id_main=" + shopParam.id_group + "&pageNum=" + (pageNum + 1) +
                                     "&id_item=" + id_item
 

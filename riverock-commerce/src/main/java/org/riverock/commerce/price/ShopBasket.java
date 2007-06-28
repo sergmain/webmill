@@ -32,8 +32,8 @@ import javax.portlet.RenderResponse;
 import org.riverock.commerce.invoice.InvoicePortlet;
 import org.riverock.commerce.schema.shop.CurrentBasketType;
 import org.riverock.commerce.dao.CommerceDaoFactory;
-import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.common.utils.PortletUtils;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  *
@@ -65,7 +65,7 @@ public final class ShopBasket {
 
         PortletURL portletURL = renderResponse.createRenderURL();
         portletURL.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, InvoicePortlet.CTX_TYPE_INVOICE );
-        portletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ).toString() );
+        portletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, PortletUtils.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ).toString() );
         portletURL.setParameters( shopParam.currencyURL );
         portletURL.setParameter( ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
 

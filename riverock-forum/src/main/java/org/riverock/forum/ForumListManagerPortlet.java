@@ -45,8 +45,8 @@ import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.web.response.PortletModuleResponseImpl;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.url.WebmillPortletUrlProviderImpl;
-import org.riverock.webmill.container.tools.PortletMetadataService;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.portlet.PortletMetadataService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SMaslyukov
@@ -111,7 +111,7 @@ public class ForumListManagerPortlet extends AbstractForumPortlet {
         genericBean.setRegisterUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
         genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setForumHomeUrl(
-            PortletService.ctxStringBuilder((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_LIST_MANAGER_PORTLET_NAME).
+            PortletUtils.ctxStringBuilder((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_LIST_MANAGER_PORTLET_NAME).
             append('?').
             append("a=1")
         );

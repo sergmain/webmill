@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -86,7 +86,7 @@ public class ImageSelectFile extends HttpServlet
                     throw new IllegalStateException( "You have not enough right to execute this operation" );
                 }
 
-                String index_page = PortletService.url("mill.image.index", renderRequest, renderResponse );
+                String index_page = PortletUtils.url("mill.image.index", renderRequest, renderResponse );
 
                 if (auth_.isUserInRole("webmill.upload_image"))
                 {
@@ -99,7 +99,7 @@ public class ImageSelectFile extends HttpServlet
                         return;
                     }
 
-                    sess.setAttribute("MILL.IMAGE.DESC_IMAGE", PortletService.getString(renderRequest, "d", "none"));
+                    sess.setAttribute("MILL.IMAGE.DESC_IMAGE", PortletUtils.getString(renderRequest, "d", "none"));
 
                     out.write("\r\n            ");
                     out.write("" + ( ( Long ) sess.getAttribute( "MILL.IMAGE.ID_MAIN" ) ));
@@ -108,7 +108,7 @@ public class ImageSelectFile extends HttpServlet
                     out.write("<br>Выберите файл для загрузки");
                     out.write("<form method=\"post\" action=\"");
                     out.write(
-                        PortletService.url("mill.image.upload_image", renderRequest, renderResponse )
+                        PortletUtils.url("mill.image.upload_image", renderRequest, renderResponse )
                     );
                     out.write("\" ENCTYPE=\"multipart/form-data\">\r\n");
                     out.write("<p>\r\n");

@@ -48,7 +48,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
@@ -117,14 +117,14 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
 
             if ( log.isDebugEnabled() )
-                log.debug( "id_main - " + PortletService.getLong( renderRequest, "id_main" ) );
+                log.debug( "id_main - " + PortletUtils.getLong( renderRequest, "id_main" ) );
 
-            Long id_main = PortletService.getLong( renderRequest, "id_main" );
+            Long id_main = PortletUtils.getLong( renderRequest, "id_main" );
             if ( id_main == null )
                 throw new IllegalArgumentException( "id_firm not initialized" );
 
 
-            String desc = PortletService.getString(renderRequest, "d", null);
+            String desc = PortletUtils.getString(renderRequest, "d", null);
 
 
             // Todo этот сиквенс просто заглушка, сейчас не работает.
@@ -192,9 +192,9 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
                 "Загружен файл " + newFileName + "<br>" +
                 DateFormatUtils.format(System.currentTimeMillis(), "dd-MMMM-yyyy HH:mm:ss:SS", TimeZone.getDefault(), renderRequest.getLocale() ) + "<br>" +
                 "<br>" +
-                "<p><a href=\"" + PortletService.url( "mill.image.index", renderRequest, renderResponse ) +
+                "<p><a href=\"" + PortletUtils.url( "mill.image.index", renderRequest, renderResponse ) +
                 "\">Загрузить данные повторно</a></p><br>" +
-                "<p><a href=\"" + PortletService.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse ) +
+                "<p><a href=\"" + PortletUtils.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse ) +
                 "\">На главную страницу</a></p>" );
 
         }

@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 import javax.portlet.PortletRequest;
 
 import org.riverock.commerce.bean.CustomCurrency;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.commerce.schema.shop.CurrencyListType;
 import org.riverock.commerce.schema.shop.HiddenParamType;
 import org.riverock.commerce.schema.shop.CurrencyItemType;

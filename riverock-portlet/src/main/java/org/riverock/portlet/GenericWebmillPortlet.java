@@ -41,7 +41,7 @@ import org.riverock.portlet.tools.DebugUtils;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.interfaces.portlet.PortletResultObject;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -101,7 +101,7 @@ public abstract class GenericWebmillPortlet implements Portlet {
             if ( code==null || code.length()==0 ){
                 String portletId = portletConfig.getInitParameter( ContainerConstants.name_portlet_id );
 
-                Long id = PortletService.getLong( renderRequest, portletId );
+                Long id = PortletUtils.getLong( renderRequest, portletId );
                 result = beanObject.getInstance( id );
             }
             else {

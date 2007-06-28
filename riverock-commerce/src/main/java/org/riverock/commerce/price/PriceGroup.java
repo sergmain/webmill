@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.schema.shop.GroupItemType;
 import org.riverock.commerce.schema.shop.GroupListType;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * $Author$

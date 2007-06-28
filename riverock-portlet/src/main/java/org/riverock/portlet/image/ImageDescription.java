@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -90,7 +90,7 @@ public class ImageDescription extends HttpServlet
                 {
 
                     PortletSession sess = renderRequest.getPortletSession(true);
-                    Long l = PortletService.getLong(renderRequest, "id_main");
+                    Long l = PortletUtils.getLong(renderRequest, "id_main");
                     if (l==null)
                         throw new IllegalArgumentException("id_main not initialized");
 
@@ -110,7 +110,7 @@ public class ImageDescription extends HttpServlet
                     out.write("<form method=\"POST\" action=\"");
                     out.write(
 
-                            PortletService.url("mill.image.step_file", renderRequest, renderResponse )
+                            PortletUtils.url("mill.image.step_file", renderRequest, renderResponse )
 
                     );
                     out.write("\">\r\n");

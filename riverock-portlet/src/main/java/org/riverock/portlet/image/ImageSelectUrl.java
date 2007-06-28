@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -87,7 +87,7 @@ public class ImageSelectUrl extends HttpServlet
                 if (auth_.isUserInRole("webmill.upload_image"))
                 {
 
-                    Long id_main = PortletService.getLong(renderRequest, "id_main");
+                    Long id_main = PortletUtils.getLong(renderRequest, "id_main");
                     if (id_main==null)
                         throw new IllegalArgumentException("id_relate_right not initialized");
 

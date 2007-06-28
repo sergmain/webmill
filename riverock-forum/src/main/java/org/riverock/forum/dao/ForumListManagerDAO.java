@@ -45,12 +45,13 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.exception.ModuleException;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.user.ModuleUser;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * @author SMaslyukov

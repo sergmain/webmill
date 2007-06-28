@@ -49,7 +49,7 @@ import org.riverock.common.tools.XmlTools;
 import org.riverock.commerce.price.ImportPriceList;
 import org.riverock.commerce.schema.import_price.PricesType;
 import org.riverock.commerce.tools.ContentTypeTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * User: Admin

@@ -25,7 +25,7 @@ package org.riverock.portlet.webclip;
 
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
@@ -127,7 +127,7 @@ public class WebclipPortlet implements Portlet {
         request.setAttribute(WebclipConstants.NEW_HREF_PREFIX_PARAM, getNewHrefPrefix(request));
 
         // set error of process action
-        request.setAttribute(WebclipConstants.WEBCLIP_ERROR_MESSAGE, PortletService.getString(request, WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, "") );
+        request.setAttribute(WebclipConstants.WEBCLIP_ERROR_MESSAGE, PortletUtils.getString(request, WebclipConstants.WEBCLIP_ERROR_MESSAGE_PARAM, "") );
 
         portletConfig.getPortletContext().getRequestDispatcher(WebclipConstants.RIVEROCK_WEBLICP_INDEX_JSP).include(request, response);
     }

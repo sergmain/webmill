@@ -78,20 +78,20 @@ public final class ImageIndex extends HttpServlet {
 
             db_ = DatabaseAdapter.getInstance();
 
-            String index_page = PortletService.url( "mill.image.index", renderRequest, renderResponse );
+            String index_page = PortletUtils.url( "mill.image.index", renderRequest, renderResponse );
 
             if ( auth_.isUserInRole( "webmill.upload_image" ) ) {
-                Long id_main_ = PortletService.getLong( renderRequest, "id_main" );
+                Long id_main_ = PortletUtils.getLong( renderRequest, "id_main" );
 
                 out.write( "\r\n" );
                 out.write( "<a href=\"" );
-                out.write( PortletService.url( "mill.image.desc", renderRequest, renderResponse ) + '&' +
+                out.write( PortletUtils.url( "mill.image.desc", renderRequest, renderResponse ) + '&' +
                     "id_main=" + id_main_ );
                 out.write( "\">upload file" );
                 out.write( "</a>" );
                 out.write( "<br>\r\n" );
                 out.write( "<a href=\"" );
-                out.write( PortletService.url( "mill.image.select_url", renderRequest, renderResponse ) + '&' +
+                out.write( PortletUtils.url( "mill.image.select_url", renderRequest, renderResponse ) + '&' +
                     "id_main=" + id_main_ );
                 out.write( "\">Загрузка изображения из URLa" );
                 out.write( "</a>" );
@@ -172,19 +172,19 @@ public final class ImageIndex extends HttpServlet {
                 out.write( "\r\n" );
                 out.write( "</table>\r\n\r\n" );
                 out.write( "<a href=\"" );
-                out.write( PortletService.url( "mill.image.desc", renderRequest, renderResponse ) + '&' +
+                out.write( PortletUtils.url( "mill.image.desc", renderRequest, renderResponse ) + '&' +
                     "id_main=" + id_main_ );
                 out.write( "\">upload file" );
                 out.write( "</a>" );
                 out.write( "<br>\r\n" );
                 out.write( "<a href=\"" );
-                out.write( PortletService.url( "mill.image.select_url", renderRequest, renderResponse ) + '&' +
+                out.write( PortletUtils.url( "mill.image.select_url", renderRequest, renderResponse ) + '&' +
                     "id_main=" + id_main_ );
                 out.write( "\">upload from URL" );
                 out.write( "</a>" );
                 out.write( "<br>\r\n" );
                 out.write( "<a href=\"" );
-                out.write( PortletService.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
+                out.write( PortletUtils.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
                     "id_main=" + id_main_ );
                 out.write( "\">Browse folder with image" );
                 out.write( "</a>" );

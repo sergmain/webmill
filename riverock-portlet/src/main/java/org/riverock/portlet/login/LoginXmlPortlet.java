@@ -45,7 +45,7 @@ import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.login.schema.LoginType;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * User: Admin
@@ -104,7 +104,7 @@ public final class LoginXmlPortlet implements Portlet {
 
                 String srcURL = null;
                 if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
-                    srcURL = PortletService.getString(renderRequest, LoginUtils.NAME_TOURL_PARAM, null);
+                    srcURL = PortletUtils.getString(renderRequest, LoginUtils.NAME_TOURL_PARAM, null);
                     srcURL = StringUtils.replace( srcURL, "%3D", "=" );
                     srcURL = StringUtils.replace( srcURL, "%26", "&" );
 

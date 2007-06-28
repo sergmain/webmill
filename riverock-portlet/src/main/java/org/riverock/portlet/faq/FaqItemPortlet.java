@@ -31,7 +31,8 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
+import org.riverock.portlet.GenericWebmillPortlet;
+import org.riverock.portlet.GenericWebmillPortlet;
 
 /**
  * User: SergeMaslyukov

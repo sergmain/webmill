@@ -44,8 +44,8 @@ import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -97,7 +97,7 @@ public class PriceEditShop extends HttpServlet
 
                 if (renderRequest.getParameter(ShopPortlet.NAME_ID_SHOP_PARAM) != null)
                 {
-                    shopParam.id_shop = PortletService.getLong(renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM);
+                    shopParam.id_shop = PortletUtils.getLong(renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM);
                 }
                 else
                 {
@@ -105,7 +105,7 @@ public class PriceEditShop extends HttpServlet
                     if (id_ == null)
                     {
                         response.sendRedirect(
-                                PortletService.url("mill.price.index", renderRequest, renderResponse )
+                                PortletUtils.url("mill.price.index", renderRequest, renderResponse )
                         );
                         return;
                     }
@@ -118,11 +118,11 @@ public class PriceEditShop extends HttpServlet
                 if (auth_.isUserInRole("webmill.edit_price_list"))
                 {
 
-                    shopParam.id_group = PortletService.getLong(renderRequest, "i");
+                    shopParam.id_group = PortletUtils.getLong(renderRequest, "i");
 
-                    if (PortletService.getString(renderRequest, "action", null).equals("update"))
+                    if (PortletUtils.getString(renderRequest, "action", null).equals("update"))
                     {
-                        int countItem = PortletService.getInt(renderRequest, "count_item", 0);
+                        int countItem = PortletUtils.getInt(renderRequest, "count_item", 0);
 
                         PreparedStatement st = null;
                         String sql_ =
@@ -137,12 +137,12 @@ public class PriceEditShop extends HttpServlet
 //                                if (st == null)
 //                                    st = db_.prepareStatement(sql_);
 
-                                Long idCode = PortletService.getLong(renderRequest, "id_code_" + i);
+                                Long idCode = PortletUtils.getLong(renderRequest, "id_code_" + i);
 
-                                st.setString(1, PortletService.getString(renderRequest, "name_" + i + "_" + idCode, null));
-                                RsetTools.setDouble(st, 2, PortletService.getDouble(renderRequest, "price_" + i + "_" + idCode));
-                                st.setString(3, PortletService.getString(renderRequest, "curr_" + i + "_" + idCode, null));
-                                RsetTools.setInt(st, 4, PortletService.getInt(renderRequest, "cb_" + i + "_" + idCode, 0 ));
+                                st.setString(1, PortletUtils.getString(renderRequest, "name_" + i + "_" + idCode, null));
+                                RsetTools.setDouble(st, 2, PortletUtils.getDouble(renderRequest, "price_" + i + "_" + idCode));
+                                st.setString(3, PortletUtils.getString(renderRequest, "curr_" + i + "_" + idCode, null));
+                                RsetTools.setInt(st, 4, PortletUtils.getInt(renderRequest, "cb_" + i + "_" + idCode, 0 ));
                                 RsetTools.setLong(st, 5, idCode);
                                 RsetTools.setLong(st, 6, shopParam.id_shop);
 
@@ -188,7 +188,7 @@ public class PriceEditShop extends HttpServlet
                             out.write("<a href=\"");
                             out.write(
 
-                                    PortletService.url(renderRequest, response, ctxInstance.page, "mill.price.index")
+                                    PortletUtils.url(renderRequest, response, ctxInstance.page, "mill.price.index")
 
                             );
                             out.write("\">.");
@@ -206,7 +206,7 @@ public class PriceEditShop extends HttpServlet
                                 out.write("<a href=\"");
                                 out.write(
 
-                                        PortletService.url(renderRequest, response, ctxInstance.page, "mill.price.shop") + '&' +
+                                        PortletUtils.url(renderRequest, response, ctxInstance.page, "mill.price.shop") + '&' +
                                         "i=" + item.id_group_current + '&' +
                                         Constants.NAME_ID_SHOP_PARAM + '=' + shopParam.id_shop
 
@@ -249,7 +249,7 @@ public class PriceEditShop extends HttpServlet
                             out.write("<a href=\"");
                             out.write(
 
-                                    PortletService.url(renderRequest, response, ctxInstance.page, "mill.price.shop") + '&' +
+                                    PortletUtils.url(renderRequest, response, ctxInstance.page, "mill.price.shop") + '&' +
                                     "i=" + itemGroup.id_group + '&' +
                                     Constants.NAME_ID_SHOP_PARAM + '=' + shopParam.id_shop
 
@@ -274,7 +274,7 @@ public class PriceEditShop extends HttpServlet
                         out.write("<form action=\"");
                         out.write(
 
-                                PortletService.url(renderRequest, response, ctxInstance.page, "mill.price.shop")
+                                PortletUtils.url(renderRequest, response, ctxInstance.page, "mill.price.shop")
 
                         );
                         out.write("\" method=\"POST\">\n");
@@ -317,7 +317,7 @@ public class PriceEditShop extends HttpServlet
                             out.write("<input type=\"button\" value=\"Описание\"\nonclick=\"window.open('");
                             out.write(
 
-                                    PortletService.url(renderRequest, response, ctxInstance.page, "mill.price.description") + '&' +
+                                    PortletUtils.url(renderRequest, response, ctxInstance.page, "mill.price.description") + '&' +
                                     "id_item=" + item.idPK
 
                             );

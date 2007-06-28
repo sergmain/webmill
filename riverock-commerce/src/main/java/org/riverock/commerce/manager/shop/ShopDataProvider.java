@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.bean.Shop;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * @author Sergei Maslyukov

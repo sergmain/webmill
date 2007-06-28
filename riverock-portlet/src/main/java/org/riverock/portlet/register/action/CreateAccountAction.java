@@ -105,7 +105,7 @@ public class CreateAccountAction implements Action {
 
             case PortalUserManager.STATUS_LOGIN_ALREADY_REGISTERED:
 //                String args2[] = {bean.getUserLogin()};
-//                String aaa = PortletService.getString( moduleActionRequest.getResourceBundle(), "reg.login_exists", args2 );
+//                String aaa = PortletUtils.getString( moduleActionRequest.getResourceBundle(), "reg.login_exists", args2 );
 //                args2 = null;
 
                 return RegisterError.loginAlreadyRegistered(moduleActionRequest);

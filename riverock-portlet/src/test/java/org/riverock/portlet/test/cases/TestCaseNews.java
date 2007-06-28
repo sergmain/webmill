@@ -41,7 +41,6 @@ import org.riverock.portlet.news.schema.NewsBlockType;
 import org.riverock.portlet.news.schema.NewsGroupType;
 import org.riverock.portlet.news.schema.NewsItemType;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.interfaces.portlet.PortletResultObject;
 
 public class TestCaseNews /*extends TestCase */
@@ -339,7 +338,7 @@ public class TestCaseNews /*extends TestCase */
             for (NewsItemType newsItem : groupResult.getNewsItem()) {
                 newsItem.setToFullItem( str );
                 newsItem.setUrlToFullNewsItem(
-//                    PortletService.url( Constants .CTX_TYPE_NEWS ) + '&' +
+//                    PortletUtils.url( Constants .CTX_TYPE_NEWS ) + '&' +
                     NewsSite.NAME_ID_NEWS_PARAM + '=' + newsItem.getNewsItemId() + '&'
                 );
             }
@@ -404,12 +403,11 @@ public class TestCaseNews /*extends TestCase */
             for (NewsItemType item : group.getNewsItem()) {
                 testAbstract.initRequestSession();
 
-                PortletDefinition desc;
 //                desc = PortletManager.getPortletDescription( "mill.news" );
 //                assertFalse("Description for portlet 'mill.news' not found", desc==null);
 
 //                testAbstract.request.setParameter(
-//                    PortletService.getStringParam(
+//                    PortletUtils.getStringParam(
 //                        desc, PortletTools.name_portlet_id
 //                    ),
 //                    ""+item.getNewsItemId()
@@ -421,7 +419,7 @@ public class TestCaseNews /*extends TestCase */
                 // localePackage надо брать из файла описателя портлетов
 //                PortletParameter portletParameter =
 //                    new PortletParameter(ctxInstance,
-//                        PortletService.getStringParam(
+//                        PortletUtils.getStringParam(
 //                            desc, ContainerConstants.locale_name_package
 //                        ),
 //                        templateItem
@@ -599,7 +597,7 @@ public class TestCaseNews /*extends TestCase */
         // localePackage надо брать из файла описателя портлетов
 //        PortletParameter portletParameter =
 //            new PortletParameter(ctxInstance,
-//                PortletService.getStringParam(
+//                PortletUtils.getStringParam(
 //                    desc, ContainerConstants.locale_name_package
 //                ),
 //                templateItem
