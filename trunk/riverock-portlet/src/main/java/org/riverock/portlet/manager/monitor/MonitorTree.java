@@ -20,7 +20,7 @@ import org.riverock.common.config.PropertiesProvider;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.portlet.manager.monitor.schema.Directory;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * User: SMaslyukov

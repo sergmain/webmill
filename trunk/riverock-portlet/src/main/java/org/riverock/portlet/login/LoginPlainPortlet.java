@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ServletTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**

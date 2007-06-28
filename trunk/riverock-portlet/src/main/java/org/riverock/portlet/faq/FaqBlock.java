@@ -43,11 +43,11 @@ import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.faq.schema.FaqBlockType;
 import org.riverock.portlet.faq.schema.FaqGroupType;
 import org.riverock.portlet.faq.schema.FaqItemType;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
 
 /**
  * $Id$

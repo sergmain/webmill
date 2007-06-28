@@ -35,7 +35,7 @@ import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**

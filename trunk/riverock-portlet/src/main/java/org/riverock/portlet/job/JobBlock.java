@@ -46,9 +46,9 @@ import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.portlet.job.schema.JobBlockType;
 import org.riverock.portlet.job.schema.JobItemType;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * $Id$

@@ -28,7 +28,7 @@ import org.riverock.common.tools.servlet.HttpServletRequestApplWrapper;
 import org.riverock.common.tools.servlet.HttpServletResponseApplWrapper;
 import org.riverock.common.tools.servlet.HttpSessionApplWrapper;
 import org.riverock.common.startup.StartupApplication;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * User: Admin

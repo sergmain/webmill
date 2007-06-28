@@ -29,7 +29,7 @@ import org.riverock.portlet.webclip.WebclipUtils;
 import org.riverock.portlet.webclip.manager.WebclipSessionBean;
 import org.riverock.portlet.webclip.manager.bean.MenuItem;
 import org.riverock.portlet.webclip.manager.bean.WebclipStatisticBean;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * User: SMaslyukov

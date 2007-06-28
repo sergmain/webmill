@@ -41,7 +41,7 @@ import org.riverock.portlet.captcha.CaptchaServiceSingleton;
 import org.riverock.portlet.register.RegisterConstants;
 import org.riverock.portlet.register.RegisterError;
 import org.riverock.portlet.register.bean.UserRegistrationBean;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * @author SergeMaslyukov

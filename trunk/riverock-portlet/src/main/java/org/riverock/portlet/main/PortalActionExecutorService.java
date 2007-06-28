@@ -28,7 +28,7 @@ import javax.portlet.PortletRequest;
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.action.PortalActionExecutor;
 
 /**

@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * @author Sergei Maslyukov

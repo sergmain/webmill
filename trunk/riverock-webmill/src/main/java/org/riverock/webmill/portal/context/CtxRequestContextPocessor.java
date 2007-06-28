@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.SimpleStringTokenizer;
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.PortletParameters;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;

@@ -40,7 +40,7 @@ import org.apache.commons.lang.StringUtils;
 import org.riverock.common.tools.MainTools;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
@@ -334,7 +334,6 @@ public final class PageElement {
                     ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
                     new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
                 );
-                actionRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portalInstance.getPortletContainer() );
 
                 actionResponse = new ActionResponseImpl(
                     portalRequestInstance.getHttpResponse(),
@@ -435,14 +434,10 @@ public final class PageElement {
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, portalTemplateItem.getCode());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, portalTemplateItem.getXmlRoot());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
-            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portalInstance.getPortletContainer() );
             renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, portalTemplateItem.getParameters() );
 
             // todo current implementation not support 'current catalog ID'
 //            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getCatalogItemId() );
-
-            // Todo after rewrite(delete) member portlet, you can delete next line
-            renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
             PortalContext portalContext = new PortalContextImpl(
                 portalInstance.getPortalName(), portalRequestInstance.getHttpRequest().getContextPath(), portalInfo

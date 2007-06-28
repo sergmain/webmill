@@ -44,9 +44,9 @@ import org.riverock.interfaces.portal.user.UserMetadataItem;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
 
 /**
  * @author SMaslyukov

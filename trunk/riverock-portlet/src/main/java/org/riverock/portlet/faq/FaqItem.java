@@ -40,8 +40,8 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
+import org.riverock.interfaces.portlet.PortletResultContent;
 
 /**
  * $Id$

@@ -36,7 +36,7 @@ import javax.portlet.PortletURL;
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.action.ModuleActionRequest;

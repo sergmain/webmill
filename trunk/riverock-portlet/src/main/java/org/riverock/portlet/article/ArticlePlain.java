@@ -33,9 +33,9 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.cms.article.bean.ArticleBean;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;

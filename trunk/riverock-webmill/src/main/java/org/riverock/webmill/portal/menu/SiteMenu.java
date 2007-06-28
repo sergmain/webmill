@@ -77,25 +77,6 @@ public final class SiteMenu {
         }
     }
 
-    /**
-     * @deprecated
-     */
-    public void reinit() {
-        synchronized (syncObject) {
-            siteMenuLaguage.clear();
-        }
-    }
-
-    /**
-     * @deprecated
-     * @param id_ not used
-     */
-    public void terminate(final Long id_) {
-        synchronized (syncObject) {
-            siteMenuLaguage.clear();
-        }
-    }
-    
     public static void invalidateCache(Long siteLanguageId) {
         if (siteLanguageId==null) {
             return;

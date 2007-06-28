@@ -27,7 +27,7 @@ import java.util.Map;
 
 import javax.portlet.PortletRequest;
 
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * @author smaslyukov

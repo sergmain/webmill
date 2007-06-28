@@ -35,4 +35,5 @@ import javax.servlet.http.Cookie;
  */
 public interface CookieManager {
     public void addCookie( Cookie cookie );
-    public List<Cookie> getCookieList();}
+    public List<Cookie> getCookieList();
+}

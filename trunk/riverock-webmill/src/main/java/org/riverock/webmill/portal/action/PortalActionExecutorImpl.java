@@ -31,6 +31,9 @@ import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.action.PortalActionExecutor;
 import org.riverock.webmill.google.sitemap.GoogleSitemapService;
+import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.portal.menu.MenuItemsProvider;
+import org.riverock.webmill.portal.PortalRequestInstance;
 
 /**
  * @author Sergei Maslyukov
@@ -42,13 +45,16 @@ import org.riverock.webmill.google.sitemap.GoogleSitemapService;
 public class PortalActionExecutorImpl implements PortalActionExecutor {
     private final static Logger log = Logger.getLogger( PortalActionExecutorImpl.class );
 
-    private static Map<String, Integer> action = new HashMap<String, Integer>();
+    private static enum PortalAction {CREATE_GOOGLE_SITEMAP_TYPE, GET_MENU_ITEMS}
 
-    private static final int CREATE_GOOGLE_SITEMAP_TYPE = 1;
+    private static Map<String, PortalAction> actions = new HashMap<String, PortalAction>();
+
     private static final String CREATE_GOOGLE_SITEMAP_ACTION = "create-google-sitemap";
+    private static final String GET_MENU_ITEMS = "get-menu-items";
 
     static {
-        action.put(CREATE_GOOGLE_SITEMAP_ACTION, CREATE_GOOGLE_SITEMAP_TYPE);
+        actions.put(CREATE_GOOGLE_SITEMAP_ACTION, PortalAction.CREATE_GOOGLE_SITEMAP_TYPE);
+        actions.put(GET_MENU_ITEMS, PortalAction.GET_MENU_ITEMS);
     }
 
     private ClassLoader portalClassLoader;
@@ -56,13 +62,15 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
     private String virtualHostUrl;
     private String applicationPath;
     private String portalContext;
+    private PortalRequestInstance portalRequestInstance;
 
-    public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId, String applicationPath, String virtualHostUrl, String portalContext) {
+    public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId, String applicationPath, String virtualHostUrl, String portalContext, PortalRequestInstance portalRequestInstance) {
         this.portalClassLoader=portalClassLoader;
         this.siteId=siteId;
         this.virtualHostUrl=virtualHostUrl;
         this.applicationPath=applicationPath;
         this.portalContext=portalContext;
+        this.portalRequestInstance=portalRequestInstance;
     }
     
     public Map<String, Object> execute(String command, Map<String, Object> parameters) {
@@ -73,19 +81,21 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
 
             Map<String, Object> result = new HashMap<String, Object>();
 
-            Integer idx = action.get(command);
-            if (idx==null) {
+            PortalAction action = actions.get(command);
+            if (action==null) {
                 log.warn("PortalAction '"+command+"' not registered");
                 return result;
             }
-            switch (idx) {
+            switch (action) {
                 case CREATE_GOOGLE_SITEMAP_TYPE:
                     GoogleSitemapService.createSitemap(siteId, virtualHostUrl, portalContext, applicationPath);
                     return result;
-                default:
-                    log.warn("Unknown value of actionIndex: " + idx);
+                case GET_MENU_ITEMS:
+                    result.put("result", MenuItemsProvider.getMenuItems(portalRequestInstance, siteId, parameters));
                     return result;
-
+                default:
+                    log.warn("Unknown value of actionIndex: " + action);
+                    return result;
             }
         }
         finally {
