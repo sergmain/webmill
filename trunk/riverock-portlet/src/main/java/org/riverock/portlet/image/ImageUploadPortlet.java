@@ -43,9 +43,10 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.portal.bean.User;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -90,7 +91,7 @@ public final class ImageUploadPortlet implements Portlet {
             if ( log.isDebugEnabled() )
                 log.debug( "Start commit new image from file" );
 
-            String index_page = PortletService.url( "mill.image.index", renderRequest, renderResponse );
+            String index_page = PortletUtils.url( "mill.image.index", renderRequest, renderResponse );
 
             if ( log.isDebugEnabled() )
                 log.debug( "right to commit image - " + auth_.isUserInRole( "webmill.upload_image" ) );

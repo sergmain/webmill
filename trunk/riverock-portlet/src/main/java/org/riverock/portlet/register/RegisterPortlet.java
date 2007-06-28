@@ -47,8 +47,8 @@ import org.riverock.module.web.response.PortletModuleResponseImpl;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.url.WebmillPortletUrlProviderImpl;
 import org.riverock.portlet.register.bean.GenericBean;
-import org.riverock.webmill.container.tools.PortletMetadataService;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
+import org.riverock.common.portlet.PortletMetadataService;
 
 /**
  * User: SergeMaslyukov
@@ -120,7 +120,7 @@ public class RegisterPortlet extends AbstractPortlet {
         genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setActionUrl(moduleActionRequest.getUrlProvider().getActionUrl());
         genericBean.setBaseModuleUrl(
-            PortletService.ctxStringBuilder((PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), "mill.register" ).
+            PortletUtils.ctxStringBuilder((PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), "mill.register" ).
             append("?a=1")
         );
         genericBean.setRemoteAddr( moduleActionRequest.getRequest().getRemoteAddr() );

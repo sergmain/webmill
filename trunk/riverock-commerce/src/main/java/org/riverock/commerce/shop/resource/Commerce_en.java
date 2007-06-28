@@ -25,7 +25,7 @@ package org.riverock.commerce.shop.resource;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.resource.XmlResourceBundle;
+import org.riverock.common.resource.XmlResourceBundle;
 
 /**
  * @author Serge Maslyukov

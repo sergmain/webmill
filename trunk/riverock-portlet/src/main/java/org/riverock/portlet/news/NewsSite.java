@@ -49,7 +49,6 @@ import org.riverock.portlet.news.schema.NewsGroupType;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.interfaces.portlet.PortletResultObject;
-import org.riverock.webmill.container.resource.PortletResourceBundleWithLocale;
 
 /**
  * $Id$
@@ -86,15 +85,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
             ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
             if( log.isDebugEnabled() ) {
                 log.debug( "resource bundle: " + bundle );
-                if ( bundle instanceof PortletResourceBundleWithLocale) {
-                    log.debug("bundle class name: " + ((PortletResourceBundleWithLocale)bundle).getResourceBundleClassName() );
-                    log.debug("bundle locale name: " + ((PortletResourceBundleWithLocale)bundle).getLocaleName() );
-                }
-                else {
-                    log.debug("bundle is not instanceof PortletResourceBundleWithLocale");
-                }
             }
-
 
             try {
                 nextNews = bundle.getString( "main.next-news" );

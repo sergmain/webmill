@@ -48,8 +48,8 @@ import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.web.response.PortletModuleResponseImpl;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.url.WebmillPortletUrlProviderImpl;
-import org.riverock.webmill.container.tools.PortletMetadataService;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.portlet.PortletMetadataService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SMaslyukov
@@ -63,7 +63,7 @@ public class ForumPortlet extends AbstractForumPortlet {
     public void process(PortletRequest portletRequest, PortletResponse actionResponse) throws PortletException, IOException {
         long timeStart = System.currentTimeMillis();
 
-        Long forumId = PortletService.getLong(portletRequest, Constants.NAME_FORUM_ID);
+        Long forumId = PortletUtils.getLong(portletRequest, Constants.NAME_FORUM_ID);
         if (log.isDebugEnabled()) {
             log.debug("forumId: "+forumId);
             Enumeration en = portletRequest.getParameterNames();
@@ -133,7 +133,7 @@ public class ForumPortlet extends AbstractForumPortlet {
         genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setActionUrl(forumActionBean.getUrlProvider().getActionUrl());
         genericBean.setForumHomeUrl(
-            PortletService.ctxStringBuilder((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_PORTLET_NAME).
+            PortletUtils.ctxStringBuilder((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_PORTLET_NAME).
             append('?').
             append(Constants.NAME_FORUM_ID).
             append('=').

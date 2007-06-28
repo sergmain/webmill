@@ -24,8 +24,9 @@
 package org.riverock.portlet.test.cases;
 
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.riverock.common.tools.servlet.HttpServletRequestApplWrapper;
-import org.riverock.common.tools.servlet.HttpServletResponseApplWrapper;
 import org.riverock.common.tools.servlet.HttpSessionApplWrapper;
 import org.riverock.common.startup.StartupApplication;
 import org.riverock.interfaces.ContainerConstants;
@@ -40,7 +41,7 @@ import org.riverock.interfaces.ContainerConstants;
 @SuppressWarnings({"deprecation"})
 public class TestCaseSiteAbstract {
     public HttpServletRequestApplWrapper request = null;
-    public HttpServletResponseApplWrapper response = null;
+    public HttpServletResponse response = null;
     public HttpSessionApplWrapper session = null;
     public static TestSite testSite = null;
     public String nameConnection = null;
@@ -54,7 +55,6 @@ public class TestCaseSiteAbstract {
     protected void testSiteStructure( TestCaseInterface testCase )
         throws Exception
     {
-//        CacheArray.reinitFullCache();
 
 //        DatabaseConnectionType dbConnConfig = GenericConfig.getDatabaseConnection( nameConnection );
 //        if (dbConnConfig==null)
@@ -91,7 +91,6 @@ public class TestCaseSiteAbstract {
     {
         StartupApplication.init();
         nameConnection = "MYSQL";
-//        GenericConfig.setDefaultConnectionName( nameConnection );
         testSiteStructure( testCase );
     }
 
@@ -121,7 +120,6 @@ public class TestCaseSiteAbstract {
         request.setParameter( ContainerConstants.NAME_LANG_PARAM, TestSite.TEST_LANGUAGE  );
 
         response = null;
-        response = new HttpServletResponseApplWrapper();
 
         session = null;
         session = new HttpSessionApplWrapper();

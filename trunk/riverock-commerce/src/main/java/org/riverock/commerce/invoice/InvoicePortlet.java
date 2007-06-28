@@ -45,8 +45,8 @@ import org.riverock.common.tools.ServletTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -76,7 +76,7 @@ public final class InvoicePortlet implements Portlet {
     }
 
     public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
-        String action = PortletService.getString(actionRequest, "action", null);
+        String action = PortletUtils.getString(actionRequest, "action", null);
 
         if ( log.isDebugEnabled() ) {
             log.debug( "Action: " + action );
@@ -96,8 +96,8 @@ public final class InvoicePortlet implements Portlet {
         Long siteId = new Long( actionRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
         if ( action.equals( "set" ) ) {
-            Long shopItemId = PortletService.getLong( actionRequest, "set_id_item" );
-            int count = PortletService.getInt( actionRequest, ShopPortlet.NAME_INVOICE_NEW_COUNT_PARAM, 0 );
+            Long shopItemId = PortletUtils.getLong( actionRequest, "set_id_item" );
+            int count = PortletUtils.getInt( actionRequest, ShopPortlet.NAME_INVOICE_NEW_COUNT_PARAM, 0 );
 
             if ( log.isDebugEnabled() ) {
                 log.debug( "shopItemId - " + shopItemId );
@@ -108,7 +108,7 @@ public final class InvoicePortlet implements Portlet {
             CommerceDaoFactory.getOrderDao().setNewQuantity(siteId, userOrderId, shopItemId, count );
 
         } else if ( action.equals( "del" ) ) {
-            Long shopItemId = PortletService.getLong( actionRequest, "del_id_item" );
+            Long shopItemId = PortletUtils.getLong( actionRequest, "del_id_item" );
             if ( log.isDebugEnabled() ) {
                 log.debug( "id_item - " + shopItemId );
             }
@@ -143,7 +143,7 @@ public final class InvoicePortlet implements Portlet {
             }
 
             AuthSession authSession = (AuthSession)renderRequest.getUserPrincipal();
-            int shopGroupId = PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 );
+            int shopGroupId = PortletUtils.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 );
 
             if ( authSession != null ) {
                 if ( log.isDebugEnabled() ) {
@@ -159,16 +159,16 @@ public final class InvoicePortlet implements Portlet {
                 }
             }
 
-            Long currencyID = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_CURRENCY_SHOP );
+            Long currencyID = PortletUtils.getLong( renderRequest, ShopPortlet.NAME_ID_CURRENCY_SHOP );
 
             String addForm =
                 ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, CTX_TYPE_INVOICE ) +
                 ServletTools.getHiddenItem( ShopPortlet.NAME_ID_CURRENCY_SHOP, currencyID ) +
                 ServletTools.getHiddenItem( ShopPortlet.NAME_ID_GROUP_SHOP,
-                    PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ) ) +
+                    PortletUtils.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ) ) +
                 ServletTools.getHiddenItem( ShopPortlet.NAME_ID_SHOP_PARAM, shop.getShopId() );
 
-            String statusSend = PortletService.getString(renderRequest, COMPLETE_SEND_ORDER, "");
+            String statusSend = PortletUtils.getString(renderRequest, COMPLETE_SEND_ORDER, "");
             if ("true".equalsIgnoreCase(statusSend)) {
 
                 PortletURL url = renderResponse.createRenderURL();
@@ -197,7 +197,7 @@ public final class InvoicePortlet implements Portlet {
 /*
             if ( order.getAuthSession() == null ) {
 
-                String backURL = StringTools.rewriteURL( PortletService.url( "mill.invoice", renderRequest, renderResponse ) );
+                String backURL = StringTools.rewriteURL( PortletUtils.url( "mill.invoice", renderRequest, renderResponse ) );
 
                 out.write( "<table cellspacing=\"2\" cellpadding=\"2\">\n" );
                 out.write( "<tr>\n" );
@@ -210,7 +210,7 @@ public final class InvoicePortlet implements Portlet {
                     out.write( bundle.getString( "invoice.register" ) );
                     out.write( "\n" );
                     out.write( "<a href=\"" );
-                    out.write( PortletService.url( "mill.register", renderRequest, renderResponse ) + '&' +
+                    out.write( PortletUtils.url( "mill.register", renderRequest, renderResponse ) + '&' +
                         LoginUtils.NAME_TOURL_PARAM + '=' + backURL );
                     out.write( "\">" );
                     out.write( bundle.getString( "button.next" ) );
@@ -219,7 +219,7 @@ public final class InvoicePortlet implements Portlet {
 
                 }
                 out.write( "</td>\n" +
-                    "<form method=\"POST\" action=\"" + PortletService.ctx( renderRequest ) + "\">\n" +
+                    "<form method=\"POST\" action=\"" + PortletUtils.ctx( renderRequest ) + "\">\n" +
                     ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.LOGIN_CHECK_PORTLET ) +
                     addForm +
                     ServletTools.getHiddenItem( LoginUtils.NAME_TOURL_PARAM, backURL ) +
@@ -315,7 +315,7 @@ public final class InvoicePortlet implements Portlet {
                         out.write( "<td class=\"priceData\">" );
                         out.write( item.getShopItemName() );
                         out.write( "</td>\n" );
-                        out.write( "<form method=\"GET\" action=\"" + PortletService.ctx( renderRequest ) + "\">\n" );
+                        out.write( "<form method=\"GET\" action=\"" + PortletUtils.ctx( renderRequest ) + "\">\n" );
                         out.write( addForm );
                         out.write( ServletTools.getHiddenItem( "set_id_item", item.getShopItemId() ) );
                         out.write( ServletTools.getHiddenItem( "action", "set" ) );
@@ -338,7 +338,7 @@ public final class InvoicePortlet implements Portlet {
                         out.write( item.getResultCurrencyName() );
                         out.write( "</td>\n" );
                         out.write( "</form>\n" );
-                        out.write( "<form method=\"GET\" action=\"" + PortletService.ctx( renderRequest ) + "\">\n" );
+                        out.write( "<form method=\"GET\" action=\"" + PortletUtils.ctx( renderRequest ) + "\">\n" );
                         out.write( addForm );
                         out.write( ServletTools.getHiddenItem( "del_id_item", item.getShopItemId() ) );
                         out.write( ServletTools.getHiddenItem( "action", "del" ) );
@@ -380,7 +380,7 @@ public final class InvoicePortlet implements Portlet {
                  !StringUtils.isBlank( orderEmail ) && isActivateEmailOrder ) {
 
                 out.write( "<br>\n" );
-                out.write( "<form method=\"GET\" action=\"" + PortletService.ctx( renderRequest ) + "\">\n" );
+                out.write( "<form method=\"GET\" action=\"" + PortletUtils.ctx( renderRequest ) + "\">\n" );
                 out.write( addForm );
                 out.write( ServletTools.getHiddenItem( "action", "send" ) );
                 out.write( "<input type=\"submit\" value=\"" );

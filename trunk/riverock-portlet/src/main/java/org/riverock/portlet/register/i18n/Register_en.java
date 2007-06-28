@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.resource.XmlResourceBundle;
+import org.riverock.common.resource.XmlResourceBundle;
 
 /**
  * @author Serge Maslyukov

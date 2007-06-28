@@ -44,7 +44,7 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -87,13 +87,13 @@ public final class ImageList extends HttpServlet {
                 throw new IllegalStateException( "You have not enough right to execute this operation" );
             }
 
-            String index_page = PortletService.url( "mill.image.index", renderRequest, renderResponse );
+            String index_page = PortletUtils.url( "mill.image.index", renderRequest, renderResponse );
 
             if ( auth_.isUserInRole( "webmill.upload_image" ) ) {
 
-                Long id_main_ = PortletService.getLong( renderRequest, "id_main" );
-                long pageNum = PortletService.getInt( renderRequest, "pageNum", 0);
-                long countImage = PortletService.getInt( renderRequest, "countImage", 10 );
+                Long id_main_ = PortletUtils.getLong( renderRequest, "id_main" );
+                long pageNum = PortletUtils.getInt( renderRequest, "pageNum", 0);
+                long countImage = PortletUtils.getInt( renderRequest, "countImage", 10 );
 
                 String sql_ =
                     "select  a.id_main, a.name_file " +
@@ -154,7 +154,7 @@ public final class ImageList extends HttpServlet {
                         out.write( "<tr>\r\n" );
                         out.write( "<td class=\"imageDirData\" width=\"100%\">\r\n" );
                         out.write( "<a href=\"" );
-                        out.write( PortletService.url( "mill.image.change_desc", renderRequest, renderResponse ) + '&' +
+                        out.write( PortletUtils.url( "mill.image.change_desc", renderRequest, renderResponse ) + '&' +
                             "id=" + id_ );
                         out.write( "\">\r\n                    " );
                         out.write( RsetTools.getString( rs, "description" ) );
@@ -178,7 +178,7 @@ public final class ImageList extends HttpServlet {
                 if ( pageNum>0 ) {
                     out.write( "\r\n" );
                     out.write( "<a href=\"" );
-                    out.write( PortletService.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
+                    out.write( PortletUtils.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
                         "id_main=" + id_main_ + "&pageNum=" + ( pageNum - 1 ) );
                     out.write( "\">prev" );
                     out.write( "</a>\r\n                " );
@@ -191,7 +191,7 @@ public final class ImageList extends HttpServlet {
 
                     out.write( "\r\n" );
                     out.write( "<a href=\"" );
-                    out.write( PortletService.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
+                    out.write( PortletUtils.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
                         "id_main=" + id_main_ + "&pageNum=" + ( pageNum + 1 ) );
                     out.write( "\">next" );
                     out.write( "</a>" );
@@ -207,7 +207,7 @@ public final class ImageList extends HttpServlet {
                 out.write( "\r\n" );
                 out.write( "</table>\r\n\r\n" );
                 out.write( "<a href=\"" );
-                out.write( PortletService.url( "mill.image.desc", renderRequest, renderResponse ) + '&' +
+                out.write( PortletUtils.url( "mill.image.desc", renderRequest, renderResponse ) + '&' +
                     "id_main=" + id_main_ );
                 out.write( "\">upload file" );
                 out.write( "</a>" );

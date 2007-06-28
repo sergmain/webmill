@@ -34,7 +34,7 @@ import org.riverock.commerce.bean.StandardCurrency;
 import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.bean.StandardCurrencyCurs;
 import org.riverock.commerce.jsf.FacesTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * @author Sergei Maslyukov

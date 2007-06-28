@@ -21,7 +21,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.container.portlet.extend;
+package org.riverock.common.portlet;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +37,7 @@ import javax.portlet.RenderResponse;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portlet.PortletResultObject;
 import org.riverock.interfaces.portlet.PortletResultContent;
-//import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * User: SergeMaslyukov
@@ -87,7 +87,7 @@ public abstract class GenericWebmillPortlet implements Portlet {
             if ( code==null || code.length()==0 ){
                 String portletId = portletConfig.getInitParameter( ContainerConstants.name_portlet_id );
 
-                Long id = PortletService.getLong( renderRequest, portletId );
+                Long id = PortletUtils.getLong( renderRequest, portletId );
                 result = beanObject.getInstance( id );
             }
             else {

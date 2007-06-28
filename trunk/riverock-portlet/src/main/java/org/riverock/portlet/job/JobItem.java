@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * $Id$
@@ -51,7 +51,7 @@ public class JobItem {
     }
 
     public String getUrlToJob( RenderRequest renderRequest, RenderResponse renderResponse ) throws ConfigException {
-        return PortletService.url(JobBlockPortlet.CTX_TYPE_JOB, renderRequest, renderResponse )+ '&' +
+        return PortletUtils.url(JobBlockPortlet.CTX_TYPE_JOB, renderRequest, renderResponse )+ '&' +
             JobBlockPortlet.NAME_ID_JOB_PARAM + '=' + idPosition;
     }
 

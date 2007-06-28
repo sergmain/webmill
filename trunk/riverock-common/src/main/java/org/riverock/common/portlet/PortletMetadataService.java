@@ -21,11 +21,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.container.tools;
+package org.riverock.common.portlet;
 
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.ContainerConstants;
 
@@ -60,7 +62,7 @@ public class PortletMetadataService {
         }
 
         String value = p.get( key );
-        if ( ContainertStringUtils.isBlank(value) ) {
+        if ( StringUtils.isBlank(value) ) {
             return defValue;
         }
 

@@ -40,7 +40,7 @@ import javax.portlet.PortletRequest;
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * User: Admin
@@ -82,7 +82,7 @@ public final class LogoutPortlet implements Portlet {
                 for (Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); ) {
 
                     String param = (String)e.nextElement();
-                    log.debug("parameter "+ param+" value "+ PortletService.getString(actionRequest, param, null) );
+                    log.debug("parameter "+ param+" value "+ PortletUtils.getString(actionRequest, param, null) );
                 }
             }
             session.invalidate();

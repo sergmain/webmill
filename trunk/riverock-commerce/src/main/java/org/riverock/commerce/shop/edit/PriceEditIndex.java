@@ -42,8 +42,8 @@ import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -73,7 +73,8 @@ public final class PriceEditIndex extends HttpServlet {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
             ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
-            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ResourceBundle bundle=null;
+//            bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
 
             out = response.getWriter();
 
@@ -129,7 +130,7 @@ public final class PriceEditIndex extends HttpServlet {
               out.write(bundle.getString("button.next"));
               out.write("\" onclick=\"location.href='");
               out.write(
-                  PortletService.url("mill.price.shop", renderRequest, renderResponse )+'&'+
+                  PortletUtils.url("mill.price.shop", renderRequest, renderResponse )+'&'+
                   ShopPortlet.NAME_ID_SHOP_PARAM + '=' +id_arm
               );
               out.write("';\">\r\n");

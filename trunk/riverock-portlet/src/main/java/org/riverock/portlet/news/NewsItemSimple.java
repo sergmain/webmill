@@ -36,8 +36,8 @@ import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.interfaces.portlet.PortletResultObject;
-import org.riverock.webmill.container.tools.PortletMetadataService;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
+import org.riverock.common.portlet.PortletMetadataService;
 
 import java.util.TimeZone;
 
@@ -67,7 +67,7 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
     }
 
     public News getNews() {
-        Long newsId = PortletService.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
+        Long newsId = PortletUtils.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
         PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         return provider.getPortalCmsNewsDao().getNews(newsId);
     }

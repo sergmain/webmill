@@ -44,7 +44,7 @@ import org.riverock.commerce.schema.shop.PriceItemType;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.XmlTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * $Author$

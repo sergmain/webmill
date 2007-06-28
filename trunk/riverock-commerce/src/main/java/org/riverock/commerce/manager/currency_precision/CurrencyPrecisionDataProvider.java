@@ -27,7 +27,7 @@ import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.jsf.FacesTools;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.manager.shop.ShopExtendedBean;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;

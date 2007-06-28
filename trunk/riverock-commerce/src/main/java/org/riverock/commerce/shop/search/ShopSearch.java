@@ -43,7 +43,7 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -337,7 +337,7 @@ public class ShopSearch extends HttpServlet {
             out.write("</form>\r\n");
 
 
-            if (PortletService.getString(renderRequest, "action", null).toLowerCase().equals("search")) {
+            if (PortletUtils.getString(renderRequest, "action", null).toLowerCase().equals("search")) {
 
                 int v_count_search = 2147483647;
                 int v_display_item = 100; // constant of count diplay item
@@ -350,13 +350,13 @@ public class ShopSearch extends HttpServlet {
                 call.registerOutParameter(1, java.sql.Types.VARCHAR);
                 call.registerOutParameter(9, java.sql.Types.VARCHAR);
 
-                call.setString(2, PortletService.getString(renderRequest, "s", null));
-                call.setString(3, PortletService.getString(renderRequest, "s1", null));
-                call.setString(4, PortletService.getString(renderRequest, "s2", null));
-                call.setString(5, PortletService.getString(renderRequest, "bool1", null));
-                call.setString(6, PortletService.getString(renderRequest, "bool2", null));
-                call.setString(7, PortletService.getString(renderRequest, "minPrice", null));
-                call.setString(8, PortletService.getString(renderRequest, "maxPrice", null));
+                call.setString(2, PortletUtils.getString(renderRequest, "s", null));
+                call.setString(3, PortletUtils.getString(renderRequest, "s1", null));
+                call.setString(4, PortletUtils.getString(renderRequest, "s2", null));
+                call.setString(5, PortletUtils.getString(renderRequest, "bool1", null));
+                call.setString(6, PortletUtils.getString(renderRequest, "bool2", null));
+                call.setString(7, PortletUtils.getString(renderRequest, "minPrice", null));
+                call.setString(8, PortletUtils.getString(renderRequest, "maxPrice", null));
 
                 call.execute();
                 String v_str = StringTools.truncateString(call.getString(1), 400);
@@ -372,7 +372,7 @@ public class ShopSearch extends HttpServlet {
 //return;
 
                 int v_len = v_str.length();
-                int v_number_page = PortletService.getInt(renderRequest, "p", 1);
+                int v_number_page = PortletUtils.getInt(renderRequest, "p", 1);
 
                 // Todo this is simple stub, current not work
                 // Todo because sequence was used to simple getting of next id of file
@@ -388,7 +388,7 @@ public class ShopSearch extends HttpServlet {
 
                 PreparedStatement ps = null;
                 RsetTools.setLong(ps, 1, v_id_query);
-                RsetTools.setLong(ps, 2, PortletService.getLong(renderRequest, "i"));
+                RsetTools.setLong(ps, 2, PortletUtils.getLong(renderRequest, "i"));
                 ps.setString(3, v_query);
                 ps.setString(4, v_str_ip);
                 ps.setString(5, v_str_ip);
@@ -588,7 +588,7 @@ WHERE id_query = v_id_query;
 
                 if (v_number_page > 0) {
                     out.write("<a href=\"search_in_shop.jsp?s=");
-                    out.write(PortletService.getString(renderRequest, "s", null) + "&p=" + (v_number_page - 1));
+                    out.write(PortletUtils.getString(renderRequest, "s", null) + "&p=" + (v_number_page - 1));
                     out.write("\">Предыдущая страница");
                     out.write("</a>\"");
 
@@ -602,7 +602,7 @@ WHERE id_query = v_id_query;
 
                 if ((v_count_search - ((v_number_page + 1) * v_display_item)) >= 0) {
                     out.write("<a href=\"search_in_shop.jsp?s=");
-                    out.write(PortletService.getString(renderRequest, "s", null) + "&p=" + (v_number_page + 1));
+                    out.write(PortletUtils.getString(renderRequest, "s", null) + "&p=" + (v_number_page + 1));
                     out.write("\">Следующая страница");
                     out.write("</a>");
 

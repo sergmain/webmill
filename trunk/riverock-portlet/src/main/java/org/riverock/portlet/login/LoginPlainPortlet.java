@@ -43,7 +43,7 @@ import org.riverock.common.tools.ServletTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * Author: mill
@@ -101,7 +101,7 @@ public final class LoginPlainPortlet implements Portlet {
 
             String srcURL;
             if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
-                srcURL = PortletService.getString(renderRequest, LoginUtils.NAME_TOURL_PARAM, null);
+                srcURL = PortletUtils.getString(renderRequest, LoginUtils.NAME_TOURL_PARAM, null);
             } else {
                 PortletURL toUrl = renderResponse.createActionURL();
                 toUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ContainerConstants.CTX_TYPE_INDEX );

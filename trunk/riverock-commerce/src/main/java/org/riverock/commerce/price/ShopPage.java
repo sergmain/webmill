@@ -42,10 +42,10 @@ import org.riverock.common.tools.XmlTools;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.schema.shop.ShopPageType;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  *
@@ -135,10 +135,10 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             shopPage.setIsProcessInvoice( shop.isProcessInvoice() ? "true" : "false" );
 
 
-            shopParam.id_group = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0L );
+            shopParam.id_group = PortletUtils.getLong( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0L );
             Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
             shopParam.setServerName( renderRequest.getServerName(), siteId );
-            shopParam.id_currency = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_CURRENCY_SHOP);
+            shopParam.id_currency = PortletUtils.getLong( renderRequest, ShopPortlet.NAME_ID_CURRENCY_SHOP);
 
             // If current currency not defined( page requested without concrete currency),
             // we will use default currency
@@ -154,8 +154,8 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
                 shopParam.id_currency = shop.getDefaultCurrencyId();
             }
 
-            shopParam.sortBy = PortletService.getString(renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");
-            shopParam.sortDirect = PortletService.getInt( renderRequest, ShopPortlet.NAME_SHOP_SORT_DIRECT, 1);
+            shopParam.sortBy = PortletUtils.getString(renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");
+            shopParam.sortDirect = PortletUtils.getInt( renderRequest, ShopPortlet.NAME_SHOP_SORT_DIRECT, 1);
 
             PortletURL itemPortletURL = renderResponse.createRenderURL();
             itemPortletURL.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP );

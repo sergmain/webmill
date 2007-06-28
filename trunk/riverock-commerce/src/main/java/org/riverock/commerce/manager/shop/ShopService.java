@@ -32,7 +32,7 @@ import javax.faces.model.SelectItem;
 import org.riverock.commerce.bean.Currency;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.commerce.jsf.FacesTools;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * @author Sergei Maslyukov

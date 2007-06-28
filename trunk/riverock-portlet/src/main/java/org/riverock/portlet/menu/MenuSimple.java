@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.XmlTools;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
@@ -49,7 +50,7 @@ import org.riverock.portlet.menu.schema.MenuSimpleType;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.interfaces.portlet.PortletResultObject;
-//import org.riverock.webmill.container.tools.PortletService;
+//import org.riverock.common.utils.PortletUtils;
 
 /**
  * $Author$
@@ -213,10 +214,10 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
 
         try {
-            String levelTemp = PortletService.getString(templateParameters, "level", null);
+            String levelTemp = PortletUtils.getString(templateParameters, "level", null);
             if (levelTemp == null)
                 return;
-            String compareTemp = PortletService.getString(templateParameters, "type_level", null);
+            String compareTemp = PortletUtils.getString(templateParameters, "type_level", null);
             if (compareTemp == null)
                 return;
 
@@ -507,9 +508,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 m.setModuleUrl(renderResponse.encodeURL(PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getUrl()));
 */
             if (item.getUrl() == null)
-                m.setModuleUrl(PortletService.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getId());
+                m.setModuleUrl(PortletUtils.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getId());
             else
-                m.setModuleUrl(PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getUrl());
+                m.setModuleUrl(PortletUtils.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getUrl());
 
             //////
 

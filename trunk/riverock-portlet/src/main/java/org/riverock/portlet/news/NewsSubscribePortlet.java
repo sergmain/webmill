@@ -35,7 +35,7 @@ import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
+import org.riverock.portlet.GenericWebmillPortlet;
 
 /**
  * User: SMaslyukov
