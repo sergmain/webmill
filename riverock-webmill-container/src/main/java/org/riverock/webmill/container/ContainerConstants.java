@@ -47,7 +47,6 @@ public class ContainerConstants {
     public static final String PORTAL_QUERY_STRING_ATTRIBUTE = "org.riverock.webmill.PORTAL_QUERY_STRING_ATTRIBUTE";
     public static final String PORTAL_COOKIES_ATTRIBUTE = "org.riverock.webmill.PORTAL_COOKIES_ATTRIBUTE";
     public static final String PORTAL_AUTH_ATTRIBUTE = "org.riverock.webmill.PORTAL_AUTH_ATTRIBUTE";
-    public static final String PORTAL_RESOURCE_BUNDLE_ATTRIBUTE = "org.riverock.webmill.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE";
     public static final String PORTAL_TEMPLATE_NAME_ATTRIBUTE = "org.riverock.webmill.PORTAL_TEMPLATE_NAME_ATTRIBUTE";
 
     public static final String PORTAL_PORTAL_INDEXER_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTAL_INDEXER_ATTRIBUTE";
