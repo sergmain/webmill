@@ -90,7 +90,7 @@ public class DbExportServlet extends HttpServlet {
             if (isSkipTable(table.getName()))  {
                 continue;
             }
-            DbDataTable data = DatabaseStructureManager.getDataTable(db.getConnection(), table, db.getFamily());
+            DbDataTable data = DatabaseStructureManager.getDataTable(db, table);
             table.setData(data);
             zipFile(out, table, DB_FILE_PREFIX +table.getName()+".xml", "TableData");
             data = null;

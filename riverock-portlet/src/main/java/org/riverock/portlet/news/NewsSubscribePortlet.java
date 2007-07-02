@@ -31,11 +31,9 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-
-
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.GenericWebmillPortlet;
+import org.riverock.common.portlet.GenericWebmillPortlet;
 
 /**
  * User: SMaslyukov

@@ -26,18 +26,18 @@ package org.riverock.common.portlet;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.interfaces.ContainerConstants;
-import org.riverock.interfaces.portlet.PortletResultObject;
-import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.common.utils.PortletUtils;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
 
 /**
  * User: SergeMaslyukov
@@ -47,11 +47,13 @@ import org.riverock.common.utils.PortletUtils;
  */
 public abstract class GenericWebmillPortlet implements Portlet {
 
-    public GenericWebmillPortlet(){}
+    public GenericWebmillPortlet() {
+    }
 
     protected PortletConfig portletConfig = null;
+
     public void init(PortletConfig portletConfig) throws PortletException {
-        if (portletConfig==null) {
+        if (portletConfig == null) {
             throw new NullPointerException();
         }
         this.portletConfig = portletConfig;
@@ -65,66 +67,64 @@ public abstract class GenericWebmillPortlet implements Portlet {
     }
 
     public boolean isXml() {
-        String s = portletConfig.getInitParameter( ContainerConstants.is_xml );
-        return s != null && Boolean.valueOf(s);
+        String s = portletConfig.getInitParameter(ContainerConstants.is_xml);
+        return s != null && Boolean.parseBoolean(s);
     }
 
-    public void doRender(RenderRequest renderRequest, RenderResponse renderResponse, PortletResultObject beanObject) throws PortletException, IOException
-    {
+    public void doRender(RenderRequest renderRequest, RenderResponse renderResponse, PortletResultObject beanObject) throws PortletException, IOException {
         OutputStream out = null;
-        try
-        {
+        try {
             out = renderResponse.getPortletOutputStream();
 
-            String code = (String)renderRequest.getAttribute(
-                ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE );
-
-            String xmlRoot = (String)renderRequest.getAttribute(
-                ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE );
-
-            beanObject.setParameters( renderRequest, renderResponse, portletConfig );
+            String code = (String) renderRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE);
+            String xmlRoot = (String) renderRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE);
+            beanObject.setParameters(renderRequest, renderResponse, portletConfig);
             PortletResultContent result;
-            if ( code==null || code.length()==0 ){
-                String portletId = portletConfig.getInitParameter( ContainerConstants.name_portlet_id );
+            if (code == null || code.length() == 0) {
+                String portletId = portletConfig.getInitParameter(ContainerConstants.name_portlet_id);
 
-                Long id = PortletUtils.getLong( renderRequest, portletId );
-                result = beanObject.getInstance( id );
+                Long id = PortletUtils.getLong(renderRequest, portletId);
+                result = beanObject.getInstance(id);
             }
             else {
-                result = beanObject.getInstanceByCode( code );
+                result = beanObject.getInstanceByCode(code);
             }
 
-            if (result!=null) {
-                result.setParameters( renderRequest, renderResponse, portletConfig );
-            } else {
-                out.write( ("Error create portlet "+portletConfig.getPortletName()).getBytes() );
+            if (result != null) {
+                result.setParameters(renderRequest, renderResponse, portletConfig);
+            }
+            else {
+                out.write(("Error create portlet " + portletConfig.getPortletName()).getBytes());
                 return;
             }
 
             byte[] bytes;
-            if ( isXml() ) {
-                if (xmlRoot==null) {
+            if (isXml()) {
+                if (xmlRoot == null) {
                     bytes = result.getXml();
                 }
                 else {
-                    bytes = result.getXml( xmlRoot );
+                    bytes = result.getXml(xmlRoot);
                 }
             }
             else {
                 bytes = result.getPlainHTML();
             }
-            if (bytes!=null)
-                out.write( bytes );
+            if (bytes != null) {
+                out.write(bytes);
+            }
         }
-        catch (Exception e){
+        catch (Exception e) {
             final String es;
-            if (portletConfig!=null)
+            if (portletConfig != null) {
                 es = "Error get " + portletConfig.getPortletName();
-            else
+            }
+            else {
                 es = "Error with null";
+            }
             throw new PortletException(es, e);
         }
-        finally{
+        finally {
             out.flush();
             out.close();
             out = null;
