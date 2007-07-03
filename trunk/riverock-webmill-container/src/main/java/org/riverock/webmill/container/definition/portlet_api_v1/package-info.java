@@ -30,4 +30,4 @@
 //
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package org.riverock.webmill.container.portlet_definition.portlet_api_v1;
+package org.riverock.webmill.container.definition.portlet_api_v1;

@@ -30,7 +30,7 @@
 //
 
 
-package org.riverock.webmill.container.portlet_definition.portlet_api_v1;
+package org.riverock.webmill.container.definition.portlet_api_v1;
 
 import java.util.ArrayList;
 import java.util.List;

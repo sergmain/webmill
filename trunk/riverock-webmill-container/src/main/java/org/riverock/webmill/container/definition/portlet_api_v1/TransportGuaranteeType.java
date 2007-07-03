@@ -30,7 +30,7 @@
 //
 
 
-package org.riverock.webmill.container.portlet_definition.portlet_api_v1;
+package org.riverock.webmill.container.definition.portlet_api_v1;
 
 import javax.xml.bind.annotation.XmlEnum;
 

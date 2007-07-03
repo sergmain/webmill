@@ -21,11 +21,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.container.portlet_definition;
+package org.riverock.webmill.container.definition;
 
 import org.riverock.webmill.container.portlet.bean.*;
 import org.riverock.webmill.container.portlet.PortletContainerException;
-import org.riverock.webmill.container.portlet_definition.portlet_api_v1.*;
+import org.riverock.webmill.container.definition.portlet_api_v1.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -47,6 +47,8 @@ import java.util.ArrayList;
  * $Id$
  */
 public class ProcessAs_v1_0 {
+    private static final String PORTLET_DEF_PACKAGE_NAME = ObjectFactory.class.getPackage().getName();
+
     public static PortletApplication processAs_v1_0(File portletFile) throws PortletContainerException {
         try {
             FileInputStream inputStream = new FileInputStream(portletFile);
@@ -69,7 +71,7 @@ public class ProcessAs_v1_0 {
     }
 
     private static PortletApplication processInputStream(InputStream inputStream) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance ("org.riverock.webmill.container.portlet_definition.portlet_api_v1");
+        JAXBContext jaxbContext = JAXBContext.newInstance (PORTLET_DEF_PACKAGE_NAME);
 
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         Source source =  new StreamSource(inputStream);

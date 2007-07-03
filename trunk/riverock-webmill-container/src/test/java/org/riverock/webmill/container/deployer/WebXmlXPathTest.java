@@ -29,7 +29,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import org.riverock.webmill.container.portlet_definition.portlet_api_v1.PortletAppType;
+import org.riverock.webmill.container.definition.web_xml_v2_4.ObjectFactory;
+import org.riverock.webmill.container.definition.web_xml_v2_4.WebAppType;
 
 /**
  * @author smaslyukov
@@ -38,6 +39,7 @@ import org.riverock.webmill.container.portlet_definition.portlet_api_v1.PortletA
  *         $Id: WebXmlXPathTest.java 1111 2006-11-30 00:18:47Z serg_main $
  */
 public class WebXmlXPathTest extends TestCase {
+    private static final String PACKAGE_NAME = ObjectFactory.class.getPackage().getName();
 
     public void testWebXml() throws Exception {
 
@@ -50,18 +52,16 @@ public class WebXmlXPathTest extends TestCase {
 
             InputStream inputStream = WebXmlXPathTest.class.getResourceAsStream(fileName);
 
-            validateWebXmlAfterPatch(inputStream);
+            JAXBContext jaxbContext = JAXBContext.newInstance (PACKAGE_NAME);
+
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            Source source =  new StreamSource(inputStream);
+            JAXBElement<WebAppType> bookingElement = unmarshaller.unmarshal( source, WebAppType.class);
+
+            WebAppType webApp = bookingElement.getValue();
+            int i = 0;
         }
 
-        JAXBContext jaxbContext = JAXBContext.newInstance ("org.riverock.webmill.container.portlet_definition.portlet_api_v1");
-
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        Source source =  new StreamSource(inputStream);
-        JAXBElement<PortletAppType> bookingElement = unmarshaller.unmarshal( source, PortletAppType.class);
-
-        PortletAppType portletApplication = bookingElement.getValue();
-
-        return initPortletApplication(portletApplication);
     }
 
     public void testXPath() throws Exception {
