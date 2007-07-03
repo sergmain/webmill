@@ -8,7 +8,7 @@ import org.riverock.dbrevision.annotation.schema.db.DbDataTable;
 import org.riverock.dbrevision.db.DatabaseAdapter;
 import org.riverock.dbrevision.db.DatabaseManager;
 import org.riverock.dbrevision.db.DatabaseStructureManager;
-import org.riverock.dbrevision.db.DbConnectionProvider;
+import org.riverock.dbrevision.db.DatabaseAdapterProvider;
 import org.riverock.dbrevision.utils.Utils;
 import org.riverock.webmill.utils.HibernateUtils;
 
@@ -73,7 +73,7 @@ public class DbExportServlet extends HttpServlet {
         session.beginTransaction();
 
         Connection connection = session.connection();
-        DatabaseAdapter db  = DbConnectionProvider.openConnect(connection, family);
+        DatabaseAdapter db  = DatabaseAdapterProvider.getInstance(connection, family);
 
         File tempDir = (File) getServletConfig().getServletContext().getAttribute("javax.servlet.context.tempdir");
         File resultFile = File.createTempFile("db-struct-", ".zip", tempDir);

@@ -270,14 +270,6 @@ riverock-database-structure.xsd">
 		<Fields name="ID_JOB_TYPE_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="NAME_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
 	</Tables>
-	<Tables schema="TEST" name="WM_DB_DEFINITION" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_DB_DEFINITION" columnName="ID_DB_DEFINITION" keySeq="1" pkName="ID_DB_DEF_MDD_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_DB_DEFINITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
-		<Fields name="NAME_DEFINITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
-		<Fields name="APLAY_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="0" defaultValue="sysdate"/>
-	</Tables>
 	<Tables schema="TEST" name="WM_LIST_COMPANY" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_LIST_COMPANY" columnName="ID_FIRM" keySeq="1" pkName="ID_FIRM_MLF_PK"/>
@@ -1100,28 +1092,21 @@ riverock-database-structure.xsd">
 	</Tables>
 
 	<Sequences name="SEQ_WM_PRICE_QUERY_TABLE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="29"/>
-	<Sequences name="SEQ_WM_PORTAL_XSLT" minValue="1" maxValue="99999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="28"/>
 
 
-	<Sequences name="SEQ_WM_DB_DEFINITION" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="15"/>
-	<Sequences name="SEQ_WM_PORTLET_ARTICLE" minValue="1" maxValue="999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="211"/>
 	<Sequences name="SEQ_WM_PORTAL_ACCESS_URL" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="58"/>
 	<Sequences name="SEQ_WM_PORTAL_ACCESS_STAT" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="17617"/>
-	<Sequences name="SEQ_WM_JOB_RESUME_DATA" minValue="1" maxValue="9999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_PORTAL_ACCESS_USERAGENT" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="508"/>
+
+	<Sequences name="SEQ_WM_JOB_RESUME_DATA" minValue="1" maxValue="9999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_JOB_POSITION_DATA" minValue="1" maxValue="99999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="22"/>
 	<Sequences name="SEQ_WM_JOB_POSITION" minValue="1" maxValue="9999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="17"/>
-	<Sequences name="SEQ_WM_LIST_COMPANY" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="51"/>
-	<Sequences name="SEQ_WM_LIST_HOLDING" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
-	<Sequences name="SEQ_WM_LIST_USER" minValue="2" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="89"/>
-	<Sequences name="SEQ_WM_LIST_USER_METADATA" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="100"/>
-	<Sequences name="SEQ_WM_LIST_R_GR_COMP_COMP" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="31"/>
-	<Sequences name="SEQ_WM_LIST_R_HOLDING_GR_COMP" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
+	<Sequences name="SEQ_WM_JOB_GENDER_LIST" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="7"/>
+
 	<Sequences name="SEQ_WM_NEWS_ITEM_IMAGE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="true" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_NEWS_ITEM" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="4714"/>
 	<Sequences name="SEQ_WM_LIST_GROUP_COMPANY" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="11"/>
-	<Sequences name="SEQ_WM_PORTAL_CSS" minValue="1" maxValue="9999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="63"/>
-	<Sequences name="SEQ_WM_AUTH_ACCESS_GROUP" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="84"/>
+
 	<Sequences name="SEQ_WM_CASH_CURR_VALUE" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="671"/>
 	<Sequences name="SEQ_WM_CASH_CURRENCY_STD" minValue="1" maxValue="9999999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="8"/>
 	<Sequences name="SEQ_WM_CASH_CURRENCY" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="651"/>
@@ -1131,23 +1116,10 @@ riverock-database-structure.xsd">
 	<Sequences name="SEQ_WM_PRICE_RELATE_USER_ORDER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_PRICE_ORDER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_PRICE_SHOP_PRECISION" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="94"/>
-	<Sequences name="SEQ_WM_PORTAL_CATALOG_LANGUAGE" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="238"/>
-	<Sequences name="SEQ_WM_PORTAL_TEMPLATE_DATA" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="24"/>
-	<Sequences name="SEQ_WM_PORTAL_TEMPLATE" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="382"/>
 	<Sequences name="SEQ_WM_CASH_LIST" minValue="100" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="101"/>
 	<Sequences name="SEQ_WM_CASH_CURS_STD" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="20"/>
-	<Sequences name="SEQ_WM_PORTAL_VIRTUAL_HOST" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="463"/>
-	<Sequences name="SEQ_WM_PORTAL_SITE_LANGUAGE" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="358"/>
-	<Sequences name="SEQ_WM_PORTAL_LIST_SITE" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="389"/>
-	<Sequences name="SEQ_WM_PORTLET_ARTICLE_DATA" minValue="1" maxValue="999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="310"/>
-	<Sequences name="SEQ_WM_AUTH_USER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="322"/>
-	<Sequences name="SEQ_WM_AUTH_RELATE_ACCGROUP" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="577"/>
 	<Sequences name="SEQ_WM_PRICE_ITEM_DESC_DATA" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="7"/>
-	<Sequences name="SEQ_WM_PORTAL_CATALOG" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="2158"/>
-	<Sequences name="SEQ_WM_PORTAL_PORTLET_NAME" minValue="1" maxValue="9999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="41"/>
 	<Sequences name="SEQ_WM_IMAGE_DIR" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1031"/>
-	<Sequences name="SEQ_WM_NEWS_LIST" minValue="1" maxValue="9999999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="425"/>
-	<Sequences name="SEQ_WM_JOB_GENDER_LIST" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="7"/>
 	<Sequences name="SEQ_WM_IMAGE_PRICE_ITEMS" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="20"/>
 
 	<Sequences name="SEQ_WM_PORTLET_FAQ" minValue="1" maxValue="99999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="7"/>
