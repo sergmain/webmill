@@ -1,21 +1,15 @@
 package org.riverock.webmill.admin.test.db;
 
-import org.riverock.webmill.admin.servlet.DbExportServlet;
-import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.dbrevision.db.DatabaseAdapter;
-import org.riverock.dbrevision.db.DbConnectionProvider;
-import org.riverock.dbrevision.db.DatabaseStructureManager;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import org.riverock.dbrevision.annotation.schema.db.DbSchema;
 import org.riverock.dbrevision.annotation.schema.db.DbTable;
 import org.riverock.dbrevision.utils.Utils;
-import org.riverock.dbrevision.system.DbStructureImport;
-import org.hibernate.Session;
-import org.apache.myfaces.custom.fileupload.UploadedFile;
-
-import java.io.*;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.sql.Connection;
+import org.riverock.webmill.admin.servlet.DbExportServlet;
 
 /**
  * User: SergeMaslyukov

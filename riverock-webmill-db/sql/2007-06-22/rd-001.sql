@@ -18,3 +18,6 @@ drop table WM_AUTH_APPLICATION
 
 drop table WM_AUTH_RELATE_RIGHT_ARM
 /
+
+drop table WM_DB_DEFINITION
+/

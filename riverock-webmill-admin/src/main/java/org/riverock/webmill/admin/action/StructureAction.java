@@ -26,6 +26,8 @@ package org.riverock.webmill.admin.action;
 
 import java.io.File;
 import java.io.Serializable;
+import java.io.InputStream;
+import java.io.FileInputStream;
 import java.sql.Connection;
 
 import javax.naming.InitialContext;
@@ -38,7 +40,7 @@ import org.riverock.common.config.PropertiesProvider;
 import org.riverock.webmill.admin.StructureSessionBean;
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.dbrevision.db.DatabaseAdapter;
-import org.riverock.dbrevision.db.DbConnectionProvider;
+import org.riverock.dbrevision.db.DatabaseAdapterProvider;
 import org.riverock.dbrevision.system.DbStructureImport;
 
 /**
@@ -93,8 +95,9 @@ public class StructureAction implements Serializable {
             session.beginTransaction();
 
             Connection connection = session.connection();
-            DatabaseAdapter db  = DbConnectionProvider.openConnect(connection, family);
-            DbStructureImport.importStructure(strucruteFileName, false, db);
+            DatabaseAdapter db  = DatabaseAdapterProvider.getInstance(connection, family);
+            InputStream stream = new FileInputStream(strucruteFileName);
+            DbStructureImport.importStructure(db, stream, false);
 
             session.getTransaction().commit();
         }
