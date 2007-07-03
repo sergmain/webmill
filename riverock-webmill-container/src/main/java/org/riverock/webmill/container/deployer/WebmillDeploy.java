@@ -130,7 +130,9 @@ public class WebmillDeploy {
             }
 
 
-            WebmillWebApplicationRewriter webRewriter = new WebmillWebApplicationRewriter(webXml);
+            if (true) throw new RuntimeException("Need rewrite");
+            WebmillWebApplicationRewriter webRewriter=null;
+//            webRewriter = new WebmillWebApplicationRewriter(webXml);
             webRewriter.processWebXML();
 
             WebmillContextRewriter contextRewriter = new WebmillContextRewriter(contextXml, portletApplicationName);
@@ -183,7 +185,8 @@ public class WebmillDeploy {
             InputStream is = this.getClass().getResourceAsStream("/org/riverock/webmill/container/tags/portlet.tld");
             if (is == null) {
                 System.out.println("Failed to find portlet.tld in classpath");
-            } else {
+            }
+            else {
 
                 String portletTldFile = webRewriter.getRealPortletTldFile();
                 if (portletTldFile.charAt(0)=='/') {
@@ -259,7 +262,7 @@ public class WebmillDeploy {
         }
     }
 
-    protected Document parseXml(InputStream source) throws Exception {
+    static Document parseXml(InputStream source) throws Exception {
         // Parse using the local dtds instead of remote dtds. This
         // allows to deploy the application offline
         SAXBuilder saxBuilder = new SAXBuilder();

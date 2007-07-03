@@ -23,13 +23,11 @@
  */
 package org.riverock.webmill.container.deployer;
 
-import java.util.Arrays;
-import java.util.List;
+import org.apache.xpath.XPathAPI;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Parent;
-import org.jdom.xpath.XPath;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import org.riverock.webmill.container.portlet.register.PortletRegisterServlet;
 
@@ -45,11 +43,13 @@ import org.riverock.webmill.container.portlet.register.PortletRegisterServlet;
  */
 public class WebmillWebApplicationRewriter {
     private static final String WEBMILL_PORTLET_REGISTER = "WebmillPortletRegister";
-    public static final String WEBMILL_SERVLET_XPATH = "/web-app/servlet/servlet-name[contains(child::text(), \"" + WEBMILL_PORTLET_REGISTER + "\")]";
-//    public static final String WEBMILL_SERVLET_MAPPING_XPATH = "/web-app/servlet-mapping/servlet-name[contains(child::text(), \"" + WEBMILL_PORTLET_REGISTER + "\")]";
-    public static final String PORTLET_TAGLIB_COUNT_XPATH = "count(/web-app/taglib/taglib-uri[contains(child::text(), \"http://java.sun.com/portlet\")])";
-    public static final String PORTLET_TAGLIB_XPATH = "/web-app/taglib/taglib-uri[contains(child::text(), \"http://java.sun.com/portlet\")]";
-    public static final String PORTLET_TAGLIB_LOCATION_XPATH = "/web-app/taglib[taglib-uri[contains(child::text(), \"http://java.sun.com/portlet\")]]/taglib-location";
+
+    static final String WEB_XML_VERSION_XPATH = "/web-app/@version";
+    static final String WEBMILL_SERVLET_XPATH = "/web-app/servlet/servlet-name[contains(child::text(), \"" + WEBMILL_PORTLET_REGISTER + "\")]";
+    static final String PORTLET_TAGLIB_COUNT_XPATH = "count(/web-app/jsp-config/taglib/taglib-uri[contains(child::text(), \"http://java.sun.com/portlet\")])";
+    static final String PORTLET_TAGLIB_XPATH = "/web-app/jsp-config/taglib/taglib-uri[contains(child::text(), \"http://java.sun.com/portlet\")]";
+    static final String PORTLET_TAGLIB_LOCATION_XPATH = "/web-app/jsp-config/taglib[taglib-uri[contains(child::text(), \"http://java.sun.com/portlet\")]]/taglib-location";
+
     protected static final String WEB_XML_PATH = "WEB-INF/web.xml";
 
     protected static final String[] ELEMENTS_BEFORE_SERVLET = new String[]{"icon", "display-name", "description",
@@ -85,64 +85,70 @@ public class WebmillWebApplicationRewriter {
      */
     public void processWebXML() throws Exception {
         try {
-            Element root = document.getRootElement();
+            Element root = document.getDocumentElement();
 
-            Object registerServlet = XPath.selectSingleNode(document, WEBMILL_SERVLET_XPATH);
-            Object portletTagCount = XPath.selectSingleNode(document, PORTLET_TAGLIB_COUNT_XPATH);
+            if (new Double(XPathAPI.eval(document, WEB_XML_VERSION_XPATH).toString()).floatValue()<2.4) {
+                throw new IllegalStateException("web.xml file must be version 2.4 or higher");
+            }
+            
+            Node registerServlet = XPathAPI.selectSingleNode(document, WEBMILL_SERVLET_XPATH);
+            Node portletTagCount = XPathAPI.selectSingleNode(document, PORTLET_TAGLIB_COUNT_XPATH);
             int countTaglibUril = new Double(portletTagCount.toString()).intValue();
             if (countTaglibUril>1) {
                 throw new IllegalStateException("Invalid web.xml file. URI http://java.sun.com/portlet defined more than once");
             }
 
-            if (!document.hasRootElement()) {
-                root = new Element("web-app");
-                document.setRootElement(root);
-            }
-
             if (registerServlet == null) {
-                Element registerServletElement = new Element("servlet");
-                Element servletName = new Element("servlet-name").addContent(WEBMILL_PORTLET_REGISTER);
-                Element servletDspName = new Element("display-name").addContent("Webmill portlet register");
-                Element servletDesc = new Element("description").addContent("Webmill servlet for register portlet application archive");
-                Element servletClass = new Element("servlet-class").addContent(PortletRegisterServlet.class.getName());
+                Element registerServletElement = document.createElement("servlet");
+                Element servletName = document.createElement("servlet-name");
+                    servletName.setNodeValue(WEBMILL_PORTLET_REGISTER);
+                Element servletDspName = document.createElement("display-name");
+                    servletDspName.setNodeValue("Webmill portlet register");
+                Element servletDesc = document.createElement("description");
+                    servletDesc.setNodeValue("Webmill servlet for register portlet application archive");
+                Element servletClass = document.createElement("servlet-class");
+                    servletClass.setNodeValue(PortletRegisterServlet.class.getName());
 
-                registerServletElement.addContent(servletName);
-                registerServletElement.addContent(servletDspName);
-                registerServletElement.addContent(servletDesc);
-                registerServletElement.addContent(servletClass);
-                insertLoadOnStartup(registerServletElement);
+                registerServletElement.appendChild(servletName);
+                registerServletElement.appendChild(servletDspName);
+                registerServletElement.appendChild(servletDesc);
+                registerServletElement.appendChild(servletClass);
+                insertLoadOnStartup(document, registerServletElement);
                 insertElementCorrectly(root, registerServletElement, ELEMENTS_BEFORE_SERVLET);
-            } else {
+            }
+            else {
                 // double check for register at Init
                 if (registerServlet instanceof Element) {
-                    Parent registerServletElement = ((Element) registerServlet).getParent();
-                    if (null == XPath.selectSingleNode(registerServletElement, LOAD_ON_STARTUP_NAME)) {
-                        insertLoadOnStartup((Element) registerServletElement);
+                    Node registerServletElement = registerServlet.getParentNode();
+                    if (null == XPathAPI.selectSingleNode(registerServletElement, LOAD_ON_STARTUP_NAME)) {
+                        insertLoadOnStartup(document, (Element) registerServletElement);
                     }
                 }
             }
 
-            Object portletTaglib = XPath.selectSingleNode(document, PORTLET_TAGLIB_XPATH);
+            Object portletTaglib = XPathAPI.selectSingleNode(document, PORTLET_TAGLIB_XPATH);
             if (portletTaglib == null) {
                 realPortletTldFile = "/WEB-INF/tld/portlet.tld";
 
-                Element taglib = new Element("taglib");
-                Element taguri = new Element("taglib-uri").addContent("http://java.sun.com/portlet");
-                Element taglocation = new Element("taglib-location").addContent(realPortletTldFile);
+                Element taglib = document.createElement("taglib");
+                Element taguri = document.createElement("taglib-uri");
+                    taguri.setNodeValue("http://java.sun.com/portlet");
+                Element taglocation = document.createElement("taglib-location");
+                    taglocation.setNodeValue(realPortletTldFile);
 
-                taglib.addContent(taguri);
-                taglib.addContent(taglocation);
+                taglib.appendChild(taguri);
+                taglib.appendChild(taglocation);
 
                 insertElementCorrectly(root, taglib, ELEMENTS_BEFORE_TAGLIB_MAPPING);
                 portletTaglibAdded = true;
 
             }
             else {
-                Object portletTaglibLocation = XPath.selectSingleNode(document, PORTLET_TAGLIB_LOCATION_XPATH);
+                Object portletTaglibLocation = XPathAPI.selectSingleNode(document, PORTLET_TAGLIB_LOCATION_XPATH);
                 if (portletTaglibLocation==null) {
                     throw new IllegalStateException("portlet.tld file not defined in web.xml");
                 }
-                realPortletTldFile = ((Element)portletTaglibLocation).getText();
+                realPortletTldFile = ((Element)portletTaglibLocation).getNodeValue();
             }
         }
         catch (Exception e) {
@@ -151,9 +157,10 @@ public class WebmillWebApplicationRewriter {
 
     }
 
-    private void insertLoadOnStartup(Element jetspeedServletElement) {
-        Element loadOnStartup = new Element(LOAD_ON_STARTUP_NAME).addContent("1");
-        jetspeedServletElement.addContent(loadOnStartup);
+    private void insertLoadOnStartup(Document document, Element jetspeedServletElement) {
+        Element loadOnStartup = document.createElement(LOAD_ON_STARTUP_NAME);
+            loadOnStartup.setNodeValue("1");
+        jetspeedServletElement.appendChild(loadOnStartup);
     }
 
     /**
@@ -169,9 +176,11 @@ public class WebmillWebApplicationRewriter {
      */
     protected void insertElementCorrectly(Element root, Element toInsert, String[] elementsBefore)
         throws Exception {
-        List allChildren = root.getChildren();
+        if (true) throw new RuntimeException("Need rewrite");
+/*
+
+        NodeList allChildren = root.getChildNodes();
         List<String> elementsBeforeList = Arrays.asList(elementsBefore);
-        toInsert.detach();
         int insertAfter = 0;
         int count = 0;
         for (Object anAllChildren : allChildren) {
@@ -191,6 +200,7 @@ public class WebmillWebApplicationRewriter {
         catch (ArrayIndexOutOfBoundsException e) {
             root.addContent(toInsert);
         }
+*/
     }
 
     public String getRealPortletTldFile() {
