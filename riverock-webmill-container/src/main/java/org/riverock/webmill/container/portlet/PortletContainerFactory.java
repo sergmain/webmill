@@ -3,8 +3,8 @@ package org.riverock.webmill.container.portlet;
 import org.riverock.webmill.container.bean.PortletWebApplication;
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.container.portlet_definition.JaxbPortletDefinitionProcessorImpl;
-import org.riverock.webmill.container.portlet_definition.PortletDefinitionProcessor;
+import org.riverock.webmill.container.definition.JaxbPortletDefinitionProcessorImpl;
+import org.riverock.webmill.container.definition.PortletDefinitionProcessor;
 import org.riverock.webmill.container.tools.ContainertStringUtils;
 
 import javax.servlet.ServletConfig;
