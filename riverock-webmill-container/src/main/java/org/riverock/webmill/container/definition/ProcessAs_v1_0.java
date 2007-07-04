@@ -49,7 +49,7 @@ import java.util.ArrayList;
 public class ProcessAs_v1_0 {
     private static final String PORTLET_DEF_PACKAGE_NAME = ObjectFactory.class.getPackage().getName();
 
-    public static PortletApplication processAs_v1_0(File portletFile) throws PortletContainerException {
+    public static PortletApplication processAs_v1_0(File portletFile) {
         try {
             FileInputStream inputStream = new FileInputStream(portletFile);
             return processInputStream(inputStream);
@@ -60,11 +60,12 @@ public class ProcessAs_v1_0 {
         }
     }
 
-    public static PortletApplication processAs_v1_0(InputStream inputStream) throws PortletContainerException {
+    public static PortletApplication processAs_v1_0(InputStream inputStream) {
         try {
             return processInputStream(inputStream);
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             throw new PortletContainerException("Error", e);
         }

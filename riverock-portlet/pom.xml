@@ -14,12 +14,6 @@
         </license>
     </licenses>
     <repositories>
-<!--
-        <repository>
-            <id>Riverock repo local</id>
-            <url>http://test.askmore/repo</url>
-        </repository>
--->
         <repository>
             <id>Riverock repo</id>
             <url>http://riverock.sourceforge.net/repo</url>

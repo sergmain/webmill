@@ -21,7 +21,6 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-
 package org.riverock.webmill.container.deployer;
 
 import java.io.File;
@@ -35,12 +34,8 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-import org.jdom.Document;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-
-import org.riverock.webmill.container.xml.EntityResolverImpl;
+import org.riverock.webmill.container.definition.DefinitionProcessorFactory;
+import org.riverock.webmill.container.definition.web_xml_v2_4.WebAppType;
 
 /**
  * Makes a web application Deploy-ready for Webmill.
@@ -59,8 +54,7 @@ public class WebmillDeploy {
         if (args.length < 2 || args.length > 3 || args.length == 3 && !(args[0].equalsIgnoreCase("-s"))) {
             System.out.println("Usage: java WebmillDeploy [-s] INPUT OUTPUT");
             System.out.println("Options:");
-            System.out
-                .println("  -s: stripLoggers - remove commons-logging[version].jar and/or log4j[version].jar from war");
+            System.out.println("  -s: stripLoggers - remove commons-logging[version].jar and/or log4j[version].jar from war");
             System.out.println("                     (required when targetting application servers like JBoss)");
 
             System.exit(1);
@@ -68,7 +62,8 @@ public class WebmillDeploy {
         }
         if (args.length == 3) {
             new WebmillDeploy(args[1], args[2], true);
-        } else {
+        }
+        else {
             new WebmillDeploy(args[0], args[1], false);
         }
     }
@@ -94,9 +89,10 @@ public class WebmillDeploy {
             // copy over all of the files in the input war to the output
             // war except for web.xml, portlet.xml, and context.xml which
             // we parse for use later
-            Document webXml = null;
-            Document portletXml = null;
-            Document contextXml = null;
+            WebAppType webXml = null;
+//            PortletApplication portletXml = null;
+
+//            Document contextXml = null;
             ZipEntry src;
             InputStream source;
             // init source files - web.xml, portlet.xml and context.xml
@@ -108,14 +104,18 @@ public class WebmillDeploy {
                     String target = src.getName();
                     if (WEB_INF_WEB_XML.equals(target)) {
                         System.out.println("Found web.xml");
-                        webXml = parseXml(source);
-                    } else if (WEB_INF_PORTLET_XML.equals(target)) {
+                        webXml = DefinitionProcessorFactory.getWebXmlDefinitionProcessor().process(source);
+                    }
+/*
+                    else if (WEB_INF_PORTLET_XML.equals(target)) {
                         System.out.println("Found WEB-INF/portlet.xml");
-                        portletXml = parseXml(source);
-                    } else if (META_INF_CONTEXT_XML.equals(target)) {
+                        portletXml = DefinitionProcessorFactory.getPortletDefinitionProcessor().process(source);
+                    }
+                    else if (META_INF_CONTEXT_XML.equals(target)) {
                         System.out.println("Found META-INF/context.xml");
                         contextXml = parseXml(source);
                     }
+*/
                 }
                 finally {
                     source.close();
@@ -125,18 +125,19 @@ public class WebmillDeploy {
             if (webXml == null) {
                 throw new IllegalArgumentException("WEB-INF/web.xml not found");
             }
+/*
             if (portletXml == null) {
                 throw new IllegalArgumentException("WEB-INF/portlet.xml not found");
             }
+*/
 
-
-            if (true) throw new RuntimeException("Need rewrite");
-            WebmillWebApplicationRewriter webRewriter=null;
-//            webRewriter = new WebmillWebApplicationRewriter(webXml);
+            WebmillWebApplicationRewriter webRewriter = new WebmillWebApplicationRewriter(webXml);
             webRewriter.processWebXML();
 
+/*
             WebmillContextRewriter contextRewriter = new WebmillContextRewriter(contextXml, portletApplicationName);
             contextRewriter.processContextXML();
+*/
 
             jin = new JarFile(inputName);
             zipEntries = jin.entries();
@@ -151,7 +152,7 @@ public class WebmillDeploy {
                         continue;
                     }
                     else {
-                        if (webRewriter.getRealPortletTldFile()!=null && fullTarget.equals(webRewriter.getRealPortletTldFile())){
+                        if (webRewriter.getRealPortletTldFile() != null && fullTarget.equals(webRewriter.getRealPortletTldFile())) {
                             System.out.println("Skip portlet tld file " + fullTarget);
                             continue;
                         }
@@ -159,6 +160,7 @@ public class WebmillDeploy {
                             System.out.println("Skip web.xml file " + target);
                             continue;
                         }
+/*
                         else if (target.equals(WEB_INF_PORTLET_XML)) {
                             System.out.println("Skip portlet.xml file " + target);
                             continue;
@@ -167,6 +169,7 @@ public class WebmillDeploy {
                             System.out.println("Skip context.xml file " + target);
                             continue;
                         }
+*/
                         System.out.println("Add file " + target);
                     }
                     addFile(target, source, jout);
@@ -177,9 +180,11 @@ public class WebmillDeploy {
             }
 
             // write the web.xml, portlet.xml, and context.xml files
-            addFile(WEB_INF_WEB_XML, webXml, jout);
+            addWebXmlFile(WEB_INF_WEB_XML, webXml, jout);
+/*
             addFile(WEB_INF_PORTLET_XML, portletXml, jout);
             addFile(META_INF_CONTEXT_XML, contextXml, jout);
+*/
 
             System.out.println("Attempting to add portlet.tld to war...");
             InputStream is = this.getClass().getResourceAsStream("/org/riverock/webmill/container/tags/portlet.tld");
@@ -189,10 +194,10 @@ public class WebmillDeploy {
             else {
 
                 String portletTldFile = webRewriter.getRealPortletTldFile();
-                if (portletTldFile.charAt(0)=='/') {
-                    portletTldFile=portletTldFile.substring(1);
+                if (portletTldFile.charAt(0) == '/') {
+                    portletTldFile = portletTldFile.substring(1);
                 }
-                System.out.println("Adding file "+portletTldFile);
+                System.out.println("Adding file " + portletTldFile);
                 try {
                     addFile(portletTldFile, is, jout);
                 }
@@ -262,16 +267,7 @@ public class WebmillDeploy {
         }
     }
 
-    static Document parseXml(InputStream source) throws Exception {
-        // Parse using the local dtds instead of remote dtds. This
-        // allows to deploy the application offline
-        SAXBuilder saxBuilder = new SAXBuilder();
-        saxBuilder.setEntityResolver(new EntityResolverImpl());
-        Document document = saxBuilder.build(source);
-        return document;
-    }
-
-    protected void addFile(String path, InputStream source, JarOutputStream jos) throws IOException {
+    private void addFile(String path, InputStream source, JarOutputStream jos) throws IOException {
         jos.putNextEntry(new ZipEntry(path));
         try {
             int count;
@@ -284,21 +280,30 @@ public class WebmillDeploy {
         }
     }
 
-    protected void addFile(String path, Document source, JarOutputStream jos) throws IOException {
-        System.out.println("Add file "+path);
-        if (source != null) {
-            jos.putNextEntry(new ZipEntry(path));
-            XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            try {
-                xmlOutputter.output(source, jos);
-            }
-            finally {
-                jos.closeEntry();
-            }
+    private void addWebXmlFile(String path, WebAppType webApp, JarOutputStream jos) throws IOException {
+        System.out.println("Add web.xml file");
+        jos.putNextEntry( new ZipEntry(path) );
+        try {
+            DefinitionProcessorFactory.getWebXmlDefinitionProcessor().marshall(webApp, jos, null);
+        }
+        finally {
+            jos.closeEntry();
         }
     }
 
-    protected String getPortletApplicationName(String path) {
+/*
+    private void addPortletXmlFile(String path, PortletType portlet, JarOutputStream jos) throws IOException {
+        System.out.println("Add portlet.xml file");
+        try {
+            DefinitionProcessorFactory.getPortletDefinitionProcessor().marshall(webApp, jos, null);
+        }
+        finally {
+            jos.closeEntry();
+        }
+    }
+*/
+
+    private String getPortletApplicationName(String path) {
         File file = new File(path);
         String name = file.getName();
         String portletApplicationName = name;

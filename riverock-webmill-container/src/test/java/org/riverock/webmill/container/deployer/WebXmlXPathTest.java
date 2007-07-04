@@ -4,19 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.xpath.XPathAPI;
 import org.apache.xpath.objects.XObject;
@@ -27,7 +22,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import org.riverock.webmill.container.definition.web_xml_v2_4.ObjectFactory;
+import org.riverock.webmill.container.definition.DefinitionProcessorFactory;
+import org.riverock.webmill.container.definition.WebXmlDefinitionProcessor;
 import org.riverock.webmill.container.definition.web_xml_v2_4.WebAppType;
 
 /**
@@ -37,7 +33,6 @@ import org.riverock.webmill.container.definition.web_xml_v2_4.WebAppType;
  *         $Id: WebXmlXPathTest.java 1111 2006-11-30 00:18:47Z serg_main $
  */
 public class WebXmlXPathTest extends TestCase {
-    private static final String PACKAGE_NAME = ObjectFactory.class.getPackage().getName();
 
     public void testWebXml() throws Exception {
 
@@ -49,14 +44,8 @@ public class WebXmlXPathTest extends TestCase {
             System.out.println("fileName = " + fileName);
 
             InputStream inputStream = WebXmlXPathTest.class.getResourceAsStream(fileName);
-
-            JAXBContext jaxbContext = JAXBContext.newInstance (PACKAGE_NAME);
-
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            Source source =  new StreamSource(inputStream);
-            JAXBElement<WebAppType> bookingElement = unmarshaller.unmarshal( source, WebAppType.class);
-
-            WebAppType webApp = bookingElement.getValue();
+            WebXmlDefinitionProcessor processor = DefinitionProcessorFactory.getWebXmlDefinitionProcessor();
+            WebAppType webApp = processor.process(inputStream);
             int i = 0;
         }
 
@@ -102,8 +91,7 @@ public class WebXmlXPathTest extends TestCase {
     }
 
     private static Document getDocument(InputStream inputStream) throws IOException, SAXException, ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory
-                .newInstance();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setIgnoringElementContentWhitespace(true);
         factory.setIgnoringComments(true);
         DocumentBuilder docBuilder = factory.newDocumentBuilder();

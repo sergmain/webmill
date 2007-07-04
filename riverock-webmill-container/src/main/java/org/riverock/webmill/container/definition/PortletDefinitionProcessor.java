@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.InputStream;
 
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
-import org.riverock.webmill.container.portlet.PortletContainerException;
 
 /**
  * @author smaslyukov
@@ -36,7 +35,7 @@ import org.riverock.webmill.container.portlet.PortletContainerException;
  *         $Id$
  */
 public interface PortletDefinitionProcessor {
-    public PortletApplication process( File portletFile ) throws PortletContainerException;
+    public PortletApplication process( File portletFile );
 
-    PortletApplication process(InputStream inputStream) throws PortletContainerException;
+    PortletApplication process(InputStream inputStream);
 }
