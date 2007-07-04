@@ -31,7 +31,7 @@ import java.io.Serializable;
  *         Time: 19:51:54
  *         $Id$
  */
-public class PortletContainerException extends Exception implements Serializable {
+public class PortletContainerException extends RuntimeException implements Serializable {
     private static final long serialVersionUID = 50434672384237127L;
 
     public PortletContainerException(){

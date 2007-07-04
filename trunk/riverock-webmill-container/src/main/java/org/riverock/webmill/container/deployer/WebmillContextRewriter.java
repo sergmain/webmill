@@ -24,8 +24,7 @@
 
 package org.riverock.webmill.container.deployer;
 
-import org.jdom.Document;
-import org.jdom.Element;
+import org.w3c.dom.Document;
 
 /**
  * Utilities for manipulating the context.xml deployment descriptor
@@ -45,6 +44,7 @@ public class WebmillContextRewriter {
 
     public void processContextXML() throws Exception {
         if (document != null) {
+/*
             try {
                 // get root Context
                 Element root = null;
@@ -73,6 +73,7 @@ public class WebmillContextRewriter {
             catch (Exception e) {
                 throw new Exception("Unable to process context.xml for infusion " + e.toString(), e);
             }
+*/
         }
     }
 }

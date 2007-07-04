@@ -84,7 +84,7 @@ public final class PortletContainer implements Serializable {
         this.portalPath = portalPath;
     }
 
-    public PortletEntry getPortletInstance(final String queryPortletName) throws PortletContainerException {
+    public PortletEntry getPortletInstance(final String queryPortletName) {
         if (isNewPortlet) {
             registerNewPortlet();
         }
@@ -217,7 +217,7 @@ public final class PortletContainer implements Serializable {
         }
     }
 
-    private PortletEntry createPortletInstance(final String portletName) throws PortletContainerException {
+    private PortletEntry createPortletInstance(final String portletName) {
         PortletWebApplication portletWebApplication = searchPortletItem( portletName );
         if (portletWebApplication == null) {
             String es = "Portlet '"+ portletName + "' not registered.";

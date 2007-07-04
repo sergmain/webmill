@@ -77,8 +77,7 @@ public final class PortletContainerFactory implements Serializable {
      * @throws PortletContainerException on errro
      */
     public synchronized static void registerPortletFile(
-        String uniqueName, File portletFile, ServletConfig servletConfig, ClassLoader classLoader, String portalPath)
-        throws PortletContainerException {
+        String uniqueName, File portletFile, ServletConfig servletConfig, ClassLoader classLoader, String portalPath) {
 
             System.out.println("Register and prepare portlet file: " + portletFile.getName());
 
@@ -105,7 +104,7 @@ public final class PortletContainerFactory implements Serializable {
         }
     }
 
-    static synchronized void digestWaitedPortletFile() throws PortletContainerException {
+    static synchronized void digestWaitedPortletFile() {
             Iterator<WaitDigestFile> iterator = digestWaitList.iterator();
             while (iterator.hasNext()) {
                 WaitDigestFile waitDigestFile = iterator.next();
@@ -150,7 +149,7 @@ public final class PortletContainerFactory implements Serializable {
             }
     }
 
-    private static List<PortletDefinition> processPortletFile(File portletFile) throws PortletContainerException {
+    private static List<PortletDefinition> processPortletFile(File portletFile) {
 
         System.out.println("Start process portlet file: " + portletFile.getName());
         List<PortletDefinition> portletList = new ArrayList<PortletDefinition>();
