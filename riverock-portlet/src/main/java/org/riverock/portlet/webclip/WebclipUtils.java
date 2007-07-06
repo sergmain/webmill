@@ -58,7 +58,11 @@ public class WebclipUtils {
         PortletDaoFactory.getWebclipDao().setOriginContent(webclip, os.toByteArray());
     }
 
-    public static void processStoredContent(WebclipBean webclip, String hrefPrefix, String hrefStartPart, PortalDaoProvider portalDaoProvider, Long siteLanguageId) throws IOException {
+    public static void processStoredContent(
+        WebclipBean webclip, String hrefPrefix, String hrefStartPart, PortalDaoProvider portalDaoProvider,
+        Long siteLanguageId, WebclipUrlChecker urlChecker
+    ) throws IOException {
+
         byte[] bytes = webclip.getZippedOriginContentAsBytes();
         GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
 
@@ -75,7 +79,7 @@ public class WebclipUtils {
 
         WebclipUrlProducer producer = new WebclipUrlProducerImpl(hrefPrefix, hrefStartPart);
         WebclipDataProcessor processor = new WebclipDataProcessorImpl(
-            producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content", portalDaoProvider, siteLanguageId
+            producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content", portalDaoProvider, siteLanguageId, urlChecker
         );
 
         os = new ByteArrayOutputStream();

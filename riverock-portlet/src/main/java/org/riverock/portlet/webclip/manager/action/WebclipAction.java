@@ -26,6 +26,9 @@ import org.riverock.portlet.tools.FacesTools;
 import org.riverock.portlet.webclip.WebclipBean;
 import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.portlet.webclip.WebclipUtils;
+import org.riverock.portlet.webclip.WebclipUrlChecker;
+import org.riverock.portlet.webclip.WebclipUrlCheckerSimpleImpl;
+import org.riverock.portlet.webclip.WebclipUrlCheckerImpl;
 import org.riverock.portlet.webclip.manager.WebclipSessionBean;
 import org.riverock.portlet.webclip.manager.bean.MenuItem;
 import org.riverock.portlet.webclip.manager.bean.WebclipStatisticBean;
@@ -203,6 +206,8 @@ public class WebclipAction implements Serializable {
 
         try {
             PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            WebclipUrlChecker urlChecker = new WebclipUrlCheckerImpl(portalDaoProvider, siteId);
+
             List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
             log.debug("siteLanguage: " + languages);
             Map<Long, String> map = new HashMap<Long, String>();
@@ -232,7 +237,7 @@ public class WebclipAction implements Serializable {
                         }
                         log.debug("  result portletName: "+portletName);
                         if (portletName.equals(WebclipConstants.WEBMILL_WIKI_WEBCLIP)) {
-                            String msg = processWebclipContent(portalDaoProvider, siteId, catalogItem);
+                            String msg = processWebclipContent(portalDaoProvider, siteId, catalogItem, urlChecker);
                             if (msg!=null) {
                                 result.add(msg);
                             }
@@ -295,6 +300,7 @@ public class WebclipAction implements Serializable {
                 lines.add(tempLine);
             }
 
+            WebclipUrlChecker urlChecker = new WebclipUrlCheckerSimpleImpl(portalDaoProvider);
             for (String line : lines) {
                 Long webclipId;
                 try {
@@ -346,7 +352,7 @@ public class WebclipAction implements Serializable {
                     Long menuItemId = portalDaoProvider.getPortalCatalogDao().createCatalogItem(item);
                     CatalogItem catalogItem = portalDaoProvider.getPortalCatalogDao().getCatalogItem(menuItemId);
                     result.add( reloadWebclipContent(portalDaoProvider, siteId, catalogItem, true) );
-                    result.add( processWebclipContent(portalDaoProvider, siteId, catalogItem, true) );
+                    result.add( processWebclipContent(portalDaoProvider, siteId, catalogItem, true, urlChecker) );
                 }
                 catch (Throwable e) {
                     log.error("Error process url '" +line+"'", e);
@@ -458,11 +464,11 @@ public class WebclipAction implements Serializable {
         return msg + "OK";
     }
 
-    private String processWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem) {
-        return processWebclipContent(portalDaoProvider, siteId, catalogItem, false);
+    private String processWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, WebclipUrlChecker urlChecker) {
+        return processWebclipContent(portalDaoProvider, siteId, catalogItem, false, urlChecker);
     }
 
-    private String processWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, boolean isForce) {
+    private String processWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, boolean isForce, WebclipUrlChecker urlChecker) {
         log.debug("    start processWebclipContent()");
 
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
@@ -480,7 +486,7 @@ public class WebclipAction implements Serializable {
         }
         try {
             CatalogLanguageItem catalogLanguageItem = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItem(catalogItem.getCatalogLanguageId());
-            WebclipUtils.processStoredContent(w.webclip, w.href, w.prefix, portalDaoProvider, catalogLanguageItem.getSiteLanguageId());
+            WebclipUtils.processStoredContent(w.webclip, w.href, w.prefix, portalDaoProvider, catalogLanguageItem.getSiteLanguageId(), urlChecker);
         }
         catch (Throwable e) {
             String es = "Error refresh content for webclip, id: "+ w.webclip.getWebclipId()+", url: "+w.url;
