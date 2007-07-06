@@ -208,8 +208,8 @@ public class WebclipPortlet implements Portlet {
                 }
                 return;
             }
-
-            WebclipUtils.processStoredContent(webclip, hrefPrefix, hrefStartPart, portalDaoProvider, siteLanguageId);
+            WebclipUrlChecker urlChecker = new WebclipUrlCheckerSimpleImpl(portalDaoProvider);
+            WebclipUtils.processStoredContent(webclip, hrefPrefix, hrefStartPart, portalDaoProvider, siteLanguageId, urlChecker);
         }
     }
 

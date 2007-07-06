@@ -98,6 +98,8 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     private Long siteLanguageId;
     private static final String NOFOLLOW_VALUE = "nofollow";
 
+    private WebclipUrlChecker checker;
+
     private static class ExcludeElement {
         public static final int ID_ATTRIBUTE_TYPE = 1;
         public static final int CLASS_ATTRIBUTE_TYPE = 2;
@@ -132,6 +134,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "floatleft"), //  commons Logo
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "dablink"), //  disambiguation msg
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "messagebox cleanup metadata plainlinks"), //
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "boilerplate"), //
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "boilerplate metadata"), //
 
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "administrator"), //  admin message about this page
@@ -152,11 +155,17 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
      * @param elementId String
      * @param portalDaoProvider portal DOA provider
      * @param siteLanguageId ID of site language
+     * @param checker url checker for check exist or not this url on site
      */
-    public WebclipDataProcessorImpl(WebclipUrlProducer urlProducer, byte[] bytes, int elementType, String elementId, PortalDaoProvider portalDaoProvider, Long siteLanguageId) {
+    public WebclipDataProcessorImpl(
+        WebclipUrlProducer urlProducer,
+        byte[] bytes, int elementType, String elementId, PortalDaoProvider portalDaoProvider,
+        Long siteLanguageId, WebclipUrlChecker checker) {
+
         this.urlProducer = urlProducer;
         this.siteLanguageId = siteLanguageId;
         this.portalDaoProvider = portalDaoProvider;
+        this.checker = checker;
 
         DOMFragmentParser parser = new DOMFragmentParser();
 
@@ -437,7 +446,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                 path = path.substring(0, path.indexOf('#'));
             }
 
-            if (portalDaoProvider.getPortalCatalogDao().getCatalogItemId(siteLanguageId, path)!=null) {
+            if (checker.isExist(siteLanguageId, path)) {
                 return UrlStatus.INTERNAL_URI_STATUS;
             }
         }

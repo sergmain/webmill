@@ -114,11 +114,11 @@ function displayInvoice() {
 <fmt:setBundle basename="org.riverock.portlet.resource.Webclip" scope="request"/>
 
 
-<table border="0">
     <%
         if (request.isUserInRole("webmill.webclip-manager") ||
             request.isUserInRole("webmill.portal-manager")) {
     %>
+<table border="0">
     <portlet:actionURL var="portletUrl"/>
     <form method="POST" action="<c:out value='${portletUrl}'/>">
         <tr>
@@ -155,10 +155,10 @@ function displayInvoice() {
     <script type="text/javascript">
         document.getElementById("sourceUrlId").focus();	
     </script>
+</table>
     <%
         }
     %>
-</table>
 
 <c:out value="${webclipErrorMessage}" escapeXml="true"/>
 
