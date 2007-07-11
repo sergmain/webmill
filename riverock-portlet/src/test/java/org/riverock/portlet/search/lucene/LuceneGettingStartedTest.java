@@ -13,6 +13,8 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Hits;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 
 /**
  * User: SMaslyukov
@@ -24,9 +26,13 @@ public class LuceneGettingStartedTest {
         int docsInIndex = Integer.parseInt(args[0]);
 
         // create an index called 'index' in a temporary directory
+        String indexDir = "/lucene/index/36";
+        Directory directory = FSDirectory.getDirectory(indexDir);
+/*
         String indexDir =
             System.getProperty("java.io.tmpdir", "tmp") +
                 System.getProperty("file.separator") + "index";
+*/
 
         Analyzer analyzer = new StopAnalyzer();
         IndexWriter writer = new IndexWriter(indexDir, analyzer, true);
@@ -37,16 +43,17 @@ public class LuceneGettingStartedTest {
 
         long startTime = System.currentTimeMillis();
         Document doc = new Document();
-        doc.add(new Field("url", "тест".getBytes("Cp1251"), Field.Store.YES));
-        doc.add(new Field("contents", new StringReader("Bibamus, moriendum est")));
+        doc.add(new Field("url", new StringReader("/page/about/ddd")));
+        doc.add(new Field("content", new StringReader("Bibamus, moriendum est")));
         writer.addDocument(doc);
         writer.close();
+        
         long stopTime = System.currentTimeMillis();
         System.out.println("Total time: " + (stopTime - startTime) + " ms");
 
         IndexSearcher is = new IndexSearcher(indexDir);
         analyzer = new StandardAnalyzer();
-        QueryParser parser = new QueryParser("contents", analyzer);
+        QueryParser parser = new QueryParser("content", analyzer);
         Query query = parser.parse("Bibamus");
         Hits hits = is.search(query);
 

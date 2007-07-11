@@ -8,9 +8,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.GZIPInputStream;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
@@ -87,5 +90,58 @@ public class WebclipUtils {
         processor.modify(os);
         String webclipData = os.toString(CharEncoding.UTF_8);
         PortletDaoFactory.getWebclipDao().updateWebclip(webclip, webclipData);
+    }
+
+    public static WebclipBeanExtended getWebclip(Long siteId, Map<String, List<String>> m, String msg, boolean isInitData) {
+        WebclipBeanExtended w = new WebclipBeanExtended();
+        if (m.isEmpty()) {
+            w.setStatus(msg + "preferences is empty.");
+            return w;
+        }
+
+        w.setUrl(getPreferenceValue(m, msg, w, "url not defined.", "too many urls - ", WebclipConstants.URL_SOURCE_PREF));
+        if (w.getStatus() !=null){
+            return w;
+        }
+        w.setHref(getPreferenceValue(m, msg, w, "href not defined.", "too many hrefs - ", WebclipConstants.NEW_HREF_PREFIX_PREF));
+        if (w.getStatus() !=null){
+            return w;
+        }
+        w.setPrefix(getPreferenceValue(m, msg, w, "prefix not defined.", "too many prefixes - ", WebclipConstants.HREF_START_PAGE_PREF));
+        if (w.getStatus() !=null){
+            return w;
+        }
+
+        String id = getPreferenceValue(m, msg, w, "webclipId not defined.", "too many webclipId - ", WebclipConstants.WEBCLIP_ID_PREF);
+        if (w.getStatus() !=null){
+            return w;
+        }
+        Long webclipId = new Long(id);
+
+        WebclipBean webclip = PortletDaoFactory.getWebclipDao().getWebclip(siteId, webclipId, isInitData);
+        if (webclip==null) {
+            w.setStatus(msg + "webclip for id "+ webclipId+" not found");
+            return w;
+        }
+        w.setWebclip(webclip);
+        return w;
+    }
+
+    public static String getPreferenceValue(Map<String, List<String>> m, String msg, WebclipBeanExtended w, String notDefined, String tooMany, String preferenceName) {
+        List<String> list = m.get(preferenceName);
+        if (list==null || list.isEmpty()) {
+            w.setStatus(msg + notDefined);
+            return null;
+        }
+        if (list.size()>1) {
+            w.setStatus(msg + tooMany +list.size());
+            return null;
+        }
+        String s = list.get(0);
+        if (StringUtils.isBlank(s)) {
+            w.setStatus(msg + preferenceName + " preference is empty.");
+            return null;
+        }
+        return s;
     }
 }

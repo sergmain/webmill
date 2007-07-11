@@ -120,7 +120,7 @@ public final class ContextNavigator extends HttpServlet {
         if (portalInstance != null) {
             return portalInstance;
         }
-        portalInstance = PortalInstanceImpl.getInstance(portalServletConfig);
+        portalInstance = PortalInstanceImpl.getInstance(siteId, portalServletConfig);
         portalInstanceMap.putIfAbsent(siteId, portalInstance);
         return portalInstance;
     }

@@ -6,18 +6,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.portlet.PortletRequest;
+
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
-import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexerShort;
+import org.riverock.interfaces.portal.search.PortalIndexerParameter;
+import org.riverock.interfaces.portal.search.PortletIndexerContent;
 import org.riverock.portlet.tools.FacesTools;
 import org.riverock.interfaces.ContainerConstants;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * User: SMaslyukov
@@ -30,8 +34,6 @@ public class IndexerAction implements Serializable {
 
     private IndexerSessionBean indexerSessionBean = null;
     private List<String> result = new ArrayList<String>();
-    private int countTryWithCounnectionTimeout=0;
-    private static final int MAX_COUNT_TRY_WITH_TIMEOUT = 5;
     private static final String INDEXER_MANAGER = "indexer-manager";
     private static final int MAX_TIME_FOR_OPERATION_IN_MINUTES = 3;
     private static final int MAX_TIME_FOR_OPERATION = MAX_TIME_FOR_OPERATION_IN_MINUTES*60*1000;
@@ -109,14 +111,16 @@ public class IndexerAction implements Serializable {
         result = new ArrayList<String>();
         result.add( "Start reindexing." );
 
-        Long siteId = getSiteId();
         try {
+            Long siteId = getSiteId();
             result.add("Result of work for "+MAX_TIME_FOR_OPERATION_IN_MINUTES+" minutes.");
 
             PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            PortalIndexer portalIndexer = getPortalIndexer();
+
             List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
             log.debug("siteLanguage: " + languages);
-            Map<Long, String> map = new HashMap<Long, String>();
+            Map<Long, PortletIndexer> map = new HashMap<Long, PortletIndexer>();
             result.add("Count of languages: " + languages.size());
             for (SiteLanguage language : languages) {
                 List<CatalogLanguageItem> catalogLanguageItems = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItemList(language.getSiteLanguageId());
@@ -124,41 +128,60 @@ public class IndexerAction implements Serializable {
                 for (CatalogLanguageItem catalogLanguageItem : catalogLanguageItems) {
                     List<CatalogItem> catalogItems = portalDaoProvider.getPortalCatalogDao().getCatalogItemList(catalogLanguageItem.getCatalogLanguageId());
                     result.add("Count of menu items for catalog '" + catalogLanguageItem.getCatalogCode()+"' - "+ catalogItems.size());
-                    for (CatalogItem catalogItem : catalogItems) {
+                    for (final CatalogItem catalogItem : catalogItems) {
                         if ((System.currentTimeMillis()-startMills)> MAX_TIME_FOR_OPERATION) {
                             result.add("");
                             result.add("Not all contents reindexing. Time limit for operation reached.");
                             return INDEXER_MANAGER;
                         }
-                        String portletName = map.get(catalogItem.getPortletId());
-                        log.debug("  portletName: "+portletName);
-                        if (portletName==null) {
-                            PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(catalogItem.getPortletId());
-                            if (portlet==null) {
-                                String s = "  portlet for portletId: " + catalogItem.getPortletId() + " not found";
-                                log.debug(s);
-                                result.add(s);
+                        PortletIndexer portletIndexer = map.get(catalogItem.getPortletId());
+                        log.debug("  portletIndexer: "+ portletIndexer);
+                        if (portletIndexer ==null) {
+                            PortletIndexer indexer = portalIndexer.getPortletIndexer(siteId, catalogItem.getPortletId());
+                            if (indexer==null) {
                                 continue;
                             }
-                            portletName = portlet.getPortletName();
-                            map.put(catalogItem.getPortletId(), portletName);
+                            portletIndexer = indexer;
+                            map.put(catalogItem.getPortletId(), portletIndexer);
                         }
-                        log.debug("  result portletName: "+portletName);
-/*
-                        if (portletName.equals(WebclipConstants.WEBMILL_WIKI_WEBCLIP)) {
-                            String msg = reloadWebclipContent(portalDaoProvider, siteId, catalogItem);
-                            if (msg!=null) {
-                                result.add(msg);
-                            }
-                            log.debug("    done reloadWebclipContent()");
+                        log.debug("  result portletIndexer: "+ portletIndexer);
+
+                        PortletRequest renderRequest = FacesTools.getPortletRequest();
+                        String url;
+                        if (catalogItem.getUrl() == null) {
+                            url = PortletUtils.pageid(renderRequest) + '/' + language.getCustomLanguage() + '/' + catalogItem.getId();
                         }
                         else {
-                            result.add("Not all content indexed. Time limit for operation reached.");
+                            url = PortletUtils.page(renderRequest) + '/' + language.getCustomLanguage() + '/' + catalogItem.getUrl();
                         }
-*/
-                        if (countTryWithCounnectionTimeout> MAX_COUNT_TRY_WITH_TIMEOUT) {
-                            result.add("Too many connections time outed.");
-                            return INDEXER_MANAGER;
+
+                        Map<String, List<String>> m = portalDaoProvider.getPortalPreferencesDao().initMetadata(catalogItem.getMetadata());
+
+                        final PortletIndexerContent content = portletIndexer.getContent(catalogItem.getContextId(), m);
+                        log.debug("Content from portlet: " + content);
+                        if (content!=null && content.getContent()!=null && content.getContent().length>0) {
+                            PortalIndexerParameter parameter = new PortalIndexerParameter() {
+                                public String getTitle() {
+                                    return catalogItem.getTitle()!=null?catalogItem.getTitle():catalogItem.getKeyMessage();
+                                }
+
+                                public String getDescription() {
+                                    return content.getDescription();
+                                }
+
+                                public byte[] getContent() {
+                                    return content.getContent();
+                                }
+
+                                public Map<String, Object> getParameters() {
+                                    return null;
+                                }
+                            };
+                            
+                            portalIndexer.indexContent(url, parameter);
+                        }
+                        else {
+                            log.debug("Content from portlet is null or empty.");
                         }
                     }
                 }
@@ -185,7 +208,7 @@ public class IndexerAction implements Serializable {
         return siteId;
     }
 
-    private PortalIndexer getPortalIndexer() {
+    private static PortalIndexer getPortalIndexer() {
         PortalIndexer portalIndexer;
         portalIndexer = (PortalIndexer) FacesTools.getAttribute( ContainerConstants.PORTAL_PORTAL_INDEXER_ATTRIBUTE );
         return portalIndexer;

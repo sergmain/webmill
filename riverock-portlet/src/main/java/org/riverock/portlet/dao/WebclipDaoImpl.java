@@ -55,6 +55,13 @@ public class WebclipDaoImpl implements WebclipDao {
         return getWebclip(siteId, webclipId, true);
     }
 
+    /**
+     *
+     * @param siteId siteId
+     * @param webclipId webcliId
+     * @param isInitWebclipData is init data of webclip or not
+     * @return webclip bean
+     */
     public WebclipBean getWebclip(Long siteId, Long webclipId, boolean isInitWebclipData) {
         if (webclipId==null || siteId==null) {
             return null;
@@ -70,11 +77,6 @@ public class WebclipDaoImpl implements WebclipDao {
                 .uniqueResult();
             if (bean!=null) {
                 if (isInitWebclipData) {
-/*
-                    if (bean.getWebclipData()==null) {
-                        System.out.println("WebclipData is null");
-                    }
-*/
                     Blob blob = bean.getWebclipBlob();
                     if (blob!=null) {
                         try {

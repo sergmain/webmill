@@ -134,6 +134,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "floatleft"), //  commons Logo
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "dablink"), //  disambiguation msg
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "messagebox cleanup metadata plainlinks"), //
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "messagebox linkless metadata plainlinks"), //
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "boilerplate"), //
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "boilerplate metadata"), //
 
@@ -150,7 +151,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     /**
      *
      * @param urlProducer UrlProducer url producer
-     * @param bytes контент для модификации урлов
+     * @param bytes content for modification
      * @param elementType int 1- table element, 2 - div element
      * @param elementId String
      * @param portalDaoProvider portal DOA provider
@@ -522,10 +523,10 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     }
 
     /**
-     * сортировка аттрибутов ноды
+     * sorting of attributes of node
      *
-     * @param attrs мапа с аттрибутами
-     * @return Attr[]
+     * @param attrs map with attributes
+     * @return Attr[] sorted array of attributes
      */
     private Attr[] sortAttributes(NamedNodeMap attrs) {
 

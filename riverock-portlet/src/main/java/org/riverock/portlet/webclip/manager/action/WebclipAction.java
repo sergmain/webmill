@@ -23,12 +23,12 @@ import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.webclip.WebclipBean;
 import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.portlet.webclip.WebclipUtils;
 import org.riverock.portlet.webclip.WebclipUrlChecker;
 import org.riverock.portlet.webclip.WebclipUrlCheckerSimpleImpl;
 import org.riverock.portlet.webclip.WebclipUrlCheckerImpl;
+import org.riverock.portlet.webclip.WebclipBeanExtended;
 import org.riverock.portlet.webclip.manager.WebclipSessionBean;
 import org.riverock.portlet.webclip.manager.bean.MenuItem;
 import org.riverock.portlet.webclip.manager.bean.WebclipStatisticBean;
@@ -345,6 +345,7 @@ public class WebclipAction implements Serializable {
                     item.setCatalogLanguageId(webclipSessionBean.getCatalogLanguageId());
                     item.setUrl(path);
                     item.setKeyMessage(menuName);
+                    item.setTitle(menuName);
                     item.setContextId(null);
                     item.setPortletId(portlet.getPortletId());
                     item.setTemplateId(template.getTemplateId());
@@ -370,66 +371,9 @@ public class WebclipAction implements Serializable {
 
     // Private methods
 
-    private static class WebclipBeanExtended {
-        private WebclipBean webclip=null;
-        private String url;
-        private String href;
-        private String prefix;
-        private String status=null;
-    }
-
     private WebclipBeanExtended getWebclip(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, String msg) {
-        WebclipBeanExtended w = new WebclipBeanExtended();
         Map<String, List<String>> m = portalDaoProvider.getPortalPreferencesDao().initMetadata(catalogItem.getMetadata());
-        if (m.isEmpty()) {
-            w.status = msg + "preferences is empty.";
-            return w;
-        }
-        
-        w.url = getPreferenceValue(m, msg, w, "url not defined.", "too many urls - ", WebclipConstants.URL_SOURCE_PREF);
-        if (w.status!=null){
-            return w;
-        }
-        w.href = getPreferenceValue(m, msg, w, "href not defined.", "too many hrefs - ", WebclipConstants.NEW_HREF_PREFIX_PREF);
-        if (w.status!=null){
-            return w;
-        }
-        w.prefix = getPreferenceValue(m, msg, w, "prefix not defined.", "too many prefixes - ", WebclipConstants.HREF_START_PAGE_PREF);
-        if (w.status!=null){
-            return w;
-        }
-
-        String id = getPreferenceValue(m, msg, w, "webclipId not defined.", "too many webclipId - ", WebclipConstants.WEBCLIP_ID_PREF);
-        if (w.status!=null){
-            return w;
-        }
-        Long webclipId = new Long(id);
-
-        WebclipBean webclip = PortletDaoFactory.getWebclipDao().getWebclip(siteId, webclipId, false);
-        if (webclip==null) {
-            w.status = msg + "webclip for id "+ webclipId+" not found";
-            return w;
-        }
-        w.webclip = webclip;
-        return w;
-    }
-
-    private String getPreferenceValue(Map<String, List<String>> m, String msg, WebclipBeanExtended w, String notDefined, String tooMany, String preferenceName) {
-        List<String> list = m.get(preferenceName);
-        if (list==null || list.isEmpty()) {
-            w.status = msg + notDefined;
-            return null;
-        }
-        if (list.size()>1) {
-            w.status = msg + tooMany +list.size();
-            return null;
-        }
-        String s = list.get(0);
-        if (StringUtils.isBlank(s)) {
-            w.status = msg + preferenceName + " preference is empty.";
-            return null;
-        }
-        return s;
+        return WebclipUtils.getWebclip(siteId, m, msg, false);
     }
 
     private String reloadWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem) {
@@ -442,22 +386,22 @@ public class WebclipAction implements Serializable {
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
 
         WebclipBeanExtended w = getWebclip(portalDaoProvider, siteId, catalogItem, msg);
-        if (!isForce && (w==null || w.webclip==null || !w.webclip.isLoadContent())) {
+        if (!isForce && (w==null || w.getWebclip() ==null || !w.getWebclip().isLoadContent())) {
             return null;
         }
         
-        if (w.status!=null) {
-            return w.status;
+        if (w.getStatus() !=null) {
+            return w.getStatus();
         }
 
         try {
-            WebclipUtils.loadContentFromSource(w.webclip, w.url);
+            WebclipUtils.loadContentFromSource(w.getWebclip(), w.getUrl());
         }
         catch (Throwable e) {
             if (e instanceof ConnectException && e.toString().indexOf("Connection timed out")!=-1) {
                 countTryWithCounnectionTimeout++;
             }
-            String es = "Error refresh content for webclip, id: "+ w.webclip.getWebclipId()+", url: "+w.url;
+            String es = "Error refresh content for webclip, id: "+ w.getWebclip().getWebclipId()+", url: "+ w.getUrl();
             log.error(es, e);
             return msg + "error load of content - " + e.toString();
         }
@@ -474,22 +418,22 @@ public class WebclipAction implements Serializable {
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
 
         WebclipBeanExtended w = getWebclip(portalDaoProvider, siteId, catalogItem, msg);
-        if (!isForce && (w==null || w.webclip==null || !w.webclip.isProcessContent())) {
+        if (!isForce && (w==null || w.getWebclip() ==null || !w.getWebclip().isProcessContent())) {
             return null;
         }
-        if (w.status!=null) {
-            return w.status;
+        if (w.getStatus() !=null) {
+            return w.getStatus();
         }
-        byte[] bytes = w.webclip.getZippedOriginContentAsBytes();
+        byte[] bytes = w.getWebclip().getZippedOriginContentAsBytes();
         if (bytes==null || bytes.length==0) {
             return msg + "zipped content of webclip is empty.";
         }
         try {
             CatalogLanguageItem catalogLanguageItem = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItem(catalogItem.getCatalogLanguageId());
-            WebclipUtils.processStoredContent(w.webclip, w.href, w.prefix, portalDaoProvider, catalogLanguageItem.getSiteLanguageId(), urlChecker);
+            WebclipUtils.processStoredContent(w.getWebclip(), w.getHref(), w.getPrefix(), portalDaoProvider, catalogLanguageItem.getSiteLanguageId(), urlChecker);
         }
         catch (Throwable e) {
-            String es = "Error refresh content for webclip, id: "+ w.webclip.getWebclipId()+", url: "+w.url;
+            String es = "Error refresh content for webclip, id: "+ w.getWebclip().getWebclipId()+", url: "+ w.getUrl();
             log.error(es, e);
             return msg + "error load of content - " + e.toString();
         }

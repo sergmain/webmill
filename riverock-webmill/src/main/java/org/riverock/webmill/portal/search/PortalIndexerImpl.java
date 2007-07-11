@@ -1,19 +1,34 @@
 package org.riverock.webmill.portal.search;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.StopAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.ParallelReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.store.Directory;
 
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexerShort;
-import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portal.search.PortalIndexerParameter;
+import org.riverock.interfaces.portal.search.PortletIndexerContent;
 import org.riverock.webmill.container.portlet.PortletContainer;
-import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.PortletContainerException;
+import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.PortletNotRegisteredException;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalSearchException;
@@ -27,12 +42,79 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 public class PortalIndexerImpl implements PortalIndexer {
     private final static Logger log = Logger.getLogger(PortalIndexerImpl.class);
 
+    private static final int MAX_MERGE_DOCS = 50000;
+    private static final int MERGE_FACTOR = 10;
+
+    private Long siteId;
     private PortletContainer container;
     private ClassLoader portalClassLoader;
+    private static final String URL_FIELD = "url";
+    private static final String TITLE_FIELD = "title";
+    private static final String CONTENT_FIELD = "content";
+    private static final String DESCRIPTION_FIELD = "desc";
 
-    public PortalIndexerImpl(PortletContainer container, ClassLoader portalClassLoader) {
+    public PortalIndexerImpl(Long siteId, PortletContainer container, ClassLoader portalClassLoader) {
+        this.siteId = siteId;
         this.container = container;
         this.portalClassLoader = portalClassLoader;
+    }
+
+    public void indexContent(String url, PortalIndexerParameter parameter) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( portalClassLoader );
+
+            if (log.isDebugEnabled()) {
+                log.debug("Start indexContent(). url: " + url+", title: " + parameter.getTitle());
+            }
+
+            // create an index called 'index' in a temporary directory
+            Directory directory = SearchFactory.getDirectorySearch().getDirectory(siteId);
+
+//            deletePreviousDocument(directory, url);
+
+            Analyzer analyzer = new StopAnalyzer();
+            IndexWriter writer = new IndexWriter(directory, analyzer, false);
+
+            // set variables that affect speed of indexing
+            writer.setMergeFactor(MERGE_FACTOR);
+            writer.setMaxMergeDocs(MAX_MERGE_DOCS);
+
+            Document doc = new Document();
+            doc.add(new Field(URL_FIELD, new StringReader(url) ));
+            if (parameter.getTitle()!=null) {
+                doc.add(new Field(TITLE_FIELD, new StringReader(parameter.getTitle())));
+            }
+            if (parameter.getDescription()!=null) {
+                StringReader reader;
+                if (parameter.getDescription().length()> PortletIndexerContent.MAX_DESCRIPTION_LENGTH) {
+                    reader = new StringReader(parameter.getDescription().substring(0, PortletIndexerContent.MAX_DESCRIPTION_LENGTH));
+                }
+                else {
+                    reader = new StringReader(parameter.getDescription());
+                }
+                doc.add(new Field(DESCRIPTION_FIELD, reader));
+            }
+            doc.add(new Field(CONTENT_FIELD, new InputStreamReader(new ByteArrayInputStream(parameter.getContent()))));
+            writer.updateDocument(new Term("url", url), doc);
+            writer.optimize();
+            writer.flush();
+            writer.close();
+        }
+        catch (Exception e) {
+            String es = "Error index content";
+            log.error(es, e);
+            throw new PortalSearchException(es, e);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
+    private static void deletePreviousDocument(Directory directory, String url) throws IOException {
+        IndexReader indexReader = IndexReader.open(directory);
+        indexReader.deleteDocuments(new Term("url", url));
+        indexReader.close();
     }
 
     public List<PortletIndexerShort> getPortletIndexers(Long siteId) {
