@@ -1,6 +1,12 @@
 package org.riverock.portlet.webclip;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import org.riverock.interfaces.portal.search.PortletIndexer;
+import org.riverock.interfaces.portal.search.PortletIndexerContent;
 import org.riverock.portlet.dao.PortletDaoFactory;
 
 /**
@@ -9,6 +15,8 @@ import org.riverock.portlet.dao.PortletDaoFactory;
  * Time: 18:53:12
  */
 public class WebclipIndexer implements PortletIndexer {
+    private final static Logger log = Logger.getLogger(WebclipIndexer.class);
+
     private Object id;
     private Long siteId;
     private ClassLoader classLoader;
@@ -39,16 +47,68 @@ public class WebclipIndexer implements PortletIndexer {
         return PortletDaoFactory.getWebclipDao().getTotalCount(siteId);
     }
 
-    public String getContent(Long objectId) {
-        WebclipBean webclipBean = PortletDaoFactory.getWebclipDao().getWebclip(siteId, objectId);
-        if (webclipBean!=null) {
-            return webclipBean.getWebclipData();
+    public PortletIndexerContent getContent(Long objectId, Map<String, List<String>> metadata) {
+        log.debug("Start getContent(), objectId: " + objectId+ ", meta:\n"+ metadata);
+        String msg = "Status: ";
+        final WebclipBeanExtended w = WebclipUtils.getWebclip(siteId, metadata, msg, true);
+        if (log.isDebugEnabled()) {
+            log.debug("w: " + w);
+            if (w!=null) {
+                log.debug("w.getWebclip(): " + w.getWebclip());
+                if (w.getWebclip()!=null) {
+                    log.debug("w.getWebclip().isIndexed(): " + w.getWebclip().isIndexed());
+                }
+                log.debug("w.getStatus(): " + w.getStatus());
+            }
         }
-        return null;
+        if (w==null || w.getWebclip()==null || w.getWebclip().isIndexed()) {
+            return null;
+        }
+
+        if (w.getStatus()!=null) {
+            log.warn("Status of webclip: " + w.getStatus());
+            return null;
+        }
+
+        if (w.getWebclip().getWebclipData()==null) {
+            return null;
+        }
+
+        return new PortletIndexerContent() {
+            public String getDescription() {
+                return null;
+            }
+
+            public byte[] getContent() {
+                return w.getWebclip().getWebclipData().getBytes();
+            }
+        };
     }
 
-    public void markAsIndexed(Long objectId) {
-        PortletDaoFactory.getWebclipDao().markAsIndexed(siteId, objectId);
+    public void markAsIndexed(Long objectId, Map<String, List<String>> metadata) {
+        log.debug("Start getContent(), objectId: " + objectId+ ", meta:\n"+ metadata);
+        String msg = "Status: ";
+        final WebclipBeanExtended w = WebclipUtils.getWebclip(siteId, metadata, msg, true);
+        if (log.isDebugEnabled()) {
+            log.debug("w: " + w);
+            if (w!=null) {
+                log.debug("w.getWebclip(): " + w.getWebclip());
+                if (w.getWebclip()!=null) {
+                    log.debug("w.getWebclip().isIndexed(): " + w.getWebclip().isIndexed());
+                }
+                log.debug("w.getStatus(): " + w.getStatus());
+            }
+        }
+        if (w==null || w.getWebclip()==null || w.getWebclip().isIndexed()) {
+            return;
+        }
+
+        if (w.getStatus()!=null) {
+            log.warn("Status of webclip: " + w.getStatus());
+            return;
+        }
+
+        PortletDaoFactory.getWebclipDao().markAsIndexed(siteId, w.getWebclip().getWebclipId());
     }
 
     public void markAllForIndexing() {

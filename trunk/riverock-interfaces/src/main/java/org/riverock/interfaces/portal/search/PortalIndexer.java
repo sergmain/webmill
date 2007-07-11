@@ -16,4 +16,6 @@ public interface PortalIndexer extends Serializable {
     PortletIndexer getPortletIndexer(Long siteId, Object portletIndexerId);
 
     void markAllForIndexing(Long siteId);
+
+    void indexContent(String url, PortalIndexerParameter parameter);
 }

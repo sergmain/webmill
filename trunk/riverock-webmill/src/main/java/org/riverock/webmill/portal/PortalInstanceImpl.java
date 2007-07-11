@@ -89,6 +89,8 @@ public class PortalInstanceImpl implements PortalInstance  {
     private static final Collection<String> destroyedPortletName = new ConcurrentLinkedQueue<String>();
     private final ClassLoader portalClassLoader = Thread.currentThread().getContextClassLoader();
 
+    private Long siteId;
+
     public void destroy() {
         portalServletConfig = null;
         portletContainer = null;
@@ -96,6 +98,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             supportedList.clear();
             supportedList = null;
         }
+        siteId=null;
     }
 
     private static class PortalVersion {
@@ -163,8 +166,8 @@ public class PortalInstanceImpl implements PortalInstance  {
         return PORTAL_VERSION;
     }
 
-    public static PortalInstanceImpl getInstance( ServletConfig servletConfig ) {
-        return new PortalInstanceImpl( servletConfig );
+    public static PortalInstanceImpl getInstance( Long siteId, ServletConfig servletConfig ) {
+        return new PortalInstanceImpl( siteId, servletConfig );
     }
 
     public int getPortalMajorVersion() {
@@ -176,11 +179,12 @@ public class PortalInstanceImpl implements PortalInstance  {
     }
 
 
-    private PortalInstanceImpl( ServletConfig servletConfig ) {
+    private PortalInstanceImpl( Long siteId, ServletConfig servletConfig ) {
+        this.siteId = siteId;
         this.portalServletConfig = servletConfig;
         this.portletContainer = PortletContainerFactory.getInstance( this, PortletContainerUtils.getDeployedInPath(servletConfig) );
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
-        this.portalIndexer = new PortalIndexerImpl(this.portletContainer, portalClassLoader);
+        this.portalIndexer = new PortalIndexerImpl(this.siteId, this.portletContainer, portalClassLoader);
     }
 
     private final static Object syncCounter = new Object();

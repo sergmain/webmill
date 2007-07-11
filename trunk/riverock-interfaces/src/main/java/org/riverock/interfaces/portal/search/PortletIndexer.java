@@ -2,6 +2,8 @@ package org.riverock.interfaces.portal.search;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: SMaslyukov
@@ -22,9 +24,9 @@ public interface PortletIndexer extends Serializable, Iterator<Long> {
 
     long getTotal();
 
-    String getContent(Long objectId);
+    PortletIndexerContent getContent(Long objectId, Map<String, List<String>> metadata);
 
-    void markAsIndexed(Long objectId);
+    void markAsIndexed(Long objectId, Map<String, List<String>> metadata);
 
     void markAllForIndexing();
 
