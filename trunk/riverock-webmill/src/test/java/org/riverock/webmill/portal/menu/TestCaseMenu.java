@@ -22,7 +22,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.test.cases;
+package org.riverock.webmill.portal.menu;
+
+import junit.framework.TestCase;
 
 /**
  * User: Admin
@@ -31,26 +33,11 @@ package org.riverock.webmill.test.cases;
  *
  * $Id$
  */
-public class TestCaseMenu // extends TestCase implements TestCaseInterface
-{
+public class TestCaseMenu /*extends TestCase*/ {
+
+    public void doTest() throws Exception {
+
 /*
-    private TestCaseSiteAbstract testAbstract = null;
-
-    public TestCaseMenu(String testName)
-    {
-        super(testName);
-    }
-
-    public void insertTestData() throws Exception
-    {
-    }
-
-    public void doTest() throws Exception
-    {
-        testAbstract.initRequestSession();
-
-        InternalTestMenuSimple.testDecodeLevel();
-
 //        Menu defMenu = testAbstract.jspPage.menuLanguage.getDefault();
 //
 //        Assert.assertEquals(true, defMenu!=null);
@@ -167,80 +154,6 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
                 assertEquals(true, mod.getMenuModuleCount()==0);
             }
         }
-    }
-
-    public void tearDown()
-        throws Exception
-    {
-        System.out.println("start tearDown()");
-
-        if (testAbstract!=null)
-        {
-            if (testAbstract.db_!=null && testAbstract.db_.conn != null)
-            {
-                testAbstract.db_.commit();
-            }
-            DatabaseAdapter.close( testAbstract.db_);
-            testAbstract.db_ = null;
-        }
-    }
-
-    public void testWithOracleConnection()
-        throws Exception
-    {
-        testAbstract = new TestCaseSiteAbstract();
-        testAbstract.testWithOracleConnection( this );
-    }
-
-    public void testWithHypersonicConnection()
-        throws Exception
-    {
-        testAbstract = new TestCaseSiteAbstract();
-        testAbstract.testWithHypersonicConnection( this );
-    }
-
-    public void testWithMySqlConnection()
-        throws Exception
-    {
-        testAbstract = new TestCaseSiteAbstract();
-        testAbstract.testWithMySqlConnection( this );
-    }
-
-    public void testWithIbmDB2Connection()
-        throws Exception
-    {
-        testAbstract = new TestCaseSiteAbstract();
-        testAbstract.testWithIbmDB2Connection( this );
-    }
-
-    public void testWithMSSQLConnection()
-        throws Exception
-    {
-        testAbstract = new TestCaseSiteAbstract();
-        testAbstract.testWithMSSQLConnection( this );
-    }
 */
-/*
-    public static void main(String args[])
-        throws Exception
-    {
-        StartupApplication.init();
-
-        long id = 1;
-        WmPortalVirtualHostItemType resultItem = GetWmPortalVirtualHostItem.getInstance( DatabaseAdapter.getInstance(), id ).item;
-
-        String[][] ns = new String[][]
-        {
-            { "mill-core", "http://webmill.askmore.info/mill/xsd/mill-core.xsd" }
-        };
-
-        XmlTools.writeToFile(
-            resultItem,
-            GenericConfig.getGenericDebugDir()+"test-WM_PORTAL_VIRTUAL_HOST-item.xml",
-            "utf-8",
-            null,
-            ns
-        );
     }
-*/
 }
