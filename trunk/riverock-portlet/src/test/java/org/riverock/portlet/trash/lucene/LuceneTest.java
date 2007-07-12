@@ -1,4 +1,4 @@
-package org.riverock.portlet.search.lucene;
+package org.riverock.portlet.trash.lucene;
 
 import java.io.StringReader;
 import java.util.Date;

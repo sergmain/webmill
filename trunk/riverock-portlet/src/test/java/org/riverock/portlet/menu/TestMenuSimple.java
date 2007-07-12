@@ -34,7 +34,8 @@ import junit.framework.TestCase;
  *
  */
 public class  TestMenuSimple extends TestCase {
-    public static void testDecodeLevel() {
+    
+    public void testDecodeLevel() {
         Assert.assertEquals(MenuSimple.UNKNOWN_LEVEL, MenuSimple.decodeLevel("hkfjsdhfksdj"));
         Assert.assertEquals(MenuSimple.UNKNOWN_LEVEL, MenuSimple.decodeLevel(null));
         Assert.assertEquals(MenuSimple.EQUAL_LEVEL, MenuSimple.decodeLevel("equal"));
