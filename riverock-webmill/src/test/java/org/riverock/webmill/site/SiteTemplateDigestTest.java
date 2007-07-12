@@ -24,6 +24,8 @@
  */
 package org.riverock.webmill.site;
 
+import junit.framework.TestCase;
+
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.webmill.portal.bean.TemplateBean;
 
@@ -33,7 +35,7 @@ import org.riverock.webmill.portal.bean.TemplateBean;
  *         Time: 15:56:49
  *         $Id$
  */
-public class SiteTemplateDigestTest {
+public class SiteTemplateDigestTest extends TestCase {
     public static final String[] template = {
         "<?xml  version=\"1.0\"  encoding=\"UTF-8\"?>\n" +
         "<SiteTemplate role=\"test.role\">\n" +
@@ -165,15 +167,20 @@ public class SiteTemplateDigestTest {
         "</SiteTemplate> "
     };
 
-    public static void main(String[] args) throws Exception {
-
+    public void testDigest() throws Exception {
+        int i=0;
         for (String aTemplate : template) {
+            System.out.println(i++);
             TemplateBean template = new TemplateBean();
             template.setTemplateId(1L);
             template.setTemplateData(aTemplate);
             template.setTemplateName("template");
-            PortalTemplate siteTemplate = PortalTemplateManagerImpl.digestSiteTemplate(template);
-            System.out.println("template:\n" + siteTemplate.toString());
+            PortalTemplate siteTemplate = PortalTemplateManagerImpl.digestNotEmptySiteTemplate(template);
+            assertNotNull(siteTemplate);
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        new SiteTemplateDigestTest().testDigest();
     }
 }

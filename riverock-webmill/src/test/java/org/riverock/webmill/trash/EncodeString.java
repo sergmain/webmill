@@ -31,7 +31,7 @@
  * $Id$
  */
 
-package org.riverock.webmill.test;
+package org.riverock.webmill.trash;
 
 import org.riverock.common.tools.StringTools;
 

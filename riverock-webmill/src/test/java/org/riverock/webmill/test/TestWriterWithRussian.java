@@ -46,19 +46,21 @@ public class TestWriterWithRussian extends TestCase {
 
         String utf8 = new String( bytes, "utf-8" );
 
+/*
         System.out.println( "new String(bytes) = " + new String( bytes ) );
         System.out.println( "new String(bytes) = " + new String( bytes, "Cp1251" ) );
         System.out.println( "new String(bytes) = " + utf8 );
+*/
 
         byte[] b = utf8.getBytes("utf8");
 
-        if (b.length!=bytes.length) {
-            throw new Exception( "Size of array not equals" );
-        }
+        assertEquals("Size of array not equals", b.length, bytes.length);
+
         for (int i=0; i<b.length; i++) {
-            if (b[i]!=bytes[i]) {
-                throw new Exception( "byte at index "+i+" not equals, o: "+bytes[i]+", n: "+b[i] );
-            }
+            assertEquals(
+                "byte at index "+i+" not equals, o: "+bytes[i]+", n: "+b[i],
+                b[i], bytes[i]
+            );
         }
     }
 }

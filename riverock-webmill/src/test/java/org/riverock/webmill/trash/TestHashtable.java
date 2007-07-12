@@ -30,7 +30,7 @@
  *
  * $Id$
  */
-package org.riverock.webmill.test;
+package org.riverock.webmill.trash;
 
 import java.util.HashMap;
 import java.util.Map;

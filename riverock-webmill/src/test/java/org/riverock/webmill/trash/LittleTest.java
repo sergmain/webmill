@@ -22,36 +22,41 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.test;
-
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 
 /**
- * User: SergeMaslyukov
- * Date: 31.12.2004
- * Time: 13:01:44
+ * User: Admin
+ * Date: Jan 25, 2003
+ * Time: 9:57:52 PM
+ *
  * $Id$
  */
-public class CharsetTest {
+package org.riverock.webmill.trash;
 
-    public static void main( String args[] ) {
+public class LittleTest
+{
 
-        test( "utf8" );
+    public byte LitleTest()
+    {
+//        byte b; b = (b + 5);
+//        float f = 3.1;
 
-        test( "utf-8" );
-        test( "windows-1251" );
-        test( "Cp1251" );
-//        test( "Ms1251" );
-
+        double d = 1.0 + 0.2 - 1.0;
+        return 0;
     }
 
-    private static void test( String s ) {
-        Charset charset = null;
-        charset = Charset.forName( s );
-        System.out.print( "charset = " + charset + " " );
-        System.out.print( "charset.displayName() = " + charset.displayName() + " " );
-        System.out.println( "charset.name() = " + charset.name() );
-        CharsetDecoder decoder = charset.newDecoder();
+    public static void main(String s[])
+        throws Exception
+    {
+        Class c = Void.class;
+
+        float f = 30;
+        Integer i = new Integer((int)(30 * ((f+100)/100)) );
+
+        System.out.println("i - "+i.intValue());
+
+        System.out.println("Class name - "+c.getName());
+
+        System.out.println("Test (1.0 + 0.2 - 1.0) - "+(1.0 + 0.2 - 1.0) );
+//        byte b = '\l';
     }
 }

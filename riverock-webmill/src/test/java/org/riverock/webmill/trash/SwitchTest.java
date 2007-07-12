@@ -22,43 +22,24 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.test;
-
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
-
-import org.riverock.common.tools.StringTools;
+package org.riverock.webmill.trash;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 12.05.2006
- *         Time: 14:31:07
+ *         Date: 20.04.2006
+ *         Time: 18:00:12
  */
-public class ConvertListToArray {
-    public static void main(String[] args) {
-        List<String> sun = new ArrayList<String>();
-        sun.add("Feel");
-        sun.add("the");
-        sun.add("power");
-        sun.add("of");
-        sun.add("the");
-        sun.add("Sun");
-        String[] s1 = sun.toArray(new String[0]); //Collection to array
-        for (String contents : s1) {
-            System.out.print(contents);
+public class SwitchTest {
+        public static final int INT_1 = 1;
+        public static void main(String[] args) {
+            Integer idx = null;
+            switch(idx) {
+                case INT_1:
+                    System.out.println("1");
+                    break;
+                default:
+                    System.out.println("default");
+            }
         }
-        System.out.println();
-        List<String> sun2 = Arrays.asList(s1); //Array back to Collection
-        for (String s2 : sun2) {
-            String s3 = s2;
-            System.out.print(s3);
-        }
-        System.out.println();
 
-        String s = StringTools.arrayToString(sun.toArray(new String[0]));
-        System.out.println("s = " + s);
-
-//        sun2.add(new String("Hello")); // throws UnsupportedOperationException
-    }
 }
