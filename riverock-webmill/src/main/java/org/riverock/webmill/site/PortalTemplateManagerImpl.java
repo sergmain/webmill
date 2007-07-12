@@ -169,12 +169,9 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         if (log.isDebugEnabled()) {
             log.debug("Digest template:\n" + template.getTemplateData());
         }
-        PortalTemplateImpl st = null;
+        PortalTemplate st = null;
         try {
-            st = (PortalTemplateImpl) digester.parse( new ByteArrayInputStream( template.getTemplateData().getBytes() ));
-            st.setTemplateName( template.getTemplateName() );
-            st.setTemplateId( template.getTemplateId() );
-            st.setVersion( template.getVersion() );
+            st = digestNotEmptySiteTemplate(template);
         } catch (IOException e) {
             String es = "Error digest template, data:\n"+template.getTemplateData();
             log.error(es, e);
@@ -182,6 +179,19 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
             String es = "Error digest template, data:\n"+template.getTemplateData();
             log.error(es, e);
         }
+
+        return st;
+    }
+
+    static PortalTemplateImpl digestNotEmptySiteTemplate(Template template) throws IOException, SAXException {
+        if (log.isDebugEnabled()) {
+            log.debug("Digest template:\n" + template.getTemplateData());
+        }
+        PortalTemplateImpl st =
+            (PortalTemplateImpl) digester.parse( new ByteArrayInputStream( template.getTemplateData().getBytes() ));
+        st.setTemplateName( template.getTemplateName() );
+        st.setTemplateId( template.getTemplateId() );
+        st.setVersion( template.getVersion() );
 
         return st;
     }

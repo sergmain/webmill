@@ -48,10 +48,11 @@ public class PortalIndexerImpl implements PortalIndexer {
     private Long siteId;
     private PortletContainer container;
     private ClassLoader portalClassLoader;
-    private static final String URL_FIELD = "url";
-    private static final String TITLE_FIELD = "title";
-    private static final String CONTENT_FIELD = "content";
-    private static final String DESCRIPTION_FIELD = "desc";
+
+    static final String URL_FIELD = "url";
+    static final String TITLE_FIELD = "title";
+    static final String CONTENT_FIELD = "content";
+    static final String DESCRIPTION_FIELD = "desc";
 
     public PortalIndexerImpl(Long siteId, PortletContainer container, ClassLoader portalClassLoader) {
         this.siteId = siteId;
@@ -73,33 +74,7 @@ public class PortalIndexerImpl implements PortalIndexer {
 
 //            deletePreviousDocument(directory, url);
 
-            Analyzer analyzer = new StopAnalyzer();
-            IndexWriter writer = new IndexWriter(directory, analyzer, false);
-
-            // set variables that affect speed of indexing
-            writer.setMergeFactor(MERGE_FACTOR);
-            writer.setMaxMergeDocs(MAX_MERGE_DOCS);
-
-            Document doc = new Document();
-            doc.add(new Field(URL_FIELD, new StringReader(url) ));
-            if (parameter.getTitle()!=null) {
-                doc.add(new Field(TITLE_FIELD, new StringReader(parameter.getTitle())));
-            }
-            if (parameter.getDescription()!=null) {
-                StringReader reader;
-                if (parameter.getDescription().length()> PortletIndexerContent.MAX_DESCRIPTION_LENGTH) {
-                    reader = new StringReader(parameter.getDescription().substring(0, PortletIndexerContent.MAX_DESCRIPTION_LENGTH));
-                }
-                else {
-                    reader = new StringReader(parameter.getDescription());
-                }
-                doc.add(new Field(DESCRIPTION_FIELD, reader));
-            }
-            doc.add(new Field(CONTENT_FIELD, new InputStreamReader(new ByteArrayInputStream(parameter.getContent()))));
-            writer.updateDocument(new Term("url", url), doc);
-            writer.optimize();
-            writer.flush();
-            writer.close();
+            indexContent(directory, url, parameter);
         }
         catch (Exception e) {
             String es = "Error index content";
@@ -109,6 +84,37 @@ public class PortalIndexerImpl implements PortalIndexer {
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
+    }
+
+    static void indexContent(Directory directory, String url, PortalIndexerParameter parameter) throws IOException {
+        Analyzer analyzer = new StopAnalyzer();
+        IndexWriter writer = new IndexWriter(directory, analyzer, false);
+
+        // set variables that affect speed of indexing
+        writer.setMergeFactor(MERGE_FACTOR);
+        writer.setMaxMergeDocs(MAX_MERGE_DOCS);
+
+        Document doc = new Document();
+//        doc.add(new Field(URL_FIELD, new StringReader(url) ));
+        doc.add(new Field(URL_FIELD, url, Field.Store.YES, Field.Index.UN_TOKENIZED ));
+        if (parameter.getTitle()!=null) {
+            doc.add(new Field(TITLE_FIELD, parameter.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
+        }
+        if (parameter.getDescription()!=null) {
+            String description;
+            if (parameter.getDescription().length()> PortletIndexerContent.MAX_DESCRIPTION_LENGTH) {
+                description = parameter.getDescription().substring(0, PortletIndexerContent.MAX_DESCRIPTION_LENGTH);
+            }
+            else {
+                description = parameter.getDescription();
+            }
+            doc.add(new Field(DESCRIPTION_FIELD, description, Field.Store.YES, Field.Index.UN_TOKENIZED ));
+        }
+        doc.add(new Field(CONTENT_FIELD, new InputStreamReader(new ByteArrayInputStream(parameter.getContent()))));
+        writer.updateDocument(new Term("url", url), doc);
+        writer.optimize();
+        writer.flush();
+        writer.close();
     }
 
     private static void deletePreviousDocument(Directory directory, String url) throws IOException {

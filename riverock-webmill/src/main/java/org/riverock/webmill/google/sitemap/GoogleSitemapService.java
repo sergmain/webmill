@@ -59,6 +59,7 @@ public class GoogleSitemapService {
     private final static Logger log = Logger.getLogger( GoogleSitemapService.class );
 
     private static final String SITEMAP_XML_GZ = "sitemap.xml.gz";
+    private static final String SITEMAP_PACKAGE_NAME = ObjectFactory.class.getPackage().getName();
 
     public static void createSitemap(Long siteId, String virtualHostUrl, String portalContext, String applicationPath) {
         if (log.isDebugEnabled()) {
@@ -136,7 +137,7 @@ public class GoogleSitemapService {
 
     static void marshall(List<Url> urlset, OutputStream os) throws JAXBException {
         log.debug("Start marshall()");
-        JAXBContext jc = JAXBContext.newInstance( "org.riverock.webmill.google.sitemap.schema.sitemap" );
+        JAXBContext jc = JAXBContext.newInstance(SITEMAP_PACKAGE_NAME);
         Marshaller m = jc.createMarshaller();
         
         // create an element for marshalling
