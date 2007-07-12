@@ -23,17 +23,11 @@
  */
 package org.riverock.portlet.test.resource_bundle;
 
-import java.util.ResourceBundle;
-import java.util.Locale;
 import java.io.InputStream;
-import java.io.IOException;
-
-import org.apache.commons.digester.Digester;
-import org.xml.sax.SAXException;
-
-import org.riverock.common.resource.CustomXmlResourceBundle;
 
 import junit.framework.TestCase;
+
+import org.riverock.common.resource.CustomXmlResourceBundle;
 
 /**
  * @author smaslyukov

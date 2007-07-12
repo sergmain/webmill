@@ -1,4 +1,4 @@
-package org.riverock.portlet.test.trash;
+package org.riverock.portlet.trash;
 
 import java.util.Set;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package org.riverock.portlet.manager.monitor;
+package org.riverock.portlet.trash.monitor;
 
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
