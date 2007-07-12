@@ -87,10 +87,19 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
         parameters = new ArrayList<PortalTemplateParameter>();
     }
 
+/*
     public String toString() {
         if (toStringValue==null) {
             synchronized(this) {
                 if (toStringValue==null) {
+                    if (portalTemplateItemType==null) {
+                        throw new IllegalStateException(
+                            "portal template item type is null." +
+                                "value: " +value+", " +
+                                "code: "+ code+", " +
+                                "xmlRoot: " + xmlRoot+", " +
+                                "role; " + role);
+                    }
                     String s = new StringBuilder()
                         .append("[").append(portalTemplateItemType.toString()).append(",")
                         .append(value).append(",").append(code).append(",").append(xmlRoot).append(",")
@@ -106,6 +115,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
     public int hashCode() {
         return toString().hashCode();
     }
+*/
 
     /**
      * Method addParameter

@@ -43,7 +43,8 @@ public class LuceneGettingStartedTest {
 
         long startTime = System.currentTimeMillis();
         Document doc = new Document();
-        doc.add(new Field("url", new StringReader("/page/about/ddd")));
+        doc.add(new Field("url", "/page/about/ddd", Field.Store.YES, Field.Index.UN_TOKENIZED));
+        doc.add(new Field("url", "тест".getBytes("Cp1251"), Field.Store.YES));
         doc.add(new Field("content", new StringReader("Bibamus, moriendum est")));
         writer.addDocument(doc);
         writer.close();

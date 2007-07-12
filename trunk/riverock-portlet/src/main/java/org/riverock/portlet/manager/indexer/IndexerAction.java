@@ -179,6 +179,7 @@ public class IndexerAction implements Serializable {
                             };
                             
                             portalIndexer.indexContent(url, parameter);
+                            portletIndexer.markAsIndexed(catalogItem.getContextId(), m);
                         }
                         else {
                             log.debug("Content from portlet is null or empty.");
