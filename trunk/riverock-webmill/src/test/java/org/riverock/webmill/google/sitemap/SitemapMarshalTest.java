@@ -26,8 +26,12 @@ package org.riverock.webmill.google.sitemap;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 
 import javax.xml.bind.JAXBException;
+
+import junit.framework.TestCase;
 
 import org.riverock.webmill.google.sitemap.schema.sitemap.Urlset;
 import org.riverock.webmill.google.sitemap.schema.sitemap.Url;
@@ -39,16 +43,26 @@ import org.riverock.webmill.google.sitemap.schema.sitemap.Url;
  *         <p/>
  *         $Id$
  */
-public class SitemapMarshalTest {
+public class SitemapMarshalTest extends TestCase {
+    
+    public void testMarshallSitemap() throws Exception {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        marshalSitemap(stream);
+        String sitemap = new String(stream.toByteArray());
+        assertNotNull(sitemap);
+    }
+
+
     public static void main(String[] args) throws JAXBException {
         long sm = System.currentTimeMillis();
-        for (int i=0; i<1; i++)
-            marshal();
+        for (int i=0; i<1; i++) {
+            (new SitemapMarshalTest()).marshalSitemap(System.out);
+        }
 
         System.out.println("sm = " + (System.currentTimeMillis()-sm));
     }
 
-    private static void marshal() throws JAXBException {
+    private void marshalSitemap(OutputStream stream) throws JAXBException {
         List<Url> urls = new ArrayList<Url>();
         Url url;
 
@@ -60,6 +74,6 @@ public class SitemapMarshalTest {
         url.setLoc("http://askmore.info/page/about/Christina_Aguilera");
         urls.add(url);
 
-        GoogleSitemapService.marshall(urls, System.out);
+        GoogleSitemapService.marshall(urls, stream);
     }
 }
