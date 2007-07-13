@@ -9,6 +9,7 @@ public class PortalTransformationParameters {
     private String title;
     private String keyword;
     private String author;
+    private String portalContextPath;
 
     public String getAuthor() {
         return author;
@@ -32,5 +33,13 @@ public class PortalTransformationParameters {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getPortalContextPath() {
+        return portalContextPath;
+    }
+
+    public void setPortalContextPath(String portalContextPath) {
+        this.portalContextPath = portalContextPath;
     }
 }

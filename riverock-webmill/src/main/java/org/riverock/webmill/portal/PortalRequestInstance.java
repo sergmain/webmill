@@ -95,7 +95,6 @@ public final class PortalRequestInstance {
     long startMills;
 
     private RequestContext requestContext = null;
-//    private PortalInfo portalInfo = null;
 
     /**
      * array of preffered locales from http request
@@ -105,7 +104,6 @@ public final class PortalRequestInstance {
     private HttpServletRequest httpRequest = null;
     private HttpServletResponse httpResponse = null;
     private PortalInstance portalInstance;
-//    private ServletConfig portalServletConfig = null;
     private AuthSession auth = null;
     private ActionRequestImpl actionRequest = null;
     private CookieManager cookieManager = new CookieManagerImpl();
@@ -113,20 +111,13 @@ public final class PortalRequestInstance {
     private String errorString = null;
     private String redirectUrl = null;
 
-//    private PortalContext portalContext = null;
-
     /**
      * File with request data, if request is multipart
      */
     private File requestBodyFile = null;
     private boolean isMultiPartRequest = false;
-
     private PortalDaoProvider portalDaoProvider = null;
-//    private PortletContainer portletContainer = null;
-
     private File tempPath = null;
-
-//    private String portalInfoName = null;
 
     private PortalTransformationParameters portalTransformationParameters = new PortalTransformationParameters();
 
@@ -162,7 +153,6 @@ public final class PortalRequestInstance {
         MainTools.deleteFile(requestBodyFile);
         requestBodyFile = null;
         portalDaoProvider = null;
-//        portletContainer = null;
         portalTransformationParameters = null;
     }
 
@@ -183,14 +173,10 @@ public final class PortalRequestInstance {
         HttpServletRequest request_,
         HttpServletResponse response_,
         PortalInstance portalInstance 
-//            ServletConfig portalServletConfig,
-//        PortletContainer portletContainer,
-//        String portalInfoName
     ) throws PortalException {
 
         this.startMills = System.currentTimeMillis();
         this.portalInstance = portalInstance;
-//        this.portalInfoName = portalInfoName;
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
 
         if (log.isInfoEnabled()) {
@@ -199,8 +185,6 @@ public final class PortalRequestInstance {
 
         this.httpRequest = request_;
         this.httpResponse = response_;
-//        this.portalServletConfig = portalInstance.getPortalServletConfig();
-//        this.portletContainer = portalInstance.getportletContainer();
         try {
             initTempPath();
 
@@ -252,6 +236,7 @@ public final class PortalRequestInstance {
                     catalogItem = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(requestContext.getExtendedCatalogItem().getCatalogId());
                 }
 
+                this.portalTransformationParameters.setPortalContextPath(httpRequest.getContextPath());
                 if (catalogItem!=null) {
                     if (StringUtils.isNotBlank(catalogItem.getTitle())) {
                         this.portalTransformationParameters.setTitle(catalogItem.getTitle());

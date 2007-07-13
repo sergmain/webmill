@@ -17,6 +17,9 @@ import org.apache.lucene.queryParser.QueryParser;
 import junit.framework.TestCase;
 
 import org.riverock.interfaces.portal.search.PortalIndexerParameter;
+import org.riverock.interfaces.portal.search.PortalSearchParameter;
+import org.riverock.interfaces.portal.search.PortalSearchResult;
+import org.riverock.interfaces.portal.search.PortalSearchResultItem;
 
 /**
  * User: SMaslyukov
@@ -189,17 +192,29 @@ public class TestPortalIndexer extends TestCase {
         assertEquals(field.stringValue(), parameter.getTitle());
     }
 
-    private void searchDocumentInContent(Directory luceneDirectory, String substring, PortalIndexerParameter parameter, String url) throws Exception {
-        IndexSearcher is = new IndexSearcher(luceneDirectory);
-        Analyzer analyzer = new StandardAnalyzer();
-        QueryParser parser = new QueryParser(PortalIndexerImpl.CONTENT_FIELD, analyzer);
-        Query query = parser.parse(substring);
-        Hits hits = is.search(query);
-        assertEquals(1, hits.length());
+    private void searchDocumentInContent(Directory luceneDirectory, final String substring, PortalIndexerParameter parameter, String url) throws Exception {
+        PortalSearchParameter p = new PortalSearchParameter() {
+            public String getQuery() {
+                return substring;
+            }
 
-        validateResultOfSearch(hits, parameter, url);
+            public Integer getResultPerPage() {
+                return null;
+            }
 
-        is.close();
+            public Integer getStartPage() {
+                return null; 
+            }
+        };
+        PortalSearchResult r = PortalIndexerImpl.search(luceneDirectory, p);
+        assertNotNull(r);
+        assertEquals(1, r.getResultItems().size() );
+
+        PortalSearchResultItem i = r.getResultItems().get(0);
+        assertNotNull(i);
+        assertEquals(i.getUrl(), url);
+        assertEquals(i.getDescription(), parameter.getDescription());
+        assertEquals(i.getTitle(), parameter.getTitle());
     }
 
     private File convertToDirAndCreate(File tempFile) {

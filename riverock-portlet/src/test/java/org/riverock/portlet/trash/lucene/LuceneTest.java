@@ -37,6 +37,7 @@ public class LuceneTest {
         Query query = parser.parse(args[0]);
         Hits hits = is.search(query);
 
+
         for (int i=0; i<hits.length(); i++) {
             Document document = hits.doc(i);
             // display the articles that were found to the user

@@ -113,7 +113,7 @@ function displayInvoice() {
 <fmt:setLocale value="${locale}" scope="request"/>
 <fmt:setBundle basename="org.riverock.portlet.resource.Webclip" scope="request"/>
 
-
+    
     <%
         if (request.isUserInRole("webmill.webclip-manager") ||
             request.isUserInRole("webmill.portal-manager")) {

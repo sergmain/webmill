@@ -24,9 +24,9 @@ public interface PortletIndexer extends Serializable, Iterator<Long> {
 
     long getTotal();
 
-    PortletIndexerContent getContent(Long objectId, Map<String, List<String>> metadata);
+    PortletIndexerContent getContent(Long objectId, Map<String, List<String>> preferences);
 
-    void markAsIndexed(Long objectId, Map<String, List<String>> metadata);
+    void markAsIndexed(Long objectId, Map<String, List<String>> preferences);
 
     void markAllForIndexing();
 
