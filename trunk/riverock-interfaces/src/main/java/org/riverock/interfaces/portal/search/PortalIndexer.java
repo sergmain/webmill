@@ -1,7 +1,6 @@
 package org.riverock.interfaces.portal.search;
 
 import java.util.List;
-import java.util.Iterator;
 import java.io.Serializable;
 
 /**
@@ -18,4 +17,6 @@ public interface PortalIndexer extends Serializable {
     void markAllForIndexing(Long siteId);
 
     void indexContent(String url, PortalIndexerParameter parameter);
+
+    PortalSearchResult search(PortalSearchParameter parameter);
 }

@@ -1,9 +1,8 @@
 package org.riverock.webmill.portal.search;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,21 +10,28 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.StopAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.ParallelReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
 
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.search.PortalIndexer;
-import org.riverock.interfaces.portal.search.PortletIndexer;
-import org.riverock.interfaces.portal.search.PortletIndexerShort;
 import org.riverock.interfaces.portal.search.PortalIndexerParameter;
+import org.riverock.interfaces.portal.search.PortalSearchParameter;
+import org.riverock.interfaces.portal.search.PortalSearchResult;
+import org.riverock.interfaces.portal.search.PortalSearchResultItem;
+import org.riverock.interfaces.portal.search.PortletIndexer;
 import org.riverock.interfaces.portal.search.PortletIndexerContent;
+import org.riverock.interfaces.portal.search.PortletIndexerShort;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
@@ -54,10 +60,77 @@ public class PortalIndexerImpl implements PortalIndexer {
     static final String CONTENT_FIELD = "content";
     static final String DESCRIPTION_FIELD = "desc";
 
+    private static class PortalSearchResultImpl implements PortalSearchResult {
+        private List<PortalSearchResultItem> resultItems=null;
+
+        public List<PortalSearchResultItem> getResultItems() {
+            if (resultItems==null) {
+                resultItems = new ArrayList<PortalSearchResultItem>();
+            }
+            return resultItems;
+        }
+    }
+
+    private static class PortalSearchResultItemImpl implements PortalSearchResultItem {
+        private String url;
+        private String title;
+        private String description;
+        private float weight;
+
+        public PortalSearchResultItemImpl(String description, String title, String url, float weight) {
+            this.description = description;
+            this.title = title;
+            this.url = url;
+            this.weight = weight;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public float getWeight() {
+            return weight;
+        }
+    }
+
     public PortalIndexerImpl(Long siteId, PortletContainer container, ClassLoader portalClassLoader) {
         this.siteId = siteId;
         this.container = container;
         this.portalClassLoader = portalClassLoader;
+    }
+
+    public PortalSearchResult search(PortalSearchParameter parameter) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( portalClassLoader );
+
+            if (log.isDebugEnabled()) {
+                log.debug("Start search(). " +
+                    "query: " + parameter.getQuery()+", " +
+                    "start page: " + parameter.getStartPage()+", " +
+                    "result per page: " + parameter.getResultPerPage()
+                );
+            }
+
+            Directory directory = SearchFactory.getDirectorySearch().getDirectory(siteId);
+            return search(directory, parameter);
+        }
+        catch (Exception e) {
+            String es = "Error index content";
+            log.error(es, e);
+            throw new PortalSearchException(es, e);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void indexContent(String url, PortalIndexerParameter parameter) {
@@ -68,12 +141,8 @@ public class PortalIndexerImpl implements PortalIndexer {
             if (log.isDebugEnabled()) {
                 log.debug("Start indexContent(). url: " + url+", title: " + parameter.getTitle());
             }
-
             // create an index called 'index' in a temporary directory
             Directory directory = SearchFactory.getDirectorySearch().getDirectory(siteId);
-
-//            deletePreviousDocument(directory, url);
-
             indexContent(directory, url, parameter);
         }
         catch (Exception e) {
@@ -84,6 +153,47 @@ public class PortalIndexerImpl implements PortalIndexer {
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
+    }
+
+    static PortalSearchResult search(Directory directory, PortalSearchParameter parameter) throws ParseException, IOException {
+        PortalSearchResult result = new PortalSearchResultImpl();
+
+        IndexSearcher is = new IndexSearcher(directory);
+        Analyzer analyzer = new StandardAnalyzer();
+        QueryParser parser = new QueryParser(PortalIndexerImpl.CONTENT_FIELD, analyzer);
+        Query query = parser.parse(parameter.getQuery());
+        Hits hits = is.search(query);
+
+        int resultPerPage = (parameter.getResultPerPage() == null ? 20 :
+            (parameter.getResultPerPage() > 200 ? 200 : parameter.getResultPerPage())
+        );
+        int i=(parameter.getStartPage()==null?0:parameter.getStartPage()) * resultPerPage;
+        if (i>=hits.length()) {
+            i = ((hits.length()/resultPerPage)-1)*resultPerPage; 
+        }
+        if (i>=hits.length()) {
+            throw new IllegalStateException("Wrong value of start of counter");
+        }
+        while (i< hits.length()) {
+            Document document = hits.doc(i++);
+            Field field;
+            field = document.getField(PortalIndexerImpl.URL_FIELD);
+            final String url = field.stringValue();
+
+            field = document.getField(PortalIndexerImpl.TITLE_FIELD);
+            final String title = field.stringValue();
+
+            field = document.getField(PortalIndexerImpl.DESCRIPTION_FIELD);
+            final String description = field.stringValue();
+
+            final float weight=0;
+            
+            result.getResultItems().add(new PortalSearchResultItemImpl( description, title, url, weight));
+        }
+        is.close();
+
+
+        return result;
     }
 
     static void indexContent(Directory directory, String url, PortalIndexerParameter parameter) throws IOException {
@@ -115,12 +225,6 @@ public class PortalIndexerImpl implements PortalIndexer {
         writer.optimize();
         writer.flush();
         writer.close();
-    }
-
-    private static void deletePreviousDocument(Directory directory, String url) throws IOException {
-        IndexReader indexReader = IndexReader.open(directory);
-        indexReader.deleteDocuments(new Term("url", url));
-        indexReader.close();
     }
 
     public List<PortletIndexerShort> getPortletIndexers(Long siteId) {

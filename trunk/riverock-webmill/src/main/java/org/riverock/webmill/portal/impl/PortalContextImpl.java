@@ -78,11 +78,11 @@ public class PortalContextImpl implements PortalContext {
     }
 
     public Enumeration getSupportedPortletModes() {
-        return Collections.enumeration( Arrays.asList( new PortletMode[]{PortletMode.VIEW, PortletMode.EDIT, PortletMode.HELP} ) );
+        return Collections.enumeration( Arrays.asList(PortletMode.VIEW, PortletMode.EDIT, PortletMode.HELP) );
     }
 
     public Enumeration getSupportedWindowStates() {
-        return Collections.enumeration( Arrays.asList( new WindowState[]{WindowState.NORMAL, WindowState.MAXIMIZED, WindowState.MINIMIZED} ) );
+        return Collections.enumeration( Arrays.asList(WindowState.NORMAL, WindowState.MAXIMIZED, WindowState.MINIMIZED) );
     }
 
     public String getPortalInfo() {

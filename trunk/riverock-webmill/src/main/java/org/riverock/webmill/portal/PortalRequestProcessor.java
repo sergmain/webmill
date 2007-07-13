@@ -322,19 +322,7 @@ public final class PortalRequestProcessor {
                         }
                     }
 
-//                    ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
                     transformContent(outputStream, portalRequestInstance);
-/*
-                    try {
-                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes, portalRequestInstance.getTempPath(),
-                            portalRequestInstance.getPortalTransformationParameters()
-                        );
-                        portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
-                    } catch (Exception e) {
-                        log.warn("Error transform page element", e);
-                        portalRequestInstance.byteArrayOutputStream.write("Error transform page element".getBytes());
-                    }
-*/
                     outputStream = null;
                 }
             }
@@ -392,7 +380,7 @@ public final class PortalRequestProcessor {
                     MainTools.writeToFile( fileName, bytes );
                 }
                 catch(Throwable th) {
-                    //catch debug;
+                    //catch debug error;
                 }
             }
         }
@@ -404,8 +392,10 @@ public final class PortalRequestProcessor {
             log.debug("#40.3, title: " + portalTransformationParameters.getTitle());
             log.debug("#40.4, keyword: " + portalTransformationParameters.getKeyword());
             log.debug("#40.5, author: " + portalTransformationParameters.getAuthor());
+            log.debug("#40.6, portal context path: " + portalTransformationParameters.getPortalContextPath());
         }
 
+        transformer.setParameter("webmill-portal.portal-context-path", portalTransformationParameters.getPortalContextPath());
         if (StringUtils.isNotBlank(portalTransformationParameters.getTitle())) {
             transformer.setParameter("webmill-portal.title", portalTransformationParameters.getTitle());
         }
