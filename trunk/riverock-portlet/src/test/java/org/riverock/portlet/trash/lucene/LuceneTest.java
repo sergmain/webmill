@@ -27,7 +27,8 @@ public class LuceneTest {
     public static void main(String[] args) throws Exception {
 
         // create an index called 'index' in a temporary directory
-        String indexDir = "c:\\TEMP\\lucene\\lucene17617\\20";
+//        String indexDir = "c:\\TEMP\\lucene\\lucene17617\\20";
+        String indexDir = "/lucene/index/36";
         Directory directory = FSDirectory.getDirectory(indexDir);
 
 
@@ -40,12 +41,17 @@ public class LuceneTest {
 
         for (int i=0; i<hits.length(); i++) {
             Document document = hits.doc(i);
+            if (document.getFields().isEmpty()) {
+                System.out.println("#"+i+" Fields is empty");
+                continue;
+            }
+            System.out.println("#"+i);
             // display the articles that were found to the user
             Field field;
             field = document.getField("url");
-            System.out.println("url: " + field.stringValue());
+            System.out.println("   url: " + field.stringValue());
             field = document.getField("title");
-            System.out.println("title: " + field.stringValue());
+            System.out.println("   title: " + field.stringValue());
         }
         is.close();
 
@@ -57,7 +63,6 @@ public class LuceneTest {
         writer.close();
 */
 
-/*
 
         IndexReader indexReader = IndexReader.open(directory);
         int deleted = indexReader.deleteDocuments(new Term("url", "/page/about/Germany"));
@@ -65,6 +70,5 @@ public class LuceneTest {
         boolean b = indexReader.hasDeletions();
         System.out.println("b = " + b);
         indexReader.close();
-*/
     }
 }

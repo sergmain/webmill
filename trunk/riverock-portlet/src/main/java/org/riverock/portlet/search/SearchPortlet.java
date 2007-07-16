@@ -11,6 +11,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.search.PortalIndexer;
@@ -40,25 +41,27 @@ public class SearchPortlet implements Portlet {
 
     public void render(RenderRequest request, RenderResponse response) throws PortletException, IOException {
         final String query = request.getParameter(SearchConstants.SEARCH_QUERY);
-        PortalSearchParameter p = new PortalSearchParameter() {
-            public String getQuery() {
-                return query;
-            }
+        if (StringUtils.isNotBlank(query)) {
+            PortalSearchResult result;
+            PortalSearchParameter p = new PortalSearchParameter() {
+                public String getQuery() {
+                    return query;
+                }
 
-            public Integer getResultPerPage() {
-                return null;
-            }
+                public Integer getResultPerPage() {
+                    return null;
+                }
 
-            public Integer getStartPage() {
-                return null;  
-            }
-        };
+                public Integer getStartPage() {
+                    return null;
+                }
+            };
+            PortalIndexer portalIndexer = (PortalIndexer) request.getAttribute( ContainerConstants.PORTAL_PORTAL_INDEXER_ATTRIBUTE );
+            result = portalIndexer.search(p);
+            request.setAttribute("result", result);
+        }
 
-        PortalIndexer portalIndexer = (PortalIndexer) request.getAttribute( ContainerConstants.PORTAL_PORTAL_INDEXER_ATTRIBUTE );
-        PortalSearchResult result = portalIndexer.search(p);
-
-        request.setAttribute("result", result);
-        request.setAttribute("query", query);
+        request.setAttribute("query", query);     
 
         portletConfig.getPortletContext().getRequestDispatcher(SearchConstants.RIVEROCK_SEARCH_INDEX_JSP).include(request, response);
     }

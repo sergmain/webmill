@@ -64,7 +64,7 @@
 
 <c:if test="${not empty result.resultItems}">
     <div id="query-result">
-        <c:forEach items="${not empty result.resultItems}" var="item">
+        <c:forEach items="${result.resultItems}" var="item">
             <div id="result-item">
                 <div id="result-item-title">
                     <b><a href='<c:out value="${item.url}"/>'><c:out value="${item.title}"/></a></b>

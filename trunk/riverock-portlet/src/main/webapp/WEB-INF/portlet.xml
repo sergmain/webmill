@@ -45,6 +45,23 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
         </portlet-info>
     </portlet>
 	<portlet>
+        <description>Webmill search portlet</description>
+        <portlet-name>webmill.search</portlet-name>
+        <display-name>Webmill search</display-name>
+		<portlet-class>org.riverock.portlet.search.SearchPortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>Webmill search</title>
+			<short-title>Search</short-title>
+			<keywords>Webmill search</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
         <description>Webmill search stub</description>
         <portlet-name>webmill.search-stub</portlet-name>
         <display-name>Webmill search</display-name>

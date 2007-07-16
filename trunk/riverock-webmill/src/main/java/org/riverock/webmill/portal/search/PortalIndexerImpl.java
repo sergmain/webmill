@@ -157,6 +157,15 @@ public class PortalIndexerImpl implements PortalIndexer {
 
     static PortalSearchResult search(Directory directory, PortalSearchParameter parameter) throws ParseException, IOException {
         PortalSearchResult result = new PortalSearchResultImpl();
+        if (log.isDebugEnabled()) {
+            log.debug("PortalSearchParameter: " + parameter);
+        }
+        if (parameter==null || StringUtils.isBlank(parameter.getQuery())) {
+            return result;
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Search query: " + parameter.getQuery());
+        }
 
         IndexSearcher is = new IndexSearcher(directory);
         Analyzer analyzer = new StandardAnalyzer();
@@ -176,6 +185,10 @@ public class PortalIndexerImpl implements PortalIndexer {
         }
         while (i< hits.length()) {
             Document document = hits.doc(i++);
+
+            if (document.getFields().isEmpty()) {
+                continue;
+            }
             Field field;
             field = document.getField(PortalIndexerImpl.URL_FIELD);
             final String url = field.stringValue();
@@ -184,7 +197,10 @@ public class PortalIndexerImpl implements PortalIndexer {
             final String title = field.stringValue();
 
             field = document.getField(PortalIndexerImpl.DESCRIPTION_FIELD);
-            final String description = field.stringValue();
+            String description="";
+            if (field!=null) {
+                description = field.stringValue();
+            }
 
             final float weight=0;
             
