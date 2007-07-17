@@ -80,6 +80,7 @@
                     <h:commandButton id="xslt-edit-cancel-action" action="#{xsltAction.cancelEditXsltAction}"
                                      value="#{msg['cancel_edit_xslt_action']}"
                                      styleClass="site-button-action"
+                                     immediate="true"
                         >
                     </h:commandButton>
                 </h:panelGroup>

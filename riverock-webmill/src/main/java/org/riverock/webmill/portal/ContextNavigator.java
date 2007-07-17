@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,7 +38,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.portal.utils.SiteList;
+import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.interfaces.portal.bean.VirtualHost;
+import org.riverock.common.html.Header;
 
 /**
  * $Id$
@@ -81,12 +84,18 @@ public final class ContextNavigator extends HttpServlet {
 
         VirtualHost host = SiteList.getVirtualHost(httpRequest.getServerName());
         if (host==null) {
-            throw new ServletException("Site for host "+ httpRequest.getServerName()+" not configured. For configuration use admin section.");
+            String errorString = "Site for host " + httpRequest.getServerName() + " not configured. For configuration use admin section.";
+            printErrorString(httpResponse, errorString);
+            log.warn(errorString);
+            log.warn("Referer: " + Header.getReferer(httpRequest));
+            return;
         }
         if (!host.isDefaultHost()) {
             host = SiteList.getDefaultVirtualHost(host.getSiteId());
             if (host==null) {
-                throw new ServletException("Default virtual host for host "+ httpRequest.getServerName()+" not configured. For configuration use admin section.");
+                String errorString = "Default virtual host for host " + httpRequest.getServerName() + " not configured. For configuration use admin section.";
+                printErrorString(httpResponse, errorString);
+                return;
             }
             StringBuilder sb = new StringBuilder(httpRequest.getScheme())
                 .append("://")
@@ -115,6 +124,14 @@ public final class ContextNavigator extends HttpServlet {
         portalInstance.process(httpRequest, httpResponse);
     }
 
+    private static void printErrorString(HttpServletResponse httpResponse, String errorString) throws IOException {
+        PortletUtils.setContentType(httpResponse);
+        PrintWriter writer = httpResponse.getWriter();
+        writer.write(errorString);
+        writer.flush();
+        writer.close();
+    }
+
     private synchronized PortalInstanceImpl createNewPortalInsance(Long siteId) {
         PortalInstanceImpl portalInstance = portalInstanceMap.get(siteId);
         if (portalInstance != null) {
@@ -125,3 +142,5 @@ public final class ContextNavigator extends HttpServlet {
         return portalInstance;
     }
 }
+
+

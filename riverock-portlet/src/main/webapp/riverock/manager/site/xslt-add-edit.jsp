@@ -25,6 +25,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://webmill.riverock.org/portlet" prefix="w" %>
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
 
@@ -42,7 +43,9 @@
     <h:outputText value="#{msg.xslt_data}"/>
     <h:inputTextarea id="xslt-data-field" value="#{siteSessionBean.xslt.xsltData}"
                      rows="20" cols="70" style="width:100%"
-        />
+        >
+        <w:textValidator type="xml"/>
+    </h:inputTextarea>
 </h:panelGrid>
 
 
