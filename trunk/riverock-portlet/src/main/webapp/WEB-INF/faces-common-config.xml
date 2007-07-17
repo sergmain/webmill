@@ -47,6 +47,18 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
+    <!-- Validator -->
+    <validator>
+        <description></description>
+        <validator-id>TextValidator</validator-id>
+        <validator-class>org.riverock.portlet.jsf.validator.TextValidator</validator-class>
+        <attribute>
+            <description></description>
+            <attribute-name>type</attribute-name>
+            <attribute-class>java.lang.String</attribute-class>
+        </attribute>
+    </validator>
+
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>

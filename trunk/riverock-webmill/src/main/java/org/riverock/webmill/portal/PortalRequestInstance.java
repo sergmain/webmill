@@ -356,7 +356,7 @@ public final class PortalRequestInstance {
                         element.initPageElementInstance(
                             templateItem.getValueAsPortletName(),
                             this,
-                            Collections.EMPTY_LIST,
+                            new ArrayList<String>(), 
                             PreferenceFactory.getStubPortletPreferencePersistencer()
                         );
                         break;
