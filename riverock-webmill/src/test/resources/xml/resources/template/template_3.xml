@@ -1,0 +1,10 @@
+<?xml  version="1.0"  encoding="UTF-8"?>
+<SiteTemplate>
+<SiteTemplateItem
+    type="portlet"
+    value="mill.menu"
+    code="TOP_MENU"
+    xmlRoot="TopMenu"
+    role="webmill.authentic"
+    template="dynamic"/>
+</SiteTemplate>

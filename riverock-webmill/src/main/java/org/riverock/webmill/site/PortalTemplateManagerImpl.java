@@ -67,6 +67,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         digester.addSetProperties("SiteTemplate/SiteTemplateItem", "code", "code");
         digester.addSetProperties("SiteTemplate/SiteTemplateItem", "xmlRoot", "xmlRoot");
         digester.addSetProperties("SiteTemplate/SiteTemplateItem", "role", "role");
+        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "template", "template");
         digester.addSetNext("SiteTemplate/SiteTemplateItem", "addSiteTemplateItem" );
 
         digester.addObjectCreate("SiteTemplate/SiteTemplateItem/Parameter", PortalTemplateParameterImpl.class);
