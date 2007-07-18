@@ -28,7 +28,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 
-import org.riverock.portlet.search.stub.SearchBean;
+import org.riverock.portlet.search.SearchBean;
 import org.riverock.portlet.tools.HibernateUtils;
 
 /**

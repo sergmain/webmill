@@ -28,7 +28,7 @@ import javax.portlet.PortletRequest;
 import org.riverock.module.web.user.ModuleUser;
 import org.riverock.module.web.user.WebmillModuleUserImpl;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Serge Maslyukov
@@ -43,11 +43,11 @@ public class WebmillPortletModuleRequestImpl extends PortletModuleRequestImpl {
     }
 
     public String getRemoteAddr() {
-        return PortletService.getRemoteAddr( portletRequest );
+        return PortletUtils.getRemoteAddr( portletRequest );
     }
 
     public String getUserAgent() {
-        return PortletService.getUserAgent( portletRequest );
+        return PortletUtils.getUserAgent( portletRequest );
     }
 
     public Long getSiteId() {
