@@ -17,6 +17,7 @@ import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.interfaces.portal.search.PortalSearchParameter;
 import org.riverock.interfaces.portal.search.PortalSearchResult;
+import org.riverock.portlet.dao.PortletDaoFactory;
 
 /**
  * User: SMaslyukov
@@ -40,25 +41,36 @@ public class SearchPortlet implements Portlet {
     }
 
     public void render(RenderRequest request, RenderResponse response) throws PortletException, IOException {
-        final String query = request.getParameter(SearchConstants.SEARCH_QUERY);
+        Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+
+        String query = request.getParameter(SearchConstants.SEARCH_QUERY);
         if (StringUtils.isNotBlank(query)) {
-            PortalSearchResult result;
-            PortalSearchParameter p = new PortalSearchParameter() {
-                public String getQuery() {
-                    return query;
-                }
+            query = query.trim();
+            if (query.length()>3) {
+                final String queryResult = StringUtils.substring(query, 0, 50);
 
-                public Integer getResultPerPage() {
-                    return null;
-                }
+                PortletDaoFactory.getSearchDao().storeRequest(siteId, queryResult );
 
-                public Integer getStartPage() {
-                    return null;
-                }
-            };
-            PortalIndexer portalIndexer = (PortalIndexer) request.getAttribute( ContainerConstants.PORTAL_PORTAL_INDEXER_ATTRIBUTE );
-            result = portalIndexer.search(p);
-            request.setAttribute("result", result);
+                PortalSearchParameter p = new PortalSearchParameter() {
+                    public String getQuery() {
+                        return queryResult;
+                    }
+
+                    public Integer getResultPerPage() {
+                        return null;
+                    }
+
+                    public Integer getStartPage() {
+                        return null;
+                    }
+                };
+                PortalIndexer portalIndexer = (PortalIndexer) request.getAttribute( ContainerConstants.PORTAL_PORTAL_INDEXER_ATTRIBUTE );
+                PortalSearchResult result = portalIndexer.search(p);
+                request.setAttribute("result", result);
+            }
+            else {
+
+            }
         }
 
         request.setAttribute("query", query);     

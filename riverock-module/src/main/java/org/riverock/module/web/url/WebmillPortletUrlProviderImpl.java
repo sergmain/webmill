@@ -35,12 +35,12 @@ import javax.portlet.PortletURL;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.WebmillPortletConstants;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SMaslyukov
@@ -71,7 +71,7 @@ public class WebmillPortletUrlProviderImpl implements UrlProvider {
             log.debug("response class: " + moduleResponse.getClass().getName());
         }
         return
-            PortletService.url( moduleName, (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ) +
+            PortletUtils.url( moduleName, (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ) +
             WebmillPortletConstants.ACTION_NAME_PARAM + '=' + actionName + '&';
     }
 
@@ -81,7 +81,7 @@ public class WebmillPortletUrlProviderImpl implements UrlProvider {
             log.debug("response class: " + moduleResponse.getOriginResponse().getClass().getName());
         }
         return
-            PortletService.urlStringBuilder(
+            PortletUtils.urlStringBuilder(
                 moduleName,  
 		(PortletRequest)moduleRequest.getOriginRequest(), 
 		(PortletResponse)moduleResponse.getOriginResponse(),

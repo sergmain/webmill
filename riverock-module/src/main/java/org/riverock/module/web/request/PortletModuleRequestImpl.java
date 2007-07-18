@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.module.web.session.ModuleSession;
 import org.riverock.module.web.session.PortletModuleSessionImpl;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Serge Maslyukov
@@ -57,38 +57,38 @@ public abstract class PortletModuleRequestImpl implements ModuleRequest {
     }
 
     public Integer getInt(String key) {
-        return PortletService.getInt(portletRequest, key);
+        return PortletUtils.getInt(portletRequest, key);
     }
 
     public Integer getInt(String key, Integer defValue) {
-        return PortletService.getInt(portletRequest, key, defValue);
+        return PortletUtils.getInt(portletRequest, key, defValue);
     }
 
     public String getString(String key) {
         if (log.isDebugEnabled()){
-            log.debug("key: "+key + ", value: "+PortletService.getString(portletRequest, key, null));
+            log.debug("key: "+key + ", value: "+ PortletUtils.getString(portletRequest, key, null));
         }
-        return PortletService.getString(portletRequest, key, null);
+        return PortletUtils.getString(portletRequest, key, null);
     }
 
     public String getString(String key, String defValue) {
-        return PortletService.getString(portletRequest, key, defValue);
+        return PortletUtils.getString(portletRequest, key, defValue);
     }
 
     public Long getLong(String key) {
-        return PortletService.getLong(portletRequest, key);
+        return PortletUtils.getLong(portletRequest, key);
     }
 
     public Long getLong(String key, Long defValue) {
-        return PortletService.getLong(portletRequest, key, defValue);
+        return PortletUtils.getLong(portletRequest, key, defValue);
     }
 
     public Double getDouble(String key) {
-        return PortletService.getDouble(portletRequest, key);
+        return PortletUtils.getDouble(portletRequest, key);
     }
 
     public Double getDouble(String key, Double defValue) {
-        return PortletService.getDouble(portletRequest, key, defValue);
+        return PortletUtils.getDouble(portletRequest, key, defValue);
     }
 
     public String getParameter(String key) {

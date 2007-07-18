@@ -21,7 +21,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.portlet.search.stub;
+package org.riverock.portlet.search;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -29,6 +29,10 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.TableGenerator;
 
 /**
  * @author Sergei Maslyukov
@@ -39,17 +43,38 @@ import javax.persistence.Column;
  */
 @Entity
 @Table(name="WM_PORTLET_SEARCH")
-//@Table(name="wm_portlet_search")
+@TableGenerator(
+    name="TABLE_PORTLET_SEARCH",
+    table="WM_PORTAL_IDS",
+    pkColumnName = "sequence_name",
+    valueColumnName = "sequence_next_value",
+    pkColumnValue = "wm_portlet_webclip",
+    allocationSize = 1,
+    initialValue = 1
+)
 public class SearchBean implements Serializable {
-                         
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator = "TABLE_PORTLET_SEARCH")
+    @Column(name="ID_SEARCH")
+    private Long searchId;
+
     @Column(name="ID_SITE")
     private Long siteId;
 
     @Column(name="SEARCH_DATE")
     private Date searchDate;
 
-    @Column(name="WORD")
+    @Column(name="WORD", length=50)
     private String word;
+
+    public Long getSearchId() {
+        return searchId;
+    }
+
+    public void setSearchId(Long searchId) {
+        this.searchId = searchId;
+    }
 
     public Long getSiteId() {
         return siteId;

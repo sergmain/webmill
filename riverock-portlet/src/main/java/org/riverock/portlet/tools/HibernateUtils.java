@@ -33,6 +33,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.cfg.AnnotationConfiguration;
 
 import org.riverock.portlet.webclip.WebclipBean;
+import org.riverock.portlet.search.SearchBean;
 
 /**
  * @author Sergei Maslyukov
@@ -45,6 +46,7 @@ public class HibernateUtils {
     static SessionFactory sessionFactory=null;
 
     public static final Class[] CLASSES = {
+        SearchBean.class,
         WebclipBean.class
     };
 

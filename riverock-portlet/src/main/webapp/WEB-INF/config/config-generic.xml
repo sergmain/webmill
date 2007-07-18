@@ -29,7 +29,6 @@
 	<DefaultConnectionName>JNDI</DefaultConnectionName>
 	<DatabaseConnection name="JNDI">
             <Family>dbFamily</Family>
-<!--	    <ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass> -->
             <DataSourceType>JNDI</DataSourceType>
             <DataSourceName>jdbc/webmill</DataSourceName>
 	</DatabaseConnection>
