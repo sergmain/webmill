@@ -187,6 +187,10 @@ public class PortalInstanceImpl implements PortalInstance  {
         this.portalIndexer = new PortalIndexerImpl(this.siteId, this.portletContainer, portalClassLoader);
     }
 
+public Long getSiteId() {
+   return siteId;
+}
+
     private final static Object syncCounter = new Object();
     private static int counterNDC = 0;
 

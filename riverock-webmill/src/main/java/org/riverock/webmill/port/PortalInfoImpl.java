@@ -161,12 +161,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
                     }
                 }
 
-                if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD ) {
                     log.debug("#15.01.03 reinit cached value ");
 
                     p = new PortalInfoImpl(siteId);
                     portatInfoMap.put(siteId, p);
-                }
+
                 lastReadData = System.currentTimeMillis();
             }
         }
