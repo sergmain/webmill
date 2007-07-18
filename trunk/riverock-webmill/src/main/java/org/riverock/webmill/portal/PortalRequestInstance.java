@@ -72,6 +72,7 @@ import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.preference.PreferenceFactory;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.portal.utils.SiteList;
 
 /**
  * User: Admin
@@ -215,6 +216,11 @@ public final class PortalRequestInstance {
             this.preferredLocales = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
 
             PortalInfo portalInfo = PortalInfoImpl.getInstance(httpRequest.getServerName());
+            if (portalInfo==null) {
+               throw new IllegalArgumentException(
+                  "PortalInfo object not created for host '"+httpRequest.getServerName()+"'"
+               );
+            }
             if (portalInfo.getSiteId() == null) {
                 throw new IllegalArgumentException("siteId is null");
             }
