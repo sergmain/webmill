@@ -1,0 +1,18 @@
+<?xml  version="1.0"  encoding="UTF-8" ?>
+<SiteTemplate  name="index"> 
+
+<SiteTemplateItem  type="custom"  value="HeaderStart"/>
+<SiteTemplateItem  type="custom"  value="HeaderTextIndex"/>
+<!--
+<SiteTemplateItem  type="file"  value="/t/_test.html"/>
+-->
+<SiteTemplateItem  type="custom"  value="HeaderEnd"/>
+
+<SiteTemplateItem  type="portlet"  value="mill.menu"/>
+<SiteTemplateItem  type="portlet"  value="mill.menu_member"/>
+<SiteTemplateItem  type="custom"  value="Separator"/>
+<SiteTemplateItem  type="dynamic"/>
+<SiteTemplateItem  type="custom"  value="Separator1"/>
+<SiteTemplateItem  type="custom"  value="Footer"/>
+
+</SiteTemplate>

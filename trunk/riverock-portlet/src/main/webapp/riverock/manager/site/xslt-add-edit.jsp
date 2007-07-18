@@ -44,7 +44,7 @@
     <h:inputTextarea id="xslt-data-field" value="#{siteSessionBean.xslt.xsltData}"
                      rows="20" cols="70" style="width:100%"
         >
-        <w:textValidator type="xml"/>
+        <w:textValidator type="xslt"/>
     </h:inputTextarea>
 </h:panelGrid>
 
