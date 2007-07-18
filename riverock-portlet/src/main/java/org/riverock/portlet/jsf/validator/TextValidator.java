@@ -14,6 +14,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,16 +36,6 @@ public class TextValidator implements Validator, StateHolder {
     private String type;
 
     private boolean transientValue = false;
-
-    public TextValidator() {
-        log.debug("Exec TextValidator()");
-    }
-
-    public TextValidator(String type) {
-        log.debug("Exec TextValidator(type), type: " + type);
-        this.type = type;
-    }
-
     final static ErrorHandler ERROR_HANDLER = new ErrorHandler() {
         public void warning(SAXParseException saxParseException) throws SAXException {
             throw saxParseException;
@@ -57,6 +49,29 @@ public class TextValidator implements Validator, StateHolder {
             throw saxParseException;
         }
     };
+
+    final static ErrorListener ERROR_LISTENER = new ErrorListener() {
+        public void warning(TransformerException transformerException) throws TransformerException {
+            throw transformerException;
+        }
+
+        public void error(TransformerException transformerException) throws TransformerException {
+            throw transformerException;
+        }
+
+        public void fatalError(TransformerException transformerException) throws TransformerException {
+            throw transformerException;
+        }
+    };
+
+    public TextValidator() {
+        log.debug("Exec TextValidator()");
+    }
+
+    public TextValidator(String type) {
+        log.debug("Exec TextValidator(type), type: " + type);
+        this.type = type;
+    }
 
     public void validate(FacesContext context, UIComponent component, Object toValidate) {
         log.debug("Start org.riverock.portlet.jsf.validator.TextValidator.validate(), type: "+type);
@@ -102,8 +117,9 @@ public class TextValidator implements Validator, StateHolder {
                 new StringReader(xslt)
             );
 
-            TransformerFactory tFactory = TransformerFactory.newInstance();
-            tFactory.newTemplates(xslSource);
+            TransformerFactory factory = TransformerFactory.newInstance();
+            factory.setErrorListener( ERROR_LISTENER );
+            factory.newTemplates(xslSource);
         }
         catch (Throwable e) {
             return e.toString();
