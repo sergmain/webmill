@@ -80,50 +80,28 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      */
     private List<PortalTemplateParameter> parameters;
 
-    private String toStringValue=null;
+    private String template;
 
     public PortalTemplateItemImpl() {
         super();
         parameters = new ArrayList<PortalTemplateParameter>();
     }
 
-/*
-    public String toString() {
-        if (toStringValue==null) {
-            synchronized(this) {
-                if (toStringValue==null) {
-                    if (portalTemplateItemType==null) {
-                        throw new IllegalStateException(
-                            "portal template item type is null." +
-                                "value: " +value+", " +
-                                "code: "+ code+", " +
-                                "xmlRoot: " + xmlRoot+", " +
-                                "role; " + role);
-                    }
-                    String s = new StringBuilder()
-                        .append("[").append(portalTemplateItemType.toString()).append(",")
-                        .append(value).append(",").append(code).append(",").append(xmlRoot).append(",")
-                        .append(role).append(",").append(getParameters()).append("]").toString();
-
-                    toStringValue = s;
-                }
-            }
-        }
-        return toStringValue;
+    public String getTemplate() {
+        return template;
     }
 
-    public int hashCode() {
-        return toString().hashCode();
+    public void setTemplate(String template) {
+        this.template = template;
     }
-*/
 
     /**
      * Method addParameter
      *
-     * @param vParameter
+     * @param parameter parameters for template item
      */
-    public void addParameter(PortalTemplateParameter vParameter) {
-        parameters.add(vParameter);
+    public void addParameter(PortalTemplateParameter parameter) {
+        parameters.add(parameter);
     }
 
     /**

@@ -1,0 +1,97 @@
+<SiteTemplate>
+
+<SiteTemplateItem  type="custom"  value="HeaderStart"/>
+<SiteTemplateItem  type="custom"  value="HeaderText"/>
+<SiteTemplateItem  type="custom"  value="HeaderEnd"/>
+
+<SiteTemplateItem  type="custom"  value="MainStart"/>
+
+<SiteTemplateItem  type="portlet"  value="mill.menu"/>
+<SiteTemplateItem  type="custom"  value="Separator"/>
+
+<SiteTemplateItem  type="portlet"  value="GetInvalidParameterTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetReaderInProcessActionTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetReaderIllegalStateAfterInputStreamTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetReaderIllegalStateWithApplFormPostDataTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetInputStreamInProcessActionTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetInputStreamIllegalStateAfterReaderTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetInputStreamIllegalStateWithApplFormPostDataTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetRemoteUserNullTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetRequestedSessionIdTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetResponseContentTypeTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetResponseContentTypesTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="CheckIsPortletModeAllowedTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="IsRequestedSessionIdValidForValidSessionTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="IsRequestedSessionIdValidForInvalidSessionTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="CheckIsWindowStateAllowedTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="RemoveAttributeTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="SetAttributeTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetParameterOnlySeenByTargetTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="GetParameterOnlySeenByTargetTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="CheckSingleParameterValuesTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="portlet"  value="SetCharacterEncodingIllegalStateTestPortlet">
+<Parameter name="is-xml" value="true"/>
+</SiteTemplateItem>
+
+<SiteTemplateItem  type="custom"  value="Footer"/>
+</SiteTemplate>

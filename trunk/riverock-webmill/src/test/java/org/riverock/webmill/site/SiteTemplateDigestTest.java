@@ -27,7 +27,9 @@ package org.riverock.webmill.site;
 import junit.framework.TestCase;
 
 import org.riverock.interfaces.portal.template.PortalTemplate;
+import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.webmill.portal.bean.TemplateBean;
+import org.riverock.webmill.utils.TestUtils;
 
 /**
  * @author smaslyukov
@@ -36,148 +38,58 @@ import org.riverock.webmill.portal.bean.TemplateBean;
  *         $Id$
  */
 public class SiteTemplateDigestTest extends TestCase {
-    public static final String[] template = {
-        "<?xml  version=\"1.0\"  encoding=\"UTF-8\"?>\n" +
-        "<SiteTemplate role=\"test.role\">\n" +
-        "\n" +
-        "<SiteTemplateItem type=\"custom\"  value=\"HeaderStart\"/>\n" +
-        "<SiteTemplateItem type=\"custom\"  value=\"HeaderText\"/>\n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"HeaderEnd\"/>\n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.menu\" code=\"TOP_MENU\" xmlRoot=\"TopMenu\" role=\"webmill.authentic\"/>\n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.login_xml\" xmlRoot=\"LoginOnIndexPage\"/>\n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"MainStart\"/>\n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.menu\"/>\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.menu_member\"/>\n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"Separator\"/>\n" +
-        "<SiteTemplateItem    type=\"portlet\"    value=\"mill.news_block\"/>\n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.menu\" code=\"DEFAULT_ru_RU\">\n" +
-        "<Parameter name=\"level\" value=\"1\"/>\n" +
-        "<Parameter name=\"type_level\" value=\"equal\"/>\n" +
-        "</SiteTemplateItem>\n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.menu\" code=\"DEFAULT_ru_RU\">\n" +
-        "<Parameter name=\"level\" value=\"1\"/>\n" +
-        "<Parameter name=\"type_level\" value=\"great\"/>\n" +
-        "</SiteTemplateItem>\n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"Footer\"/>\n" +
-        "</SiteTemplate>",
-
-        "<SiteTemplate> \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"HeaderStart\"/> \n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"HeaderText\"/> \n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"HeaderEnd\"/> \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"MainStart\"/> \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.menu\"/> \n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"Separator\"/> \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetInvalidParameterTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetReaderInProcessActionTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetReaderIllegalStateAfterInputStreamTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetReaderIllegalStateWithApplFormPostDataTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetInputStreamInProcessActionTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetInputStreamIllegalStateAfterReaderTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetInputStreamIllegalStateWithApplFormPostDataTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetRemoteUserNullTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetRequestedSessionIdTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetResponseContentTypeTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetResponseContentTypesTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"CheckIsPortletModeAllowedTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"IsRequestedSessionIdValidForValidSessionTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"IsRequestedSessionIdValidForInvalidSessionTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"CheckIsWindowStateAllowedTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"RemoveAttributeTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"SetAttributeTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetParameterOnlySeenByTargetTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"GetParameterOnlySeenByTargetTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"CheckSingleParameterValuesTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"SetCharacterEncodingIllegalStateTestPortlet\">\n" +
-        "<Parameter name=\"is-xml\" value=\"true\"/>\n" +
-        "</SiteTemplateItem>  \n" +
-        "\n" +
-        "<SiteTemplateItem  type=\"custom\"  value=\"Footer\"/> \n" +
-        "</SiteTemplate> "
-    };
 
     public void testDigest() throws Exception {
-        int i=0;
-        for (String aTemplate : template) {
-            System.out.println(i++);
-            TemplateBean template = new TemplateBean();
-            template.setTemplateId(1L);
-            template.setTemplateData(aTemplate);
-            template.setTemplateName("template");
-            PortalTemplate siteTemplate = PortalTemplateManagerImpl.digestNotEmptySiteTemplate(template);
-            assertNotNull(siteTemplate);
-        }
+
+        PortalTemplate siteTemplate;
+        TemplateBean template = new TemplateBean();
+        template.setTemplateId(1L);
+        template.setTemplateName("template");
+
+        template.setTemplateData(
+            TestUtils.getResourceAsString("/xml/resources/template/template_1.xml")
+        );
+        siteTemplate = PortalTemplateManagerImpl.digestNotEmptySiteTemplate(template);
+        assertNotNull(siteTemplate);
+
+        template.setTemplateData(
+            TestUtils.getResourceAsString("/xml/resources/template/template_2.xml")
+        );
+        siteTemplate = PortalTemplateManagerImpl.digestNotEmptySiteTemplate(template);
+        assertNotNull(siteTemplate);
+
+    }
+
+    public void testPortletItem() throws Exception {
+
+        PortalTemplate siteTemplate;
+        TemplateBean template = new TemplateBean();
+        template.setTemplateId(1L);
+        template.setTemplateName("template");
+
+        template.setTemplateData(
+            TestUtils.getResourceAsString("/xml/resources/template/template_3.xml")
+        );
+        siteTemplate = PortalTemplateManagerImpl.digestNotEmptySiteTemplate(template);
+        assertNotNull(siteTemplate);
+
+        assertEquals(1, siteTemplate.getPortalTemplateItems().size());
+        PortalTemplateItem item = siteTemplate.getPortalTemplateItems().get(0);
+/*
+        type="portlet"
+        value="mill.menu"
+        code="TOP_MENU"
+        xmlRoot="TopMenu"
+        role="webmill.authentic"
+        template="dynamic"/>
+*/
+        assertEquals("portlet", item.getType());
+        assertEquals("mill.menu", item.getValue());
+        assertEquals("TOP_MENU", item.getCode());
+        assertEquals("TopMenu", item.getXmlRoot());
+        assertEquals("webmill.authentic", item.getRole());
+        assertEquals("dynamic", item.getTemplate());
+
     }
 
     public static void main(String[] args) throws Exception {

@@ -53,10 +53,10 @@
 <div id="query-form">
     <table border="0">
         <portlet:renderURL var="portletUrl"/>
-        <form method="POST" action="<c:out value='${portletUrl}'/>">
+        <form method="GET" action="<c:out value='${portletUrl}'/>">
             <tr>
                 <td width="50%"><input type="text" name="query" size="50" value="<c:out value='${query}'/>"></td>
-                <td><input style="width:150px;" type="submit" name="search" value="<fmt:message key='search_button'/>" ></td>
+                <td><input style="width:150px;" type="submit" value="<fmt:message key='search_button'/>" ></td>
             </tr>
         </form>
     </table>

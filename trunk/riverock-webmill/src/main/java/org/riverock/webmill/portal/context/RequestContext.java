@@ -39,6 +39,8 @@ import org.riverock.webmill.portal.PortletParameters;
 public class RequestContext {
     private String templateName = null;
 
+    private String targetTemplateName=null;
+
     private String defaultPortletName = null;
 
     private String defaultNamespace = null;
@@ -53,11 +55,12 @@ public class RequestContext {
 
     private Long contextId;
 
-    public RequestState getDefaultRequestState() {
-        if (defaultRequestState==null) {
-            throw new IllegalStateException("defaultRequestState is null");
-        }
-        return defaultRequestState;
+    public String getTargetTemplateName() {
+        return targetTemplateName;
+    }
+
+    public void setTargetTemplateName(String targetTemplateName) {
+        this.targetTemplateName = targetTemplateName;
     }
 
     public Long getContextId() {
@@ -68,7 +71,17 @@ public class RequestContext {
         this.contextId = contextId;
     }
 
+    public RequestState getDefaultRequestState() {
+        if (defaultRequestState==null) {
+            throw new IllegalStateException("defaultRequestState is null");
+        }
+        return defaultRequestState;
+    }
+
     public void setDefaultRequestState(RequestState defaultRequestState) {
+        if (defaultRequestState==null) {
+            throw new IllegalStateException("defaultRequestState is null");
+        }
         this.defaultRequestState = defaultRequestState;
     }
 
@@ -92,6 +105,9 @@ public class RequestContext {
     }
 
     public void setDefaultPortletName(String defaultPortletName) {
+        if (defaultPortletName==null) {
+            throw new IllegalStateException("defaultPortletName is null");
+        }
         this.defaultPortletName = defaultPortletName;
     }
 
@@ -103,6 +119,9 @@ public class RequestContext {
     }
 
     public void setLocale(Locale locale) {
+        if (locale==null) {
+            throw new IllegalStateException("locale is null");
+        }
         this.locale = locale;
     }
 
@@ -126,6 +145,9 @@ public class RequestContext {
     }
 
     public void setTemplateName(String templateName) {
+        if (templateName==null) {
+            throw new IllegalStateException("templateName is null");
+        }
         this.templateName = templateName;
     }
 

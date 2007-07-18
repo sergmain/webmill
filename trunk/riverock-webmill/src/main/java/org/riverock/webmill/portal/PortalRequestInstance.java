@@ -141,7 +141,6 @@ public final class PortalRequestInstance {
         preferredLocales = null;
         httpRequest = null;
         httpResponse = null;
-//        portalServletConfig = null;
         auth = null;
         if (actionRequest != null) {
             actionRequest.destroy();
@@ -219,47 +218,33 @@ public final class PortalRequestInstance {
             if (portalInfo.getSiteId() == null) {
                 throw new IllegalArgumentException("siteId is null");
             }
-            RequestContextParameter factoryParameter =
+            RequestContextParameter contextParameter =
                 new RequestContextParameter(httpRequest, portalInstance.getPortletContainer(), isMultiPartRequest, requestBodyFile, portalInfo.getSiteId());
 
-            this.requestContext = RequestContextFactory.createRequestContext(factoryParameter);
+            this.requestContext = RequestContextFactory.createRequestContext(contextParameter);
             if (requestContext == null) {
                 throw new IllegalArgumentException("General error for access portal page");
             }
 
             if (requestContext.getExtendedCatalogItem()!=null || requestContext.getContextId()!=null) {
-                CatalogItem catalogItem;
-                if (requestContext.getContextId()!=null) {
-                    catalogItem = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(requestContext.getContextId());
-                }
-                else {
-                    catalogItem = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(requestContext.getExtendedCatalogItem().getCatalogId());
-                }
-
-                this.portalTransformationParameters.setPortalContextPath(httpRequest.getContextPath());
-                if (catalogItem!=null) {
-                    if (StringUtils.isNotBlank(catalogItem.getTitle())) {
-                        this.portalTransformationParameters.setTitle(catalogItem.getTitle());
-                    }
-                    else {
-                        this.portalTransformationParameters.setTitle(catalogItem.getKeyMessage());
-                    }
-                    if (StringUtils.isNotBlank(catalogItem.getKeyword())) {
-                        this.portalTransformationParameters.setKeyword(catalogItem.getKeyword());
-                    }
-                    else {
-                        this.portalTransformationParameters.setKeyword(catalogItem.getKeyMessage());
-                    }
-                    this.portalTransformationParameters.setAuthor(catalogItem.getAuthor());
-                }
+                CatalogItem catalogItem = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(
+                    requestContext.getContextId()!=null
+                        ?requestContext.getContextId()
+                        :requestContext.getExtendedCatalogItem().getCatalogId()
+                );
+                initTransformationParameters(catalogItem);
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("#10.1 catalogId: " + requestContext.getContextId());
-                log.debug("#10.2 contextId: " + requestContext.getExtendedCatalogItem().getCatalogId());
+                log.debug("#10.1 contextId: " + requestContext.getContextId());
+                if (requestContext.getExtendedCatalogItem()!=null)
+                    log.debug("#10.2 catalogId: " + requestContext.getExtendedCatalogItem().getCatalogId());
+                else
+                    log.debug("#10.2 requestContext.getExtendedCatalogItem() is null.");
                 log.debug("#10.3, title: " + portalTransformationParameters.getTitle());
                 log.debug("#10.4, keyword: " + portalTransformationParameters.getKeyword());
                 log.debug("#10.5, author: " + portalTransformationParameters.getAuthor());
+                log.debug("#10.6, portal context path: " + portalTransformationParameters.getPortalContextPath());
             }
 
             initTemplate(portalInfo);
@@ -272,10 +257,18 @@ public final class PortalRequestInstance {
                 String portletName;
                 Namespace namespace = null;
                 PortletParameters portletParameters = null;
+                String targetTemplateName;
+                if (StringUtils.isNotBlank(templateItem.getTemplate())) {
+                    targetTemplateName = templateItem.getTemplate(); 
+                }
+                else {
+                    targetTemplateName = requestContext.getTemplateName();
+                }
+
                 if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
                     portletName = templateItem.getValueAsPortletName();
 
-                    namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++, templateItem);
+                    namespace = NamespaceFactory.getNamespace(portletName, targetTemplateName, i++, templateItem);
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
                     if (portletParameters == null) {
@@ -284,49 +277,19 @@ public final class PortalRequestInstance {
                 }
                 else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                     portletName = requestContext.getDefaultPortletName();
-                    namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++, templateItem);
+                    namespace = NamespaceFactory.getNamespace(portletName, targetTemplateName, i++, templateItem);
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
 
                     if (portletParameters == null) {
-                        throw new IllegalStateException(
+                        log.error(
                             "portletParameters object is null, " +
                                 "namespace: " + namespace.getNamespace() + ", " +
                                 "portletName: " + portletName
                         );
+                        // skip this portlet
+                        continue;
                     }
-
-/*
-                    // init parameters for XSLT transformation
-                    // init title
-                    if (StringUtils.isNotBlank(requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getTitle())) {
-                        this.portalTransformationParameters.setTitle(requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getTitle());
-                    }
-                    // init keyword
-                    List<String> keywords = requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getKeywords();
-                    if (keywords !=null && !keywords.isEmpty() ) {
-                        String k = "";
-                        boolean isNotFirst = false;
-                        for (String keyword : keywords) {
-                            if (StringUtils.isBlank(keyword)) {
-                                continue;
-                            }
-                            if (isNotFirst) {
-                                k += ',' + keyword;
-                            }
-                            else {
-                                k += keyword;
-                            }
-                        }
-                        if (StringUtils.isNotBlank(k)) {
-                            this.portalTransformationParameters.setKeyword(k);
-                        }
-                    }
-                    // init author
-//                    if (StringUtils.isNotBlank(requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getAuthor())) {
-//                        this.portalTransformationParameters.setAuthor(requestContext.getExtendedCatalogItem().getPortletDefinition().getPortletInfo().getAuthor());
-//                    }
-*/
                 }
 
                 // chech for template item is not restricted after create namespace
@@ -335,7 +298,7 @@ public final class PortalRequestInstance {
                     continue;
                 }
 
-                PageElement element = new PageElement(portalInstance, namespace, templateItem, portletParameters);
+                PageElement element = new PageElement(portalInstance, namespace, templateItem, portletParameters, targetTemplateName);
 
                 if (log.isDebugEnabled()) {
                     log.debug("TemplateItem, " +
@@ -392,6 +355,26 @@ public final class PortalRequestInstance {
         }
     }
 
+    private void initTransformationParameters(CatalogItem catalogItem) {
+        // set up transformation parameters - title, keywords, author, portal context path.
+        this.portalTransformationParameters.setPortalContextPath(httpRequest.getContextPath());
+        if (catalogItem!=null) {
+            if (StringUtils.isNotBlank(catalogItem.getTitle())) {
+                this.portalTransformationParameters.setTitle(catalogItem.getTitle());
+            }
+            else {
+                this.portalTransformationParameters.setTitle(catalogItem.getKeyMessage());
+            }
+            if (StringUtils.isNotBlank(catalogItem.getKeyword())) {
+                this.portalTransformationParameters.setKeyword(catalogItem.getKeyword());
+            }
+            else {
+                this.portalTransformationParameters.setKeyword(catalogItem.getKeyMessage());
+            }
+            this.portalTransformationParameters.setAuthor(catalogItem.getAuthor());
+        }
+    }
+
     /**
      * remove form session all attributes, which are corresponded to destroyed portlet
      *
@@ -445,12 +428,6 @@ public final class PortalRequestInstance {
         return pageElementList;
     }
 
-/*
-    public ServletConfig getPortalServletConfig() {
-        return portalServletConfig;
-    }
-
-*/
     public String getErrorString() {
         return errorString;
     }
@@ -525,12 +502,6 @@ public final class PortalRequestInstance {
             return requestContext.getLocale();
     }
 
-/*
-    public PortletContainer getPortletContainer() {
-        return portletContainer;
-    }
-
-*/
     public HttpServletRequest getHttpRequest() {
         return httpRequest;
     }
@@ -549,7 +520,6 @@ public final class PortalRequestInstance {
             throw new PortalException(errorString);
         }
         log.debug("template:\n" + template.toString());
-
     }
 
     private void initXslt(PortalInfo portalInfo) throws PortalException {
@@ -616,13 +586,8 @@ public final class PortalRequestInstance {
         }
         if (!tempPath.exists()) {
             log.error("Specified temp directory '" + tempPath + "' not exists. Set to default java input/output temp directory");
+            // TODO. or set to other dir?
             tempPath = new File(System.getProperty("java.io.tmpdir"));
         }
     }
-
-/*
-    public String getPortalInfoName() {
-        return portalInfoName;
-    }
-*/
 }

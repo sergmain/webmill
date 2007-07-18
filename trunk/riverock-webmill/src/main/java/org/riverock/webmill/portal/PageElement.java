@@ -90,21 +90,24 @@ public final class PageElement {
     private PortletPreferencePersistencer persistencer=null;
     private Map<String, List<String>> portletMetadata=null;
     private List<String> roleList = null;
+    private String targetTemplateName=null;
 
     /**
      * renderParameter used for set parameters in action
      */
     private Map<String, List<String>> renderParameters = new HashMap<String, List<String>>();
-//    private PortletContainer portletContainer = null;
+
     private PortalInstance portalInstance;
 
     public PageElement(PortalInstance portalInstance, Namespace namespace,
-                       PortalTemplateItem portalTemplateItem, PortletParameters portletParameters
+                       PortalTemplateItem portalTemplateItem, PortletParameters portletParameters,
+                       String targetTemplateName
     ) {
         this.portalInstance = portalInstance;
         this.namespace = namespace;
         this.portalTemplateItem = portalTemplateItem;
         this.parameters = portletParameters;
+        this.targetTemplateName = targetTemplateName;
     }
 
     public void destroy() {
@@ -334,6 +337,7 @@ public final class PageElement {
                     ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
                     new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
                 );
+                actionRequest.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, targetTemplateName );
 
                 actionResponse = new ActionResponseImpl(
                     portalRequestInstance.getHttpResponse(),
@@ -435,6 +439,7 @@ public final class PageElement {
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, portalTemplateItem.getXmlRoot());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
             renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, portalTemplateItem.getParameters() );
+            renderRequest.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, targetTemplateName );
 
             // todo current implementation not support 'current catalog ID'
 //            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getCatalogItemId() );
