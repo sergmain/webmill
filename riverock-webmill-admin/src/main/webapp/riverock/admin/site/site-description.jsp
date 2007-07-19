@@ -65,7 +65,11 @@
                 var="host"
                 value="#{siteSessionBean.siteExtended.virtualHosts}"
                 layout="orderedList" forceId="true">
-        <h:outputText value="#{host}"/>
+        <h:panelGroup style="align:center;valign:center;width:40px;">
+            <t:graphicImage value="/images/yes.gif" rendered="#{host.defaultHost}" border="0"/>
+            <h:outputText value="&nbsp" escape="false" rendered="#{not host.defaultHost}"/>
+        </h:panelGroup>
+        <h:outputText value="#{host.host}"/>
     </t:dataList>
 
 </h:panelGrid>

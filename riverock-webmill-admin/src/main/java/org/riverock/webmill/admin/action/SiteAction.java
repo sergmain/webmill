@@ -74,7 +74,6 @@ public class SiteAction implements Serializable {
     }
 
 // Add actions
-
     public String addSiteAction() {
         log.debug("Add site action.");
 
@@ -182,6 +181,7 @@ public class SiteAction implements Serializable {
         log.info("Process delete site action.");
         if (siteSessionBean.getSiteExtended() != null) {
             DaoFactory.getWebmillAdminDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
+            siteSessionBean.setCurrentSiteId(null);
             siteSessionBean.setSiteExtended(null);
             siteSessionBean.setId(null);
             siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);
@@ -196,14 +196,13 @@ public class SiteAction implements Serializable {
         return "site";
     }
 
-// virtual host actions
-
-    public void deleteVirtualHostActionListener(ActionEvent event) {
-        log.debug("Delete virtual host action.");
+    // virtual host actions
+    public void deleteVirtualHostAction() {
+        log.debug( "Delete virtual host action." );
 
         String host = siteSessionBean.getCurrentVirtualHost();
         if (log.isDebugEnabled()) {
-            log.debug("delete virtual host: " + host);
+            log.debug( "delete virtual host: " + host );
         }
 
         if (StringUtils.isBlank(host)) {
@@ -233,7 +232,7 @@ public class SiteAction implements Serializable {
         }
 
         siteSessionBean.getSiteExtended().getVirtualHosts().add(
-            new VirtualHostBean(null, null, newHost.toLowerCase(), false)
+            new VirtualHostBean(null, null, newHost.toLowerCase(), siteSessionBean.getSiteExtended().getVirtualHosts().isEmpty())
         );
         siteSessionBean.setNewVirtualHost(null);
     }

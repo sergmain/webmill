@@ -27,6 +27,9 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%--
+<%@ taglib uri="http://sourceforge.net/projects/facestrace" prefix="ft"%>
+--%>
 
 <f:loadBundle basename="org.riverock.webmill.admin.resource.Site" var="msg"/>
 <f:loadBundle basename="org.riverock.webmill.admin.resource.Manager" var="manager"/>
@@ -53,7 +56,7 @@
 </style>
 <f:view>
 
-    <h:form>
+    <h:form id="siteManagerForm">
 
         <f:subview id="site-top-actions-subview">
             <jsp:include page="site-top-actions.jsp"/>
@@ -72,15 +75,17 @@
                 </f:subview>
 
                 <h:panelGroup id="operation-site-add-panel">
-                    <h:commandButton id="site-add-process-action" action="#{siteAction.processAddSiteAction}"
+                    <t:commandButton id="siteProcessActionButton" action="#{siteAction.processAddSiteAction}"
                                      value="#{msg['process_add_site_action']}"
                                      styleClass="site-button-action"
+                                     forceId="true"
                         >
-                    </h:commandButton>
+                    </t:commandButton>
                     <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                     <h:commandButton id="site-add-cancel-action" action="#{siteAction.cancelAddSiteAction}"
                                      value="#{msg['cancel_add_site_action']}"
                                      styleClass="site-button-action"
+                        immediate="true"
                         >
                     </h:commandButton>
                 </h:panelGroup>
@@ -89,4 +94,9 @@
         </h:panelGrid>
 
     </h:form>
+
+<!--
+    <ft:trace />
+-->
+
 </f:view>

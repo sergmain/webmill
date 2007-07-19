@@ -982,6 +982,7 @@ riverock-database-structure.xsd">
 		<Fields name="ID_SITE_VIRTUAL_HOST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="NAME_VIRTUAL_HOST" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
+		<Fields name="IS_DEFAULT_HOST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTAL_VIRTUAL_HOST" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_SVH_FK" pkName="ID_SITE_SLS_PK">
 			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>

@@ -14,12 +14,6 @@
         </license>
     </licenses>
     <repositories>
-<!--
-        <repository>
-            <id>Riverock repo local</id>
-            <url>http://test.askmore/repo</url>
-        </repository>
--->
         <repository>
             <id>Riverock repo</id>
             <url>http://riverock.sourceforge.net/repo</url>
@@ -208,6 +202,11 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-annotations</artifactId>
+            <version>3.3.0.ga</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-commons-annotations</artifactId>
             <version>3.3.0.ga</version>
         </dependency>
 

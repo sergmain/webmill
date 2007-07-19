@@ -106,6 +106,7 @@ public class CreateSiteService {
                     VirtualHostBean virtualHost = new VirtualHostBean();
                     virtualHost.setHost(host.getHost().toLowerCase());
                     virtualHost.setSiteId(siteId);
+                    virtualHost.setDefaultHost(host.isDefaultHost());
                     dao.createVirtualHost(virtualHost);
                 }
             }

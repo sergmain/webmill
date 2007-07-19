@@ -103,4 +103,17 @@ public class SiteExtended implements Serializable {
     public void setVirtualHosts(List<VirtualHost> virtualHosts) {
         this.virtualHosts = virtualHosts;
     }
+
+    public boolean isDefaultHostCheckedNotOnce() {
+        if (virtualHosts==null || virtualHosts.isEmpty()) {
+            return false;
+        }
+        int count=0;
+        for (VirtualHost virtualHost : virtualHosts) {
+            if (virtualHost.isDefaultHost()) {
+                count++;
+            }
+        }
+        return count!=1;
+    }
 }
