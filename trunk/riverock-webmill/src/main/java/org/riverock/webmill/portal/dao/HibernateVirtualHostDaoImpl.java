@@ -32,6 +32,7 @@ import org.hibernate.Query;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
+import org.riverock.webmill.portal.utils.SiteList;
 
 /**
  * @author Sergei Maslyukov
@@ -87,6 +88,7 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         }
         finally {
             session.close();
+            SiteList.destroy();
         }
     }
 
@@ -107,6 +109,7 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         }
         finally {
             session.close();
+            SiteList.destroy();
         }
     }
 
@@ -123,6 +126,7 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         }
         finally {
             session.close();
+            SiteList.destroy();
         }
     }
 
