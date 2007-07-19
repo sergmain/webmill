@@ -72,7 +72,6 @@ import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.preference.PreferenceFactory;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.portal.utils.SiteList;
 
 /**
  * User: Admin

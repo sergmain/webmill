@@ -45,85 +45,61 @@ public class SiteList {
     private Map<String, VirtualHost> hashListSite = new HashMap<String, VirtualHost>();
     private Map<Long, VirtualHost> mapDefaultHost = new HashMap<Long, VirtualHost>();
 
-    private static long lastReadData = 0;
-    private final static long LENGTH_TIME_PERIOD = 10000;
-    private static SiteList backupObject = null;
-
-    private final static Object syncObject = new Object();
+    private static SiteList siteList;
 
     public static Long getSiteId(String serverName) {
-        VirtualHost virtualHost = SiteList.getInstance().searchHost(serverName);
+        VirtualHost virtualHost = getSiteList().searchHost(serverName);
 
         return virtualHost!=null?virtualHost.getSiteId():null;
     }
 
     public static VirtualHost getVirtualHost(String serverName) {
-        return SiteList.getInstance().searchHost(serverName);
+        return getSiteList().searchHost(serverName);
     }
 
     public static VirtualHost getDefaultVirtualHost(Long siteId) {
-        return SiteList.getInstance().searchDefaultVirtualHost(siteId);
+        return getSiteList().searchDefaultVirtualHost(siteId);
     }
 
-    public SiteList() {
-    }
-
-    public void reinit() {
-        lastReadData = 0;
-    }
-
-    public void terminate(java.lang.Long id_) {
-        lastReadData = 0;
-    }
-
-    protected void finalize() throws Throwable {
-        if (hashListSite != null) {
-            hashListSite.clear();
-            hashListSite = null;
-        }
-        super.finalize();
-    }
-
-    public static SiteList getInstance() {
-        if (log.isDebugEnabled()) {
-            log.debug("#15.01.01 lastReadData: " + lastReadData + ", current " + System.currentTimeMillis());
-            log.debug("#15.01.02 LENGTH_TIME_PERIOD " + LENGTH_TIME_PERIOD + ", status " +
-                (((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD)
-                || (backupObject == null)));
-        }
-
-        if (((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD)
-            || (backupObject == null)) {
-            synchronized (syncObject) {
-                if (((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD)
-                    || (backupObject == null)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("#15.01.03 reinit cached value ");
-                        log.debug("#15.01.04 old value " + backupObject);
-                    }
-                    backupObject = null;
-                    SiteList site = new SiteList();
-
-                    List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
-                    for (VirtualHost host : hosts) {
-                        site.hashListSite.put(host.getHost().toLowerCase(), host);
-                        if (host.isDefaultHost()) {
-                            site.mapDefaultHost.put(host.getSiteId(), host);
-                        }
-                    }
-
-                    backupObject = site;
-
-                    if (log.isDebugEnabled()) log.debug("#15.01.05 new value " + backupObject);
-                }
-                else if (log.isDebugEnabled()) log.debug("Get from cache");
-
-                if (log.isDebugEnabled()) log.debug("#15.01.09 ret value " + backupObject);
-
-                lastReadData = System.currentTimeMillis();
+    public static void destroy() {
+        synchronized(SiteList.class) {
+            if (siteList==null) {
+                return;
+            }
+            if (siteList.hashListSite!=null) {
+                siteList.hashListSite.clear();
+            }
+            if (siteList.mapDefaultHost!=null) {
+                siteList.mapDefaultHost.clear();
             }
         }
-        return backupObject;
+    }
+
+    private static SiteList getSiteList() {
+        if (siteList==null) {
+            synchronized(SiteList.class) {
+                if (siteList!=null) {
+                    return siteList;
+                }
+                SiteList instance = getInstance();
+                siteList = instance;
+            }
+        }
+        return siteList;
+    }
+
+    private static SiteList getInstance() {
+        return new SiteList();
+    }
+
+    private SiteList() {
+        List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
+        for (VirtualHost host : hosts) {
+            hashListSite.put(host.getHost().toLowerCase(), host);
+            if (host.isDefaultHost()) {
+                mapDefaultHost.put(host.getSiteId(), host);
+            }
+        }
     }
 
     private VirtualHost searchHost(final String serverName) {
