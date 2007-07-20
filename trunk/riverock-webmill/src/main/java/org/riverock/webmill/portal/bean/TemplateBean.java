@@ -37,6 +37,9 @@ import javax.persistence.Column;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import org.riverock.interfaces.portal.bean.Template;
 
 /**
@@ -47,7 +50,6 @@ import org.riverock.interfaces.portal.bean.Template;
  */
 @Entity
 @Table(name="WM_PORTAL_TEMPLATE")
-//@Table(name="wm_portal_template")
 @TableGenerator(
     name="TABLE_PORTAL_TEMPLATE",
     table="WM_PORTAL_IDS",
@@ -57,6 +59,7 @@ import org.riverock.interfaces.portal.bean.Template;
     allocationSize = 1,
     initialValue = 1
 )
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class TemplateBean implements Serializable, Template {
     private static final long serialVersionUID = 1059005501L;
 

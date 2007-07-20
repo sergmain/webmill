@@ -32,6 +32,7 @@ import java.util.Collections;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
@@ -58,9 +59,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Long id = (Long)session.createQuery(
                 "select catalog.catalogId " +
                     "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
@@ -74,7 +74,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setLong("catalogId", catalogItemId)
                 .setString("customLanguage", locale.toString().toLowerCase())
                 .uniqueResult();
-            session.getTransaction().commit();
             return id;
         }
         finally {
@@ -94,9 +93,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Long id = (Long)session.createQuery(
                 "select catalog.catalogId " +
                     "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
@@ -108,7 +106,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setLong("portletId", portletNameId)
                 .setLong("templateId", templateId)
                 .uniqueResult();
-            session.getTransaction().commit();
             return id;
         }
         finally {
@@ -121,9 +118,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Long id = (Long)session.createQuery(
                 "select catalog.catalogId " +
                     "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
@@ -133,7 +129,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setLong("siteLanguageId", siteLanguageId)
                 .setString("url", pageUrl)
                 .uniqueResult();
-            session.getTransaction().commit();
             return id;
         }
         finally {
@@ -146,9 +141,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 
             String resultPortletName = portletName;
             if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {
@@ -182,7 +176,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setString("portletName", resultPortletName)
                 .setString("templateName", templateName)
                 .uniqueResult();
-            session.getTransaction().commit();
             return id;
         }
         finally {
@@ -195,9 +188,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 
             String resultPortletName = portletName;
             if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {
@@ -234,7 +226,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setString("portletName", resultPortletName)
                 .setString("templateName", templateName)
                 .uniqueResult();
-            session.getTransaction().commit();
+
             return id;
         }
         finally {
@@ -247,9 +239,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Long id = (Long)session.createQuery(
                 "select catalog.catalogId " +
                     "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
@@ -263,7 +254,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setString("customLanguage", locale.toString().toLowerCase())
                 .setString("url", pageUrl)
                 .uniqueResult();
-            session.getTransaction().commit();
             return id;
         }
         finally {
@@ -279,9 +269,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             CatalogBean bean = (CatalogBean)session.createQuery(
                 "select catalog " +
                     "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
@@ -292,7 +281,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             if (log.isDebugEnabled() && bean!=null) {
                 log.debug("Metadata: " + bean.getMetadata());
             }
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -301,17 +289,14 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
     }
 
     public List<CatalogItem> getCatalogItemList(Long catalogLanguageId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<CatalogItem> list = session.createQuery(
                 "select catalog " +
                     "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
                     "where catalog.catalogLanguageId=:catalogLanguageId")
                 .setLong("catalogLanguageId", catalogLanguageId)
                 .list();
-
-            session.getTransaction().commit();
 
             Collections.sort(list, MENU_ITEM_COMPARATOR);
 
@@ -327,16 +312,14 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             CatalogLanguageBean bean = (CatalogLanguageBean)session.createQuery(
                 "select catalogLang " +
                     "from  org.riverock.webmill.portal.bean.CatalogLanguageBean as catalogLang " +
                     "where catalogLang.catalogLanguageId=:catalogLanguageId")
                 .setLong("catalogLanguageId", catalogLanguageId)
                 .uniqueResult();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -349,16 +332,14 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List list = session.createQuery(
                 "select catalogLang " +
                     "from  org.riverock.webmill.portal.bean.CatalogLanguageBean as catalogLang " +
                     "where catalogLang.siteLanguageId=:siteLanguageId")
                 .setLong("siteLanguageId", siteLanguageId)
                 .list();
-            session.getTransaction().commit();
             return list;
         }
         finally {
@@ -395,6 +376,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             session.save(bean);
 
             session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -456,6 +438,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             bean.setOrderField(catalogItem.getOrderField());
             bean.setPortletRole(catalogItem.getPortletRole());
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -484,6 +468,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 siteLanguageId=getCatalogLanguageItem(bean.getCatalogLanguageId()).getSiteLanguageId();
                 session.delete(bean);
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -513,6 +499,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             session.save(bean);
 
             session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -551,6 +538,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             bean.setDefault(catalogLanguageItem.getDefault());
             bean.setSiteLanguageId(catalogLanguageItem.getSiteLanguageId());
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -585,6 +574,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 siteLanguageId=bean.getSiteLanguageId();
                 session.delete(bean);
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -623,6 +614,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setLong("siteLanguageId", siteLanguageId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -638,10 +631,9 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         Long id;
         try {
-            session.beginTransaction();
             id = (Long)session.createQuery(
             "select siteLang.siteId " +
                     "from  org.riverock.webmill.portal.bean.CatalogLanguageBean catalogLang, " +
@@ -650,7 +642,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                     "      catalogLang.siteLanguageId=siteLang.siteLanguageId ")
                 .setLong("catalogLanguageId", catalogLanguageId)
                 .uniqueResult();
-            session.getTransaction().commit();
             return id;
         }
         finally {
@@ -664,10 +655,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         }
 
         String urlReal = url.trim().toLowerCase();
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
-
             List ids = session.createQuery(
                 "select catalog " +
                     "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
@@ -678,7 +667,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setString("url", urlReal)
                 .list();
 
-            session.getTransaction().commit();
             return !ids.isEmpty();
         }
         finally {
@@ -716,6 +704,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 }
             }
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -732,10 +722,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         }
         
         String urlReal = url.trim().toLowerCase();
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
-
             List<Long> ids = session.createQuery(
                 "select catalog.catalogId " +
                     "from  org.riverock.webmill.portal.bean.CatalogBean as catalog, " +
@@ -754,7 +742,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 }
             }
 
-            session.getTransaction().commit();
             return flag;
         }
         finally {
@@ -767,9 +754,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             CatalogLanguageBean bean = (CatalogLanguageBean)session.createQuery(
                 "select catalogLang " +
                     "from  org.riverock.webmill.portal.bean.CatalogLanguageBean as catalogLang " +
@@ -777,7 +763,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
                 .setString("catalogCode", catalogLanguageCode)
                 .setLong("siteLanguageId", siteLanguageId)
                 .uniqueResult();
-            session.getTransaction().commit();
+
             return bean;
         }
         finally {

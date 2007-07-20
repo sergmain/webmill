@@ -221,7 +221,6 @@ public class PortalIndexerImpl implements PortalIndexer {
         writer.setMaxMergeDocs(MAX_MERGE_DOCS);
 
         Document doc = new Document();
-//        doc.add(new Field(URL_FIELD, new StringReader(url) ));
         doc.add(new Field(URL_FIELD, url, Field.Store.YES, Field.Index.UN_TOKENIZED ));
         if (parameter.getTitle()!=null) {
             doc.add(new Field(TITLE_FIELD, parameter.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
@@ -241,6 +240,7 @@ public class PortalIndexerImpl implements PortalIndexer {
         writer.optimize();
         writer.flush();
         writer.close();
+        writer = null;
     }
 
     public List<PortletIndexerShort> getPortletIndexers(Long siteId) {

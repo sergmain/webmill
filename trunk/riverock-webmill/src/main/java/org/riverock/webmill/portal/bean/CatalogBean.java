@@ -36,6 +36,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.common.TreeItem;
 
@@ -56,6 +59,7 @@ import org.riverock.interfaces.common.TreeItem;
     allocationSize = 1,
     initialValue = 1
 )
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class CatalogBean implements Serializable, CatalogItem {
     private static final long serialVersionUID = 1057005506L;
 

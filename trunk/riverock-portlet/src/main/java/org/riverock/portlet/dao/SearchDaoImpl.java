@@ -61,8 +61,9 @@ public class SearchDaoImpl implements SearchDao {
             bean.setWord(searchString);
 
             session.save(bean);
-            session.flush();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {

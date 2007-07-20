@@ -34,6 +34,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
@@ -52,6 +55,7 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
     allocationSize=1,
     initialValue = 1
 )
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class VirtualHostBean implements Serializable, VirtualHost {
     private static final long serialVersionUID = 3255005504L;
 

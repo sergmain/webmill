@@ -28,6 +28,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.user.UserMetadataItem;
 import org.riverock.webmill.portal.bean.UserMetadataItemBean;
@@ -45,9 +46,8 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
     private final static Logger log = Logger.getLogger(HibernateUserMetadataDaoImpl.class);
 
     public UserMetadataItem getMetadata(String userLogin, Long siteId, String metadataName) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 
             UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
                 "select meta " +
@@ -59,7 +59,6 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
                 .setLong("siteId", siteId)
                 .uniqueResult();
 
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -107,6 +106,9 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
                 bean.setDateValue(null);
             }
             session.save(bean);
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -154,6 +156,9 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
                 bean.setDateValue(null);
             }
             session.save(bean);
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -201,6 +206,9 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
                 bean.setStringValue(null);
             }
             session.save(bean);
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {

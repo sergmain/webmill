@@ -47,15 +47,12 @@ public class PortalXslt implements XsltTransformer {
     private static Logger log = Logger.getLogger(PortalXslt.class);
 
     private Xslt xslt = null;
-//    private Transformer transformer = null;
     private Templates translet = null;
     private final Object transformerSync = new Object();
 
     protected void finalize() throws Throwable {
         xslt = null;
-//        transformer = null;
         translet = null;
-
         super.finalize();
     }
 
@@ -85,23 +82,6 @@ public class PortalXslt implements XsltTransformer {
                 throw e;
             }
 
-/*
-            if (log.isDebugEnabled()) {
-                log.debug("XsltList. translet - " + translet);
-                log.debug("Start create Transformer");
-            }
-
-            synchronized (transformerSync) {
-                transformer=null;
-                try {
-                    transformer = translet.newTransformer();
-                }
-                catch (TransformerConfigurationException e) {
-                    log.error("Error create transformer", e);
-                    throw e;
-                }
-            }
-*/
         }
         catch (Exception e) {
             String es = "Error create transformer";
@@ -119,13 +99,5 @@ public class PortalXslt implements XsltTransformer {
             log.error(es, e);
             throw new IllegalStateException(es, e);
         }
-/*
-        if (transformer!=null) {
-            return transformer;
-        }
-        synchronized (transformerSync) {
-            return transformer;
-        }
-*/
     }
 }

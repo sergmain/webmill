@@ -34,6 +34,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 
 /**
@@ -44,7 +47,6 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
  */
 @Entity
 @Table(name="WM_PORTAL_SITE_LANGUAGE")
-//@Table(name="wm_portal_site_language")
 @TableGenerator(
     name="TABLE_SITE_LANGUAGE",
     table="WM_PORTAL_IDS",
@@ -54,6 +56,7 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
     allocationSize=1,
     initialValue = 1
 )
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SiteLanguageBean implements Serializable,  SiteLanguage {
     private static final long serialVersionUID = 1055005503L;
 

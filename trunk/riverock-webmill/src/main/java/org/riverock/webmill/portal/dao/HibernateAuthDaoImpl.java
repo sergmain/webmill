@@ -31,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -56,16 +57,14 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     private static Logger log = Logger.getLogger(HibernateAuthDaoImpl.class);
 
     public User getUser(String userLogin) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             UserBean user = (UserBean)session.createQuery(
                 "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
                 " org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
                 "where user.userId = auth.userId and auth.userLogin=:userLogin ")
                 .setString("userLogin", userLogin)
                 .uniqueResult();
-            session.getTransaction().commit();
             return user;
         }
         finally {
@@ -74,15 +73,13 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public List<Long> getGrantedUserIdList(String username) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<AuthInfoImpl> authInfos = session.createQuery(
                 "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
                 "where auth.userLogin=:userLogin ")
                 .setString("userLogin", username)
                 .list();
-            session.getTransaction().commit();
             List<Long> result = new ArrayList<Long>();
             for (AuthInfoImpl authInfo : authInfos) {
                 result.add(authInfo.getUserId());
@@ -108,9 +105,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04 " +
             "where   a04.is_root = 1 and a04.user_login=? ";
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<Long> list = session
                 .createSQLQuery(sql_)
                 .addScalar("id_firm", Hibernate.LONG)
@@ -137,7 +133,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             .setString("userLogin3", username)
             .list();
 */
-            session.getTransaction().commit();
             return list;
         }
         finally {
@@ -155,9 +150,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             "from    WM_AUTH_USER a04, WM_LIST_HOLDING b04 "+
             "where   a04.is_root=1 and a04.user_login=?";
         
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<Long> list = session.createSQLQuery( sql_ )
     /*
                 "select auth1.holdingId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
@@ -171,7 +165,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 .setString(0, username)
                 .setString(1, username)
                 .list();
-            session.getTransaction().commit();
+            
             if (log.isDebugEnabled()) {
                 log.debug("list: " + list);
                 if (!list.isEmpty()) {
@@ -186,16 +180,15 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public Long checkCompanyId(Long companyId, String userLogin) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Long id = (Long)session.createQuery(
                 "select company.id from org.riverock.webmill.portal.bean.CompanyBean as company " +
                 "where company.id = :companyId and company.id in (:companyIds) ")
                 .setParameterList("companyIds", getGrantedCompanyIdList(userLogin))
                 .setLong("companyId", companyId)
                 .uniqueResult();
-            session.getTransaction().commit();
+
             return id;
         }
         finally {
@@ -204,16 +197,15 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public Long checkHoldingId(Long holdingId, String userLogin) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Long id = (Long)session.createQuery(
                 "select holding.id from org.riverock.webmill.portal.bean.HoldingBean as holding " +
                 "where  holding.id = :holdingId and holding.id in (:holdingIds) ")
                 .setParameterList("holdingIds", getGrantedHoldingIdList(userLogin))
                 .setLong("holdingId", holdingId)
                 .uniqueResult();
-            session.getTransaction().commit();
+
             return id;
         }
         finally {
@@ -234,9 +226,9 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             "       b.ID_FIRM  in ("+getGrantedCompanyId(db, auth.getUserLogin())+") "
         );
 */
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
+
             AuthInfoImpl auth = (AuthInfoImpl)session.createQuery(
                 "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl as auth," +
                 "where auth.authUserId=:id_auth_user_owner ")
@@ -272,7 +264,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                     .setLong("id_auth_user_check", id_auth_user_check)
                     .uniqueResult();
             }
-            session.getTransaction().commit();
             return id!=null;
         }
         finally {
@@ -291,11 +282,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         if ( log.isInfoEnabled() )
             startMills = System.currentTimeMillis();
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
-
-            try {
                 AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
                     "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
                     "where auth.userLogin=:userLogin and auth.userPassword=:userPassword")
@@ -327,10 +315,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                     .uniqueResult();
 
                 return authUserId!=null;
-            }
-            finally {
-                session.getTransaction().commit();
-            }
         }
         finally {
             session.close();
@@ -338,9 +322,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public AuthInfo getAuthInfo(String login_, String pass_) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 
             AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
                 "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
@@ -349,7 +332,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 .setString("userPassword", pass_)
                 .uniqueResult();
 
-            session.getTransaction().commit();
             return authInfo;
         }
         finally {
@@ -361,9 +343,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         if (authUserId==null) {
             return null;
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 
             AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
                 "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
@@ -371,7 +352,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 .setLong("authUserId", authUserId)
                 .uniqueResult();
 
-            session.getTransaction().commit();
             return authInfo;
         }
         finally {
@@ -386,9 +366,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 "where  a.ID_USER=b.ID_USER and  " +
                 "       b.ID_FIRM  in ("+getGrantedCompanyId(db, authSession.getUserLogin())+") "
         */
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<AuthInfoImpl> authInfos = session.createQuery(
                 "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
                     "     org.riverock.webmill.portal.bean.UserBean as user " +
@@ -412,7 +391,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     */
                 .setParameterList("companyIds", getGrantedCompanyIdList(authSession.getUserLogin()))
                 .list();
-            session.getTransaction().commit();
             return (List) authInfos;
         }
         finally {
@@ -427,9 +405,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             return list;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 
             String sql =
                 "select  a01.id_auth_user " +
@@ -491,7 +468,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     */
                 .setParameterList("ids", ids)
                 .list();
-            session.getTransaction().commit();
+
             return (List)list;
         }
         finally {
@@ -500,9 +477,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public boolean checkAccess( String userLogin, String userPassword, final String serverName ) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 
 /*
         String sql_ =
@@ -511,7 +487,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             "       a.ID_USER = b.ID_USER and b.is_deleted=0";
 */
 
-            try {
                 AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
                     "select auth " +
                         "from  org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
@@ -594,10 +569,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                     .list();
 
                 return !list.isEmpty();
-            }
-            finally {
-                session.getTransaction().commit();
-            }
         }
         finally {
             session.close();
@@ -605,9 +576,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public List<RoleBean> getUserRoleList( AuthSession authSession ) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 /*
             ps = db.prepareStatement(
                 "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP " +
@@ -622,7 +592,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                     "where role.roleId=relate.roleId and relate.authUserId=:authUserId ")
                 .setLong("authUserId", authSession.getAuthInfo().getAuthUserId())
                 .list();
-            session.getTransaction().commit();
+
             return (List)roles;
         }
         finally {
@@ -631,9 +601,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public List<RoleBean> getRoleList( AuthSession authSession ) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 /*
             ps = db.prepareStatement(
                 "select  ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
@@ -643,7 +612,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             List<RoleBeanImpl> roles = session.createQuery(
                 "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role ")
                 .list();
-            session.getTransaction().commit();
+
             return (List)roles;
         }
         finally {
@@ -652,9 +621,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
 /*
             ps = db.prepareStatement(
                 "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP  " +
@@ -670,30 +638,13 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                     "where role.roleId=relate.roleId and relate.authUserId=:authUserId ")
                 .setLong("authUserId", authUserId)
                 .list();
-            session.getTransaction().commit();
+
             return (List)roles;
         }
         finally {
             session.close();
         }
     }
-/*
-    private static List<RoleBean> internalGetRoleList(ResultSet rs) throws SQLException {
-        List<RoleBean> list = new ArrayList<RoleBean>();
-        while( rs.next() ) {
-            RoleBeanImpl bean = new RoleBeanImpl();
-            Long id = RsetTools.getLong( rs, "ID_ACCESS_GROUP" );
-            String name = RsetTools.getString( rs, "NAME_ACCESS_GROUP" );
-
-            if( name != null && id != null ) {
-                bean.setName( name );
-                bean.setRoleId( id );
-                list.add( bean );
-            }
-        }
-        return list;
-    }
-*/
 
     public Long addRole( AuthSession authSession, RoleBean roleBean) {
         Session session = HibernateUtils.getSession();
@@ -701,7 +652,9 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             session.beginTransaction();
             RoleBeanImpl bean = new RoleBeanImpl(roleBean);
             session.save(bean);
+
             session.flush();
+            session.clear();
             session.getTransaction().commit();
             return bean.getRoleId();
         }
@@ -723,6 +676,9 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             if (bean!=null) {
                 bean.setName(roleBean.getName());
             }
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -741,6 +697,9 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             "delete org.riverock.webmill.a3.bean.RoleBeanImpl role where role.roleId=:roleId")
                 .setLong("roleId", roleBean.getRoleId())
                 .executeUpdate();
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -816,6 +775,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             }
 
             session.flush();
+            session.clear();
             session.getTransaction().commit();
             return bean.getAuthUserId();
         }
@@ -857,6 +817,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             processDeletedRoles( session, infoAuth );
             processNewRoles( session, infoAuth.getRoles(), infoAuth.getAuthInfo().getAuthUserId() );
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -933,6 +895,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -946,9 +910,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         if( authSession==null ) {
             return (List)users;
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             users = session.createQuery(
                 "select user from org.riverock.webmill.portal.bean.UserBean as user " +
                     "where user.isDeleted=false and user.companyId in ( :companyIds )")
@@ -970,7 +933,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     */
                 .setParameterList("companyIds", getGrantedCompanyIdList(authSession.getUserLogin()) )
                 .list();
-            session.getTransaction().commit();
+
             return (List)users;
         }
         finally {
@@ -982,15 +945,14 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         if( roleId == null ) {
             return null;
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             RoleBeanImpl bean = (RoleBeanImpl)session.createQuery(
                 "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role " +
                 "where role.roleId=:roleId ")
                 .setLong("roleId", roleId)
                 .uniqueResult();
-            session.getTransaction().commit();
+
             return bean;
         }
         finally {
@@ -1002,15 +964,14 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         if( roleName == null ) {
             return null;
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             RoleBeanImpl bean = (RoleBeanImpl)session.createQuery(
                 "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role " +
                 "where role.name=:name ")
                 .setString("name", roleName)
                 .uniqueResult();
-            session.getTransaction().commit();
+
             return bean;
         }
         finally {

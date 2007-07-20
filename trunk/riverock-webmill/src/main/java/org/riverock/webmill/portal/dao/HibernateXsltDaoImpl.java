@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.common.exception.DatabaseException;
@@ -62,9 +63,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
      * @return Map<String, Xslt>
      */
     public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
                 "where xslt.isCurrent=true and xslt.siteLanguageId=:site_language_id");
@@ -98,7 +98,6 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                     map.put(lang, xslt);
                 }
             }
-            session.getTransaction().commit();
             return map;
         }
         finally {
@@ -110,9 +109,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
         if (log.isDebugEnabled()) {
             log.debug("Start getCurrentXslt() for siteLanguageId "+siteLanguageId);
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
                     "where xslt.isCurrent=true and xslt.siteLanguageId = :site_language_id ");
@@ -137,7 +135,6 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return xslt;
         }
         finally {
@@ -149,9 +146,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
         if (log.isDebugEnabled()) {
             log.debug("Start getXslt() for xsltId "+xsltId);
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
                     "where xslt.id=:ID_SITE_XSLT"
@@ -177,7 +173,6 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return xslt;
         }
         finally {
@@ -189,9 +184,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
         if (log.isDebugEnabled()) {
             log.debug("Start getXslt() for xsltName "+xsltName+" and siteLanguageId " +siteLanguageId);
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt where xslt.name=:xslt_name and xslt.siteLanguageId=:site_language_id "
             );
@@ -217,7 +211,6 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return xslt;
         }
         finally {
@@ -252,8 +245,9 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 bean.setXsltBlob(null);
             }
             session.save(bean);
+            
             session.flush();
-
+            session.clear();
             session.getTransaction().commit();
 
             return bean.getId();
@@ -264,9 +258,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
     }
 
     public List<Xslt> getXsltList(Long siteLanguageId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select xslt from org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
                 "where xslt.siteLanguageId = :site_language_id");
@@ -293,7 +286,6 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return (List)xsltBeans;
         }
         finally {
@@ -314,6 +306,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 query.setLong("site_language_id", siteLanguage.getSiteLanguageId())
                     .executeUpdate();
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -330,6 +324,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                     "where xslt.siteLanguageId = :site_language_id")
                 .setLong("site_language_id", siteLanguageId)
                 .executeUpdate();
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -369,6 +365,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                     bean.setXsltBlob(null);
                 }
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -386,6 +384,8 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 .setLong("xslt_id", xsltId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {

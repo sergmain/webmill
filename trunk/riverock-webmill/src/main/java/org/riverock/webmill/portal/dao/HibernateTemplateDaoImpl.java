@@ -34,6 +34,7 @@ import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Template;
@@ -54,9 +55,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         if (log.isDebugEnabled()) {
             log.debug("Start getTemplateInternal() for templateId "+ templateId);
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             TemplateBean bean = (TemplateBean)session.createQuery(
                 "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
                     "where template.templateId=:templateId ")
@@ -64,7 +64,6 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                 .uniqueResult();
 
             prepareBlob(bean);
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -94,9 +93,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
     }
 
     public Template getTemplate(String templateName, Long siteLanguageId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             TemplateBean bean = (TemplateBean)session.createQuery(
                 "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
                     "where template.templateName=:templateName and template.siteLanguageId=:siteLanguageId ")
@@ -105,7 +103,6 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                 .uniqueResult();
 
             prepareBlob(bean);
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -121,9 +118,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
      * @return org.riverock.interfaces.portal.bean.Template - Attention! template data not initalized
      */
     public Template getTemplate(Long  siteId, String templateName, String lang) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             TemplateBean bean = (TemplateBean)session.createQuery(
                 "select template " +
                     "from  org.riverock.webmill.portal.bean.TemplateBean as template, " +
@@ -134,9 +130,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                 .setString("customLanguage", lang)
                 .setLong("siteId", siteId)
                 .uniqueResult();
-
             // Do not process blob at this point
-            session.getTransaction().commit();
+
             return bean;
         }
         finally {
@@ -151,9 +146,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             "where  b.ID_SITE_SUPPORT_LANGUAGE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
 
     public List<Template> getTemplateLanguageList(Long siteLanguageId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<TemplateBean> bean = session.createQuery(
                 "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
                 "where  template.siteLanguageId=:siteLanguageId")
@@ -163,7 +157,6 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             for (TemplateBean templateBean : bean) {
                 prepareBlob(templateBean);
             }
-            session.getTransaction().commit();
             return (List)bean;
         }
         finally {
@@ -175,9 +168,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         if (log.isDebugEnabled())
             log.debug("Start getTemplateList(), siteId: " +siteId);
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<TemplateBean> beans = session.createQuery(
                 "select template " +
                     "from  org.riverock.webmill.portal.bean.TemplateBean as template," +
@@ -189,7 +181,6 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             for (TemplateBean templateBean : beans) {
                 prepareBlob(templateBean);
             }
-            session.getTransaction().commit();
             return (List)beans;
         }
         finally {
@@ -234,6 +225,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             }
             session.save(bean);
             session.flush();
+            session.clear();
             session.getTransaction().commit();
             return bean.getTemplateId();
         }
@@ -258,6 +250,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             for (TemplateBean templateBean : bean) {
                 session.delete(templateBean);
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -279,6 +273,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             for (TemplateBean templateBean : templateBeans) {
                 session.delete(templateBean);
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -329,6 +325,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                 }
 
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -350,6 +348,8 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             if (bean!=null) {
                 session.delete(bean);
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -358,16 +358,14 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
     }
 
     public Template getDefaultDynamicTemplate(Long siteLanguageId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
-
             TemplateBean bean = (TemplateBean)session.createQuery(
                 "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
                     "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
                 .setLong("siteLanguageId", siteLanguageId)
                 .uniqueResult();
-            session.getTransaction().commit();
+
             return bean;
         }
         finally {

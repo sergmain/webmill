@@ -36,6 +36,7 @@ import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Article;
@@ -71,6 +72,9 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             for (ArticleBean articleBean : beans) {
                 session.delete(articleBean);
             }
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -92,6 +96,9 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             for (ArticleBean articleBean : beans) {
                 session.delete(articleBean);
             }
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -129,6 +136,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 session.delete(newsGroupBean);
             }
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -163,6 +172,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 session.delete(newsGroupBean);
             }
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -171,16 +182,14 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
     }
 
     public List<NewsGroup> getNewsGroupList(Long siteLanguageId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<NewsGroupBean> groupBeans = session.createQuery(
                 "select newsGroup " +
                     "from  org.riverock.webmill.portal.bean.NewsGroupBean as newsGroup " +
                     "where newsGroup.isDeleted=false and newsGroup.siteLanguageId=:siteLanguageId")
                 .setLong("siteLanguageId", siteLanguageId)
                 .list();
-            session.getTransaction().commit();
             return (List)groupBeans;
         }
         finally {
@@ -189,9 +198,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
     }
 
     public List<News> getNewsList(Long newsGroupId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<NewsBean> beans = session.createQuery(
                 "select news " +
                     "from  org.riverock.webmill.portal.bean.NewsBean news " +
@@ -218,7 +226,6 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 }
             }
 
-            session.getTransaction().commit();
             return (List)beans;
         }
         finally {
@@ -231,16 +238,14 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             NewsGroupBean newsGroup = (NewsGroupBean)session.createQuery(
                 "select newsGroup " +
                     "from  org.riverock.webmill.portal.bean.NewsGroupBean newsGroup " +
                     "where newsGroup.isDeleted=false and newsGroup.newsGroupId=:newsGroupId ")
                 .setLong("newsGroupId", newsGroupId)
                 .uniqueResult();
-            session.getTransaction().commit();
             return newsGroup;
         }
         finally {
@@ -249,9 +254,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
     }
 
     public News getNews(Long newsId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             NewsBean news = (NewsBean)session.createQuery(
                 "select news " +
                     "from  org.riverock.webmill.portal.bean.NewsBean news " +
@@ -277,7 +281,6 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 }
             }
 
-            session.getTransaction().commit();
             return news;
         }
         finally {
@@ -308,8 +311,9 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 bean.setNewsBlob(null);
             }
             session.save(bean);
-            session.flush();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
 
             return bean.getNewsId();
@@ -354,6 +358,9 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 else
                     bean.setPostDate(new Date() );
             }
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -379,6 +386,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 news.setDeleted(true);
             }
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -393,8 +402,9 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
 
             NewsGroupBean bean = new NewsGroupBean(newsGroup);
             session.save(bean);
-            session.flush();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
 
             return bean.getNewsGroupId();
@@ -423,6 +433,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 newsGroup.setDeleted(true);
             }
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -450,6 +462,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 bean.setSiteLanguageId(newsGroup.getSiteLanguageId());
             }
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -462,9 +476,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             ArticleBean article = (ArticleBean)session.createQuery(
                 "select article " +
                     "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
@@ -492,7 +505,6 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 }
             }
 
-            session.getTransaction().commit();
             return article;
         }
         finally {
@@ -506,9 +518,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             return list;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<ArticleBean> beans = session.createQuery(
                 "select article " +
                     "from org.riverock.webmill.portal.bean.ArticleBean as article " +
@@ -535,7 +546,6 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return (List)beans;
         }
         finally {
@@ -548,9 +558,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             ArticleBean article = (ArticleBean)session.createQuery(
                 "select article " +
                     "from  org.riverock.webmill.portal.bean.ArticleBean as article " +
@@ -576,7 +585,6 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 }
             }
 
-            session.getTransaction().commit();
             return article;
         }
         finally {
@@ -608,8 +616,9 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
             }
 
             session.save(bean);
-            session.flush();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
 
             return bean.getArticleId();
@@ -654,6 +663,9 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                     bean.setArticleBlob(null);
                 }
             }
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -681,6 +693,8 @@ public class HibernateCmsDaoImpl implements InternalCmsDao {
                 session.delete(bean);
             }
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {

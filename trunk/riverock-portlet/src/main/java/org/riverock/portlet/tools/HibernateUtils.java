@@ -30,6 +30,7 @@ import javax.naming.NamingException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.HibernateException;
+import org.hibernate.StatelessSession;
 import org.hibernate.cfg.AnnotationConfiguration;
 
 import org.riverock.portlet.webclip.WebclipBean;
@@ -89,6 +90,7 @@ public class HibernateUtils {
                 .setProperty("hibernate.current_session_context_class", "thread" )
                 .setProperty("hibernate.transaction.flush_before_completion", "false" )
                 .setProperty("hibernate.cache.provider_class", org.hibernate.cache.EhCacheProvider.class.getName() )
+                .setProperty("net.sf.ehcache.configurationResourceName", "/ehcache.xml" )
                 .setProperty("hibernate.connection.datasource", "java:comp/env/jdbc/webmill")
             ;
             setAnnotatedClasses(cfg);
@@ -113,6 +115,12 @@ public class HibernateUtils {
         return sessionFactory.openSession();
     }
 
+    public static StatelessSession getStatelSession() throws HibernateException {
+        if (sessionFactory==null) {
+            prepareSession();
+        }
+        return sessionFactory.openStatelessSession();
+    }
 
     public static void setSessionFactory(SessionFactory sessionFactory) {
         HibernateUtils.sessionFactory = sessionFactory;

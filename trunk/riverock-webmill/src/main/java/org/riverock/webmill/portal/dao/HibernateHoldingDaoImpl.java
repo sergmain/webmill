@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -49,9 +50,8 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             HoldingBean bean = (HoldingBean)session.createQuery(
                 "select holding from org.riverock.webmill.portal.bean.HoldingBean as holding " +
                 "where  holding.id=:holdingId and holding.id in (:holdingIds)")
@@ -69,7 +69,6 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
                         .list()
                 );
             }
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -82,9 +81,8 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<Long> list = authSession.getGrantedHoldingIdList();
             List<HoldingBean> bean;
             if (!list.isEmpty()) {
@@ -107,7 +105,6 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
             else {
                 bean = new ArrayList<HoldingBean>();
             }
-            session.getTransaction().commit();
             return (List)bean;
         }
         finally {
@@ -134,7 +131,9 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
                     session.save(relate);
                 }
             }
+
             session.flush();
+            session.clear();
             session.getTransaction().commit();
             return bean.getId();
         }
@@ -186,6 +185,8 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
                     session.save(relateBean);
                 }
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -220,6 +221,8 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
                 .executeUpdate();
             session.delete(bean);
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -236,6 +239,9 @@ public class HibernateHoldingDaoImpl implements InternalHoldingDao {
             relateBean.setCompanyId(companyId);
             relateBean.setHoldingId(holdingId);
             session.save(relateBean);
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {

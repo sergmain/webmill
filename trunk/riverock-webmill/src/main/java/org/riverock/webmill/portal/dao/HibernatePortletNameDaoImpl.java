@@ -27,6 +27,7 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.webmill.container.portlet.PortletContainer;
@@ -41,16 +42,17 @@ import org.riverock.webmill.utils.HibernateUtils;
  *         $Id$
  */
 public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
+    private static final String PORTLET_QUERY_STRING = "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet " +
+    "where portlet.portletName = :portletName";
+
     public PortletName getPortletName(Long portletId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             PortletNameBean bean = (PortletNameBean)session.createQuery(
                 "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet " +
                     "where portlet.portletId = :portletId")
                 .setLong("portletId", portletId)
                 .uniqueResult();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -59,11 +61,9 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
     }
 
     public PortletName getPortletName(String portletName) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             PortletNameBean bean = getPortletNameInternal(session, portletName);
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -71,10 +71,21 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
         }
     }
 
+    private PortletNameBean getPortletNameInternal(StatelessSession session, String portletName) {
+        List<PortletNameBean> beans = session.createQuery(
+            PORTLET_QUERY_STRING)
+            .setString("portletName", portletName)
+            .list();
+        PortletNameBean bean=null;
+        if (beans.size()>0) {
+            bean = beans.get(0);
+        }
+        return bean;
+    }
+
     private PortletNameBean getPortletNameInternal(Session session, String portletName) {
         List<PortletNameBean> beans = session.createQuery(
-            "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet " +
-            "where portlet.portletName = :portletName")
+            PORTLET_QUERY_STRING)
             .setString("portletName", portletName)
             .list();
         PortletNameBean bean=null;
@@ -92,6 +103,7 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
                 PortletNameBean bean = new PortletNameBean(portletName);
                 session.save(bean);
                 session.flush();
+                session.clear();
                 session.getTransaction().commit();
                 return bean.getPortletId();
             }
@@ -115,6 +127,8 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
             if (bean!=null) {
                 bean.setPortletName(portletNameBean.getPortletName());
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -136,6 +150,8 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
                 .setLong("portletId", portletNameBean.getPortletId())
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -144,13 +160,11 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
     }
 
     public List<PortletName> getPortletNameList() {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<PortletNameBean> list = session.createQuery(
                 "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet")
                 .list();
-            session.getTransaction().commit();
             return (List)list;
         }
         finally {

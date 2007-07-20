@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.io.*;
 
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
+
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 
@@ -62,9 +64,8 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
                 return new HashMap<String, List<String>>();
             }
 
-            Session session = HibernateUtils.getSession();
+            StatelessSession session = HibernateUtils.getStatelessSession();
             try {
-                session.beginTransaction();
                 CatalogBean bean = (CatalogBean)session.createQuery(
                     "select catalog " +
                         "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
@@ -72,7 +73,6 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
                     .setLong("catalogId", catalogId)
                     .uniqueResult();
 
-                session.getTransaction().commit();
                 if (bean==null) {
                     return new HashMap<String, List<String>>();
                 }
@@ -110,10 +110,8 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
                 return;
             }
 
-            Session session = HibernateUtils.getSession();
+            StatelessSession session = HibernateUtils.getStatelessSession();
             try {
-                session.beginTransaction();
-
                 CatalogBean bean = (CatalogBean)session.createQuery(
                     "select catalog " +
                         "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
@@ -124,8 +122,6 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
                 if (bean!=null) {
                     bean.setMetadata(s);
                 }
-
-                session.getTransaction().commit();
             }
             finally {
                 session.close();
