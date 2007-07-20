@@ -133,17 +133,39 @@ public class PortalIndexerImpl implements PortalIndexer {
         }
     }
 
-    public void indexContent(String url, PortalIndexerParameter parameter) {
+    public void indexContent(PortalIndexerParameter parameter) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( portalClassLoader );
 
             if (log.isDebugEnabled()) {
-                log.debug("Start indexContent(). url: " + url+", title: " + parameter.getTitle());
+                log.debug("Start indexContent(). url: " + parameter.getUrl()+", title: " + parameter.getTitle());
             }
             // create an index called 'index' in a temporary directory
             Directory directory = SearchFactory.getDirectorySearch().getDirectory(siteId);
-            indexContent(directory, url, parameter);
+            indexContent(directory, parameter);
+        }
+        catch (Exception e) {
+            String es = "Error index content";
+            log.error(es, e);
+            throw new PortalSearchException(es, e);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
+    public void indexContent(List<PortalIndexerParameter> parameter) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( portalClassLoader );
+
+            if (log.isDebugEnabled()) {
+                log.debug("Start indexContent(List<PortalIndexerParameter>)");
+            }
+            // create an index called 'index' in a temporary directory
+            Directory directory = SearchFactory.getDirectorySearch().getDirectory(siteId);
+            indexContent(directory, parameter);
         }
         catch (Exception e) {
             String es = "Error index content";
@@ -168,51 +190,57 @@ public class PortalIndexerImpl implements PortalIndexer {
         }
 
         IndexSearcher is = new IndexSearcher(directory);
-        Analyzer analyzer = new StandardAnalyzer();
-        QueryParser parser = new QueryParser(PortalIndexerImpl.CONTENT_FIELD, analyzer);
-        Query query = parser.parse(parameter.getQuery());
-        Hits hits = is.search(query);
-
-        int resultPerPage = (parameter.getResultPerPage() == null ? 20 :
-            (parameter.getResultPerPage() > 200 ? 200 : parameter.getResultPerPage())
-        );
-        int i=(parameter.getStartPage()==null?0:parameter.getStartPage()) * resultPerPage;
-        if (i>=hits.length()) {
-            i = ((hits.length()/resultPerPage)-1)*resultPerPage; 
-        }
-        if (i>=hits.length()) {
-            throw new IllegalStateException("Wrong value of start of counter");
-        }
-        while (i< hits.length()) {
-            Document document = hits.doc(i++);
-
-            if (document.getFields().isEmpty()) {
-                continue;
-            }
-            Field field;
-            field = document.getField(PortalIndexerImpl.URL_FIELD);
-            final String url = field.stringValue();
-
-            field = document.getField(PortalIndexerImpl.TITLE_FIELD);
-            final String title = field.stringValue();
-
-            field = document.getField(PortalIndexerImpl.DESCRIPTION_FIELD);
-            String description="";
-            if (field!=null) {
-                description = field.stringValue();
+        try {
+            Analyzer analyzer = new StandardAnalyzer();
+            QueryParser parser = new QueryParser(PortalIndexerImpl.CONTENT_FIELD, analyzer);
+            Query query = parser.parse(parameter.getQuery());
+            Hits hits = is.search(query);
+            if (hits.length()==0) {
+                return result;
             }
 
-            final float weight=0;
-            
-            result.getResultItems().add(new PortalSearchResultItemImpl( description, title, url, weight));
+            int resultPerPage = (parameter.getResultPerPage() == null ? 20 :
+                (parameter.getResultPerPage() > 200 ? 200 : parameter.getResultPerPage())
+            );
+            int i=(parameter.getStartPage()==null?0:parameter.getStartPage()) * resultPerPage;
+            if (i>=hits.length()) {
+                i = ((hits.length()/resultPerPage)-1)*resultPerPage;
+            }
+            if (i>=hits.length()) {
+                throw new IllegalStateException("Wrong value of start of counter");
+            }
+            while (i< hits.length()) {
+                Document document = hits.doc(i++);
+
+                if (document.getFields().isEmpty()) {
+                    continue;
+                }
+                Field field;
+                field = document.getField(PortalIndexerImpl.URL_FIELD);
+                final String url = field.stringValue();
+
+                field = document.getField(PortalIndexerImpl.TITLE_FIELD);
+                final String title = field.stringValue();
+
+                field = document.getField(PortalIndexerImpl.DESCRIPTION_FIELD);
+                String description="";
+                if (field!=null) {
+                    description = field.stringValue();
+                }
+
+                final float weight=0;
+
+                result.getResultItems().add(new PortalSearchResultItemImpl( description, title, url, weight));
+            }
+
+            return result;
         }
-        is.close();
-
-
-        return result;
+        finally {
+            is.close();
+        }
     }
 
-    static void indexContent(Directory directory, String url, PortalIndexerParameter parameter) throws IOException {
+    static void indexContent(Directory directory, PortalIndexerParameter parameter) throws IOException {
         Analyzer analyzer = new StopAnalyzer();
         IndexWriter writer = new IndexWriter(directory, analyzer, false);
 
@@ -221,7 +249,7 @@ public class PortalIndexerImpl implements PortalIndexer {
         writer.setMaxMergeDocs(MAX_MERGE_DOCS);
 
         Document doc = new Document();
-        doc.add(new Field(URL_FIELD, url, Field.Store.YES, Field.Index.UN_TOKENIZED ));
+        doc.add(new Field(URL_FIELD, parameter.getUrl(), Field.Store.YES, Field.Index.UN_TOKENIZED ));
         if (parameter.getTitle()!=null) {
             doc.add(new Field(TITLE_FIELD, parameter.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
         }
@@ -236,7 +264,40 @@ public class PortalIndexerImpl implements PortalIndexer {
             doc.add(new Field(DESCRIPTION_FIELD, description, Field.Store.YES, Field.Index.UN_TOKENIZED ));
         }
         doc.add(new Field(CONTENT_FIELD, new InputStreamReader(new ByteArrayInputStream(parameter.getContent()))));
-        writer.updateDocument(new Term("url", url), doc);
+        writer.updateDocument(new Term("url", parameter.getUrl()), doc);
+        writer.optimize();
+        writer.flush();
+        writer.close();
+        writer = null;
+    }
+
+    static void indexContent(Directory directory, List<PortalIndexerParameter> parameters) throws IOException {
+        Analyzer analyzer = new StopAnalyzer();
+        IndexWriter writer = new IndexWriter(directory, analyzer, false);
+
+        // set variables that affect speed of indexing
+        writer.setMergeFactor(MERGE_FACTOR);
+        writer.setMaxMergeDocs(MAX_MERGE_DOCS);
+
+        for (PortalIndexerParameter parameter : parameters) {
+            Document doc = new Document();
+            doc.add(new Field(URL_FIELD, parameter.getUrl(), Field.Store.YES, Field.Index.UN_TOKENIZED ));
+            if (parameter.getTitle()!=null) {
+                doc.add(new Field(TITLE_FIELD, parameter.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
+            }
+            if (parameter.getDescription()!=null) {
+                String description;
+                if (parameter.getDescription().length()> PortletIndexerContent.MAX_DESCRIPTION_LENGTH) {
+                    description = parameter.getDescription().substring(0, PortletIndexerContent.MAX_DESCRIPTION_LENGTH);
+                }
+                else {
+                    description = parameter.getDescription();
+                }
+                doc.add(new Field(DESCRIPTION_FIELD, description, Field.Store.YES, Field.Index.UN_TOKENIZED ));
+            }
+            doc.add(new Field(CONTENT_FIELD, new InputStreamReader(new ByteArrayInputStream(parameter.getContent()))));
+            writer.updateDocument(new Term("url", parameter.getUrl()), doc);
+        }
         writer.optimize();
         writer.flush();
         writer.close();

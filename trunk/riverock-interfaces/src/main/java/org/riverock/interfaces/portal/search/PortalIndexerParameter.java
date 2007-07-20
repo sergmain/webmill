@@ -10,6 +10,8 @@ import java.io.Serializable;
  */
 public interface PortalIndexerParameter extends Serializable {
 
+    String getUrl();
+
     String getTitle();
 
     String getDescription();

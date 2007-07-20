@@ -16,7 +16,9 @@ public interface PortalIndexer extends Serializable {
 
     void markAllForIndexing(Long siteId);
 
-    void indexContent(String url, PortalIndexerParameter parameter);
+    void indexContent(PortalIndexerParameter parameter);
+    
+    void indexContent(List<PortalIndexerParameter> parameters);
 
     PortalSearchResult search(PortalSearchParameter parameter);
 }

@@ -39,6 +39,7 @@ public class IndexerAction implements Serializable {
     private static final int MAX_TIME_FOR_OPERATION = MAX_TIME_FOR_OPERATION_IN_MINUTES*60*1000;
 
     private List<PortletIndexerShort> portletIndexerShorts;
+    private static final int BATCH_INDEXING_SIZE = 10;
 
     public IndexerAction() {
     }
@@ -120,8 +121,10 @@ public class IndexerAction implements Serializable {
 
             List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
             log.debug("siteLanguage: " + languages);
-            Map<Long, PortletIndexer> map = new HashMap<Long, PortletIndexer>();
+            Map<Long, PortletIndexer> portletIndexerMap = new HashMap<Long, PortletIndexer>();
             result.add("Count of languages: " + languages.size());
+            List<PortalIndexerParameter> parameters = new ArrayList<PortalIndexerParameter>();
+            PortletIndexer portletIndexer;
             for (SiteLanguage language : languages) {
                 List<CatalogLanguageItem> catalogLanguageItems = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItemList(language.getSiteLanguageId());
                 result.add("Count of catalogs for language '" + language.getCustomLanguage()+"' - "+ catalogLanguageItems.size());
@@ -134,7 +137,7 @@ public class IndexerAction implements Serializable {
                             result.add("Not all contents reindexing. Time limit for operation reached.");
                             return INDEXER_MANAGER;
                         }
-                        PortletIndexer portletIndexer = map.get(catalogItem.getPortletId());
+                        portletIndexer = portletIndexerMap.get(catalogItem.getPortletId());
                         log.debug("  portletIndexer: "+ portletIndexer);
                         if (portletIndexer ==null) {
                             PortletIndexer indexer = portalIndexer.getPortletIndexer(siteId, catalogItem.getPortletId());
@@ -142,7 +145,7 @@ public class IndexerAction implements Serializable {
                                 continue;
                             }
                             portletIndexer = indexer;
-                            map.put(catalogItem.getPortletId(), portletIndexer);
+                            portletIndexerMap.put(catalogItem.getPortletId(), portletIndexer);
                         }
                         log.debug("  result portletIndexer: "+ portletIndexer);
 
@@ -160,7 +163,12 @@ public class IndexerAction implements Serializable {
                         final PortletIndexerContent content = portletIndexer.getContent(catalogItem.getContextId(), m);
                         log.debug("Content from portlet: " + content);
                         if (content!=null && content.getContent()!=null && content.getContent().length>0) {
+                            final String finalUrl = url;
                             PortalIndexerParameter parameter = new PortalIndexerParameter() {
+                                public String getUrl() {
+                                    return finalUrl;
+                                }
+
                                 public String getTitle() {
                                     return catalogItem.getTitle()!=null?catalogItem.getTitle():catalogItem.getKeyMessage();
                                 }
@@ -174,18 +182,44 @@ public class IndexerAction implements Serializable {
                                 }
 
                                 public Map<String, Object> getParameters() {
-                                    return null;
+                                    return new HashMap<String, Object>();
                                 }
                             };
-                            
-                            portalIndexer.indexContent(url, parameter);
-                            portletIndexer.markAsIndexed(catalogItem.getContextId(), m);
+                            parameter.getParameters().put("portletId", catalogItem.getContextId());
+                            parameter.getParameters().put("contectId", catalogItem.getPortletId());
+                            parameter.getParameters().put("meta", m);
+                            parameters.add(parameter);
                         }
                         else {
                             log.debug("Content from portlet is null or empty.");
                         }
+
+                        if (parameters.size()>BATCH_INDEXING_SIZE) {
+                            portalIndexer.indexContent(parameters);
+                            for (PortalIndexerParameter parameter : parameters) {
+                                //noinspection unchecked
+                                portletIndexer = portletIndexerMap.get((Long)parameter.getParameters().get("portletId"));
+                                portletIndexer.markAsIndexed(
+                                    (Long)parameter.getParameters().get("contectId"),
+                                    (Map<String, List<String>>)parameter.getParameters().get("meta")
+                                );
+                            }
+                            parameters.clear();
+                        }
                     }
                 }
+            }
+            if (parameters.size()>BATCH_INDEXING_SIZE) {
+                portalIndexer.indexContent(parameters);
+                for (PortalIndexerParameter parameter : parameters) {
+                    //noinspection unchecked
+                    portletIndexer = portletIndexerMap.get((Long)parameter.getParameters().get("portletId"));
+                    portletIndexer.markAsIndexed(
+                        (Long)parameter.getParameters().get("contectId"),
+                        (Map<String, List<String>>)parameter.getParameters().get("meta")
+                    );
+                }
+                parameters.clear();
             }
             return INDEXER_MANAGER;
         }
