@@ -46,6 +46,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Cache;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.search.PortalIndexer;
@@ -58,6 +61,10 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.search.PortalIndexerImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.utils.HibernateUtils;
+
+import org.hibernate.stat.Statistics;
+import org.hibernate.stat.EntityStatistics;
 
 /**
  * @author smaslyukov
@@ -71,8 +78,10 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private static final String UNKNOWN_PORTAL_VERSON = "0.0.1";
     private static final String WEBMILL_PROPERTIES = "/org/riverock/webmill/portal/webmill.properties";
+
     private static final PortalVersion portalVersion = new PortalVersion( getPortalVersion() );
     private static final String PORTAL_INFO = "WebMill/"+getPortalVersion();
+
     private static String PORTAL_VERSION = null;
     private static final String COPYRIGHT =
         "<!--\n" +
@@ -187,9 +196,9 @@ public class PortalInstanceImpl implements PortalInstance  {
         this.portalIndexer = new PortalIndexerImpl(this.siteId, this.portletContainer, portalClassLoader);
     }
 
-public Long getSiteId() {
-   return siteId;
-}
+    public Long getSiteId() {
+        return siteId;
+    }
 
     private final static Object syncCounter = new Object();
     private static int counterNDC = 0;
@@ -333,6 +342,7 @@ public Long getSiteId() {
                     " total memory " + Runtime.getRuntime().totalMemory() +
                     " max memory " + Runtime.getRuntime().maxMemory()
             );
+            writeCacheStatistics();
         }
         catch (Throwable th) {
             final String es = "Error last step of build page";
@@ -352,6 +362,45 @@ public Long getSiteId() {
                 log.error("Error destroy portalRequestInstance object", e);
             }
             NDC.pop();
+        }
+    }
+
+    private void writeCacheStatistics() {
+        if (log.isDebugEnabled()) {
+            try {
+                log.debug("Get keys for all cache.");
+                CacheManager manager = CacheManager.getInstance();
+                String[] names = manager.getCacheNames();
+                for (String name : names) {
+                    log.debug("    name: " + name);
+                    Cache cache = manager.getCache(name);
+                    List keys = cache.getKeysNoDuplicateCheck();
+                    for (Object key : keys) {
+                        log.debug("        key: " + key.toString());
+                    }
+                }
+
+                Statistics stats = HibernateUtils.getSession().getSessionFactory().getStatistics();
+
+                double queryCacheHitCount  = stats.getQueryCacheHitCount();
+                double queryCacheMissCount = stats.getQueryCacheMissCount();
+                double queryCacheHitRatio = queryCacheHitCount / (queryCacheHitCount + queryCacheMissCount);
+
+                log.debug("Query Hit ratio: " + queryCacheHitRatio);
+
+                names = stats.getEntityNames();
+                for (String name : names) {
+                    EntityStatistics entityStats = stats.getEntityStatistics( name );
+                    long changes =
+                        entityStats.getInsertCount()
+                            + entityStats.getUpdateCount()
+                            + entityStats.getDeleteCount();
+                    log.debug("    "+name+ " changed " + changes + " times" );
+                }
+            }
+            catch(Throwable th) {
+                log.info("Error: " + th);
+            }
         }
     }
 
@@ -461,7 +510,7 @@ public Long getSiteId() {
     }
 
     public static List<String> destroyedPortlet() {
-        //noinspection RedundantCast
+        //noinspection RedundantCast,unchecked
         return (List)Arrays.asList( destroyedPortletName.toArray() );
     }
 

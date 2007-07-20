@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Css;
@@ -55,9 +56,8 @@ public class HibernateCssDaoImpl implements InternalCssDao {
         if (log.isDebugEnabled()) {
             log.debug("Start getCssCurrent() for siteId "+siteId);
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.isCurrent=true and css.siteId = :site_id");
             query.setLong("site_id", siteId);
             CssBean css = (CssBean)query.uniqueResult();
@@ -80,7 +80,6 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return css;
         }
         finally {
@@ -89,9 +88,8 @@ public class HibernateCssDaoImpl implements InternalCssDao {
     }
 
     public List<Css> getCssList(Long siteId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.siteId = :site_id");
             query.setLong("site_id", siteId);
             List<CssBean> cssList = query.list();
@@ -116,7 +114,6 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return (List)cssList;
         }
         finally {
@@ -129,9 +126,8 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             log.debug("Start getCss() for cssId "+cssId);
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery("select css from org.riverock.webmill.main.CssBean as css where css.cssId = :css_id");
             query.setLong("css_id", cssId);
             CssBean css = (CssBean)query.uniqueResult();
@@ -156,7 +152,6 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return css;
         }
         finally {
@@ -193,6 +188,7 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             }
             session.save(bean);
             session.flush();
+            session.clear();
 
             session.getTransaction().commit();
 
@@ -235,6 +231,8 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                     bean.setCssBlob(null);
                 }
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -252,6 +250,8 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                 .setLong("css_id", cssId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -266,6 +266,8 @@ public class HibernateCssDaoImpl implements InternalCssDao {
             session.createQuery("delete org.riverock.webmill.main.CssBean css where css.siteId = :site_id")
                 .setLong("site_id", siteId)
                 .executeUpdate();
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {

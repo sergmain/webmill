@@ -272,13 +272,13 @@
     created programmtically using CacheManager.add(String cacheName)
     -->
     <defaultCache
-            maxElementsInMemory="50000"
+            maxElementsInMemory="1000"
             eternal="true"
             timeToIdleSeconds="1200"
             timeToLiveSeconds="1200"
             overflowToDisk="true"
             diskPersistent="false"
             diskExpiryThreadIntervalSeconds="1200"
-            memoryStoreEvictionPolicy="LRU"
+            memoryStoreEvictionPolicy="LFU"
             />
 </ehcache>

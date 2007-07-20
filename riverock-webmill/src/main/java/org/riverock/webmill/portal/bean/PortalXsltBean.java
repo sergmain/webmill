@@ -37,6 +37,9 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import org.riverock.interfaces.portal.bean.Xslt;
 
 /**
@@ -46,7 +49,6 @@ import org.riverock.interfaces.portal.bean.Xslt;
  */
 @Entity
 @Table(name="WM_PORTAL_XSLT")
-//@Table(name="wm_portal_xslt")
 @TableGenerator(
     name="TABLE_XSLT",
     table="WM_PORTAL_IDS",
@@ -56,6 +58,7 @@ import org.riverock.interfaces.portal.bean.Xslt;
     allocationSize = 1,
     initialValue = 1
 )
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class PortalXsltBean implements Serializable, Xslt {
     private static final long serialVersionUID = 3255005501L;
 

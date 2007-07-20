@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.portal.bean.CatalogBean;
@@ -47,15 +48,13 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
         if (siteId==null) {
             throw new IllegalArgumentException("siteId is null");
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List<SiteLanguageBean> cssList = (List)session.createQuery(
                 "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
                 "where siteLanguage.siteId = :site_id")
                 .setLong("site_id", siteId)
                 .list();
-            session.getTransaction().commit();
             return (List)cssList;
         }
         finally {
@@ -64,15 +63,13 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
     }
 
     public SiteLanguage getSiteLanguage(Long siteLanguageId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
                 "where siteLanguage.siteLanguageId = :site_language_id");
             query.setLong("site_language_id", siteLanguageId);
             SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -81,16 +78,14 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
     }
 
     public SiteLanguage getSiteLanguage(Long siteId, String languageLocale) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select siteLanguage from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
                 "where siteLanguage.siteId = :site_id and siteLanguage.customLanguage = :custom_language ");
             query.setLong("site_id", siteId);
             query.setString("custom_language", languageLocale);
             SiteLanguageBean bean = (SiteLanguageBean)query.uniqueResult();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -105,6 +100,7 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
             SiteLanguageBean bean = new SiteLanguageBean(siteLanguage);
             session.save(bean);
             session.flush();
+            session.clear();
             session.getTransaction().commit();
             return bean.getSiteLanguageId();
         }
@@ -128,6 +124,8 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
                 bean.setNameCustomLanguage(siteLanguage.getNameCustomLanguage());
                 bean.setSiteId(siteLanguage.getSiteId());
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -142,6 +140,8 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
 
             deleteSiteLanguage(session, siteLanguageId);
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -163,6 +163,8 @@ public class HibernateSiteLanguageDaoImpl implements InternalSiteLanguageDao {
                 deleteSiteLanguage(session, bean.getSiteLanguageId());
                 session.delete(bean);
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {

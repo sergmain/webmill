@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-webmill</artifactId>
-            <version>5.7.0</version>
+            <version>5.7.1</version>
         </dependency>
 
         <dependency>

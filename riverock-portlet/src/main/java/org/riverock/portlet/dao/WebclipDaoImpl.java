@@ -34,6 +34,7 @@ import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.portlet.tools.HibernateUtils;
@@ -66,9 +67,8 @@ public class WebclipDaoImpl implements WebclipDao {
         if (webclipId==null || siteId==null) {
             return null;
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelSession();
         try {
-            session.beginTransaction();
             WebclipBean bean = (WebclipBean)session.createQuery(
                 "select bean from org.riverock.portlet.webclip.WebclipBean as bean " +
                     "where bean.webclipId = :webclipId and bean.siteId=:siteId")
@@ -95,7 +95,7 @@ public class WebclipDaoImpl implements WebclipDao {
                     }
                 }
             }
-            session.getTransaction().commit();
+
             return bean;
         }
         finally {
@@ -108,15 +108,14 @@ public class WebclipDaoImpl implements WebclipDao {
         if (siteId==null) {
             return new ArrayList<Long>(0);
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelSession();
         try {
-            session.beginTransaction();
             List<Long> ids = session.createQuery(
                 "select bean.webclipId from org.riverock.portlet.webclip.WebclipBean as bean " +
                     "where bean.siteId=:siteId")
                 .setLong("siteId", siteId)
                 .list();
-            session.getTransaction().commit();
+
             return ids;
         }
         finally {
@@ -127,7 +126,6 @@ public class WebclipDaoImpl implements WebclipDao {
     public Long createWebclip(Long siteId) {
 
         Session session = HibernateUtils.getSession();
-
         try {
             session.beginTransaction();
 
@@ -138,8 +136,9 @@ public class WebclipDaoImpl implements WebclipDao {
             bean.setProcessContent(false);
 
             session.save(bean);
-            session.flush();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
 
             return bean.getWebclipId();
@@ -151,7 +150,6 @@ public class WebclipDaoImpl implements WebclipDao {
 
     public void updateWebclip(WebclipBean webclip, String resultContent) {
         Session session = HibernateUtils.getSession();
-
         try {
             session.beginTransaction();
 
@@ -179,6 +177,9 @@ public class WebclipDaoImpl implements WebclipDao {
                 }
                 bean.setProcessContent(false);
             }
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -188,21 +189,28 @@ public class WebclipDaoImpl implements WebclipDao {
 
     public void setOriginContent(WebclipBean webclip, byte[] bytes) {
         Session session = HibernateUtils.getSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        WebclipBean bean = (WebclipBean)session.createQuery(
-            "select bean from org.riverock.portlet.webclip.WebclipBean as bean " +
-                "where bean.webclipId = :webclipId and bean.siteId=:siteId")
-            .setLong("webclipId", webclip.getWebclipId())
-            .setLong("siteId", webclip.getSiteId())
-            .uniqueResult();
-        if (bean!=null) {
-            bean.setZipOriginContent( Hibernate.createBlob(bytes) );
-            bean.setLoadContent(false);
-            bean.setProcessContent(true);
+            WebclipBean bean = (WebclipBean)session.createQuery(
+                "select bean from org.riverock.portlet.webclip.WebclipBean as bean " +
+                    "where bean.webclipId = :webclipId and bean.siteId=:siteId")
+                .setLong("webclipId", webclip.getWebclipId())
+                .setLong("siteId", webclip.getSiteId())
+                .uniqueResult();
+            if (bean!=null) {
+                bean.setZipOriginContent( Hibernate.createBlob(bytes) );
+                bean.setLoadContent(false);
+                bean.setProcessContent(true);
+            }
+
+            session.flush();
+            session.clear();
+            session.getTransaction().commit();
         }
-        session.getTransaction().commit();
-        session.close();
+        finally {
+            session.close();
+        }
     }
 
     public void deleteWebclip(Long siteId, Long weblipId) {
@@ -211,7 +219,6 @@ public class WebclipDaoImpl implements WebclipDao {
         }
 
         Session session = HibernateUtils.getSession();
-
         try {
             session.beginTransaction();
 
@@ -222,6 +229,8 @@ public class WebclipDaoImpl implements WebclipDao {
                 .setLong("siteId", siteId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -231,7 +240,6 @@ public class WebclipDaoImpl implements WebclipDao {
 
     public void markAllForReload(Long siteId) {
         Session session = HibernateUtils.getSession();
-
         try {
             session.beginTransaction();
             session.createQuery(
@@ -240,6 +248,8 @@ public class WebclipDaoImpl implements WebclipDao {
                 .setLong("siteId", siteId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -257,6 +267,8 @@ public class WebclipDaoImpl implements WebclipDao {
                 .setLong("siteId", siteId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -265,9 +277,8 @@ public class WebclipDaoImpl implements WebclipDao {
     }
 
     public WebclipStatisticBean getStatistic(Long siteId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelSession();
         try {
-            session.beginTransaction();
             WebclipStatisticBean stat = new WebclipStatisticBean();
             stat.setTotalCount( getTotalCount(siteId, session) ); 
             stat.setForReloadCount(
@@ -286,7 +297,6 @@ public class WebclipDaoImpl implements WebclipDao {
                     .setLong("siteId", siteId)
                     .uniqueResult()
             );
-            session.getTransaction().commit();
             return stat;
         }
         finally {
@@ -295,11 +305,9 @@ public class WebclipDaoImpl implements WebclipDao {
     }
 
     public long getTotalCount(Long siteId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelSession();
         try {
-            session.beginTransaction();
             Long count = getTotalCount(siteId, session);
-            session.getTransaction().commit();
             return count;
         }
         finally {
@@ -307,7 +315,7 @@ public class WebclipDaoImpl implements WebclipDao {
         }
     }
 
-    private long getTotalCount(Long siteId, Session session) {
+    private long getTotalCount(Long siteId, StatelessSession session) {
         return (Long)session.createQuery(
             "select count(*) " +
                 "from org.riverock.portlet.webclip.WebclipBean as bean " +
@@ -317,9 +325,8 @@ public class WebclipDaoImpl implements WebclipDao {
     }
 
     public long getNotIndexedCount(Long siteId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelSession();
         try {
-            session.beginTransaction();
             Long l = (Long)session.createQuery(
                 "select count(*) " +
                     "from org.riverock.portlet.webclip.WebclipBean as bean " +
@@ -327,7 +334,6 @@ public class WebclipDaoImpl implements WebclipDao {
                 .setLong("siteId", siteId)
                 .uniqueResult();
 
-            session.getTransaction().commit();
             return l;
         }
         finally {
@@ -346,6 +352,8 @@ public class WebclipDaoImpl implements WebclipDao {
                 .setLong("webclipId", webclipId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -363,6 +371,8 @@ public class WebclipDaoImpl implements WebclipDao {
                 .setLong("siteId", siteId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -371,12 +381,11 @@ public class WebclipDaoImpl implements WebclipDao {
     }
 
     public WebclipBean getFirstForIndexing(Long siteId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelSession();
         try {
-            session.beginTransaction();
             WebclipBean bean = (WebclipBean)session.createQuery(
                 "select bean from org.riverock.portlet.webclip.WebclipBean as bean " +
-                    "where bean.webclipId = :webclipId and bean.siteId=:siteId")
+                    "where bean.siteId=:siteId and bean.indexed=false")
                 .setLong("siteId", siteId)
                 .setFirstResult(1)
                 .uniqueResult();
@@ -398,7 +407,6 @@ public class WebclipDaoImpl implements WebclipDao {
                     }
                 }
             }
-            session.getTransaction().commit();
             return bean;
         }
         finally {

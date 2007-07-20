@@ -57,6 +57,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
     allocationSize = 1,
     initialValue = 1
 )
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class WebclipBean implements Serializable {
 
     @Id
@@ -68,7 +69,7 @@ public class WebclipBean implements Serializable {
     private Long siteId;
 
     @Column(name="ZIP_ORIGIN_CONTENT")
-    @Cache(usage = CacheConcurrencyStrategy.NONE)
+//    @Cache(usage = CacheConcurrencyStrategy.NONE)
     private Blob zipOriginContent;
 
     @Column(name="WEBCLIP_BLOB")

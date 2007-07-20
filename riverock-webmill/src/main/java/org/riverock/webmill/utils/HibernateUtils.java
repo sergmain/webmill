@@ -27,6 +27,7 @@ package org.riverock.webmill.utils;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.HibernateException;
+import org.hibernate.StatelessSession;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.portal.bean.*;
@@ -111,9 +112,11 @@ public class HibernateUtils {
                 .setProperty("hibernate.transaction.factory_class", org.hibernate.transaction.JDBCTransactionFactory.class.getName() )
                 .setProperty("hibernate.current_session_context_class", "thread" )
                 .setProperty("hibernate.transaction.flush_before_completion", "false" )
-                .setProperty("hibernate.cache.provider_class", org.hibernate.cache.EhCacheProvider.class.getName() )
+                .setProperty("hibernate.cache.provider_class", net.sf.ehcache.hibernate.EhCacheProvider.class.getName() )
+                .setProperty("net.sf.ehcache.configurationResourceName", "/ehcache.xml" )
                 .setProperty("hibernate.connection.datasource", "java:comp/env/jdbc/webmill")
             ;
+
             setAnnotatedClasses(cfg);
             sessionFactory = cfg.buildSessionFactory();
 
@@ -136,6 +139,12 @@ public class HibernateUtils {
         return sessionFactory.openSession();
     }
 
+    public static StatelessSession getStatelessSession() throws HibernateException {
+        if (sessionFactory==null) {
+            prepareSession();
+        }
+        return sessionFactory.openStatelessSession();
+    }
 
     public static void setSessionFactory(SessionFactory sessionFactory) {
         HibernateUtils.sessionFactory = sessionFactory;

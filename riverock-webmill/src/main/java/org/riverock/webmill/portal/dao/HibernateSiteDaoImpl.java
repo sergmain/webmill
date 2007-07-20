@@ -29,6 +29,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
@@ -47,12 +48,10 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
     private final static Logger log = Logger.getLogger(HibernateSiteDaoImpl.class);
 
     public List<Site> getSites() {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery("select site from org.riverock.webmill.portal.bean.SiteBean as site");
             List<SiteBean> siteList = query.list();
-            session.getTransaction().commit();
             return (List)siteList;
         }
         finally {
@@ -61,15 +60,13 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
     }
 
     public List<Site> getSites(AuthSession authSession) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List siteList = session.createQuery(
                 "select site from org.riverock.webmill.portal.bean.SiteBean as site " +
                     "where site.companyId in (:companyIds)")
                 .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
                 .list();
-            session.getTransaction().commit();
             return (List)siteList;
         }
         finally {
@@ -78,15 +75,13 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
     }
 
     public Site getSite(Long siteId) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select site from org.riverock.webmill.portal.bean.SiteBean as site " +
                 "where site.siteId = :site_id");
             query.setLong("site_id", siteId);
             SiteBean site = (SiteBean)query.uniqueResult();
-            session.getTransaction().commit();
             return site;
         }
         finally {
@@ -95,15 +90,13 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
     }
 
     public Site getSite(String siteName) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             Query query = session.createQuery(
                 "select site from org.riverock.webmill.portal.bean.SiteBean as site " +
                 "where site.siteName = :site_name");
             query.setString("site_name", siteName);
             SiteBean site = (SiteBean)query.uniqueResult();
-            session.getTransaction().commit();
             return site;
         }
         finally {
@@ -141,6 +134,7 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             }
 
             session.flush();
+            session.clear();
             session.getTransaction().commit();
             return siteBean.getSiteId();
         }
@@ -224,6 +218,8 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                     }
                 }
             }
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -347,6 +343,8 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                 .setLong("site_id", siteId)
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {

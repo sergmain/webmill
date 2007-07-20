@@ -34,6 +34,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 
 /**
@@ -44,7 +47,6 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
  */
 @Entity
 @Table(name="WM_PORTAL_CATALOG_LANGUAGE")
-//@Table(name="wm_portal_catalog_language")
 @TableGenerator(
     name="TABLE_PORTAL_CATALOG_LANGUAGE",
     table="WM_PORTAL_IDS",
@@ -54,6 +56,7 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
     allocationSize = 1,
     initialValue = 1
 )
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class CatalogLanguageBean implements Serializable, CatalogLanguageItem {
     private static final long serialVersionUID = 1057005507L;
 

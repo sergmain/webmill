@@ -27,6 +27,7 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -45,15 +46,13 @@ import org.riverock.webmill.utils.HibernateUtils;
 public class HibernateCompanyDaoImpl implements InternalCompanyDao {
 
     public Company getCompany( String companyName ) {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             CompanyBean bean = (CompanyBean)session.createQuery(
                 "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
                 "where  company.name=:companyName ")
                 .setString("companyName", companyName)
                 .uniqueResult();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -66,16 +65,14 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             CompanyBean bean = (CompanyBean)session.createQuery(
                 "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
                 "where  company.isDeleted=false and company.id=:companyid and company.id in (:companyIds)")
                 .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
                 .setLong("companyid", companyId)
                 .uniqueResult();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -87,15 +84,13 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
         if (authSession==null) {
             return null;
         }
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List bean = session.createQuery(
                 "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
                 "where  company.isDeleted=false and company.id in (:companyIds)")
                 .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
                 .list();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -108,14 +103,12 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
      * @return list of company
      */
     public List<Company> getCompanyList_notRestricted() {
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             List bean = session.createQuery(
                 "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
                 "where  company.isDeleted=false")
                 .list();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -133,15 +126,13 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
             return null;
         }
 
-        Session session = HibernateUtils.getSession();
+        StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            session.beginTransaction();
             CompanyBean bean = (CompanyBean)session.createQuery(
                 "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
                 "where  company.isDeleted=false and company.id=:companyid ")
                 .setLong("companyid", companyId)
                 .uniqueResult();
-            session.getTransaction().commit();
             return bean;
         }
         finally {
@@ -181,6 +172,8 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
             bean.setInfo(company.getInfo());
             bean.setDeleted(company.isDeleted());
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -206,6 +199,9 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
                 "where  company.companyId=:companyId")
                 .setLong("companyId", company.getId())
                 .executeUpdate();
+
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -228,6 +224,7 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
             }
 
             session.flush();
+            session.clear();
             session.getTransaction().commit();
             return bean.getId();
         }
@@ -267,6 +264,7 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
             }
 
             session.flush();
+            session.clear();
             session.getTransaction().commit();
             return bean.getId();
         }
@@ -304,6 +302,8 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
             company.setInfo(companyBean.getInfo());
             company.setDeleted(companyBean.isDeleted());
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
@@ -328,6 +328,8 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
                 .setLong("companyId", companyBean.getId())
                 .executeUpdate();
 
+            session.flush();
+            session.clear();
             session.getTransaction().commit();
         }
         finally {
