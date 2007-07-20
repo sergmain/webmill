@@ -3,6 +3,8 @@ package org.riverock.webmill.portal.search;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.document.Document;
@@ -29,15 +31,17 @@ import org.riverock.interfaces.portal.search.PortalSearchResultItem;
 public class TestPortalIndexer extends TestCase {
 
     private File lucenePath;
-    private static final String PAGE_ABOUT_TEST_URL = "/page/about/test";
+    private static final String PAGE_ABOUT_TEST_URL_1 = "/page/about/test-1";
     private static final String TITLE_1 = "#1 title òåñò ÈÈÈ test";
     private static final String DESCRIPTION_1 = "#1 description desc";
     private static final String CONTENT_1 = "#1 content abc qwe 123 proba";
 
+    private static final String PAGE_ABOUT_TEST_URL_2 = "/page/about/test-2";
     private static final String TITLE_2 = "#2 java sql oracle";
     private static final String DESCRIPTION_2 = "#2 java sql oracle";
     private static final String CONTENT_2 = "#2 proba j2ee sql oracle SOA";
     private static final long SITE_ID = 20L;
+    private static final String TRASH_QUERY = "ksdfhksdjfhksjd";
 
     protected void setUp() throws java.lang.Exception {
         System.out.println("Start setUp()");
@@ -110,32 +114,89 @@ public class TestPortalIndexer extends TestCase {
         return search;
     }
 
-    public void testInsertContent() throws Exception {
+    public void testSearchNonExistingText() throws Exception {
         DirectorySearchImpl search = initDirectorySearch();
-
         Directory directory = prepareDirecotry(search, SITE_ID);
 
-        PortalIndexerParameter parameter;
-        parameter = new PortalIndexerParameter() {
+        PortalSearchParameter p = new PortalSearchParameter() {
+            public String getQuery() {
+                return TRASH_QUERY;
+            }
+
+            public Integer getResultPerPage() {
+                return null;
+            }
+
+            public Integer getStartPage() {
+                return null;
+            }
+        };
+
+        PortalSearchResult r = PortalIndexerImpl.search(directory, p);
+        assertNotNull(r);
+        assertEquals(0, r.getResultItems().size());
+
+    }
+
+    public void testBatchIndexing() throws Exception {
+        DirectorySearchImpl search = initDirectorySearch();
+        Directory directory = prepareDirecotry(search, SITE_ID);
+
+        List<PortalIndexerParameter> parameters = new ArrayList<PortalIndexerParameter>();
+        PortalIndexerParameter p1 =  new PortalIndexerParameter() {
+            public String getUrl() { return PAGE_ABOUT_TEST_URL_1; }
             public String getTitle() { return TITLE_1; }
             public String getDescription() { return DESCRIPTION_1; }
             public byte[] getContent() { return CONTENT_1.getBytes(); }
             public Map<String, Object> getParameters() { return null; }
         };
-        PortalIndexerImpl.indexContent(directory, PAGE_ABOUT_TEST_URL, parameter);
-        searchDocumentInTitle(directory, "test", parameter, PAGE_ABOUT_TEST_URL);
-        searchDocumentInContent(directory, "qwe", parameter, PAGE_ABOUT_TEST_URL);
-
-        // test of rewriteing content for specific URL
-        parameter = new PortalIndexerParameter() {
+        PortalIndexerParameter  p2 = new PortalIndexerParameter() {
+            public String getUrl() { return PAGE_ABOUT_TEST_URL_2; }
             public String getTitle() { return TITLE_2; }
             public String getDescription() { return DESCRIPTION_2; }
             public byte[] getContent() { return CONTENT_2.getBytes(); }
             public Map<String, Object> getParameters() { return null; }
         };
-        PortalIndexerImpl.indexContent(directory, PAGE_ABOUT_TEST_URL, parameter);
-        searchDocumentInTitle(directory, "java", parameter, PAGE_ABOUT_TEST_URL);
-        searchDocumentInContent(directory, "SOA", parameter, PAGE_ABOUT_TEST_URL);
+
+        parameters.add(p1);
+        parameters.add(p2);
+        PortalIndexerImpl.indexContent(directory, parameters);
+
+        searchDocumentInTitle(directory, "test", p1);
+        searchDocumentInContent(directory, "qwe", p1);
+        searchDocumentInTitle(directory, "java", p2);
+        searchDocumentInContent(directory, "SOA", p2);
+
+        directory.close();
+    }
+
+    public void testInsertContent() throws Exception {
+        DirectorySearchImpl search = initDirectorySearch();
+        Directory directory = prepareDirecotry(search, SITE_ID);
+
+        PortalIndexerParameter parameter;
+        parameter = new PortalIndexerParameter() {
+            public String getUrl() { return PAGE_ABOUT_TEST_URL_1; }
+            public String getTitle() { return TITLE_1; }
+            public String getDescription() { return DESCRIPTION_1; }
+            public byte[] getContent() { return CONTENT_1.getBytes(); }
+            public Map<String, Object> getParameters() { return null; }
+        };
+        PortalIndexerImpl.indexContent(directory, parameter);
+        searchDocumentInTitle(directory, "test", parameter);
+        searchDocumentInContent(directory, "qwe", parameter);
+
+        // test of rewriteing content for specific URL
+        parameter = new PortalIndexerParameter() {
+            public String getUrl() { return PAGE_ABOUT_TEST_URL_1; }
+            public String getTitle() { return TITLE_2; }
+            public String getDescription() { return DESCRIPTION_2; }
+            public byte[] getContent() { return CONTENT_2.getBytes(); }
+            public Map<String, Object> getParameters() { return null; }
+        };
+        PortalIndexerImpl.indexContent(directory, parameter);
+        searchDocumentInTitle(directory, "java", parameter);
+        searchDocumentInContent(directory, "SOA", parameter);
 
 
         directory.close();
@@ -162,17 +223,17 @@ public class TestPortalIndexer extends TestCase {
     }
 */
 
-    private void searchDocumentInTitle(Directory luceneDirectory, String subTitle, PortalIndexerParameter parameter, String url) throws Exception {
+    private void searchDocumentInTitle(Directory luceneDirectory, String subTitle, PortalIndexerParameter parameter) throws Exception {
         IndexSearcher is = new IndexSearcher(luceneDirectory);
         Analyzer analyzer = new StandardAnalyzer();
         QueryParser parser = new QueryParser(PortalIndexerImpl.TITLE_FIELD, analyzer);
         Query query = parser.parse(subTitle);
         Hits hits = is.search(query);
-        validateResultOfSearch(hits, parameter, url);
+        validateResultOfSearch(hits, parameter);
         is.close();
     }
 
-    private void validateResultOfSearch(Hits hits, PortalIndexerParameter parameter, String url) throws IOException {
+    private void validateResultOfSearch(Hits hits, PortalIndexerParameter parameter) throws IOException {
         assertTrue(hits.length()==1);
 
         Document document = hits.doc(0);
@@ -181,7 +242,7 @@ public class TestPortalIndexer extends TestCase {
 
         field = document.getField(PortalIndexerImpl.URL_FIELD);
         assertNotNull(field);
-        assertEquals(field.stringValue(), url);
+        assertEquals(field.stringValue(), parameter.getUrl());
 
         field = document.getField(PortalIndexerImpl.DESCRIPTION_FIELD);
         assertNotNull(field);
@@ -192,7 +253,7 @@ public class TestPortalIndexer extends TestCase {
         assertEquals(field.stringValue(), parameter.getTitle());
     }
 
-    private void searchDocumentInContent(Directory luceneDirectory, final String substring, PortalIndexerParameter parameter, String url) throws Exception {
+    private void searchDocumentInContent(Directory luceneDirectory, final String substring, PortalIndexerParameter parameter) throws Exception {
         PortalSearchParameter p = new PortalSearchParameter() {
             public String getQuery() {
                 return substring;
@@ -212,7 +273,7 @@ public class TestPortalIndexer extends TestCase {
 
         PortalSearchResultItem i = r.getResultItems().get(0);
         assertNotNull(i);
-        assertEquals(i.getUrl(), url);
+        assertEquals(i.getUrl(), parameter.getUrl());
         assertEquals(i.getDescription(), parameter.getDescription());
         assertEquals(i.getTitle(), parameter.getTitle());
     }
