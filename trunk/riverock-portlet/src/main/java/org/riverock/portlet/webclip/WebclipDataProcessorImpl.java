@@ -138,6 +138,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "messagebox linkless metadata plainlinks"), //
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "boilerplate"), //
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "boilerplate metadata"), //
+        new ExcludeElement(DIV_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "notice metadata plainlinks"), //
 
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "administrator"), //  admin message about this page
         new ExcludeElement(DIV_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "contentSub"), //  '(Redirected from Maybach 62S)' msg
