@@ -40,6 +40,9 @@ public class IndexerAction implements Serializable {
 
     private List<PortletIndexerShort> portletIndexerShorts;
     private static final int BATCH_INDEXING_SIZE = 10;
+    private static final String CONTEXT_ID = "contectId";
+    private static final String PORTLET_ID = "portletId";
+    private static final String META = "meta";
 
     public IndexerAction() {
     }
@@ -123,7 +126,8 @@ public class IndexerAction implements Serializable {
             log.debug("siteLanguage: " + languages);
             Map<Long, PortletIndexer> portletIndexerMap = new HashMap<Long, PortletIndexer>();
             result.add("Count of languages: " + languages.size());
-            List<PortalIndexerParameter> parameters = new ArrayList<PortalIndexerParameter>();
+            List<PortalIndexerParameter> indexerParameters = new ArrayList<PortalIndexerParameter>();
+            List<Map<Object, Object>> localParams = new ArrayList<Map<Object, Object>>();
             PortletIndexer portletIndexer;
             for (SiteLanguage language : languages) {
                 List<CatalogLanguageItem> catalogLanguageItems = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItemList(language.getSiteLanguageId());
@@ -185,42 +189,32 @@ public class IndexerAction implements Serializable {
                                     return new HashMap<String, Object>();
                                 }
                             };
-                            parameter.getParameters().put("portletId", catalogItem.getContextId());
-                            parameter.getParameters().put("contectId", catalogItem.getPortletId());
-                            parameter.getParameters().put("meta", m);
-                            parameters.add(parameter);
+                            if (log.isDebugEnabled()) {
+                                log.debug("contextId: " + catalogItem.getContextId());
+                                log.debug("portletId: " + catalogItem.getPortletId());
+                                log.debug("meta: " + m);
+                                log.debug("portletIndexer: " + portletIndexer);
+                                log.debug("portletIndexerMap: " + portletIndexerMap);
+                            }
+                            Map<Object, Object> map = new HashMap<Object, Object>();
+                            if (catalogItem.getContextId()!=null) {
+                                map.put(CONTEXT_ID, catalogItem.getContextId());
+                            }
+                            map.put(PORTLET_ID, catalogItem.getPortletId());
+                            map.put(META, m);
+                            localParams.add(map);
+
+                            indexerParameters.add(parameter);
                         }
                         else {
                             log.debug("Content from portlet is null or empty.");
                         }
 
-                        if (parameters.size()>BATCH_INDEXING_SIZE) {
-                            portalIndexer.indexContent(parameters);
-                            for (PortalIndexerParameter parameter : parameters) {
-                                //noinspection unchecked
-                                portletIndexer = portletIndexerMap.get((Long)parameter.getParameters().get("portletId"));
-                                portletIndexer.markAsIndexed(
-                                    (Long)parameter.getParameters().get("contectId"),
-                                    (Map<String, List<String>>)parameter.getParameters().get("meta")
-                                );
-                            }
-                            parameters.clear();
-                        }
+                        indexContent(localParams, portalIndexer, indexerParameters, portletIndexerMap);
                     }
                 }
             }
-            if (parameters.size()>BATCH_INDEXING_SIZE) {
-                portalIndexer.indexContent(parameters);
-                for (PortalIndexerParameter parameter : parameters) {
-                    //noinspection unchecked
-                    portletIndexer = portletIndexerMap.get((Long)parameter.getParameters().get("portletId"));
-                    portletIndexer.markAsIndexed(
-                        (Long)parameter.getParameters().get("contectId"),
-                        (Map<String, List<String>>)parameter.getParameters().get("meta")
-                    );
-                }
-                parameters.clear();
-            }
+            indexContent(localParams, portalIndexer, indexerParameters, portletIndexerMap);
             return INDEXER_MANAGER;
         }
         finally {
@@ -234,6 +228,33 @@ public class IndexerAction implements Serializable {
             result.add("Left count of webclips for reloading: " + statisticBean.getForReloadCount());
             result.add("Left count of webclips for processing: " + statisticBean.getForProcessCount());
 */
+        }
+    }
+
+    private static void indexContent(List<Map<Object, Object>> localParams, PortalIndexer portalIndexer, List<PortalIndexerParameter> indexerParameters, Map<Long, PortletIndexer> portletIndexerMap) {
+        if (localParams.size()>BATCH_INDEXING_SIZE) {
+            portalIndexer.indexContent(indexerParameters);
+            for (Map<Object, Object> parameter : localParams) {
+
+                Long portletId = (Long) parameter.get(PORTLET_ID);
+                Long contextId = (Long) parameter.get(CONTEXT_ID);
+                //noinspection unchecked
+                Map<String, List<String>> meta = (Map<String, List<String>>) parameter.get(META);
+
+                PortletIndexer portletIndexer = portletIndexerMap.get(portletId);
+
+                if (log.isDebugEnabled()) {
+                    log.debug("contextId: " + contextId);
+                    log.debug("portletId: " + portletId);
+                    log.debug("meta: " + meta);
+                    log.debug("portletIndexer: " + portletIndexer);
+                    log.debug("portletIndexerMap: " + portletIndexerMap);
+                }
+
+                portletIndexer.markAsIndexed(contextId, meta);
+                parameter.clear();
+            }
+            localParams.clear();
         }
     }
 
