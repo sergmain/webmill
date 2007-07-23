@@ -21,6 +21,7 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.LockObtainFailedException;
 
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.bean.PortletName;
@@ -273,7 +274,13 @@ public class PortalIndexerImpl implements PortalIndexer {
 
     static void indexContent(Directory directory, List<PortalIndexerParameter> parameters) throws IOException {
         Analyzer analyzer = new StopAnalyzer();
-        IndexWriter writer = new IndexWriter(directory, analyzer, false);
+        IndexWriter writer;
+        try {
+            writer = new IndexWriter(directory, analyzer, false);
+        }
+        catch (LockObtainFailedException e) {
+            throw e;
+        }
 
         // set variables that affect speed of indexing
         writer.setMergeFactor(MERGE_FACTOR);

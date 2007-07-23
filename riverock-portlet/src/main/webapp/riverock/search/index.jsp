@@ -51,12 +51,12 @@
 <fmt:setBundle basename="org.riverock.portlet.resource.Search" scope="request"/>
 
 <div id="query-form">
-    <table border="0">
+    <table cellpadding="0" cellspacing="0">
         <portlet:renderURL var="portletUrl"/>
         <form method="GET" action="<c:out value='${portletUrl}'/>">
             <tr>
-                <td width="50%"><input type="text" name="query" size="50" value="<c:out value='${query}'/>"></td>
-                <td><input style="width:150px;" type="submit" value="<fmt:message key='search_button'/>" ></td>
+                <td id="input-text-cell" class="input-text-cell"><input class="input-text" type="text" name="query" value="<c:out value='${query}'/>"></td>
+                <td id="input-button-cell" class="input-button-cell"><input class="input-button" type="submit" value="<fmt:message key='search_button'/>" ></td>
             </tr>
         </form>
     </table>
