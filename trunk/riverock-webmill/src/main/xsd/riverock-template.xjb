@@ -4,12 +4,12 @@
 
 	<jaxb:bindings schemaLocation="riverock-template.xsd" node="/xs:schema">
 		<jaxb:schemaBindings>
-			<jaxb:package name="org.riverock.webmill.schema.template"/>
+			<jaxb:package name="org.riverock.webmill.template.schema"/>
 		</jaxb:schemaBindings>
 	</jaxb:bindings>
 	<jaxb:bindings schemaLocation="riverock-template-page-elements.xsd" node="/xs:schema">
 		<jaxb:schemaBindings>
-			<jaxb:package name="org.riverock.webmill.schema.template.elements"/>
+			<jaxb:package name="org.riverock.webmill.template.schema.elements"/>
 		</jaxb:schemaBindings>
 	</jaxb:bindings>
 
