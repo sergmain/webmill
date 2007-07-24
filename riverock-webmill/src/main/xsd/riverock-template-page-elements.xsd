@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Serg (Ru-Board) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" targetNamespace="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="dynamicType"/>
+	<xs:complexType name="customType">
+		<xs:attribute name="value" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="portletType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="parameter" type="element:parameterType"/>
+		</xs:sequence>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+		<xs:attribute name="code" type="xs:string"/>
+		<xs:attribute name="xmlRoot" type="xs:string"/>
+		<xs:attribute name="role" type="xs:string"/>
+	</xs:complexType>
+	<xs:element name="dynamic" type="element:dynamicType"/>
+	<xs:element name="custom" type="element:customType"/>
+	<xs:element name="portlet" type="element:portletType"/>
+	<xs:complexType name="parameterType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+	</xs:complexType>
+</xs:schema>

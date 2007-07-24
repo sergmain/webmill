@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Serg (Ru-Board) -->
 <xsd:schema xmlns:j2ee="http://java.sun.com/xml/ns/j2ee" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://java.sun.com/xml/ns/j2ee" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.4">
 	<xsd:annotation>
 		<xsd:documentation>

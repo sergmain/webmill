@@ -67,7 +67,7 @@
         <c:forEach items="${result.resultItems}" var="item">
             <div id="result-item">
                 <div id="result-item-title">
-                    <b><a href='<c:out value="${item.url}"/>'><c:out value="${item.title}"/></a></b>
+                    <a href='<c:out value="${item.url}"/>'><c:out value="${item.title}"/></a>
                 </div>
                 <div id="result-item-desc">
                     <c:out value="${item.description}"/>
