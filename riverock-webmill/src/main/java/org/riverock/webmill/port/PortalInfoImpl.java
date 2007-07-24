@@ -38,7 +38,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
@@ -49,7 +48,7 @@ import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.utils.SiteList;
-import org.riverock.webmill.site.PortalTemplateManagerImpl;
+import org.riverock.webmill.template.PortalTemplateManagerImpl;
 
 /**
  * $Id$
