@@ -54,7 +54,7 @@
 	<ArticlePara>org.riverock.webmill.main - константы и загрузка файлов на сервер</ArticlePara>
 	<ArticlePara>org.riverock.webmill.port - пакет, содержащий служебные классы для портала webmill</ArticlePara>
 	<ArticlePara>org.riverock.webmill.portlet - портлет контейнер</ArticlePara>
-	<ArticlePara>org.riverock.webmill.site - информация о сайте, на котором выполняется webmill</ArticlePara>
+	<ArticlePara>org.riverock.webmill.template - информация о сайте, на котором выполняется webmill</ArticlePara>
 	<ArticlePara>org.riverock.webmill.system - работа со стректурой БД.</ArticlePara>
 	<ArticlePara>org.riverock.webmill.tools - набор инструментальных классов</ArticlePara>
 	<ArticlePara>org.riverock.webmill.utils - набор инструментальных классов</ArticlePara>
