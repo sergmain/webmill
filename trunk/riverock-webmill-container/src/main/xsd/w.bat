@@ -1,1 +1,1 @@
-C:\opt2\jaxb-ri-20070122\bin\xjc.bat web-app_2_4.xsd -p org.riverock.webmill.container.definition.web_xml_v2_4 -d ../java
+C:\opt2\jaxb-ri-20070711\bin\xjc.bat web-app_2_4.xsd -p org.riverock.webmill.container.definition.web_xml_v2_4 -d ../java
