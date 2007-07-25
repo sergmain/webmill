@@ -6,8 +6,8 @@ Webmill portal/portlet container dependencies:
 
 	activation-1.1.jar
 	mail-1.4.jar
-	jaxb-api-2.0.2.jar
-	jaxb-impl-2.0.2.jar
+	jaxb-api-2.0.jar
+	jaxb-impl-2.0.5.jar
 	jsr173_1.0_api.jar
 	portlet-1.0.jar
 	riverock-interfaces-1.1.jar

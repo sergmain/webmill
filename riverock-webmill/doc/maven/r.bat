@@ -1,0 +1,1 @@
+mvn deploy:deploy-file -DgroupId=com.sun.xml.bind -DartifactId=jaxb-impl -Dversion=2.0.5 -Dpackaging=jar -Dfile=jaxb-impl-2.0.5.jar -Durl=scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/repo -DrepositoryId=riverock-repository
