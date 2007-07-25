@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Serg (Ru-Board) -->
 <jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
 
-	<jaxb:bindings schemaLocation="riverock-template.xsd" node="/xs:schema">
-		<jaxb:schemaBindings>
-			<jaxb:package name="org.riverock.webmill.template.schema"/>
-		</jaxb:schemaBindings>
-	</jaxb:bindings>
-	<jaxb:bindings schemaLocation="riverock-template-page-elements.xsd" node="/xs:schema">
-		<jaxb:schemaBindings>
-			<jaxb:package name="org.riverock.webmill.template.schema.elements"/>
-		</jaxb:schemaBindings>
-	</jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="riverock-template-page-elements.xsd" node="//xs:element[@name='parameter']">
+      <jaxb:class name="ElementParameter"/>
+      <jaxb:property name="elementParameter"/>
+    </jaxb:bindings>
+
 
     <jaxb:bindings schemaLocation="riverock-template.xsd" node="//xs:element[@name='html']">
       <jaxb:bindings node=".//xs:attribute[@name='lang']">
