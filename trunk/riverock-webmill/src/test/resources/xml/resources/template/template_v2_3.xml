@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Template xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://webmill.riverock.org/xsd/riverock-template.xsd">
 <html>
-    <head>
-        <title>aaaa
-        </title>
-    </head>
-	<body>
+    <body>
 		<element:custom value="Aaa"/>
-		<element:dynamic/>
 	</body>
 </html>
-</Template>
+</Template>    
