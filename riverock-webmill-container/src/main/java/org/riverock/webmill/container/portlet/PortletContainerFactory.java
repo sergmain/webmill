@@ -33,13 +33,13 @@ public final class PortletContainerFactory implements Serializable {
 
     /**
      * get new instance of portlet container
-     * @param portalInstance portal instance
+     * @param portalInstanceBase portal instance
      * @param portalPath portal path. All web contextsportlets) in same web application must returm same portalPath  
      * @return portlet container
      */
-    public synchronized static PortletContainer getInstance(PortalInstance portalInstance, String portalPath) {
-        if (portalInstance==null) {
-            throw new IllegalStateException("PortalInstance is null");
+    public synchronized static PortletContainer getInstance(PortalInstanceBase portalInstanceBase, String portalPath) {
+        if (portalInstanceBase ==null) {
+            throw new IllegalStateException("PortalInstanceBase is null");
         }
         if (portalPath==null) {
             throw new IllegalStateException("PortalPath is null");
@@ -53,14 +53,14 @@ public final class PortletContainerFactory implements Serializable {
             synchronized(PortletContainerFactory.class) {
                 container = portletContainers.get(portalPath);
                 if (container==null) {
-                    container = new PortletContainer(portalInstance, portalPath);
+                    container = new PortletContainer(portalInstanceBase, portalPath);
                     portletContainers.put(portalPath, container );
                 }
             }
         }
         // portlet was registered before portal
-        if (container.portalInstance==null) {
-            container.portalInstance=portalInstance;
+        if (container.portalInstanceBase ==null) {
+            container.portalInstanceBase = portalInstanceBase;
         }
         System.out.println("PortletContainer for "+portalPath+" is "+container);
         return container;

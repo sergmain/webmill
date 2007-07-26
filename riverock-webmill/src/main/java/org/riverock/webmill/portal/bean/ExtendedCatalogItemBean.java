@@ -39,7 +39,6 @@ import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
@@ -49,6 +48,8 @@ import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.context.RequestContextParameter;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.template.PortalTemplate;
+import org.riverock.webmill.template.PortalTemplateManagerFactory;
 
 /**
  * @author Sergei Maslyukov
@@ -205,7 +206,7 @@ public final class ExtendedCatalogItemBean {
         }
         
         PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
-        PortalTemplate template = portalInfo.getPortalTemplateManager().getTemplate( templateName, locale.toString());
+        PortalTemplate template = PortalTemplateManagerFactory.getInstance(portalInfo.getSiteId()).getTemplate( templateName, locale.toString());
         if (template==null) {
             return null;
         }

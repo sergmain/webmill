@@ -40,7 +40,6 @@ import org.riverock.common.tools.XmlTools;
 import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.menu.Menu;
@@ -181,43 +180,15 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         menuSimple.setMenuName("");
 
         markAsCurrentThread(currentMenuModule);
-
-/*
-        if (log.isDebugEnabled()) {
-            synchronized (objSync4) {
-                try {
-                    String fileName =
-                        GenericConfig.getGenericDebugDir() +
-                        File.separatorChar +
-                        "menu-simple-" + System.currentTimeMillis() + ".xml";
-
-                    log.debug("Write menu to " + fileName);
-                    XmlTools.writeToFile(menuSimple, fileName);
-                }
-                catch (Throwable e) {
-                    // catch debug exception
-                }
-            }
-        }
-*/
     }
-//    private final static Object objSync4 = new Object();
-
 
     private void processPortletParameters() throws PortletException {
 
-        List<PortalTemplateParameter> templateParameters =
-            (List<PortalTemplateParameter>) renderRequest.getAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE);
-
-        if (log.isDebugEnabled()) {
-            log.debug("param.getParameters(): " + templateParameters);
-        }
-
         try {
-            String levelTemp = PortletUtils.getString(templateParameters, "level", null);
+            String levelTemp = PortletUtils.getString(renderRequest, "level", null);
             if (levelTemp == null)
                 return;
-            String compareTemp = PortletUtils.getString(templateParameters, "type_level", null);
+            String compareTemp = PortletUtils.getString(renderRequest, "type_level", null);
             if (compareTemp == null)
                 return;
 
@@ -311,26 +282,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private final static Object objSync2 = new Object();
-    private final static Object objSync3 = new Object();
-
     void processMenuLevel(final int level, final int compareLevel) throws ConfigException {
-        long tempLong = System.currentTimeMillis();
         if (log.isDebugEnabled()) {
             log.debug("processMenuLevel(), level: " + level + ", compareLevel: " + compareLevel);
-
-/*
-            synchronized (objSync2) {
-                String fileName = GenericConfig.getGenericDebugDir() + File.separatorChar + "menu-simple-" + tempLong + ".xml";
-                log.debug("Write menu to " + fileName);
-                try {
-                    XmlTools.writeToFile(menuSimple, fileName);
-                }
-                catch (Exception e) {
-                    //catch debug exception
-                }
-            }
-*/
         }
 
         switch (compareLevel) {
@@ -347,15 +301,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     if (result == null)
                         menuSimple = new MenuSimpleType();
                     else {
-/*
-                        for (final MenuModuleType newVar : result) {
-                            newVar.getMenuModule().addAll( new ArrayList());
-                        }
-*/
-
                         menuSimple.getMenuModule().addAll(result);
                     }
-
                 }
                 break;
             case LESS_THAN_LEVEL:
@@ -557,8 +504,6 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         return getMenuModule(menuSimple.getMenuModule()).getBytes();
     }
 
-    private final static Object syncDebug = new Object();
-
     public byte[] getXml(String rootElement) throws Exception {
         if (log.isDebugEnabled())
             log.debug("start get XmlByte array, rootElement: " + rootElement);
@@ -578,23 +523,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             throw e;
         }
 
-/*
-        if (log.isDebugEnabled()) {
-            log.debug("end get XmlByte array. length of array - " + b.length);
-
-            final String testFile = GenericConfig.getGenericDebugDir() + File.separatorChar + "menu-simple-url"+(counter++)+".xml";
-            log.debug("Start output test data to file " + testFile);
-            synchronized (syncDebug) {
-                MainTools.writeToFile(testFile, b);
-            }
-            log.debug("end output data");
-        }
-*/
-
         return b;
     }
-
-    private static int counter=0;
 
     public byte[] getXml() throws Exception {
         return getXml("MenuSimple");

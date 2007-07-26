@@ -52,7 +52,6 @@ import net.sf.ehcache.Cache;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.search.PortalIndexer;
-import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.container.tools.PortletContainerUtils;
@@ -62,6 +61,8 @@ import org.riverock.webmill.portal.search.PortalIndexerImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.template.PortalTemplateManagerImpl;
+import org.riverock.webmill.template.PortalTemplateManager;
 
 import org.hibernate.stat.Statistics;
 import org.hibernate.stat.EntityStatistics;
@@ -100,6 +101,8 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private Long siteId;
 
+    private PortalTemplateManager portalTemplateManager=null;
+
     public void destroy() {
         portalServletConfig = null;
         portletContainer = null;
@@ -123,6 +126,10 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     public ClassLoader getPortalClassLoader() {
         return portalClassLoader;
+    }
+
+    public PortalTemplateManager getPortalTemplateManager() {
+        return portalTemplateManager;
     }
 
     public PortalIndexer getPortalIndexer() {
@@ -194,6 +201,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         this.portletContainer = PortletContainerFactory.getInstance( this, PortletContainerUtils.getDeployedInPath(servletConfig) );
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
         this.portalIndexer = new PortalIndexerImpl(this.siteId, this.portletContainer, portalClassLoader);
+        this.portalTemplateManager = PortalTemplateManagerImpl.getInstance(this.siteId);
     }
 
     public Long getSiteId() {

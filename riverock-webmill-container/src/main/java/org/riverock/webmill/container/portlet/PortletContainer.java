@@ -66,16 +66,16 @@ public final class PortletContainer implements Serializable {
     // unique name initialized in PortletRegisterServlet.init() method
     private Map<String, PortletContext> portletContextMap = new HashMap<String, PortletContext>();
 
-    PortalInstance portalInstance = null;
+    PortalInstanceBase portalInstanceBase = null;
     private PortletContentCache contentCache = null;
     private String portalPath = null;
     boolean isNewPortlet = false;
 
     private final static Object syncObect = new Object();
 
-    PortletContainer(PortalInstance portalInstance, String portalPath) {
+    PortletContainer(PortalInstanceBase portalInstanceBase, String portalPath) {
         this.contentCache = new PortletContentCacheImpl();
-        this.portalInstance = portalInstance;
+        this.portalInstanceBase = portalInstanceBase;
         this.portalPath = portalPath;
     }
 
@@ -156,7 +156,7 @@ public final class PortletContainer implements Serializable {
             if (portletEntries != null) {
                 for (PortletEntry portletEntry : portletEntries) {
                     try {
-                        portalInstance.destroyPortlet(portletEntry.getPortletDefinition().getFullPortletName());
+                        portalInstanceBase.destroyPortlet(portletEntry.getPortletDefinition().getFullPortletName());
                         destroyPortlet(portletEntry, uniqueName);
                     }
                     catch (Throwable th) {
@@ -209,7 +209,7 @@ public final class PortletContainer implements Serializable {
         synchronized(syncObect) {
             for (PortletWebApplication portletWebApplication : portletItems.values()) {
                 if (!portletWebApplication.isRegistered()) {
-                    portalInstance.registerPortlet(portletWebApplication.getPortletDefinition().getFullPortletName());
+                    portalInstanceBase.registerPortlet(portletWebApplication.getPortletDefinition().getFullPortletName());
                     portletWebApplication.setRegistered(true);
                 }
             }
@@ -250,7 +250,7 @@ public final class PortletContainer implements Serializable {
             final ClassLoader classLoader = portletWebApplication.getClassLoader();
             Thread.currentThread().setContextClassLoader( classLoader );
 
-            PortletContext portletContext = getPortletContext( portletWebApplication, portalInstance.getPortalName() );
+            PortletContext portletContext = getPortletContext( portletWebApplication, portalInstanceBase.getPortalName() );
             if (portletWebApplication.getUniqueName()==null) {
                 String es = "Erorr create instance of portlet '" + portletName + "'. UniqueName in portletWebApplication is null";
                 System.out.println( es );
@@ -371,8 +371,8 @@ containing the portlet is restarted.
         return contentCache;
     }
 
-    public PortalInstance getPortalInstance() {
-        return portalInstance;
+    public PortalInstanceBase getPortalInstance() {
+        return portalInstanceBase;
     }
 
 }

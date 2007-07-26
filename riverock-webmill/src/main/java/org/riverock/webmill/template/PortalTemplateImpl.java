@@ -22,15 +22,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.template.bean;
+package org.riverock.webmill.template;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
-
-import org.riverock.interfaces.portal.template.PortalTemplate;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
-import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 
 /**
  * Both attributes, 'nameTemplate' and 'name' are deprecated. Must

@@ -16,8 +16,7 @@ import org.riverock.webmill.template.schema.SiteTemplate;
 import org.riverock.webmill.template.schema.SiteTemplateItem;
 import org.riverock.webmill.template.schema.Parameter;
 import org.riverock.webmill.template.schema.ElementParameter;
-import org.riverock.webmill.portal.template.bean.types.PortalTemplateItemTypeImpl;
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.webmill.container.tools.ContainertStringUtils;
 
 /**
  * User: SMaslyukov
@@ -25,6 +24,21 @@ import org.riverock.interfaces.portal.template.PortalTemplateItemType;
  * Time: 14:33:39
  */
 public class TemplateUtils {
+
+    public static String getString( final List<PortalTemplateParameter> v, final String nameParam) throws IllegalArgumentException{
+        return getString(v, nameParam, null);
+    }
+
+    public synchronized static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
+        if ( templateParameters == null || ContainertStringUtils.isBlank(nameParam) )
+            return defValue;
+
+        for (PortalTemplateParameter portalTemplateParameter : templateParameters) {
+            if (portalTemplateParameter.getName().equals(nameParam))
+                return portalTemplateParameter.getValue();
+        }
+        return defValue;
+    }
 
     public static List<Object> getElements(Html html) {
         List<Object> elements = new ArrayList<Object>();

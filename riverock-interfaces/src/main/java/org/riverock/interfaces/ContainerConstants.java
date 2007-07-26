@@ -50,7 +50,7 @@ public class ContainerConstants {
     public static final String PORTAL_TEMPLATE_NAME_ATTRIBUTE = "org.riverock.webmill.PORTAL_TEMPLATE_NAME_ATTRIBUTE";
 
     public static final String PORTAL_PORTAL_INDEXER_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTAL_INDEXER_ATTRIBUTE";
-    public static final String PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE = "org.riverock.webmill.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE";
+//    public static final String PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE = "org.riverock.webmill.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE";
     public static final String PORTAL_PORTLET_METADATA_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_METADATA_ATTRIBUTE";
 
     /** value of current catalog item id (id of menu item) */

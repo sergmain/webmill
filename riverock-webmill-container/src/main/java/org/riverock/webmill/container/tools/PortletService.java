@@ -35,7 +35,6 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 
-import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.bean.InitParam;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
@@ -45,21 +44,6 @@ import org.riverock.webmill.container.portlet.bean.Supports;
  * $Id$
  */
 public final class PortletService {
-
-    public static String getString( final List<PortalTemplateParameter> v, final String nameParam) throws IllegalArgumentException{
-        return getString(v, nameParam, null);
-    }
-
-    public synchronized static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
-        if ( templateParameters == null || ContainertStringUtils.isBlank(nameParam) )
-            return defValue;
-
-        for (PortalTemplateParameter portalTemplateParameter : templateParameters) {
-            if (portalTemplateParameter.getName().equals(nameParam))
-                return portalTemplateParameter.getValue();
-        }
-        return defValue;
-    }
 
     public static String convertString( final String s, final String fromCharset, final String toCharset)
             throws java.io.UnsupportedEncodingException
@@ -217,16 +201,6 @@ public final class PortletService {
             // silence remove attribete
         }
         session.removeAttribute(attr);
-    }
-
-    /**
-     * @deprecated use org.riverock.webmill.container.tools.PortletService.getLong()
-     * @param namePortletID
-     * @param request
-     * @return Long
-     */
-    public static Long getIdPortlet( final String namePortletID, final PortletRequest request ) {
-        return getLong(request, namePortletID);
     }
 
     public static String getString( final PortletRequest request, final String f ) {

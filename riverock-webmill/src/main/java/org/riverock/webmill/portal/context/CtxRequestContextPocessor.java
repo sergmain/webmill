@@ -45,7 +45,6 @@ import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * $Id$

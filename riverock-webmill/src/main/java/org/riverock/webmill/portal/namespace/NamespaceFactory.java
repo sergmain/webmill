@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
+import org.riverock.webmill.template.PortalTemplateItem;
 
 /**
  * @author SergeMaslyukov
@@ -50,7 +50,7 @@ public class NamespaceFactory {
      * <br>For example: webmill:login-portlet-id:login-portlet
      * @param templateName template name
      * @param tempalteItemIndex intex if item in template
-     * @param templateItem
+     * @param templateItem  item of template
      * @return namespace
      */
     public static Namespace getNamespace(String fullPortletName, String templateName, int tempalteItemIndex, PortalTemplateItem templateItem) {

@@ -22,12 +22,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.template.bean.types;
+package org.riverock.webmill.template;
 
 import java.util.Map;
 import java.util.HashMap;
-
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 
 /**
  * Class TemplateItemTypeTypeType.
