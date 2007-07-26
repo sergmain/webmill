@@ -50,13 +50,10 @@ import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.interfaces.portal.template.PortalTemplate;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
-import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
@@ -72,6 +69,10 @@ import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.preference.PreferenceFactory;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.template.PortalTemplate;
+import org.riverock.webmill.template.PortalTemplateItem;
+import org.riverock.webmill.template.PortalTemplateItemType;
+import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
 
 /**
  * User: Admin
@@ -171,7 +172,7 @@ public final class PortalRequestInstance {
     PortalRequestInstance(
         HttpServletRequest request_,
         HttpServletResponse response_,
-        PortalInstance portalInstance 
+        PortalInstance portalInstance
     ) throws PortalException {
 
         this.startMills = System.currentTimeMillis();
@@ -214,10 +215,10 @@ public final class PortalRequestInstance {
             }
             this.preferredLocales = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
 
-            PortalInfo portalInfo = PortalInfoImpl.getInstance(httpRequest.getServerName());
+            PortalInfo portalInfo = PortalInfoImpl.getInstance(portalInstance.getSiteId());
             if (portalInfo==null) {
                throw new IllegalArgumentException(
-                  "PortalInfo object not created for host '"+httpRequest.getServerName()+"'"
+                  "PortalInfo object not created for host '"+httpRequest.getServerName()+"', siteId: " +portalInstance.getSiteId()
                );
             }
             if (portalInfo.getSiteId() == null) {
@@ -252,7 +253,7 @@ public final class PortalRequestInstance {
                 log.debug("#10.6, portal context path: " + portalTransformationParameters.getPortalContextPath());
             }
 
-            initTemplate(portalInfo);
+            initTemplate();
             initXslt(portalInfo);
 
             // init page element list
@@ -392,6 +393,7 @@ public final class PortalRequestInstance {
         }
         try {
             NamespaceMapper nm = NamespaceFactory.getNamespaceMapper();
+            //noinspection unchecked
             List<String> attrs = Collections.list(session.getAttributeNames());
             for (String portletName : destroyedPortletNames) {
                 List<Namespace> namespaces = NamespaceFactory.getNamespaces(portletName);
@@ -515,9 +517,9 @@ public final class PortalRequestInstance {
         return httpResponse;
     }
 
-    private void initTemplate(PortalInfo portalInfo) throws PortalException {
+    private void initTemplate() throws PortalException {
 
-        template = portalInfo.getPortalTemplateManager().getTemplate(requestContext.getTemplateName(), getLocale().toString());
+        template = portalInstance.getPortalTemplateManager().getTemplate(requestContext.getTemplateName(), getLocale().toString());
 
         if (template == null) {
             String errorString = "Template '" + requestContext.getTemplateName() + "', locale " + getLocale().toString() + ", not found";
@@ -528,13 +530,14 @@ public final class PortalRequestInstance {
     }
 
     private void initXslt(PortalInfo portalInfo) throws PortalException {
+        XsltTransformerManager transformerManager = XsltTransformetManagerFactory.getInstanse(portalInfo.getSiteId());
         // prepare Xsl objects
-        if (portalInfo.getXsltTransformerManager() == null) {
+        if (transformerManager == null) {
             String errorString = "XSL template not defined";
             log.error(errorString);
             throw new PortalException(errorString);
         }
-        xslt = portalInfo.getXsltTransformerManager().getXslt(getLocale().toString());
+        xslt = transformerManager.getXslt(getLocale().toString());
         if (xslt == null) {
             String errorString = "XSLT for locale " + getLocale().toString() + " not defined.";
             log.error(errorString);

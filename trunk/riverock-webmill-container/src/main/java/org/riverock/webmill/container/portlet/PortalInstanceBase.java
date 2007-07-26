@@ -23,33 +23,17 @@
  */
 package org.riverock.webmill.container.portlet;
 
-import java.util.Collection;
-
-import javax.servlet.ServletConfig;
-
-import org.riverock.interfaces.portal.search.PortalIndexer;
-
 /**
  * @author smaslyukov
  *         Date: 29.07.2005
  *         Time: 17:41:20
  *         $Id$
  */
-public interface PortalInstance {
+public interface PortalInstanceBase {
+    
     public String getPortalName();
-    public int getPortalMajorVersion();
-    public int getPortalMinorVersion();
-    public Collection<String> getSupportedLocales();
 
-    void registerPortlet(String fullPortletName);
+    void registerPortlet(String fullPortletName);              
 
     void destroyPortlet(String fullPortletName);
-
-    PortletContainer getPortletContainer();
-    
-    ServletConfig getPortalServletConfig();
-
-    PortalIndexer getPortalIndexer();
-
-    ClassLoader getPortalClassLoader();
 }

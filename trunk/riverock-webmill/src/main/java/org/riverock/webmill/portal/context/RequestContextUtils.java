@@ -43,9 +43,6 @@ import org.riverock.common.html.AcceptLanguageWithLevel;
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.interfaces.portal.template.PortalTemplate;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
@@ -56,6 +53,10 @@ import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.template.PortalTemplate;
+import org.riverock.webmill.template.PortalTemplateItem;
+import org.riverock.webmill.template.PortalTemplateItemType;
+import org.riverock.webmill.template.PortalTemplateManagerFactory;
 
 /**
  * $Id$
@@ -262,7 +263,8 @@ public final class RequestContextUtils {
     }
 
     static void initParametersMap(RequestContext requestContext, RequestContextParameter factoryParameter, PortalInfo portalInfo) {
-        PortalTemplate template = portalInfo.getPortalTemplateManager().getTemplate(
+
+        PortalTemplate template = PortalTemplateManagerFactory.getInstance(portalInfo.getSiteId()).getTemplate(
             requestContext.getExtendedCatalogItem().getTemplateId()
         );
 

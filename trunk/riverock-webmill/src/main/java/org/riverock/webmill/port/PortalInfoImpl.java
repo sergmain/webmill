@@ -37,18 +37,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.interfaces.portal.template.PortalTemplateManager;
-import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.utils.SiteList;
-import org.riverock.webmill.template.PortalTemplateManagerImpl;
 
 /**
  * $Id$
@@ -68,8 +65,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private transient Locale defaultLocale = null;
 
-    private transient XsltTransformerManager xsltTransformerManager = null;
-    private transient PortalTemplateManager portalTemplateManager = null;
+//    private transient XsltTransformerManager xsltTransformerManager = null;
+//    private transient PortalTemplateManager portalTemplateManager = null;
 
     private transient Map<String, Long> supportLanguageMap = null;
     private transient Map<String, MenuLanguage> languageMenuMap = null;
@@ -125,8 +122,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             log.debug("#15.09.01 finalize");
 
         defaultLocale = null;
-        xsltTransformerManager = null;
-        portalTemplateManager = null;
+//        xsltTransformerManager = null;
+//        portalTemplateManager = null;
 
         super.finalize();
     }
@@ -173,7 +170,6 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private PortalInfoImpl(Long siteId) {
         this.siteId = siteId;
-        long mills; // System.currentTimeMillis();
         siteBean = InternalDaoFactory.getInternalSiteDao().getSite( siteId );
 
         if (StringUtils.isNotBlank(siteBean.getDefLanguage())) {
@@ -195,8 +191,9 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         }
         initPortalProperties();
 
-        mills = 0;
+        long mills = 0;  // System.currentTimeMillis();
 
+/*
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
         xsltTransformerManager = new XsltTransformerManagerImpl(siteId);
         if (log.isInfoEnabled()) log.info("Init xsltTransformerManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
@@ -204,6 +201,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
         portalTemplateManager = PortalTemplateManagerImpl.getInstance(siteId);
         if (log.isInfoEnabled()) log.info("Init portalTemplateManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
+*/
 
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
         siteLanguageList = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList( siteId );
@@ -277,6 +275,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return defaultLocale;
     }
 
+/*
     public XsltTransformerManager getXsltTransformerManager() {
         return this.xsltTransformerManager;
     }
@@ -285,6 +284,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return portalTemplateManager;
     }
 
+*/
     private void initMenu() {
         if (log.isDebugEnabled()) log.debug("start get menu for site " + siteId);
 

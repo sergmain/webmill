@@ -28,8 +28,6 @@ import java.util.Map;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
-import org.riverock.interfaces.portal.template.PortalTemplateManager;
 import org.riverock.interfaces.portal.bean.Site;
 
 /**
@@ -43,10 +41,8 @@ public interface PortalInfo extends Serializable {
     public Long getCompanyId();
     public Long getSiteLanguageId( Locale locale );
     public MenuLanguage getMenu(String locale);
-    public XsltTransformerManager getXsltTransformerManager();
     public Map<String, String> getPortalProperties();
     public Locale getDefaultLocale();
-    public PortalTemplateManager getPortalTemplateManager();
     public Site getSite();
 }
 

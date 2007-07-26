@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.XmlTools;
-import org.riverock.portlet.news.NewsSite;
 import org.riverock.portlet.news.schema.NewsBlockType;
 import org.riverock.portlet.news.schema.NewsGroupType;
 import org.riverock.portlet.news.schema.NewsItemType;
@@ -63,8 +62,6 @@ public class TestCaseNews /*extends TestCase */
 
     private static final String NEWS_ITEM_URL = "url";
     private static final String NEWS_ITEM_TO_URL = "to news";
-
-    private TestCaseSiteAbstract testAbstract = null;
 
 /*
     public TestCaseNews(String testName)
@@ -385,7 +382,6 @@ public class TestCaseNews /*extends TestCase */
     private void initNewsItemRequestByCode()
         throws Exception
     {
-        testAbstract.initRequestSession();
 
 //        TemplateItemType templateItem = new TemplateItemType();
 //        templateItem.setCode( "RELEASE_NEWS_ITEM" );
@@ -393,7 +389,6 @@ public class TestCaseNews /*extends TestCase */
 //        testAbstract.session.setAttribute(Constants.PORTLET_CODE_SESSION, "RELEASE_NEWS_ITEM");
 //        portletParameter.portletCode = NEWS_GROUP_CODE;
 
-        testAbstract.request.setSession( testAbstract.session );
     }
 
 
@@ -401,7 +396,6 @@ public class TestCaseNews /*extends TestCase */
         
         for (NewsGroupType group : newsBlock.getNewsGroup()) {
             for (NewsItemType item : group.getNewsItem()) {
-                testAbstract.initRequestSession();
 
 //                desc = PortletManager.getPortletDescription( "mill.news" );
 //                assertFalse("Description for portlet 'mill.news' not found", desc==null);
@@ -555,7 +549,6 @@ public class TestCaseNews /*extends TestCase */
             }
         }
 
-        testAbstract.initRequestSession();
         String str = null;
         try
         {

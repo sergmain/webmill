@@ -26,11 +26,8 @@ package org.riverock.webmill.template;
 
 import junit.framework.TestCase;
 
-import org.riverock.interfaces.portal.template.PortalTemplate;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.utils.TestUtils;
-import org.riverock.webmill.template.PortalTemplateManagerImpl;
 
 /**
  * @author smaslyukov

@@ -24,8 +24,8 @@
  */
 package org.riverock.webmill.portal.template;
 
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.portal.PageElement;
+import org.riverock.webmill.template.PortalTemplateItemType;
 
 /**
  * User: SergeMaslyukov

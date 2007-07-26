@@ -25,34 +25,39 @@
 package org.riverock.webmill.portal;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.portlet.PortletPreferences;
-import javax.portlet.PortletMode;
 import javax.portlet.PortalContext;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletPreferences;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
-import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.bean.SitePortletData;
-import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
-import org.riverock.webmill.container.portlet.PortalInstance;
+import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.impl.*;
+import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.impl.ActionRequestImpl;
+import org.riverock.webmill.portal.impl.ActionResponseImpl;
+import org.riverock.webmill.portal.impl.PortalContextImpl;
+import org.riverock.webmill.portal.impl.RenderRequestImpl;
+import org.riverock.webmill.portal.impl.RenderResponseImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.preference.PortletPreferencePersistencer;
 import org.riverock.webmill.portal.preference.PortletPreferencesImpl;
+import org.riverock.webmill.template.PortalTemplateItem;
+import org.riverock.webmill.template.PortalTemplateParameter;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * User: SergeMaslyukov
@@ -398,6 +403,12 @@ public final class PageElement {
                 }
             }
 
+            for (PortalTemplateParameter p : portalTemplateItem.getParameters()) {
+                List<String> list = new ArrayList<String>(1);
+                list.add(p.getValue());
+                renderRequestParamMap.put(p.getName(), list);
+            }
+
             this.portletPreferences = new PortletPreferencesImpl(
                 new HashMap<String, List<String>>(portletMetadata),
                 persistencer,
@@ -438,7 +449,6 @@ public final class PageElement {
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, portalTemplateItem.getCode());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, portalTemplateItem.getXmlRoot());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
-            renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, portalTemplateItem.getParameters() );
             renderRequest.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, targetTemplateName );
 
             // todo current implementation not support 'current catalog ID'

@@ -36,12 +36,7 @@ import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import org.riverock.interfaces.portal.bean.Template;
-import org.riverock.interfaces.portal.template.PortalTemplate;
-import org.riverock.interfaces.portal.template.PortalTemplateManager;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.template.bean.PortalTemplateImpl;
-import org.riverock.webmill.portal.template.bean.PortalTemplateItemImpl;
-import org.riverock.webmill.portal.template.bean.PortalTemplateParameterImpl;
 
 /**
  * $Id$

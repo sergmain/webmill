@@ -42,11 +42,11 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.MainTools;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.bean.SitePortletData;
-import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.template.TemplateItemBaseClass;
+import org.riverock.webmill.template.PortalTemplateItem;
+import org.riverock.webmill.template.PortalTemplateItemType;
+import org.riverock.webmill.template.TemplateUtils;
 
 /**
  * User: SergeMaslyukov
@@ -146,7 +146,7 @@ public final class PortalRequestProcessor {
 
         for (PageElement pageElement : portalRequestInstance.getPageElementList()) {
             if (log.isDebugEnabled()) {
-                if (pageElement.getPortalTemplateItem().getTypeObject().getType()==PortalTemplateItemType.PORTLET_TYPE ||
+                if (pageElement.getPortalTemplateItem().getTypeObject().getType()== PortalTemplateItemType.PORTLET_TYPE ||
                     pageElement.getPortalTemplateItem().getTypeObject().getType()==PortalTemplateItemType.DYNAMIC_TYPE) {
 
                     log.debug("PageElement: ");
@@ -257,7 +257,7 @@ public final class PortalRequestProcessor {
 
             boolean isXml = false;
             if (pageElement!=null && pageElement.getPortalTemplateItem()!=null && pageElement.getPortalTemplateItem().getParameters()!=null) {
-                String isXmlString = PortletService.getString(pageElement.getPortalTemplateItem().getParameters(), "is-xml", "false");
+                String isXmlString = TemplateUtils.getString(pageElement.getPortalTemplateItem().getParameters(), "is-xml", "false");
                 isXml = Boolean.parseBoolean( isXmlString );
             }
             boolean isElementXml = Boolean.TRUE.equals(item.getIsXml()) || isXml;
@@ -307,7 +307,7 @@ public final class PortalRequestProcessor {
                 boolean isNextElementXml = false;
                 if (pageElementNext!=null) {
                     if ( pageElementNext.getPortalTemplateItem()!=null && pageElementNext.getPortalTemplateItem().getParameters()!=null) {
-                        String isXmlString = PortletService.getString(pageElementNext.getPortalTemplateItem().getParameters(), "is-xml", "false");
+                        String isXmlString = TemplateUtils.getString(pageElementNext.getPortalTemplateItem().getParameters(), "is-xml", "false");
                         isNextXml = Boolean.parseBoolean( isXmlString );
                     }
                     isNextElementXml = pageElementNext.getIsXml() || isNextXml;

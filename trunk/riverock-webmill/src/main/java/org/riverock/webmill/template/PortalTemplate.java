@@ -21,37 +21,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.interfaces.portal.template;
+package org.riverock.webmill.template;
 
+import java.util.List;
 import java.io.Serializable;
 
 /**
  * @author SergeMaslyukov
  *         Date: 01.01.2006
- *         Time: 9:45:11
+ *         Time: 9:11:56
  *         $Id$
  */
-public interface PortalTemplateItemType extends Serializable {
-    /**
-     * The custom type
-     */
-    public static final int CUSTOM_TYPE = 0;
-
-    /**
-     * The portlet type
-     */
-    public static final int PORTLET_TYPE = 1;
-
-    /**
-     * The dynamic type
-     */
-    public static final int DYNAMIC_TYPE = 2;
-
-    /**
-     * The file type
-     */
-    public static final int FILE_TYPE = 3;
-
-    public int getType();
-    public String toString();
+public interface PortalTemplate extends Serializable {
+    public Long getTemplateId();
+    public String getTemplateName();
+    public String getRole();
+    public List<PortalTemplateItem> getPortalTemplateItems();
+    int getVersion();
 }

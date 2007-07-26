@@ -26,8 +26,8 @@ package org.riverock.webmill.portal.template;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
-import org.riverock.webmill.portal.template.bean.types.PortalTemplateItemTypeImpl;
+import org.riverock.webmill.template.PortalTemplateItemTypeImpl;
+import org.riverock.webmill.template.PortalTemplateItemType;
 import org.riverock.webmill.portal.PageElement;
 
 /**
