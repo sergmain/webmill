@@ -1129,41 +1129,5 @@ riverock-database-structure.xsd">
 	<Sequences name="SEQ_WM_PORTLET_FAQ_LIST" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="45"/>
 	<Sequences name="SEQ_WM_PORTLET_FAQ_QUESTION" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="9"/>
 
-	<BigTextTable>
-		<MasterTable xmlns="">WM_JOB_POSITION</MasterTable>
-		<SlaveTable xmlns="">WM_JOB_POSITION_DATA</SlaveTable>
-		<MasterPkField xmlns="">ID_JOB_POSITION</MasterPkField>
-		<SlavePkField xmlns="">ID_JOB_POSITION_DATA</SlavePkField>
-		<SlaveFkField xmlns="">ID_JOB_POSITION</SlaveFkField>
-		<StorageField xmlns="">TEXT_POSITION</StorageField>
-		<SequenceName xmlns="">SEQ_WM_JOB_POSITION_DATA</SequenceName>
-	</BigTextTable>
-	<BigTextTable>
-		<MasterTable xmlns="">WM_JOB_RESUME</MasterTable>
-		<SlaveTable xmlns="">WM_JOB_RESUME_DATA</SlaveTable>
-		<MasterPkField xmlns="">ID_JOB_RESUME</MasterPkField>
-		<SlavePkField xmlns="">ID_JOB_RESUME_DATA</SlavePkField>
-		<SlaveFkField xmlns="">ID_JOB_RESUME</SlaveFkField>
-		<StorageField xmlns="">TEXT_RESUME</StorageField>
-		<SequenceName xmlns="">SEQ_WM_JOB_RESUME_DATA</SequenceName>
-	</BigTextTable>
-	<BigTextTable>
-		<MasterTable xmlns="">WM_PORTLET_FAQ_LIST</MasterTable>
-		<SlaveTable xmlns="">WM_PORTLET_FAQ_ANSWER</SlaveTable>
-		<MasterPkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</MasterPkField>
-		<SlavePkField xmlns="">ID_SITE_PORTLET_FAQ_ANSWER</SlavePkField>
-		<SlaveFkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</SlaveFkField>
-		<StorageField xmlns="">ANSWER</StorageField>
-		<SequenceName xmlns="">SEQ_WM_PORTLET_FAQ_ANSWER</SequenceName>
-	</BigTextTable>
-	<BigTextTable>
-		<MasterTable xmlns="">WM_PORTLET_FAQ_LIST</MasterTable>
-		<SlaveTable xmlns="">WM_PORTLET_FAQ_QUESTION</SlaveTable>
-		<MasterPkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</MasterPkField>
-		<SlavePkField xmlns="">ID_SITE_PORTLET_FAQ_QUESTION</SlavePkField>
-		<SlaveFkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</SlaveFkField>
-		<StorageField xmlns="">QUESTION</StorageField>
-		<SequenceName xmlns="">SEQ_WM_PORTLET_FAQ_QUESTION</SequenceName>
-	</BigTextTable>
 
 </riverock-db-stuct:SchemaElement>
