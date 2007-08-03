@@ -52,7 +52,7 @@ public class HibernateUtilsTest {
         cfg.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull" );
         cfg.setProperty("hibernate.show_sql", "true" );
         cfg.setProperty("hibernate.connection.username", "root" );
-//        cfg.setProperty("hibernate.connection.password", "" );
+        cfg.setProperty("hibernate.connection.password", "qqq" );
 
         HibernateUtils.setAnnotatedClasses(cfg);
 
