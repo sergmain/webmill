@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DbRevision>
+    <Module>
+        <Description>Webmill portal</Description>
+        <Name>webmill</Name>
+        <Versions>
+            <Version>5.7.0</Version>
+            <Version>5.8.0</Version>
+        </Versions>
+    </Module>
+</DbRevision>
