@@ -342,8 +342,9 @@ public class PortalInstanceImpl implements PortalInstance  {
             //noinspection UnusedAssignment
             out = null;
 
-            if (log.isInfoEnabled())
+            if (log.isInfoEnabled()) {
                 log.info(timeString.toString());
+            }
 
             log.warn(
                 "free memory " + Runtime.getRuntime().freeMemory() +
