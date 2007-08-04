@@ -65,7 +65,7 @@
             </f:subview>
 
 
-            <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
+            <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.css']}">
 
                 <f:subview id="subview-site-info">
                     <jsp:include page="css-add-edit.jsp"/>

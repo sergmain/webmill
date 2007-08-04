@@ -64,7 +64,7 @@
                 <jsp:include page="site-tree.jsp"/>
             </f:subview>
 
-            <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.site-manager']}">
+            <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager']}">
 
                 <f:subview id="subview-site-info">
                     <jsp:include page="site-language-add-edit.jsp"/>

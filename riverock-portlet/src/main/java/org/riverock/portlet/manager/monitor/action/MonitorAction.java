@@ -13,6 +13,7 @@ import org.riverock.portlet.manager.monitor.ServerMonitorUtils;
 import org.riverock.portlet.manager.monitor.ServerMonitorConstants;
 import org.riverock.portlet.manager.monitor.schema.Directory;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
@@ -28,6 +29,8 @@ public class MonitorAction {
     private String result = null;
     private static final String WEBMILL_MONITOR = "webmill-monitor";
 
+    public static final String[] ROLES = new String[]{"webmill.portal-manager"};
+
     public String getResult() {
         return result;
     }
@@ -42,6 +45,8 @@ public class MonitorAction {
 
     public String createServerSizeFileAction() {
         try {
+            SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
             createServerSizeFile();
         }
         catch(Throwable th) {

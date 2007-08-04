@@ -32,6 +32,7 @@ import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.bean.XsltBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -47,6 +48,8 @@ public class XsltAction implements Serializable {
     private SiteSessionBean siteSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private DataProvider dataProvider = null;
+
+    public static final String[] ROLES = new String[]{"webmill.authentic"};
 
     public XsltAction() {
     }
@@ -70,7 +73,7 @@ public class XsltAction implements Serializable {
 
 // main select action
     public String selectXslt() {
-        XsltAction.log.info( "Select xslt action." );
+        log.info( "Select xslt action." );
         loadCurrentObject();
 
         return "site";
@@ -78,7 +81,7 @@ public class XsltAction implements Serializable {
 
 // Add actions
     public String addXsltAction() {
-        XsltAction.log.info( "Add xslt action." );
+        log.info( "Add xslt action." );
 
         XsltBean xsltBean = new XsltBean();
         xsltBean.setSiteLanguageId(siteSessionBean.getId());
@@ -88,7 +91,9 @@ public class XsltAction implements Serializable {
     }
 
     public String processAddXsltAction() {
-        XsltAction.log.info( "Procss add xslt action." );
+        log.info( "Procss add xslt action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             Long xsltId = FacesTools.getPortalDaoProvider().getPortalXsltDao().createXslt(
@@ -104,7 +109,7 @@ public class XsltAction implements Serializable {
     }
 
     public String cancelAddXsltAction() {
-        XsltAction.log.info( "Cancel add xslt action." );
+        log.info( "Cancel add xslt action." );
 
         setSessionObject(null);
         cleadDataProviderObject();
@@ -114,13 +119,15 @@ public class XsltAction implements Serializable {
 
 // Edit actions
     public String editXsltAction() {
-        XsltAction.log.info( "Edit holding action." );
+        log.info( "Edit holding action." );
 
         return "xslt-edit";
     }
 
     public String processEditXsltAction() {
-        XsltAction.log.info( "Save changes xslt action." );
+        log.info( "Save changes xslt action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             FacesTools.getPortalDaoProvider().getPortalXsltDao().updateXslt(getSessionObject());
@@ -155,6 +162,8 @@ public class XsltAction implements Serializable {
 
     public String processDeleteXsltAction() {
         log.info( "Process delete xslt action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalXsltDao().deleteXslt(getSessionObject().getId());

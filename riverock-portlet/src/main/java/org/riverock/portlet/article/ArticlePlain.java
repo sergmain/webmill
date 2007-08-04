@@ -84,7 +84,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             log.debug( "Article plain. method is 'Plain'" );
         }
 
-        if (article.getArticleData()==null) {
+        if (article==null || article.getArticleData()==null) {
             return new byte[]{};
         }
 

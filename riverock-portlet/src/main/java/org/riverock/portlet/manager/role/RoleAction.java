@@ -24,8 +24,11 @@
 package org.riverock.portlet.manager.role;
 
 import java.io.Serializable;
-import org.riverock.portlet.main.AuthSessionBean;
+
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author SergeMaslyukov
@@ -36,6 +39,8 @@ public class RoleAction implements Serializable {
 
 	private RoleSessionBean roleSessionBean = null;
 	private AuthSessionBean authSessionBean = null;
+
+    public static final String[] ROLES = new String[]{"webmill.portal-manager"};
 
 	public RoleAction() {
 	}
@@ -63,6 +68,8 @@ public class RoleAction implements Serializable {
 	}
 
 	public String processAddRole() {
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         Long roleId = authSessionBean.getAuthSession().addRole( roleSessionBean.getRole() );
         roleSessionBean.setCurrentRoleId( roleId );
         loadCurrentRole();
@@ -75,6 +82,8 @@ public class RoleAction implements Serializable {
 	}
 
 	public String processEditRole() {
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         authSessionBean.getAuthSession().updateRole( roleSessionBean.getRole() );
 		return "role";
 	}
@@ -85,6 +94,8 @@ public class RoleAction implements Serializable {
 	}
 
 	public String processDeleteRole() {
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         authSessionBean.getAuthSession().deleteRole( roleSessionBean.getRole() );
 		roleSessionBean.setRole( null );
 		return "role";
@@ -96,7 +107,7 @@ public class RoleAction implements Serializable {
 	}
 
 	private void loadCurrentRole() {
-        	RoleBean bean = authSessionBean.getAuthSession().getRole( roleSessionBean.getCurrentRoleId() );
-		roleSessionBean.setRole( new RoleBeanImpl(bean) );
+        RoleBean bean = authSessionBean.getAuthSession().getRole( roleSessionBean.getCurrentRoleId() );
+        roleSessionBean.setRole( new RoleBeanImpl(bean) );
 	}
 }

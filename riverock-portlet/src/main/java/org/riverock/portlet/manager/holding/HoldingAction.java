@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author SergeMaslyukov
@@ -44,6 +45,8 @@ public class HoldingAction implements Serializable {
     private HoldingSessionBean holdingSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private HoldingDataProvider holdingDataProvider = null;
+
+    public static final String[] ROLES = new String[]{"webmill.portal-manager"};
 
     public HoldingAction() {
     }
@@ -127,6 +130,9 @@ public class HoldingAction implements Serializable {
 
     public String processAddHoldingAction() {
         log.info( "Procss add holding action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( holdingSessionBean.getHoldingBean() != null ) {
             FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
                 holdingSessionBean.getHoldingBean()
@@ -157,6 +163,9 @@ public class HoldingAction implements Serializable {
 
     public String saveHoldingAction() {
         log.info( "Save holding action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( holdingSessionBean.getHoldingBean() != null ) {
 		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding( 
 			holdingSessionBean.getHoldingBean() 
@@ -194,6 +203,9 @@ public class HoldingAction implements Serializable {
 
     public String processDeleteHoldingAction() {
         log.info( "Process delete holding action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( holdingSessionBean.getHoldingBean() != null ) {
 		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding( 
 			holdingSessionBean.getHoldingBean() 

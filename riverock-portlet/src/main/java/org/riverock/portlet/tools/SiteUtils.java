@@ -23,6 +23,8 @@
  */
 package org.riverock.portlet.tools;
 
+import javax.portlet.PortletRequest;
+
 /**
  * User: smaslyukov
  * Date: 09.08.2004
@@ -32,6 +34,19 @@ package org.riverock.portlet.tools;
 public final class SiteUtils {
 
     public static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
+
+    public static void checkRights(PortletRequest request, String[] roles) {
+        boolean isOk = false;
+        for (String role : roles) {
+            if (request.isUserInRole(role)) {
+                isOk = true;
+                break;
+            }
+        }
+        if (!isOk) {
+            throw new SecurityException("Access denied");
+        }
+    }
 
     public static String getTempDir() {
         return System.getProperty( JAVA_IO_TMPDIR );

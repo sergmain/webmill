@@ -32,6 +32,7 @@ import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.bean.CssBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -47,6 +48,8 @@ public class CssAction implements Serializable {
     private SiteSessionBean siteSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private DataProvider dataProvider = null;
+
+    public static final String[] ROLES = new String[]{"webmill.authentic"};
 
     public CssAction() {
     }
@@ -90,6 +93,8 @@ public class CssAction implements Serializable {
     public String processAddCssAction() {
         log.info( "Procss add CSS action." );
 
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( getSessionObject() !=null ) {
             Long cssId = FacesTools.getPortalDaoProvider().getPortalCssDao().createCss(
                 getSessionObject()
@@ -121,6 +126,8 @@ public class CssAction implements Serializable {
 
     public String processEditCssAction() {
         log.info( "Save changes CSS action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             FacesTools.getPortalDaoProvider().getPortalCssDao().updateCss(getSessionObject());
@@ -155,6 +162,8 @@ public class CssAction implements Serializable {
 
     public String processDeleteCssAction() {
         log.info( "Process delete CSS action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalCssDao().deleteCss(getSessionObject().getCssId());

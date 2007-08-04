@@ -20,6 +20,8 @@ import org.riverock.interfaces.portal.search.PortletIndexerShort;
 import org.riverock.interfaces.portal.search.PortalIndexerParameter;
 import org.riverock.interfaces.portal.search.PortletIndexerContent;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.common.utils.PortletUtils;
 
@@ -43,6 +45,8 @@ public class IndexerAction implements Serializable {
     private static final String CONTEXT_ID = "contectId";
     private static final String PORTLET_ID = "portletId";
     private static final String META = "meta";
+
+    public static final String[] ROLES = new String[]{"webmill.portal-manager","webmill.index-manager"};
 
     public IndexerAction() {
     }
@@ -80,6 +84,9 @@ public class IndexerAction implements Serializable {
 
     public String statisticAction() {
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return INDEXER_MANAGER;
+        }
         result.add( "Get statistics." );
 
         Long siteId = getSiteId();
@@ -94,6 +101,9 @@ public class IndexerAction implements Serializable {
 
     public String markAllForIndexingAction() {
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return INDEXER_MANAGER;
+        }
         result.add( "Start mark all contents for reindexing." );
         try {
             PortalIndexer portalIndexer = getPortalIndexer();
@@ -113,6 +123,9 @@ public class IndexerAction implements Serializable {
         long startMills = System.currentTimeMillis();
 
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return INDEXER_MANAGER;
+        }
         result.add( "Start reindexing." );
 
         try {
@@ -270,5 +283,14 @@ public class IndexerAction implements Serializable {
         return portalIndexer;
     }
 
+    private boolean checkRights() {
+        try {
+            SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        } catch (SecurityException e) {
+            result.add(e.toString());
+            return true;
+        }
+        return false;
+    }
 }
 

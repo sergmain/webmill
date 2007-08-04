@@ -50,7 +50,7 @@
     }
 </style>
 
-<h:panelGrid columns="3" rendered="#{isUserInRole['webmill.portal-manager,webmill.webclip-manager']}">
+<h:panelGrid columns="3" rendered="#{isUserInRole['webmill.portal-manager,webmill.index-manager']}">
 
     <h:outputText value="&nbsp;" escape="false"/>
     <h:outputText value="&nbsp;" escape="false"/>

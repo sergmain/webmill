@@ -64,7 +64,7 @@
                 <jsp:include page="site-tree.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="operation-xslt-delete-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.xslt']}">
+            <h:panelGroup id="operation-xslt-delete-panel" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.xslt']}">
 
                 <f:subview id="delete-xslt-subview">
                     <jsp:include page="xslt-description.jsp"/>

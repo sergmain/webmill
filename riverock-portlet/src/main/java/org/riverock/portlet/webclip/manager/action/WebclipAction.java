@@ -23,6 +23,7 @@ import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.portlet.webclip.WebclipUtils;
 import org.riverock.portlet.webclip.WebclipUrlChecker;
@@ -79,6 +80,9 @@ public class WebclipAction implements Serializable {
 
     public String statisticAction() {
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return WEBCLIP_MANAGER;
+        }
         result.add( "Get statistics." );
 
         Long siteId = getSiteId();
@@ -93,6 +97,9 @@ public class WebclipAction implements Serializable {
 
     public String markAllForReloadAction() {
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return WEBCLIP_MANAGER;
+        }
         result.add( "Start mark all webclips for reloading." );
         try {
             PortletDaoFactory.getWebclipDao().markAllForReload(getSiteId());
@@ -106,6 +113,9 @@ public class WebclipAction implements Serializable {
 
     public String markAllForProcessAction() {
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return WEBCLIP_MANAGER;
+        }
 
         result.add( "Start mark all webclips for processing." );
         try {
@@ -124,6 +134,9 @@ public class WebclipAction implements Serializable {
         long startMills = System.currentTimeMillis();
 
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return WEBCLIP_MANAGER;
+        }
         result.add( "Start reloading webclips." );
 
         Long siteId = getSiteId();
@@ -199,6 +212,9 @@ public class WebclipAction implements Serializable {
         long startMills = System.currentTimeMillis();
 
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return WEBCLIP_MANAGER;
+        }
         result.add( "Start processing webclips." );
 
         Long siteId = getSiteId();
@@ -270,6 +286,9 @@ public class WebclipAction implements Serializable {
     public String bulkCreateMenus() {
 
         result = new ArrayList<String>();
+        if (checkRights()) {
+            return WEBCLIP_MANAGER;
+        }
 
         if (StringUtils.isBlank(webclipSessionBean.getUrls())) {
             result.add("List of urls is empty");
@@ -368,6 +387,15 @@ public class WebclipAction implements Serializable {
         return WEBCLIP_MANAGER;
     }
 
+    private boolean checkRights() {
+        try {
+            SiteUtils.checkRights(FacesTools.getPortletRequest(), WebclipConstants.WEBCLIP_MANAGER_ROLES);
+        } catch (SecurityException e) {
+            result.add(e.toString());
+            return true;
+        }
+        return false;
+    }
 
     // Private methods
 

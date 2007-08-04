@@ -79,4 +79,6 @@ public class WebclipConstants {
     public static final int MAX_TIME_NOT_REFRESH_DATA = 1000*60*60*3;
     public static final String WIKI_URI = "/wiki";
     public static final String ROOT_URI = "/";
+    
+    public static final String[] WEBCLIP_MANAGER_ROLES = new String[]{"webmill.portal-manager","webmill.webclip-manager"};
 }

@@ -64,7 +64,7 @@
                 <jsp:include page="site-tree.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="operation-site-delete-panel" rendered="#{isUserInRole['webmill.site-manager']}">
+            <h:panelGroup id="operation-site-delete-panel" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager']}">
 
                 <f:subview id="delete-site-subview">
                     <jsp:include page="site-description.jsp"/>
