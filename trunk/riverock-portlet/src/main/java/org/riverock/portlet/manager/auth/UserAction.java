@@ -30,6 +30,8 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -44,6 +46,8 @@ public class UserAction implements Serializable {
     private UserSessionBean userSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private DataProvider dataProvider = null;
+
+    public static final String[] ROLES = new String[]{"webmill.portal-manager","webmill.auth"};
 
     public UserAction() {
     }
@@ -130,10 +134,13 @@ public class UserAction implements Serializable {
 
     public String processAddUserAction() {
         log.info( "Procss add user action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( userSessionBean.getUserBean() != null ) {
-	    userSessionBean.getUserBean().getAuthInfo().setUserPassword( 
-		userSessionBean.getUserBean().getUserPassword()
-	    );
+            userSessionBean.getUserBean().getAuthInfo().setUserPassword(
+                userSessionBean.getUserBean().getUserPassword()
+            );
             authSessionBean.getAuthSession().addUser( userSessionBean.getUserBean() );
             userSessionBean.setUserBean( null );
 
@@ -162,6 +169,9 @@ public class UserAction implements Serializable {
 
     public String saveUserAction() {
         log.info( "Save user action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( userSessionBean.getUserBean() != null ) {
             authSessionBean.getAuthSession().updateUser( userSessionBean.getUserBean() );
             userSessionBean.setUserBean( null );
@@ -196,6 +206,9 @@ public class UserAction implements Serializable {
 
     public String processDeleteUserAction() {
         log.info( "Process delete user action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( userSessionBean.getUserBean() != null ) {
             authSessionBean.getAuthSession().deleteUser( userSessionBean.getUserBean() );
             userSessionBean.setUserBean( null );

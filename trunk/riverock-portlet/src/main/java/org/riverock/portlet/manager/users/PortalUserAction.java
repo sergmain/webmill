@@ -29,6 +29,7 @@ import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author SergeMaslyukov
@@ -41,6 +42,8 @@ public class PortalUserAction implements Serializable {
 
     private PortalUserSessionBean portalUserSessionBean = null;
     private AuthSessionBean authSessionBean = null;
+
+    public static final String[] ROLES = new String[]{"webmill.portal-manager","webmill.user-manager"};
 
     public PortalUserAction() {
     }
@@ -68,6 +71,8 @@ public class PortalUserAction implements Serializable {
     }
 
     public String processAddPortalUser() {
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         Long id = FacesTools.getPortalDaoProvider().getPortalUserDao().addUser(portalUserSessionBean.getPortalUser());
 
         portalUserSessionBean.setCurrentPortalUserId(id);
@@ -81,6 +86,8 @@ public class PortalUserAction implements Serializable {
     }
 
     public String processEditPortalUser() {
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         FacesTools.getPortalDaoProvider().getPortalUserDao().updateUser(portalUserSessionBean.getPortalUser());
         return "portal-user";
     }
@@ -91,6 +98,8 @@ public class PortalUserAction implements Serializable {
     }
 
     public String processDeletePortalUser() {
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         FacesTools.getPortalDaoProvider().getPortalUserDao().deleteUser(portalUserSessionBean.getPortalUser());
         portalUserSessionBean.setPortalUser(null);
         return "portal-user";

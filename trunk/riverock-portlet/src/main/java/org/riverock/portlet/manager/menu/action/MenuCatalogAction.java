@@ -32,6 +32,7 @@ import org.riverock.portlet.manager.menu.MenuDataProvider;
 import org.riverock.portlet.manager.menu.MenuSessionBean;
 import org.riverock.portlet.manager.menu.bean.MenuCatalogBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -90,6 +91,8 @@ public class MenuCatalogAction implements Serializable {
     public String processChangeTemplateForCatalogLanguageAction() {
         log.info( "Save changes of template catalog action." );
 
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), MenuAction.ROLES);
+
         if( getSessionObject() !=null ) {
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().changeTemplateForCatalogLanguage(
                     getSessionObject().getCatalogLanguageId(), menuSessionBean.getTemplateId()
@@ -125,6 +128,8 @@ public class MenuCatalogAction implements Serializable {
     public String processAddMenuCatalogAction() {
         log.info( "Procss add menu catalog action." );
 
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), MenuAction.ROLES);
+
         if( getSessionObject() !=null ) {
             Long cssId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogLanguageItem(
                 getSessionObject()
@@ -156,6 +161,8 @@ public class MenuCatalogAction implements Serializable {
 
     public String processEditMenuCatalogAction() {
         log.info( "Save changes menu catalog action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), MenuAction.ROLES);
 
         if( getSessionObject() !=null ) {
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().updateCatalogLanguageItem(getSessionObject());
@@ -190,6 +197,8 @@ public class MenuCatalogAction implements Serializable {
 
     public String processDeleteMenuCatalogAction() {
         log.info( "Process delete menu catalog action. getSessionObject().getCatalogLanguageId(): " +getSessionObject().getCatalogLanguageId() );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), MenuAction.ROLES);
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().deleteCatalogLanguageItem(getSessionObject().getCatalogLanguageId());

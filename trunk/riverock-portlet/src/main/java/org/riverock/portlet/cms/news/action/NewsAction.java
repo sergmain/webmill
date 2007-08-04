@@ -32,6 +32,7 @@ import org.riverock.portlet.cms.news.NewsSessionBean;
 import org.riverock.portlet.cms.news.NewsDataProvider;
 import org.riverock.portlet.cms.news.bean.NewsBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -45,6 +46,8 @@ public class NewsAction implements Serializable {
     private NewsSessionBean newsSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private NewsDataProvider newsDataProvider = null;
+
+    public static final String[] ROLES = new String[]{"webmill.portal-manager","webmill.cms-manager","webmill.news-manager"};
 
     public NewsAction() {
     }
@@ -88,6 +91,9 @@ public class NewsAction implements Serializable {
 
     public String processAddNewsAction() {
         log.info("Procss add news item action.");
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if (getSessionObject() != null) {
 
             if (newsSessionBean.getCurrentNewsId() == null && newsSessionBean.getCurrentNewsGroupId() == null) {
@@ -130,6 +136,8 @@ public class NewsAction implements Serializable {
     public String processEditNewsAction() {
         log.info("Save changes news item action.");
 
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().updateNews(getSessionObject());
             cleadDataProviderObject();
@@ -162,6 +170,8 @@ public class NewsAction implements Serializable {
 
     public String processDeleteNewsAction() {
         log.info("Process delete news item action.");
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().deleteNews(getSessionObject().getNewsId());

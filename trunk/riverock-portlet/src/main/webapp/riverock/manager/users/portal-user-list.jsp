@@ -40,7 +40,9 @@
                           <h:outputText value="#{msg.header_table_portal_user_name}" />
                        </f:facet>
                        <t:commandLink action="#{portalUserAction.selectPortalUser}" immediate="true" >
-                            <h:outputText value="#{portalUserBean.name}" />
+<!--
+//TODO fix name
+-->                            <h:outputText value="#{portalUserBean.name}" />
                             <t:updateActionListener property="#{portalUserSessionBean.currentPortalUserId}" value="#{portalUserBean.userId}" />
                        </t:commandLink>
                    </h:column>

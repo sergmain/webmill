@@ -32,6 +32,7 @@ import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -47,6 +48,8 @@ public class TemplateAction implements Serializable {
     private SiteSessionBean siteSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private DataProvider dataProvider = null;
+
+    public static final String[] ROLES = new String[]{"webmill.authentic"};
 
     public TemplateAction() {
     }
@@ -70,7 +73,7 @@ public class TemplateAction implements Serializable {
 
 // main select action
     public String selectTemplate() {
-        TemplateAction.log.info( "Select template action." );
+        log.info( "Select template action." );
         loadCurrentObject();
 
         return "site";
@@ -78,7 +81,7 @@ public class TemplateAction implements Serializable {
 
 // Add actions
     public String addTemplateAction() {
-        TemplateAction.log.info( "Add template action." );
+        log.info( "Add template action." );
 
         TemplateBean templateBean = new TemplateBean();
         templateBean.setSiteLanguageId(siteSessionBean.getId());
@@ -88,7 +91,9 @@ public class TemplateAction implements Serializable {
     }
 
     public String processAddTemplateAction() {
-        TemplateAction.log.info( "Procss add template action." );
+        log.info( "Procss add template action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             Long templateId = FacesTools.getPortalDaoProvider().getPortalTemplateDao().createTemplate(
@@ -104,7 +109,7 @@ public class TemplateAction implements Serializable {
     }
 
     public String cancelAddTemplateAction() {
-        TemplateAction.log.info( "Cancel add template action." );
+        log.info( "Cancel add template action." );
 
         setSessionObject(null);
         cleadDataProviderObject();
@@ -114,13 +119,15 @@ public class TemplateAction implements Serializable {
 
 // Edit actions
     public String editTemplateAction() {
-        TemplateAction.log.info( "Edit holding action." );
+        log.info( "Edit holding action." );
 
         return "tenmplate-edit";
     }
 
     public String processEditTemplateAction() {
-        TemplateAction.log.info( "Save changes template action." );
+        log.info( "Save changes template action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             FacesTools.getPortalDaoProvider().getPortalTemplateDao().updateTemplate(getSessionObject());
@@ -155,6 +162,8 @@ public class TemplateAction implements Serializable {
 
     public String processDeleteTemplateAction() {
         log.info( "Process delete template action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalTemplateDao().deleteTemplate(getSessionObject().getTemplateId());

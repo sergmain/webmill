@@ -34,6 +34,7 @@ import org.riverock.portlet.manager.menu.MenuSessionBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -47,6 +48,8 @@ public class MenuAction implements Serializable {
     private MenuSessionBean menuSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private MenuDataProvider dataProvider = null;
+
+    static final String[] ROLES = new String[]{"webmill.portal-manager", "webmill.site-manager", "webmill.menu"};
 
     public MenuAction() {
     }
@@ -102,6 +105,9 @@ public class MenuAction implements Serializable {
 
     public String processAddMenuItemAction() {
         log.info("Procss add menu item action.");
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if (getSessionObject() != null) {
 
             if (menuSessionBean.getCurrentMenuItemId() == null && menuSessionBean.getCurrentMenuCatalogId() == null) {
@@ -158,6 +164,8 @@ public class MenuAction implements Serializable {
     public String processEditMenuItemAction() {
         log.info("Save changes menu item action.");
 
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if (getSessionObject() != null) {
             if (log.isDebugEnabled()) {
                 if (getSessionObject().getMenuItem()!=null) {
@@ -203,6 +211,8 @@ public class MenuAction implements Serializable {
 
     public String processDeleteMenuItemAction() {
         log.info("Process delete menu item action.");
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().deleteCatalogItem(getSessionObject().getMenuItem().getCatalogId());

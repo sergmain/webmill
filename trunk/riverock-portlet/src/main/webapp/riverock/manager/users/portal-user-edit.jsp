@@ -53,13 +53,16 @@
                     <jsp:include page="_portal-user-top-action.jsp"/>
                 </f:subview>
 
-        <h:panelGrid columns="1" rendered="#{!empty portalUserSessionBean.portalUser and isUserInRole['webmill.user-manager']}">
+        <h:panelGrid columns="1" rendered="#{!empty portalUserSessionBean.portalUser and isUserInRole['webmill.portal-manager,webmill.user-manager']}">
 
             <h:panelGroup>
                 <h:outputText value="Portal user info"/>
                 <h:panelGrid columns="2">
 
                     <h:outputText value="#{msg.portal_user_company_name}"/>
+<!--
+//TODO fix companyName
+-->
                     <h:outputText value="#{portalUserSessionBean.portalUser.companyName}"/>
 
                     <h:outputText value="#{msg.portal_user_first_name}"/>

@@ -35,7 +35,10 @@
  		<h:outputText value="#{portalUserSessionBean.portalUser.userId}"/>
 
  		<h:outputText value="#{msg.portal_user_company_name}"/>
- 		<h:outputText value="#{portalUserSessionBean.portalUser.companyName}"/>
+<!--
+//TODO fix companyName
+-->
+     <h:outputText value="#{portalUserSessionBean.portalUser.companyName}"/>
 
  		<h:outputText value="#{msg.portal_user_created_date}"/>
  		<h:outputText value="#{portalUserSessionBean.portalUser.createdDate}"/>

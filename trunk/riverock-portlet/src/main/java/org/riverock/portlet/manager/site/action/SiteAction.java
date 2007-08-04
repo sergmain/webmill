@@ -38,6 +38,7 @@ import org.riverock.portlet.manager.site.bean.SiteBean;
 import org.riverock.portlet.manager.site.bean.SiteExtended;
 import org.riverock.portlet.manager.site.bean.VirtualHostBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -53,6 +54,8 @@ public class SiteAction implements Serializable {
     private SiteSessionBean siteSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private DataProvider dataProvider = null;
+
+    public static final String[] ROLES = new String[]{"webmill.authentic"};
 
     public SiteAction() {
     }
@@ -105,6 +108,8 @@ public class SiteAction implements Serializable {
     public String processAddSiteAction() {
         log.debug( "Procss add site action." );
 
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if (log.isDebugEnabled()) {
             log.debug("site: " + siteSessionBean.getSiteExtended());
             if (siteSessionBean.getSiteExtended()!=null) {
@@ -149,6 +154,8 @@ public class SiteAction implements Serializable {
     public String processEditSiteAction() {
         log.debug( "Save changes site action." );
 
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( siteSessionBean.getSiteExtended()!=null ) {
             if (log.isDebugEnabled()) {
                 log.debug("virtual hosts: " +siteSessionBean.getSiteExtended().getVirtualHosts());
@@ -186,6 +193,9 @@ public class SiteAction implements Serializable {
 
     public String processDeleteSiteAction() {
         log.info( "Process delete site action." );
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
         if( siteSessionBean.getSiteExtended() != null ) {
             FacesTools.getPortalDaoProvider().getPortalSiteDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
             siteSessionBean.setCurrentSiteId(null);

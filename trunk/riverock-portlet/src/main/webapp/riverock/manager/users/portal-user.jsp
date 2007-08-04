@@ -54,7 +54,7 @@
                     <jsp:include page="_portal-user-top-action.jsp"/>
                 </f:subview>
 
-        <h:panelGrid columns="2" rendered="#{isUserInRole['webmill.user-manager']}">
+        <h:panelGrid columns="2" rendered="#{isUserInRole['webmill.portal-manager,webmill.user-manager']}">
 
                 <f:subview id="subviewPortalUserList">
                     <jsp:include page="portal-user-list.jsp"/>

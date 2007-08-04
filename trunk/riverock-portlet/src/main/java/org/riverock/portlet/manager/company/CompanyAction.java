@@ -26,6 +26,7 @@ package org.riverock.portlet.manager.company;
 import java.io.Serializable;
 
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.main.AuthSessionBean;
 
@@ -38,6 +39,8 @@ public class CompanyAction implements Serializable {
 
 	private CompanySessionBean sessionBean = null;
 	private AuthSessionBean authSessionBean = null;
+
+    public static final String[] ROLES = new String[]{"webmill.portal-manager"};
 
 	public CompanyAction() {
 	}
@@ -65,6 +68,9 @@ public class CompanyAction implements Serializable {
 	}
 
 	public String processAddCompany() {
+
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
 		Long companyId = FacesTools.getPortalDaoProvider().getPortalCompanyDao().processAddCompany(
 			sessionBean.getCompany(),
 			authSessionBean.getUserLogin(),
@@ -82,6 +88,8 @@ public class CompanyAction implements Serializable {
 	}
 
 	public String processEditCompany() {
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
 		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processSaveCompany(sessionBean.getCompany() );
 		
 		return "company";
@@ -93,6 +101,8 @@ public class CompanyAction implements Serializable {
 	}
 
 	public String processDeleteCompany() {
+        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+
 		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processDeleteCompany(sessionBean.getCompany());
 		sessionBean.setCompany( null );
 		return "company";
@@ -105,7 +115,8 @@ public class CompanyAction implements Serializable {
 
 	private void loadCurrentCompany() {
 		Company bean = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(
-			sessionBean.getCurrentCompanyId() );
+			sessionBean.getCurrentCompanyId()
+        );
 		sessionBean.setCompany( bean );
 	}
 }
