@@ -167,6 +167,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.riverock</groupId>
+            <artifactId>dbrevision</artifactId>
+            <version>0.9.9-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1-rc1</version>

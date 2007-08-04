@@ -1,26 +1,23 @@
 package org.riverock.webmill.trash;
 
-import java.sql.SQLException;
-import java.sql.DatabaseMetaData;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
 import org.hibernate.Session;
 
-import org.riverock.dbrevision.db.DatabaseStructureManager;
+import org.riverock.common.exception.DatabaseException;
+import org.riverock.dbrevision.annotation.schema.db.DbForeignKey;
 import org.riverock.dbrevision.db.DatabaseAdapter;
 import org.riverock.dbrevision.db.DatabaseAdapterProvider;
-import org.riverock.dbrevision.db.DatabaseManager;
-import org.riverock.dbrevision.annotation.schema.db.DbSchema;
-import org.riverock.dbrevision.annotation.schema.db.DbTable;
-import org.riverock.dbrevision.annotation.schema.db.DbForeignKey;
+import org.riverock.dbrevision.db.DatabaseStructureManager;
 import org.riverock.dbrevision.utils.Utils;
-import org.riverock.common.exception.DatabaseException;
-import org.riverock.webmill.utils.HibernateUtilsTest;
 import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.utils.HibernateUtilsTest;
 
 /**
  * User: SMaslyukov

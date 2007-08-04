@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DbRevision>
+    <Module>
+        <Description>Webmill forum portlet</Description>
+        <Name>webmill-forum-portlet</Name>
+        <Versions>
+            <Version>1.0</Version>
+        </Versions>
+    </Module>
+</DbRevision>     

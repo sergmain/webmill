@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dbrevision-structure:SchemaElement
+    xmlns:dbrevision-structure="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd
+dbrevision-structure.xsd">
+
+    <Table schema="TEST" name="WM_FAQ_IDS" type="TABLE">
+        <Field name="sequence_name" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
+        <Field name="sequence_next_value" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+    </Table>
+
+    <Table schema="TEST" name="WM_PORTLET_FAQ" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_PORTLET_FAQ" pkName="ID_ST_PORT_FAQ_PK">
+            <Column columnName="ID_SITE_PORTLET_FAQ" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_SITE_PORTLET_FAQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="7" decimalDigit="0" nullable="0"/>
+        <Field name="FAQ_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30"
+               nullable="1"/>
+        <Field name="NAME_FAQ" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50"
+               nullable="1"/>
+        <Field name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="6" decimalDigit="0" nullable="0"/>
+    </Table>
+    <Table schema="TEST" name="WM_PORTLET_FAQ_ANSWER" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_PORTLET_FAQ_ANSWER" pkName="ID_SPFA_PK">
+            <Column columnName="ID_SITE_PORTLET_FAQ_ANSWER" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_SITE_PORTLET_FAQ_ANSWER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="7" decimalDigit="0" nullable="0"/>
+        <Field name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="7" decimalDigit="0" nullable="0"/>
+        <Field name="ANSWER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000"
+               nullable="0"/>
+        <ForeignKey pkSchemaName="TEST" pkTableName="WM_PORTLET_FAQ_LIST" fkSchemaName="TEST"
+                    fkTableName="WM_PORTLET_FAQ_ANSWER" fkName="ID_SPFA_SPFL_FK" pkName="ID_PORT_FAQ_LST_PK">
+            <Column pkColumnName="ID_SITE_PORTLET_FAQ_LIST" fkColumnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1"/>
+            <DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+    <Table schema="TEST" name="WM_PORTLET_FAQ_LIST" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_PORTLET_FAQ_LIST" pkName="ID_PORT_FAQ_LST_PK">
+            <Column columnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="7" decimalDigit="0" nullable="0"/>
+        <Field name="ID_SITE_PORTLET_FAQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="7" decimalDigit="0" nullable="0"/>
+        <Field name="QUESTION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1"
+               nullable="1"/>
+        <Field name="ANSWER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1"
+               nullable="1"/>
+        <Field name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7"
+               nullable="1" defaultValue="sysdate"/>
+        <Field name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3"
+               decimalDigit="0" nullable="1"/>
+        <ForeignKey pkSchemaName="TEST" pkTableName="WM_PORTLET_FAQ" fkSchemaName="TEST"
+                    fkTableName="WM_PORTLET_FAQ_LIST" fkName="ID_SITE_PORTLET_FAQ_SPFL_FK" pkName="ID_ST_PORT_FAQ_PK">
+            <Column pkColumnName="ID_SITE_PORTLET_FAQ" fkColumnName="ID_SITE_PORTLET_FAQ" keySeq="1"/>
+            <DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+    <Table schema="TEST" name="WM_PORTLET_FAQ_QUESTION" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_PORTLET_FAQ_QUESTION" pkName="ID_SPFQ_PK">
+            <Column columnName="ID_SITE_PORTLET_FAQ_QUESTION" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_SITE_PORTLET_FAQ_QUESTION" dataType="NUMBER" javaType="3"
+               javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+        <Field name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="7" decimalDigit="0" nullable="0"/>
+        <Field name="QUESTION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000"
+               nullable="0"/>
+        <ForeignKey pkSchemaName="TEST" pkTableName="WM_PORTLET_FAQ_LIST" fkSchemaName="TEST"
+                    fkTableName="WM_PORTLET_FAQ_QUESTION" fkName="ID_SPFQ_SPFL_FK" pkName="ID_PORT_FAQ_LST_PK">
+            <Column pkColumnName="ID_SITE_PORTLET_FAQ_LIST" fkColumnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1"/>
+            <DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+
+</dbrevision-structure:SchemaElement>
