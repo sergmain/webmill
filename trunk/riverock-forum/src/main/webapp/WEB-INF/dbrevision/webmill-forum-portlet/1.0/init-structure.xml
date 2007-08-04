@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dbrevision-structure:SchemaElement
+    xmlns:dbrevision-structure="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd
+dbrevision-structure.xsd">
+
+    <Table schema="" name="WM_FORUM" type="TABLE">
+        <PrimaryKey catalogName="" schemaName="" tableName="WM_FORUM" pkName="FORUM_ID_WF_PK">
+            <Column columnName="FORUM_ID" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="FORUM_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="SITE_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="FORUM_NAME" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100"
+               decimalDigit="0" nullable="0"/>
+        <Field name="IS_USE_LOCALE" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="1"
+               decimalDigit="0" nullable="0" defaultValue="0"/>
+        <Field name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1"
+               decimalDigit="0" nullable="0" defaultValue="0"/>
+        <ForeignKey pkTableName="WM_PORTAL_LIST_SITE" fkTableName="WM_FORUM" fkName="FORUM_ID_WF_FK"
+                    pkName="ID_SITE_SLS_PK">
+            <Column pkColumnName="ID_SITE" fkColumnName="SITE_ID" keySeq="1"/>
+            <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+    <Table schema="" name="WM_FORUM_CATEGORY" type="TABLE">
+        <PrimaryKey catalogName="" schemaName="" tableName="WM_FORUM_CATEGORY" pkName="FORUM_CATEGORY_ID_WFC_PK">
+            <Column columnName="FORUM_CATEGORY_ID" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="FORUM_CATEGORY_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER"
+               size="10" decimalDigit="0" nullable="0"/>
+        <Field name="FORUM_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="FORUM_CATEGORY_NAME" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR"
+               size="100" decimalDigit="0" nullable="0"/>
+        <Field name="IS_USE_LOCALE" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="1"
+               decimalDigit="0" nullable="0" defaultValue="0"/>
+        <Field name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1"
+               decimalDigit="0" nullable="0" defaultValue="0"/>
+        <ForeignKey pkTableName="WM_FORUM" fkTableName="WM_FORUM_CATEGORY" fkName="FORUM_ID_WFC_FK"
+                    pkName="FORUM_ID_WF_PK">
+            <Column pkColumnName="FORUM_ID" fkColumnName="FORUM_ID" keySeq="1"/>
+            <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+    <Table schema="" name="WM_FORUM_CONCRETE" type="TABLE">
+        <PrimaryKey catalogName="" schemaName="" tableName="WM_FORUM_CONCRETE" pkName="F_ID_WFC_PK">
+            <Column columnName="F_ID" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="F_ORDER" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0" defaultValue="0"/>
+        <Field name="F_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="F_NAME" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40"
+               decimalDigit="0" nullable="0"/>
+        <Field name="F_INFO" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100"
+               decimalDigit="0" nullable="0"/>
+        <Field name="F_U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="1"/>
+        <Field name="F_TOPICS" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0" defaultValue="0"/>
+        <Field name="F_MESSAGES" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0" defaultValue="0"/>
+        <Field name="F_U_ID2" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="1"/>
+        <Field name="F_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0"
+               decimalDigit="0" nullable="1"/>
+        <Field name="FORUM_CATEGORY_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER"
+               size="10" decimalDigit="0" nullable="0"/>
+        <Field name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1"
+               decimalDigit="0" nullable="0" defaultValue="0"/>
+    </Table>
+    <Table schema="" name="WM_FORUM_TOPIC" type="TABLE">
+        <PrimaryKey catalogName="" schemaName="" tableName="WM_FORUM_TOPIC" pkName="WM_FORUM_TOPIC_PK">
+            <Column columnName="T_ID" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="T_ORDER" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_LOCKED" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_ICONID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_F_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_NAME" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_REPLIES" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_VIEWS" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_U_ID2" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="T_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0"
+               decimalDigit="0" nullable="0"/>
+        <ForeignKey pkTableName="WM_FORUM_CONCRETE" fkTableName="WM_FORUM_TOPIC" fkName="ID_FORUM_WFT_FK"
+                    pkName="WM_FORUM_PK_PK">
+            <Column pkColumnName="T_ID" fkColumnName="T_F_ID" keySeq="1"/>
+            <DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+    <Table schema="" name="WM_FORUM_MESSAGE" type="TABLE">
+        <PrimaryKey catalogName="" schemaName="" tableName="WM_FORUM_MESSAGE" pkName="WM_FORUM_MESSAGE_PK">
+            <Column columnName="M_ID" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="M_ICONID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="M_T_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="M_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="M_CONTENT" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000"
+               decimalDigit="0" nullable="1"/>
+        <Field name="M_U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="M_TIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0"
+               decimalDigit="0" nullable="0"/>
+        <Field size="5" nullable="0" name="COUNT_EDITED" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               defaultValue="0" decimalDigit="0" dataType="NUMBER"/>
+        <Field size="7" nullable="1" name="LAST_EDITED_TIME" javaType="91" javaStringType="java.sql.Types.TIMESTAMP"
+               dataType="DATE"/>
+    </Table>
+    <Table schema="" name="WM_FORUM_USER" type="TABLE">
+        <PrimaryKey catalogName="" schemaName="" tableName="WM_FORUM_USER" pkName="WM_FORUM_USER_PK">
+            <Column columnName="U_ID" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="U_AVATAR_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="U_SIGN" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100"
+               decimalDigit="0" nullable="1"/>
+        <Field name="U_POST" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="U_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0"
+               decimalDigit="0" nullable="0"/>
+        <Field name="U_LASTIP" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15"
+               decimalDigit="0" nullable="0"/>
+    </Table>
+
+</dbrevision-structure:SchemaElement>

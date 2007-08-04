@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dbrevision-structure:SchemaElement xmlns:dbrevision-structure="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd"
+                                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                    xsi:schemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd dbrevision-structure.xsd">
+
+	<Table schema="TEST" name="WM_WEBCLIP_IDS" type="TABLE">
+		<Field name="sequence_name" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
+		<Field name="sequence_next_value" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+	</Table>
+	<Table schema="TEST" name="WM_PORTLET_WEBCLIP" type="TABLE">
+		<PrimaryKey schemaName="TEST" tableName="WM_PORTLET_ARTICLE" pkName="ID_WEBCLIP_WPW_PK">
+			<Column columnName="ID_WEBCLIP" keySeq="1" />
+		</PrimaryKey>
+		<Field name="ID_WEBCLIP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<Field name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Field name="WEBCLIP_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Field name="VERSION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" nullable="1" defaultValue="0" decimalDigit="0" />
+		<Field name="WEBCLIP_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
+		<Field name="ZIP_ORIGIN_CONTENT" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
+		<Field name="IS_LOAD_CONTENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Field name="IS_PROCESS_CONTENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<ForeignKey pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" fkSchemaName="TEST" fkTableName="WM_PORTLET_WEBCLIP" fkName="ID_SITE_WPW_FK" pkName="ID_SITE_SLS_PK">
+            <Column pkColumnName="ID_SITE" fkColumnName="ID_SITE" keySeq="1" />
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ForeignKey>
+	</Table>
+</dbrevision-structure:SchemaElement>

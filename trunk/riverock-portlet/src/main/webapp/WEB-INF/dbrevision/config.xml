@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DbRevision>
+    <Module>
+        <Description>Webmill webclip portlet</Description>
+        <Name>webmill-webclip-portlet </Name>
+        <Versions>
+            <Version>1.0</Version>
+        </Versions>
+    </Module>
+    <Module>
+        <Description>Webmill job portlet</Description>
+        <Name>webmill-faq-portlet </Name>
+        <Versions>
+            <Version>1.0</Version>
+        </Versions>
+    </Module>
+    <Module>
+        <Description>Webmill faq portlet</Description>
+        <Name>webmill-faq-portlet </Name>
+        <Versions>
+            <Version>1.0</Version>
+        </Versions>
+    </Module>
+</DbRevision>     

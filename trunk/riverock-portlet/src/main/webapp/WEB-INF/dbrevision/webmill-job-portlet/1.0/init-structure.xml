@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dbrevision-structure:SchemaElement
+    xmlns:dbrevision-structure="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd
+dbrevision-structure.xsd">
+
+    <Table schema="TEST" name="WM_JOB_IDS" type="TABLE">
+        <Field name="sequence_name" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
+        <Field name="sequence_next_value" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+    </Table>
+
+    <Table schema="TEST" name="WM_JOB_POSITION" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_JOB_POSITION" pkName="ID_JOB_POS_JP_PK">
+            <Column columnName="ID_JOB_POSITION" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_JOB_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10"
+               decimalDigit="0" nullable="0"/>
+        <Field name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7"
+               nullable="1" defaultValue="sysdate"/>
+        <Field name="PERIOD_ACTIVITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4"
+               decimalDigit="0" nullable="1" defaultValue="90"/>
+        <Field name="AGE_FROM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2"
+               decimalDigit="0" nullable="1"/>
+        <Field name="AGE_TO" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3"
+               decimalDigit="0" nullable="1"/>
+        <Field name="ID_JOB_SEX_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3"
+               decimalDigit="0" nullable="1"/>
+        <Field name="ID_JOB_TYPE_EDUCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="3" decimalDigit="0" nullable="1"/>
+        <Field name="SALARY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10"
+               decimalDigit="3" nullable="1"/>
+        <Field name="SALARY_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80"
+               nullable="1"/>
+        <Field name="CITY_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40"
+               nullable="1"/>
+        <Field name="TEXT_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1"
+               nullable="1"/>
+        <Field name="ID_CONTACT_PERSON" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10"
+               decimalDigit="0" nullable="1"/>
+        <Field name="TEST_PERIOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50"
+               nullable="1"/>
+        <Field name="ID_JOB_TYPE_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="10" decimalDigit="0" nullable="1"/>
+        <Field name="NAME_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100"
+               nullable="1"/>
+        <Field name="CONTACT_PERSON" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR"
+               size="100" nullable="1"/>
+        <Field name="TYPE_JOB" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1"
+               decimalDigit="0" nullable="1"/>
+        <Field name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10"
+               decimalDigit="0" nullable="1"/>
+        <ForeignKey pkSchemaName="TEST" pkTableName="WM_JOB_GENDER_LIST" fkSchemaName="TEST"
+                    fkTableName="WM_JOB_POSITION" fkName="ID_JOB_SEX_LIST_JP_FK" pkName="ID_JOB_SEX_JSL_PK">
+            <Column pkColumnName="ID_JOB_SEX_LIST" fkColumnName="ID_JOB_SEX_LIST" keySeq="1"/>
+            <DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+        <ForeignKey pkSchemaName="TEST" pkTableName="WM_JOB_TYPE_EDUCATION" fkSchemaName="TEST"
+                    fkTableName="WM_JOB_POSITION" fkName="ID_JOB_TYPE_EDU_JP_FK" pkName="ID_JOB_EDU_JTE_PK">
+            <Column pkColumnName="ID_JOB_TYPE_EDUCATION" fkColumnName="ID_JOB_TYPE_EDUCATION" keySeq="1"/>
+            <DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+        <ForeignKey pkSchemaName="TEST" pkTableName="WM_JOB_TYPE_POSITION" fkSchemaName="TEST"
+                    fkTableName="WM_JOB_POSITION" fkName="ID_JOB_TYPE_POS_JP_FK" pkName="ID_JOB__POS_JTP_PK">
+            <Column pkColumnName="ID_JOB_TYPE_POSITION" fkColumnName="ID_JOB_TYPE_POSITION" keySeq="1"/>
+            <DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+    <Table schema="TEST" name="WM_JOB_POSITION_DATA" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_JOB_POSITION_DATA" pkName="ID_JOB_POS_JPD_PK">
+            <Column columnName="ID_JOB_POSITION_DATA" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_JOB_POSITION_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="11" decimalDigit="0" nullable="0"/>
+        <Field name="ID_JOB_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10"
+               decimalDigit="0" nullable="1"/>
+        <Field name="TEXT_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR"
+               size="4000" nullable="1"/>
+        <ForeignKey pkSchemaName="TEST" pkTableName="WM_JOB_POSITION" fkSchemaName="TEST"
+                    fkTableName="WM_JOB_POSITION_DATA" fkName="ID_JOB_POSITION_JPD_FK" pkName="ID_JOB_POS_JP_PK">
+            <Column pkColumnName="ID_JOB_POSITION" fkColumnName="ID_JOB_POSITION" keySeq="1"/>
+            <DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+    <Table schema="TEST" name="WM_JOB_RESUME" type="TABLE">
+        <Field name="ID_JOB_RESUME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10"
+               decimalDigit="0" nullable="1"/>
+    </Table>
+    <Table schema="TEST" name="WM_JOB_RESUME_DATA" type="TABLE">
+        <Field name="ID_JOB_RESUME_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="10" decimalDigit="0" nullable="1"/>
+        <Field name="ID_JOB_RESUME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10"
+               decimalDigit="0" nullable="1"/>
+        <Field name="TEXT_RESUME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000"
+               nullable="1"/>
+    </Table>
+    <Table schema="TEST" name="WM_JOB_GENDER_LIST" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_JOB_GENDER_LIST" pkName="ID_JOB_SEX_JSL_PK">
+            <Column columnName="ID_JOB_SEX_LIST" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_JOB_SEX_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3"
+               decimalDigit="0" nullable="0"/>
+        <Field name="SEX_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40"
+               nullable="1"/>
+    </Table>
+    <Table schema="TEST" name="WM_JOB_TYPE_EDUCATION" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_JOB_TYPE_EDUCATION" pkName="ID_JOB_EDU_JTE_PK">
+            <Column columnName="ID_JOB_TYPE_EDUCATION" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_JOB_TYPE_EDUCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="3" decimalDigit="0" nullable="0"/>
+        <Field name="NAME_EDUCATION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40"
+               nullable="1"/>
+    </Table>
+    <Table schema="TEST" name="WM_JOB_TYPE_POSITION" type="TABLE">
+        <PrimaryKey schemaName="TEST" tableName="WM_JOB_TYPE_POSITION" pkName="ID_JOB__POS_JTP_PK">
+            <Column columnName="ID_JOB_TYPE_POSITION" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_JOB_TYPE_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL"
+               size="10" decimalDigit="0" nullable="0"/>
+        <Field name="NAME_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60"
+               nullable="1"/>
+    </Table>
+
+</dbrevision-structure:SchemaElement>
