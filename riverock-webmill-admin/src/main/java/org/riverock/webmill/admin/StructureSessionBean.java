@@ -24,19 +24,46 @@
  */
 package org.riverock.webmill.admin;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 18.07.2006
  *         Time: 18:50:23
  */
 public class StructureSessionBean {
-    private String errorMessage=null;
+    private List<String> messages=null;
 
-    public String getErrorMessage() {
-        return errorMessage;
+    private String moduleName=null;
+
+    private String versionName=null;
+
+    public String getModuleName() {
+        return moduleName;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
+
+    public String getVersionName() {
+        return versionName;
+    }
+
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
+    }
+
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
+    }
+
+    public List<String> getMessages() {
+        if (messages==null) {
+            messages = new ArrayList<String>();
+        }
+        return messages;
+    }
+
 }

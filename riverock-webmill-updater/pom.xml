@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.riverock</groupId>
-    <artifactId>riverock-webmill-update</artifactId>
+    <artifactId>riverock-webmill-updater</artifactId>
     <packaging>jar</packaging>
     <version>5.8.0-SNAPSHOT</version>
     <name>Webmill updater</name>
@@ -14,36 +14,36 @@
     	<url>http://riverock.svn.sourceforge.net/viewvc/riverock</url>
     </scm>
 
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/webmill-update</url>
-    </site>
-    <repository>
-      <id>riverock-repository</id>
-      <name>Riverock repository</name>
-      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/repo</url>
-    </repository>
-  </distributionManagement>
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/webmill-update</url>
+        </site>
+        <repository>
+            <id>riverock-repository</id>
+            <name>Riverock repository</name>
+            <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/repo</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>dbrevision</artifactId>
             <version>0.9.9-SNAPSHOT</version>
-            <scope>provided </scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jsr173_api</artifactId>
             <version>1.0</version>
-            <scope>provided </scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.0</version>
-            <scope>provided </scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

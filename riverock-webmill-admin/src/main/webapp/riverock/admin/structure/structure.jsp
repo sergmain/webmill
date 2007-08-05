@@ -60,14 +60,51 @@
         <h:commandButton id="db-list-action" action="db" value="#{manager.db_button}"
                          styleClass="top-button-action"/>
 
-        <h:panelGrid columns="1">
+           <t:dataTable id="revisionModuleTable"
+                         var="module"
+                         value="#{structureService.manager.modules}"
+                         preserveDataModel="true">
+                <h:column>
+                    <h:panelGrid columns="1">
 
-            <h:commandButton value="#{msg.action_create_db_structure}"
-                             action="#{structureAction.createDbStructure}"
-                             styleClass="structure-button-action"
-                />
+                        <h:panelGrid columns="2">
+                            <h:outputText value="#{module.name}"/>
 
-        </h:panelGrid>
+                            <t:commandLink action="#{structureAction.applayModule}" immediate="true">
+                                <h:outputText value="#{msg.applay}"/>
+                                <t:updateActionListener property="#{structureSessionBean.moduleName}" value="#{module.name}"/>
+                            </t:commandLink>
+                        </h:panelGrid>
 
-    </h:form>
+                        <h:panelGroup>
+                            <h:outputText value="#{msg.module_complete}" rendered="#{module.complete}"/>
+                            <t:dataTable id="revisionVersionTable"
+                                         var="version"
+                                         value="#{module.versions}"
+                                         preserveDataModel="true"
+                                rendered="#{not module.complete}">
+
+                                <h:panelGrid columns="3">
+                                    <h:outputText value="&nbsp;"/>
+
+                                    <h:outputText value="#{version.versionName}"/>
+
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msg.version_complete}" rendered="#{version.complete}"/>
+                                        <t:commandLink action="#{structureAction.applayVersion}" immediate="true" rendered="#{not version.complete}">
+                                            <h:outputText value="#{msg.applay}"/>
+                                            <t:updateActionListener property="#{structureSessionBean.moduleName}" value="#{module.name}"/>
+                                            <t:updateActionListener property="#{structureSessionBean.versionName}" value="#{version.versionName}"/>
+                                        </t:commandLink>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                            </t:dataTable>
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+                </h:column>
+
+            </t:dataTable>
+            
+     </h:form>
 </f:view>
