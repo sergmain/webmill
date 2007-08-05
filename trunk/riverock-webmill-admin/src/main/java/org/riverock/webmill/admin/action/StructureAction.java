@@ -24,24 +24,15 @@
  */
 package org.riverock.webmill.admin.action;
 
-import java.io.File;
 import java.io.Serializable;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.sql.Connection;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 
-import org.riverock.common.config.PropertiesProvider;
 import org.riverock.webmill.admin.StructureSessionBean;
-import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.dbrevision.db.DatabaseAdapter;
-import org.riverock.dbrevision.db.DatabaseAdapterProvider;
-import org.riverock.dbrevision.system.DbStructureImport;
+import org.riverock.webmill.admin.service.StructureService;
+import org.riverock.dbrevision.manager.Module;
+import org.riverock.dbrevision.manager.Version;
 
 /**
  * @author Sergei Maslyukov
@@ -54,8 +45,17 @@ public class StructureAction implements Serializable {
 
     private StructureSessionBean structureSessionBean=null;
 
+    private StructureService structureService=null;
 
     public StructureAction() {
+    }
+
+    public StructureService getStructureService() {
+        return structureService;
+    }
+
+    public void setStructureService(StructureService structureService) {
+        this.structureService = structureService;
     }
 
     public StructureSessionBean getStructureSessionBean() {
@@ -66,48 +66,62 @@ public class StructureAction implements Serializable {
         this.structureSessionBean = structureSessionBean;
     }
 
-    public String createDbStructure() {
-        String strucruteFileName =
-            PropertiesProvider.getApplicationPath()+ File.separatorChar+
-                "WEB-INF" + File.separatorChar+
-                "webmill" + File.separatorChar+
-                "structure" + File.separatorChar+
-                "webmill-schema.xml";
-
-        log.debug("structure file name: " +strucruteFileName);
-
+    public String applayModule() {
         try {
-            structureSessionBean.setErrorMessage(null);
-
-            String family;
-            String name = "java:comp/env/dbFamily";
-            try {
-                InitialContext ic = new InitialContext();
-                family = (String) ic.lookup(name);
+            structureSessionBean.setMessages(null);
+            Module module = structureService.getManager().getModule(structureSessionBean.getModuleName());
+            if (module!=null) {
+                module.applay();
             }
-            catch (NamingException e) {
-                String es = "Error get value of DB family from JNDI. JNDI env: " + name;
-                log.error(es, e);
-                throw new IllegalArgumentException(es, e);
-            }
-
-            Session session = HibernateUtils.getSession();
-            session.beginTransaction();
-
-            Connection connection = session.connection();
-            DatabaseAdapter db  = DatabaseAdapterProvider.getInstance(connection, family);
-            InputStream stream = new FileInputStream(strucruteFileName);
-            DbStructureImport.importStructure(db, stream, false);
-
-            session.getTransaction().commit();
         }
         catch (Throwable e) {
             String es = "Error create db structure";
             log.error(es, e);
-            structureSessionBean.setErrorMessage(e.toString());
+            structureSessionBean.getMessages().add(e.toString());
+        }
+        try {
+            structureService.init();
+        }
+        catch (Throwable e) {
+            String es = "Error reinit DbRevisionManager.";
+            log.error(es, e);
+            structureSessionBean.getMessages().add(e.toString());
         }
 
-        return "create-structure-result";
+        return "structure";
+    }
 
+    public String applayVersion() {
+        try {
+            structureSessionBean.setMessages(null);
+            Module module = structureService.getManager().getModule(structureSessionBean.getModuleName());
+            if (module!=null) {
+                List<Version> versions = module.getVersions();
+                for (Version version : versions) {
+                    if (version.isComplete()) {
+                        continue;
+                    }
+                    version.applay();
+                    if (version.getVersionName().equals(structureSessionBean.getVersionName())) {
+                        break;
+                    }
+                }
+            }
+        }
+        catch (Throwable e) {
+            String es = "Error create db structure";
+            log.error(es, e);
+            structureSessionBean.getMessages().add(e.toString());
+        }
+        try {
+            structureService.init();
+        }
+        catch (Throwable e) {
+            String es = "Error reinit DbRevisionManager.";
+            log.error(es, e);
+            structureSessionBean.getMessages().add(e.toString());
+        }
+
+        return "structure";
     }
 }

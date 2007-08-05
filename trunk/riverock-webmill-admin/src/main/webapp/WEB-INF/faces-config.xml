@@ -81,6 +81,16 @@
 
     <!-- Structure section -->
     <managed-bean>
+        <managed-bean-name>structureSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.StructureSessionBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>structureService</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.service.StructureService</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>structureAction</managed-bean-name>
         <managed-bean-class>org.riverock.webmill.admin.action.StructureAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -88,11 +98,10 @@
             <property-name>structureSessionBean</property-name>
             <value>#{structureSessionBean}</value>
         </managed-property>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>structureSessionBean</managed-bean-name>
-        <managed-bean-class>org.riverock.webmill.admin.StructureSessionBean</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
+        <managed-property>
+            <property-name>structureService</property-name>
+            <value>#{structureSessionBean}</value>
+        </managed-property>
     </managed-bean>
 
     <!-- Company section -->
@@ -156,6 +165,7 @@
     </managed-bean>
 
     <!-- structure navigation rules -->
+<!--
     <navigation-rule>
         <from-view-id>/riverock/admin/structure/structure.jsp</from-view-id>
         <navigation-case>
@@ -163,6 +173,7 @@
             <to-view-id>/riverock/admin/structure/create-structure-result.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
+-->
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
