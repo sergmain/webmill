@@ -45,6 +45,27 @@
         width: 150px;
         height: 22px;
     }
+    .styleFirstCol {
+        width: 300px;
+    }
+    .styleSecondCol {
+        width: 100px;
+    }
+
+    .styleSubFirstCol {
+        width: 20px;
+        border:none;
+    }
+    .styleSumSecondCol{
+        border: 1px solid;
+        width: 280px;
+        border:none;
+    }
+    .styleSubThirdCol {
+        width: 100px;
+        border:none;
+    }
+
 </style>
 
 <f:view>
@@ -63,41 +84,43 @@
            <t:dataTable id="revisionModuleTable"
                          var="module"
                          value="#{structureService.manager.modules}"
-                         preserveDataModel="true">
+                         preserveDataModel="false"
+                         style="width:400px; border:1px none; ">
                 <h:column>
-                    <h:panelGrid columns="1">
+                    <h:panelGrid columns="1" style="width:100%; border: 1px none;">
 
-                        <h:panelGrid columns="2">
-                            <h:outputText value="#{module.name}"/>
+                        <h:panelGrid columns="2" style="width:100%; border: 1px none;" columnClasses="styleFirstCol, styleSecondCol">
+                            <h:outputText value="#{module.description}"/>
 
-                            <t:commandLink action="#{structureAction.applayModule}" immediate="true">
-                                <h:outputText value="#{msg.applay}"/>
+                            <t:commandButton action="#{structureAction.applyModule}" value="#{msg.apply}">
                                 <t:updateActionListener property="#{structureSessionBean.moduleName}" value="#{module.name}"/>
-                            </t:commandLink>
+                            </t:commandButton>
                         </h:panelGrid>
 
-                        <h:panelGroup>
+                        <h:panelGroup style="width:100%; border: 1px none;" >
                             <h:outputText value="#{msg.module_complete}" rendered="#{module.complete}"/>
                             <t:dataTable id="revisionVersionTable"
                                          var="version"
                                          value="#{module.versions}"
-                                         preserveDataModel="true"
-                                rendered="#{not module.complete}">
+                                         preserveDataModel="false"
+                                         rendered="#{not module.complete}"
+                                         style="width:100%; ; border:1px none; ">
+                                <h:column>
 
-                                <h:panelGrid columns="3">
-                                    <h:outputText value="&nbsp;"/>
+                                    <h:panelGrid columns="3" columnClasses="styleSubFirstCol, styleSumSecondCol, styleSubThirdCol">
+                                        <f:verbatim>&nbsp;</f:verbatim>
 
-                                    <h:outputText value="#{version.versionName}"/>
+                                        <h:outputText value="#{version.versionName}"/>
 
-                                    <h:panelGroup>
-                                        <h:outputText value="#{msg.version_complete}" rendered="#{version.complete}"/>
-                                        <t:commandLink action="#{structureAction.applayVersion}" immediate="true" rendered="#{not version.complete}">
-                                            <h:outputText value="#{msg.applay}"/>
-                                            <t:updateActionListener property="#{structureSessionBean.moduleName}" value="#{module.name}"/>
-                                            <t:updateActionListener property="#{structureSessionBean.versionName}" value="#{version.versionName}"/>
-                                        </t:commandLink>
-                                    </h:panelGroup>
-                                </h:panelGrid>
+                                        <h:panelGroup>
+                                            <h:outputText value="#{msg.version_complete}" rendered="#{version.complete}"/>
+                                            <t:commandButton action="#{structureAction.applyVersion}" value="#{msg.apply}" rendered="#{not version.complete}">
+                                                <t:updateActionListener property="#{structureSessionBean.moduleName}" value="#{module.name}"/>
+                                                <t:updateActionListener property="#{structureSessionBean.versionName}" value="#{version.versionName}"/>
+                                            </t:commandButton>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
+                                </h:column>
                             </t:dataTable>
                         </h:panelGroup>
 

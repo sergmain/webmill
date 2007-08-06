@@ -2,63 +2,25 @@
 <Patches xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision.xsd">
 	<Patch>
 		<Name>patch-1-1</Name>
-        <Action>
-            <Type>CUSTOM_SQL</Type>
-            <ActionParameter name="sql">
-                <Data>update WM_PORTAL_TEMPLATE
-set TEMPLATE_DATA=null
-</Data>
-            </ActionParameter>
-        </Action>
+        <SqlAction>
+            <Sql>update WM_PORTAL_TEMPLATE set TEMPLATE_DATA=null</Sql>
+        </SqlAction>
 	</Patch>
     <Patch>
         <Name>patch-1-2</Name>
         <PreviousName>patch-1-1</PreviousName>
-        <Action>
-            <Type>ADD_TABLE_COLUMN</Type>
-            <ActionParameter name="table_name">
-                <Data>WM_PORTAL_TEMPLATE</Data>
-            </ActionParameter>
-            <ActionParameter name="column_name">
-                <Data>TEMPLATE_ROLE</Data>
-            </ActionParameter>
-            <ActionParameter name="column_type">
-                <Data>VARCHAR</Data>
-            </ActionParameter>
-            <ActionParameter name="column_size">
-                <Data>50</Data>
-            </ActionParameter>
-            <ActionParameter name="column_decimal_digit">
-                <Data>0</Data>
-            </ActionParameter>
-            <ActionParameter name="column_default_value">
-                <Data/>
-            </ActionParameter>
-            <ActionParameter name="column_nullable">
-                <Data>1</Data>
-            </ActionParameter>
-        </Action>
+        <AddTableFieldAction tableName="WM_PORTAL_TEMPLATE">
+            <Field name="TEMPLATE_ROLE" dataType="VARCHAR" size="50" decimalDigit="0" defaultValue="" nullable="1"/>
+        </AddTableFieldAction>
     </Patch>
     <Patch>
         <Name>patch-1-3</Name>
         <PreviousName>patch-1-2</PreviousName>
-        <Action>
-            <Type>CUSTOM_CLASS_ACTION</Type>
-            <ActionParameter name="class_name">
-                <Data>org.riverock.update.webmill.v580.ConvertTemplate</Data>
-            </ActionParameter>
-        </Action>
+        <Validator>
+            <Class>org.riverock.update.webmill.v580.convert_template.ConvertTemplate</Class>
+        </Validator>
+        <CustomClassAction>
+            <Class>org.riverock.update.webmill.v580.convert_template.ConvertTemplate</Class>
+        </CustomClassAction>
     </Patch>
-<!--
-    <Patch>
-        <Name>patch-1-4</Name>
-        <PreviousName>patch-1-3</PreviousName>
-        <Action>
-            <Type>CUSTOM_SQL</Type>
-            <ActionParameter name="sql">
-                <Data></Data>
-            </ActionParameter>
-        </Action>
-    </Patch>
--->
 </Patches>

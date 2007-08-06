@@ -100,7 +100,7 @@
         </managed-property>
         <managed-property>
             <property-name>structureService</property-name>
-            <value>#{structureSessionBean}</value>
+            <value>#{structureService}</value>
         </managed-property>
     </managed-bean>
 

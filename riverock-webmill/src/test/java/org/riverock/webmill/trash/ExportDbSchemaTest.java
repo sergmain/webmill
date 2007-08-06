@@ -18,8 +18,8 @@ import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.dbrevision.system.DbStructureExport;
-import org.riverock.dbrevision.db.DatabaseAdapterProvider;
-import org.riverock.dbrevision.db.DatabaseAdapter;
+import org.riverock.dbrevision.db.DatabaseFactory;
+import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.db.DatabaseManager;
 import org.riverock.dbrevision.db.DatabaseStructureManager;
 import org.riverock.dbrevision.annotation.schema.db.DbSchema;
@@ -40,7 +40,7 @@ public class ExportDbSchemaTest {
 
 
         Session session = HibernateUtils.getSession();
-        DatabaseAdapter adapter = DatabaseAdapterProvider.getInstance(session.connection(), DatabaseAdapter.Family.MYSQL);
+        Database adapter = DatabaseFactory.getInstance(session.connection(), Database.Family.MYSQL);
 
         DbSchema schema = DatabaseManager.getDbStructure(adapter, true);
         DbTable t = null;

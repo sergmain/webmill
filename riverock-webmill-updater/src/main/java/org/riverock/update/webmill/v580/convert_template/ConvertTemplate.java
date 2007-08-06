@@ -11,8 +11,7 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang.StringUtils;
 
-import org.riverock.dbrevision.annotation.schema.db.Action;
-import org.riverock.dbrevision.db.DatabaseAdapter;
+import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.manager.patch.PatchAction;
 import org.riverock.dbrevision.manager.patch.PatchStatus;
 import org.riverock.dbrevision.manager.patch.PatchValidator;
@@ -32,7 +31,7 @@ import org.riverock.update.webmill.v580.convert_template.schema.Template;
  */
 public class ConvertTemplate implements PatchAction, PatchValidator {
     
-    public PatchStatus validate(DatabaseAdapter adapter, Action action) {
+    public PatchStatus validate(Database database) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         ResultSet rs1 = null;
@@ -40,7 +39,7 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
 
         PatchStatus status = new PatchStatus();
         try {
-            st = adapter.getConnection().createStatement();
+            st = database.getConnection().createStatement();
             rs = st.executeQuery("select ID_SITE_TEMPLATE from WM_PORTAL_TEMPLATE");
             while (rs.next()) {
                 Long templateId = DbUtils.getLong(rs, "ID_SITE_TEMPLATE");
@@ -50,13 +49,13 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
                     return status;
                 }
 
-                ps = adapter.getConnection().prepareStatement(
+                ps = database.getConnection().prepareStatement(
                     "select TEMPLATE_BLOB from WM_PORTAL_TEMPLATE where ID_SITE_TEMPLATE=?"
                 );
                 ps.setLong(1, templateId);
                 rs1 = ps.executeQuery();
                 if (rs1.next()) {
-                    byte[] blob = adapter.getBlobField(rs, "TEMPLATE_BLOB", 1024*1024);
+                    byte[] blob = database.getBlobField(rs, "TEMPLATE_BLOB", 1024*1024);
                     ByteArrayInputStream stream = new ByteArrayInputStream(blob);
 
                     try {
@@ -87,7 +86,7 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
         return status;
     }
 
-    public PatchStatus process(DatabaseAdapter adapter, Action action) {
+    public PatchStatus process(Database database) {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -96,7 +95,7 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
 
         PatchStatus status = new PatchStatus();
         try {
-            st = adapter.getConnection().createStatement();
+            st = database.getConnection().createStatement();
             rs = st.executeQuery("select ID_SITE_TEMPLATE from WM_PORTAL_TEMPLATE");
             while (rs.next()) {
                 Long templateId = DbUtils.getLong(rs, "ID_SITE_TEMPLATE");
@@ -106,20 +105,20 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
                     return status;
                 }
 
-                ps = adapter.getConnection().prepareStatement(
+                ps = database.getConnection().prepareStatement(
                     "select TEMPLATE_BLOB from WM_PORTAL_TEMPLATE where ID_SITE_TEMPLATE=?"
                 );
                 ps.setLong(1, templateId);
                 rs1 = ps.executeQuery();
                 if (rs1.next()) {
                     try {
-                        byte[] blob = adapter.getBlobField(rs, "TEMPLATE_BLOB", 1024*1024);
+                        byte[] blob = database.getBlobField(rs, "TEMPLATE_BLOB", 1024*1024);
                         ByteArrayInputStream stream = new ByteArrayInputStream(blob);
 
                         SiteTemplate siteTemplate = Utils.getObjectFromXml(SiteTemplate.class, stream);
 
                         if (StringUtils.isNotBlank(siteTemplate.getRole())) {
-                            updateRole(adapter, templateId, siteTemplate.getRole().trim());
+                            updateRole(database, templateId, siteTemplate.getRole().trim());
                         }
                         Template template = new Template();
                         for (SiteTemplateItem item : siteTemplate.getSiteTemplateItem()) {
@@ -147,7 +146,7 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
                             }
                         }
                         byte[] bytes = Utils.getXml(template, "Template", "utf-8");
-                        updateTemplate(adapter, templateId, bytes);
+                        updateTemplate(database, templateId, bytes);
                     }
                     catch (JAXBException e) {
                         status.setStatus(PatchStatus.Status.ERROR);
@@ -155,7 +154,7 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
                     }
                 }
             }
-            adapter.getConnection().commit();
+            database.getConnection().commit();
         }
         catch (SQLException e) {
             status.setStatus(PatchStatus.Status.ERROR);
@@ -168,11 +167,11 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
         return status;
     }
 
-    private void updateTemplate(DatabaseAdapter adapter, Long templateId, byte[] bytes) {
+    private void updateTemplate(Database database, Long templateId, byte[] bytes) {
         
     }
 
-    private void updateRole(DatabaseAdapter adapter, Long templateId, String role) {
+    private void updateRole(Database database, Long templateId, String role) {
         //To change body of created methods use File | Settings | File Templates.
     }
 }

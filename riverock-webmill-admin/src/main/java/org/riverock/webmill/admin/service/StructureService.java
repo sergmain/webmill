@@ -1,29 +1,29 @@
 package org.riverock.webmill.admin.service;
 
+import java.io.Serializable;
 import java.sql.Connection;
-import java.util.List;
+import java.util.Properties;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.hibernate.Session;
-
 import org.apache.log4j.Logger;
 
-import org.riverock.dbrevision.manager.Module;
-import org.riverock.dbrevision.manager.DbRevisionManager;
-import org.riverock.dbrevision.db.DatabaseAdapter;
-import org.riverock.dbrevision.db.DatabaseAdapterProvider;
+import org.hibernate.Session;
+
 import org.riverock.common.config.PropertiesProvider;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.dbrevision.db.Database;
+import org.riverock.dbrevision.db.DatabaseFactory;
+import org.riverock.dbrevision.manager.DbRevisionManager;
 import org.riverock.webmill.admin.AdminConstants;
+import org.riverock.webmill.utils.HibernateUtils;
 
 /**
  * User: SergeMaslyukov
  * Date: 05.08.2007
  * Time: 18:15:17
  */
-public class StructureService {
+public class StructureService implements Serializable {
     private static Logger log = Logger.getLogger(StructureService.class);
 
     private DbRevisionManager manager=null;
@@ -48,16 +48,20 @@ public class StructureService {
             log.error(es, e);
             throw new IllegalArgumentException(es, e);
         }
-
+         
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
         Connection connection = session.connection();
-        DatabaseAdapter adapter = DatabaseAdapterProvider.getInstance(connection, family);
+        Database database = DatabaseFactory.getInstance(connection, family);
 
         String dbrevisionPath = PropertiesProvider.getApplicationPath() + AdminConstants.DBREVISION_PATH;
         log.debug("structure file name: " + dbrevisionPath);
 
-        manager = new DbRevisionManager(adapter, dbrevisionPath);
+        manager = new DbRevisionManager(database, dbrevisionPath);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Modules:\n" + manager.getModules());
+        }
     }
 }
