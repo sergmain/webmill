@@ -12,8 +12,8 @@ import org.hibernate.Session;
 
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.dbrevision.annotation.schema.db.DbForeignKey;
-import org.riverock.dbrevision.db.DatabaseAdapter;
-import org.riverock.dbrevision.db.DatabaseAdapterProvider;
+import org.riverock.dbrevision.db.Database;
+import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.DatabaseStructureManager;
 import org.riverock.dbrevision.utils.Utils;
 import org.riverock.webmill.utils.HibernateUtils;
@@ -32,7 +32,7 @@ public class GetForeignKeysTest {
 
 
         Session session = HibernateUtils.getSession();
-        DatabaseAdapter adapter = DatabaseAdapterProvider.getInstance(session.connection(), DatabaseAdapter.Family.MYSQL);
+        Database adapter = DatabaseFactory.getInstance(session.connection(), Database.Family.MYSQL);
         DatabaseMetaData metaData = adapter.getConnection().getMetaData();
         String dbSchema = metaData.getUserName();
         System.out.println("dbSchema = " + dbSchema);

@@ -14,9 +14,9 @@ import org.hibernate.Session;
 
 import org.riverock.dbrevision.annotation.schema.db.DbSchema;
 import org.riverock.dbrevision.annotation.schema.db.DbTable;
-import org.riverock.dbrevision.db.DatabaseAdapter;
-import org.riverock.dbrevision.db.DatabaseAdapterProvider;
 import org.riverock.dbrevision.db.DatabaseStructureManager;
+import org.riverock.dbrevision.db.DatabaseFactory;
+import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.system.DbStructureImport;
 import org.riverock.dbrevision.utils.Utils;
 import org.riverock.webmill.admin.CompanySessionBean;
@@ -71,7 +71,7 @@ public class DbAction  implements Serializable {
             session.beginTransaction();
 
             Connection connection = session.connection();
-            DatabaseAdapter db  = DatabaseAdapterProvider.getInstance(connection, family);
+            Database db  = DatabaseFactory.getInstance(connection, family);
 
             log.debug("Start loop with zipEntry for search db structure file.");
             // search and process db structure file
@@ -102,7 +102,7 @@ public class DbAction  implements Serializable {
                     }
 
                     log.debug("Import DB structure");
-                    DbStructureImport.importStructure(schema, db, false);
+                    DbStructureImport.importStructure(db, schema, false);
                 }
             }
             connection.commit();

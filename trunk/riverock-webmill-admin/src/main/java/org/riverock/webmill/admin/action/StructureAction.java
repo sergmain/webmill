@@ -66,12 +66,12 @@ public class StructureAction implements Serializable {
         this.structureSessionBean = structureSessionBean;
     }
 
-    public String applayModule() {
+    public String applyModule() {
         try {
             structureSessionBean.setMessages(null);
             Module module = structureService.getManager().getModule(structureSessionBean.getModuleName());
             if (module!=null) {
-                module.applay();
+                module.apply();
             }
         }
         catch (Throwable e) {
@@ -91,7 +91,7 @@ public class StructureAction implements Serializable {
         return "structure";
     }
 
-    public String applayVersion() {
+    public String applyVersion() {
         try {
             structureSessionBean.setMessages(null);
             Module module = structureService.getManager().getModule(structureSessionBean.getModuleName());
@@ -101,7 +101,7 @@ public class StructureAction implements Serializable {
                     if (version.isComplete()) {
                         continue;
                     }
-                    version.applay();
+                    version.apply();
                     if (version.getVersionName().equals(structureSessionBean.getVersionName())) {
                         break;
                     }
