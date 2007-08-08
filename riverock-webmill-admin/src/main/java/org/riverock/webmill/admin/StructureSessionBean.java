@@ -27,6 +27,8 @@ package org.riverock.webmill.admin;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.riverock.dbrevision.manager.patch.PatchStatus;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 18.07.2006
