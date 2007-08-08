@@ -2,7 +2,6 @@ package org.riverock.webmill.admin.service;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.util.Properties;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -28,12 +27,12 @@ public class StructureService implements Serializable {
 
     private DbRevisionManager manager=null;
 
-    public DbRevisionManager getManager() {
-        return manager;
-    }
-
     public StructureService() {
         init();
+    }
+
+    public DbRevisionManager getManager() {
+        return manager;
     }
 
     public void init() {

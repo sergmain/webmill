@@ -81,6 +81,16 @@
         <h:commandButton id="db-list-action" action="db" value="#{manager.db_button}"
                          styleClass="top-button-action"/>
 
+        <t:dataTable id="messagesTable"
+                      var="message"
+                      value="#{structureSessionBean.messages}"
+                      preserveDataModel="false"
+                      style="width:100%; border:none; ">
+             <h:column>
+                 <h:outputText value="#{message}"/>
+             </h:column>
+        </t:dataTable>
+
            <t:dataTable id="revisionModuleTable"
                          var="module"
                          value="#{structureService.manager.modules}"
@@ -92,18 +102,19 @@
                         <h:panelGrid columns="2" style="width:100%; border: 1px none;" columnClasses="styleFirstCol, styleSecondCol">
                             <h:outputText value="#{module.description}"/>
 
-                            <t:commandButton action="#{structureAction.applyModule}" value="#{msg.apply}">
-                                <t:updateActionListener property="#{structureSessionBean.moduleName}" value="#{module.name}"/>
-                            </t:commandButton>
+                            <h:panelGroup>
+                                <t:commandButton action="#{structureAction.applyModule}" value="#{msg.apply}" rendered="#{not module.complete}">
+                                    <t:updateActionListener property="#{structureSessionBean.moduleName}" value="#{module.name}"/>
+                                </t:commandButton>
+                                <h:outputText value="#{msg.module_complete}" rendered="#{module.complete}"/>
+                            </h:panelGroup>
                         </h:panelGrid>
 
-                        <h:panelGroup style="width:100%; border: 1px none;" >
-                            <h:outputText value="#{msg.module_complete}" rendered="#{module.complete}"/>
+                        <h:panelGroup>
                             <t:dataTable id="revisionVersionTable"
                                          var="version"
                                          value="#{module.versions}"
                                          preserveDataModel="false"
-                                         rendered="#{not module.complete}"
                                          style="width:100%; ; border:1px none; ">
                                 <h:column>
 

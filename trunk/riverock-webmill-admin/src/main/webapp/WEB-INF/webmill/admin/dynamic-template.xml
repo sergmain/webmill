@@ -1,36 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ org.riverock.webmill.admin - Webmill portal admin web application
-  ~ For more information about Webmill portal, please visit project site
-  ~ http://webmill.askmore.info
-  ~
-  ~ Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
-  ~ Riverock - The Open-source Java Development Community,
-  ~ http://www.riverock.org
-  ~
-  ~
-  ~ This program is free software; you can redistribute it and/or
-  ~ modify it under the terms of the GNU General Public
-  ~ License as published by the Free Software Foundation; either
-  ~ version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This library is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public
-  ~ License along with this library; if not, write to the Free Software
-  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-  -->
-<SiteTemplate>
-	<SiteTemplateItem type="custom" value="HeaderStart"/>
-	<SiteTemplateItem type="custom" value="HeaderText"/>
-	<SiteTemplateItem type="custom" value="HeaderEnd"/>
-	<SiteTemplateItem type="portlet" value="mill.menu" code="TOP_MENU" xmlRoot="TopMenu"/>
-	<SiteTemplateItem type="custom" value="MainStart"/>
-	<SiteTemplateItem type="portlet" value="mill.menu" code="MAIN" />
-	<SiteTemplateItem type="custom" value="Separator"/>
-	<SiteTemplateItem type="dynamic" value=""/>
-	<SiteTemplateItem type="custom" value="Footer"/>
-</SiteTemplate>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Template xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd">
+    <element:custom value="HeaderStart"/>
+    <element:custom value="HeaderText"/>
+    <element:custom value="HeaderEnd"/>
+    <element:portlet xmlRoot="TopMenu" value="mill.menu" code="TOP_MENU"/>
+    <element:custom value="MainStart"/>
+    <element:portlet value="mill.menu" code="MAIN"/>
+    <element:custom value="Separator"/>
+    <element:dynamic/>
+    <element:custom value="Footer"/>
+</Template>
