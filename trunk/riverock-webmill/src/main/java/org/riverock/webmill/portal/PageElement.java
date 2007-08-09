@@ -57,6 +57,7 @@ import org.riverock.webmill.portal.preference.PortletPreferencePersistencer;
 import org.riverock.webmill.portal.preference.PortletPreferencesImpl;
 import org.riverock.webmill.template.PortalTemplateItem;
 import org.riverock.webmill.template.PortalTemplateParameter;
+import org.riverock.webmill.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -80,7 +81,7 @@ public final class PageElement {
     private SitePortletData data = null;
 
     private PortletEntry portletEntry = null;
-    private PortalTemplateItem portalTemplateItem = null;
+    private ParsedTemplateElement portalTemplateItem = null;
     private boolean isXml = false;
     private PortletParameters parameters = null;
     private boolean isRedirected = false;
@@ -105,7 +106,7 @@ public final class PageElement {
     private PortalInstance portalInstance;
 
     public PageElement(PortalInstance portalInstance, Namespace namespace,
-                       PortalTemplateItem portalTemplateItem, PortletParameters portletParameters,
+                       ParsedTemplateElement portalTemplateItem, PortletParameters portletParameters,
                        String targetTemplateName
     ) {
         this.portalInstance = portalInstance;
@@ -245,8 +246,9 @@ public final class PageElement {
                 log.debug( "Portlet object successfull created" );
                 log.debug( "isXml() - "+isXml );
 
-                if ( isXml )
+                if ( isXml ) {
                     log.debug( "XmlRoot - "+portalTemplateItem.getXmlRoot() );
+                }
 
                 log.debug( "portletBytes - " + portletBytes );
             }

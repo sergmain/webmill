@@ -26,7 +26,7 @@ package org.riverock.portlet.manager.company;
 import java.io.Serializable;
 
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.main.AuthSessionBean;
 
@@ -69,7 +69,7 @@ public class CompanyAction implements Serializable {
 
 	public String processAddCompany() {
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
 		Long companyId = FacesTools.getPortalDaoProvider().getPortalCompanyDao().processAddCompany(
 			sessionBean.getCompany(),
@@ -88,7 +88,7 @@ public class CompanyAction implements Serializable {
 	}
 
 	public String processEditCompany() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
 		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processSaveCompany(sessionBean.getCompany() );
 		
@@ -101,7 +101,7 @@ public class CompanyAction implements Serializable {
 	}
 
 	public String processDeleteCompany() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
 		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processDeleteCompany(sessionBean.getCompany());
 		sessionBean.setCompany( null );

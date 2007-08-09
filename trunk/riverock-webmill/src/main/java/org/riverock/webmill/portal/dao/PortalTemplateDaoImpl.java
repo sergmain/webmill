@@ -29,6 +29,7 @@ import java.util.List;
 import org.riverock.interfaces.portal.dao.PortalTemplateDao;
 import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.webmill.portal.bean.TemplateBean;
 
 /**
  * @author Sergei Maslyukov
@@ -81,7 +82,7 @@ public class PortalTemplateDaoImpl implements PortalTemplateDao {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalTemplateDao().getTemplateLanguageList(siteLanguageId);
+            return (List)InternalDaoFactory.getInternalTemplateDao().getTemplateLanguageList(siteLanguageId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
@@ -92,7 +93,7 @@ public class PortalTemplateDaoImpl implements PortalTemplateDao {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalTemplateDao().getTemplateList(siteId);
+            return (List)InternalDaoFactory.getInternalTemplateDao().getTemplateList(siteId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
@@ -103,7 +104,8 @@ public class PortalTemplateDaoImpl implements PortalTemplateDao {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalTemplateDao().createTemplate(template);
+            TemplateBean bean = new TemplateBean(template);
+            return InternalDaoFactory.getInternalTemplateDao().createTemplate(bean);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
@@ -114,7 +116,8 @@ public class PortalTemplateDaoImpl implements PortalTemplateDao {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalTemplateDao().updateTemplate(template);
+            TemplateBean bean = new TemplateBean(template);
+            InternalDaoFactory.getInternalTemplateDao().updateTemplate(bean);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

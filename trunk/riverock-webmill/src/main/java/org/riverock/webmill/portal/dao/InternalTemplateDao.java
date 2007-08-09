@@ -26,7 +26,7 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
-import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.webmill.portal.bean.TemplateBean;
 
 /**
  * @author Sergei Maslyukov
@@ -34,19 +34,19 @@ import org.riverock.interfaces.portal.bean.Template;
  *         Time: 17:51:14
  */
 public interface InternalTemplateDao {
-    public Template getTemplate(Long templateId);
-    public Template getTemplate(String templateName, Long siteLanguageId);
-    public Template getTemplate(Long siteId, String templateName, String lang);
-    public Template getDefaultDynamicTemplate(Long siteLanguageId);
+    public TemplateBean getTemplate(Long templateId);
+    public TemplateBean getTemplate(String templateName, Long siteLanguageId);
+    public TemplateBean getTemplate(Long siteId, String templateName, String lang);
+    public TemplateBean getDefaultDynamicTemplate(Long siteLanguageId);
 
-    public List<Template> getTemplateLanguageList( Long siteLanguageId );
-    public List<Template> getTemplateList( Long siteId );
+    public List<TemplateBean> getTemplateLanguageList( Long siteLanguageId );
+    public List<TemplateBean> getTemplateList( Long siteId );
 
-    public Long createTemplate(Template template);
+    public Long createTemplate(TemplateBean template);
 
     public void deleteTemplate(Long templateId);
     public void deleteTemplateForSite(Long siteId);
     public void deleteTemplateForSiteLanguage(Long siteLanguageId);
 
-    public void updateTemplate(Template template);
+    public void updateTemplate(TemplateBean template);
 }

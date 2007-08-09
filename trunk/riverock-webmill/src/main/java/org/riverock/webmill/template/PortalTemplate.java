@@ -23,8 +23,9 @@
  */
 package org.riverock.webmill.template;
 
-import java.util.List;
 import java.io.Serializable;
+
+import org.riverock.webmill.template.parser.ParsedTemplate;
 
 /**
  * @author SergeMaslyukov
@@ -34,8 +35,15 @@ import java.io.Serializable;
  */
 public interface PortalTemplate extends Serializable {
     public Long getTemplateId();
-    public String getTemplateName();
     public String getRole();
-    public List<PortalTemplateItem> getPortalTemplateItems();
+    public ParsedTemplate getTemplate();
+
+    /**
+     * This field used for check template is updated in db or not
+     * 
+     * @return version of db record
+     */
     int getVersion();
+
+    public String getTemplateName();
 }

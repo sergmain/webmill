@@ -32,7 +32,7 @@ import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -93,7 +93,7 @@ public class TemplateAction implements Serializable {
     public String processAddTemplateAction() {
         log.info( "Procss add template action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             Long templateId = FacesTools.getPortalDaoProvider().getPortalTemplateDao().createTemplate(
@@ -127,7 +127,7 @@ public class TemplateAction implements Serializable {
     public String processEditTemplateAction() {
         log.info( "Save changes template action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             FacesTools.getPortalDaoProvider().getPortalTemplateDao().updateTemplate(getSessionObject());
@@ -163,7 +163,7 @@ public class TemplateAction implements Serializable {
     public String processDeleteTemplateAction() {
         log.info( "Process delete template action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalTemplateDao().deleteTemplate(getSessionObject().getTemplateId());

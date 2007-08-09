@@ -29,7 +29,7 @@ import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SergeMaslyukov
@@ -71,7 +71,7 @@ public class PortalUserAction implements Serializable {
     }
 
     public String processAddPortalUser() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         Long id = FacesTools.getPortalDaoProvider().getPortalUserDao().addUser(portalUserSessionBean.getPortalUser());
 
@@ -86,7 +86,7 @@ public class PortalUserAction implements Serializable {
     }
 
     public String processEditPortalUser() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         FacesTools.getPortalDaoProvider().getPortalUserDao().updateUser(portalUserSessionBean.getPortalUser());
         return "portal-user";
@@ -98,7 +98,7 @@ public class PortalUserAction implements Serializable {
     }
 
     public String processDeletePortalUser() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         FacesTools.getPortalDaoProvider().getPortalUserDao().deleteUser(portalUserSessionBean.getPortalUser());
         portalUserSessionBean.setPortalUser(null);

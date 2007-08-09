@@ -27,13 +27,12 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.cms.article.ArticleSessionBean;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.portlet.cms.article.ArticleDataProvider;
+import org.riverock.portlet.cms.article.ArticleSessionBean;
 import org.riverock.portlet.cms.article.bean.ArticleBean;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.portlet.webclip.WebclipConstants;
 
 /**
  * @author Sergei Maslyukov
@@ -94,7 +93,7 @@ public class ArticleAction implements Serializable {
     public String processAddArticleAction() {
         log.info("Procss add article action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
 
@@ -128,7 +127,7 @@ public class ArticleAction implements Serializable {
     public String processEditArticleAction() {
         log.info("Save changes article action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().updateArticle(getSessionObject());
@@ -163,7 +162,7 @@ public class ArticleAction implements Serializable {
     public String processDeleteArticleAction() {
         log.info("Process delete article action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().deleteArticle(getSessionObject().getArticleId());

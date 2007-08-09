@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SergeMaslyukov
@@ -74,7 +74,7 @@ public class PortletNameAction implements Serializable {
     }
 
     public String processAddPortletName() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         Long id = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().createPortletName( portletNameSessionBean.getPortletName() );
         portletNameSessionBean.setCurrentPortletNameId( id );
@@ -88,7 +88,7 @@ public class PortletNameAction implements Serializable {
     }
 
     public String processEditPortletName() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         FacesTools.getPortalDaoProvider().getPortalPortletNameDao().updatePortletName( portletNameSessionBean.getPortletName() );
         return "portlet-name";
@@ -100,7 +100,7 @@ public class PortletNameAction implements Serializable {
     }
 
     public String processDeletePortletName() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         FacesTools.getPortalDaoProvider().getPortalPortletNameDao().deletePortletName( portletNameSessionBean.getPortletName() );
         portletNameSessionBean.setPortletName( null );

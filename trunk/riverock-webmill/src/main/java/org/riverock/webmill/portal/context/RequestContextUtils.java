@@ -57,6 +57,7 @@ import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.PortalTemplateItem;
 import org.riverock.webmill.template.PortalTemplateItemType;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
+import org.riverock.webmill.template.TemplateUtils;
 
 /**
  * $Id$
@@ -280,13 +281,15 @@ public final class RequestContextUtils {
             log.debug( "template:\n" + template.toString());
             log.debug( "Process template");
         }
-        for (PortalTemplateItem templateItem : template.getPortalTemplateItems()) {
+        if (true) throw new RuntimeException("Need rewrite");
+//        for (PortalTemplateItem templateItem : template.getPortalTemplateItems()) {
+        for (PortalTemplateItem templateItem : new ArrayList<PortalTemplateItem>()) {
 
             // we change request status if portlet is 'always_process_as_action'
             RequestState requestState;
 
             if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
-                String portletName = templateItem.getValueAsPortletName();
+                String portletName = TemplateUtils.getFullPortletName( templateItem.getValue() );
 
                 Namespace namespace = NamespaceFactory.getNamespace(portletName, template.getTemplateName(), i++, templateItem);
                 if (log.isDebugEnabled()) {

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp1 (http://www.altova.com) by Serg (Home) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="2.0">
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
 	<xs:import namespace="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" schemaLocation="riverock-template-page-elements.xsd"/>
@@ -34,6 +35,7 @@
 		<xs:attribute name="code" type="xs:string"/>
 		<xs:attribute name="xmlRoot" type="xs:string"/>
 		<xs:attribute name="role" type="xs:string"/>
+		<xs:attribute name="template" type="xs:string"/>
 	</xs:complexType>
 	<xs:complexType name="Parameter">
 		<xs:attribute name="name" type="xs:string" use="required"/>
@@ -46,7 +48,8 @@
 				<xs:choice maxOccurs="unbounded">
 					<xs:element ref="element:portlet"/>
 					<xs:element ref="element:dynamic"/>
-					<xs:element ref="element:custom"/>
+					<xs:element ref="element:xslt"/>
+					<xs:element ref="element:include"/>
 				</xs:choice>
 			</xs:choice>
 		</xs:complexType>
@@ -55,7 +58,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="head" minOccurs="0"/>
-				<xs:element ref="element:custom" minOccurs="0"/>
+				<xs:element ref="element:xslt" minOccurs="0"/>
 				<xs:element ref="body"/>
 			</xs:sequence>
 			<xs:attribute name="lang" type="xs:NMTOKEN"/>
@@ -80,8 +83,9 @@
 					<xs:element ref="meta"/>
 					<xs:element ref="link"/>
 					<xs:element ref="object"/>
-					<xs:element ref="element:custom"/>
+					<xs:element ref="element:xslt"/>
 					<xs:element ref="element:portlet"/>
+					<xs:element ref="element:include"/>
 				</xs:choice>
 				<xs:choice>
 					<xs:sequence>
@@ -316,9 +320,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -426,9 +431,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -494,7 +500,8 @@
 				<xs:element ref="script"/>
 				<xs:element ref="element:portlet"/>
 				<xs:element ref="element:dynamic"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -558,9 +565,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -624,9 +632,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -690,9 +699,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -756,9 +766,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -822,9 +833,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -888,9 +900,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -1035,9 +1048,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -1339,9 +1353,10 @@
 				<xs:element ref="textarea"/>
 				<xs:element ref="label"/>
 				<xs:element ref="button"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -1745,7 +1760,8 @@
 				<xs:element ref="script"/>
 				<xs:element ref="element:portlet"/>
 				<xs:element ref="element:dynamic"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -1949,7 +1965,8 @@
 				<xs:element ref="script"/>
 				<xs:element ref="element:portlet"/>
 				<xs:element ref="element:dynamic"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -2772,7 +2789,8 @@
 				<xs:element ref="script"/>
 				<xs:element ref="element:portlet"/>
 				<xs:element ref="element:dynamic"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -2838,7 +2856,8 @@
 				<xs:element ref="script"/>
 				<xs:element ref="element:portlet"/>
 				<xs:element ref="element:dynamic"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -4436,9 +4455,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>
@@ -4559,9 +4579,10 @@
 				<xs:element ref="ins"/>
 				<xs:element ref="del"/>
 				<xs:element ref="script"/>
-				<xs:element ref="element:custom"/>
+				<xs:element ref="element:xslt"/>
 				<xs:element ref="element:dynamic"/>
 				<xs:element ref="element:portlet"/>
+				<xs:element ref="element:include"/>
 			</xs:choice>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="class" type="xs:string"/>

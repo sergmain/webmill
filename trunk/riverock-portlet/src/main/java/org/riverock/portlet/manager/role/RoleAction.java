@@ -28,7 +28,7 @@ import java.io.Serializable;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SergeMaslyukov
@@ -68,7 +68,7 @@ public class RoleAction implements Serializable {
 	}
 
 	public String processAddRole() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         Long roleId = authSessionBean.getAuthSession().addRole( roleSessionBean.getRole() );
         roleSessionBean.setCurrentRoleId( roleId );
@@ -82,7 +82,7 @@ public class RoleAction implements Serializable {
 	}
 
 	public String processEditRole() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         authSessionBean.getAuthSession().updateRole( roleSessionBean.getRole() );
 		return "role";
@@ -94,7 +94,7 @@ public class RoleAction implements Serializable {
 	}
 
 	public String processDeleteRole() {
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         authSessionBean.getAuthSession().deleteRole( roleSessionBean.getRole() );
 		roleSessionBean.setRole( null );

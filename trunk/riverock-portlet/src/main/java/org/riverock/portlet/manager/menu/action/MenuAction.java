@@ -34,7 +34,7 @@ import org.riverock.portlet.manager.menu.MenuSessionBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -106,7 +106,7 @@ public class MenuAction implements Serializable {
     public String processAddMenuItemAction() {
         log.info("Procss add menu item action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
 
@@ -164,7 +164,7 @@ public class MenuAction implements Serializable {
     public String processEditMenuItemAction() {
         log.info("Save changes menu item action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
             if (log.isDebugEnabled()) {
@@ -212,7 +212,7 @@ public class MenuAction implements Serializable {
     public String processDeleteMenuItemAction() {
         log.info("Process delete menu item action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().deleteCatalogItem(getSessionObject().getMenuItem().getCatalogId());
