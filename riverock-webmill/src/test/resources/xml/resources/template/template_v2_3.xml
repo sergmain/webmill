@@ -2,7 +2,7 @@
 <Template xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://webmill.riverock.org/xsd/riverock-template.xsd">
 <html>
     <body>
-		<element:custom value="Aaa"/>
+		<element:xslt name="Aaa"/>
 	</body>
 </html>
 </Template>    

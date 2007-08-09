@@ -1,23 +1,16 @@
 package org.riverock.webmill.template;
 
 import java.beans.PropertyDescriptor;
+import java.lang.Object;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import org.riverock.webmill.template.schema.Html;
-import org.riverock.webmill.template.schema.Portlet;
-import org.riverock.webmill.template.schema.Custom;
-import org.riverock.webmill.template.schema.Dynamic;
-import org.riverock.webmill.template.schema.Template;
-import org.riverock.webmill.template.schema.SiteTemplate;
-import org.riverock.webmill.template.schema.SiteTemplateItem;
-import org.riverock.webmill.template.schema.Parameter;
-import org.riverock.webmill.template.schema.ElementParameter;
-import org.riverock.webmill.container.tools.ContainertStringUtils;
 import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.container.tools.ContainertStringUtils;
+import org.riverock.webmill.template.schema.*;
 
 /**
  * User: SMaslyukov
@@ -26,7 +19,7 @@ import org.riverock.webmill.container.portlet.PortletContainer;
  */
 public class TemplateUtils {
 
-    public static String getString( final List<PortalTemplateParameter> v, final String nameParam) throws IllegalArgumentException{
+    public static String getString( final List<ElementParameter> v, final String nameParam) throws IllegalArgumentException{
         return getString(v, nameParam, null);
     }
 
@@ -39,11 +32,11 @@ public class TemplateUtils {
         }
     }
 
-    public static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
+    public static String getString( final List<ElementParameter> templateParameters, final String nameParam, final String defValue ) {
         if ( templateParameters == null || ContainertStringUtils.isBlank(nameParam) )
             return defValue;
 
-        for (PortalTemplateParameter portalTemplateParameter : templateParameters) {
+        for (ElementParameter portalTemplateParameter : templateParameters) {
             if (portalTemplateParameter.getName().equals(nameParam))
                 return portalTemplateParameter.getValue();
         }
@@ -65,7 +58,7 @@ public class TemplateUtils {
         if (obj==null) {
             return;
         }
-        if  ((obj instanceof Portlet) || (obj instanceof Custom) || (obj instanceof Dynamic)) {
+        if  ((obj instanceof Portlet) || (obj instanceof Xslt) || (obj instanceof Dynamic) || (obj instanceof Include)) {
             elements.add(obj);
             return;
         }
@@ -85,7 +78,7 @@ public class TemplateUtils {
             if (!(o.getClass().getPackage().getName().equals(Html.class.getPackage().getName()))) {
                 continue;
             }
-            if  ((o instanceof Portlet) || (o instanceof Custom) || (o instanceof Dynamic)) {
+            if  ((o instanceof Portlet) || (o instanceof Xslt) || (o instanceof Dynamic) || (o instanceof Include)) {
                 elements.add(o);
             }
             else {
@@ -103,19 +96,19 @@ public class TemplateUtils {
         for (SiteTemplateItem templateItem : siteTemplate.getSiteTemplateItem()) {
             switch (PortalTemplateItemTypeImpl.valueOf(templateItem.getType()).getType()) {
                 case PortalTemplateItemType.CUSTOM_TYPE:
-                    Custom custom = new Custom();
-                    custom.setValue( templateItem.getValue() );
-                    t.getPortletOrDynamicOrCustom().add(custom);
+                    Xslt custom = new Xslt();
+                    custom.setName( templateItem.getValue() );
+                    t.getPortletOrDynamicOrXslt().add(custom);
                     break;
 
                 case PortalTemplateItemType.DYNAMIC_TYPE:
-                    t.getPortletOrDynamicOrCustom().add(new Dynamic());
+                    t.getPortletOrDynamicOrXslt().add(new Dynamic());
                     break;
 
                 case PortalTemplateItemType.PORTLET_TYPE:
                     Portlet portlet = new Portlet();
                     portlet.setCode(templateItem.getCode());
-                    portlet.setValue(templateItem.getValue());
+                    portlet.setName(templateItem.getValue());
                     portlet.setXmlRoot(templateItem.getXmlRoot());
                     for (Parameter parameter : templateItem.getParameter()) {
                         ElementParameter p = new ElementParameter();
@@ -123,7 +116,7 @@ public class TemplateUtils {
                         p.setValue(parameter.getValue());
                         portlet.getElementParameter().add(p);
                     }
-                    t.getPortletOrDynamicOrCustom().add(portlet);
+                    t.getPortletOrDynamicOrXslt().add(portlet);
                     break;
             }
         }

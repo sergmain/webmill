@@ -29,7 +29,9 @@
 	</xs:element>
 	<xs:element name="include">
 		<xs:complexType>
-			<xs:attribute name="template" type="xs:string" use="required"/>
+			<xs:sequence>
+				<xs:element name="Template" type="xs:string"/>
+			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

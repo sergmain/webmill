@@ -7,6 +7,8 @@ import java.lang.Object;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEventHandler;
+import javax.xml.bind.ValidationEvent;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
@@ -14,6 +16,7 @@ import junit.framework.TestCase;
 
 import org.riverock.common.tools.XmlTools;
 import org.riverock.webmill.template.schema.*;
+import org.riverock.webmill.utils.JaxbValidationEventHandler;
 
 /**
  * User: SMaslyukov
@@ -39,13 +42,13 @@ public class TestParsingTemplateV2 extends TestCase {
         SiteTemplate siteTemplate;
 
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_1.xml");
-        siteTemplate = XmlTools.getObjectFromXml(SiteTemplate.class, is);
+        siteTemplate = XmlTools.getObjectFromXml(SiteTemplate.class, is, JaxbValidationEventHandler.getHandler());
         assertNotNull(siteTemplate);
 
         Template t = TemplateUtils.convertTemplate(siteTemplate);
         assertNotNull(t);
 
-        assertEquals(siteTemplate.getSiteTemplateItem().size(), t.getPortletOrDynamicOrCustom().size());
+        assertEquals(siteTemplate.getSiteTemplateItem().size(), t.getPortletOrDynamicOrXslt().size());
 
 /*
         <SiteTemplateItem type="custom" value="HeaderStart"/>
@@ -88,15 +91,15 @@ public class TestParsingTemplateV2 extends TestCase {
         assertEquals("great", p.getValue());
 
 
-        assertEquals(Custom.class, t.getPortletOrDynamicOrCustom().get(0).getClass());
-        assertEquals(Portlet.class, t.getPortletOrDynamicOrCustom().get(3).getClass());
-        assertEquals(Portlet.class, t.getPortletOrDynamicOrCustom().get(9).getClass());
-        assertEquals(Dynamic.class, t.getPortletOrDynamicOrCustom().get(13).getClass());
-        Object o = t.getPortletOrDynamicOrCustom().get(11);
+        assertEquals(Xslt.class, t.getPortletOrDynamicOrXslt().get(0).getClass());
+        assertEquals(Portlet.class, t.getPortletOrDynamicOrXslt().get(3).getClass());
+        assertEquals(Portlet.class, t.getPortletOrDynamicOrXslt().get(9).getClass());
+        assertEquals(Dynamic.class, t.getPortletOrDynamicOrXslt().get(13).getClass());
+        Object o = t.getPortletOrDynamicOrXslt().get(11);
         assertEquals(Portlet.class, o.getClass());
         Portlet portlet = (Portlet)o;
 
-        assertEquals("mill.menu", portlet.getValue());
+        assertEquals("mill.menu", portlet.getName());
         assertEquals("DEFAULT_ru_RU", portlet.getCode());
         assertEquals(2, portlet.getElementParameter().size());
 
@@ -116,23 +119,15 @@ public class TestParsingTemplateV2 extends TestCase {
         SiteTemplate siteTemplate;
 
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_1.xml");
-        siteTemplate = XmlTools.getObjectFromXml(SiteTemplate.class, is);
+        siteTemplate = XmlTools.getObjectFromXml(SiteTemplate.class, is, JaxbValidationEventHandler.getHandler());
         assertNotNull(siteTemplate);
     }
 
     public void testUnmarshalTemplate_v2_2() throws Exception {
         InputStream is;
-        Template siteTemplate;
 
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_2.xml");
-
-        Source source =  new StreamSource(is);
-        JAXBContext jaxbContext = JAXBContext.newInstance (Template.class.getPackage().getName());
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        JAXBElement<Template> jaxbElement;
-        jaxbElement = unmarshaller.unmarshal( source, Template.class);
-
-        siteTemplate = jaxbElement.getValue();
+        Template siteTemplate = XmlTools.getObjectFromXml(Template.class, is, JaxbValidationEventHandler.getHandler() );
         assertNotNull(siteTemplate);
     }
 
@@ -141,13 +136,13 @@ public class TestParsingTemplateV2 extends TestCase {
         InputStream is;
         Template template;
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_2.xml");
-        template = XmlTools.getObjectFromXml(Template.class, is);
+        template = XmlTools.getObjectFromXml(Template.class, is, JaxbValidationEventHandler.getHandler());
         assertNotNull(template);
     }
 
     public void testUnmarshalTemplate_v2_3() throws Exception {
         InputStream is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_3.xml");
-        Template template = XmlTools.getObjectFromXml(Template.class, is);
+        Template template = XmlTools.getObjectFromXml(Template.class, is, JaxbValidationEventHandler.getHandler());
         assertNotNull(template);
     }
 
@@ -155,7 +150,7 @@ public class TestParsingTemplateV2 extends TestCase {
 
         InputStream is;
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_4.xml");
-        Template template = XmlTools.getObjectFromXml(Template.class, is);
+        Template template = XmlTools.getObjectFromXml(Template.class, is, JaxbValidationEventHandler.getHandler());
         assertNotNull(template);
 
         Html html = template.getHtml();
@@ -190,23 +185,32 @@ public class TestParsingTemplateV2 extends TestCase {
         assertNotNull(html.getBody().getPOrH1OrH2());
         assertEquals(3, html.getBody().getPOrH1OrH2().size());
 
-        assertTrue(html.getBody().getPOrH1OrH2().get(0) instanceof Custom);
-        assertEquals("Aaa", ((Custom)html.getBody().getPOrH1OrH2().get(0)).getValue());
+        assertTrue(html.getBody().getPOrH1OrH2().get(0) instanceof Xslt);
+        assertEquals("Aaa", ((Xslt)html.getBody().getPOrH1OrH2().get(0)).getName());
 
         assertTrue(html.getBody().getPOrH1OrH2().get(1) instanceof Dynamic);
 
         assertTrue(html.getBody().getPOrH1OrH2().get(2) instanceof Portlet);
 
         Portlet portlet = (Portlet)html.getBody().getPOrH1OrH2().get(2);
-        assertEquals("webmill:search", portlet.getValue());
+        assertEquals("webmill:search", portlet.getName());
         assertEquals("SearchXml", portlet.getXmlRoot());
         assertEquals("SEARCH_CODE", portlet.getCode());
 
         List<Object> elements = TemplateUtils.getElements(template);
         assertEquals(3, elements.size());
 
-        assertTrue(elements.get(0) instanceof Custom);
+        assertTrue(elements.get(0) instanceof Xslt);
         assertTrue(elements.get(1) instanceof Dynamic);
         assertTrue(elements.get(2) instanceof Portlet);
     }
+
+    public void testUnmarshalTemplate_v2_5() throws Exception {
+        InputStream is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_5.xml");
+        Template template = XmlTools.getObjectFromXml(Template.class, is, JaxbValidationEventHandler.getHandler());
+        assertNotNull(template);
+        assertEquals(9, template.getPortletOrDynamicOrXslt().size());
+    }
+
+
 }

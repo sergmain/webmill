@@ -45,7 +45,7 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
     private ActionRequest actionRequest = null;
     private ClassLoader classLoader = null;
 
-    PortalSessionManagerImpl( ClassLoader classLoader, ActionRequest actionRequest ) {
+    public PortalSessionManagerImpl( ClassLoader classLoader, ActionRequest actionRequest ) {
         this.actionRequest = actionRequest;
         this.classLoader = classLoader;
     }

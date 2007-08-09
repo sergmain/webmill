@@ -29,14 +29,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.Xslt;
-import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
-import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.webmill.admin.bean.*;
@@ -219,7 +219,8 @@ public class HibernatedWebmillAdminDaoImpl implements WebmillAdminDao {
     }
 
     public Long createTemplate(TemplateBean template) {
-        return InternalDaoFactory.getInternalTemplateDao().createTemplate(template);
+        org.riverock.webmill.portal.bean.TemplateBean bean = new org.riverock.webmill.portal.bean.TemplateBean(template);
+        return InternalDaoFactory.getInternalTemplateDao().createTemplate(bean);
     }
 
     public Long createPortletName(PortletNameBean portletNameBean) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Template xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd">
+    <element:xslt name="HeaderStart"/>
+    <element:xslt name="HeaderText"/>
+    <element:xslt name="HeaderEnd"/>
+    <element:portlet xmlRoot="TopMenu" name="mill.menu" code="TOP_MENU"/>
+    <element:portlet xmlRoot="LoginOnIndexPage" name="mill.login_xml"/>
+    <element:xslt name="MainStart"/>
+    <element:portlet name="mill.menu"/>
+    <element:portlet name="mill.menu_member"/>
+    <element:xslt name="Separator"/>
+    <element:portlet name="mill.news_block"/>
+    <element:portlet name="mill.menu" code="DEFAULT_ru_RU">
+        <element:parameter value="1" name="level"/>
+        <element:parameter value="equal" name="type_level"/>
+    </element:portlet>
+    <element:portlet name="mill.menu" code="DEFAULT_ru_RU">
+        <element:parameter value="2" name="level"/>
+        <element:parameter value="great" name="type_level"/>
+    </element:portlet>
+    <element:xslt name="Footer"/>
+</Template>

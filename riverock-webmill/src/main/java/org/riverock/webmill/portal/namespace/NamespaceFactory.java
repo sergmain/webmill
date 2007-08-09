@@ -44,8 +44,8 @@ public class NamespaceFactory {
 
     public static int getTemplateUniqueIndex(ParsedTemplateElement element, int tempalteItemIndex) {
         switch (element.getType()) {
-            case CUSTOM:
-                return ("custom"+element.getCustom().getName()).hashCode();
+            case XSLT:
+                return ("xslt"+element.getXslt().getName()).hashCode();
             case DYNAMIC:
                 return ("dynamic").hashCode();
             case PORTLET:

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2007 sp1 (http://www.altova.com) by Serg (Home) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" attributeFormDefault="unqualified" jaxb:version="2.0">
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
 	<xs:import namespace="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" schemaLocation="riverock-template-page-elements.xsd"/>

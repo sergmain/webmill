@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -68,8 +67,11 @@ import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.preference.PreferenceFactory;
+import org.riverock.webmill.portal.page_element.PageElement;
+import org.riverock.webmill.portal.page_element.PageElementPortlet;
+import org.riverock.webmill.portal.page_element.XsltPageElement;
+import org.riverock.webmill.portal.page_element.StringPageElement;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.template.PortalTemplateItemType;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.TemplateUtils;
 import org.riverock.webmill.template.parser.ParsedTemplateElement;
@@ -304,51 +306,62 @@ public final class PortalRequestInstance {
 
                 // chech for template item is not restricted after create namespace
                 // restriction of template item must be processed after
+/*
                 if (!checkTemplateItemRole(o)) {
                     continue;
                 }
+*/
 
-                PageElement element = new PageElement(portalInstance, namespace, o, portletParameters, targetTemplateName);
-
-                if (log.isDebugEnabled()) {
-                    log.debug("TemplateItem, " +
-                        "type: " + (templateItem.getType() != null ? templateItem.getType() : null) + ", " +
-                        "value: " + templateItem.getValue() + ", " +
-                        ", code: " + templateItem.getCode() + ", xmlRoot: " + templateItem.getXmlRoot());
-                    log.debug("getDefaultPortletDefinition(): " + requestContext.getDefaultPortletName());
-                    log.debug("namespace: " + namespace);
-                    log.debug("portletParameters: " + portletParameters);
-                    log.debug("element.getParameters(): " + element.getParameters());
+                if (httpRequest.isRequestedSessionIdValid()) {
+                    checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
                 }
 
-                switch (templateItem.getTypeObject().getType()) {
-                    case PortalTemplateItemType.PORTLET_TYPE:
-                        if (httpRequest.isRequestedSessionIdValid()) {
-                            checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
+                PageElement element;
+                switch (o.getType()) {
+                    case PORTLET: {
+                        Portlet p = o.getPortlet();
+                        if (log.isDebugEnabled()) {
+                            log.debug("PageElementPortlet, " +
+                                "name: " + p.getName() + ", " +
+                                ", code: " + p.getCode() + ", xmlRoot: " + p.getXmlRoot());
+                            log.debug("namespace: " + namespace);
+                            log.debug("portletParameters: " + portletParameters);
+                            log.debug("element.getParameters(): " + p.getElementParameter());
                         }
-                        element.initPageElementInstance(
-                            TemplateUtils.getFullPortletName( templateItem.getValue() ),
-                            this,
-                            new ArrayList<String>(), 
+
+                        element = new PageElementPortlet(
+                            portalInstance, namespace, portletParameters, targetTemplateName, p.getXmlRoot(), p.getCode(), p.getElementParameter(),
+                            this, TemplateUtils.getFullPortletName( p.getName() ),
+                            new ArrayList<String>(),
                             PreferenceFactory.getStubPortletPreferencePersistencer()
                         );
                         break;
-
-                    case PortalTemplateItemType.DYNAMIC_TYPE:
-                        if (httpRequest.isRequestedSessionIdValid()) {
-                            checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
+                    }
+                    case DYNAMIC: {
+                        if (log.isDebugEnabled()) {
+                            log.debug("PageElementPortlet as dynamiic");
+                            log.debug("getDefaultPortletDefinition(): " + requestContext.getDefaultPortletName());
+                            log.debug("namespace: " + namespace);
+                            log.debug("portletParameters: " + portletParameters);
                         }
-                        element.initPageElementInstance(
-                            requestContext.getDefaultPortletName(),
-                            this,
+                        element = new PageElementPortlet(
+                            portalInstance, namespace, portletParameters, targetTemplateName, null, null, null,
+                            this, requestContext.getDefaultPortletName(),
                             requestContext.getExtendedCatalogItem().getRoleList(),
                             PreferenceFactory.getPortletPreferencePersistencer(requestContext.getExtendedCatalogItem().getCatalogId())
                         );
                         break;
-                    case PortalTemplateItemType.FILE_TYPE:
-                    case PortalTemplateItemType.CUSTOM_TYPE:
+                    }
+                    case XSLT:
+                        element = new XsltPageElement(o.getXslt().getName());
                         break;
+                    case STRING:
+                        element = new StringPageElement(o.getString());
+                        break;
+                    case INCLUDE:
+                        continue;
                     default:
+                        throw new PortalException("Unknown type of template element: " + o.getType());
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("#5.20");
@@ -391,7 +404,7 @@ public final class PortalRequestInstance {
      * @param destroyedPortletNames name of destroyed portlet
      * @param session               http session
      */
-    private void checkDestroyedPortlet(List<String> destroyedPortletNames, HttpSession session) {
+    private static void checkDestroyedPortlet(List<String> destroyedPortletNames, HttpSession session) {
         if (session == null) {
             return;
         }
@@ -417,6 +430,7 @@ public final class PortalRequestInstance {
     }
 
     private boolean checkTemplateItemRole(ParsedTemplateElement element) {
+/*
         if (element == null || !element.isPortlet() || StringUtils.isBlank(element.getPortlet().get)) {
             return true;
         }
@@ -432,6 +446,8 @@ public final class PortalRequestInstance {
                 return true;
             }
         }
+*/
+        log.warn("Role checker not implemented always return false");
         return false;
     }
 

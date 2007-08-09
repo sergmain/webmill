@@ -6,7 +6,7 @@
         </title>
     </head>
 	<body>
-		<element:custom value="Aaa"/>
+		<element:xslt name="Aaa"/>
 		<element:dynamic/>
 	</body>
 </html>
