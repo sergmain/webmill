@@ -13,7 +13,7 @@ import org.riverock.portlet.manager.monitor.ServerMonitorUtils;
 import org.riverock.portlet.manager.monitor.ServerMonitorConstants;
 import org.riverock.portlet.manager.monitor.schema.Directory;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
@@ -45,7 +45,7 @@ public class MonitorAction {
 
     public String createServerSizeFileAction() {
         try {
-            SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+            PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
             createServerSizeFile();
         }

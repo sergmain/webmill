@@ -69,9 +69,11 @@ import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.preference.PreferenceFactory;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.template.PortalTemplate;
-import org.riverock.webmill.template.PortalTemplateItem;
 import org.riverock.webmill.template.PortalTemplateItemType;
+import org.riverock.webmill.template.PortalTemplate;
+import org.riverock.webmill.template.TemplateUtils;
+import org.riverock.webmill.template.parser.ParsedTemplateElement;
+import org.riverock.webmill.template.schema.Portlet;
 import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
 
 /**
@@ -258,32 +260,34 @@ public final class PortalRequestInstance {
 
             // init page element list
             int i = 0;
-            for (PortalTemplateItem templateItem : template.getPortalTemplateItems()) {
+            for (ParsedTemplateElement o : template.getTemplate().getElements()) {
 
                 String portletName;
                 Namespace namespace = null;
                 PortletParameters portletParameters = null;
                 String targetTemplateName;
-                if (StringUtils.isNotBlank(templateItem.getTemplate())) {
-                    targetTemplateName = templateItem.getTemplate(); 
+
+                if (o.isPortlet() && StringUtils.isNotBlank(o.getPortlet().getTemplate())) {
+                    targetTemplateName = o.getPortlet().getTemplate(); 
                 }
                 else {
                     targetTemplateName = requestContext.getTemplateName();
                 }
 
-                if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
-                    portletName = templateItem.getValueAsPortletName();
+                if (o.isPortlet()) {
+                    Portlet p = o.getPortlet();
+                    portletName = TemplateUtils.getFullPortletName( p.getName() );
 
-                    namespace = NamespaceFactory.getNamespace(portletName, targetTemplateName, i++, templateItem);
+                    namespace = NamespaceFactory.getNamespace(portletName, targetTemplateName, NamespaceFactory.getTemplateUniqueIndex(o, i++));
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
                     if (portletParameters == null) {
                         portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, List<String>>());
                     }
                 }
-                else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
+                else if (o.isDynamic()) {
                     portletName = requestContext.getDefaultPortletName();
-                    namespace = NamespaceFactory.getNamespace(portletName, targetTemplateName, i++, templateItem);
+                    namespace = NamespaceFactory.getNamespace(portletName, targetTemplateName, NamespaceFactory.getTemplateUniqueIndex(o, i++));
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
 
@@ -300,11 +304,11 @@ public final class PortalRequestInstance {
 
                 // chech for template item is not restricted after create namespace
                 // restriction of template item must be processed after
-                if (!checkTemplateItemRole(templateItem)) {
+                if (!checkTemplateItemRole(o)) {
                     continue;
                 }
 
-                PageElement element = new PageElement(portalInstance, namespace, templateItem, portletParameters, targetTemplateName);
+                PageElement element = new PageElement(portalInstance, namespace, o, portletParameters, targetTemplateName);
 
                 if (log.isDebugEnabled()) {
                     log.debug("TemplateItem, " +
@@ -323,7 +327,7 @@ public final class PortalRequestInstance {
                             checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
                         }
                         element.initPageElementInstance(
-                            templateItem.getValueAsPortletName(),
+                            TemplateUtils.getFullPortletName( templateItem.getValue() ),
                             this,
                             new ArrayList<String>(), 
                             PreferenceFactory.getStubPortletPreferencePersistencer()
@@ -412,8 +416,8 @@ public final class PortalRequestInstance {
         }
     }
 
-    private boolean checkTemplateItemRole(PortalTemplateItem templateItem) {
-        if (templateItem == null || StringUtils.isBlank(templateItem.getRole())) {
+    private boolean checkTemplateItemRole(ParsedTemplateElement element) {
+        if (element == null || !element.isPortlet() || StringUtils.isBlank(element.getPortlet().get)) {
             return true;
         }
 

@@ -24,7 +24,7 @@
 package org.riverock.portlet.webclip;
 
 import org.riverock.portlet.dao.PortletDaoFactory;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
@@ -64,7 +64,7 @@ public class WebclipPortlet implements Portlet {
         log.debug("Start processAction()");
 
         try {
-            SiteUtils.checkRights(request, WebclipConstants.WEBCLIP_MANAGER_ROLES);
+            PortletUtils.checkRights(request, WebclipConstants.WEBCLIP_MANAGER_ROLES);
 
             Long webclipId = getWebclipId(request);
             Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );

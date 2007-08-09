@@ -30,8 +30,9 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.portlet.main.AuthSessionBean;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SergeMaslyukov
@@ -135,7 +136,7 @@ public class UserAction implements Serializable {
     public String processAddUserAction() {
         log.info( "Procss add user action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( userSessionBean.getUserBean() != null ) {
             userSessionBean.getUserBean().getAuthInfo().setUserPassword(
@@ -170,7 +171,7 @@ public class UserAction implements Serializable {
     public String saveUserAction() {
         log.info( "Save user action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( userSessionBean.getUserBean() != null ) {
             authSessionBean.getAuthSession().updateUser( userSessionBean.getUserBean() );
@@ -207,7 +208,7 @@ public class UserAction implements Serializable {
     public String processDeleteUserAction() {
         log.info( "Process delete user action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( userSessionBean.getUserBean() != null ) {
             authSessionBean.getAuthSession().deleteUser( userSessionBean.getUserBean() );

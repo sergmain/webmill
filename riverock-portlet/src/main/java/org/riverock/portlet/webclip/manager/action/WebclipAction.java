@@ -23,7 +23,7 @@ import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.portlet.webclip.WebclipUtils;
 import org.riverock.portlet.webclip.WebclipUrlChecker;
@@ -389,7 +389,7 @@ public class WebclipAction implements Serializable {
 
     private boolean checkRights() {
         try {
-            SiteUtils.checkRights(FacesTools.getPortletRequest(), WebclipConstants.WEBCLIP_MANAGER_ROLES);
+            PortletUtils.checkRights(FacesTools.getPortletRequest(), WebclipConstants.WEBCLIP_MANAGER_ROLES);
         } catch (SecurityException e) {
             result.add(e.toString());
             return true;

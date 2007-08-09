@@ -5,9 +5,9 @@
 			<xs:sequence/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="custom">
+	<xs:element name="xslt">
 		<xs:complexType>
-			<xs:attribute name="value" type="xs:string"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="portlet">
@@ -15,15 +15,21 @@
 			<xs:sequence>
 				<xs:element ref="element:parameter" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="value" type="xs:string" use="required"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
 			<xs:attribute name="code" type="xs:string"/>
 			<xs:attribute name="xmlRoot" type="xs:string"/>
+			<xs:attribute name="template" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="parameter">
 		<xs:complexType>
 			<xs:attribute name="name" type="xs:string" use="required"/>
 			<xs:attribute name="value" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="include">
+		<xs:complexType>
+			<xs:attribute name="template" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

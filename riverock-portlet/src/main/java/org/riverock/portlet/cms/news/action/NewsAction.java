@@ -32,7 +32,7 @@ import org.riverock.portlet.cms.news.NewsSessionBean;
 import org.riverock.portlet.cms.news.NewsDataProvider;
 import org.riverock.portlet.cms.news.bean.NewsBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -92,7 +92,7 @@ public class NewsAction implements Serializable {
     public String processAddNewsAction() {
         log.info("Procss add news item action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
 
@@ -136,7 +136,7 @@ public class NewsAction implements Serializable {
     public String processEditNewsAction() {
         log.info("Save changes news item action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().updateNews(getSessionObject());
@@ -171,7 +171,7 @@ public class NewsAction implements Serializable {
     public String processDeleteNewsAction() {
         log.info("Process delete news item action.");
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().deleteNews(getSessionObject().getNewsId());

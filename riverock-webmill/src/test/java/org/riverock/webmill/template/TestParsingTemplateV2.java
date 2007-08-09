@@ -202,7 +202,7 @@ public class TestParsingTemplateV2 extends TestCase {
         assertEquals("SearchXml", portlet.getXmlRoot());
         assertEquals("SEARCH_CODE", portlet.getCode());
 
-        List<Object> elements = TemplateUtils.getElements(html);
+        List<Object> elements = TemplateUtils.getElements(template);
         assertEquals(3, elements.size());
 
         assertTrue(elements.get(0) instanceof Custom);

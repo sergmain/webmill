@@ -37,20 +37,20 @@ import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.PortletName;
-import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.bean.TemplateBean;
 
 /**
  *
  * $Id$
  *
  */
-public final class PortalMenuItem implements MenuItem{
+public final class PortalMenuItem implements MenuItem {
     private final static Logger log = Logger.getLogger( MenuItem.class );
 
     private CatalogItem ctx = null;
-    private Template template = null;
+    private TemplateBean template = null;
     private PortletName portletName = null;
 
     private String menuName = null;

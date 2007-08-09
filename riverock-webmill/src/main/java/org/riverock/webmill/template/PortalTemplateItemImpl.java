@@ -64,7 +64,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
     /**
      * Field namespace
      */
-    private String namespace;
+//    private String namespace;
 
     /**
      * Field role
@@ -130,9 +130,9 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      *
      * @return the value of field 'namespace'.
      */
-    public String getNamespace() {
-        return this.namespace;
-    }
+//    public String getNamespace() {
+//        return this.namespace;
+//    }
 
     /**
      * Method getParameterAsReference
@@ -216,9 +216,9 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      *
      * @param namespace the value of field 'namespace'.
      */
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
+//    public void setNamespace(String namespace) {
+//        this.namespace = namespace;
+//    }
 
     /**
      * Method setParameter

@@ -17,6 +17,7 @@ import org.riverock.webmill.template.schema.SiteTemplateItem;
 import org.riverock.webmill.template.schema.Parameter;
 import org.riverock.webmill.template.schema.ElementParameter;
 import org.riverock.webmill.container.tools.ContainertStringUtils;
+import org.riverock.webmill.container.portlet.PortletContainer;
 
 /**
  * User: SMaslyukov
@@ -29,7 +30,16 @@ public class TemplateUtils {
         return getString(v, nameParam, null);
     }
 
-    public synchronized static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
+    public static String getFullPortletName(String shortPortletName) {
+        if ( shortPortletName.indexOf( PortletContainer.PORTLET_ID_NAME_SEPARATOR )==-1 ) {
+            return PortletContainer.PORTLET_ID_NAME_SEPARATOR + shortPortletName;
+        }
+        else {
+            return shortPortletName;
+        }
+    }
+
+    public static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
         if ( templateParameters == null || ContainertStringUtils.isBlank(nameParam) )
             return defValue;
 
@@ -40,10 +50,10 @@ public class TemplateUtils {
         return defValue;
     }
 
-    public static List<Object> getElements(Html html) {
+    public static List<Object> getElements(Template template) {
         List<Object> elements = new ArrayList<Object>();
         try {
-            getElements(html, elements);
+            getElements(template, elements);
         }
         catch (Exception e) {
             throw new RuntimeException("Error process Html object", e);

@@ -22,12 +22,14 @@ import org.riverock.dbrevision.manager.patch.PatchStatus;
 import org.riverock.dbrevision.manager.patch.PatchValidator;
 import org.riverock.dbrevision.utils.DbUtils;
 import org.riverock.dbrevision.utils.Utils;
-import org.riverock.update.webmill.v580.convert_template.schema.Custom;
 import org.riverock.update.webmill.v580.convert_template.schema.Dynamic;
 import org.riverock.update.webmill.v580.convert_template.schema.Portlet;
 import org.riverock.update.webmill.v580.convert_template.schema.SiteTemplate;
 import org.riverock.update.webmill.v580.convert_template.schema.SiteTemplateItem;
 import org.riverock.update.webmill.v580.convert_template.schema.Template;
+import org.riverock.update.webmill.v580.convert_template.schema.Xslt;
+import org.riverock.update.webmill.v580.convert_template.schema.Parameter;
+import org.riverock.update.webmill.v580.convert_template.schema.ElementParameter;
 
 /**
  * User: SergeMaslyukov
@@ -191,27 +193,27 @@ public class ConvertTemplate implements PatchAction, PatchValidator {
                 Portlet p = new Portlet();
                 p.setCode(item.getCode());
                 p.setXmlRoot(item.getXmlRoot());
-                p.setValue(item.getValue());
-                template.getPortletOrDynamicOrCustom().add(p);
+                p.setName(item.getValue());
+                p.setTemplate(item.getTemplate());
+                template.getDynamicOrPortletOrXslt().add(p);
+                for (Parameter parameter : item.getParameter()) {
+                    ElementParameter elementParameter = new ElementParameter();
+                    elementParameter.setName(parameter.getName());
+                    elementParameter.setValue(parameter.getValue());
+                    p.getElementParameter().add(elementParameter);
+                }
             }
             else if (StringUtils.equals("custom", item.getType())) {
-                Custom c = new Custom();
-                c.setValue(item.getValue());
-                template.getPortletOrDynamicOrCustom().add(c);
-            }
-            else if (StringUtils.equals("portlet", item.getType())) {
-                Portlet p = new Portlet();
-                p.setCode(item.getCode());
-                p.setValue(item.getValue());
-                p.setXmlRoot(item.getXmlRoot());
-                template.getPortletOrDynamicOrCustom().add(p);
+                Xslt c = new Xslt();
+                c.setName(item.getValue());
+                template.getDynamicOrPortletOrXslt().add(c);
             }
             else if (StringUtils.equals("file", item.getType())) {
 
             }
             else if (StringUtils.equals("dynamic", item.getType())) {
-                Dynamic d  = new Dynamic();
-                template.getPortletOrDynamicOrCustom().add(d);
+                Dynamic d = new Dynamic();
+                template.getDynamicOrPortletOrXslt().add(d);
             }
             else {
                 throw new IllegalStateException("Unknown type of site template item: " + item.getType());

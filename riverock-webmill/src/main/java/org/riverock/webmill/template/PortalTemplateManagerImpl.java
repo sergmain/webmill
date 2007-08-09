@@ -24,19 +24,16 @@
  */
 package org.riverock.webmill.template;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 
-import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.template.parser.TemplateParserFactory;
 
 /**
  * $Id$
@@ -47,30 +44,6 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     private static final int INIT_COUNT_OF_SITE = 10;
 
     private static Map<Long, PortalTemplateManager> managers = new HashMap<Long, PortalTemplateManager>(INIT_COUNT_OF_SITE);
-
-    private static Digester digester = null;
-    static {
-        digester = new Digester();
-        digester.setValidating(false);
-
-        digester.addObjectCreate("SiteTemplate", PortalTemplateImpl.class);
-        digester.addSetProperties("SiteTemplate", "role", "role");
-
-        digester.addObjectCreate("SiteTemplate/SiteTemplateItem", PortalTemplateItemImpl.class);
-        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "type", "type");
-        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "value", "value");
-        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "code", "code");
-        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "xmlRoot", "xmlRoot");
-        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "role", "role");
-        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "template", "template");
-        digester.addSetNext("SiteTemplate/SiteTemplateItem", "addSiteTemplateItem" );
-
-        digester.addObjectCreate("SiteTemplate/SiteTemplateItem/Parameter", PortalTemplateParameterImpl.class);
-        digester.addSetProperties("SiteTemplate/SiteTemplateItem/Parameter", "name", "name");
-        digester.addSetProperties("SiteTemplate/SiteTemplateItem/Parameter", "value", "value");
-        digester.addSetNext("SiteTemplate/SiteTemplateItem/Parameter", "addParameter");
-
-    }
 
     private Map<Long, PortalTemplate> hashId = new ConcurrentHashMap<Long, PortalTemplate>(INIT_COUNT_OF_SITE);
     private Long siteId;
@@ -107,30 +80,22 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
             log.debug( "search template for name: '" + nameTemplate + "', lang: '" + lang + "'" );
         }
 
-        if ( nameTemplate == null || lang == null )
+        if ( nameTemplate==null || lang==null ) {
             return null;
+        }
 
-        Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(siteId, nameTemplate, lang); 
+        TemplateBean template = InternalDaoFactory.getInternalTemplateDao().getTemplate(siteId, nameTemplate, lang);
         if (template==null) {
             return null;
         }
         PortalTemplate portalTemplate = hashId.get( template.getTemplateId());
-        if (portalTemplate!=null) {
-            if (template.getVersion()==portalTemplate.getVersion()) {
-                return portalTemplate;
-            }
-            else {
-                // get full template (with blob)
-                template = InternalDaoFactory.getInternalTemplateDao().getTemplate(template.getTemplateId());
-                PortalTemplate st = digestSiteTemplate(template);
-                hashId.put(template.getTemplateId(), st);
-                return st;
-            }
+        if (portalTemplate!=null && template.getVersion()==portalTemplate.getVersion()) {
+            return portalTemplate;
         }
         else {
             // get full template (with blob)
             template = InternalDaoFactory.getInternalTemplateDao().getTemplate(template.getTemplateId());
-            PortalTemplate st = digestSiteTemplate(template);
+            PortalTemplate st = parseTemplate(template);
             hashId.put(template.getTemplateId(), st);
             return st;
         }
@@ -139,56 +104,44 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     private PortalTemplateManagerImpl(Long siteId) {
         this.siteId=siteId;
         log.debug("Start PortalTemplateManagerImpl()");
-        for (Template template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
+        for (TemplateBean template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
             try {
-                PortalTemplate st = digestSiteTemplate(template);
-                // dont add broken template 
+                PortalTemplate st = parseTemplate(template);
+                // dont add broken template
                 if (st!=null) {
                     hashId.put(template.getTemplateId(), st);
                 }
             }
-            catch (Exception e) {
-                // Todo. Add to template text data. If we get error, then create template with error message
-                String es = "Error get templates";
+            catch (Throwable e) {
+                String es = "Error process template";
                 log.error(es, e);
-                throw new IllegalStateException(es, e);
             }
         }
     }
 
-    static PortalTemplate digestSiteTemplate(Template template) {
+    static PortalTemplate parseTemplate(TemplateBean template) {
+        if (log.isDebugEnabled()) {
+            log.debug("Digest template:\n" + template.getTemplateData());
+        }
         if (StringUtils.isBlank(template.getTemplateData()) ) {
             final PortalTemplateImpl portalTemplate = new PortalTemplateImpl();
             portalTemplate.setTemplateName( template.getTemplateName() );
             return portalTemplate;
         }
-        if (log.isDebugEnabled()) {
-            log.debug("Digest template:\n" + template.getTemplateData());
-        }
-        PortalTemplate st = null;
-        try {
-            st = digestNotEmptySiteTemplate(template);
-        } catch (IOException e) {
-            String es = "Error digest template, data:\n"+template.getTemplateData();
-            log.error(es, e);
-        } catch (SAXException e) {
-            String es = "Error digest template, data:\n"+template.getTemplateData();
-            log.error(es, e);
-        }
-
-        return st;
+        return parseNotEmptyTemplate(template);
     }
 
-    static PortalTemplateImpl digestNotEmptySiteTemplate(Template template) throws IOException, SAXException {
+    static PortalTemplateImpl parseNotEmptyTemplate(TemplateBean template) {
         if (log.isDebugEnabled()) {
             log.debug("Digest template:\n" + template.getTemplateData());
         }
-        PortalTemplateImpl st =
-            (PortalTemplateImpl) digester.parse( new ByteArrayInputStream( template.getTemplateData().getBytes() ));
-        st.setTemplateName( template.getTemplateName() );
-        st.setTemplateId( template.getTemplateId() );
-        st.setVersion( template.getVersion() );
+        PortalTemplateImpl portalTemplate = new PortalTemplateImpl();
+        portalTemplate.setTemplate( TemplateParserFactory.getTemplateParser().parse(template.getTemplateData().getBytes()) );
+        portalTemplate.setRole(template.getTemplateRole());
+        portalTemplate.setTemplateName( template.getTemplateName() );
+        portalTemplate.setTemplateId( template.getTemplateId() );
+        portalTemplate.setVersion( template.getVersion() );
 
-        return st;
+        return portalTemplate;
     }
 }

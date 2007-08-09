@@ -32,7 +32,7 @@ import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.bean.XsltBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -93,7 +93,7 @@ public class XsltAction implements Serializable {
     public String processAddXsltAction() {
         log.info( "Procss add xslt action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             Long xsltId = FacesTools.getPortalDaoProvider().getPortalXsltDao().createXslt(
@@ -127,7 +127,7 @@ public class XsltAction implements Serializable {
     public String processEditXsltAction() {
         log.info( "Save changes xslt action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             FacesTools.getPortalDaoProvider().getPortalXsltDao().updateXslt(getSessionObject());
@@ -163,7 +163,7 @@ public class XsltAction implements Serializable {
     public String processDeleteXsltAction() {
         log.info( "Process delete xslt action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalXsltDao().deleteXslt(getSessionObject().getId());

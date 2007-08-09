@@ -25,7 +25,6 @@ package org.riverock.common.utils;
 
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -35,36 +34,32 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
- * $Id$
+ * $Id: PortletService.java 1228 2007-06-28 10:08:00Z serg_main $
  */
 public final class PortletUtils {
 
-    public static String getString( final List<PortalTemplateParameter> v, final String nameParam) throws IllegalArgumentException{
-        return getString(v, nameParam, null);
-    }
-
-    public synchronized static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
-        if ( templateParameters == null || StringUtils.isBlank(nameParam) )
-            return defValue;
-
-        for (PortalTemplateParameter portalTemplateParameter : templateParameters) {
-            if (portalTemplateParameter.getName().equals(nameParam))
-                return portalTemplateParameter.getValue();
+    public static void checkRights(PortletRequest request, String[] roles) {
+        boolean isOk = false;
+        for (String role : roles) {
+            if (request.isUserInRole(role)) {
+                isOk = true;
+                break;
+            }
         }
-        return defValue;
+        if (!isOk) {
+            throw new SecurityException("Access denied");
+        }
     }
 
     public static String convertString( final String s, final String fromCharset, final String toCharset)
             throws java.io.UnsupportedEncodingException
     {
-        if (s == null)
+        if (s == null) {
             return null;
+        }
 
         return new String(s.getBytes(fromCharset), toCharset);
     }
@@ -97,23 +92,26 @@ public final class PortletUtils {
     }
 
     public static String pageid( final String portalContext ) {
-        if (portalContext.equals("/") || portalContext.equals("") )
-            return ContainerConstants.PAGEID_SERVLET_NAME ;
+        if (portalContext.equals("/") || portalContext.equals("") ) {
+            return ContainerConstants.PAGEID_SERVLET_NAME;
+        }
 
         return portalContext + ContainerConstants.PAGEID_SERVLET_NAME ;
     }
 
     public static String page( final PortletRequest renderRequest ) {
         String path = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
-        if (path.equals("/") || path.equals("") )
-            return ContainerConstants.PAGE_SERVLET_NAME ;
+        if (path.equals("/") || path.equals("") ) {
+            return ContainerConstants.PAGE_SERVLET_NAME;
+        }
 
         return path + ContainerConstants.PAGE_SERVLET_NAME ;
     }
 
     public static String page( final String portalContext ) {
-        if (portalContext.equals("/") || portalContext.equals("") )
+        if (portalContext.equals("/") || portalContext.equals("") ) {
             return ContainerConstants.PAGE_SERVLET_NAME ;
+        }
 
         return portalContext + ContainerConstants.PAGE_SERVLET_NAME ;
     }
@@ -218,16 +216,6 @@ public final class PortletUtils {
         session.removeAttribute(attr);
     }
 
-    /**
-     * @deprecated use org.riverock.webmill.container.tools.PortletService.getLong()
-     * @param namePortletID
-     * @param request
-     * @return Long
-     */
-    public static Long getIdPortlet( final String namePortletID, final PortletRequest request ) {
-        return getLong(request, namePortletID);
-    }
-
     public static String getString( final PortletRequest request, final String f ) {
         if (f==null) {
             return null;
@@ -259,14 +247,11 @@ public final class PortletUtils {
         }
         Long s_ = def;
         final String parameter = request.getParameter(f);
-        if (parameter != null)
-        {
-            try
-            {
+        if (parameter != null) {
+            try {
                 s_ = new Long(parameter);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 // not rethrow exception 'cos this method return def value in this case
             }
         }
@@ -310,14 +295,11 @@ public final class PortletUtils {
         }
         Double s_ = def;
         final String parameter = request.getParameter(f);
-        if (parameter != null)
-        {
-            try
-            {
+        if (parameter != null) {
+            try {
                 s_ = new Double(parameter);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 // not rethrow exception 'cos this method return def value in this case
             }
         }
@@ -367,19 +349,23 @@ public final class PortletUtils {
     public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest, final String portletName, final String templateName, Locale locale ) {
         StringBuilder b;
         String portalContextPath = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
-        if (portalContextPath.equals("/") || portalContextPath.equals("") )
+        if (portalContextPath.equals("/") || portalContextPath.equals("") ) {
             b = new StringBuilder( ContainerConstants.URI_CTX_MANAGER );
-        else
+        }
+        else {
             b = new StringBuilder( portalContextPath ).append( ContainerConstants.URI_CTX_MANAGER );
+        }
 
         b.append( '/' ).append( locale.toString() );
-	b.append( ',' );
-        if (templateName!=null) 
+        b.append( ',' );
+        if (templateName!=null) {
            b.append( templateName );
+        }
 
-	b.append( ',' );
-        if (portletName!=null)
+        b.append( ',' );
+        if (portletName!=null) {
             b.append( portletName );
+        }
 
         b.append( "/ctx" );
 
@@ -399,13 +385,15 @@ public final class PortletUtils {
         String string = locale.replace( '-', '_' );
 
         int idx = string.indexOf('_');
-        if (idx == -1)
+        if (idx == -1) {
             return new Locale(string.toLowerCase(), "");
+        }
 
         String lang = string.substring(0, idx).toLowerCase();
         int idx1 = string.indexOf('_', idx+1);
-        if (idx1==-1)
+        if (idx1==-1) {
             return new Locale(lang, string.substring(idx+1).toLowerCase() );
+        }
 
         return new Locale(
             lang, string.substring(idx+1, idx1).toLowerCase( ), string.substring(idx1+1).toLowerCase() );

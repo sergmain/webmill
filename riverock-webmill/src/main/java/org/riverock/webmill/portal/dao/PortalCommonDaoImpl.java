@@ -47,11 +47,11 @@ public class PortalCommonDaoImpl implements PortalCommonDao {
     }
 
     public List<Template> getTemplateList( Long siteId ) {
-        return InternalDaoFactory.getInternalTemplateDao().getTemplateList(siteId);
+        return (List)InternalDaoFactory.getInternalTemplateDao().getTemplateList(siteId);
     }
 
     public List<Template> getTemplateLanguageList(Long siteLanguageId) {
-        return InternalDaoFactory.getInternalTemplateDao().getTemplateLanguageList(siteLanguageId);
+        return (List)InternalDaoFactory.getInternalTemplateDao().getTemplateLanguageList(siteLanguageId);
     }
 
 }

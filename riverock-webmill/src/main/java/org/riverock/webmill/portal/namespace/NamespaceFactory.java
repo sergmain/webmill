@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.riverock.webmill.template.PortalTemplateItem;
+import org.riverock.webmill.template.parser.ParsedTemplateElement;
 
 /**
  * @author SergeMaslyukov
@@ -42,6 +42,21 @@ public class NamespaceFactory {
     private static ConcurrentMap<String, List<Namespace>> namespaceByPortletName = new ConcurrentHashMap<String, List<Namespace>>();
     private static int index = 1;
 
+    public static int getTemplateUniqueIndex(ParsedTemplateElement element, int tempalteItemIndex) {
+        switch (element.getType()) {
+            case CUSTOM:
+                return ("custom"+element.getCustom().getName()).hashCode();
+            case DYNAMIC:
+                return ("dynamic").hashCode();
+            case PORTLET:
+                return ("portlet-"+element.getPortlet().getName()+'-'+element.getPortlet().getCode()+'-'+element.getPortlet().getXmlRoot()).hashCode();
+            case STRING:
+                return element.hashCode();
+            default:
+                throw new IllegalStateException("Unknown type of template element. "+element.getClass().getName());
+        }
+    }
+
     /**
      * The getNamespaces method must return a valid identifier as defined in the 3.8 Identifier
      * Section of the Java Language Specification Second Edition.
@@ -49,13 +64,12 @@ public class NamespaceFactory {
      * @param fullPortletName full portlet name. Format: [["application-id":]"portlet-id":]"portlet-name
      * <br>For example: webmill:login-portlet-id:login-portlet
      * @param templateName template name
-     * @param tempalteItemIndex intex if item in template
-     * @param templateItem  item of template
+     * @param tempalteUniqueIndex intex if item in template
+     * @param o  item of template
      * @return namespace
      */
-    public static Namespace getNamespace(String fullPortletName, String templateName, int tempalteItemIndex, PortalTemplateItem templateItem) {
-//        String n = "idx-" + tempalteItemIndex + "_" + templateName + '_' + fullPortletName;
-        String n = "idx-" + templateItem.hashCode() + "_" + templateName + '_' + fullPortletName;
+    public static Namespace getNamespace(String fullPortletName, String templateName, int tempalteUniqueIndex) {
+        String n = "idx-" + tempalteUniqueIndex + "_" + templateName + '_' + fullPortletName;
 
         Namespace namespace = namespaces.get(n);
         if (namespace!=null) {

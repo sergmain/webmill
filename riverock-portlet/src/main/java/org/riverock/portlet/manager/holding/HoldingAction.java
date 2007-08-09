@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SergeMaslyukov
@@ -131,7 +131,7 @@ public class HoldingAction implements Serializable {
     public String processAddHoldingAction() {
         log.info( "Procss add holding action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( holdingSessionBean.getHoldingBean() != null ) {
             FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
@@ -164,7 +164,7 @@ public class HoldingAction implements Serializable {
     public String saveHoldingAction() {
         log.info( "Save holding action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( holdingSessionBean.getHoldingBean() != null ) {
 		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding( 
@@ -204,7 +204,7 @@ public class HoldingAction implements Serializable {
     public String processDeleteHoldingAction() {
         log.info( "Process delete holding action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( holdingSessionBean.getHoldingBean() != null ) {
 		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding( 

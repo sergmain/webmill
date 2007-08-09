@@ -24,9 +24,10 @@
  */
 package org.riverock.webmill.template;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.Serializable;
+
+import org.riverock.common.tools.XmlTools;
+import org.riverock.webmill.template.parser.ParsedTemplate;
 
 /**
  * Both attributes, 'nameTemplate' and 'name' are deprecated. Must
@@ -37,22 +38,35 @@ import java.io.Serializable;
 public class PortalTemplateImpl implements PortalTemplate, Serializable {
 
     /**
-     * Field role
+     * Template role
      */
     private java.lang.String role;
 
-    private java.lang.String templateName = null;
-
     private Long templateId = null;
+
     private int version;
 
-    /**
-     * Field portalTemplateItems
-     */
-    private List<PortalTemplateItem> portalTemplateItems;
+    private ParsedTemplate template=null;
+
+    private String templateName=null;
 
     public PortalTemplateImpl() {
-        portalTemplateItems = new ArrayList<PortalTemplateItem>();
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    public ParsedTemplate getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(ParsedTemplate template) {
+        this.template = template;
     }
 
     public int getVersion() {
@@ -71,23 +85,6 @@ public class PortalTemplateImpl implements PortalTemplate, Serializable {
         this.templateId = templateId;
     }
 
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    /**
-     * Method addSiteTemplateItem
-     *
-     * @param vSitePortalTemplateItem PortalTemplateItemImpl
-     */
-    public void addSiteTemplateItem(PortalTemplateItemImpl vSitePortalTemplateItem) {
-        portalTemplateItems.add(vSitePortalTemplateItem);
-    }
-
     /**
      * Returns the value of field 'role'.
      *
@@ -95,18 +92,6 @@ public class PortalTemplateImpl implements PortalTemplate, Serializable {
      */
     public String getRole() {
         return this.role;
-    }
-
-    /**
-     * Method getSiteTemplateItemAsReference
-     * <p/>
-     * Returns a reference to 'siteTemplateItem'. No type checking
-     * is performed on any modications to the Collection.
-     *
-     * @return returns a reference to the Collection.
-     */
-    public List<PortalTemplateItem> getPortalTemplateItems() {
-        return portalTemplateItems;
     }
 
     /**
@@ -118,52 +103,18 @@ public class PortalTemplateImpl implements PortalTemplate, Serializable {
         this.role = role;
     }
 
-    /**
-     * Method setSiteTemplateItemAsReference
-     * <p/>
-     * Sets the value of 'siteTemplateItem' by setting it to the
-     * given ArrayList. No type checking is performed.
-     *
-     * @param siteTemplateItemCollection the ArrayList to copy.
-     */
-    public void setPortalTemplateItems(List<PortalTemplateItem> siteTemplateItemCollection) {
-        portalTemplateItems = siteTemplateItemCollection;
-    }
-
     public String toString() {
-        String s = "";
 
-        s +=
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<SiteTemplate";
-        if (getRole() != null) {
-            s += " role=\"" + getRole() + "\"";
+        if (template==null) {
+            return "<template_is_null/>";
         }
-        s += ">\n";
-
-        for (PortalTemplateItem portalTemplateItem : portalTemplateItems) {
-            s += "    <SiteTemplateItem  type=\"" + portalTemplateItem.getType() + "\" value=\"" + portalTemplateItem.getValue() + "\"";
-            if (portalTemplateItem.getCode() != null) {
-                s += " code=\"" + portalTemplateItem.getCode() + "\"";
-            }
-            if (portalTemplateItem.getXmlRoot() != null) {
-                s += " xmlRoot=\"" + portalTemplateItem.getXmlRoot() + "\"";
-            }
-            if (portalTemplateItem.getRole() != null) {
-                s += " role=\"" + portalTemplateItem.getRole() + "\"";
-            }
-
-            s += ">\n";
-
-            for (PortalTemplateParameter portalTemplateParameterImpl : portalTemplateItem.getParameters()) {
-                s += "        <Parameter name=\"" + portalTemplateParameterImpl.getName() + "\" value=\"" + portalTemplateParameterImpl.getValue() + "\"/>\n";
-            }
-            s += "    </SiteTemplateItem>\n";
-
+        try {
+            byte[] bytes = XmlTools.getXml(template, "Template", "utf-8");
+            return new String(bytes, "utf-8"); 
         }
-
-        s += "</SiteTemplate>";
-
-        return s;
+        catch(Throwable th) {
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TemplateParseError/>";
+        }
     }
 }

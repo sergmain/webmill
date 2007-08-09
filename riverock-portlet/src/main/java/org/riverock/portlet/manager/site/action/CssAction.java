@@ -32,7 +32,7 @@ import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.bean.CssBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -93,7 +93,7 @@ public class CssAction implements Serializable {
     public String processAddCssAction() {
         log.info( "Procss add CSS action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             Long cssId = FacesTools.getPortalDaoProvider().getPortalCssDao().createCss(
@@ -127,7 +127,7 @@ public class CssAction implements Serializable {
     public String processEditCssAction() {
         log.info( "Save changes CSS action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
             FacesTools.getPortalDaoProvider().getPortalCssDao().updateCss(getSessionObject());
@@ -163,7 +163,7 @@ public class CssAction implements Serializable {
     public String processDeleteCssAction() {
         log.info( "Process delete CSS action." );
 
-        SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+        PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalCssDao().deleteCss(getSessionObject().getCssId());

@@ -80,6 +80,9 @@ public class TemplateBean implements Serializable, Template {
     @Column(name="is_default_dynamic")
     private boolean isDefaultDynamic = false;
 
+    @Column(name="TEMPLATE_ROLE")
+    private String templateRole;
+
     @Version
     @Column(name="VERSION")
     private int version;
@@ -90,6 +93,27 @@ public class TemplateBean implements Serializable, Template {
     @Transient
     private String templateData;
 
+
+    public TemplateBean(Template t) {
+        this.templateId = t.getTemplateId();
+        this.siteLanguageId = t.getSiteLanguageId();
+        this.templateName = t.getTemplateName();
+        this.templateData = t.getTemplateData();
+        this.isDefaultDynamic = t.isDefaultDynamic();
+        this.version = t.getVersion();
+        this.templateLanguage = t.getTemplateLanguage();
+    }
+
+    public TemplateBean() {
+    }
+
+    public String getTemplateRole() {
+        return templateRole;
+    }
+
+    public void setTemplateRole(String templateRole) {
+        this.templateRole = templateRole;
+    }
 
     public int getVersion() {
         return version;

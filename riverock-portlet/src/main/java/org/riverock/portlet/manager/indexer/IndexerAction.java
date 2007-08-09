@@ -20,7 +20,7 @@ import org.riverock.interfaces.portal.search.PortletIndexerShort;
 import org.riverock.interfaces.portal.search.PortalIndexerParameter;
 import org.riverock.interfaces.portal.search.PortletIndexerContent;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.common.utils.PortletUtils;
@@ -285,7 +285,7 @@ public class IndexerAction implements Serializable {
 
     private boolean checkRights() {
         try {
-            SiteUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
+            PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
         } catch (SecurityException e) {
             result.add(e.toString());
             return true;

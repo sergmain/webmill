@@ -37,7 +37,6 @@ import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 
 import org.riverock.common.exception.DatabaseException;
-import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.utils.HibernateUtils;
 
@@ -51,7 +50,7 @@ import org.riverock.webmill.utils.HibernateUtils;
 public class HibernateTemplateDaoImpl implements InternalTemplateDao {
     private final static Logger log = Logger.getLogger(HibernateTemplateDaoImpl.class);
 
-    public Template getTemplate(Long templateId) {
+    public TemplateBean getTemplate(Long templateId) {
         if (log.isDebugEnabled()) {
             log.debug("Start getTemplateInternal() for templateId "+ templateId);
         }
@@ -92,7 +91,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         }
     }
 
-    public Template getTemplate(String templateName, Long siteLanguageId) {
+    public TemplateBean getTemplate(String templateName, Long siteLanguageId) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             TemplateBean bean = (TemplateBean)session.createQuery(
@@ -117,7 +116,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
      * @param lang String
      * @return org.riverock.interfaces.portal.bean.Template - Attention! template data not initalized
      */
-    public Template getTemplate(Long  siteId, String templateName, String lang) {
+    public TemplateBean getTemplate(Long  siteId, String templateName, String lang) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             TemplateBean bean = (TemplateBean)session.createQuery(
@@ -145,7 +144,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             "from   WM_PORTAL_TEMPLATE a, WM_PORTAL_SITE_LANGUAGE b " +
             "where  b.ID_SITE_SUPPORT_LANGUAGE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
 
-    public List<Template> getTemplateLanguageList(Long siteLanguageId) {
+    public List<TemplateBean> getTemplateLanguageList(Long siteLanguageId) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             List<TemplateBean> bean = session.createQuery(
@@ -157,14 +156,14 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             for (TemplateBean templateBean : bean) {
                 prepareBlob(templateBean);
             }
-            return (List)bean;
+            return bean;
         }
         finally {
             session.close();
         }
     }
 
-    public List<Template> getTemplateList(Long siteId) {
+    public List<TemplateBean> getTemplateList(Long siteId) {
         if (log.isDebugEnabled())
             log.debug("Start getTemplateList(), siteId: " +siteId);
 
@@ -181,14 +180,14 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             for (TemplateBean templateBean : beans) {
                 prepareBlob(templateBean);
             }
-            return (List)beans;
+            return beans;
         }
         finally {
             session.close();
         }
     }
 
-    public Long createTemplate(Template template) {
+    public Long createTemplate(TemplateBean template) {
         Session session = HibernateUtils.getSession();
         try {
             session.beginTransaction();
@@ -282,7 +281,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         }
     }
 
-    public void updateTemplate(Template template) {
+    public void updateTemplate(TemplateBean template) {
         Session session = HibernateUtils.getSession();
         try {
             session.beginTransaction();
@@ -357,7 +356,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         }
     }
 
-    public Template getDefaultDynamicTemplate(Long siteLanguageId) {
+    public TemplateBean getDefaultDynamicTemplate(Long siteLanguageId) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             TemplateBean bean = (TemplateBean)session.createQuery(
