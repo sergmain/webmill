@@ -7,7 +7,6 @@
       <jaxb:property name="elementParameter"/>
     </jaxb:bindings>
 
-
     <jaxb:bindings schemaLocation="riverock-template.xsd" node="//xs:element[@name='html']">
       <jaxb:bindings node=".//xs:attribute[@name='lang']">
         <jaxb:property name="oldLang"/>

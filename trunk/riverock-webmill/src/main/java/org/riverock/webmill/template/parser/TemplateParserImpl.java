@@ -11,11 +11,10 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 import org.riverock.webmill.template.schema.Template;
 import org.riverock.webmill.template.TemplateUtils;
-import org.riverock.webmill.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.exception.ParseTemplatePortalException;
 import org.riverock.webmill.utils.NamespacePrefixMapperImpl;
+import org.riverock.webmill.utils.JaxbValidationEventHandler;
 import org.riverock.common.tools.XmlTools;
-import org.riverock.dbrevision.utils.Utils;
 
 /**
  * User: SMaslyukov
@@ -32,10 +31,10 @@ public class TemplateParserImpl implements TemplateParser {
     
     public ParsedTemplate parse(InputStream inputStream) throws ParseTemplatePortalException {
         try {
-            Template t = XmlTools.getObjectFromXml(Template.class, inputStream);
+            Template t = XmlTools.getObjectFromXml(Template.class, inputStream, JaxbValidationEventHandler.getHandler());
 
 
-            byte[] templateBytes = Utils.getXml(t, "Template", "utf-8", true,
+            byte[] templateBytes = XmlTools.getXml(t, "Template", "utf-8", true,
                 new NamespacePrefixMapper[] {NamespacePrefixMapperImpl.NAMESPACE_PREFIX_MAPPER}
             );
             String s = new String(templateBytes, "utf-8");

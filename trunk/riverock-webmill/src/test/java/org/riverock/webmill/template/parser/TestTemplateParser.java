@@ -46,7 +46,7 @@ public class TestTemplateParser extends TestCase {
         InputStream is = TestTemplateParser.class.getResourceAsStream("/xml/resources/template/template_v2_5.xml");
         ParsedTemplate template = TemplateParserFactory.getTemplateParser().parse(is);
         assertNotNull(template);
-        assertEquals(3, template.getElements().length);
-        assertTrue(template.getElements()[1].isPortlet());
+        assertEquals(19, template.getElements().length);
+        assertTrue(template.getElements()[1].isXslt());
     }
 }

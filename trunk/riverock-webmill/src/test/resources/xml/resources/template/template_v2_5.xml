@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Template xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://webmill.riverock.org/xsd/riverock-template.xsd">
-        <element:portlet value="webmill:search" xmlRoot="SearchXml" code="SEARCH_CODE"/>
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://webmill.riverock.org/xsd/riverock-template.xsd">
+    <element:xslt name="HeaderStart"/>
+    <element:xslt name="HeaderText"/>
+    <element:xslt name="HeaderEnd"/>
+    <element:portlet xmlRoot="TopMenu" name="mill.menu" code="TOP"/>
+    <element:portlet xmlRoot="LoginOnIndexPage" name="mill.login_xml"/>
+    <element:xslt name="MainStart"/>
+    <element:portlet name="mill.menu" code="MAIN"/>
+    <element:xslt name="Separator"/>
+    <element:xslt name="Footer"/>
 </Template>

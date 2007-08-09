@@ -54,10 +54,9 @@ import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.template.PortalTemplate;
-import org.riverock.webmill.template.PortalTemplateItem;
-import org.riverock.webmill.template.PortalTemplateItemType;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
 import org.riverock.webmill.template.TemplateUtils;
+import org.riverock.webmill.template.parser.ParsedTemplateElement;
 
 /**
  * $Id$
@@ -281,17 +280,17 @@ public final class RequestContextUtils {
             log.debug( "template:\n" + template.toString());
             log.debug( "Process template");
         }
-        if (true) throw new RuntimeException("Need rewrite");
-//        for (PortalTemplateItem templateItem : template.getPortalTemplateItems()) {
-        for (PortalTemplateItem templateItem : new ArrayList<PortalTemplateItem>()) {
+        for (ParsedTemplateElement templateItem : template.getTemplate().getElements()) {
 
             // we change request status if portlet is 'always_process_as_action'
             RequestState requestState;
 
-            if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
-                String portletName = TemplateUtils.getFullPortletName( templateItem.getValue() );
+            if (templateItem.isPortlet()) {
+                String portletName = TemplateUtils.getFullPortletName( templateItem.getPortlet().getName() );
 
-                Namespace namespace = NamespaceFactory.getNamespace(portletName, template.getTemplateName(), i++, templateItem);
+                Namespace namespace = NamespaceFactory.getNamespace(
+                    portletName, template.getTemplateName(), NamespaceFactory.getTemplateUniqueIndex(templateItem, i++)
+                );
                 if (log.isDebugEnabled()) {
                     log.debug("    template name: " +template.getTemplateName());
                     log.debug("    namespace: " +namespace.getNamespace());
@@ -325,11 +324,12 @@ public final class RequestContextUtils {
                         requestContext.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
-            } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
-                //noinspection UnusedAssignment
+            }
+            else if (templateItem.isDynamic()) {
                 Namespace namespace = NamespaceFactory.getNamespace(
-                    requestContext.getExtendedCatalogItem().getFullPortletName(), template.getTemplateName(), i++,
-                    templateItem);
+                    requestContext.getExtendedCatalogItem().getFullPortletName(),
+                    template.getTemplateName(), NamespaceFactory.getTemplateUniqueIndex(templateItem, i++)
+                );
                 requestContext.setDefaultNamespace( namespace.getNamespace() );
                 requestState = initParameterForDefaultPortlet(factoryParameter, requestContext, portalInfo);
             }

@@ -7,9 +7,9 @@
         <title>aaaa</title>
     </head>
 	<body>
-		<element:custom value="Aaa"/>
+		<element:xslt name="Aaa"/>
 		<element:dynamic/>
-        <element:portlet value="webmill:search" xmlRoot="SearchXml" code="SEARCH_CODE"/> 
+        <element:portlet name="webmill:search" xmlRoot="SearchXml" code="SEARCH_CODE"/>
     </body>
 </html>
 </Template>

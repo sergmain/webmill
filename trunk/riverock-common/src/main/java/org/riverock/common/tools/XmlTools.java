@@ -38,6 +38,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.ValidationEventHandler;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -60,18 +61,25 @@ public final class XmlTools {
     }
 
     public static <T> T getObjectFromXml(final Class<T> classType, final String str) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance ( classType.getPackage().getName() );
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-        Source inSrc = new StreamSource(new StringReader(str));
-        return unmarshaller.unmarshal(inSrc, classType).getValue();
+        return getObjectFromXml(classType, new StreamSource(new StringReader(str)), null);
     }
 
     public static <T> T getObjectFromXml(final Class<T> classType, InputStream is) throws JAXBException {
+        return getObjectFromXml(classType, new StreamSource(is), null);
+    }
+
+    public static <T> T getObjectFromXml(final Class<T> classType, InputStream is, ValidationEventHandler handler) throws JAXBException {
+        return getObjectFromXml(classType, new StreamSource(is), handler);
+    }
+
+    public static <T> T getObjectFromXml(final Class<T> classType, Source inSrc, ValidationEventHandler handler) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance ( classType.getPackage().getName() );
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-        Source inSrc = new StreamSource(is);
+        if (handler!=null) {
+            unmarshaller.setEventHandler(handler);
+        }
+
         return unmarshaller.unmarshal(inSrc, classType).getValue();
     }
 

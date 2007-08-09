@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal;
+package org.riverock.webmill.portal.page_element;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
+import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.bean.SitePortletData;
@@ -55,10 +56,14 @@ import org.riverock.webmill.portal.impl.RenderResponseImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.preference.PortletPreferencePersistencer;
 import org.riverock.webmill.portal.preference.PortletPreferencesImpl;
-import org.riverock.webmill.template.PortalTemplateItem;
-import org.riverock.webmill.template.PortalTemplateParameter;
-import org.riverock.webmill.template.parser.ParsedTemplateElement;
+import org.riverock.webmill.portal.PortletParameters;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalSessionManagerImpl;
+import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.template.schema.ElementParameter;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.exception.PortalException;
 
 /**
  * User: SergeMaslyukov
@@ -66,8 +71,10 @@ import org.riverock.webmill.utils.PortletUtils;
  * Time: 19:29:20
  * $Id$
  */
-public final class PageElement {
-    private final static Logger log = Logger.getLogger( PageElement.class );
+public final class PageElementPortlet implements PageElement {
+    private final static Logger log = Logger.getLogger( PageElementPortlet.class );
+
+    private static final int NUM_LINES = 100;
 
     private static final String ACCESS_DISABLED_FOR_PORTLET = "Access denied";
 
@@ -81,8 +88,7 @@ public final class PageElement {
     private SitePortletData data = null;
 
     private PortletEntry portletEntry = null;
-    private ParsedTemplateElement portalTemplateItem = null;
-    private boolean isXml = false;
+    private Boolean isXml = null;
     private PortletParameters parameters = null;
     private boolean isRedirected = false;
     private String redirectUrl = null;
@@ -98,6 +104,10 @@ public final class PageElement {
     private List<String> roleList = null;
     private String targetTemplateName=null;
 
+    private String xmlRoot=null;
+    private String code=null;
+    private List<ElementParameter> templateParameters=null;
+
     /**
      * renderParameter used for set parameters in action
      */
@@ -105,15 +115,35 @@ public final class PageElement {
 
     private PortalInstance portalInstance;
 
-    public PageElement(PortalInstance portalInstance, Namespace namespace,
-                       ParsedTemplateElement portalTemplateItem, PortletParameters portletParameters,
-                       String targetTemplateName
+    public PageElementPortlet(
+        PortalInstance portalInstance,
+        Namespace namespace,
+        PortletParameters portletParameters,
+        String targetTemplateName,
+        String xmlRoot,
+        String code,
+        List<ElementParameter> templateParameters,
+        PortalRequestInstance portalRequestInstance,
+        String fullPortletName,
+        List<String> roleList,
+        PortletPreferencePersistencer persistencer
     ) {
         this.portalInstance = portalInstance;
         this.namespace = namespace;
-        this.portalTemplateItem = portalTemplateItem;
         this.parameters = portletParameters;
         this.targetTemplateName = targetTemplateName;
+        this.xmlRoot=xmlRoot;
+        this.code=code;
+        if (templateParameters!=null) {
+            this.templateParameters=templateParameters;
+        }
+        else {
+            this.templateParameters=new ArrayList<ElementParameter>();
+        }
+        this.portalRequestInstance=portalRequestInstance;
+        this.fullPortletName=fullPortletName;
+        this.persistencer = persistencer;
+        this.roleList = roleList;
     }
 
     public void destroy() {
@@ -135,7 +165,6 @@ public final class PageElement {
         }
         data = null;
         portletEntry = null;
-        portalTemplateItem = null;
         parameters = null;
         redirectUrl = null;
         if (log.isDebugEnabled()) {
@@ -151,7 +180,7 @@ public final class PageElement {
         }
     }
 
-    public void processActionPortlet() {
+    public void processAction() {
         initPortlet();
 
         if (portletEntry==null) {
@@ -193,7 +222,7 @@ public final class PageElement {
         }
     }
 
-    public void renderPortlet() {
+    public void render() {
         initPortlet();
         initRender();
 
@@ -247,14 +276,14 @@ public final class PageElement {
                 log.debug( "isXml() - "+isXml );
 
                 if ( isXml ) {
-                    log.debug( "XmlRoot - "+portalTemplateItem.getXmlRoot() );
+                    log.debug( "XmlRoot - "+xmlRoot );
                 }
 
                 log.debug( "portletBytes - " + portletBytes );
             }
 
             if (portletBytes==null || portletBytes.length==0) {
-                data = PortalRequestProcessor.setData( "", false, false );
+                data = PageElementUtils.setData( "", false, false );
             }
             else {
                 if ( isXml ) {
@@ -268,16 +297,16 @@ public final class PageElement {
                             return;
                         }
                         else {
-                            data = PortalRequestProcessor.setData( "", false, false );
+                            data = PageElementUtils.setData( "", false, false );
                         }
                     }
                     else {
-                        data = PortalRequestProcessor.setData(
+                        data = PageElementUtils.setData(
                                 MainTools.getBytes( portletBytes, idx+1 ), false, true );
                     }
                 }
                 else {
-                    data = PortalRequestProcessor.setData( portletBytes, false, false );
+                    data = PageElementUtils.setData( portletBytes, false, false );
                 }
             }
 
@@ -405,7 +434,7 @@ public final class PageElement {
                 }
             }
 
-            for (PortalTemplateParameter p : portalTemplateItem.getParameters()) {
+            for (ElementParameter p : templateParameters) {
                 List<String> list = new ArrayList<String>(1);
                 list.add(p.getValue());
                 renderRequestParamMap.put(p.getName(), list);
@@ -448,8 +477,8 @@ public final class PageElement {
             );
 
             // set portlet specific attribute
-            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, portalTemplateItem.getCode());
-            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, portalTemplateItem.getXmlRoot());
+            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, code);
+            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, xmlRoot);
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
             renderRequest.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, targetTemplateName );
 
@@ -498,13 +527,6 @@ public final class PageElement {
 
     private boolean isStandardPortletMode(PortletMode portletMode) {
         return portletMode==PortletMode.VIEW ||portletMode==PortletMode.EDIT ||portletMode==PortletMode.HELP; 
-    }
-
-    void initPageElementInstance( final String portletName,  final PortalRequestInstance portalRequestInstance, List<String> roleList, PortletPreferencePersistencer persistencer ) {
-        this.portalRequestInstance = portalRequestInstance;
-        this.fullPortletName = portletName;
-        this.persistencer = persistencer;
-        this.roleList = roleList;
     }
 
     private void initPortlet() {
@@ -651,12 +673,34 @@ public final class PageElement {
         return portletEntry;
     }
 
-    public PortalTemplateItem getPortalTemplateItem() {
-        return portalTemplateItem;
+    public SitePortletData getData() {
+        if ( getException()!=null || getErrorString()!=null ) {
+            String es = "";
+            if (getErrorString()!=null) {
+                es += getErrorString();
+            }
+            if (getException()!=null) {
+                es += (
+                    "<br>" +
+                    ExceptionTools.getStackTrace( getException(), NUM_LINES, "<br>")
+                    );
+            }
+
+            data = PageElementUtils.setData( es.getBytes(), true, false );
+        }
+
+        return data;
     }
 
-    public SitePortletData getData() {
-        return data;
+    public boolean isXml() {
+        if (isXml==null) {
+            throw new PortalException("isXml not initialized");
+        }
+        return isXml;
+    }
+
+    public boolean isAction() {
+        return (parameters!=null && parameters.getRequestState().isActionRequest());
     }
 
     public void setData( SitePortletData data ) {
@@ -690,4 +734,5 @@ public final class PageElement {
     public String getFullPortletName() {
         return fullPortletName;
     }
+
 }

@@ -26,6 +26,8 @@ package org.riverock.webmill.template;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import org.riverock.common.tools.XmlTools;
 import org.riverock.webmill.template.parser.ParsedTemplate;
 
@@ -104,17 +106,6 @@ public class PortalTemplateImpl implements PortalTemplate, Serializable {
     }
 
     public String toString() {
-
-        if (template==null) {
-            return "<template_is_null/>";
-        }
-        try {
-            byte[] bytes = XmlTools.getXml(template, "Template", "utf-8");
-            return new String(bytes, "utf-8"); 
-        }
-        catch(Throwable th) {
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TemplateParseError/>";
-        }
+        return "[templateName"+templateName+"]";
     }
 }
