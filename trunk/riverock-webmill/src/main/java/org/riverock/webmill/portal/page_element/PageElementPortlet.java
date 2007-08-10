@@ -150,7 +150,10 @@ public final class PageElementPortlet implements PageElement {
         exception = null;
         errorString = null;
 
-        actionRequest = null;
+        if ( actionRequest!=null ) {
+            actionRequest.destroy();
+            actionRequest = null;
+        }
         if ( actionResponse!=null ) {
             actionResponse.destroy();
             actionResponse = null;
@@ -165,18 +168,36 @@ public final class PageElementPortlet implements PageElement {
         }
         data = null;
         portletEntry = null;
-        parameters = null;
-        redirectUrl = null;
-        if (log.isDebugEnabled()) {
-            log.debug("#13.1");
+        if ( parameters!=null ) {
+            parameters.destroy();
+            parameters = null;
         }
+        redirectUrl = null;
+        namespace = null;
+        fullPortletName=null;
+        if ( renderRequestParamMap!=null ) {
+            renderRequestParamMap.clear();
+            renderRequestParamMap = null;
+        }
+        contextPath=null;
+        portalRequestInstance=null;
+        portletPreferences=null;
+        persistencer=null;
+        portletMetadata=null;
+        roleList = null;
+        targetTemplateName=null;
+
+        xmlRoot=null;
+        code=null;
+
+        if ( templateParameters!=null ) {
+            templateParameters.clear();
+            templateParameters = null;
+        }
+
         if ( renderParameters!=null ) {
             renderParameters.clear();
             renderParameters = null;
-        }
-        namespace = null;
-        if (log.isDebugEnabled()) {
-            log.debug("#13.2");
         }
     }
 

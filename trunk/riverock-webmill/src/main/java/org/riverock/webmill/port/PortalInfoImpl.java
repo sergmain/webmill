@@ -65,9 +65,6 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private transient Locale defaultLocale = null;
 
-//    private transient XsltTransformerManager xsltTransformerManager = null;
-//    private transient PortalTemplateManager portalTemplateManager = null;
-
     private transient Map<String, Long> supportLanguageMap = null;
     private transient Map<String, MenuLanguage> languageMenuMap = null;
 
@@ -122,8 +119,6 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             log.debug("#15.09.01 finalize");
 
         defaultLocale = null;
-//        xsltTransformerManager = null;
-//        portalTemplateManager = null;
 
         super.finalize();
     }
@@ -192,16 +187,6 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         initPortalProperties();
 
         long mills = 0;  // System.currentTimeMillis();
-
-/*
-        if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-        xsltTransformerManager = new XsltTransformerManagerImpl(siteId);
-        if (log.isInfoEnabled()) log.info("Init xsltTransformerManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
-
-        if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-        portalTemplateManager = PortalTemplateManagerImpl.getInstance(siteId);
-        if (log.isInfoEnabled()) log.info("Init portalTemplateManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
-*/
 
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
         siteLanguageList = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList( siteId );
@@ -275,16 +260,6 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return defaultLocale;
     }
 
-/*
-    public XsltTransformerManager getXsltTransformerManager() {
-        return this.xsltTransformerManager;
-    }
-
-    public PortalTemplateManager getPortalTemplateManager() {
-        return portalTemplateManager;
-    }
-
-*/
     private void initMenu() {
         if (log.isDebugEnabled()) log.debug("start get menu for site " + siteId);
 

@@ -52,6 +52,8 @@ public class NamespaceFactory {
                 return ("portlet-"+element.getPortlet().getName()+'-'+element.getPortlet().getCode()+'-'+element.getPortlet().getXmlRoot()).hashCode();
             case STRING:
                 return element.hashCode();
+            case INCLUDE:
+                return "include".hashCode();
             default:
                 throw new IllegalStateException("Unknown type of template element. "+element.getClass().getName());
         }
@@ -65,7 +67,6 @@ public class NamespaceFactory {
      * <br>For example: webmill:login-portlet-id:login-portlet
      * @param templateName template name
      * @param tempalteUniqueIndex intex if item in template
-     * @param o  item of template
      * @return namespace
      */
     public static Namespace getNamespace(String fullPortletName, String templateName, int tempalteUniqueIndex) {

@@ -76,6 +76,10 @@ public class HibernateUtils {
 
     public static final String HIBERNATE_FAMILY = "hibernate_family";
     private synchronized static void prepareSession() {
+        if (sessionFactory!=null) {
+            return;
+        }
+        
         try {
             String hibernateFamily = null;
             Context envCtx = null;
@@ -118,7 +122,9 @@ public class HibernateUtils {
             ;
 
             setAnnotatedClasses(cfg);
-            sessionFactory = cfg.buildSessionFactory();
+            //noinspection UnnecessaryLocalVariable
+            SessionFactory sessionFactoryReference = cfg.buildSessionFactory();
+            sessionFactory = sessionFactoryReference;
 
         } catch (Throwable ex) {
             // Log exception!

@@ -97,20 +97,22 @@ public class PortalInstanceImpl implements PortalInstance  {
     private PortalIndexer portalIndexer = null;
     private Collection<String> supportedList = null;
     private static final Collection<String> destroyedPortletName = new ConcurrentLinkedQueue<String>();
-    private final ClassLoader portalClassLoader = Thread.currentThread().getContextClassLoader();
 
     private Long siteId;
 
     private PortalTemplateManager portalTemplateManager=null;
+    private ClassLoader portalClassLoader=null;
 
     public void destroy() {
         portalServletConfig = null;
         portletContainer = null;
+        portalIndexer=null;
         if (supportedList!=null) {
             supportedList.clear();
             supportedList = null;
         }
         siteId=null;
+        portalClassLoader = null;
     }
 
     private static class PortalVersion {
@@ -182,8 +184,8 @@ public class PortalInstanceImpl implements PortalInstance  {
         return PORTAL_VERSION;
     }
 
-    public static PortalInstanceImpl getInstance( Long siteId, ServletConfig servletConfig ) {
-        return new PortalInstanceImpl( siteId, servletConfig );
+    public static PortalInstanceImpl getInstance( Long siteId, ServletConfig servletConfig, ClassLoader portalClassLoader ) {
+        return new PortalInstanceImpl( siteId, servletConfig, portalClassLoader );
     }
 
     public int getPortalMajorVersion() {
@@ -195,9 +197,11 @@ public class PortalInstanceImpl implements PortalInstance  {
     }
 
 
-    private PortalInstanceImpl( Long siteId, ServletConfig servletConfig ) {
+    private PortalInstanceImpl( Long siteId, ServletConfig servletConfig, ClassLoader portalClassLoader  ) {
         this.siteId = siteId;
         this.portalServletConfig = servletConfig;
+        this.portalClassLoader = portalClassLoader;
+
         this.portletContainer = PortletContainerFactory.getInstance( this, PortletContainerUtils.getDeployedInPath(servletConfig) );
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
         this.portalIndexer = new PortalIndexerImpl(this.siteId, this.portletContainer, portalClassLoader);
@@ -365,6 +369,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             try {
                 if (portalRequestInstance != null) {
                     portalRequestInstance.destroy();
+                    portalRequestInstance=null;
                 }
             }
             catch (Throwable e) {

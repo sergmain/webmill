@@ -51,13 +51,17 @@ public final class ContextNavigator extends HttpServlet {
     private final ConcurrentMap<Long, PortalInstanceImpl> portalInstanceMap = new ConcurrentHashMap<Long, PortalInstanceImpl>();
 
     private ServletConfig portalServletConfig = null;
+    private ClassLoader classLoader=null;
 
     public void init(ServletConfig servletConfig) {
         portalServletConfig = servletConfig;
+//        classLoader=Thread.currentThread().getContextClassLoader();
+        classLoader=ContextNavigator.class.getClassLoader();
     }
 
     public void destroy() {
         portalServletConfig = null;
+        classLoader=null;
 
         for (PortalInstanceImpl portalInstance : portalInstanceMap.values()) {
             portalInstance.destroy();
@@ -137,7 +141,7 @@ public final class ContextNavigator extends HttpServlet {
         if (portalInstance != null) {
             return portalInstance;
         }
-        portalInstance = PortalInstanceImpl.getInstance(siteId, portalServletConfig);
+        portalInstance = PortalInstanceImpl.getInstance(siteId, portalServletConfig, classLoader);
         portalInstanceMap.putIfAbsent(siteId, portalInstance);
         return portalInstance;
     }

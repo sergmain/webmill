@@ -154,17 +154,19 @@ public class PortalUserManagerImpl implements PortalUserManager {
                     return new UserOperationStatusBean(PortalUserManager.STATUS_EMAIL_ALREADY_REGISTERED);
                 }
 
-                UserBean user = new UserBean();
-                user.setAddress(userRegistration.getAddress());
+                UserBean user = new UserBean(userRegistration);
                 user.setCreatedDate(new Date(System.currentTimeMillis()));
                 user.setDeleted(false);
                 user.setDeletedDate(null);
+                user.setCompanyId(companyId);
+/*
+                user.setAddress(userRegistration.getAddress());
                 user.setEmail(userRegistration.getEmail());
                 user.setFirstName(userRegistration.getFirstName());
                 user.setLastName(userRegistration.getLastName());
                 user.setMiddleName(userRegistration.getMiddleName());
                 user.setPhone(userRegistration.getPhone());
-                user.setCompanyId(companyId);
+*/
                 Long userId = InternalDaoFactory.getInternalUserDao().addUser(user);
 
                 // register-default-role
