@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,25 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
 
     public void destroy() {
         super.destroy();
+        requestBodyFile=null;
+        if (realBufferedReader!=null) {
+            try {
+                realBufferedReader.close();
+                realBufferedReader=null;
+            }
+            catch (IOException e) {
+                log.warn("Error close realBufferedReader", e);
+            }
+        }
+        if (realInputStream!=null) {
+            try {
+                realInputStream.close();
+            }
+            catch (IOException e) {
+                log.warn("Error close realInputStream", e);
+            }
+        }
+        contentTypeManager=null;
     }
 
     public ActionRequestImpl(

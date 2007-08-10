@@ -63,6 +63,10 @@ public final class ActionResponseImpl implements ActionResponse {
             renderParameters.clear();
             renderParameters = null;
         }
+        if (portletProperties!=null) {
+            portletProperties.clear();
+            portletProperties = null;
+        }
     }
 
     public ActionResponseImpl( final HttpServletResponse response, final Map<String, List<String>> renderParameters,

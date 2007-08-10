@@ -76,7 +76,7 @@ import org.riverock.webmill.portal.user.PortalUserManagerImpl;
 public class WebmillPortletRequest extends ServletRequestWrapper implements HttpServletRequest, PortletRequest {
     private final static Logger log = Logger.getLogger( WebmillPortletRequest.class );
 
-    private static final NamespaceMapper mapper = NamespaceFactory.getNamespaceMapper();
+    private static final NamespaceMapper NAMESPACE_MAPPER = NamespaceFactory.getNamespaceMapper();
 
     protected HttpServletRequest httpRequest = null;
     protected HttpServletResponse httpResponse = null;
@@ -110,15 +110,31 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     public void destroy() {
         httpRequest = null;
         httpResponse = null;
-        parameters = null;
+        if (parameters!=null) {
+            parameters.clear();
+            parameters = null;
+        }
         session = null;
         auth = null;
         locale = null;
         preferredLocale = null;
         cookies = null;
         renderParameters = null;
+        servletContext=null;
+        portletPreferences = null;
+        contextPath = null;
         portalContext = null;
-        includedParameters=null;
+        portletContext=null;
+        if (portletProperties!=null) {
+            portletProperties.clear();
+            portletProperties=null;
+        }
+        portletDefinition=null;
+        namespace=null;
+        if (includedParameters!=null) {
+            includedParameters.clear();
+            includedParameters=null;
+        }
     }
 
     public WebmillPortletRequest(
@@ -487,7 +503,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         String encodedName = isNameReserved(key) ?
                 key :
-                mapper.encode(namespace, key);
+                NAMESPACE_MAPPER.encode(namespace, key);
 
         Object attribute = getHttpServletRequest().getAttribute(encodedName);
 
@@ -503,7 +519,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         while (attributes.hasMoreElements()) {
             String attribute = (String) attributes.nextElement();
 
-            String portletAttribute = mapper.decode(namespace, attribute);
+            String portletAttribute = NAMESPACE_MAPPER.decode(namespace, attribute);
 
 /*
             if (log.isDebugEnabled()) {
@@ -524,7 +540,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         }
 
         String encodedName = isNameReserved(key) ?
-                key : mapper.encode(namespace, key);
+                key : NAMESPACE_MAPPER.encode(namespace, key);
 
 /*
         if (log.isDebugEnabled()) {
@@ -558,7 +574,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         if (key==null) {
             throw new IllegalArgumentException("Call removeAttribute() with null");
         }
-        String encodedName = isNameReserved(key) ? key : mapper.encode(namespace, key);
+        String encodedName = isNameReserved(key) ? key : NAMESPACE_MAPPER.encode(namespace, key);
         getHttpServletRequest().removeAttribute(encodedName);
     }
 

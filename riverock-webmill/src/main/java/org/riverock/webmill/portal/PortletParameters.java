@@ -58,6 +58,16 @@ public final class PortletParameters {
         this.requestState = requestState;
     }
 
+    public void destroy() {
+        namespace = null;
+        if (parameters!=null) {
+            parameters.clear();
+            parameters=null;
+        }
+        requestBodyFile=null;
+        requestState=null;
+    }
+
     public RequestState getRequestState() {
         return requestState;
     }

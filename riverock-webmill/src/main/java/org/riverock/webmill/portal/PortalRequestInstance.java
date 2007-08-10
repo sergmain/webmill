@@ -62,7 +62,6 @@ import org.riverock.webmill.portal.context.RequestContextParameter;
 import org.riverock.webmill.portal.context.RequestState;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
-import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
@@ -110,7 +109,7 @@ public final class PortalRequestInstance {
     private HttpServletResponse httpResponse = null;
     private PortalInstance portalInstance;
     private AuthSession auth = null;
-    private ActionRequestImpl actionRequest = null;
+//    private ActionRequestImpl actionRequest = null;
     private CookieManager cookieManager = new CookieManagerImpl();
 
     private String errorString = null;
@@ -127,12 +126,17 @@ public final class PortalRequestInstance {
     private PortalTransformationParameters portalTransformationParameters = new PortalTransformationParameters();
 
     public void destroy() {
-        for (PageElement pageElement : getPageElementList()) {
-            pageElement.destroy();
+        if (pageElementList!=null) {
+            for (PageElement pageElement : pageElementList) {
+                pageElement.destroy();
+            }
+            pageElementList.clear();
+            pageElementList=null;
         }
 
         if (byteArrayOutputStream != null) {
             try {
+                // TODO remove?
                 byteArrayOutputStream.close();
             }
             catch (IOException e) {
@@ -147,10 +151,12 @@ public final class PortalRequestInstance {
         httpRequest = null;
         httpResponse = null;
         auth = null;
+/*
         if (actionRequest != null) {
             actionRequest.destroy();
             actionRequest = null;
         }
+*/
         cookieManager = null;
         errorString = null;
         redirectUrl = null;
@@ -459,10 +465,10 @@ public final class PortalRequestInstance {
         return errorString;
     }
 
-    ActionRequestImpl getActionRequest() {
-        return actionRequest;
-    }
-
+//    ActionRequestImpl getActionRequest() {
+//        return actionRequest;
+//    }
+//
     public Locale[] getPreferredLocales() {
         return preferredLocales;
     }
