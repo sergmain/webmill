@@ -459,6 +459,7 @@
 			<xs:attribute name="onkeypress" type="xs:string"/>
 			<xs:attribute name="onkeydown" type="xs:string"/>
 			<xs:attribute name="onkeyup" type="xs:string"/>
+			<xs:attribute name="align" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="p">
@@ -4645,6 +4646,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
+			<xs:attribute name="width" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

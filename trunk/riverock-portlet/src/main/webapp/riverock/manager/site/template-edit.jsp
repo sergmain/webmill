@@ -80,6 +80,7 @@
                     <h:commandButton id="template-edit-cancel-action" action="#{templateAction.cancelEditTemplateAction}"
                                      value="#{msg['cancel_edit_template_action']}"
                                      styleClass="site-button-action"
+                                     immediate="true"
                         >
                     </h:commandButton>
                 </h:panelGroup>

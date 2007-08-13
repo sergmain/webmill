@@ -212,5 +212,12 @@ public class TestParsingTemplateV2 extends TestCase {
         assertEquals(9, template.getPortletOrDynamicOrXslt().size());
     }
 
+    public void testUnmarshalTemplate_v2_6() throws Exception {
+        InputStream is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_6.xml");
+        Template template = XmlTools.getObjectFromXml(Template.class, is, JaxbValidationEventHandler.getHandler());
+        assertNotNull(template);
+//        assertEquals(9, template.getPortletOrDynamicOrXslt().size());
+    }
+
 
 }

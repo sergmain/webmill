@@ -80,6 +80,7 @@
                     <h:commandButton id="site-language-edit-cancel-action" action="#{siteLanguageAction.cancelEditSiteLanguageAction}"
                                      value="#{msg['cancel_edit_site_language_action']}"
                                      styleClass="site-button-action"
+                                     immediate="true"
                         >
                     </h:commandButton>
                 </h:panelGroup>
