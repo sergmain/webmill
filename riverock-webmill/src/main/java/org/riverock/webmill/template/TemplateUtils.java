@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.tools.ContainertStringUtils;
@@ -18,6 +19,7 @@ import org.riverock.webmill.template.schema.*;
  * Time: 14:33:39
  */
 public class TemplateUtils {
+    private final static Logger log = Logger.getLogger( TemplateUtils.class );
 
     public static String getString( final List<ElementParameter> v, final String nameParam) throws IllegalArgumentException{
         return getString(v, nameParam, null);
@@ -69,6 +71,21 @@ public class TemplateUtils {
             if (o==null) {
                 continue;
             }
+            if (o.getClass()==null) {
+                log.debug("Object o: " + o);
+                log.debug("Object o class: " + o.getClass());
+                continue;
+            }
+            if (o.getClass().getPackage()==null) {
+                log.debug("Object o: " + o);
+                log.debug("Object o class: " + o.getClass());
+                log.debug("Object o package: " + o.getClass().getPackage());
+                continue;
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("o.getClass().getPackage().getName(): " + o.getClass().getPackage().getName());
+            }
+
             if (o instanceof List) {
                 for (Object o1 : (List)o) {
                     getElements(o1, elements);

@@ -81,6 +81,7 @@
                     <h:commandButton id="css-edit-cancel-action" action="#{cssAction.cancelEditCssAction}"
                                      value="#{msg['cancel_edit_css_action']}"
                                      styleClass="site-button-action"
+                                     immediate="true"
                         >
                     </h:commandButton>
                 </h:panelGroup>
