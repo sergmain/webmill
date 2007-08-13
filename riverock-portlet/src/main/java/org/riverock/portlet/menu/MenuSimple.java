@@ -44,6 +44,7 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.portlet.menu.schema.MenuModuleType;
 import org.riverock.portlet.menu.schema.MenuSimpleType;
 import org.riverock.interfaces.ContainerConstants;
@@ -109,7 +110,11 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     log.debug("PortalInfo is null");
             }
             PortalInfo portalInfo = (PortalInfo) renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
-            Menu catalog = portalInfo.getMenu(renderRequest.getLocale().toString()).getCatalogByCode(portletCode_);
+            MenuLanguage menuLanguage = portalInfo.getMenu(renderRequest.getLocale().toString());
+            if (menuLanguage==null) {
+                return null;
+            }
+            Menu catalog = menuLanguage.getCatalogByCode(portletCode_);
 
 //            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
             Long defaultCatalogId = null;
@@ -134,7 +139,11 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
         try {
             PortalInfo portalInfo = (PortalInfo) renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
-            Menu menu = portalInfo.getMenu(renderRequest.getLocale().toString()).getDefault();
+            MenuLanguage menuLanguage = portalInfo.getMenu(renderRequest.getLocale().toString());
+            if (menuLanguage==null) {
+                return null;
+            }
+            Menu menu = menuLanguage.getDefault();
 
             if (menu == null) {
                 return null;

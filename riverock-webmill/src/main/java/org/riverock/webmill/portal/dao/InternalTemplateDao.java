@@ -36,6 +36,14 @@ import org.riverock.webmill.portal.bean.TemplateBean;
 public interface InternalTemplateDao {
     public TemplateBean getTemplate(Long templateId);
     public TemplateBean getTemplate(String templateName, Long siteLanguageId);
+    /**
+     * Attention! template data not initalized
+     *
+     * @param siteId site  ID
+     * @param templateName String
+     * @param lang String
+     * @return org.riverock.interfaces.portal.bean.Template - Attention! template data not initalized
+     */
     public TemplateBean getTemplate(Long siteId, String templateName, String lang);
     public TemplateBean getDefaultDynamicTemplate(Long siteLanguageId);
 

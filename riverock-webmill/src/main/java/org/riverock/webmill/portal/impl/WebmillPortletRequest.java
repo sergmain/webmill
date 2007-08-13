@@ -690,8 +690,9 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 //        dumpMap(parameters, "getParameterMap(), parameters");
 
         Map<String, List<String>> map = new HashMap<String, List<String>>();
-        if ( parameters!=null )
+        if ( parameters!=null ) {
             map.putAll( parameters );
+        }
 
         if ( renderParameters!=null ) {
             for ( Map.Entry<String, List<String>> entry : renderParameters.entrySet()) {
@@ -719,7 +720,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
                 }
             }
         }
-        Map<String, String[]> result = new HashMap<String, String[]>();
+        Map<String, String[]> result = new HashMap<String, String[]>(map.size());
         for ( Map.Entry<String, List<String>> entry : map.entrySet()) {
             result.put( entry.getKey(), entry.getValue().toArray(new String[0]));
         }
@@ -875,7 +876,8 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.auth = portalRequestInstance.getAuth();
         this.locale = portalRequestInstance.getLocale();
         this.preferredLocale = portalRequestInstance.getPreferredLocales();
-        this.parameters = Collections.unmodifiableMap( parameters );
+//        this.parameters = Collections.unmodifiableMap( parameters );
+        this.parameters = parameters;
 
         this.portalContext = new PortalContextImpl(portalRequestInstance.getPortalInstance().getPortalName(), httpRequest.getContextPath(), portalInfo);
         this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext, namespace);

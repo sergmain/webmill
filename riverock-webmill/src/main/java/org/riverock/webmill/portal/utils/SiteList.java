@@ -72,6 +72,7 @@ public class SiteList {
             if (siteList.mapDefaultHost!=null) {
                 siteList.mapDefaultHost.clear();
             }
+            siteList=null;
         }
     }
 
@@ -81,6 +82,7 @@ public class SiteList {
                 if (siteList!=null) {
                     return siteList;
                 }
+                //noinspection UnnecessaryLocalVariable
                 SiteList instance = getInstance();
                 siteList = instance;
             }
