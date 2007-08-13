@@ -35,6 +35,7 @@ import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.bean.*;
+import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.utils.HibernateUtils;
 
 /**
@@ -343,11 +344,13 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                 .setLong("site_id", siteId)
                 .executeUpdate();
 
+
             session.flush();
             session.clear();
             session.getTransaction().commit();
         }
         finally {
+            SiteList.destroy();
             session.close();
         }
     }
