@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-common</artifactId>
-            <version>[1.2-SNAPSHOT]</version>
+            <version>[1.2]</version>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-webmill</artifactId>
-            <version>5.8.0</version>
+            <version>[5.8.0]</version>
         </dependency>
 
         <dependency>
