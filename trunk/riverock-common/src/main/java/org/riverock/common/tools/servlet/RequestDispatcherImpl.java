@@ -44,7 +44,7 @@ import org.riverock.interfaces.generic.InternalRequest;
  * $Id$
  */
 public class RequestDispatcherImpl implements RequestDispatcher {
-    private final static Logger log = Logger.getLogger( RequestDispatcherImpl.class );
+    private static Logger log = Logger.getLogger( RequestDispatcherImpl.class );
 
     private RequestDispatcher requestDispatcher = null;
     private String queryString=null;

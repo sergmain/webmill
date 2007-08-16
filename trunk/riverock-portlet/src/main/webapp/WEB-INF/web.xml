@@ -213,6 +213,14 @@
 		<display-name>Webmill portlet register</display-name>
 		<servlet-name>WebmillPortletRegister</servlet-name>
 		<servlet-class>org.riverock.webmill.container.portlet.register.PortletRegisterServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<description>Shutdown helper servlet</description>
+		<display-name>Shutdown helper servlet</display-name>
+		<servlet-name>ShutdownHelperServlet</servlet-name>
+		<servlet-class>org.riverock.portlet.ShutdownHelperServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 

@@ -8,7 +8,6 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
  * Time: 20:22:55
  */
 public class NamespacePrefixMapperImpl extends NamespacePrefixMapper {
-    public static final NamespacePrefixMapperImpl NAMESPACE_PREFIX_MAPPER = new NamespacePrefixMapperImpl();
 
     public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
         if( "http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd".equals(namespaceUri) )

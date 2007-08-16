@@ -42,7 +42,7 @@ import org.riverock.common.contenttype.ContentTypeManager;
 
 public class ServletResponseWrapperInclude implements ServletResponse {
 
-    private final static Logger log = Logger.getLogger( ServletResponseWrapperInclude.class );
+    private static Logger log = Logger.getLogger( ServletResponseWrapperInclude.class );
 
     private final static int BUFFER_INITIAL_SIZE = 10000;
 

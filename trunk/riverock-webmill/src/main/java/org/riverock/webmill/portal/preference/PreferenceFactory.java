@@ -32,7 +32,7 @@ package org.riverock.webmill.portal.preference;
  *         $Id$
  */
 public class PreferenceFactory {
-    private static final StubPortletPreferencePersistencerImpl STUB_PORTLET_PREFERENCE_PERSISTENCER = new StubPortletPreferencePersistencerImpl();
+    private static StubPortletPreferencePersistencerImpl STUB_PORTLET_PREFERENCE_PERSISTENCER = new StubPortletPreferencePersistencerImpl();
 
     public static PortletPreferencePersistencer getPortletPreferencePersistencer(Long contextId) {
         return new PortletPreferencePersistencerImpl(contextId);

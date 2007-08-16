@@ -40,7 +40,7 @@ import org.riverock.common.config.StringLocaleManager;
  * $Id: ConfigService.java 1010 2006-09-24 21:09:34Z serg_main $
  */
 public final class ConfigService {
-    private final static Logger log = Logger.getLogger( ConfigService.class );
+    private static Logger log = Logger.getLogger( ConfigService.class );
 
     private final static String localeLanguage[] = {"ru"};
 

@@ -52,6 +52,14 @@ public class HibernateUtils {
     };
 
     public static final String HIBERNATE_FAMILY = "hibernate_family";
+
+    public static synchronized void destroy() {
+        if (sessionFactory!=null) {
+            sessionFactory.close();
+            sessionFactory=null;
+        }
+    }
+
     private synchronized static void prepareSession() {
         try {
             String hibernateFamily = null;
@@ -92,9 +100,15 @@ public class HibernateUtils {
                 .setProperty("hibernate.cache.provider_class", org.hibernate.cache.EhCacheProvider.class.getName() )
                 .setProperty("net.sf.ehcache.configurationResourceName", "/ehcache.xml" )
                 .setProperty("hibernate.connection.datasource", "java:comp/env/jdbc/webmill")
+
+//                .setProperty("hibernate.validator.autoregister_listeners", "false")
+                .setProperty("hibernate.search.autoregister_listeners", "false")
             ;
             setAnnotatedClasses(cfg);
-            sessionFactory = cfg.buildSessionFactory();
+
+            //noinspection UnnecessaryLocalVariable
+            SessionFactory sessionFactoryReference = cfg.buildSessionFactory();
+            sessionFactory = sessionFactoryReference;
 
         } catch (Throwable ex) {
             // Log exception!

@@ -55,7 +55,7 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
  * $Id$
  */
 public final class XmlTools {
-    private final static Logger log = Logger.getLogger(XmlTools.class);
+    private static Logger log = Logger.getLogger(XmlTools.class);
 
     public XmlTools() {
     }

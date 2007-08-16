@@ -42,7 +42,7 @@ import org.riverock.interfaces.portlet.member.PortletGetList;
  * $Id$
  */
 public class LanguagePerSite implements PortletGetList {
-    private static Logger log = Logger.getLogger( LanguagePerSite.class );
+    private final static Logger log = Logger.getLogger( LanguagePerSite.class );
 
     public LanguagePerSite() {
     }

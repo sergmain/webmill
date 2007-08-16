@@ -57,7 +57,7 @@ import org.riverock.webmill.template.PortalTemplateManagerFactory;
  *         Time: 13:12:45
  */
 public final class ExtendedCatalogItemBean {
-    private static Logger log = Logger.getLogger(ExtendedCatalogItemBean.class);
+    private final static Logger log = Logger.getLogger(ExtendedCatalogItemBean.class);
 
     private PortletDefinition portlet = null;
     private String namePortletId = null;

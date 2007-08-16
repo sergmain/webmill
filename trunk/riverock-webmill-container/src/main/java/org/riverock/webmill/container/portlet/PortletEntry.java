@@ -78,9 +78,9 @@ public final class PortletEntry {
     }
 
     public ClassLoader getClassLoader() {
-        if (classLoader==null) {
-            throw new IllegalArgumentException("Portlet classLoader is null");
-        }
+//        if (classLoader==null) {
+//            throw new IllegalArgumentException("Portlet classLoader is null");
+//        }
         return classLoader;
     }
 

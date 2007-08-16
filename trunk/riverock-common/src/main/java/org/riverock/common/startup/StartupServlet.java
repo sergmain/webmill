@@ -53,7 +53,7 @@ import org.riverock.common.main.Constants;
  * $Id$
  */
 public final class StartupServlet extends HttpServlet {
-    private final static Logger log = Logger.getLogger(StartupServlet.class);
+    private static Logger log = Logger.getLogger(StartupServlet.class);
     private static final String LOG_CONFIG_FILE_PARAM_NAME = "log-config-file";
     private static final String LOG_PATH_PARAM_NAME = "log-path";
 

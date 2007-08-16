@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
  *         $Id$
  */
 public class ContentTypeManager {
-    private final static Logger log = Logger.getLogger(ContentTypeManager.class);
+    private static Logger log = Logger.getLogger(ContentTypeManager.class);
 
     private ContentType contentType = null;
 

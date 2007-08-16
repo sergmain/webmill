@@ -50,7 +50,7 @@ import org.riverock.portlet.webclip.manager.bean.WebclipStatisticBean;
  */
 @SuppressWarnings({"UnusedAssignment"})
 public class WebclipDaoImpl implements WebclipDao {
-    private static Logger log = Logger.getLogger( WebclipDaoImpl.class );
+    private final static Logger log = Logger.getLogger( WebclipDaoImpl.class );
 
     public WebclipBean getWebclip(Long siteId, Long webclipId) {
         return getWebclip(siteId, webclipId, true);

@@ -44,7 +44,7 @@ import org.riverock.common.tools.DateTools;
 import org.riverock.common.startup.StartupApplication;
 
 public class TestProperties {
-    private static Logger cat = Logger.getLogger(TestProperties.class);
+    private final static Logger cat = Logger.getLogger(TestProperties.class);
 
     public TestProperties() {
     }

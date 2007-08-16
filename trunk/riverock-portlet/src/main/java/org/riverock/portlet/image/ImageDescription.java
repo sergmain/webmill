@@ -51,7 +51,7 @@ import org.riverock.common.utils.PortletUtils;
  */
 public class ImageDescription extends HttpServlet
 {
-    private static Logger cat = Logger.getLogger(ImageDescription.class);
+    private final static Logger cat = Logger.getLogger(ImageDescription.class);
 
     public ImageDescription()
     {

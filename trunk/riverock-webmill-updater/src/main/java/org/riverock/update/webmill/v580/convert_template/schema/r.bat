@@ -1,0 +1,17 @@
+svn delete      Q.java
+svn delete      Style.java
+svn delete      Noscript.java
+svn delete      Big.java
+svn delete      Br.java
+svn delete      Script.java
+svn delete      Object.java
+svn delete      Abbr.java
+svn delete      Hr.java
+svn delete      Ol.java
+svn delete      H4.java
+svn delete      Col.java
+svn delete      Ul.java
+svn delete      B.java
+svn delete      Cite.java
+svn delete      Thead.java
+svn delete      Tr.java

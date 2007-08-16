@@ -43,7 +43,7 @@ import org.riverock.common.utils.PortletUtils;
  * $Id$
  */
 public class JobItem {
-    private static Logger log = Logger.getLogger( JobItem.class );
+    private final static Logger log = Logger.getLogger( JobItem.class );
 
     public Integer periodActivity;
 

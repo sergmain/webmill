@@ -39,7 +39,7 @@ import org.riverock.interfaces.portal.action.PortalActionExecutor;
  *         $Id$
  */
 public class PortalActionExecutorService {
-    private static Logger log = Logger.getLogger( PortalActionExecutorService.class );
+    private final static Logger log = Logger.getLogger( PortalActionExecutorService.class );
 
     public String createGoogleSitemap() {
         log.debug("Start PortalActionExecutorService.createGoogleSitemap()");

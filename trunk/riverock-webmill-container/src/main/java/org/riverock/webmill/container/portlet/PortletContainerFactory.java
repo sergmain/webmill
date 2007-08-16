@@ -27,7 +27,7 @@ public final class PortletContainerFactory implements Serializable {
     private static List<WaitDigestFile> digestWaitList = new ArrayList<WaitDigestFile>();
 
     // Masp of portlet containers, key is path to dir, where placed all web application
-    private static Map<String, PortletContainer> portletContainers = new HashMap<String, PortletContainer>();
+    private static PortletContanerByPortalPathMap portletContainers = new PortletContanerByPortalPathMap();
 
     private static PortletDefinitionProcessor portletDefinitionProcessor = new JaxbPortletDefinitionProcessorImpl();
 
@@ -59,8 +59,8 @@ public final class PortletContainerFactory implements Serializable {
             }
         }
         // portlet was registered before portal
-        if (container.portalInstanceBase ==null) {
-            container.portalInstanceBase = portalInstanceBase;
+        if (container.getPortalInstanceBase()==null) {
+            container.setPortalInstanceBase(portalInstanceBase);
         }
         System.out.println("PortletContainer for "+portalPath+" is "+container);
         return container;
@@ -93,7 +93,7 @@ public final class PortletContainerFactory implements Serializable {
         }
         System.out.println("Portlet container instance: " + container);
         System.out.println("Undeploy uniqueName: " + uniqueName);
-        container.destroy(uniqueName);
+        container.destroyContextForName(uniqueName);
 
         Iterator<WaitDigestFile> iter = digestWaitList.iterator();
         while (iter.hasNext()) {

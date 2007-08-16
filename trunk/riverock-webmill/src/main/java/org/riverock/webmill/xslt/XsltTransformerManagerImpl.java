@@ -43,7 +43,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  *         $Id$
  */
 public class XsltTransformerManagerImpl implements XsltTransformerManager {
-    private transient final static Logger log = Logger.getLogger(XsltTransformerManagerImpl.class);
+    private final static Logger log = Logger.getLogger(XsltTransformerManagerImpl.class);
 
     private static class Transformation {
         private XsltTransformer transformer;

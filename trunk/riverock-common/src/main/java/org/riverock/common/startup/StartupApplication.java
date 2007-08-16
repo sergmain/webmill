@@ -39,7 +39,7 @@ import org.riverock.common.config.PropertiesProvider;
  */
 
 public final class StartupApplication {
-    private final static Logger log = Logger.getLogger(StartupApplication.class);
+    private static Logger log = Logger.getLogger(StartupApplication.class);
 
     private static boolean isInit = false;
 

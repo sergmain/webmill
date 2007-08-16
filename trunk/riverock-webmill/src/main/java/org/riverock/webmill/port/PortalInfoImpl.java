@@ -53,7 +53,7 @@ import org.riverock.webmill.portal.utils.SiteList;
 public final class PortalInfoImpl implements Serializable, PortalInfo {
     private static final long serialVersionUID = 438274672384237876L;
 
-    private transient final static Logger log = Logger.getLogger(PortalInfoImpl.class);
+    private final static Logger log = Logger.getLogger(PortalInfoImpl.class);
 
     /**
      * as a key used siteId
@@ -75,6 +75,37 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return portalProperties;
     }
 
+    public static void destroyAll() {
+        if (portatInfoMap!=null) {
+            for (PortalInfoImpl portalInfo : portatInfoMap.values()) {
+                portalInfo.destroy();
+            }
+            portatInfoMap.clear();
+        }
+        portatInfoMap=null;
+    }
+
+    private void destroy() {
+        siteBean = null;
+        if (siteLanguageList!=null) {
+            siteLanguageList.clear();
+            siteLanguageList=null;
+        }
+        defaultLocale = null;
+        if (supportLanguageMap!=null) {
+            supportLanguageMap.clear();
+            supportLanguageMap=null;
+        }
+        if (languageMenuMap!=null) {
+            languageMenuMap.clear();
+            languageMenuMap=null;
+        }
+        siteId=null;
+        if (portalProperties!=null) {
+            portalProperties.clear();
+            portalProperties=null;
+        }
+    }
 
     public boolean isCurrentSite(Long siteLanguageId) {
         if (siteLanguageId == null)

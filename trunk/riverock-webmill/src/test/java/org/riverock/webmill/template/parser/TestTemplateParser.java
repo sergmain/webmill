@@ -1,6 +1,8 @@
 package org.riverock.webmill.template.parser;
 
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import junit.framework.TestCase;
 
@@ -11,8 +13,36 @@ import junit.framework.TestCase;
  */
 public class TestTemplateParser extends TestCase {
 
-    public void testTemplateParsing_2() throws Exception {
+    public void testTemplateParsing_2_thread() throws Exception {
         
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("xml/resources/template/template_v2_2.xml");
+        ParsedTemplate template = TemplateParserFactory.getTemplateParser().parse(is);
+        assertNotNull(template);
+        assertEquals(5, template.getElements().length);
+        assertTrue(template.getElements()[1].isXslt());
+        assertTrue(template.getElements()[3].isDynamic());
+    }
+
+/*
+    public void testTemplateParsing_2_byStep() throws Exception {
+
+        URL url = TestTemplateParser.class.getResource("/xml/resources/template/template_v2_2.xml");
+        System.out.println("url class = " + url.getClass().getName());
+        System.out.println("url = " + url);
+        URLConnection urlConnection = url.openConnection();
+        System.out.println("urlConnection = " + urlConnection);
+        InputStream is = urlConnection.getInputStream();
+        System.out.println("is = " + is);
+        ParsedTemplate template = TemplateParserFactory.getTemplateParser().parse(is);
+        assertNotNull(template);
+        assertEquals(5, template.getElements().length);
+        assertTrue(template.getElements()[1].isXslt());
+        assertTrue(template.getElements()[3].isDynamic());
+    }
+
+*/
+    public void testTemplateParsing_2() throws Exception {
+
         InputStream is = TestTemplateParser.class.getResourceAsStream("/xml/resources/template/template_v2_2.xml");
         ParsedTemplate template = TemplateParserFactory.getTemplateParser().parse(is);
         assertNotNull(template);

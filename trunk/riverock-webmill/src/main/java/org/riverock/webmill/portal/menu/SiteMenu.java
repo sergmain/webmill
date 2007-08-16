@@ -56,6 +56,25 @@ public final class SiteMenu {
 
     public SiteMenu(){}
 
+    public static void destroyAll() {
+        if (siteMenuLaguage!=null) {
+            for (SiteMenu siteMenu : siteMenuLaguage.values()) {
+                siteMenu.destroy();
+            }
+            siteMenuLaguage.clear();
+        }
+    }
+
+    public void destroy() {
+        if (menuLanguage!=null) {
+            for (MenuLanguage menuLanguage : this.menuLanguage) {
+                ((PortalMenuLanguage)menuLanguage).destroy();
+            }
+            menuLanguage.clear();
+            menuLanguage=null;
+        }
+    }
+
     private final static Object syncObject = new Object();
 
     public static SiteMenu getInstance( final Long siteId) {

@@ -31,7 +31,7 @@ import org.xml.sax.SAXParseException;
  * Time: 17:13:02
  */
 public class TextValidator implements Validator, StateHolder {
-    private static Logger log = Logger.getLogger(TextValidator.class);
+    private final static Logger log = Logger.getLogger(TextValidator.class);
 
     private String type;
 

@@ -43,7 +43,7 @@ import org.riverock.interfaces.portal.dao.PortalDaoProvider;
  * $Id$
  */
 public class FaqGroup implements PortletGetList {
-    private static Logger log = Logger.getLogger(FaqGroup.class);
+    private final static Logger log = Logger.getLogger(FaqGroup.class);
 
     static String sql_ = null;
     static {

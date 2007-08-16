@@ -34,4 +34,6 @@ import java.io.Serializable;
 public interface PortalTemplateManager extends Serializable {
     public PortalTemplate getTemplate( final String templateName, final String localeName );
     public PortalTemplate getTemplate( final long templateId );
+
+    void destroy();
 }

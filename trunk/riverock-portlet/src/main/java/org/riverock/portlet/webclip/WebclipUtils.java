@@ -25,7 +25,7 @@ import org.riverock.interfaces.portal.dao.PortalDaoProvider;
  */
 @SuppressWarnings({"UnusedAssignment"})
 public class WebclipUtils {
-    private static Logger log = Logger.getLogger(WebclipPortlet.class);
+    private final static Logger log = Logger.getLogger(WebclipPortlet.class);
 
     public static void loadContentFromSource(WebclipBean webclip, String url) throws IOException {
         URL urlObject = new URL(url);

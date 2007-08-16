@@ -18,6 +18,7 @@ import org.riverock.interfaces.portal.search.PortalIndexer;
 import org.riverock.interfaces.portal.search.PortalSearchParameter;
 import org.riverock.interfaces.portal.search.PortalSearchResult;
 import org.riverock.portlet.dao.PortletDaoFactory;
+import org.riverock.portlet.tools.HibernateUtils;
 
 /**
  * User: SMaslyukov
@@ -25,7 +26,7 @@ import org.riverock.portlet.dao.PortletDaoFactory;
  * Time: 20:44:07
  */
 public class SearchPortlet implements Portlet {
-    private static Logger log = Logger.getLogger(SearchPortlet.class);
+    private final static Logger log = Logger.getLogger(SearchPortlet.class);
 
     private PortletConfig portletConfig=null;
 
@@ -35,6 +36,7 @@ public class SearchPortlet implements Portlet {
 
     public void destroy() {
         portletConfig=null;
+        HibernateUtils.destroy();
     }
 
     public void processAction(ActionRequest request, ActionResponse response) throws PortletException, IOException {

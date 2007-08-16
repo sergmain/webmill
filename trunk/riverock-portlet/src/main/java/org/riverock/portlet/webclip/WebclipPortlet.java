@@ -24,6 +24,7 @@
 package org.riverock.portlet.webclip;
 
 import org.riverock.portlet.dao.PortletDaoFactory;
+import org.riverock.portlet.tools.HibernateUtils;
 import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.common.utils.PortletUtils;
@@ -48,7 +49,7 @@ import java.net.InetSocketAddress;
  * $Id$
  */
 public class WebclipPortlet implements Portlet {
-    private static Logger log = Logger.getLogger(WebclipPortlet.class);
+    private final static Logger log = Logger.getLogger(WebclipPortlet.class);
 
     private PortletConfig portletConfig=null;
 
@@ -58,6 +59,7 @@ public class WebclipPortlet implements Portlet {
 
     public void destroy() {
         portletConfig=null;
+        HibernateUtils.destroy();
     }
 
     public void processAction (ActionRequest request, ActionResponse response) throws PortletException, IOException {

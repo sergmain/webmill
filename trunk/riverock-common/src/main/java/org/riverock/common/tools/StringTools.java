@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public class StringTools {
-    private final static Logger log = Logger.getLogger(StringTools.class);
+    private static Logger log = Logger.getLogger(StringTools.class);
 
     /**
      * Converts a string array to a string.

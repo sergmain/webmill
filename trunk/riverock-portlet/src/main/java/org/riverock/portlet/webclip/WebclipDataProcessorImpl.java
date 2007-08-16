@@ -100,26 +100,6 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
     private WebclipUrlChecker checker;
 
-    private static class ExcludeElement {
-        public static final int ID_ATTRIBUTE_TYPE = 1;
-        public static final int CLASS_ATTRIBUTE_TYPE = 2;
-        public static final int LONGDESC_ATTRIBUTE_TYPE = 3;
-        private String name;
-        /**
-         * type of attribute.
-         * 1 - 'id' attr
-         * 2 - 'class' attr 
-         */
-        private int typeOfAttribute;
-        private String value;
-
-        public ExcludeElement(String name, int typeOfAttribute, String value) {
-            this.name = name;
-            this.typeOfAttribute = typeOfAttribute;
-            this.value = value;
-        }
-    }
-
     private final static ExcludeElement[] excludes = new ExcludeElement[]{
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "messagebox"),
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "messagebox protected"),

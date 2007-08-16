@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class RsetTools {
-    private final static Logger log = Logger.getLogger( RsetTools.class );
+    private static Logger log = Logger.getLogger( RsetTools.class );
 
     public static void setString(final PreparedStatement ps, final int index, final String data)
         throws SQLException {

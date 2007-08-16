@@ -191,7 +191,7 @@ public final class PortletService {
         try {
 
             Class cl = obj.getClass();
-            Method m = cl.getMethod("destroy");
+            Method m = cl.getMethod("destroyContextForName");
 
             if (m != null)
                 m.invoke(obj);
