@@ -54,7 +54,7 @@ import org.riverock.webmill.utils.HibernateUtils;
  *         $Id$
  */
 public class HibernateAuthDaoImpl implements InternalAuthDao {
-    private static Logger log = Logger.getLogger(HibernateAuthDaoImpl.class);
+    private final static Logger log = Logger.getLogger(HibernateAuthDaoImpl.class);
 
     public User getUser(String userLogin) {
         StatelessSession session = HibernateUtils.getStatelessSession();

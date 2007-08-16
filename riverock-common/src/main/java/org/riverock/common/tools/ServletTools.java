@@ -40,14 +40,14 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class ServletTools {
-    private final static Logger log = Logger.getLogger(ServletTools.class);
+    private static Logger log = Logger.getLogger(ServletTools.class);
 
     /**
      * Remove all attributes in session context. We try 3 times remove all attributes.
      * In 1st and 2nd loops ConcurrentModificationException ignored.
      *
      * @param session HttpSession session
-     * @throws Exception
+     * @throws Exception on error
      */
     public static void cleanSession(final HttpSession session) throws Exception {
         if (session == null)

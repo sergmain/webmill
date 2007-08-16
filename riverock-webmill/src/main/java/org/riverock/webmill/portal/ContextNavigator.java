@@ -36,9 +36,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Hierarchy;
+import org.apache.commons.logging.LogFactory;
+
+import net.sf.ehcache.CacheManager;
 
 import org.riverock.webmill.portal.utils.SiteList;
+import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.template.PortalTemplateManagerFactory;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.common.html.Header;
 
@@ -56,7 +65,7 @@ public final class ContextNavigator extends HttpServlet {
     public void init(ServletConfig servletConfig) {
         portalServletConfig = servletConfig;
 //        classLoader=Thread.currentThread().getContextClassLoader();
-        classLoader=ContextNavigator.class.getClassLoader();
+        classLoader = ContextNavigator.class.getClassLoader();
     }
 
     public void destroy() {
@@ -67,6 +76,32 @@ public final class ContextNavigator extends HttpServlet {
             portalInstance.destroy();
         }
         portalInstanceMap.clear();
+        try {
+            HibernateUtils.destroy();
+        }
+        catch (Throwable th) {
+            log.warn("Error unload hibernate", th);
+        }
+        PortalTemplateManagerFactory.destroyAll();
+        PortalInfoImpl.destroyAll();
+        SiteMenu.destroyAll();
+        try {
+            ((Hierarchy)LogManager.getLoggerRepository()).getRendererMap();
+        }
+        catch (Exception e) {
+            System.out.println("Error clean up logger rendered map");
+        }
+        
+        try {
+            ((Hierarchy)LogManager.getLoggerRepository()).clear();
+        }
+        catch (Exception e) {
+            System.out.println("Error clean up logger references");
+        }
+        LogFactory.release(Thread.currentThread().getContextClassLoader());
+        LogFactory.releaseAll();
+        LogManager.shutdown();
+        CacheManager.getInstance().shutdown();
     }
 
     public ContextNavigator() {

@@ -47,6 +47,17 @@ public final class PortalMenuLanguage implements MenuLanguage {
 
     public PortalMenuLanguage(){}
 
+    public void destroy() {
+        this.item = null;
+        if (menu!=null) {
+            for (Menu menu1 : menu) {
+                ((PortalMenu)menu1).destroy();
+            }
+            menu.clear();
+            menu=null;
+        }
+    }
+
     // return name of template for 'index' page
     public MenuItem getIndexMenuItem(){
         if (log.isDebugEnabled()){

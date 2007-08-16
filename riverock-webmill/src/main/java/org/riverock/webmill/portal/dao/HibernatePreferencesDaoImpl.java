@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
 
-import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 
 import org.apache.log4j.Logger;

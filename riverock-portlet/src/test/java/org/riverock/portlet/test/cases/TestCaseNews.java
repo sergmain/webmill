@@ -45,7 +45,7 @@ import org.riverock.interfaces.portlet.PortletResultObject;
 
 public class TestCaseNews /*extends TestCase */
 {
-    private static Logger log = Logger.getLogger(TestCaseNews.class);
+    private final static Logger log = Logger.getLogger(TestCaseNews.class);
 
     private final static String NEWS_GROUP_TEXT = "Блок новостей ";
     private final static String NEWS_ITEM_TEXT = "Новость ";

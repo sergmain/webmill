@@ -48,6 +48,17 @@ public final class PortalMenu implements Menu {
     private boolean isDefault = false;
     private String catalogCode = null;
 
+    public void destroy() {
+        if (menuItem !=null) {
+            for (MenuItem catalogItem : menuItem) {
+                ((PortalMenuItem)catalogItem).destroy();
+            }
+            menuItem.clear();
+            menuItem = null;
+        }
+        catalogCode=null;
+    }
+
     public boolean getIsDefault(){
         return isDefault;
     }

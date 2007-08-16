@@ -54,7 +54,7 @@ import org.riverock.webmill.utils.HibernateUtils;
  *         $Id$
  */
 public class HibernateXsltDaoImpl implements InternalXsltDao {
-    private static Logger log = Logger.getLogger(HibernateXsltDaoImpl.class);
+    private final static Logger log = Logger.getLogger(HibernateXsltDaoImpl.class);
 
     /**
      * key is language of site

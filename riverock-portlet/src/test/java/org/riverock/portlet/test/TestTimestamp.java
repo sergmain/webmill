@@ -45,7 +45,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.riverock.common.tools.DateTools;
 
 public class TestTimestamp {
-    private static Logger cat = Logger.getLogger(TestTimestamp.class);
+    private final static Logger cat = Logger.getLogger(TestTimestamp.class);
 
     public TestTimestamp() {
     }

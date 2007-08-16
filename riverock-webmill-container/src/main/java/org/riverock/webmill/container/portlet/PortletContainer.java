@@ -57,7 +57,7 @@ public final class PortletContainer implements Serializable {
 
     // in this map as a key used unique name of web-application
     // unique name initialized in PortletRegisterServlet.init() method
-    private Map<String, List<PortletEntry>> portletInstanceUniqueNameMap = new ConcurrentHashMap<String, List<PortletEntry>>();
+    private PortletEntryListByUniqueNameMap portletInstanceUniqueNameMap = new PortletEntryListByUniqueNameMap();
 
     // as key used full portlet name
     private Map<String, PortletEntry> portletInstanceMap = new ConcurrentHashMap<String, PortletEntry>();
@@ -66,7 +66,7 @@ public final class PortletContainer implements Serializable {
     // unique name initialized in PortletRegisterServlet.init() method
     private Map<String, PortletContext> portletContextMap = new HashMap<String, PortletContext>();
 
-    PortalInstanceBase portalInstanceBase = null;
+    private PortalInstanceBase portalInstanceBase = null;
     private PortletContentCache contentCache = null;
     private String portalPath = null;
     boolean isNewPortlet = false;
@@ -75,7 +75,7 @@ public final class PortletContainer implements Serializable {
 
     PortletContainer(PortalInstanceBase portalInstanceBase, String portalPath) {
         this.contentCache = new PortletContentCacheImpl();
-        this.portalInstanceBase = portalInstanceBase;
+        this.setPortalInstanceBase(portalInstanceBase);
         this.portalPath = portalPath;
     }
 
@@ -138,21 +138,21 @@ public final class PortletContainer implements Serializable {
         }
     }
 
-    public void destroy(String uniqueName) {
-        System.out.println("Undeploy uniqueName: " + uniqueName);
+    public void destroyContextForName(String uniqueName) {
+        System.out.println("Undeploy all for unique name: " + uniqueName);
         synchronized(syncObect) {
             Iterator<Map.Entry<String, PortletWebApplication>> iterator = portletItems.entrySet().iterator();
             while (iterator.hasNext()) {
                 PortletWebApplication portletWebApplication = iterator.next().getValue();
 
                 if ( portletWebApplication.getUniqueName().equals( uniqueName ) ) {
-                    System.out.println( "Remove portlet entry: " + portletWebApplication.getPortletDefinition().getFullPortletName() );
+                    System.out.println( "  Remove portlet entry: " + portletWebApplication.getPortletDefinition().getFullPortletName() );
                     iterator.remove();
                 }
             }
 
             List<PortletEntry> portletEntries = portletInstanceUniqueNameMap.get(uniqueName);
-            System.out.println("Portlet entries for unique name '" + uniqueName + "': " + portletEntries);
+//            System.out.println("Portlet entries for unique name '" + uniqueName + "': " + portletEntries);
             if (portletEntries != null) {
                 for (PortletEntry portletEntry : portletEntries) {
                     try {
@@ -163,11 +163,27 @@ public final class PortletContainer implements Serializable {
                         th.printStackTrace(System.out);
                     }
                 }
+                
                 portletInstanceUniqueNameMap.remove(uniqueName);
                 portletContextMap.remove(uniqueName);
             }
         }
     }
+
+    public void unregisterPortalInstance() {
+        this.setPortalInstanceBase(null);
+    }
+
+/*
+    public boolean destroyContainer() {
+        if (!portletItems.isEmpty() )
+        this.portletInstanceMap=null;
+        this.portletContextMap
+        this.portalInstanceBase
+        this.contentCache
+        this.portalPath
+    }
+*/
 
     private void destroyPortlet( PortletEntry portletEntry, String uniqueName ) {
 
@@ -180,21 +196,36 @@ public final class PortletContainer implements Serializable {
         portletInstanceMap.remove( portletEntry.getPortletDefinition().getFullPortletName() );
 
         if (portletEntry.getClassLoader()!=null) {
-            System.out.println("Undeploy portlet context in classLoader: " + portletEntry.getClassLoader() +"\nhashCode: " + portletEntry.getClassLoader().hashCode() );
+//            System.out.println("Undeploy portlet context in classLoader: " + portletEntry.getClassLoader() +"\nhashCode: " + portletEntry.getClassLoader().hashCode() );
+            ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                final ClassLoader classLoader = portletEntry.getClassLoader();
+                Thread.currentThread().setContextClassLoader( classLoader );
+
+                portletEntry.destroy();
+            }
+            finally {
+                Thread.currentThread().setContextClassLoader( oldLoader );
+            }
         }
         else {
-            System.out.println("Undeploy terminated, classLoader is null");
-        }
+            System.out.println("ClassLoader is null, try to undeploy using portlet's class loader.");
+            try {
+                ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+                try {
+                    final ClassLoader classLoader = portletEntry.getPortlet().getClass().getClassLoader();
+                    Thread.currentThread().setContextClassLoader( classLoader );
 
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            final ClassLoader classLoader = portletEntry.getClassLoader();
-            Thread.currentThread().setContextClassLoader( classLoader );
-
-            portletEntry.destroy();
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
+                    portletEntry.destroy();
+                }
+                finally {
+                    Thread.currentThread().setContextClassLoader( oldLoader );
+                }
+            }
+            catch (Throwable th) {
+                System.out.println("Error undeploy using portlet's class loader");
+                th.printStackTrace();  
+            }
         }
     }
 
@@ -293,12 +324,12 @@ public final class PortletContainer implements Serializable {
                     // Todo
 /*
 If a permanent unavailability is indicated by the UnavailableException, the portlet
-container must remove the portlet from service immediately, call the portlet’s destroy
+container must remove the portlet from service immediately, call the portlet’s destroyContextForName
 method, and release the portlet object.xviii A portlet that throws a permanent
 UnavailableException must be considered unavailable until the portlet application
 containing the portlet is restarted.
 */
-                    destroy( portletName );
+                    destroyContextForName( portletName );
                 }
                 return new PortletEntry(portletDefinition, e, portletWebApplication.getUniqueName());
             }
@@ -355,10 +386,10 @@ containing the portlet is restarted.
         return portletItems.get( portletName );
     }
 
-    private static void addPortletEntry( Map<String, List<PortletEntry>> map, final String portletName, final PortletEntry value ) {
-        List<PortletEntry> list = map.get( portletName );
+    private static void addPortletEntry( PortletEntryListByUniqueNameMap map, final String portletName, final PortletEntry value ) {
+        PortletEntryList list = map.get( portletName );
         if (list==null) {
-            List<PortletEntry> portletEntries = new ArrayList<PortletEntry>();
+            PortletEntryList portletEntries = new PortletEntryList();
             portletEntries.add( value );
             map.put( portletName, portletEntries );
         }
@@ -371,8 +402,15 @@ containing the portlet is restarted.
         return contentCache;
     }
 
-    public PortalInstanceBase getPortalInstance() {
-        return portalInstanceBase;
+    public String getPortalPath() {
+        return portalPath;
     }
 
+    void setPortalInstanceBase(PortalInstanceBase portalInstanceBase) {
+        this.portalInstanceBase = portalInstanceBase;
+    }
+
+    PortalInstanceBase getPortalInstanceBase() {
+        return portalInstanceBase;
+    }
 }

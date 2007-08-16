@@ -39,7 +39,7 @@ import java.io.IOException;
  * $Id$
  */
 public class StubSearchPortlet implements Portlet {
-    private static Logger log = Logger.getLogger(StubSearchPortlet.class);
+    private final static Logger log = Logger.getLogger(StubSearchPortlet.class);
 
     private PortletConfig portletConfig=null;
 

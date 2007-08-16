@@ -37,7 +37,7 @@ import org.riverock.interfaces.ContainerConstants;
  *         Time: 12:39:24
  */
 public class RequestContextFactory {
-    private static Logger log = Logger.getLogger( RequestContextProcessor.class );
+    private final static Logger log = Logger.getLogger( RequestContextProcessor.class );
 
     public static final int UNKNOWN_SERVLET_IDX = 0;
     public static final int PAGEID_SERVLET_IDX = 1;

@@ -82,7 +82,7 @@ public class PortletRegisterServlet extends HttpServlet {
         }
         catch(Throwable th) {
             th.printStackTrace( System.out );
-            throw new IllegalStateException( "Eror destroy portlet" );
+            throw new IllegalStateException( "Eror destroyContextForName portlet" );
         }
     }
 }

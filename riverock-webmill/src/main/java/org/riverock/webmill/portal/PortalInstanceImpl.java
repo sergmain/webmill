@@ -26,12 +26,12 @@ package org.riverock.webmill.portal;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.ServletConfig;
@@ -61,8 +61,8 @@ import org.riverock.webmill.portal.search.PortalIndexerImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.webmill.template.PortalTemplateManagerImpl;
 import org.riverock.webmill.template.PortalTemplateManager;
+import org.riverock.webmill.template.PortalTemplateManagerFactory;
 
 import org.hibernate.stat.Statistics;
 import org.hibernate.stat.EntityStatistics;
@@ -79,8 +79,9 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private static final String UNKNOWN_PORTAL_VERSON = "0.0.1";
     private static final String WEBMILL_PROPERTIES = "/org/riverock/webmill/portal/webmill.properties";
+    private static final String WEBMILL_PROPERTIES_WITHIN_CLASSLOADER = "org/riverock/webmill/portal/webmill.properties";
 
-    private static final PortalVersion portalVersion = new PortalVersion( getPortalVersion() );
+    private static PortalVersion portalVersion = new PortalVersion( getPortalVersion() );
     private static final String PORTAL_INFO = "WebMill/"+getPortalVersion();
 
     private static String PORTAL_VERSION = null;
@@ -104,6 +105,7 @@ public class PortalInstanceImpl implements PortalInstance  {
     private ClassLoader portalClassLoader=null;
 
     public void destroy() {
+        portletContainer.unregisterPortalInstance();
         portalServletConfig = null;
         portletContainer = null;
         portalIndexer=null;
@@ -113,17 +115,6 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
         siteId=null;
         portalClassLoader = null;
-    }
-
-    private static class PortalVersion {
-        int major;
-        int minor;
-
-        PortalVersion( String version ) {
-            StringTokenizer st = new StringTokenizer( version, "." );
-            major = new Integer( st.nextToken() );
-            minor = new Integer( st.nextToken() );
-        }
     }
 
     public ClassLoader getPortalClassLoader() {
@@ -147,39 +138,47 @@ public class PortalInstanceImpl implements PortalInstance  {
     }
 
     public String getPortalName() {
-        return PORTAL_INFO + getPortalVersion();
+        return PORTAL_INFO;
     }
 
-    private static String getPortalVersion() {
+    private synchronized static String getPortalVersion() {
         if (PORTAL_VERSION!=null) {
             return PORTAL_VERSION;
         }
-        synchronized(PortalInstanceImpl.class) {
-            if (PORTAL_VERSION!=null) {
-                return PORTAL_VERSION;
-            }
-            Properties pr = new Properties();
+        Properties pr = new Properties();
+        try {
+            InputStream inputStream=null;
             try {
-                pr.load(PortalInstanceImpl.class.getResourceAsStream(WEBMILL_PROPERTIES));
-                String version = pr.getProperty("portal.version");
-                if (StringUtils.isBlank(version)) {
-                    String es = "Value for property 'portal.version' not found";
-                    log.error(es);
+//                inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(WEBMILL_PROPERTIES_WITHIN_CLASSLOADER);
+                inputStream = PortalInstanceImpl.class.getResourceAsStream(WEBMILL_PROPERTIES);
+
+                pr.load(inputStream);
+            }
+            finally {
+                if (inputStream!=null) {
+                    inputStream.close();
+                    //noinspection UnusedAssignment
+                    inputStream=null;
+                }
+            }
+            String version = pr.getProperty("portal.version");
+            if (StringUtils.isBlank(version)) {
+                String es = "Value for property 'portal.version' not found";
+                log.error(es);
+                PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
+            }
+            else {
+                if (version.equals("${pom.version}")) {
                     PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
                 }
                 else {
-                    if (version.equals("${pom.version}")) {
-                        PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
-                    }
-                    else {
-                        PORTAL_VERSION = version;
-                    }
+                    PORTAL_VERSION = version;
                 }
-            } catch (IOException e) {
-                String es = "Error load webmill.properties files.";
-                log.error(es, e);
-                PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
             }
+        } catch (IOException e) {
+            String es = "Error load webmill.properties files.";
+            log.error(es, e);
+            PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;
         }
         return PORTAL_VERSION;
     }
@@ -205,7 +204,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         this.portletContainer = PortletContainerFactory.getInstance( this, PortletContainerUtils.getDeployedInPath(servletConfig) );
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
         this.portalIndexer = new PortalIndexerImpl(this.siteId, this.portletContainer, portalClassLoader);
-        this.portalTemplateManager = PortalTemplateManagerImpl.getInstance(this.siteId);
+        this.portalTemplateManager = PortalTemplateManagerFactory.getInstance(this.siteId);
     }
 
     public Long getSiteId() {

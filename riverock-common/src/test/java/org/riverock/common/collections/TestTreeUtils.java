@@ -97,7 +97,7 @@ public class TestTreeUtils extends TestCase {
     }
 
     public void testConstructor() throws Exception {
-        new TreeUtils.TreeItemComparator();
+        new TreeItemComparator();
         new TreeUtils();
     }
 
@@ -137,7 +137,7 @@ public class TestTreeUtils extends TestCase {
     }
 
     public void testCompare() throws Exception {
-        Comparator<TreeItem> comparator = new TreeUtils.TreeItemComparator();
+        Comparator<TreeItem> comparator = new TreeItemComparator();
         assertEquals(comparator.compare(null, null), 0);
         assertEquals(comparator.compare(null, new Item()), 1);
         assertEquals(comparator.compare(new Item(), null ), -1);

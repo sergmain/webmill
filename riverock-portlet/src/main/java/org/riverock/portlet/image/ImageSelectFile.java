@@ -53,7 +53,7 @@ import org.riverock.common.utils.PortletUtils;
  */
 public class ImageSelectFile extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(ImageSelectFile.class);
+    private final static Logger log = Logger.getLogger(ImageSelectFile.class);
 
     public ImageSelectFile()
     {

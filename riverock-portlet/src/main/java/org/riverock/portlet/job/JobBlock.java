@@ -54,7 +54,7 @@ import org.riverock.interfaces.ContainerConstants;
  * $Id$
  */
 public class JobBlock implements PortletResultObject, PortletGetList, PortletResultContent {
-    private static Logger log = Logger.getLogger( JobBlock.class );
+    private final static Logger log = Logger.getLogger( JobBlock.class );
 
     private List<JobItem> v = new ArrayList<JobItem>();
     private RenderRequest renderRequest = null;

@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  * Time: 17:13:02
  */
 public class TextValidatorTag extends ValidatorTag {
-    private static Logger log = Logger.getLogger(TextValidatorTag.class);
+    private final static Logger log = Logger.getLogger(TextValidatorTag.class);
 
     private String type;
     

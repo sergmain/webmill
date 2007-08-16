@@ -50,7 +50,7 @@ import org.riverock.webmill.utils.HibernateUtils;
  * $Id$
  */
 public class HibernateCssDaoImpl implements InternalCssDao {
-    private static Logger log = Logger.getLogger(HibernateCssDaoImpl.class);
+    private final static Logger log = Logger.getLogger(HibernateCssDaoImpl.class);
 
     public Css getCssCurrent(Long siteId) {
         if (log.isDebugEnabled()) {

@@ -21,73 +21,30 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-
-/**
- * $Id$
- */
 package org.riverock.common.collections;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Comparator;
 import java.util.Collections;
-import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.common.TreeItem;
 
-
+/**
+ * $Id$
+ */
 public final class TreeUtils {
 
-    private final static Logger log = Logger.getLogger( TreeUtils.class );
-    private final static TreeItemComparator comparator = new TreeItemComparator();
-
-    static class TreeItemComparator implements Comparator<TreeItem>, Serializable {
-        public int compare(TreeItem item1, TreeItem item2) {
-
-            if (item1 ==null && item2 ==null)
-                return 0;
-
-            if (item1 ==null)
-                return 1;
-
-            if (item2 ==null)
-                return -1;
-
-            if ( item1.getId() > item2.getId())
-                return 1;
-            else if ( item1.getId() < item2.getId())
-                return -1;
-
-            // Here item1.getId().equals(item2.getId())
-
-            if ( item1.getTopId()==null && item2.getTopId()==null)
-                return 0;
-
-            if ( item1.getTopId()!=null && item2.getTopId()==null )
-                return -1;
-
-            if ( item1.getTopId()==null && item2.getTopId()!=null)
-                return 1;
-
-
-            if ( item1.getTopId().equals( item2.getTopId()))
-                return 0;
-
-            if ( item1.getTopId() > item2.getTopId())
-                return 1;
-            else
-                return -1;
-        }
-    }
+    private static Logger log = Logger.getLogger( TreeUtils.class );
+    private static TreeItemComparator comparator = new TreeItemComparator();
 
     /**
-     * преобразуем дерево в плоский лист
-     * @param nodes дерево
-     * @return List
+     * transform tree in list
+     * @param nodes tree
+     * @return List list
      */
     public static List<TreeItem> toPlainList(List<TreeItem> nodes) {
         List<TreeItem> result = new ArrayList<TreeItem>();

@@ -41,27 +41,17 @@ import org.riverock.webmill.template.parser.TemplateParserFactory;
 public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     private final static Logger log = Logger.getLogger( PortalTemplateManagerImpl.class );
 
-    private static final int INIT_COUNT_OF_SITE = 10;
-
-    private static Map<Long, PortalTemplateManager> managers = new HashMap<Long, PortalTemplateManager>(INIT_COUNT_OF_SITE);
+    static final int INIT_COUNT_OF_SITE = 10;
 
     private Map<Long, PortalTemplate> hashId = new ConcurrentHashMap<Long, PortalTemplate>(INIT_COUNT_OF_SITE);
     private Long siteId;
 
-    public static PortalTemplateManager getInstance(Long siteId) {
-        PortalTemplateManager manager = managers.get(siteId);
-        if (manager==null) {
-            synchronized(PortalTemplateManagerImpl.class) {
-                manager = managers.get(siteId);
-                if (manager!=null) {
-                    return null;
-                }
-                manager = new PortalTemplateManagerImpl(siteId);
-                managers.put(siteId, manager);
-                return manager;
-            }
+    public void destroy() {
+        if (hashId!=null) {
+            hashId.clear();
+            hashId=null;
         }
-        return manager;
+        siteId=null;
     }
 
     public PortalTemplate getTemplate( final long id ) {
@@ -101,7 +91,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         }
     }
 
-    private PortalTemplateManagerImpl(Long siteId) {
+    PortalTemplateManagerImpl(Long siteId) {
         this.siteId=siteId;
         log.debug("Start PortalTemplateManagerImpl()");
         for (TemplateBean template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {

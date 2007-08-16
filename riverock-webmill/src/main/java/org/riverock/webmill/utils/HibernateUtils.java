@@ -29,6 +29,7 @@ import org.hibernate.Session;
 import org.hibernate.HibernateException;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.AnnotationConfiguration;
+
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.portal.bean.*;
 import org.riverock.webmill.a3.bean.AuthInfoImpl;
@@ -73,6 +74,13 @@ public class HibernateUtils {
         NewsGroupBean.class,
         UserMetadataItemBean.class
     };
+
+    public static synchronized void destroy() {
+        if (sessionFactory!=null) {
+            sessionFactory.close();
+            sessionFactory=null;
+        }
+    }
 
     public static final String HIBERNATE_FAMILY = "hibernate_family";
     private synchronized static void prepareSession() {
@@ -119,9 +127,13 @@ public class HibernateUtils {
                 .setProperty("hibernate.cache.provider_class", net.sf.ehcache.hibernate.EhCacheProvider.class.getName() )
                 .setProperty("net.sf.ehcache.configurationResourceName", "/ehcache.xml" )
                 .setProperty("hibernate.connection.datasource", "java:comp/env/jdbc/webmill")
+
+//                .setProperty("hibernate.validator.autoregister_listeners", "false")
+                .setProperty("hibernate.search.autoregister_listeners", "false")
             ;
 
             setAnnotatedClasses(cfg);
+            
             //noinspection UnnecessaryLocalVariable
             SessionFactory sessionFactoryReference = cfg.buildSessionFactory();
             sessionFactory = sessionFactoryReference;

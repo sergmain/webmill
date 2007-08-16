@@ -55,7 +55,7 @@ import org.riverock.webmill.utils.HibernateUtils;
  * $Id$
  */
 public class HibernateCmsDaoImpl implements InternalCmsDao {
-    private static Logger log = Logger.getLogger(HibernateCmsDaoImpl.class);
+    private final static Logger log = Logger.getLogger(HibernateCmsDaoImpl.class);
 
     public void deleteArticleForSite(Long siteId) {
         Session session = HibernateUtils.getSession();

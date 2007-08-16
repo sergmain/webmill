@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Iterator;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -148,15 +150,35 @@ public final class PortalRequestInstance {
         template = null;
         requestContext = null;
         preferredLocales = null;
+        if (httpRequest!=null) {
+            Enumeration en = httpRequest.getAttributeNames();
+            while (en.hasMoreElements()) {
+                Object o =  en.nextElement();
+                if (o==null) {
+                    continue;
+                }
+                if (o instanceof String) {
+                    try {
+                        httpRequest.removeAttribute((String)o);
+                    }
+                    catch (Throwable e) {
+                        log.warn("Error remove attribute", e);
+                    }
+                }
+                else {
+                    log.warn("Class of oname of attribute is not String, real: " + o.getClass().getName());
+                    try {
+                        httpRequest.removeAttribute(o.toString());
+                    }
+                    catch (Throwable e) {
+                        log.warn("Error remove attribute", e);
+                    }
+                }
+            }
+        }
         httpRequest = null;
         httpResponse = null;
         auth = null;
-/*
-        if (actionRequest != null) {
-            actionRequest.destroy();
-            actionRequest = null;
-        }
-*/
         cookieManager = null;
         errorString = null;
         redirectUrl = null;

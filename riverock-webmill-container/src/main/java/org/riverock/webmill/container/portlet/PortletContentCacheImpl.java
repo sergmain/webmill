@@ -40,6 +40,8 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  */
 public final class PortletContentCacheImpl implements PortletContentCache {
 
+    private Map<String, CacheEntry> contentCache = new HashMap<String, CacheEntry>(300, 1.1f);
+
     private final static class CacheEntry {
         SitePortletData data = null;
         long lastInitTime = 0;
@@ -48,6 +50,13 @@ public final class PortletContentCacheImpl implements PortletContentCache {
             this.data = data;
             lastInitTime = System.currentTimeMillis();
         }
+    }
+
+    public void destroy() {
+        if (contentCache!=null) {
+            contentCache.clear();
+        }
+        contentCache=null;
     }
 
     public void invalidate(String portletName) {
@@ -60,8 +69,6 @@ public final class PortletContentCacheImpl implements PortletContentCache {
         return new PortletContentCacheImpl();
     }
 
-    private Map<String, CacheEntry> contentCache = new HashMap<String, CacheEntry>(300, 1.1f);
-    
     // Todo
     /*
 If the content of a portlet is cached, the cache has not expired and the portlet is not the

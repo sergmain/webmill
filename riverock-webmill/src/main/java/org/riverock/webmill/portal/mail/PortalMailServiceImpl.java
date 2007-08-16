@@ -44,7 +44,7 @@ import org.riverock.interfaces.portal.mail.PortalMailService;
  *         Time: 16:15:27
  */
 public class PortalMailServiceImpl implements PortalMailService {
-    private static Logger log = Logger.getLogger(PortalMailServiceImpl.class);
+    private final static Logger log = Logger.getLogger(PortalMailServiceImpl.class);
 
     private static final String UTF_8="utf-8";
     private String smtpHost;

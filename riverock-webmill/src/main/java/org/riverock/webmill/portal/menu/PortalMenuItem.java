@@ -57,15 +57,23 @@ public final class PortalMenuItem implements MenuItem {
     private List<MenuItem> catalogItems = new LinkedList<MenuItem>();  // List of MenuItem
 
     protected void finalize() throws Throwable {
-        menuName = null;
-        portletName = null;
+        destroy();
+
+        super.finalize();
+    }
+
+    public void destroy() {
+        ctx=null;
         template = null;
+        portletName = null;
+        menuName = null;
         if (catalogItems !=null) {
+            for (MenuItem catalogItem : catalogItems) {
+                ((PortalMenuItem)catalogItem).destroy();
+            }
             catalogItems.clear();
             catalogItems = null;
         }
-
-        super.finalize();
     }
 
     public Map<String, String> getMetadata() {

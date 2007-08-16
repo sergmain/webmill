@@ -37,7 +37,7 @@ import org.riverock.common.tools.ServletTools;
  */
 public class MapTools {
 
-    private final static Logger log = Logger.getLogger( ServletTools.class );
+    private static Logger log = Logger.getLogger( ServletTools.class );
 
     public static String getString( final Map map, final String f ) {
         return getString( map, f, null );

@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.xml.bind.ValidationEventHandler;
+
 import org.apache.log4j.Logger;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
@@ -24,6 +26,9 @@ import org.riverock.common.tools.XmlTools;
 public class TemplateParserImpl implements TemplateParser {
     private final static Logger log = Logger.getLogger(TemplateParserImpl.class);
 
+    private final static NamespacePrefixMapper namespacePrefixMapper = new NamespacePrefixMapperImpl();
+    private final static ValidationEventHandler validationEventHandler = new JaxbValidationEventHandler();
+
     public ParsedTemplate parse(byte[] bytes) throws ParseTemplatePortalException {
         ByteArrayInputStream inputStream = new ByteArrayInputStream( bytes );
         return parse(inputStream);
@@ -31,11 +36,11 @@ public class TemplateParserImpl implements TemplateParser {
     
     public ParsedTemplate parse(InputStream inputStream) throws ParseTemplatePortalException {
         try {
-            Template t = XmlTools.getObjectFromXml(Template.class, inputStream, JaxbValidationEventHandler.getHandler());
+            Template t = XmlTools.getObjectFromXml(Template.class, inputStream, validationEventHandler);
 
 
             byte[] templateBytes = XmlTools.getXml(t, "Template", "utf-8", true,
-                new NamespacePrefixMapper[] {NamespacePrefixMapperImpl.NAMESPACE_PREFIX_MAPPER}
+                new NamespacePrefixMapper[] {namespacePrefixMapper}
             );
             String s = new String(templateBytes, "utf-8");
 

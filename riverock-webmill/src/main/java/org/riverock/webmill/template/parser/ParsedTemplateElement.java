@@ -11,26 +11,30 @@ import org.riverock.webmill.template.schema.Include;
  * Time: 10:02:07
  */
 public class ParsedTemplateElement {
-    public static enum Type {XSLT, PORTLET, STRING, DYNAMIC, INCLUDE}
 
     private Object o;
-    private Type type;
+    private TemplateType type;
+
+    protected void finalize() {
+        o=null;
+        type=null;
+    }
 
     public ParsedTemplateElement(Object o) {
         if (o instanceof Xslt) {
-            type = Type.XSLT;
+            type = TemplateType.XSLT;
         }
         else if (o instanceof Portlet) {
-            type = Type.PORTLET;
+            type = TemplateType.PORTLET;
         }
         else if (o instanceof Dynamic) {
-            type = Type.DYNAMIC;
+            type = TemplateType.DYNAMIC;
         }
         else if (o instanceof String) {
-            type = Type.STRING;
+            type = TemplateType.STRING;
         }
         else if (o instanceof Include) {
-            type = Type.INCLUDE;
+            type = TemplateType.INCLUDE;
         }
         else {
             throw new IllegalStateException("Wrong type of object. Must Portlet, Xslt, Dynamic or String. Real: " + o.getClass().getName());
@@ -38,60 +42,60 @@ public class ParsedTemplateElement {
         this.o = o;
     }
 
-    public Type getType() {
+    public TemplateType getType() {
         return type;
     }
 
     public boolean isPortlet() {
-        return type== Type.PORTLET;
+        return type== TemplateType.PORTLET;
     }
 
     public boolean isXslt() {
-        return type== Type.XSLT;
+        return type== TemplateType.XSLT;
     }
 
     public boolean isDynamic() {
-        return type== Type.DYNAMIC;
+        return type== TemplateType.DYNAMIC;
     }
 
     public boolean isInclude() {
-        return type== Type.INCLUDE;
+        return type== TemplateType.INCLUDE;
     }
 
     public boolean isString() {
-        return type== Type.STRING;
+        return type== TemplateType.STRING;
     }
 
     public Include getInclude() {
-        if (type== Type.INCLUDE) {
+        if (type== TemplateType.INCLUDE) {
             return (Include)o;
         }
         throw new IllegalStateException("Object is not Include");
     }
 
     public Portlet getPortlet() {
-        if (type== Type.PORTLET) {
+        if (type== TemplateType.PORTLET) {
             return (Portlet)o;
         }
         throw new IllegalStateException("Object is not Portlet");
     }
 
     public Xslt getXslt() {
-        if (type== Type.XSLT) {
+        if (type== TemplateType.XSLT) {
             return (Xslt)o;
         }
         throw new IllegalStateException("Object is not Xslt");
     }
 
     public Dynamic getDynamic() {
-        if (type== Type.DYNAMIC) {
+        if (type== TemplateType.DYNAMIC) {
             return (Dynamic)o;
         }
         throw new IllegalStateException("Object is not Dynamic");
     }
 
     public String getString() {
-        if (type==Type.STRING) {
+        if (type== TemplateType.STRING) {
             return (String)o;
         }
         throw new IllegalStateException("Object is not String");

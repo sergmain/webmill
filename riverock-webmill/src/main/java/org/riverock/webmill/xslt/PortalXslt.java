@@ -44,7 +44,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  * $Id$
  */
 public class PortalXslt implements XsltTransformer {
-    private static Logger log = Logger.getLogger(PortalXslt.class);
+    private final static Logger log = Logger.getLogger(PortalXslt.class);
 
     private Xslt xslt = null;
     private Templates translet = null;

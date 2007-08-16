@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class TransferFile {
-    private final static Logger log = Logger.getLogger( TransferFile.class );
+    private static Logger log = Logger.getLogger( TransferFile.class );
 
     public static byte[] getFileBytes(InputStream in, int sizeBuff)
         throws Exception
