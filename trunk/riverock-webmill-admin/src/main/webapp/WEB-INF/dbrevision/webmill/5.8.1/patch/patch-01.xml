@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Patches xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision.xsd">
+    <Patch>
+        <Name>patch-1-1</Name>
+        <AddTableFieldAction tableName="WM_PORTAL_TEMPLATE">
+            <Field name="PARSED_TEMPLATE" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="1"/>
+        </AddTableFieldAction>
+    </Patch>
+    <Patch>
+        <Name>patch-1-2</Name>
+        <PreviousName>patch-1-1</PreviousName>
+        <AddTableFieldAction tableName="WM_PORTAL_TEMPLATE">
+            <Field name="IS_MAXIMIZED_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+        </AddTableFieldAction>
+    </Patch>
+    <Patch>
+        <Name>patch-1-3</Name>
+        <PreviousName>patch-1-2</PreviousName>
+        <AddTableFieldAction tableName="WM_PORTAL_TEMPLATE">
+            <Field name="IS_POPUP_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+        </AddTableFieldAction>
+    </Patch>
+    <Patch>
+        <Name>patch-1-4</Name>
+        <PreviousName>patch-1-3</PreviousName>
+        <Validator>
+            <Class>org.riverock.update.webmill.v581.convert_template.PrepareParsedTemplateField</Class>
+        </Validator>
+        <CustomClassAction>
+            <Class>org.riverock.update.webmill.v581.convert_template.PrepareParsedTemplateField</Class>
+        </CustomClassAction>
+    </Patch>
+</Patches>
