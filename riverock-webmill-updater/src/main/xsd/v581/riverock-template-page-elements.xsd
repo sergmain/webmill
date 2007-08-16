@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" targetNamespace="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="dynamic">
+		<xs:complexType>
+			<xs:sequence/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="xslt">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="portlet">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="element:parameter" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="code" type="xs:string"/>
+			<xs:attribute name="xmlRoot" type="xs:string"/>
+			<xs:attribute name="template" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="parameter">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="include">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Template" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
