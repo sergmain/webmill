@@ -87,21 +87,7 @@
     </navigation-rule>
 
     <navigation-rule>
-        <from-view-id>/riverock/manager/company/company-add.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>company</from-outcome>
-            <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/company/company-edit.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>company</from-outcome>
-            <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/company/company-delete.jsp</from-view-id>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>company</from-outcome>
             <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
