@@ -205,8 +205,13 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         if ( !httpRequest.isRequestedSessionIdValid() ) {
             this.session = null;
-            this.session = new PortletSessionImpl( httpRequest.getSession(true), portletContext, namespace );
-            return session;
+            if (create) {
+                this.session = new PortletSessionImpl( httpRequest.getSession(true), portletContext, namespace );
+                return session;
+            }
+            else {
+                return null;
+            }
         }
 
         //
@@ -230,7 +235,9 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             			log.debug("The underlying HttpSession is expired and should be invalidated.");
             		}
             		httpSession.invalidate();
-            		httpSession = httpRequest.getSession(create);
+                    //
+                    this.session=null;
+                    httpSession = httpRequest.getSession(create);
             	}
             }
         }
@@ -876,11 +883,10 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.auth = portalRequestInstance.getAuth();
         this.locale = portalRequestInstance.getLocale();
         this.preferredLocale = portalRequestInstance.getPreferredLocales();
-//        this.parameters = Collections.unmodifiableMap( parameters );
         this.parameters = parameters;
 
         this.portalContext = new PortalContextImpl(portalRequestInstance.getPortalInstance().getPortalName(), httpRequest.getContextPath(), portalInfo);
-        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext, namespace);
+//        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext, namespace);
 
         Cookie[] c = httpRequest.getCookies();
         if (c!=null) {
@@ -896,9 +902,6 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalInfo );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
 
-        // PORTAL_QUERY_STRING_ATTRIBUTE constants can be deleted
-        // after rewrite invoke method in member module with 'lookup' type
-        this.setAttribute( ContainerConstants.PORTAL_QUERY_STRING_ATTRIBUTE, httpRequest.getQueryString() );
         this.setAttribute( ContainerConstants.PORTAL_QUERY_METHOD_ATTRIBUTE, httpRequest.getMethod() );
 
         this.setAttribute( ContainerConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE, portalRequestInstance.getCookieManager() );
