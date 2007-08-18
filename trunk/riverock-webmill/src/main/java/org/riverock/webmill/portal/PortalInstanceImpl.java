@@ -175,7 +175,8 @@ public class PortalInstanceImpl implements PortalInstance  {
                     PORTAL_VERSION = version;
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             String es = "Error load webmill.properties files.";
             log.error(es, e);
             PORTAL_VERSION = UNKNOWN_PORTAL_VERSON;

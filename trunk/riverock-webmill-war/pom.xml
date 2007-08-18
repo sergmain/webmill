@@ -4,7 +4,7 @@
     <groupId>org.riverock</groupId>
     <artifactId>riverock-webmill-war</artifactId>
     <packaging>war</packaging>
-    <version>5.8.0</version>
+    <version>5.8.1</version>
     <name>Webmill portal deployment package for Tomcat</name>
     <url>http://webmill.riverock.org</url>
     <licenses>
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-webmill</artifactId>
-            <version>[5.8.0]</version>
+            <version>[5.8.1]</version>
         </dependency>
 
         <dependency>

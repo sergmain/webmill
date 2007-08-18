@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
-import org.apache.log4j.Hierarchy;
 import org.apache.commons.logging.LogFactory;
 
 import net.sf.ehcache.CacheManager;
@@ -85,23 +84,9 @@ public final class ContextNavigator extends HttpServlet {
         PortalTemplateManagerFactory.destroyAll();
         PortalInfoImpl.destroyAll();
         SiteMenu.destroyAll();
-        try {
-            ((Hierarchy)LogManager.getLoggerRepository()).getRendererMap();
-        }
-        catch (Exception e) {
-            System.out.println("Error clean up logger rendered map");
-        }
-        
-        try {
-            ((Hierarchy)LogManager.getLoggerRepository()).clear();
-        }
-        catch (Exception e) {
-            System.out.println("Error clean up logger references");
-        }
-        LogFactory.release(Thread.currentThread().getContextClassLoader());
+        CacheManager.getInstance().shutdown();
         LogFactory.releaseAll();
         LogManager.shutdown();
-        CacheManager.getInstance().shutdown();
     }
 
     public ContextNavigator() {
