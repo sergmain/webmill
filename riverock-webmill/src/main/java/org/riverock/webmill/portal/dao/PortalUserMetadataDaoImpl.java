@@ -39,7 +39,7 @@ public class PortalUserMetadataDaoImpl implements PortalUserMetadataDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalUserMetadataDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalUserMetadataDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

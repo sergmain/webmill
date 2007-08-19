@@ -343,6 +343,8 @@ dbrevision-structure.xsd">
 		<Field name="ORDER_EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
 		<Field name="IS_ACTIVATE_EMAIL_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<Field name="PROPERTIES" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="1"/>
+        <Field name="SERVER_TIME_ZONE" dataType="VARCHAR" size="50" decimalDigit="0" defaultValue="Europe/Moscow" nullable="0" />
+        <Field name="IS_ENABLE_NAVIGATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<ForeignKey pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" fkSchemaName="TEST" fkTableName="WM_PORTAL_LIST_SITE" fkName="ID_FIRM_SLS_FK" pkName="ID_FIRM_MLF_PK">
             <Column pkColumnName="ID_FIRM" fkColumnName="ID_FIRM" keySeq="1" />
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
@@ -366,7 +368,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_TEMPLATE" type="TABLE">
+	<Table name="WM_PORTAL_TEMPLATE" type="TABLE">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_TEMPLATE" pkName="ID_SITETEMPL_ST_PK">
 			<Column columnName="ID_SITE_TEMPLATE" keySeq="1" />
 		</PrimaryKey>
@@ -387,7 +389,41 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_VIRTUAL_HOST" type="TABLE">
+    <Table name="WM_PORTAL_PORTLET_ALIAS" type="TABLE">
+        <PrimaryKey tableName="WM_PORTAL_PORTLET_ALIAS" pkName="ID_PORT_ALIAS_WPPA_PK">
+            <Column columnName="ID_PORTLET_ALIAS" keySeq="1" />
+        </PrimaryKey>
+        <Field name="ID_PORTLET_ALIAS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+        <Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+        <Field name="ID_PORTLET_NAME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+        <Field name="SHORT_URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="0"/>
+        <Field name="ID_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+        <ForeignKey pkTableName="WM_PORTAL_LIST_SITE" fkTableName="WM_PORTAL_PORTLET_ALIAS" fkName="ID_SITE_WPPA_FK" pkName="ID_SITE_SLS_PK">
+            <Column pkColumnName="ID_SITE" fkColumnName="ID_SITE" keySeq="1" />
+            <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+        <ForeignKey pkTableName="WM_PORTAL_PORTLET_NAME" fkTableName="WM_PORTAL_PORTLET_ALIAS" fkName="ID_PORTLET_NAME_WPPA_FK" pkName="ID_CTX_TYPE_SCT_PK">
+            <Column pkColumnName="ID_SITE_CTX_TYPE" fkColumnName="ID_PORTLET_NAME" keySeq="1" />
+            <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+    <Table name="WM_PORTAL_URL_ALIAS" type="TABLE">
+        <PrimaryKey tableName="WM_PORTAL_URL_ALIAS" pkName="ID_URL_ALIAS_WPUA_PK">
+            <Column columnName="ID_URL_ALIAS" keySeq="1" />
+        </PrimaryKey>
+        <Field name="ID_URL_ALIAS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+        <Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+        <Field name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="0"/>
+        <Field name="ALIAS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="0"/>
+        <ForeignKey pkTableName="WM_PORTAL_LIST_SITE" fkTableName="WM_PORTAL_URL_ALIAS" fkName="ID_SITE_WPUA_FK" pkName="ID_SITE_SLS_PK">
+            <Column pkColumnName="ID_SITE" fkColumnName="ID_SITE" keySeq="1" />
+            <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+            <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+        </ForeignKey>
+    </Table>
+	<Table name="WM_PORTAL_VIRTUAL_HOST" type="TABLE">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_VIRTUAL_HOST" pkName="ID_VIRT_HST_SVH_PK">
 			<Column columnName="ID_SITE_VIRTUAL_HOST" keySeq="1" />
 		</PrimaryKey>
@@ -401,7 +437,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_XSLT" type="TABLE">
+	<Table name="WM_PORTAL_XSLT" type="TABLE">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_XSLT" pkName="ID_SITE_XSLT_SX_PK">
 			<Column columnName="ID_SITE_XSLT" keySeq="1" />
 		</PrimaryKey>

@@ -42,7 +42,7 @@ public class PortalCmsArticleDaoImpl implements PortalCmsArticleDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCmsArticleDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalCmsArticleDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

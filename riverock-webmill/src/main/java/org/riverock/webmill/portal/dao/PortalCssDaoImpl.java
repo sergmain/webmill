@@ -39,7 +39,7 @@ public class PortalCssDaoImpl implements PortalCssDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCssDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalCssDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

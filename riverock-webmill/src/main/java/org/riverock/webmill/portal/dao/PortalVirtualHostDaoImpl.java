@@ -39,7 +39,7 @@ public class PortalVirtualHostDaoImpl implements PortalVirtualHostDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalVirtualHostDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalVirtualHostDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

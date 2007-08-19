@@ -15,7 +15,7 @@ public class PortalPreferencesDaoImpl implements PortalPreferencesDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalPreferencesDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalPreferencesDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

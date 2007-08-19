@@ -48,7 +48,6 @@ import org.riverock.interfaces.portal.bean.Site;
  */
 @Entity
 @Table(name="WM_PORTAL_LIST_SITE")
-//@Table(name="wm_portal_list_site")
 @TableGenerator(
     name="TABLE_SITE",
     table="WM_PORTAL_IDS",
@@ -96,6 +95,12 @@ public class SiteBean implements Serializable, Site {
     @Column(name="PROPERTIES")
     private String properties=null;
 
+    @Column(name="IS_ENABLE_NAVIGATION")
+    private boolean isEnableNavigation = false;
+
+    @Column(name="SERVER_TIME_ZONE")
+    private String serverTimeZone;
+
     @Transient
     private String portalCharset = CharEncoding.UTF_8;
 
@@ -114,13 +119,32 @@ public class SiteBean implements Serializable, Site {
         this.adminEmail = site.getAdminEmail();
         this.cssFile = site.getCssFile();
         this.properties = site.getProperties();
+        this.isEnableNavigation = site.isEnableNavigation();
+        this.serverTimeZone = site.getServerTimeZone();
     }
 
     public String getPortalCharset() {
-        if (portalCharset==null)
+        if (portalCharset==null) {
             portalCharset=CharEncoding.UTF_8;
+        }
         
         return portalCharset;
+    }
+
+    public void setEnableNavigation(boolean enableNavigation) {
+        isEnableNavigation = enableNavigation;
+    }
+
+    public boolean isEnableNavigation() {
+        return isEnableNavigation;
+    }
+
+    public String getServerTimeZone() {
+        return serverTimeZone;
+    }
+
+    public void setServerTimeZone(String serverTimeZone) {
+        this.serverTimeZone = serverTimeZone;
     }
 
     public void setPortalCharset(String portalCharset) {

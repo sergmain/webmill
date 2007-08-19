@@ -39,7 +39,7 @@ public class PortalSiteLanguageDaoImpl implements PortalSiteLanguageDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalSiteLanguageDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalSiteLanguageDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

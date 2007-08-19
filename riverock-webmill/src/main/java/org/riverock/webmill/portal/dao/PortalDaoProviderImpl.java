@@ -52,24 +52,24 @@ public class PortalDaoProviderImpl implements PortalDaoProvider {
     private PortalCmsNewsDao portalCmsNewsDao = null;
     private PortalPreferencesDao portalPreferencesDao = null;
 
-    public PortalDaoProviderImpl(AuthSession authSession, ClassLoader classLoader) {
-        this.portalCompanyDao = new PortalCompanyDaoImpl(authSession, classLoader);
-        this.portalHoldingDao = new PortalHoldingDaoImpl(authSession, classLoader);
-        this.portalAuthDao = new PortalAuthDaoImpl(authSession, classLoader);
+    public PortalDaoProviderImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+        this.portalCompanyDao = new PortalCompanyDaoImpl(authSession, classLoader, siteId);
+        this.portalHoldingDao = new PortalHoldingDaoImpl(authSession, classLoader, siteId);
+        this.portalAuthDao = new PortalAuthDaoImpl(authSession, classLoader, siteId);
 
-        this.portalCatalogDao = new PortalCatalogDaoImpl(authSession, classLoader);
-        this.portalPortletNameDao = new PortalPortletNameDaoImpl(authSession, classLoader);
-        this.portalSiteDao = new PortalSiteDaoImpl(authSession, classLoader);
-        this.portalSiteLanguageDao = new PortalSiteLanguageDaoImpl(authSession, classLoader);
-        this.portalTemplateDao = new PortalTemplateDaoImpl(authSession, classLoader);
-        this.portalVirtualHostDao = new PortalVirtualHostDaoImpl(authSession, classLoader);
-        this.portalXsltDao = new PortalXsltDaoImpl(authSession, classLoader);
-        this.portalCssDao = new PortalCssDaoImpl(authSession, classLoader);
-        this.portalUserMetadataDao = new PortalUserMetadataDaoImpl(authSession, classLoader);
-        this.portalUserDao = new PortalUserDaoImpl(authSession, classLoader);
-        this.portalCmsArticleDao = new PortalCmsArticleDaoImpl(authSession, classLoader);
-        this.portalCmsNewsDao = new PortalCmsNewDaoImpl(authSession, classLoader);
-        this.portalPreferencesDao = new PortalPreferencesDaoImpl(authSession, classLoader);
+        this.portalCatalogDao = new PortalCatalogDaoImpl(authSession, classLoader, siteId);
+        this.portalPortletNameDao = new PortalPortletNameDaoImpl(authSession, classLoader, siteId);
+        this.portalSiteDao = new PortalSiteDaoImpl(authSession, classLoader, siteId);
+        this.portalSiteLanguageDao = new PortalSiteLanguageDaoImpl(authSession, classLoader, siteId);
+        this.portalTemplateDao = new PortalTemplateDaoImpl(authSession, classLoader, siteId);
+        this.portalVirtualHostDao = new PortalVirtualHostDaoImpl(authSession, classLoader, siteId);
+        this.portalXsltDao = new PortalXsltDaoImpl(authSession, classLoader, siteId);
+        this.portalCssDao = new PortalCssDaoImpl(authSession, classLoader, siteId);
+        this.portalUserMetadataDao = new PortalUserMetadataDaoImpl(authSession, classLoader, siteId);
+        this.portalUserDao = new PortalUserDaoImpl(authSession, classLoader, siteId);
+        this.portalCmsArticleDao = new PortalCmsArticleDaoImpl(authSession, classLoader, siteId);
+        this.portalCmsNewsDao = new PortalCmsNewDaoImpl(authSession, classLoader, siteId);
+        this.portalPreferencesDao = new PortalPreferencesDaoImpl(authSession, classLoader, siteId);
     }
 
     public PortalCmsArticleDao getPortalCmsArticleDao() {

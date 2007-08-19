@@ -40,7 +40,7 @@ public class PortalCompanyDaoImpl implements PortalCompanyDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCompanyDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalCompanyDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

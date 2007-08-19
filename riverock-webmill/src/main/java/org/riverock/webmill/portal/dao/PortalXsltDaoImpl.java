@@ -40,7 +40,7 @@ public class PortalXsltDaoImpl implements PortalXsltDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalXsltDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalXsltDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

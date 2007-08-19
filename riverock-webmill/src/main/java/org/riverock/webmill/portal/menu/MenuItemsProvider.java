@@ -110,7 +110,7 @@ public class MenuItemsProvider {
                     );
                 }
                 ClassLoader classLoader = portalRequestInstance.getPortalInstance().getPortalClassLoader();
-                obj.setPortalDaoProvider(new PortalDaoProviderImpl(portalRequestInstance.getAuth(), classLoader));
+                obj.setPortalDaoProvider(new PortalDaoProviderImpl(portalRequestInstance.getAuth(), classLoader, siteId));
                 return obj.getList( catalogLanguageId, contextId);
             }
             return new ArrayList<ClassQueryItem>(0);
