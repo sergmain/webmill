@@ -333,6 +333,66 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         }
     }
 
+    public void setMaximizedTemplate(Long templateId) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setDefaultDynamic(Long templateId) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setPopupTemplate(Long templateId) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public TemplateBean getMaximizedTemplate(Long siteLanguageId) {
+        StatelessSession session = HibernateUtils.getStatelessSession();
+        try {
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.siteLanguageId=:siteLanguageId and template.isMaximizedTemplate=true ")
+                .setLong("siteLanguageId", siteLanguageId)
+                .uniqueResult();
+
+            return bean;
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public TemplateBean getPopupTemplate(Long siteLanguageId) {
+        StatelessSession session = HibernateUtils.getStatelessSession();
+        try {
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.siteLanguageId=:siteLanguageId and template.isPopupTemplate=true ")
+                .setLong("siteLanguageId", siteLanguageId)
+                .uniqueResult();
+
+            return bean;
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public TemplateBean getDefaultDynamicTemplate(Long siteLanguageId) {
+        StatelessSession session = HibernateUtils.getStatelessSession();
+        try {
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
+                .setLong("siteLanguageId", siteLanguageId)
+                .uniqueResult();
+
+            return bean;
+        }
+        finally {
+            session.close();
+        }
+    }
+
     public void deleteTemplate(Long templateId) {
         Session session = HibernateUtils.getSession();
         try {
@@ -356,19 +416,4 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         }
     }
 
-    public TemplateBean getDefaultDynamicTemplate(Long siteLanguageId) {
-        StatelessSession session = HibernateUtils.getStatelessSession();
-        try {
-            TemplateBean bean = (TemplateBean)session.createQuery(
-                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
-                    "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
-                .setLong("siteLanguageId", siteLanguageId)
-                .uniqueResult();
-
-            return bean;
-        }
-        finally {
-            session.close();
-        }
-    }
 }

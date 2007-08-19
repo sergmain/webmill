@@ -80,6 +80,12 @@ public class TemplateBean implements Serializable, Template {
     @Column(name="is_default_dynamic")
     private boolean isDefaultDynamic = false;
 
+    @Column(name="IS_MAXIMIZED_TEMPLATE")
+    private boolean isMaximizedTemplate = false;
+
+    @Column(name="IS_POPUP_TEMPLATE")
+    private boolean isPopupTemplae = false;
+
     @Column(name="TEMPLATE_ROLE")
     private String templateRole;
 
@@ -102,9 +108,16 @@ public class TemplateBean implements Serializable, Template {
         this.isDefaultDynamic = t.isDefaultDynamic();
         this.version = t.getVersion();
         this.templateLanguage = t.getTemplateLanguage();
+        this.templateRole = t.getRoles();
+        this.templateLanguage = t.getTemplateLanguage();
+        this.templateLanguage = t.getTemplateLanguage();
     }
 
     public TemplateBean() {
+    }
+
+    public String getRoles() {
+        return templateRole;
     }
 
     public String getTemplateRole() {
@@ -175,7 +188,23 @@ public class TemplateBean implements Serializable, Template {
         return isDefaultDynamic;
     }
 
-    public void setDefaultDynamic(boolean defaultDynamic) {
-        isDefaultDynamic = defaultDynamic;
+    public boolean isMaximizedTemplate() {
+        return isMaximizedTemplate;
+    }
+
+    public boolean isPopupTemplate() {
+        return isPopupTemplae;  
+    }
+
+    public void setMaximizedTemplate(boolean isMaximizedTemplate) {
+        this.isMaximizedTemplate = isMaximizedTemplate;
+    }
+
+    public void setPopupTemplae(boolean isPopupTemplae) {
+        this.isPopupTemplae = isPopupTemplae;
+    }
+
+    public void setDefaultDynamic(boolean isDefaultDynamic) {
+        this.isDefaultDynamic = isDefaultDynamic;
     }
 }

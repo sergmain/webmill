@@ -42,7 +42,7 @@ public class PortalCmsNewDaoImpl implements PortalCmsNewsDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCmsNewDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalCmsNewDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

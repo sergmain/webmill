@@ -237,7 +237,7 @@ public final class PortalRequestInstance {
 
             this.auth = AuthTools.getAuthSession(httpRequest);
             ClassLoader classLoader = portalInstance.getPortalClassLoader();
-            this.portalDaoProvider = new PortalDaoProviderImpl(auth, classLoader);
+            this.portalDaoProvider = new PortalDaoProviderImpl(auth, classLoader, portalInstance.getSiteId());
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
                 log.debug("portal requet instance class loader:\n" + classLoader + "\nhash: " + classLoader.hashCode());

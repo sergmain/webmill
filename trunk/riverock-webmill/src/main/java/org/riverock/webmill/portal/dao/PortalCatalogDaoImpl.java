@@ -41,7 +41,7 @@ public class PortalCatalogDaoImpl implements PortalCatalogDao {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCatalogDaoImpl(AuthSession authSession, ClassLoader classLoader) {
+    PortalCatalogDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

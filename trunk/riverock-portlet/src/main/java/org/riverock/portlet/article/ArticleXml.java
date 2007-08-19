@@ -24,6 +24,8 @@
 package org.riverock.portlet.article;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringEscapeUtils;
+
 import org.riverock.common.tools.DateTools;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.Article;
@@ -90,7 +92,9 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
             append( "<" ).append( rootName ).
             append( "><ArticleDate>" ).append( dateText ).append( "</ArticleDate>" ).
             append( "<ArticleTime>" ).append( timeText ).append( "</ArticleTime>" ).
-            append( "<ArticleName>" ).append( article.getArticleName()!=null?article.getArticleName():"" ).append( "</ArticleName>" ).
+            append( "<ArticleName>" ).
+            append( article.getArticleName()!=null? StringEscapeUtils.escapeXml(article.getArticleName()):"" ).
+            append( "</ArticleName>" ).
             append( "<ArticleText>" ).append( article.getArticleData()!=null?article.getArticleData():"" ).append( "</ArticleText></" ).
             append( rootName == null ?DEFAULT_ROOT_NAME :rootName ).append( ">" ).toString();
 

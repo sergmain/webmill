@@ -54,4 +54,8 @@ public interface Site extends Serializable {
     public String getProperties();
 
     public String getPortalCharset();
+
+    public boolean isEnableNavigation();
+
+    public String getServerTimeZone();
 }

@@ -42,10 +42,9 @@ public interface InternalTemplateDao {
      * @param siteId site  ID
      * @param templateName String
      * @param lang String
-     * @return org.riverock.interfaces.portal.bean.Template - Attention! template data not initalized
+     * @return org.riverock.interfaces.portal.bean.Template - Attention! template data not initialized
      */
     public TemplateBean getTemplate(Long siteId, String templateName, String lang);
-    public TemplateBean getDefaultDynamicTemplate(Long siteLanguageId);
 
     public List<TemplateBean> getTemplateLanguageList( Long siteLanguageId );
     public List<TemplateBean> getTemplateList( Long siteId );
@@ -57,4 +56,13 @@ public interface InternalTemplateDao {
     public void deleteTemplateForSiteLanguage(Long siteLanguageId);
 
     public void updateTemplate(TemplateBean template);
+
+    void setDefaultDynamic(Long templateId);
+    public TemplateBean getDefaultDynamicTemplate(Long siteLanguageId);
+
+    public TemplateBean getMaximizedTemplate(Long siteLanguageId);
+    void setMaximizedTemplate(Long templateId);
+
+    public TemplateBean getPopupTemplate(Long siteLanguageId);
+    void setPopupTemplate(Long templateId);
 }

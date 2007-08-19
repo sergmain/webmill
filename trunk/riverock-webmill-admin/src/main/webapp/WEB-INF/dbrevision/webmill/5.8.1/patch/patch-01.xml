@@ -23,6 +23,62 @@
     <Patch>
         <Name>patch-1-4</Name>
         <PreviousName>patch-1-3</PreviousName>
+        <AddTableFieldAction tableName="WM_PORTAL_LIST_SITE">
+            <Field name="IS_ENABLE_NAVIGATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+        </AddTableFieldAction>
+    </Patch>
+    <Patch>
+        <Name>patch-1-5</Name>
+        <PreviousName>patch-1-4</PreviousName>
+        <AddTableFieldAction tableName="WM_PORTAL_LIST_SITE">
+            <Field name="SERVER_TIME_ZONE" dataType="VARCHAR" size="50" decimalDigit="0" defaultValue="Europe/Moscow" nullable="0" />
+        </AddTableFieldAction>
+    </Patch>
+    <Patch>
+        <Name>patch-1-6</Name>
+        <PreviousName>patch-1-5</PreviousName>
+        <Table name="WM_PORTAL_PORTLET_ALIAS" type="TABLE">
+            <PrimaryKey tableName="WM_PORTAL_PORTLET_ALIAS" pkName="ID_PORT_ALIAS_WPPA_PK">
+                <Column columnName="ID_PORTLET_ALIAS" keySeq="1" />
+            </PrimaryKey>
+            <Field name="ID_PORTLET_ALIAS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+            <Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+            <Field name="ID_PORTLET_NAME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+            <Field name="SHORT_URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="0"/>
+            <Field name="ID_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+            <ForeignKey pkTableName="WM_PORTAL_LIST_SITE" fkTableName="WM_PORTAL_PORTLET_ALIAS" fkName="ID_SITE_WPPA_FK" pkName="ID_SITE_SLS_PK">
+                <Column pkColumnName="ID_SITE" fkColumnName="ID_SITE" keySeq="1" />
+                <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+                <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+            </ForeignKey>
+            <ForeignKey pkTableName="WM_PORTAL_PORTLET_NAME" fkTableName="WM_PORTAL_PORTLET_ALIAS" fkName="ID_PORTLET_NAME_WPPA_FK" pkName="ID_CTX_TYPE_SCT_PK">
+                <Column pkColumnName="ID_SITE_CTX_TYPE" fkColumnName="ID_PORTLET_NAME" keySeq="1" />
+                <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+                <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+            </ForeignKey>
+        </Table>
+    </Patch>
+    <Patch>
+        <Name>patch-1-7</Name>
+        <PreviousName>patch-1-6</PreviousName>
+        <Table name="WM_PORTAL_URL_ALIAS" type="TABLE">
+            <PrimaryKey tableName="WM_PORTAL_URL_ALIAS" pkName="ID_URL_ALIAS_WPUA_PK">
+                <Column columnName="ID_URL_ALIAS" keySeq="1" />
+            </PrimaryKey>
+            <Field name="ID_URL_ALIAS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+            <Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+            <Field name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="0"/>
+            <Field name="ALIAS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="0"/>
+            <ForeignKey pkTableName="WM_PORTAL_LIST_SITE" fkTableName="WM_PORTAL_URL_ALIAS" fkName="ID_SITE_WPUA_FK" pkName="ID_SITE_SLS_PK">
+                <Column pkColumnName="ID_SITE" fkColumnName="ID_SITE" keySeq="1" />
+                <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+                <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+            </ForeignKey>
+        </Table>
+    </Patch>
+    <Patch>
+        <Name>patch-1-8</Name>
+        <PreviousName>patch-1-7</PreviousName>
         <Validator>
             <Class>org.riverock.update.webmill.v581.convert_template.PrepareParsedTemplateField</Class>
         </Validator>
