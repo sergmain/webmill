@@ -46,7 +46,7 @@ import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.portal.context.RequestContextParameter;
+import org.riverock.webmill.portal.url.RequestContextParameter;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;

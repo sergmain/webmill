@@ -50,8 +50,8 @@ import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.context.CtxRequestContextPocessor;
-import org.riverock.webmill.portal.context.RequestState;
+import org.riverock.webmill.portal.url.CtxRequestContextPocessor;
+import org.riverock.webmill.portal.url.RequestState;
 import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
