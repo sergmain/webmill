@@ -30,6 +30,7 @@ import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 
 import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.portal.url.interpreter.RequestContextUtils;
 
 /**
  * @author Sergei Maslyukov

@@ -30,6 +30,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.ContainerConstants;
+import org.riverock.webmill.portal.url.interpreter.PageUrlInterpreter;
+import org.riverock.webmill.portal.url.interpreter.PageidUrlInterpreter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreter;
+import org.riverock.webmill.portal.url.interpreter.CtxUrlInterpreter;
+import org.riverock.webmill.portal.url.interpreter.IndexUrlInterpreter;
 
 /**
  * @author Sergei Maslyukov
