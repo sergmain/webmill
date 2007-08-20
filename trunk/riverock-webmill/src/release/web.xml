@@ -228,7 +228,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>ContextNavigator</servlet-name>
-		<servlet-class>org.riverock.webmill.portal.ContextNavigator</servlet-class>
+		<servlet-class>org.riverock.webmill.portal.PortalFrontController</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 	<servlet>

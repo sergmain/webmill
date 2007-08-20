@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 public class InternalServletResponseWrapper extends HttpServletResponseWrapper {
     private final static Logger log = Logger.getLogger(InternalServletResponseWrapper.class);
 
-    // all methos in HttpServletResponse must invoked only from ContextNavigator
+    // all methos in HttpServletResponse must invoked only from PortalFrontController
     // all others invokes are wrong
     boolean isOk = false;
 
