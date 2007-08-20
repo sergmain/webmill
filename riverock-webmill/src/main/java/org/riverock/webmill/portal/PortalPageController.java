@@ -49,9 +49,9 @@ import org.riverock.webmill.portal.page_element.PageElement;
  * Date: 24.11.2004
  * Time: 23:53:05
  */
-public final class PortalRequestProcessor {
+public final class PortalPageController {
 
-    private final static Logger log = Logger.getLogger( PortalRequestProcessor.class );
+    private final static Logger log = Logger.getLogger( PortalPageController.class );
 
     /**
      *  Main method for processing pages with portlets

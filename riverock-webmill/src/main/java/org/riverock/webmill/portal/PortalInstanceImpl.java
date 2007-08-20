@@ -250,7 +250,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             }
 
             portalRequestInstance = new PortalRequestInstance( request_, response_, this );
-            PortalRequestProcessor.processPortalRequest( portalRequestInstance );
+            PortalPageController.processPortalRequest( portalRequestInstance );
         }
         catch (Throwable e) {
             String es = "General error processing request";

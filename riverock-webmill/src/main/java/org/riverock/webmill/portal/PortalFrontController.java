@@ -53,8 +53,8 @@ import org.riverock.common.html.Header;
 /**
  * $Id$
  */
-public final class ContextNavigator extends HttpServlet {
-    private final static Logger log = Logger.getLogger(ContextNavigator.class);
+public final class PortalFrontController extends HttpServlet {
+    private final static Logger log = Logger.getLogger(PortalFrontController.class);
 
     private final ConcurrentMap<Long, PortalInstanceImpl> portalInstanceMap = new ConcurrentHashMap<Long, PortalInstanceImpl>();
 
@@ -64,7 +64,7 @@ public final class ContextNavigator extends HttpServlet {
     public void init(ServletConfig servletConfig) {
         portalServletConfig = servletConfig;
 //        classLoader=Thread.currentThread().getContextClassLoader();
-        classLoader = ContextNavigator.class.getClassLoader();
+        classLoader = PortalFrontController.class.getClassLoader();
     }
 
     public void destroy() {
@@ -89,7 +89,7 @@ public final class ContextNavigator extends HttpServlet {
         LogManager.shutdown();
     }
 
-    public ContextNavigator() {
+    public PortalFrontController() {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
