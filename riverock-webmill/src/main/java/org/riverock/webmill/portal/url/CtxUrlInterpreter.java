@@ -49,13 +49,13 @@ import org.riverock.webmill.port.PortalInfoImpl;
 /**
  * $Id$
  */
-public final class CtxRequestContextPocessor implements RequestContextProcessor {
-    private final static Logger log = Logger.getLogger(CtxRequestContextPocessor.class);
+public final class CtxUrlInterpreter implements UrlInterpreter {
+    private final static Logger log = Logger.getLogger(CtxUrlInterpreter.class);
 
     // add for compatible with jsr168 TCK
     private static final String INVOKE_PORTLET_NAME = "portletName";
 
-    public CtxRequestContextPocessor() {
+    public CtxUrlInterpreter() {
     }
 
     /**
@@ -139,7 +139,7 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
      * @param factoryParameter
      * @return
      */
-    public RequestContext parseRequest(RequestContextParameter factoryParameter) {
+    public RequestContext interpret(RequestContextParameter factoryParameter) {
 
         log.debug("Start process as page, format request: "+ requestFormat );
 

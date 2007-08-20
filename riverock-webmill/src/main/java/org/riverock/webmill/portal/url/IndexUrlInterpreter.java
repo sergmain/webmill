@@ -33,13 +33,13 @@ import org.riverock.webmill.port.PortalInfoImpl;
 /**
  * $Id$
  */
-public class IndexRequestContextProcessor implements RequestContextProcessor {
-    private final static Logger log = Logger.getLogger(IndexRequestContextProcessor.class);
+public class IndexUrlInterpreter implements UrlInterpreter {
+    private final static Logger log = Logger.getLogger(IndexUrlInterpreter.class);
 
-    public IndexRequestContextProcessor() {
+    public IndexUrlInterpreter() {
     }
 
-    public RequestContext parseRequest(RequestContextParameter factoryParameter) {
+    public RequestContext interpret(RequestContextParameter factoryParameter) {
 
         PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
 

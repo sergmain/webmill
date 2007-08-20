@@ -50,7 +50,7 @@ import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.url.CtxRequestContextPocessor;
+import org.riverock.webmill.portal.url.CtxUrlInterpreter;
 import org.riverock.webmill.portal.url.RequestState;
 import org.riverock.webmill.portal.namespace.Namespace;
 
@@ -339,7 +339,7 @@ public final class PortletURLImpl implements PortletURL {
         }
 
         url.append(
-            CtxRequestContextPocessor.encodeUrl(
+            CtxUrlInterpreter.encodeUrl(
                 portletRequest, resultPortletName,
                 (String)portletRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ),
                 portletRequest.getLocale(),

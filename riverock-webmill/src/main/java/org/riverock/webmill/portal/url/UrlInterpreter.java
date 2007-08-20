@@ -27,6 +27,6 @@ package org.riverock.webmill.portal.url;
 /**
  * $Id$
  */
-public interface RequestContextProcessor {
-    public RequestContext parseRequest( RequestContextParameter factoryParameter );
+public interface UrlInterpreter {
+    public RequestContext interpret( RequestContextParameter factoryParameter );
 }

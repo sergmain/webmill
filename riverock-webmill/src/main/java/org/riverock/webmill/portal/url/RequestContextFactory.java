@@ -37,7 +37,7 @@ import org.riverock.interfaces.ContainerConstants;
  *         Time: 12:39:24
  */
 public class RequestContextFactory {
-    private final static Logger log = Logger.getLogger( RequestContextProcessor.class );
+    private final static Logger log = Logger.getLogger( UrlInterpreter.class );
 
     public static final int UNKNOWN_SERVLET_IDX = 0;
     public static final int PAGEID_SERVLET_IDX = 1;
@@ -59,19 +59,19 @@ public class RequestContextFactory {
      */
     public static RequestContext createRequestContext( RequestContextParameter factoryParameter ) {
 
-        RequestContextProcessor processor = null;
+        UrlInterpreter processor = null;
         String servletPath = factoryParameter.getRequest().getServletPath();
         Integer idx = requestContextMap.get(servletPath);
         if (idx!=null) {
             switch(idx) {
                 case PAGEID_SERVLET_IDX:
-                    processor = new PageidRequestContextProcessor();
+                    processor = new PageidUrlInterpreter();
                     break;
                 case PAGE_SERVLET_IDX:
-                    processor = new PageRequestContextProcessor();
+                    processor = new PageUrlInterpreter();
                     break;
                 case CTX_SERVLET_IDX:
-                    processor = new CtxRequestContextPocessor();
+                    processor = new CtxUrlInterpreter();
                     break;
             }
         }
@@ -88,7 +88,7 @@ public class RequestContextFactory {
             log.debug("processor: " + processor);
         }
 
-        RequestContext requestContext = processor.parseRequest(factoryParameter);
+        RequestContext requestContext = processor.interpret(factoryParameter);
         if ( log.isDebugEnabled() ) {
             log.debug( "#2 requestContext: "+requestContext );
             if (requestContext !=null) {
@@ -100,7 +100,7 @@ public class RequestContextFactory {
         // return as index context
         if (requestContext==null) {
             log.debug("Process this request as 'index'");
-            requestContext = new IndexRequestContextProcessor().parseRequest(factoryParameter);
+            requestContext = new IndexUrlInterpreter().interpret(factoryParameter);
         }
 
         return requestContext;
