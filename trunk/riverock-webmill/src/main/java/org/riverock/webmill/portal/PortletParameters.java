@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.List;
 import java.io.File;
 
-import org.riverock.webmill.portal.context.RequestState;
+import org.riverock.webmill.portal.url.RequestState;
 
 /**
  * @author Sergei Maslyukov

@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.servlet.ServletResponseWrapperInclude;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.context.RequestState;
+import org.riverock.webmill.portal.url.RequestState;
 import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
