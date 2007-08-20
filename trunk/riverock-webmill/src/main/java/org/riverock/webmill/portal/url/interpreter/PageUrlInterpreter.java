@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.url;
+package org.riverock.webmill.portal.url.interpreter;
 
 import java.util.Locale;
 
@@ -30,6 +30,8 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.url.RequestContext;
+import org.riverock.webmill.portal.url.RequestContextParameter;
 
 /**
  * $Id$
