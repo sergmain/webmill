@@ -29,52 +29,59 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
  */
-public final class PageRequestContextProcessor implements RequestContextProcessor {
-    private final static Logger log = Logger.getLogger(PageRequestContextProcessor.class);
+public final class PageidUrlInterpreter implements UrlInterpreter {
+    private final static Logger log = Logger.getLogger(PageidUrlInterpreter.class);
 
-    public PageRequestContextProcessor() {
+    public PageidUrlInterpreter() {
     }
 
-    public RequestContext parseRequest(RequestContextParameter factoryParameter) {
+    public RequestContext interpret(RequestContextParameter factoryParameter) {
 
-        log.debug(
-            "Start process as 'page', format request: " +
-            "/<CONTEXT>/page/<LOCALE>[/<num_of_portlet,portlet_param>]/name/<PAGE_NAME>[?<portlet_param>]..."
-        );
+        log.debug("Start process as '/pageid', format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...");
+        // format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...
 
         String path = factoryParameter.getRequest().getPathInfo();
-        if (path==null || path.equals("/")) {
+        if (log.isDebugEnabled()) {
+            log.debug("path: " + path + ", content type: " + factoryParameter.getRequest().getContentType());
+        }
+        if (path == null || path.equals("/")) {
             return null;
         }
 
         int idxSlash = path.indexOf('/', 1);
-        if (idxSlash==-1) {
+        if (idxSlash == -1) {
+            log.warn("Bad format of URL for /pageid context: " + path);
             return null;
         }
 
         Locale locale = StringTools.getLocale(path.substring(1, idxSlash));
-        String pageName = path.substring( idxSlash+1 );
 
-        Long ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(
-            factoryParameter.getSiteId(), locale, pageName
-        );
+        int idx = path.indexOf('/', idxSlash + 1);
+        String pageId;
+        if (idx == -1)
+            pageId = path.substring(idxSlash + 1);
+        else
+            pageId = path.substring(idxSlash + 1, idx);
 
         if (log.isDebugEnabled())  {
             log.debug("siteId: " + factoryParameter.getSiteId() );
             log.debug("locale: " + locale.toString() );
-            log.debug("pageName: " + pageName);
-            log.debug("ctxId: " + ctxId);
+            log.debug("pageId: " + pageId);
         }
 
-        if (ctxId==null) {
+        Long ctxId;
+        try {
+            ctxId = new Long(pageId);
+        }
+        catch (java.lang.NumberFormatException e) {
+            log.warn("NumberFormatException error of parsing pageid: " + pageId);
             return null;
         }
+
         return RequestContextUtils.getRequestContextBean(factoryParameter, ctxId);
     }
-
 }
