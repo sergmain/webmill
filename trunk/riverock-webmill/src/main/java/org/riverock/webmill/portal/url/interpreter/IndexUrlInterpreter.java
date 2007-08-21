@@ -29,8 +29,8 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.portal.url.RequestContext;
-import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.webmill.portal.url.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.UrlInterpreterParameter;
 
 /**
  * $Id$
@@ -41,7 +41,7 @@ public class IndexUrlInterpreter implements UrlInterpreter {
     public IndexUrlInterpreter() {
     }
 
-    public RequestContext interpret(RequestContextParameter factoryParameter) {
+    public UrlInterpreterResult interpret(UrlInterpreterParameter factoryParameter) {
 
         PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
 
@@ -49,21 +49,21 @@ public class IndexUrlInterpreter implements UrlInterpreter {
         MenuLanguage menu = portalInfo.getMenu(factoryParameter.getPredictedLocale().toString());
         if (menu==null){
             log.error( "Menu for locale: "+factoryParameter.getPredictedLocale().toString() +" not defined" );
-            return new RequestContext();
+            return new UrlInterpreterResult();
         }
 
         if (menu.getIndexMenuItem() == null) {
             log.warn("menu: " + menu);
             log.warn("locale: " + factoryParameter.getPredictedLocale().toString());
             log.warn("Menu item pointed to 'index' portlet not defined");
-            return new RequestContext();
+            return new UrlInterpreterResult();
         }
 
         Long ctxId = menu.getIndexMenuItem().getId();
         if (ctxId==null) {
             String es = "Menu item with 'index' portlet not found";
             log.error(es);
-            return new RequestContext();
+            return new UrlInterpreterResult();
         }
 
         return UrlInterpreterUtils.getRequestContextBean(factoryParameter, ctxId);

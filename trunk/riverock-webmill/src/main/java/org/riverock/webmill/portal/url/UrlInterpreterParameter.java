@@ -38,7 +38,7 @@ import org.riverock.webmill.exception.PortalException;
  *         Date: 20.04.2006
  *         Time: 12:46:07
  */
-public final class RequestContextParameter {
+public final class UrlInterpreterParameter {
     private PortletDefinitionProvider portletDefinitionProvider=null;
     private Locale predictedLocale = null;
     private boolean isMultiPartRequest = false;
@@ -47,7 +47,7 @@ public final class RequestContextParameter {
     private Map<String, List<String>> httpRequestParameter;
     private String pathInfo;
 
-    public RequestContextParameter(
+    public UrlInterpreterParameter(
         String pathInfo, PortletDefinitionProvider portletDefinitionProvider,
         boolean isMultiPartRequest, File requestBodyFile,
         Long siteId, Locale predictedLocale, Map<String, List<String>> httpRequestParameter

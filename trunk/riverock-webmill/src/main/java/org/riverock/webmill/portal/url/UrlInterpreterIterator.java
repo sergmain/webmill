@@ -26,7 +26,6 @@ package org.riverock.webmill.portal.url;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -75,12 +74,12 @@ public class UrlInterpreterIterator {
      * @param factoryParameter request context parameters
      * @return request context
      */
-    public static RequestContext interpretUrl( RequestContextParameter factoryParameter ) {
+    public static UrlInterpreterResult interpretUrl( UrlInterpreterParameter factoryParameter ) {
 
         for (UrlInterpreter urlInterpreter : INTERPRETER) {
-            RequestContext requestContext = urlInterpreter.interpret(factoryParameter);
-            if (requestContext!=null) {
-                return requestContext;
+            UrlInterpreterResult urlInterpreterResult = urlInterpreter.interpret(factoryParameter);
+            if (urlInterpreterResult !=null) {
+                return urlInterpreterResult;
             }
         }
         throw new PortalException("Error interpret url");

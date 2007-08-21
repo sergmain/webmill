@@ -1,7 +1,7 @@
 package org.riverock.webmill.portal.url.interpreter;
 
-import org.riverock.webmill.portal.url.RequestContext;
-import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.webmill.portal.url.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.UrlInterpreterParameter;
 
 /**
  * User: SMaslyukov
@@ -10,7 +10,7 @@ import org.riverock.webmill.portal.url.RequestContextParameter;
  */
 public class AliasUrlInterpreter implements UrlInterpreter {
     
-    public RequestContext interpret(RequestContextParameter factoryParameter) {
+    public UrlInterpreterResult interpret(UrlInterpreterParameter factoryParameter) {
         return null; 
     }
 }

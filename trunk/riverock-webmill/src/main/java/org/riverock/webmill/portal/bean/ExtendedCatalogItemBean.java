@@ -41,12 +41,10 @@ import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
-import org.riverock.webmill.container.portlet.PortletContainerException;
-import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.webmill.portal.url.UrlInterpreterParameter;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
@@ -115,7 +113,7 @@ public final class ExtendedCatalogItemBean {
         return namePortletId;
     }
 
-    public static ExtendedCatalogItemBean getInstance(RequestContextParameter factoryParameter, final Long ctxId) {
+    public static ExtendedCatalogItemBean getInstance(UrlInterpreterParameter factoryParameter, final Long ctxId) {
         if (log.isDebugEnabled()) {
             log.debug("ExtendedCatalogItemBean.getInstance() ctxId: " + ctxId);
         }
@@ -200,7 +198,7 @@ public final class ExtendedCatalogItemBean {
         return catalogItem;
     }
 
-    public static ExtendedCatalogItemBean getInstance(RequestContextParameter factoryParameter, String templateName, String portletName, Locale locale) {
+    public static ExtendedCatalogItemBean getInstance(UrlInterpreterParameter factoryParameter, String templateName, String portletName, Locale locale) {
         if (portletName==null) {
             return null;
         }
@@ -220,7 +218,7 @@ public final class ExtendedCatalogItemBean {
         return extendedCatalogItem;
     }
 
-    private static void initPortletDefinition(RequestContextParameter contextParameter, ExtendedCatalogItemBean extendedCatalogItem) {
+    private static void initPortletDefinition(UrlInterpreterParameter contextParameter, ExtendedCatalogItemBean extendedCatalogItem) {
         extendedCatalogItem.portlet = contextParameter.getPortletDefinitionProvider().getPortletDefinition(extendedCatalogItem.getFullPortletName());
         if (extendedCatalogItem.portlet != null) {
             extendedCatalogItem.namePortletId = PortletService.getStringParam(

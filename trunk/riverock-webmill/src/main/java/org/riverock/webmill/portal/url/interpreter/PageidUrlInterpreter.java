@@ -29,8 +29,8 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.portal.url.RequestContext;
-import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.webmill.portal.url.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.UrlInterpreterParameter;
 
 /**
  * $Id$
@@ -41,7 +41,7 @@ public final class PageidUrlInterpreter implements UrlInterpreter {
     public PageidUrlInterpreter() {
     }
 
-    public RequestContext interpret(RequestContextParameter factoryParameter) {
+    public UrlInterpreterResult interpret(UrlInterpreterParameter factoryParameter) {
 
         log.debug("Start process as '/pageid', format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...");
         // format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...
