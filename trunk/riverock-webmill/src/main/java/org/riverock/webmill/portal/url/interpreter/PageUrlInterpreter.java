@@ -27,6 +27,7 @@ package org.riverock.webmill.portal.url.interpreter;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
@@ -51,9 +52,14 @@ public final class PageUrlInterpreter implements UrlInterpreter {
         );
 
         String path = factoryParameter.getPathInfo();
-        if (path==null || path.startsWith(ContainerConstants.PAGE_SERVLET_NAME)) {
+        if (StringUtils.isBlank(path) || path.equals("/")) {
             return null;
         }
+
+        if (!path.startsWith(ContainerConstants.PAGE_SERVLET_NAME)) {
+            return null;
+        }
+        path = path.substring(ContainerConstants.PAGE_SERVLET_NAME.length());
 
         int idxSlash = path.indexOf('/', 1);
         if (idxSlash==-1) {

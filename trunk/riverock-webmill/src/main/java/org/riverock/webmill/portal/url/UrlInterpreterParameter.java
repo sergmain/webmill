@@ -32,6 +32,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * @author Sergei Maslyukov
@@ -46,11 +47,13 @@ public final class UrlInterpreterParameter {
     private Long siteId;
     private Map<String, List<String>> httpRequestParameter;
     private String pathInfo;
+    private PortalInfo portalInfo;
 
     public UrlInterpreterParameter(
         String pathInfo, PortletDefinitionProvider portletDefinitionProvider,
         boolean isMultiPartRequest, File requestBodyFile,
-        Long siteId, Locale predictedLocale, Map<String, List<String>> httpRequestParameter
+        Long siteId, Locale predictedLocale, Map<String, List<String>> httpRequestParameter,
+        PortalInfo portalInfo
     ) {
         this.siteId = siteId;
         this.pathInfo = pathInfo;
@@ -59,6 +62,7 @@ public final class UrlInterpreterParameter {
         this.requestBodyFile = requestBodyFile;
         this.predictedLocale = predictedLocale;
         this.httpRequestParameter = httpRequestParameter;
+        this.portalInfo=portalInfo;
 
         if ((isMultiPartRequest && httpRequestParameter!=null) || (!isMultiPartRequest && requestBodyFile!=null)) {
             throw new PortalException(
@@ -66,6 +70,10 @@ public final class UrlInterpreterParameter {
                     ", requestBodyFile!=null: " + (requestBodyFile!=null)
             );
         }
+    }
+
+    public PortalInfo getPortalInfo() {
+        return portalInfo;
     }
 
     public String getPathInfo() {

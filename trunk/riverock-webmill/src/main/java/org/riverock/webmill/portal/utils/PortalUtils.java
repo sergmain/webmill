@@ -39,7 +39,6 @@ import org.apache.log4j.Logger;
 import org.apache.commons.lang.CharEncoding;
 
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterUtils;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.interfaces.portal.PortalInfo;

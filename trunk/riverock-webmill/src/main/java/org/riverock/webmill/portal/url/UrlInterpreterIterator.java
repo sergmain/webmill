@@ -24,20 +24,16 @@
  */
 package org.riverock.webmill.portal.url;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.portal.url.interpreter.PageUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.PageidUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreter;
+import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.portal.url.interpreter.AliasUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.CtxUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.IndexUrlInterpreter;
+import org.riverock.webmill.portal.url.interpreter.PageUrlInterpreter;
+import org.riverock.webmill.portal.url.interpreter.PageidUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.PortletAliasUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.AliasUrlInterpreter;
-import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreter;
 
 /**
  * @author Sergei Maslyukov
@@ -56,6 +52,7 @@ public class UrlInterpreterIterator {
         new IndexUrlInterpreter()
     };
 
+/*
     public static final int UNKNOWN_SERVLET_IDX = 0;
     public static final int PAGEID_SERVLET_IDX = 1;
     public static final int PAGE_SERVLET_IDX = 2;
@@ -68,6 +65,7 @@ public class UrlInterpreterIterator {
         requestContextMap.put(ContainerConstants.URI_CTX_MANAGER, CTX_SERVLET_IDX);
     }
 
+*/
     /**
      * init context type and name of template, if type of context is null, set it to 'index_page'
      *

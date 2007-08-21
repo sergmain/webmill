@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -21,6 +22,16 @@ public class InternalServletRequestWrapper extends HttpServletRequestWrapper {
 
     public InternalServletRequestWrapper(HttpServletRequest request) {
         super(request);
+    }
+
+    public HttpSession getSession() {
+        if (true) throw new RuntimeException("session created");
+        return super.getSession();
+    }
+
+    public HttpSession getSession(boolean isCreate) {
+        if (isCreate) throw new RuntimeException("session created");
+        return super.getSession(isCreate);
     }
 
     public Enumeration getAttributeNames() {

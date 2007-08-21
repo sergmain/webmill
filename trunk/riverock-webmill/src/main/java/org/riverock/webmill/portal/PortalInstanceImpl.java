@@ -25,8 +25,8 @@
 package org.riverock.webmill.portal;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -39,15 +39,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
-import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import org.hibernate.stat.EntityStatistics;
+import org.hibernate.stat.Statistics;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
@@ -59,13 +60,10 @@ import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.search.PortalIndexerImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
-import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.template.PortalTemplateManager;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
-
-import org.hibernate.stat.Statistics;
-import org.hibernate.stat.EntityStatistics;
+import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.utils.PortletUtils;
 
 /**
  * @author smaslyukov
@@ -79,7 +77,6 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private static final String UNKNOWN_PORTAL_VERSON = "0.0.1";
     private static final String WEBMILL_PROPERTIES = "/org/riverock/webmill/portal/webmill.properties";
-    private static final String WEBMILL_PROPERTIES_WITHIN_CLASSLOADER = "org/riverock/webmill/portal/webmill.properties";
 
     private static PortalVersion portalVersion = new PortalVersion( getPortalVersion() );
     private static final String PORTAL_INFO = "WebMill/"+getPortalVersion();
@@ -149,9 +146,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         try {
             InputStream inputStream=null;
             try {
-//                inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(WEBMILL_PROPERTIES_WITHIN_CLASSLOADER);
                 inputStream = PortalInstanceImpl.class.getResourceAsStream(WEBMILL_PROPERTIES);
-
                 pr.load(inputStream);
             }
             finally {
@@ -239,6 +234,7 @@ public class PortalInstanceImpl implements PortalInstance  {
 
         PortalRequestInstance portalRequestInstance = null;
         try {
+/*
             boolean isSessionValid = request_.isRequestedSessionIdValid();
 
             if (log.isDebugEnabled()) {
@@ -248,6 +244,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             if (!isSessionValid) {
                 initSession(request_);
             }
+*/
 
             portalRequestInstance = new PortalRequestInstance( request_, response_, this );
             PortalPageController.processPortalRequest( portalRequestInstance );
@@ -369,6 +366,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             try {
                 if (portalRequestInstance != null) {
                     portalRequestInstance.destroy();
+                    //noinspection UnusedAssignment
                     portalRequestInstance=null;
                 }
             }
@@ -418,6 +416,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
     }
 
+/*
     private static void initSession(HttpServletRequest request_) {
         if (log.isInfoEnabled()) {
             log.info("invalidate current session ");
@@ -459,6 +458,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             log.debug(" old session is null" );
         }
     }
+*/
 
     private static void putMainRequestDebug(int counter, HttpServletRequest request_, HttpServletResponse response_) {
         log.debug("counter #6 " + counter);
