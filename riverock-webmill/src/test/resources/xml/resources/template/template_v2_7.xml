@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Template xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\sandbox\riverock\trunk\riverock-webmill\src\main\xsd\riverock-template.xsd">
+    <element:xslt name="HeaderStart"/>
+    <element:xslt name="HeaderTextIndex"/>
+    <element:xslt name="HeaderEnd"/>
+    <element:portlet name="mill.menu" code="MAIN_MENU">
+        <element:parameter value="0" name="level"/>
+        <element:parameter value="great" name="type_level"/>
+    </element:portlet>
+    <element:portlet name="mill.news_block" code="CURRENT_NEWS"/>
+    <element:xslt name="Separator"/>
+    <element:portlet xmlRoot="TopMenu" name="mill.menu" code="MAIN_MENU">
+        <element:parameter value="0" name="level"/>
+        <element:parameter value="equal" name="type_level"/>
+    </element:portlet>
+    <element:xslt name="SeparatorDynStart"/>
+    <element:dynamic/>
+    <element:xslt name="SeparatorDynImage"/>
+    <element:xslt name="SeparatorDynEnd"/>
+    <element:xslt name="Footer"/>
+</Template>

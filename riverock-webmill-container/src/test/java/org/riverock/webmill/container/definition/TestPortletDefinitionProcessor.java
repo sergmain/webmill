@@ -62,7 +62,7 @@ public class TestPortletDefinitionProcessor extends TestCase {
         };
 
         for (TestItem file : files) {
-            System.out.println("file = " + file.fileName);
+//            System.out.println("file = " + file.fileName);
 
             InputStream is = TestPortletDefinitionProcessor.class.getResourceAsStream(file.fileName); 
             PortletApplication portletApplication = processor.process(is);

@@ -88,22 +88,6 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                     throw new DatabaseException(es, e);
                 }
             }
-            blob = bean.getParsedTemplate();
-            if (blob!=null) {
-                try {
-                    bean.setParsedTemplateData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error prepare Template";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-                catch (SQLException e) {
-                    String es = "Error get template";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
-            }
         }
     }
 

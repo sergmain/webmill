@@ -4,13 +4,11 @@ import java.io.InputStream;
 import java.lang.Object;
 import java.util.List;
 
-import javax.xml.bind.ValidationEventHandler;
-
 import junit.framework.TestCase;
 
 import org.riverock.common.tools.XmlTools;
 import org.riverock.webmill.template.schema.*;
-import org.riverock.webmill.utils.JaxbValidationEventHandler;
+import org.riverock.webmill.utils.SingletonFactory;
 
 /**
  * User: SMaslyukov
@@ -18,8 +16,6 @@ import org.riverock.webmill.utils.JaxbValidationEventHandler;
  * Time: 19:38:35
  */
 public class TestParsingTemplateV2 extends TestCase {
-
-    public ValidationEventHandler validationEventHandler = new JaxbValidationEventHandler();
 
     public void testNullOperation() {
         List<Object> elements = TemplateUtils.getElements(null);
@@ -38,7 +34,7 @@ public class TestParsingTemplateV2 extends TestCase {
         SiteTemplate siteTemplate;
 
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_1.xml");
-        siteTemplate = XmlTools.getObjectFromXml(SiteTemplate.class, is, validationEventHandler);
+        siteTemplate = XmlTools.getObjectFromXml(SiteTemplate.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(siteTemplate);
 
         Template t = TemplateUtils.convertTemplate(siteTemplate);
@@ -115,7 +111,7 @@ public class TestParsingTemplateV2 extends TestCase {
         SiteTemplate siteTemplate;
 
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_1.xml");
-        siteTemplate = XmlTools.getObjectFromXml(SiteTemplate.class, is, validationEventHandler);
+        siteTemplate = XmlTools.getObjectFromXml(SiteTemplate.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(siteTemplate);
     }
 
@@ -123,7 +119,7 @@ public class TestParsingTemplateV2 extends TestCase {
         InputStream is;
 
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_2.xml");
-        Template siteTemplate = XmlTools.getObjectFromXml(Template.class, is, validationEventHandler );
+        Template siteTemplate = XmlTools.getObjectFromXml(Template.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(siteTemplate);
     }
 
@@ -132,13 +128,13 @@ public class TestParsingTemplateV2 extends TestCase {
         InputStream is;
         Template template;
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_2.xml");
-        template = XmlTools.getObjectFromXml(Template.class, is, validationEventHandler);
+        template = XmlTools.getObjectFromXml(Template.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(template);
     }
 
     public void testUnmarshalTemplate_v2_3() throws Exception {
         InputStream is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_3.xml");
-        Template template = XmlTools.getObjectFromXml(Template.class, is, validationEventHandler);
+        Template template = XmlTools.getObjectFromXml(Template.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(template);
     }
 
@@ -146,7 +142,7 @@ public class TestParsingTemplateV2 extends TestCase {
 
         InputStream is;
         is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_4.xml");
-        Template template = XmlTools.getObjectFromXml(Template.class, is, validationEventHandler);
+        Template template = XmlTools.getObjectFromXml(Template.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(template);
 
         Html html = template.getHtml();
@@ -203,14 +199,14 @@ public class TestParsingTemplateV2 extends TestCase {
 
     public void testUnmarshalTemplate_v2_5() throws Exception {
         InputStream is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_5.xml");
-        Template template = XmlTools.getObjectFromXml(Template.class, is, validationEventHandler);
+        Template template = XmlTools.getObjectFromXml(Template.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(template);
         assertEquals(9, template.getPortletOrDynamicOrXslt().size());
     }
 
     public void testUnmarshalTemplate_v2_6() throws Exception {
         InputStream is = TestParsingTemplateV2.class.getResourceAsStream("/xml/resources/template/template_v2_6.xml");
-        Template template = XmlTools.getObjectFromXml(Template.class, is, validationEventHandler);
+        Template template = XmlTools.getObjectFromXml(Template.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(template);
 //        assertEquals(9, template.getPortletOrDynamicOrXslt().size());
     }

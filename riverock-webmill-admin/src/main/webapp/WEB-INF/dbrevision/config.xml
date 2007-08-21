@@ -6,6 +6,7 @@
         <Versions>
             <Version>5.7.0</Version>
             <Version>5.8.0</Version>
+            <Version>5.8.1</Version>
         </Versions>
     </Module>
 </DbRevision>
