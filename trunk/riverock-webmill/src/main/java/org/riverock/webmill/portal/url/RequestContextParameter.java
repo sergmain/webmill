@@ -24,13 +24,14 @@
  */
 package org.riverock.webmill.portal.url;
 
-import java.util.Locale;
 import java.io.File;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.riverock.webmill.container.portlet.PortletContainer;
-import org.riverock.webmill.portal.url.interpreter.RequestContextUtils;
+import org.riverock.webmill.exception.PortalException;
 
 /**
  * @author Sergei Maslyukov
@@ -38,21 +39,45 @@ import org.riverock.webmill.portal.url.interpreter.RequestContextUtils;
  *         Time: 12:46:07
  */
 public final class RequestContextParameter {
-    private HttpServletRequest request = null;
-    private PortletContainer portletContainer = null;
+    private PortletDefinitionProvider portletDefinitionProvider=null;
     private Locale predictedLocale = null;
     private boolean isMultiPartRequest = false;
     private File requestBodyFile = null;
     private Long siteId;
+    private Map<String, List<String>> httpRequestParameter;
+    private String pathInfo;
 
-    public RequestContextParameter(HttpServletRequest request, PortletContainer portletContainer, boolean isMultiPartRequest, File requestBodyFile, Long siteId) {
+    public RequestContextParameter(
+        String pathInfo, PortletDefinitionProvider portletDefinitionProvider,
+        boolean isMultiPartRequest, File requestBodyFile,
+        Long siteId, Locale predictedLocale, Map<String, List<String>> httpRequestParameter
+    ) {
         this.siteId = siteId;
-        this.request = request;
-        this.portletContainer = portletContainer;
+        this.pathInfo = pathInfo;
+        this.portletDefinitionProvider = portletDefinitionProvider;
         this.isMultiPartRequest = isMultiPartRequest;
         this.requestBodyFile = requestBodyFile;
+        this.predictedLocale = predictedLocale;
+        this.httpRequestParameter = httpRequestParameter;
 
-        this.predictedLocale = RequestContextUtils.prepareLocale(this);
+        if ((isMultiPartRequest && httpRequestParameter!=null) || (!isMultiPartRequest && requestBodyFile!=null)) {
+            throw new PortalException(
+                "Wrong state. isMultiPartRequest: " + isMultiPartRequest+", httpRequestParameter!=null: " +(httpRequestParameter!=null)+
+                    ", requestBodyFile!=null: " + (requestBodyFile!=null)
+            );
+        }
+    }
+
+    public String getPathInfo() {
+        return pathInfo;
+    }
+
+    public PortletDefinitionProvider getPortletDefinitionProvider() {
+        return portletDefinitionProvider;
+    }
+
+    public Map<String, List<String>> getHttpRequestParameter() {
+        return httpRequestParameter;
     }
 
     public File getRequestBodyFile() {
@@ -65,14 +90,6 @@ public final class RequestContextParameter {
 
     public Locale getPredictedLocale() {
         return predictedLocale;
-    }
-
-    public HttpServletRequest getRequest() {
-        return request;
-    }
-
-    public PortletContainer getPortletContainer() {
-        return portletContainer;
     }
 
     public Long getSiteId() {

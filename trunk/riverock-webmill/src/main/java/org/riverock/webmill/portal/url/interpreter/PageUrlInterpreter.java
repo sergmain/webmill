@@ -27,11 +27,13 @@ package org.riverock.webmill.portal.url.interpreter;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.url.RequestContext;
 import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * $Id$
@@ -49,8 +51,8 @@ public final class PageUrlInterpreter implements UrlInterpreter {
             "/<CONTEXT>/page/<LOCALE>[/<num_of_portlet,portlet_param>]/name/<PAGE_NAME>[?<portlet_param>]..."
         );
 
-        String path = factoryParameter.getRequest().getPathInfo();
-        if (path==null || path.equals("/")) {
+        String path = factoryParameter.getPathInfo();
+        if (path==null || path.startsWith(ContainerConstants.PAGE_SERVLET_NAME)) {
             return null;
         }
 
@@ -76,7 +78,7 @@ public final class PageUrlInterpreter implements UrlInterpreter {
         if (ctxId==null) {
             return null;
         }
-        return RequestContextUtils.getRequestContextBean(factoryParameter, ctxId);
+        return UrlInterpreterUtils.getRequestContextBean(factoryParameter, ctxId);
     }
 
 }

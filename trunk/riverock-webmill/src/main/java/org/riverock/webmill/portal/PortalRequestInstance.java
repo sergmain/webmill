@@ -29,18 +29,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -57,25 +55,27 @@ import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
-import org.riverock.webmill.portal.url.RequestContext;
-import org.riverock.webmill.portal.url.RequestContextFactory;
-import org.riverock.webmill.portal.url.RequestContextParameter;
-import org.riverock.webmill.portal.url.RequestState;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
-import org.riverock.webmill.portal.preference.PreferenceFactory;
 import org.riverock.webmill.portal.page_element.PageElement;
 import org.riverock.webmill.portal.page_element.PageElementPortlet;
-import org.riverock.webmill.portal.page_element.XsltPageElement;
 import org.riverock.webmill.portal.page_element.StringPageElement;
-import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.portal.page_element.XsltPageElement;
+import org.riverock.webmill.portal.preference.PreferenceFactory;
+import org.riverock.webmill.portal.url.PortletDefinitionProviderImpl;
+import org.riverock.webmill.portal.url.RequestContext;
+import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.webmill.portal.url.RequestState;
+import org.riverock.webmill.portal.url.UrlInterpreterIterator;
+import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.TemplateUtils;
 import org.riverock.webmill.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.template.schema.Portlet;
+import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
 
 /**
@@ -192,10 +192,6 @@ public final class PortalRequestInstance {
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
     }
 
-    public PortalInstance getPortalInstance() {
-        return portalInstance;
-    }
-
     public PortalDaoProvider getPortalDaoProvider() {
         return portalDaoProvider;
     }
@@ -219,8 +215,7 @@ public final class PortalRequestInstance {
         try {
             initTempPath();
 
-            org.apache.commons.fileupload.RequestContext uploadRequestContext = new ServletRequestContext(httpRequest);
-            this.isMultiPartRequest = FileUpload.isMultipartContent(uploadRequestContext);
+            this.isMultiPartRequest = PortletUtils.isMultiPart(httpRequest);
             if (isMultiPartRequest) {
                 requestBodyFile = PortletUtils.storeBodyRequest(httpRequest, MAX_REQUEST_BODY_SIZE);
             }
@@ -256,9 +251,19 @@ public final class PortalRequestInstance {
                 throw new IllegalArgumentException("siteId is null");
             }
             RequestContextParameter contextParameter =
-                new RequestContextParameter(httpRequest, portalInstance.getPortletContainer(), isMultiPartRequest, requestBodyFile, portalInfo.getSiteId());
+                new RequestContextParameter(
+                    httpRequest.getPathInfo(),
+                    new PortletDefinitionProviderImpl(portalInstance.getPortletContainer()), 
+                    isMultiPartRequest, requestBodyFile,
+                    portalInfo.getSiteId(),
+                    PortalUtils.prepareLocale(httpRequest, portalInfo.getSiteId()),
+                    (isMultiPartRequest
+                        ?null
+                        :PortalUtils.prepareParameters(httpRequest, portalInfo.getSite().getPortalCharset())
+                    )
+                );
 
-            this.requestContext = RequestContextFactory.createRequestContext(contextParameter);
+            this.requestContext = UrlInterpreterIterator.interpretUrl(contextParameter);
             if (requestContext == null) {
                 throw new IllegalArgumentException("General error for access portal page");
             }
@@ -547,6 +552,10 @@ public final class PortalRequestInstance {
         userRoles.put(role, roleRefAccess);
 
         return roleRefAccess;
+    }
+
+    public PortalInstance getPortalInstance() {
+        return portalInstance;
     }
 
     public Locale getLocale() {

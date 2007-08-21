@@ -48,6 +48,7 @@ public final class PortletParameters {
     public PortletParameters( final String namespace, RequestState requestState, final Map<String, List<String>> parameters) {
         this.namespace = namespace;
         this.parameters = parameters;
+        this.isMultiPart = false;
         this.requestState = requestState;
     }
 

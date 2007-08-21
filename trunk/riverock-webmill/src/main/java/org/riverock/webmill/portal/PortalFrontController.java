@@ -63,7 +63,6 @@ public final class PortalFrontController extends HttpServlet {
 
     public void init(ServletConfig servletConfig) {
         portalServletConfig = servletConfig;
-//        classLoader=Thread.currentThread().getContextClassLoader();
         classLoader = PortalFrontController.class.getClassLoader();
     }
 
@@ -143,7 +142,7 @@ public final class PortalFrontController extends HttpServlet {
 
         PortalInstanceImpl portalInstance = portalInstanceMap.get(host.getSiteId());
         if (portalInstance == null) {
-            portalInstance = createNewPortalInsance(host.getSiteId());
+            portalInstance = createNewPortalInstance(host.getSiteId());
         }
         portalInstance.process(httpRequest, httpResponse);
     }
@@ -156,7 +155,7 @@ public final class PortalFrontController extends HttpServlet {
         writer.close();
     }
 
-    private synchronized PortalInstanceImpl createNewPortalInsance(Long siteId) {
+    private synchronized PortalInstanceImpl createNewPortalInstance(Long siteId) {
         PortalInstanceImpl portalInstance = portalInstanceMap.get(siteId);
         if (portalInstance != null) {
             return portalInstance;
