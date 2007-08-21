@@ -36,4 +36,6 @@ public interface PortalTemplateManager extends Serializable {
     public PortalTemplate getTemplate( final long templateId );
 
     void destroy();
+
+    void destroy(Long templateId);
 }

@@ -6,7 +6,7 @@ package org.riverock.webmill.template.parser;
  * Time: 18:57:58
  */
 public class TemplateParserFactory {
-    private static final TemplateParser TEMPLATE_PARSER = new TemplateParserImpl();
+    private static final TemplateParser TEMPLATE_PARSER = new TemplateParser();
 
     public static TemplateParser getTemplateParser() {
         return TEMPLATE_PARSER;

@@ -380,7 +380,6 @@ dbrevision-structure.xsd">
 		<Field name="VERSION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1" defaultValue="0"/>
 		<Field name="TEMPLATE_BLOB" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="0"/>
         <Field name="TEMPLATE_ROLE" dataType="VARCHAR" size="50" decimalDigit="0" defaultValue="" nullable="1"/>
-		<Field name="PARSED_TEMPLATE" dataType="BLOB" javaType="2004" javaStringType="java.sql.Types.BLOB" size="1" nullable="0"/>
         <Field name="IS_MAXIMIZED_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
         <Field name="IS_POPUP_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<ForeignKey pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_TEMPLATE" fkName="ID_SUPPORT_LANG_ST_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">

@@ -24,7 +24,6 @@
  */
 package org.riverock.webmill.template;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,6 +44,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
 
     private Map<Long, PortalTemplate> hashId = new ConcurrentHashMap<Long, PortalTemplate>(INIT_COUNT_OF_SITE);
     private Long siteId;
+    private final Object syncObject = new Object();
 
     public void destroy() {
         if (hashId!=null) {
@@ -54,15 +54,40 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         siteId=null;
     }
 
-    public PortalTemplate getTemplate( final long id ) {
+    public void destroy(Long templateId) {
+        synchronized(syncObject) {
+            hashId.remove(templateId);
+        }
+    }
+
+    public PortalTemplate getTemplate( final long templateId) {
         if (log.isDebugEnabled()) {
-            log.debug("search template for id - "+ id);
+            log.debug("search template for id - "+ templateId);
             for (Map.Entry<Long, PortalTemplate> entry : hashId.entrySet() ) {
                 log.debug("template id: " + entry.getKey()+", template: " +entry.getValue());
             }
         }
 
-        return hashId.get(id);
+        PortalTemplate template = hashId.get(templateId);
+        if (template!=null) {
+            return template;
+        }
+
+        synchronized(syncObject) {
+            template = hashId.get(templateId);
+            if (template!=null) {
+                return template;
+            }
+            // get full template (with blob)
+            TemplateBean templateBean = InternalDaoFactory.getInternalTemplateDao().getTemplate(templateId);
+            if (templateBean==null) {
+                return null;
+            }
+            template = parseTemplate(templateBean);
+            hashId.put(templateBean.getTemplateId(), template);
+
+            return template;
+        }
     }
 
     public PortalTemplate getTemplate( final String nameTemplate, final String lang ) {
@@ -78,22 +103,36 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         if (template==null) {
             return null;
         }
-        PortalTemplate portalTemplate = hashId.get( template.getTemplateId());
+
+        Long templateId = template.getTemplateId();
+        
+        PortalTemplate portalTemplate = hashId.get( templateId );
         if (portalTemplate!=null && template.getVersion()==portalTemplate.getVersion()) {
             return portalTemplate;
         }
         else {
-            // get full template (with blob)
-            template = InternalDaoFactory.getInternalTemplateDao().getTemplate(template.getTemplateId());
-            PortalTemplate st = parseTemplate(template);
-            hashId.put(template.getTemplateId(), st);
-            return st;
+            synchronized (syncObject) {
+                template = InternalDaoFactory.getInternalTemplateDao().getTemplate(templateId);
+                if (template==null) {
+                    hashId.remove(templateId);
+                    return null;
+                }
+                portalTemplate = hashId.get(templateId);
+                if (portalTemplate!=null && template.getVersion()==portalTemplate.getVersion()) {
+                    return portalTemplate;
+                }
+
+                PortalTemplate st = parseTemplate(template);
+                hashId.put(templateId, st);
+                return st;
+            }
         }
     }
 
     PortalTemplateManagerImpl(Long siteId) {
         this.siteId=siteId;
         log.debug("Start PortalTemplateManagerImpl()");
+/*
         for (TemplateBean template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
             try {
                 PortalTemplate st = parseTemplate(template);
@@ -107,6 +146,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
                 log.error(es, e);
             }
         }
+*/
     }
 
     static PortalTemplate parseTemplate(TemplateBean template) {

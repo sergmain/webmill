@@ -26,10 +26,7 @@ package org.riverock.webmill.template;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.StringEscapeUtils;
-
-import org.riverock.common.tools.XmlTools;
-import org.riverock.webmill.template.parser.ParsedTemplate;
+import org.riverock.webmill.template.parser.ParsedTemplateElement;
 
 /**
  * Both attributes, 'nameTemplate' and 'name' are deprecated. Must
@@ -48,7 +45,7 @@ public class PortalTemplateImpl implements PortalTemplate, Serializable {
 
     private int version;
 
-    private ParsedTemplate template=null;
+    private ParsedTemplateElement[] template=null;
 
     private String templateName=null;
 
@@ -63,11 +60,11 @@ public class PortalTemplateImpl implements PortalTemplate, Serializable {
         this.templateName = templateName;
     }
 
-    public ParsedTemplate getTemplate() {
+    public ParsedTemplateElement[] getTemplateElements() {
         return template;
     }
 
-    public void setTemplate(ParsedTemplate template) {
+    public void setTemplate(ParsedTemplateElement[] template) {
         this.template = template;
     }
 
