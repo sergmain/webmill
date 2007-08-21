@@ -50,6 +50,10 @@ public final class AuthTools {
     }
 
     public static AuthSession getAuthSession(HttpSession session){
+        if (session==null) {
+            return null;
+        }
+        
         if (session instanceof PortletSession) {
             return (AuthSession) ((PortletSession)session).getAttribute(Constants.AUTH_SESSION, PortletSession.APPLICATION_SCOPE);
         }
@@ -60,10 +64,14 @@ public final class AuthTools {
     }
 
     public static AuthSession getAuthSession(PortletRequest request){
-        return (AuthSession) request.getPortletSession(true).getAttribute(Constants.AUTH_SESSION, PortletSession.APPLICATION_SCOPE);
+        PortletSession session = request.getPortletSession(false);
+        if (session==null) {
+            return null;
+        }
+        return (AuthSession) session.getAttribute(Constants.AUTH_SESSION, PortletSession.APPLICATION_SCOPE);
     }
 
     public static AuthSession getAuthSession(HttpServletRequest request){
-        return getAuthSession(request.getSession(true));
+        return getAuthSession(request.getSession(false));
     }
 }
