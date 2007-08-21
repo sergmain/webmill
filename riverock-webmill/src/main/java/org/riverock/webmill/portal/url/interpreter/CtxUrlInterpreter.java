@@ -41,8 +41,8 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.PortletParameters;
-import org.riverock.webmill.portal.url.RequestContext;
-import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.webmill.portal.url.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.RequestState;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
@@ -141,7 +141,7 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
      * @param factoryParameter
      * @return
      */
-    public RequestContext interpret(RequestContextParameter factoryParameter) {
+    public UrlInterpreterResult interpret(UrlInterpreterParameter factoryParameter) {
 
         log.debug("Start process as page, format request: "+ requestFormat );
 
@@ -180,7 +180,7 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             locale = StringTools.getLocale(localeNameTemp.get(0));
         }
 
-        RequestContext bean = new RequestContext();
+        UrlInterpreterResult bean = new UrlInterpreterResult();
         bean.setLocale( locale );
         if (log.isDebugEnabled()) {
             log.debug("real locale: " + locale);

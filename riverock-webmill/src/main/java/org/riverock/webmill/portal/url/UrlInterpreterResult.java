@@ -36,7 +36,7 @@ import org.riverock.webmill.portal.PortletParameters;
  *         Date: 20.04.2006
  *         Time: 13:01:59
  */
-public class RequestContext {
+public class UrlInterpreterResult {
     private String templateName = null;
 
     private String targetTemplateName=null;

@@ -38,8 +38,8 @@ import org.riverock.webmill.portal.PortletParameters;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
-import org.riverock.webmill.portal.url.RequestContext;
-import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.webmill.portal.url.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.RequestState;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
@@ -52,10 +52,10 @@ import org.riverock.webmill.template.parser.ParsedTemplateElement;
 public final class UrlInterpreterUtils {
     private final static Logger log = Logger.getLogger( UrlInterpreterUtils.class );
 
-    static RequestContext getRequestContextBean(RequestContextParameter factoryParameter, Long ctxId ) {
+    static UrlInterpreterResult getRequestContextBean(UrlInterpreterParameter factoryParameter, Long ctxId ) {
         log.debug("Start getRequestContextBean()");
 
-        RequestContext bean = new RequestContext();
+        UrlInterpreterResult bean = new UrlInterpreterResult();
         ExtendedCatalogItemBean extendedCatalogItem = ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId);
         if (extendedCatalogItem==null) {
             log.warn("page with id "+ctxId+" not found");
@@ -84,18 +84,18 @@ public final class UrlInterpreterUtils {
         return bean;
     }
 
-    static void initParametersMap(RequestContext requestContext, RequestContextParameter factoryParameter, PortalInfo portalInfo) {
+    static void initParametersMap(UrlInterpreterResult urlInterpreterResult, UrlInterpreterParameter factoryParameter, PortalInfo portalInfo) {
 
         PortalTemplate template = PortalTemplateManagerFactory.getInstance(portalInfo.getSiteId()).getTemplate(
-            requestContext.getExtendedCatalogItem().getTemplateId()
+            urlInterpreterResult.getExtendedCatalogItem().getTemplateId()
         );
 
         if (template == null) {
-            String errorString = "Template with id " + requestContext.getExtendedCatalogItem().getTemplateId() + " not found";
+            String errorString = "Template with id " + urlInterpreterResult.getExtendedCatalogItem().getTemplateId() + " not found";
             log.warn(errorString);
             throw new IllegalStateException(errorString);
         }
-        requestContext.setTemplateName( template.getTemplateName() );
+        urlInterpreterResult.setTemplateName( template.getTemplateName() );
         // looking for dynamic portlet.
         int i=0;
         if (log.isDebugEnabled()) {
@@ -117,78 +117,78 @@ public final class UrlInterpreterUtils {
                     log.debug("    template name: " +template.getTemplateName());
                     log.debug("    namespace: " +namespace.getNamespace());
                     log.debug("    portlet: " +portletName);
-                    log.debug("    default namespace: " +requestContext.getDefaultNamespace());
-                    log.debug("    default portlet: " +requestContext.getExtendedCatalogItem().getFullPortletName());
+                    log.debug("    default namespace: " + urlInterpreterResult.getDefaultNamespace());
+                    log.debug("    default portlet: " + urlInterpreterResult.getExtendedCatalogItem().getFullPortletName());
                     log.debug("");
                 }
 
-                if ( requestContext.getDefaultNamespace()!=null) {
-                    if ( requestContext.getDefaultNamespace().equals( namespace.getNamespace() ) ) {
+                if ( urlInterpreterResult.getDefaultNamespace()!=null) {
+                    if ( urlInterpreterResult.getDefaultNamespace().equals( namespace.getNamespace() ) ) {
                         if (log.isDebugEnabled()) {
-                            log.debug("    Create parameter for NS "+namespace.getNamespace() +", action state: " +requestContext.getDefaultRequestState());
+                            log.debug("    Create parameter for NS "+namespace.getNamespace() +", action state: " + urlInterpreterResult.getDefaultRequestState());
                         }
-                        requestState = initParameterForDefaultPortlet(factoryParameter, requestContext, portalInfo);
+                        requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult, portalInfo);
                     }
                     else {
                         requestState = new RequestState();
                         PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, List<String>>() );
-                        requestContext.getParameters().put( namespace.getNamespace(), portletParameters );
+                        urlInterpreterResult.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
                 else {
-                    String tempPortletName = requestContext.getExtendedCatalogItem().getFullPortletName();
+                    String tempPortletName = urlInterpreterResult.getExtendedCatalogItem().getFullPortletName();
                     if (tempPortletName !=null && tempPortletName.equals(portletName)) {
-                        requestState = initParameterForDefaultPortlet(factoryParameter, requestContext, portalInfo);
+                        requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult, portalInfo);
                     }
                     else {
                         requestState = new RequestState();
                         PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, List<String>>() );
-                        requestContext.getParameters().put( namespace.getNamespace(), portletParameters );
+                        urlInterpreterResult.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
             }
             else if (templateItem.isDynamic()) {
                 Namespace namespace = NamespaceFactory.getNamespace(
-                    requestContext.getExtendedCatalogItem().getFullPortletName(),
+                    urlInterpreterResult.getExtendedCatalogItem().getFullPortletName(),
                     template.getTemplateName(), NamespaceFactory.getTemplateUniqueIndex(templateItem, i++)
                 );
-                requestContext.setDefaultNamespace( namespace.getNamespace() );
-                requestState = initParameterForDefaultPortlet(factoryParameter, requestContext, portalInfo);
+                urlInterpreterResult.setDefaultNamespace( namespace.getNamespace() );
+                requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult, portalInfo);
             }
             else {
                 continue;
             }
-            if (PortletService.getBooleanParam(requestContext.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.always_process_as_action, false)) {
+            if (PortletService.getBooleanParam(urlInterpreterResult.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.always_process_as_action, false)) {
                 log.debug("Set explicitly action status for portlet");
                 requestState.setActionRequest(true);
             }
         }
     }
 
-    public static RequestState initParameterForDefaultPortlet(RequestContextParameter factoryParameter, RequestContext requestContext, PortalInfo portalInfo) {
+    public static RequestState initParameterForDefaultPortlet(UrlInterpreterParameter factoryParameter, UrlInterpreterResult urlInterpreterResult, PortalInfo portalInfo) {
         // prepare dynamic parameters
         PortletParameters portletParameters;
         if (factoryParameter.isMultiPartRequest()) {
-            portletParameters = new PortletParameters( requestContext.getDefaultNamespace(), requestContext.getDefaultRequestState(), factoryParameter.getRequestBodyFile() );
+            portletParameters = new PortletParameters( urlInterpreterResult.getDefaultNamespace(), urlInterpreterResult.getDefaultRequestState(), factoryParameter.getRequestBodyFile() );
         }
         else {
             // init id of concrete portlet instance with value
-            if (requestContext.getConcretePortletIdValue()!=null) {
-                String nameId = PortletService.getStringParam( requestContext.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.name_portlet_id );
+            if (urlInterpreterResult.getConcretePortletIdValue()!=null) {
+                String nameId = PortletService.getStringParam( urlInterpreterResult.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.name_portlet_id );
                 if ( log.isDebugEnabled() ) {
                     log.debug( "nameId: "+nameId );
-                    log.debug( "Id: "+requestContext.getConcretePortletIdValue() );
+                    log.debug( "Id: "+ urlInterpreterResult.getConcretePortletIdValue() );
                     log.debug( "httpRequestParameter: "+factoryParameter.getHttpRequestParameter() );
                 }
                 if (nameId!=null) {
-                    MapWithParameters.putInStringList(factoryParameter.getHttpRequestParameter(), nameId, requestContext.getConcretePortletIdValue().toString() );
+                    MapWithParameters.putInStringList(factoryParameter.getHttpRequestParameter(), nameId, urlInterpreterResult.getConcretePortletIdValue().toString() );
                 }
             }
 
-            portletParameters = new PortletParameters( requestContext.getDefaultNamespace(), requestContext.getDefaultRequestState(), factoryParameter.getHttpRequestParameter() );
+            portletParameters = new PortletParameters( urlInterpreterResult.getDefaultNamespace(), urlInterpreterResult.getDefaultRequestState(), factoryParameter.getHttpRequestParameter() );
         }
-        requestContext.getParameters().put( requestContext.getDefaultNamespace(), portletParameters );
-        return requestContext.getDefaultRequestState();
+        urlInterpreterResult.getParameters().put( urlInterpreterResult.getDefaultNamespace(), portletParameters );
+        return urlInterpreterResult.getDefaultRequestState();
     }
 
 }

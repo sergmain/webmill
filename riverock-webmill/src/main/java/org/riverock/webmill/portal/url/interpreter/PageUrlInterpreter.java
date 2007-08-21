@@ -27,12 +27,11 @@ package org.riverock.webmill.portal.url.interpreter;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.url.RequestContext;
-import org.riverock.webmill.portal.url.RequestContextParameter;
+import org.riverock.webmill.portal.url.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.UrlInterpreterParameter;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
@@ -44,7 +43,7 @@ public final class PageUrlInterpreter implements UrlInterpreter {
     public PageUrlInterpreter() {
     }
 
-    public RequestContext interpret(RequestContextParameter factoryParameter) {
+    public UrlInterpreterResult interpret(UrlInterpreterParameter factoryParameter) {
 
         log.debug(
             "Start process as 'page', format request: " +
