@@ -221,22 +221,7 @@ public final class ExtendedCatalogItemBean {
     }
 
     private static void initPortletDefinition(RequestContextParameter contextParameter, ExtendedCatalogItemBean extendedCatalogItem) {
-        if (contextParameter == null || contextParameter.getPortletContainer() == null) {
-            return;
-        }
-        PortletEntry entry = null;
-        try {
-            entry = contextParameter.getPortletContainer().getPortletInstance(extendedCatalogItem.getFullPortletName());
-        }
-        catch (PortletContainerException e) {
-            log.error("Error get portlet '" + extendedCatalogItem.getFullPortletName() + "'", e);
-        }
-        if (entry == null) {
-            log.warn("Instance for portlet name "+extendedCatalogItem.getFullPortletName()+" not found");
-            return;
-        }
-
-        extendedCatalogItem.portlet = entry.getPortletDefinition();
+        extendedCatalogItem.portlet = contextParameter.getPortletDefinitionProvider().getPortletDefinition(extendedCatalogItem.getFullPortletName());
         if (extendedCatalogItem.portlet != null) {
             extendedCatalogItem.namePortletId = PortletService.getStringParam(
                 extendedCatalogItem.portlet, ContainerConstants.name_portlet_id

@@ -55,7 +55,7 @@ import org.riverock.webmill.port.PortalInfoImpl;
 public final class CtxUrlInterpreter implements UrlInterpreter {
     private final static Logger log = Logger.getLogger(CtxUrlInterpreter.class);
 
-    // add for compatible with jsr168 TCK
+    // added for compatible with jsr168 TCK
     private static final String INVOKE_PORTLET_NAME = "portletName";
 
     public CtxUrlInterpreter() {
@@ -96,7 +96,6 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
                 log.warn("isActionReqeust: " + isActionReqeust);
                 log.warn("namespace: " + namespace!=null?namespace.getNamespace():"null");
                 log.warn("contextId: " + contextId);
-//                throw new IllegalArgumentException("For action request, contextId must be not null");
             }
         }
 
@@ -135,7 +134,7 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
     }
 
     /**
-     * fvalid format of url:<br>
+     * valid format of url:<br>
      * &lt;PORTAL_CONTEXT>/ctx/&lt;LOCALE>,&lt;TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE],[NAMESPACE],[CONTEXT_ID] <br>
      * /&lt;PARAMETERS_OF_OTHER_PORTLETS>/ctx?<br>
      *
@@ -146,14 +145,14 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
 
         log.debug("Start process as page, format request: "+ requestFormat );
 
-        RequestContext bean = new RequestContext();
-
-        String path = factoryParameter.getRequest().getPathInfo();
-        if (path == null || path.equals("/")) {
+        String path = factoryParameter.getPathInfo();
+        if (StringUtils.isBlank(path) || path.equals("/")) {
             return null;
         }
 
-        if (log.isDebugEnabled()) log.debug("path: " + path);
+        if (log.isDebugEnabled()) {
+            log.debug("path: " + path);
+        }
 
         int idxSlash = path.indexOf('/', 1);
         if (log.isDebugEnabled()) log.debug("idxSlash: " + idxSlash);
@@ -166,8 +165,9 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             log.debug("st.countTokens(): " + st.countTokens());
         }
 
-        if (st.countTokens() < 2)
+        if (st.countTokens() < 2) {
             return null;
+        }
 
         // init locale
         Locale locale = StringTools.getLocale(st.nextToken());
@@ -175,10 +175,12 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             log.debug("token with locale: " + locale);
         }
 
-        String localeNameTemp = factoryParameter.getRequest().getParameter(ContainerConstants.NAME_LANG_PARAM);
-        if (localeNameTemp != null) {
-            locale = StringTools.getLocale(localeNameTemp);
+        List<String> localeNameTemp = factoryParameter.getHttpRequestParameter().get(ContainerConstants.NAME_LANG_PARAM);
+        if (localeNameTemp!=null && !localeNameTemp.isEmpty()) {
+            locale = StringTools.getLocale(localeNameTemp.get(0));
         }
+
+        RequestContext bean = new RequestContext();
         bean.setLocale( locale );
         if (log.isDebugEnabled()) {
             log.debug("real locale: " + locale);
@@ -196,21 +198,21 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         if (log.isDebugEnabled()) {
             log.debug("portletName");
             log.debug("     portletName from path: " + portletName);
-            log.debug("     ContainerConstants.NAME_TYPE_CONTEXT_PARAM: " + factoryParameter.getRequest().getParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM));
-            log.debug("     portletName for compatible with TCK: " + factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME));
+            log.debug("     ContainerConstants.NAME_TYPE_CONTEXT_PARAM: " + factoryParameter.getHttpRequestParameter().get(ContainerConstants.NAME_TYPE_CONTEXT_PARAM));
+            log.debug("     portletName for compatible with TCK: " + factoryParameter.getHttpRequestParameter().get(INVOKE_PORTLET_NAME));
         }
 
         // In 1st case we get portlet name from 'portletName' parameter. For compatible with TCK
         // in 2nd case we get portlet name from 'mill.context' parameter.
         //    This extension allow us create URL to other portlet
         // In last case we get portlet name from URI
-        String pn = factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME);
-        if (pn==null) {
-            pn = factoryParameter.getRequest().getParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM);
+        List<String> pn = factoryParameter.getHttpRequestParameter().get(INVOKE_PORTLET_NAME);
+        if (pn==null || pn.isEmpty()) {
+            pn = factoryParameter.getHttpRequestParameter().get(ContainerConstants.NAME_TYPE_CONTEXT_PARAM);
         }
 
-        if (pn!=null) {
-            portletName = pn;
+        if (pn!=null && !pn.isEmpty()) {
+            portletName = pn.get(0);
         }
 
         if ( portletName!=null && portletName.indexOf( PortletContainer.PORTLET_ID_NAME_SEPARATOR )==-1 ) {
@@ -291,10 +293,10 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         }
         bean.setExtendedCatalogItem( extendedBean );
 
-        RequestContextUtils.initParametersMap(bean, factoryParameter, PortalInfoImpl.getInstance( factoryParameter.getSiteId() ));
+        UrlInterpreterUtils.initParametersMap(bean, factoryParameter, PortalInfoImpl.getInstance( factoryParameter.getSiteId() ));
 
         // prepare parameters for others portlets
-        prepareParameters( bean.getParameters(), factoryParameter.getRequest().getServletPath() );
+        prepareParameters( bean.getParameters(), factoryParameter.getPathInfo() );
         return bean;
     }
 
@@ -307,8 +309,9 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
     private void prepareParameters( Map<String, PortletParameters> map, String s ) {
 
         int idx = s.lastIndexOf( '/' );
-        if (idx==-1)
+        if (idx==-1) {
             return;
+        }
 
         s = s.substring( 0, idx );
 
@@ -320,16 +323,18 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
 
             SimpleStringTokenizer p = new SimpleStringTokenizer( element, new String[]{",,"} );
             // get portlet namespace
-            if ( p.hasMoreTokens() )
+            if ( p.hasMoreTokens() ) {
                 namespace = p.nextToken();
+            }
 
             Map<String, List<String>> param = new HashMap<String, List<String>>();
             while ( p.hasMoreTokens() ) {
                 String temp = p.nextToken();
 
                 idx = temp.indexOf( ',' );
-                if (idx==-1)
+                if (idx==-1) {
                     continue;
+                }
 
                 String key = temp.substring( 0, idx );
                 String value = temp.substring( idx+1 );

@@ -66,6 +66,6 @@ public class IndexUrlInterpreter implements UrlInterpreter {
             return new RequestContext();
         }
 
-        return RequestContextUtils.getRequestContextBean(factoryParameter, ctxId);
+        return UrlInterpreterUtils.getRequestContextBean(factoryParameter, ctxId);
     }
 }
