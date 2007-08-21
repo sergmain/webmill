@@ -43,10 +43,8 @@ public class IndexUrlInterpreter implements UrlInterpreter {
 
     public UrlInterpreterResult interpret(UrlInterpreterParameter factoryParameter) {
 
-        PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
-
         // process current request as 'index'
-        MenuLanguage menu = portalInfo.getMenu(factoryParameter.getPredictedLocale().toString());
+        MenuLanguage menu = factoryParameter.getPortalInfo().getMenu(factoryParameter.getPredictedLocale().toString());
         if (menu==null){
             log.error( "Menu for locale: "+factoryParameter.getPredictedLocale().toString() +" not defined" );
             return new UrlInterpreterResult();

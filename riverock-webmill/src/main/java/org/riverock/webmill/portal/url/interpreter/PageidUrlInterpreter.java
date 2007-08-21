@@ -27,10 +27,12 @@ package org.riverock.webmill.portal.url.interpreter;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.portal.url.UrlInterpreterResult;
 import org.riverock.webmill.portal.url.UrlInterpreterParameter;
+import org.riverock.interfaces.ContainerConstants;
 
 /**
  * $Id$
@@ -47,11 +49,17 @@ public final class PageidUrlInterpreter implements UrlInterpreter {
         // format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...
 
         String path = factoryParameter.getPathInfo();
+        if (StringUtils.isBlank(path) || path.equals("/")) {
+            return null;
+        }
+
+        if (!path.startsWith(ContainerConstants.PAGEID_SERVLET_NAME)) {
+            return null;
+        }
+        path = path.substring(ContainerConstants.PAGEID_SERVLET_NAME.length());
+
         if (log.isDebugEnabled()) {
             log.debug("path: " + path);
-        }
-        if (path == null || path.equals("/")) {
-            return null;
         }
 
         int idxSlash = path.indexOf('/', 1);

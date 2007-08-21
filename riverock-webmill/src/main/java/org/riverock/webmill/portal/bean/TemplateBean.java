@@ -77,6 +77,9 @@ public class TemplateBean implements Serializable, Template {
     @Column(name="TEMPLATE_BLOB")
     private Blob templateBlob;
 
+    @Column(name="PARSED_TEMPLATE")
+    private Blob parsedTemplate;
+
     @Column(name="is_default_dynamic")
     private boolean isDefaultDynamic = false;
 
@@ -99,6 +102,8 @@ public class TemplateBean implements Serializable, Template {
     @Transient
     private String templateData;
 
+    @Transient
+    private String parsedTemplateData;
 
     public TemplateBean(Template t) {
         this.templateId = t.getTemplateId();
@@ -110,10 +115,25 @@ public class TemplateBean implements Serializable, Template {
         this.templateLanguage = t.getTemplateLanguage();
         this.templateRole = t.getRoles();
         this.templateLanguage = t.getTemplateLanguage();
-        this.templateLanguage = t.getTemplateLanguage();
     }
 
     public TemplateBean() {
+    }
+
+    public String getParsedTemplateData() {
+        return parsedTemplateData;
+    }
+
+    public void setParsedTemplateData(String parsedTemplateData) {
+        this.parsedTemplateData = parsedTemplateData;
+    }
+
+    public Blob getParsedTemplate() {
+        return parsedTemplate;
+    }
+
+    public void setParsedTemplate(Blob parsedTemplate) {
+        this.parsedTemplate = parsedTemplate;
     }
 
     public String getRoles() {

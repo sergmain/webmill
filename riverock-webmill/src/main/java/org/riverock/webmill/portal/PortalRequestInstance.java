@@ -250,7 +250,7 @@ public final class PortalRequestInstance {
             if (portalInfo.getSiteId() == null) {
                 throw new IllegalArgumentException("siteId is null");
             }
-            UrlInterpreterParameter contextParameter =
+            UrlInterpreterParameter interpreterParameter =
                 new UrlInterpreterParameter(
                     httpRequest.getPathInfo(),
                     new PortletDefinitionProviderImpl(portalInstance.getPortletContainer()), 
@@ -260,10 +260,11 @@ public final class PortalRequestInstance {
                     (isMultiPartRequest
                         ?null
                         :PortalUtils.prepareParameters(httpRequest, portalInfo.getSite().getPortalCharset())
-                    )
+                    ),
+                    portalInfo
                 );
 
-            this.urlInterpreterResult = UrlInterpreterIterator.interpretUrl(contextParameter);
+            this.urlInterpreterResult = UrlInterpreterIterator.interpretUrl(interpreterParameter);
             if (urlInterpreterResult == null) {
                 throw new IllegalArgumentException("General error for access portal page");
             }
@@ -294,7 +295,7 @@ public final class PortalRequestInstance {
 
             // init page element list
             int i = 0;
-            for (ParsedTemplateElement o : template.getTemplate().getElements()) {
+            for (ParsedTemplateElement o : template.getTemplateElements()) {
 
                 String portletName;
                 Namespace namespace = null;

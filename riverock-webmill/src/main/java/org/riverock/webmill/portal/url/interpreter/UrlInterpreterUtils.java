@@ -102,7 +102,7 @@ public final class UrlInterpreterUtils {
             log.debug( "template:\n" + template.toString());
             log.debug( "Process template");
         }
-        for (ParsedTemplateElement templateItem : template.getTemplate().getElements()) {
+        for (ParsedTemplateElement templateItem : template.getTemplateElements()) {
 
             // we change request status if portlet is 'always_process_as_action'
             RequestState requestState;

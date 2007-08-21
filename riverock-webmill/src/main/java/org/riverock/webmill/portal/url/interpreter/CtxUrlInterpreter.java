@@ -108,18 +108,22 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
 
         b.append( '/' ).append( locale.toString() );
         b.append( ',' );
-        if (templateName!=null)
+        if (templateName!=null) {
             b.append( templateName );
+        }
 
         b.append( ',' );
-        if (portletName!=null)
+        if (portletName!=null) {
             b.append( portletName );
+        }
 
         b.append( ',' );
-        if (isActionReqeust)
+        if (isActionReqeust) {
             b.append('a');
-        else
+        }
+        else {
             b.append('r');
+        }
         b.append( ',' );
         b.append( namespace.getNamespace() );
 
@@ -150,14 +154,20 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             return null;
         }
 
+        if (!path.startsWith(ContainerConstants.URI_CTX_MANAGER)) {
+            return null;
+        }
+        path = path.substring(ContainerConstants.URI_CTX_MANAGER.length());
+
         if (log.isDebugEnabled()) {
             log.debug("path: " + path);
         }
 
         int idxSlash = path.indexOf('/', 1);
         if (log.isDebugEnabled()) log.debug("idxSlash: " + idxSlash);
-        if (idxSlash == -1)
+        if (idxSlash == -1) {
             return null;
+        }
 
         String localeFromUrl = path.substring(1, idxSlash);
         StringTokenizer st = new StringTokenizer(localeFromUrl, ",", false);
@@ -296,7 +306,7 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         UrlInterpreterUtils.initParametersMap(bean, factoryParameter, PortalInfoImpl.getInstance( factoryParameter.getSiteId() ));
 
         // prepare parameters for others portlets
-        prepareParameters( bean.getParameters(), factoryParameter.getPathInfo() );
+        prepareParameters( bean.getParameters(), path );
         return bean;
     }
 

@@ -34,8 +34,23 @@ import org.riverock.webmill.portal.bean.TemplateBean;
  *         Time: 17:51:14
  */
 public interface InternalTemplateDao {
+    /**
+     * templateData is initialized
+     *
+     * @param templateId template Id
+     * @return template
+     */
     public TemplateBean getTemplate(Long templateId);
+
+    /**
+     * templateData is initialized
+     * 
+     * @param templateName template name
+     * @param siteLanguageId site language id
+     * @return template
+     */
     public TemplateBean getTemplate(String templateName, Long siteLanguageId);
+
     /**
      * Attention! template data not initalized
      *
