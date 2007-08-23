@@ -76,6 +76,9 @@ public class UrlInterpreterIterator {
 
         for (UrlInterpreter urlInterpreter : INTERPRETER) {
             UrlInterpreterResult urlInterpreterResult = urlInterpreter.interpret(factoryParameter);
+            if (log.isDebugEnabled()) {
+                log.debug("urlInterpreter: " + urlInterpreter+", result: " + urlInterpreterResult);
+            }
             if (urlInterpreterResult !=null) {
                 return urlInterpreterResult;
             }

@@ -29,7 +29,6 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.interfaces.portal.bean.SiteLanguage;

@@ -1,7 +1,5 @@
 package org.riverock.webmill.xslt;
 
-import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
-
 /**
  * User: SMaslyukov
  * Date: 26.07.2007

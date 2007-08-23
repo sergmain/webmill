@@ -45,15 +45,15 @@ public final class PageidUrlInterpreter implements UrlInterpreter {
 
     public UrlInterpreterResult interpret(UrlInterpreterParameter factoryParameter) {
 
-        log.debug("Start process as '/pageid', format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...");
-        // format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...
+        log.debug("Start process as '/pageid', format request: [/<CONTEXT>]/pageid/<LOCALE>/<CONTEXT_ID>/...");
+        // format request: [/<CONTEXT>]/pageid/<LOCALE>/<CONTEXT_ID>/...
 
         String path = factoryParameter.getPathInfo();
         if (StringUtils.isBlank(path) || path.equals("/")) {
             return null;
         }
 
-        if (!path.startsWith(ContainerConstants.PAGEID_SERVLET_NAME)) {
+        if (!path.equals(ContainerConstants.PAGEID_SERVLET_NAME) && !path.startsWith(ContainerConstants.PAGEID_SERVLET_NAME+'/')) {
             return null;
         }
         path = path.substring(ContainerConstants.PAGEID_SERVLET_NAME.length());
@@ -94,6 +94,10 @@ public final class PageidUrlInterpreter implements UrlInterpreter {
             return null;
         }
 
-        return UrlInterpreterUtils.getRequestContextBean(factoryParameter, ctxId);
+        UrlInterpreterResult urlInterpreterResult = UrlInterpreterUtils.getRequestContextBean(factoryParameter, ctxId);
+        if (log.isDebugEnabled()) {
+            log.debug("result of pageid interpreter: " + urlInterpreterResult);
+        }
+        return urlInterpreterResult;
     }
 }
