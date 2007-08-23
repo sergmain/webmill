@@ -156,7 +156,9 @@ public final class PortletContainer implements Serializable {
             if (portletEntries != null) {
                 for (PortletEntry portletEntry : portletEntries) {
                     try {
-                        portalInstanceBase.destroyPortlet(portletEntry.getPortletDefinition().getFullPortletName());
+                        if (portalInstanceBase!=null) {
+                            portalInstanceBase.destroyPortlet(portletEntry.getPortletDefinition().getFullPortletName());
+                        }
                         destroyPortlet(portletEntry, uniqueName);
                     }
                     catch (Throwable th) {

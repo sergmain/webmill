@@ -49,7 +49,6 @@ import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
-import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.exception.PortalException;
@@ -77,6 +76,7 @@ import org.riverock.webmill.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.template.schema.Portlet;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
+import org.riverock.webmill.xslt.XsltTransformerManager;
 
 /**
  * User: Admin

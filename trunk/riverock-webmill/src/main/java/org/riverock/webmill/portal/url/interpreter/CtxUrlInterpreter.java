@@ -66,12 +66,12 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
      * if requestState is actionRequest, then CONTEXT_ID is requeired
      */
     private static final String requestFormat =
-        "<PORTAL_CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE],[NAMESPACE],[CONTEXT_ID]" +
+        "[/<CONTEXT>]/ctx/<LOCALE>,<TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE],[NAMESPACE],[CONTEXT_ID]" +
             "/<PARAMETERS_OF_OTHER_PORTLETS>/ctx?";
 
     /**
      * format of returned url:<br>
-     * &lt;PORTAL_CONTEXT>/ctx/&lt;LOCALE>,&lt;TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE],[NAMESPACE],[CONTEXT_ID] <br>
+     * [&lt;CONTEXT>]/ctx/&lt;LOCALE>,&lt;TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE],[NAMESPACE],[CONTEXT_ID] <br>
      * /&lt;PARAMETERS_OF_OTHER_PORTLETS>/ctx?<br>
      *
      * 
@@ -101,10 +101,12 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
 
         StringBuilder b = new StringBuilder();
         String portalContextPath = portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
-        if (portalContextPath.equals("/") || portalContextPath.equals("") )
+        if (portalContextPath.equals("/") || portalContextPath.equals("") ) {
             b.append( ContainerConstants.URI_CTX_MANAGER );
-        else
+        }
+        else {
             b.append( portalContextPath ).append( ContainerConstants.URI_CTX_MANAGER );
+        }
 
         b.append( '/' ).append( locale.toString() );
         b.append( ',' );
@@ -154,7 +156,7 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             return null;
         }
 
-        if (!path.startsWith(ContainerConstants.URI_CTX_MANAGER)) {
+        if (!path.equals(ContainerConstants.URI_CTX_MANAGER) && !path.startsWith(ContainerConstants.URI_CTX_MANAGER+'/')) {
             return null;
         }
         path = path.substring(ContainerConstants.URI_CTX_MANAGER.length());

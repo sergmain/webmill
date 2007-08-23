@@ -48,7 +48,7 @@ public final class PageUrlInterpreter implements UrlInterpreter {
 
         log.debug(
             "Start process as 'page', format request: " +
-            "/<CONTEXT>/page/<LOCALE>[/<num_of_portlet,portlet_param>]/name/<PAGE_NAME>[?<portlet_param>]..."
+            "[/<CONTEXT>]/page/<LOCALE>[/<num_of_portlet,portlet_param>]/name/<PAGE_NAME>[?<portlet_param>]..."
         );
 
         String path = factoryParameter.getPathInfo();
@@ -56,7 +56,7 @@ public final class PageUrlInterpreter implements UrlInterpreter {
             return null;
         }
 
-        if (!path.startsWith(ContainerConstants.PAGE_SERVLET_NAME)) {
+        if (!path.equals(ContainerConstants.PAGE_SERVLET_NAME) && !path.startsWith(ContainerConstants.PAGE_SERVLET_NAME+'/')) {
             return null;
         }
         path = path.substring(ContainerConstants.PAGE_SERVLET_NAME.length());

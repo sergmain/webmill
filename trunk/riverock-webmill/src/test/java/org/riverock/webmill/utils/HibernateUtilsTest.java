@@ -49,7 +49,7 @@ public class HibernateUtilsTest {
 //        cfg.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.EhCacheProvider" );
 
         cfg.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver" );
-        cfg.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull" );
+        cfg.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/qqq?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull" );
         cfg.setProperty("hibernate.show_sql", "true" );
         cfg.setProperty("hibernate.connection.username", "root" );
         cfg.setProperty("hibernate.connection.password", "qqq" );

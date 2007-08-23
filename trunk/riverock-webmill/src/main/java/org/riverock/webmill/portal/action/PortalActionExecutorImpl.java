@@ -31,9 +31,9 @@ import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.action.PortalActionExecutor;
 import org.riverock.webmill.google.sitemap.GoogleSitemapService;
-import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.menu.MenuItemsProvider;
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.url.UrlCycleChecker;
 
 /**
  * @author Sergei Maslyukov
@@ -45,16 +45,18 @@ import org.riverock.webmill.portal.PortalRequestInstance;
 public class PortalActionExecutorImpl implements PortalActionExecutor {
     private final static Logger log = Logger.getLogger( PortalActionExecutorImpl.class );
 
-    private static enum PortalAction {CREATE_GOOGLE_SITEMAP_TYPE, GET_MENU_ITEMS}
+    private static enum PortalAction {CREATE_GOOGLE_SITEMAP_TYPE, GET_MENU_ITEMS, URL_CYCLE_CHECK}
 
     private static Map<String, PortalAction> actions = new HashMap<String, PortalAction>();
 
     private static final String CREATE_GOOGLE_SITEMAP_ACTION = "create-google-sitemap";
     private static final String GET_MENU_ITEMS = "get-menu-items";
+    private static final String URL_CYCLE_CHECK = "url-cycle-check";
 
     static {
         actions.put(CREATE_GOOGLE_SITEMAP_ACTION, PortalAction.CREATE_GOOGLE_SITEMAP_TYPE);
         actions.put(GET_MENU_ITEMS, PortalAction.GET_MENU_ITEMS);
+        actions.put(URL_CYCLE_CHECK, PortalAction.GET_MENU_ITEMS);
     }
 
     private ClassLoader portalClassLoader;
@@ -93,6 +95,9 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
                 case GET_MENU_ITEMS:
                     result.put("result", MenuItemsProvider.getMenuItems(portalRequestInstance, siteId, parameters));
                     return result;
+                case URL_CYCLE_CHECK:
+                    result.put("result", UrlCycleChecker.isCycle(parameters));
+                    return result;
                 default:
                     log.warn("Unknown value of actionIndex: " + action);
                     return result;
@@ -101,6 +106,5 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
-
     }
 }
