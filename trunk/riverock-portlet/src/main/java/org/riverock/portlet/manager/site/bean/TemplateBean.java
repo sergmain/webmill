@@ -42,6 +42,9 @@ public class TemplateBean implements Serializable, Template {
     private String templateLanguage = null;
     private boolean isDefaultDynamic = false;
     private int version;
+    private boolean isMaximizedTemplate = false;
+    private boolean isPopupTemplate = false;
+    private String roles;
 
     public TemplateBean(){
     }
@@ -54,6 +57,33 @@ public class TemplateBean implements Serializable, Template {
         this.templateLanguage=template.getTemplateLanguage();
         this.isDefaultDynamic=template.isDefaultDynamic();
         this.version=template.getVersion();
+        this.isMaximizedTemplate=template.isMaximizedTemplate();
+        this.isPopupTemplate=template.isPopupTemplate();
+        this.roles=template.getRoles();
+    }
+
+    public boolean isMaximizedTemplate() {
+        return isMaximizedTemplate;
+    }
+
+    public void setMaximizedTemplate(boolean maximizedTemplate) {
+        isMaximizedTemplate = maximizedTemplate;
+    }
+
+    public boolean isPopupTemplate() {
+        return isPopupTemplate;
+    }
+
+    public void setPopupTemplate(boolean popupTemplate) {
+        isPopupTemplate = popupTemplate;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
     public int getVersion() {

@@ -51,6 +51,8 @@ public class SiteBean implements Site, Serializable {
     private String defVariant;
     private String adminEmail;
     private String properties=null;
+    private String serverTimeZone=null;
+    private boolean isEnableNavigation;
 
     public SiteBean(){
     }
@@ -67,6 +69,8 @@ public class SiteBean implements Site, Serializable {
         this.defVariant = site.getDefVariant();
         this.adminEmail = site.getAdminEmail();
         this.properties = site.getProperties();
+        this.serverTimeZone = site.getServerTimeZone();
+        this.isEnableNavigation = site.isEnableNavigation();
     }
 
     public String getSiteDefaultLocale() {
@@ -98,6 +102,14 @@ public class SiteBean implements Site, Serializable {
 
     public String getPortalCharset() {
         return "utf-8";
+    }
+
+    public void setEnableNavigation(boolean enableNavigation) {
+        isEnableNavigation = enableNavigation;
+    }
+
+    public boolean isEnableNavigation() {
+        return isEnableNavigation;
     }
 
     public void setProperties(String properties) {
@@ -182,5 +194,13 @@ public class SiteBean implements Site, Serializable {
 
     public void setAdminEmail(String adminEmail) {
         this.adminEmail = FacesTools.convertParameter(adminEmail);
+    }
+
+    public String getServerTimeZone() {
+        return serverTimeZone;
+    }
+
+    public void setServerTimeZone(String serverTimeZone) {
+        this.serverTimeZone = serverTimeZone;
     }
 }

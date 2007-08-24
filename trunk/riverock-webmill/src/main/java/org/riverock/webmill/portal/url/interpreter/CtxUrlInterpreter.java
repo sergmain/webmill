@@ -66,8 +66,8 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
      * if requestState is actionRequest, then CONTEXT_ID is requeired
      */
     private static final String requestFormat =
-        "[/<CONTEXT>]/ctx/<LOCALE>,<TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE],[NAMESPACE],[CONTEXT_ID]" +
-            "/<PARAMETERS_OF_OTHER_PORTLETS>/ctx?";
+        "[[/<CONTEXT>]/ctx/<LOCALE>,<TEMPLATE_NAME>[PORTLET_NAME[,REQUEST_STATE[,NAMESPACE[,CONTEXT_ID]]]]" +
+            "[/<PARAMETERS_OF_OTHER_PORTLETS>]]/ctx?";
 
     /**
      * format of returned url:<br>
@@ -234,6 +234,9 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         if (log.isDebugEnabled()) {
             log.debug("Final portletName: " + portletName);
         }
+        if (portletName==null) {
+            return null;
+        }
         bean.setDefaultPortletName( portletName );
 
         // Init request state: action/render, windows state, portlet mode
@@ -278,9 +281,6 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             log.debug("     contextId: " + bean.getContextId() );
         }
 
-        if (bean.getDefaultPortletName()==null) {
-            return null;
-        }
         Long ctxId;
         if (bean.getContextId()!=null) {
             ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(
@@ -299,9 +299,9 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         ExtendedCatalogItemBean extendedBean = ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId);
         if (extendedBean==null) {
             extendedBean = ExtendedCatalogItemBean.getInstance(factoryParameter, bean.getTemplateName(), bean.getDefaultPortletName(), bean.getLocale());
-        }
-        if (extendedBean==null) {
-            return null;
+            if (extendedBean==null) {
+                return null;
+            }
         }
         bean.setExtendedCatalogItem( extendedBean );
 

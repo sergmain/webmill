@@ -53,6 +53,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     private String metadata;
     private String portletRole;
     private List<CatalogItem> subCatalogItemList = null;
+    private boolean isIncludeInSitemap;
 
     public CatalogBean(CatalogItem catalogItem) {
         this.catalogId=catalogItem.getCatalogId();
@@ -70,6 +71,7 @@ public class CatalogBean implements Serializable, CatalogItem {
         this.metadata=catalogItem.getMetadata();
         this.portletRole=catalogItem.getPortletRole();
         this.subCatalogItemList=initCatalogList(catalogItem.getSubCatalogItemList());
+        this.isIncludeInSitemap=catalogItem.isIncludeInSitemap();
     }
 
     private List<CatalogItem> initCatalogList(List<CatalogItem> subCatalogItemList) {
@@ -82,6 +84,14 @@ public class CatalogBean implements Serializable, CatalogItem {
             items.add( new CatalogBean(item) );
         }
         return items;
+    }
+
+    public boolean isIncludeInSitemap() {
+        return isIncludeInSitemap;
+    }
+
+    public void setIncludeInSitemap(boolean includeInSitemap) {
+        isIncludeInSitemap = includeInSitemap;
     }
 
     public List<CatalogItem> getSubCatalogItemList() {

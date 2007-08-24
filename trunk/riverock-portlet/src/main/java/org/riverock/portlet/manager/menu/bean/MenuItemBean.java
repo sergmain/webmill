@@ -53,6 +53,7 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     private String metadata;
     private String portletRole;
     private List<CatalogItem> subCatalogItemList = null;
+    private boolean isIncludeInSitemap;
 
     public MenuItemBean(){}
 
@@ -71,12 +72,21 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
         this.keyword=item.getKeyword();
         this.metadata=item.getMetadata();
         this.portletRole=item.getPortletRole();
+        this.isIncludeInSitemap=item.isIncludeInSitemap();
         if (item.getSubCatalogItemList()!=null) {
             this.subCatalogItemList = new ArrayList<CatalogItem>();
             for (CatalogItem catalogItem : item.getSubCatalogItemList()) {
                 this.subCatalogItemList.add(new MenuItemBean(catalogItem));
             }
         }
+    }
+
+    public boolean isIncludeInSitemap() {
+        return isIncludeInSitemap;
+    }
+
+    public void setIncludeInSitemap(boolean includeInSitemap) {
+        isIncludeInSitemap = includeInSitemap;
     }
 
     public List<CatalogItem> getSubCatalogItemList() {

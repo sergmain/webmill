@@ -83,7 +83,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
             if (templateBean==null) {
                 return null;
             }
-            template = parseTemplate(templateBean);
+            template = prepareTemplate(templateBean);
             hashId.put(templateBean.getTemplateId(), template);
 
             return template;
@@ -122,7 +122,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
                     return portalTemplate;
                 }
 
-                PortalTemplate st = parseTemplate(template);
+                PortalTemplate st = prepareTemplate(template);
                 hashId.put(templateId, st);
                 return st;
             }
@@ -135,7 +135,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
 /*
         for (TemplateBean template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
             try {
-                PortalTemplate st = parseTemplate(template);
+                PortalTemplate st = prepareTemplate(template);
                 // dont add broken template
                 if (st!=null) {
                     hashId.put(template.getTemplateId(), st);
@@ -149,7 +149,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
 */
     }
 
-    static PortalTemplate parseTemplate(TemplateBean template) {
+    static PortalTemplate prepareTemplate(TemplateBean template) {
         if (log.isDebugEnabled()) {
             log.debug("Digest template:\n" + template.getTemplateData());
         }
