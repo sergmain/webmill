@@ -32,6 +32,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 
 import org.riverock.interfaces.portal.bean.News;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portlet.PortletResultContent;
@@ -52,6 +53,7 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
     private final static Logger log = Logger.getLogger( NewsItemSimple.class );
 
     private News news;
+    private TimeZone serverTimeZone=null;
 
     private RenderRequest renderRequest = null;
 
@@ -62,31 +64,27 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
     public NewsItemSimple() {
     }
 
-    private NewsItemSimple(News news) {
-        this.news =news;
-    }
-
-    public News getNews() {
+    public NewsItemSimple getNews() {
         Long newsId = PortletUtils.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
         PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
-        return provider.getPortalCmsNewsDao().getNews(newsId);
+        PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
+        this.news = provider.getPortalCmsNewsDao().getNews(newsId);
+        this.serverTimeZone = TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone());
+        return this;
     }
 
     public PortletResultContent getInstance( Long id ) {
-        return new NewsItemSimple( getNews() );
+        return getNews();
     }
 
     public PortletResultContent getInstanceByCode( String newsCode ) {
-        return new NewsItemSimple( getNews() );
+        return getNews();
     }
 
     public byte[] getPlainHTML() throws Exception {
 
-        //TODO need use site specific TimeZone
-        TimeZone timeZone = TimeZone.getDefault();
-
-        String newsDate = DateFormatUtils.format(news.getPostDate(), "dd.MMM.yyyy", timeZone, renderRequest.getLocale());
-        String newsTime = DateFormatUtils.format(news.getPostDate(), "HH:mm", timeZone, renderRequest.getLocale());
+        String newsDate = DateFormatUtils.format(news.getPostDate(), "dd.MMM.yyyy", serverTimeZone, renderRequest.getLocale());
+        String newsTime = DateFormatUtils.format(news.getPostDate(), "HH:mm", serverTimeZone, renderRequest.getLocale());
 
         StringBuilder s = new StringBuilder().
             append( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n").
@@ -114,10 +112,8 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
 
     public byte[] getXml( final String rootElement) throws Exception {
 
-        //TODO need use site specific TimeZone
-        TimeZone timeZone = TimeZone.getDefault();
-        String newsDate = DateFormatUtils.format(news.getPostDate(), "dd.MMM.yyyy", timeZone, renderRequest.getLocale());
-        String newsTime = DateFormatUtils.format(news.getPostDate(), "HH:mm", timeZone, renderRequest.getLocale());
+        String newsDate = DateFormatUtils.format(news.getPostDate(), "dd.MMM.yyyy", serverTimeZone, renderRequest.getLocale());
+        String newsTime = DateFormatUtils.format(news.getPostDate(), "HH:mm", serverTimeZone, renderRequest.getLocale());
 
         String root = PortletMetadataService.getMetadata( renderRequest, "xml-root-name", rootElement );
 

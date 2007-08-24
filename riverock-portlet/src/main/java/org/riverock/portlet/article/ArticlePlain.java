@@ -58,12 +58,9 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
     public Article article;
     private RenderRequest renderRequest = null;
+    private TimeZone serverTimeZone=null;
 
     public ArticlePlain() {
-    }
-
-    private ArticlePlain( Article article ) {
-        this.article = article;
     }
 
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
@@ -102,15 +99,11 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     }
 
     public String getArticleDate() {
-        //TODO need use site specific TimeZone
-        TimeZone timeZone = TimeZone.getDefault();
-        return DateTools.getStringDate( article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), timeZone);
+        return DateTools.getStringDate( article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), serverTimeZone);
     }
 
     public String getArticleTime() {
-        //TODO need use site specific TimeZone
-        TimeZone timeZone = TimeZone.getDefault();
-        return DateTools.getStringDate( article.getPostDate(), "HH:mm", renderRequest.getLocale(), timeZone );
+        return DateTools.getStringDate( article.getPostDate(), "HH:mm", renderRequest.getLocale(), serverTimeZone );
     }
 
     public String getArticleName() {
@@ -147,7 +140,10 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     public PortletResultContent getInstance( Long articleId ) throws PortletException {
         PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         Article article = provider.getPortalCmsArticleDao().getArticle(articleId);
-        return new ArticlePlain(article);
+        PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
+        this.article = article;
+        this.serverTimeZone = TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone());
+        return this;
     }
 
     public PortletResultContent getInstanceByCode( String articleCode ) {
@@ -169,7 +165,9 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             bean.setSiteLanguageId(siteLangaugeId);
             article = bean; 
         }
-        return new ArticlePlain(article);
+        this.article = article;
+        this.serverTimeZone = TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone());
+        return this;
     }
 
     public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {

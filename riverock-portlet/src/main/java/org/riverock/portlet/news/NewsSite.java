@@ -173,9 +173,11 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
                 newsItemType.setNewsHeader(StringEscapeUtils.unescapeXml(news.getNewsHeader()));
                 newsItemType.setNewsItemId(news.getNewsId());
                 newsItemType.setNewsText(news.getNewsText());
-                newsItemType.setNewsText(news.getNewsText());
-                newsItemType.setNewsDate(DateFormatUtils.format(news.getPostDate(), "dd.MMM.yyyy", TimeZone.getDefault(), renderRequest.getLocale()));
-                newsItemType.setNewsTime(DateFormatUtils.format(news.getPostDate(), "HH:mm", TimeZone.getDefault(), renderRequest.getLocale()));
+                TimeZone tz = TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone());
+                newsItemType.setNewsDate(DateFormatUtils.format(
+                    news.getPostDate(), "dd.MMM.yyyy", tz, renderRequest.getLocale())
+                );
+                newsItemType.setNewsTime(DateFormatUtils.format(news.getPostDate(), "HH:mm", tz, renderRequest.getLocale()));
 
                 newsGroupType.getNewsItem().add(newsItemType);
             }

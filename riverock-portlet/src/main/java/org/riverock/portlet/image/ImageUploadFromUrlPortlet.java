@@ -50,6 +50,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * Author: mill
@@ -94,9 +95,11 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
                 throw new PortletSecurityException( "You have not enough right" );
             }
 
+            PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
 
-            if ( log.isDebugEnabled() )
+            if ( log.isDebugEnabled() ) {
                 log.debug( "urlString - " + renderRequest.getParameter( "url_download" ) );
+            }
 
             String urlString = renderRequest.getParameter( "url_download" ).trim();
             if ( urlString == null )
@@ -173,7 +176,9 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
             is = null;
             url = null;
 
-            out.write( DateFormatUtils.format(System.currentTimeMillis(), "dd-MMMM-yyyy HH:mm:ss:SS", TimeZone.getDefault(), renderRequest.getLocale() ) + "<br>" );
+            out.write( DateFormatUtils.format(System.currentTimeMillis(), "dd-MMMM-yyyy HH:mm:ss:SS",
+                TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone()), 
+                renderRequest.getLocale() ) + "<br>" );
 
 //            ps = dbDyn.prepareStatement( "insert into WM_IMAGE_DIR " +
 //                "( id_image_dir, ID_FIRM, is_group, id, id_main, name_file, description )" +
@@ -190,7 +195,9 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
             out.write( "Загрузка данных прошла без ошибок<br>" +
                 "Загружен файл " + newFileName + "<br>" +
-                DateFormatUtils.format(System.currentTimeMillis(), "dd-MMMM-yyyy HH:mm:ss:SS", TimeZone.getDefault(), renderRequest.getLocale() ) + "<br>" +
+                DateFormatUtils.format(System.currentTimeMillis(), "dd-MMMM-yyyy HH:mm:ss:SS",
+                    TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone()),
+                    renderRequest.getLocale() ) + "<br>" +
                 "<br>" +
                 "<p><a href=\"" + PortletUtils.url( "mill.image.index", renderRequest, renderResponse ) +
                 "\">Загрузить данные повторно</a></p><br>" +
