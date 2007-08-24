@@ -63,4 +63,6 @@ public interface CatalogItem extends TreeItem, Serializable {
     public String getPortletRole();
 
     public List<CatalogItem> getSubCatalogItemList();
+
+    boolean isIncludeInSitemap();
 }
