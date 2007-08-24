@@ -289,6 +289,7 @@ dbrevision-structure.xsd">
 		<Field name="URL_RESOURCE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 		<Field name="METADATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="1"/>
 		<Field name="PORTLET_ROLE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="1"/>
+        <Field name="IS_INCLUDE_IN_SITEMAP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
 		<ForeignKey pkSchemaName="TEST" pkTableName="WM_PORTAL_CATALOG_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_CATALOG" fkName="ID_CTX_LANG_CATALOG_SCC_FK" pkName="ID_LNGCAT_ISCLC_PK">
             <Column pkColumnName="ID_SITE_CTX_LANG_CATALOG" fkColumnName="ID_SITE_CTX_LANG_CATALOG" keySeq="1" />
 			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
