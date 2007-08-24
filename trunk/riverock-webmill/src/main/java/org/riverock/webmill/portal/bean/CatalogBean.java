@@ -107,6 +107,9 @@ public class CatalogBean implements Serializable, CatalogItem {
     @Column(name="PORTLET_ROLE")
     private String portletRole;
 
+    @Column(name="IS_INCLUDE_IN_SITEMAP")
+    private boolean isIncludeInSitemap;
+
     @Transient
     private List<CatalogItem> subCatalogItemList = null;
 
@@ -129,6 +132,15 @@ public class CatalogBean implements Serializable, CatalogItem {
         this.metadata = catalogItem.getMetadata();
         this.portletRole = catalogItem.getPortletRole();
         this.subCatalogItemList = catalogItem.getSubCatalogItemList();
+        this.isIncludeInSitemap = catalogItem.isIncludeInSitemap();
+    }
+
+    public boolean isIncludeInSitemap() {
+        return isIncludeInSitemap;
+    }
+
+    public void setIncludeInSitemap(boolean includeInSitemap) {
+        isIncludeInSitemap = includeInSitemap;
     }
 
     public List<CatalogItem> getSubCatalogItemList() {
