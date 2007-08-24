@@ -105,6 +105,10 @@ public class TestCatalogComparator extends TestCase {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
+        public boolean isIncludeInSitemap() {
+            return false;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
         public Long getTopId() {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }

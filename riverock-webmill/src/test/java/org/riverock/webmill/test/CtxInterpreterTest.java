@@ -1,23 +1,20 @@
 package org.riverock.webmill.test;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.io.File;
 
-import org.riverock.webmill.utils.HibernateUtilsTest;
-import org.riverock.webmill.portal.dao.InternalCssDao;
-import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.dao.OfflineDaoFactory;
+import org.riverock.webmill.portal.url.PortletDefinitionProvider;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;
 import org.riverock.webmill.portal.url.UrlInterpreterParameter;
-import org.riverock.webmill.portal.url.PortletDefinitionProvider;
 import org.riverock.webmill.portal.url.UrlInterpreterResult;
 import org.riverock.webmill.portal.url.interpreter.TestPortletDefinitionProvider;
-import org.riverock.webmill.main.CssBean;
-import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.interfaces.portal.bean.Css;
-import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * User: SMaslyukov
@@ -27,9 +24,10 @@ import org.riverock.interfaces.portal.PortalInfo;
 public class CtxInterpreterTest {
     public static String pathInfo = "/ctx/en,templ-mill-dyn1-en,mill.news_block,r,ns13,228/ctx";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        HibernateUtilsTest.prepareSession();
+//        HibernateUtilsTest.prepareSession();
+        OfflineDaoFactory.init();
 
         PortletDefinitionProvider portletDefinitionProvider = new TestPortletDefinitionProvider();
         boolean isMultiPartRequest = false;
@@ -38,8 +36,13 @@ public class CtxInterpreterTest {
         Long siteId = 16L;
         Locale predictedLocale = Locale.ENGLISH;
 
-        Map<String, List<String>> httpRequestParameter = null;
-            PortalInfo portalInfo = PortalInfoImpl.getInstance(siteId);
+        Map<String, List<String>> httpRequestParameter = new HashMap<String, List<String>>();
+        httpRequestParameter.put("mill.template", Arrays.asList("dynamic_me.askmore"));
+        httpRequestParameter.put("mill.xmlroot", Arrays.asList("XmlNewsItem"));
+        httpRequestParameter.put("news.type", Arrays.asList("item"));
+        httpRequestParameter.put("mill.id_news_item", Arrays.asList("289"));
+
+        PortalInfo portalInfo = PortalInfoImpl.getInstance(siteId);
 
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,
@@ -52,6 +55,6 @@ public class CtxInterpreterTest {
             portalInfo
         );
         UrlInterpreterResult result = UrlInterpreterIterator.interpretUrl(factoryParameter);
-        
+        System.out.println("result = " + result);
     }
 }

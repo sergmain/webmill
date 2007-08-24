@@ -125,8 +125,9 @@ public final class PortalMenu implements Menu {
         if (log.isDebugEnabled()) {
             log.debug("list for search index: " + v);
         }
-        if (v == null)
+        if (v == null) {
             return null;
+        }
 
         for (Object o : v) {
             MenuItem ctxItem = (MenuItem)o;

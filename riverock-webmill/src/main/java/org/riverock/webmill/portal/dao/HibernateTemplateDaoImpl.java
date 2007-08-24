@@ -70,7 +70,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
         }
     }
 
-    private static void prepareBlob(TemplateBean bean) {
+    static void prepareBlob(TemplateBean bean) {
         if (bean!=null) {
             Blob blob = bean.getTemplateBlob();
             if (blob!=null) {

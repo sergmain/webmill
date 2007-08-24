@@ -24,8 +24,8 @@
  */
 package org.riverock.webmill.portal.menu;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -42,8 +42,9 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 public final class PortalMenuLanguage implements MenuLanguage {
     private final static Logger log = Logger.getLogger( PortalMenuLanguage.class );
 
-    private List<Menu> menu = new ArrayList<Menu>();
+    private List<Menu> menu = null;
     private SiteLanguage item = null;
+    private boolean isNotInited=true;
 
     public PortalMenuLanguage(){}
 
@@ -60,28 +61,39 @@ public final class PortalMenuLanguage implements MenuLanguage {
 
     // return name of template for 'index' page
     public MenuItem getIndexMenuItem(){
+        if (isNotInited) {
+            initMenus();
+        }
         if (log.isDebugEnabled()){
             log.debug("menu: "+menu);
         }
 
         for (Menu catalog : this.menu) {
             MenuItem item = catalog.getIndexMenuItem();
-            if (item != null)
+            if (item != null) {
                 return item;
+            }
         }
         return null;
     }
 
     // return name of template for 'index' page
     public String getIndexTemplate(){
+        if (isNotInited) {
+            initMenus();
+        }
         MenuItem indexTemplate = getIndexMenuItem();
-        if (indexTemplate != null)
+        if (indexTemplate != null) {
             return indexTemplate.getNameTemplate();
+        }
 
         return null;
     }
 
     public Menu getDefault() {
+        if (isNotInited) {
+            initMenus();
+        }
         for (Menu catalog : this.menu) {
             if (catalog.getIsDefault())
                 return catalog;
@@ -90,9 +102,13 @@ public final class PortalMenuLanguage implements MenuLanguage {
     }
 
     public Menu getCatalogByCode( String code ) {
-        if (code==null)
+        if (code==null) {
             return null;
+        }
 
+        if (isNotInited) {
+            initMenus();
+        }
         for (Menu catalog : this.menu) {
             if (code.equals(catalog.getCatalogCode()))
                 return catalog;
@@ -100,11 +116,14 @@ public final class PortalMenuLanguage implements MenuLanguage {
         return null;
     }
 
-    public MenuItem searchMenuItem(Long id)
-    {
-        if (id==null)
+    public MenuItem searchMenuItem(Long id) {
+        if (id==null) {
             return null;
+        }
 
+        if (isNotInited) {
+            initMenus();
+        }
         for (Menu menu : this.menu) {
             MenuItem ci = menu.searchMenuItem(id);
             if (ci != null) {
@@ -115,8 +134,9 @@ public final class PortalMenuLanguage implements MenuLanguage {
     }
 
     public PortalMenuLanguage(SiteLanguage bean) {
-        if (bean == null)
+        if (bean == null) {
             return;
+        }
 
         this.item = bean;
 
@@ -127,7 +147,14 @@ public final class PortalMenuLanguage implements MenuLanguage {
             log.debug("language - " + getLang());
         }
 
-        List<CatalogLanguageItem> list = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItemList( bean.getSiteLanguageId() );
+    }
+
+    private synchronized void initMenus() {
+        if (!isNotInited) {
+            return;
+        }
+        this.menu = new ArrayList<Menu>();
+        List<CatalogLanguageItem> list = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItemList( item.getSiteLanguageId() );
 
         for (CatalogLanguageItem catalogLanguageBean : list) {
             Menu catalog = new PortalMenu(catalogLanguageBean);
@@ -136,15 +163,17 @@ public final class PortalMenuLanguage implements MenuLanguage {
     }
 
     public String getLocaleStr() {
-        if (item == null)
+        if (item == null) {
             return null;
+        }
 
         return item.getCustomLanguage();
     }
 
     public String getLang() {
-        if (item == null)
+        if (item == null) {
             return null;
+        }
 
         return item.getNameCustomLanguage();
     }

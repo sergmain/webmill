@@ -77,6 +77,13 @@ public class CatalogLanguageBean implements Serializable, CatalogLanguageItem {
     public CatalogLanguageBean() {
     }
 
+    public CatalogLanguageBean(Long catalogLanguageId, String catalogCode, Boolean aDefault, Long siteLanguageId) {
+        this.catalogCode = catalogCode;
+        this.catalogLanguageId = catalogLanguageId;
+        isDefault = aDefault;
+        this.siteLanguageId = siteLanguageId;
+    }
+
     public CatalogLanguageBean(CatalogLanguageItem catalogLanguageItem) {
         this.catalogLanguageId = catalogLanguageItem.getCatalogLanguageId();
         isDefault = catalogLanguageItem.getDefault();

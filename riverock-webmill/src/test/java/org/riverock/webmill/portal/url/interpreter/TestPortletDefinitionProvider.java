@@ -10,7 +10,8 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  */
 public class TestPortletDefinitionProvider implements PortletDefinitionProvider {
     public PortletDefinition getPortletDefinition(String fullPortletName) {
-        PortletDefinition definition = new PortletDefinition();
+        PortletDefinition definition=null;
+//        definition = new PortletDefinition();
         return definition; 
     }
 }

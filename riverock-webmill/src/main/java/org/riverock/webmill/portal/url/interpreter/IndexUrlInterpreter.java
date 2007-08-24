@@ -46,22 +46,22 @@ public class IndexUrlInterpreter implements UrlInterpreter {
         // process current request as 'index'
         MenuLanguage menu = factoryParameter.getPortalInfo().getMenu(factoryParameter.getPredictedLocale().toString());
         if (menu==null){
-            log.error( "Menu for locale: "+factoryParameter.getPredictedLocale().toString() +" not defined" );
-            return new UrlInterpreterResult();
+            log.warn( "Menu for locale: "+factoryParameter.getPredictedLocale().toString() +" not defined" );
+            return null;
         }
 
         if (menu.getIndexMenuItem() == null) {
             log.warn("menu: " + menu);
             log.warn("locale: " + factoryParameter.getPredictedLocale().toString());
             log.warn("Menu item pointed to 'index' portlet not defined");
-            return new UrlInterpreterResult();
+            return null;
         }
 
         Long ctxId = menu.getIndexMenuItem().getId();
         if (ctxId==null) {
             String es = "Menu item with 'index' portlet not found";
-            log.error(es);
-            return new UrlInterpreterResult();
+            log.warn(es);
+            return null;
         }
 
         return UrlInterpreterUtils.getRequestContextBean(factoryParameter, ctxId);

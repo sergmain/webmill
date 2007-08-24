@@ -31,22 +31,22 @@ package org.riverock.webmill.portal.dao;
  *         $Id$
  */
 public class InternalDaoFactory {
-    public final static InternalCssDao internalCssDao = new HibernateCssDaoImpl();
-    public final static InternalXsltDao internalXsltDao = new HibernateXsltDaoImpl();
-    public final static InternalSiteDao internalSiteDao = new HibernateSiteDaoImpl();
-    public final static InternalSiteLanguageDao internalSiteLanguageDao = new HibernateSiteLanguageDaoImpl();
-    public final static InternalVirtualHostDao internalVirtualHostDao = new HibernateVirtualHostDaoImpl();
-    public final static InternalPortletNameDao internalPortletNameDao = new HibernatePortletNameDaoImpl();
-    public final static InternalAuthDao internalAuthDao = new HibernateAuthDaoImpl();
-    public final static InternalCompanyDao internalCompanyDao = new HibernateCompanyDaoImpl();
-    public final static InternalHoldingDao internalHoldingDao = new HibernateHoldingDaoImpl();
-    public final static InternalUserMetadataDao internalUserMetadataDao = new HibernateUserMetadataDaoImpl();
-    public final static InternalUserDao internalUserDao = new HibernateUserDaoImpl();
-    public final static InternalDao internalDao = new HibernateDaoImpl();
-    public final static InternalCatalogDao internalCatalogDao = new HibernateCatalogDaoImpl();
-    public final static InternalPreferencesDao internalPreferencesDao = new HibernatePreferencesDaoImpl();
-    public final static InternalTemplateDao internalTemplateDao = new HibernateTemplateDaoImpl();
-    public final static InternalCmsDao internalCmsDao = new HibernateCmsDaoImpl();
+    private static InternalCssDao internalCssDao = new HibernateCssDaoImpl();
+    private static InternalXsltDao internalXsltDao = new HibernateXsltDaoImpl();
+    private static InternalSiteDao internalSiteDao = new HibernateSiteDaoImpl();
+    private static InternalSiteLanguageDao internalSiteLanguageDao = new HibernateSiteLanguageDaoImpl();
+    private static InternalVirtualHostDao internalVirtualHostDao = new HibernateVirtualHostDaoImpl();
+    private static InternalPortletNameDao internalPortletNameDao = new HibernatePortletNameDaoImpl();
+    private static InternalAuthDao internalAuthDao = new HibernateAuthDaoImpl();
+    private static InternalCompanyDao internalCompanyDao = new HibernateCompanyDaoImpl();
+    private static InternalHoldingDao internalHoldingDao = new HibernateHoldingDaoImpl();
+    private static InternalUserMetadataDao internalUserMetadataDao = new HibernateUserMetadataDaoImpl();
+    private static InternalUserDao internalUserDao = new HibernateUserDaoImpl();
+    private static InternalDao internalDao = new HibernateDaoImpl();
+    private static InternalCatalogDao internalCatalogDao = new HibernateCatalogDaoImpl();
+    private static InternalPreferencesDao internalPreferencesDao = new HibernatePreferencesDaoImpl();
+    private static InternalTemplateDao internalTemplateDao = new HibernateTemplateDaoImpl();
+    private static InternalCmsDao internalCmsDao = new HibernateCmsDaoImpl();
 
     public static InternalPreferencesDao getInternalPreferencesDao() {
         return internalPreferencesDao;
@@ -110,5 +110,69 @@ public class InternalDaoFactory {
 
     public static InternalAuthDao getInternalAuthDao() {
         return internalAuthDao;
+    }
+
+    static void setInternalAuthDao(InternalAuthDao internalAuthDao) {
+        InternalDaoFactory.internalAuthDao = internalAuthDao;
+    }
+
+    static void setInternalCatalogDao(InternalCatalogDao internalCatalogDao) {
+        InternalDaoFactory.internalCatalogDao = internalCatalogDao;
+    }
+
+    static void setInternalCmsDao(InternalCmsDao internalCmsDao) {
+        InternalDaoFactory.internalCmsDao = internalCmsDao;
+    }
+
+    static void setInternalCompanyDao(InternalCompanyDao internalCompanyDao) {
+        InternalDaoFactory.internalCompanyDao = internalCompanyDao;
+    }
+
+    static void setInternalCssDao(InternalCssDao internalCssDao) {
+        InternalDaoFactory.internalCssDao = internalCssDao;
+    }
+
+    static void setInternalDao(InternalDao internalDao) {
+        InternalDaoFactory.internalDao = internalDao;
+    }
+
+    static void setInternalHoldingDao(InternalHoldingDao internalHoldingDao) {
+        InternalDaoFactory.internalHoldingDao = internalHoldingDao;
+    }
+
+    static void setInternalPortletNameDao(InternalPortletNameDao internalPortletNameDao) {
+        InternalDaoFactory.internalPortletNameDao = internalPortletNameDao;
+    }
+
+    static void setInternalPreferencesDao(InternalPreferencesDao internalPreferencesDao) {
+        InternalDaoFactory.internalPreferencesDao = internalPreferencesDao;
+    }
+
+    static void setInternalSiteDao(InternalSiteDao internalSiteDao) {
+        InternalDaoFactory.internalSiteDao = internalSiteDao;
+    }
+
+    static void setInternalSiteLanguageDao(InternalSiteLanguageDao internalSiteLanguageDao) {
+        InternalDaoFactory.internalSiteLanguageDao = internalSiteLanguageDao;
+    }
+
+    static void setInternalTemplateDao(InternalTemplateDao internalTemplateDao) {
+        InternalDaoFactory.internalTemplateDao = internalTemplateDao;
+    }
+
+    static void setInternalUserDao(InternalUserDao internalUserDao) {
+        InternalDaoFactory.internalUserDao = internalUserDao;
+    }
+
+    static void setInternalUserMetadataDao(InternalUserMetadataDao internalUserMetadataDao) {
+        InternalDaoFactory.internalUserMetadataDao = internalUserMetadataDao;
+    }
+
+    static void setInternalVirtualHostDao(InternalVirtualHostDao internalVirtualHostDao) {
+        InternalDaoFactory.internalVirtualHostDao = internalVirtualHostDao;
+    }
+
+    static void setInternalXsltDao(InternalXsltDao internalXsltDao) {
+        InternalDaoFactory.internalXsltDao = internalXsltDao;
     }
 }
