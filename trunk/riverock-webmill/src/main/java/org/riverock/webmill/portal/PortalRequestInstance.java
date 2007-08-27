@@ -345,10 +345,6 @@ public final class PortalRequestInstance {
                 }
 */
 
-                if (httpRequest.isRequestedSessionIdValid()) {
-                    checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), httpRequest.getSession(false));
-                }
-
                 PageElement element;
                 switch (o.getType()) {
                     case PORTLET: {
@@ -428,37 +424,6 @@ public final class PortalRequestInstance {
                 this.portalTransformationParameters.setKeyword(catalogItem.getKeyMessage());
             }
             this.portalTransformationParameters.setAuthor(catalogItem.getAuthor());
-        }
-    }
-
-    /**
-     * remove form session all attributes, which are corresponded to destroyed portlet
-     *
-     * @param destroyedPortletNames name of destroyed portlet
-     * @param session               http session
-     */
-    private static void checkDestroyedPortlet(List<String> destroyedPortletNames, HttpSession session) {
-        if (session == null) {
-            return;
-        }
-        try {
-            NamespaceMapper nm = NamespaceFactory.getNamespaceMapper();
-            //noinspection unchecked
-            List<String> attrs = Collections.list(session.getAttributeNames());
-            for (String portletName : destroyedPortletNames) {
-                List<Namespace> namespaces = NamespaceFactory.getNamespaces(portletName);
-                for (Namespace namespace : namespaces) {
-                    for (String attr : attrs) {
-                        String realAttrName = nm.decode(namespace, attr);
-                        if (realAttrName != null) {
-                            session.removeAttribute(attr);
-                        }
-                    }
-                }
-            }
-        }
-        catch (Throwable e) {
-            log.error("Error remove attributed", e);
         }
     }
 

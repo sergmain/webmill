@@ -24,24 +24,20 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Collections;
-
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
-
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
-import org.riverock.webmill.portal.menu.SiteMenu;
+//import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.webmill.port.PortalInfoImpl;
+
+import java.util.*;
 
 /**
  * @author Sergei Maslyukov
@@ -53,6 +49,12 @@ import org.riverock.webmill.port.PortalInfoImpl;
 public class HibernateCatalogDaoImpl implements InternalCatalogDao {
     private final static Logger log = Logger.getLogger(HibernateCatalogDaoImpl.class);
     private static final MenuItemComparator MENU_ITEM_COMPARATOR = new MenuItemComparator();
+
+    private final Observable observable = new Observable();
+
+    public void addObserver(Observer o) {
+        observable.addObserver(o);
+    }
 
     public Long getCatalogItemId(Long siteId, Locale locale, Long catalogItemId) {
         if (siteId == null || locale==null || catalogItemId==null) {
@@ -351,7 +353,8 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         if (siteLanguageId==null) {
             return;
         }
-        SiteMenu.invalidateCache(siteLanguageId);
+        observable.notifyObservers();
+//        SiteMenu.invalidateCache(siteLanguageId);
         PortalInfoImpl.invalidateCache(siteLanguageId);
     }
 

@@ -213,4 +213,13 @@ public class OfflineBlob implements Blob {
         throw new IllegalStateException("Not implemented");
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    public void free() throws SQLException {
+        bytes = null;
+    }
+
+    public InputStream getBinaryStream(long pos, long length) throws SQLException {
+        ByteArrayInputStream result = new ByteArrayInputStream(getBytes(pos, (int)length));
+        return result;
+    }
 }

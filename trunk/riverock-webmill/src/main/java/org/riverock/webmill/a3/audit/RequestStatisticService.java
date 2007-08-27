@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.InternalDao;
+import org.riverock.webmill.a3.bean.RequestStatisticBean;
 import org.riverock.common.tools.StringTools;
 
 /**

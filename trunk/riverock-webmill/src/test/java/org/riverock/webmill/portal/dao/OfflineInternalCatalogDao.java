@@ -1,9 +1,6 @@
 package org.riverock.webmill.portal.dao;
 
-import java.util.Locale;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -193,6 +190,10 @@ public class OfflineInternalCatalogDao implements InternalCatalogDao {
     }
 
     public void changeTemplateForCatalogLanguage(Long catalogLanguageId, Long templateId) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void addObserver(Observer o) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

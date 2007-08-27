@@ -24,16 +24,13 @@
  */
 package org.riverock.webmill.portal.menu;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
-
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * $Id$
@@ -41,7 +38,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  *
  * return menu for all supported languages for this site
  */
-public final class SiteMenu {
+public final class SiteMenu implements Observer {
     private final static Logger log = Logger.getLogger( SiteMenu.class );
 
     private List<MenuLanguage> menuLanguage = new ArrayList<MenuLanguage>();
@@ -54,7 +51,7 @@ public final class SiteMenu {
         return menuLanguage;
     }
 
-    public SiteMenu(){}
+//    public SiteMenu(){}
 
     public static void destroyAll() {
         if (siteMenuLaguage!=null) {
@@ -91,6 +88,7 @@ public final class SiteMenu {
                 return tempLangMenu;
             }
             SiteMenu temp = new SiteMenu( siteId );
+            InternalDaoFactory.getInternalCatalogDao().addObserver(temp);
             siteMenuLaguage.put( siteId,  temp);
             return temp;
         }
@@ -142,4 +140,7 @@ public final class SiteMenu {
         }
     }
 
+    public void update(Observable o, Object arg) {
+        
+    }
 }
