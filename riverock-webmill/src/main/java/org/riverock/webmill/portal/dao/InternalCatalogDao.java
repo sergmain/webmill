@@ -26,6 +26,7 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Observer;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
@@ -68,4 +69,5 @@ public interface InternalCatalogDao {
 
     public void changeTemplateForCatalogLanguage(Long catalogLanguageId, Long templateId);
 
+    void addObserver(Observer o);
 }

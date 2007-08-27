@@ -27,11 +27,7 @@ package org.riverock.webmill.portal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.ServletConfig;
@@ -39,6 +35,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
@@ -60,6 +57,9 @@ import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.search.PortalIndexerImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
+import org.riverock.webmill.portal.namespace.NamespaceMapper;
+import org.riverock.webmill.portal.namespace.NamespaceFactory;
+import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.template.PortalTemplateManager;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
 import org.riverock.webmill.utils.HibernateUtils;
@@ -245,6 +245,10 @@ public class PortalInstanceImpl implements PortalInstance  {
                 initSession(request_);
             }
 */
+
+            if (request_.isRequestedSessionIdValid()) {
+                checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), request_.getSession(false));
+            }
 
             portalRequestInstance = new PortalRequestInstance( request_, response_, this );
             PortalPageController.processPortalRequest( portalRequestInstance );
@@ -530,6 +534,37 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     public void destroyPortlet(String fullPortletName) {
         destroyedPortletName.add(fullPortletName);
+    }
+
+    /**
+     * remove form session all attributes, which are corresponded to destroyed portlet
+     *
+     * @param destroyedPortletNames name of destroyed portlet
+     * @param session               http session
+     */
+    private static void checkDestroyedPortlet(List<String> destroyedPortletNames, HttpSession session) {
+        if (session == null) {
+            return;
+        }
+        try {
+            NamespaceMapper nm = NamespaceFactory.getNamespaceMapper();
+            //noinspection unchecked
+            List<String> attrs = Collections.list(session.getAttributeNames());
+            for (String portletName : destroyedPortletNames) {
+                List<Namespace> namespaces = NamespaceFactory.getNamespaces(portletName);
+                for (Namespace namespace : namespaces) {
+                    for (String attr : attrs) {
+                        String realAttrName = nm.decode(namespace, attr);
+                        if (realAttrName != null) {
+                            session.removeAttribute(attr);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Throwable e) {
+            log.error("Error remove attributed", e);
+        }
     }
 
 }
