@@ -61,10 +61,10 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     }
 
     public PortalTemplate getTemplate( final long templateId) {
-        if (log.isDebugEnabled()) {
-            log.debug("search template for id - "+ templateId);
+        if (log.isTraceEnabled()) {
+            log.trace("search template for id - "+ templateId);
             for (Map.Entry<Long, PortalTemplate> entry : hashId.entrySet() ) {
-                log.debug("template id: " + entry.getKey()+", template: " +entry.getValue());
+                log.trace("template id: " + entry.getKey()+", template: " +entry.getValue());
             }
         }
 
@@ -132,21 +132,6 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     PortalTemplateManagerImpl(Long siteId) {
         this.siteId=siteId;
         log.debug("Start PortalTemplateManagerImpl()");
-/*
-        for (TemplateBean template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
-            try {
-                PortalTemplate st = prepareTemplate(template);
-                // dont add broken template
-                if (st!=null) {
-                    hashId.put(template.getTemplateId(), st);
-                }
-            }
-            catch (Throwable e) {
-                String es = "Error process template";
-                log.error(es, e);
-            }
-        }
-*/
     }
 
     static PortalTemplate prepareTemplate(TemplateBean template) {

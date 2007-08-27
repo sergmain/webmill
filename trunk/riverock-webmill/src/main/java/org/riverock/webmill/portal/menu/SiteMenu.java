@@ -126,12 +126,12 @@ public final class SiteMenu {
         return new PortalMenuLanguage();
     }
 
-    private SiteMenu( final Long idSite) {
+    private SiteMenu( final Long siteId) {
         if (log.isDebugEnabled()) {
-            log.debug("#33.60.00. Get List of language for siteId " + idSite );
+            log.debug("#33.60.00. Get List of language for siteId " + siteId );
         }
 
-        List<SiteLanguage> list = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList( idSite );
+        List<SiteLanguage> list = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList( siteId );
 
         if (log.isDebugEnabled()) {
             log.debug("Count of language for this site is "+list.size());

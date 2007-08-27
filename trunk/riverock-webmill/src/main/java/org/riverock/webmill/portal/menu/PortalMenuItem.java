@@ -24,22 +24,23 @@
  */
 package org.riverock.webmill.portal.menu;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Properties;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.bean.TemplateBean;
+import org.riverock.webmill.template.PortalTemplate;
+import org.riverock.webmill.template.PortalTemplateManagerFactory;
 
 /**
  *
@@ -50,11 +51,11 @@ public final class PortalMenuItem implements MenuItem {
     private final static Logger log = Logger.getLogger( MenuItem.class );
 
     private CatalogItem ctx = null;
-    private TemplateBean template = null;
+    private PortalTemplate template = null;
     private PortletName portletName = null;
 
     private String menuName = null;
-    private List<MenuItem> catalogItems = new LinkedList<MenuItem>();  // List of MenuItem
+    private List<MenuItem> catalogItems = new LinkedList<MenuItem>();
 
     protected void finalize() throws Throwable {
         destroy();
@@ -108,7 +109,7 @@ public final class PortalMenuItem implements MenuItem {
             "template: "+template +",name: "+menuName+",url: "+getUrl()+"]";
     }
 
-    public PortalMenuItem(CatalogItem catalogBean) {
+    public PortalMenuItem(Long siteId, CatalogItem catalogBean) {
         this.ctx = catalogBean;
         if (this.ctx==null) {
             throw new IllegalStateException("catalogBean is empty");
@@ -122,7 +123,8 @@ public final class PortalMenuItem implements MenuItem {
         }
 
         this.menuName = ctx.getKeyMessage();
-        this.template = InternalDaoFactory.getInternalTemplateDao().getTemplate( ctx.getTemplateId() );
+        this.template = PortalTemplateManagerFactory.getInstance(siteId).getTemplate(ctx.getTemplateId());
+//        this.template = InternalDaoFactory.getInternalTemplateDao().getTemplate( ctx.getTemplateId() );
         this.portletName = InternalDaoFactory.getInternalPortletNameDao().getPortletName( ctx.getPortletId() );
     }
 

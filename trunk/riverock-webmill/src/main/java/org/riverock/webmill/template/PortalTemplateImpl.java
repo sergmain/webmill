@@ -103,6 +103,6 @@ public class PortalTemplateImpl implements PortalTemplate, Serializable {
     }
 
     public String toString() {
-        return "[templateName"+templateName+"]";
+        return "[templateName:"+templateName+"]";
     }
 }

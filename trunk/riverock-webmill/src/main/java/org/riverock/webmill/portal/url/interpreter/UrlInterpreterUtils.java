@@ -31,16 +31,14 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.PortletParameters;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
-import org.riverock.webmill.portal.url.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.RequestState;
+import org.riverock.webmill.portal.url.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.UrlInterpreterResult;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
 import org.riverock.webmill.template.TemplateUtils;
@@ -78,15 +76,14 @@ public final class UrlInterpreterUtils {
         bean.setDefaultPortletName( bean.getExtendedCatalogItem().getFullPortletName() );
         bean.setDefaultRequestState( new RequestState() );
 
-        PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
-        initParametersMap(bean, factoryParameter, portalInfo);
+        initParametersMap(bean, factoryParameter);
 
         return bean;
     }
 
-    static void initParametersMap(UrlInterpreterResult urlInterpreterResult, UrlInterpreterParameter factoryParameter, PortalInfo portalInfo) {
+    static void initParametersMap(UrlInterpreterResult urlInterpreterResult, UrlInterpreterParameter factoryParameter) {
 
-        PortalTemplate template = PortalTemplateManagerFactory.getInstance(portalInfo.getSiteId()).getTemplate(
+        PortalTemplate template = PortalTemplateManagerFactory.getInstance(factoryParameter.getSiteId()).getTemplate(
             urlInterpreterResult.getExtendedCatalogItem().getTemplateId()
         );
 
@@ -127,7 +124,7 @@ public final class UrlInterpreterUtils {
                         if (log.isDebugEnabled()) {
                             log.debug("    Create parameter for NS "+namespace.getNamespace() +", action state: " + urlInterpreterResult.getDefaultRequestState());
                         }
-                        requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult, portalInfo);
+                        requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult);
                     }
                     else {
                         requestState = new RequestState();
@@ -138,7 +135,7 @@ public final class UrlInterpreterUtils {
                 else {
                     String tempPortletName = urlInterpreterResult.getExtendedCatalogItem().getFullPortletName();
                     if (tempPortletName !=null && tempPortletName.equals(portletName)) {
-                        requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult, portalInfo);
+                        requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult);
                     }
                     else {
                         requestState = new RequestState();
@@ -153,7 +150,7 @@ public final class UrlInterpreterUtils {
                     template.getTemplateName(), NamespaceFactory.getTemplateUniqueIndex(templateItem, i++)
                 );
                 urlInterpreterResult.setDefaultNamespace( namespace.getNamespace() );
-                requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult, portalInfo);
+                requestState = initParameterForDefaultPortlet(factoryParameter, urlInterpreterResult);
             }
             else {
                 continue;
@@ -165,7 +162,7 @@ public final class UrlInterpreterUtils {
         }
     }
 
-    public static RequestState initParameterForDefaultPortlet(UrlInterpreterParameter factoryParameter, UrlInterpreterResult urlInterpreterResult, PortalInfo portalInfo) {
+    public static RequestState initParameterForDefaultPortlet(UrlInterpreterParameter factoryParameter, UrlInterpreterResult urlInterpreterResult) {
         // prepare dynamic parameters
         PortletParameters portletParameters;
         if (factoryParameter.isMultiPartRequest()) {

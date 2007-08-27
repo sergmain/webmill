@@ -167,7 +167,7 @@ public final class PortalMenu implements Menu {
         return false;
     }
 
-    public PortalMenu(CatalogLanguageItem bean) {
+    public PortalMenu(Long siteId, CatalogLanguageItem bean) {
 
         if (bean==null){
             throw new IllegalStateException("Item of menu is null");
@@ -176,7 +176,9 @@ public final class PortalMenu implements Menu {
         isDefault = bean.getDefault();
         catalogCode = bean.getCatalogCode();
 
-        if (log.isDebugEnabled()) log.debug("#33.70.00 ");
+        if (log.isDebugEnabled()) {
+            log.debug("#33.70.00 ");
+        }
 
         List<CatalogItem> list = InternalDaoFactory.getInternalCatalogDao().getCatalogItemList( bean.getCatalogLanguageId() );
         for (CatalogItem catalogBean : list) {
@@ -184,14 +186,16 @@ public final class PortalMenu implements Menu {
             if (catalogBean.getTemplateId()==null) {
                 continue;
             }
-            menuItem.add(new PortalMenuItem(catalogBean));
+            menuItem.add(new PortalMenuItem(siteId, catalogBean));
         }
 
         if (log.isDebugEnabled()) log.debug("menuItem size - " + menuItem.size());
 
         menuItem = (List<MenuItem>)(List)TreeUtils.rebuildTree((List<TreeItem>)((List)menuItem));
 
-        if (log.isDebugEnabled()) log.debug("menuItem size - " + menuItem.size());
+        if (log.isDebugEnabled()) {
+            log.debug("menuItem size - " + menuItem.size());
+        }
     }
 
     public void reinit(){}
