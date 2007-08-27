@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.riverock</groupId>
+  <version>1.0</version>
+  <artifactId>webmill</artifactId>
+  <name>All modules</name>
+  <packaging>pom</packaging>
+  <modules>
+<!--
+    <module>riverock-interfaces</module>
+    <module>riverock-common</module>
+    <module>riverock-sso</module>
+    <module>riverock-module</module>
+    <module>riverock-webmill-container</module>
+-->
+    <module>riverock-webmill</module>
+    <module>riverock-webmill-updater</module>
+    <module>riverock-webmill-admin</module>
+    <module>riverock-portlet</module>
+    <module>riverock-forum</module>
+    <module>riverock-commerce</module>
+  </modules>
+</project>
