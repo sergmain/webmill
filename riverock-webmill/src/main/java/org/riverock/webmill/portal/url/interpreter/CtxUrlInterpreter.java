@@ -305,7 +305,7 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         }
         bean.setExtendedCatalogItem( extendedBean );
 
-        UrlInterpreterUtils.initParametersMap(bean, factoryParameter, PortalInfoImpl.getInstance( factoryParameter.getSiteId() ));
+        UrlInterpreterUtils.initParametersMap(bean, factoryParameter);
 
         // prepare parameters for others portlets
         prepareParameters( bean.getParameters(), path );

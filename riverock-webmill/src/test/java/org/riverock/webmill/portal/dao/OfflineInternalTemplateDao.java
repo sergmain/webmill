@@ -168,7 +168,7 @@ public class OfflineInternalTemplateDao implements InternalTemplateDao{
         digester.addBeanPropertySetter("table/row/VERSION", "version");
         digester.addBeanPropertySetter("table/row/TEMPLATE_ROLE", "templateRole");
         digester.addBeanPropertySetter("table/row/IS_MAXIMIZED_TEMPLATE", "maximizedTemplate");
-        digester.addBeanPropertySetter("table/row/IS_POPUP_TEMPLATE", "popupTemplae");
+        digester.addBeanPropertySetter("table/row/IS_POPUP_TEMPLATE", "popupTemplate");
 
         digester.addObjectCreate("table/row/TEMPLATE_BLOB", OfflineBlob.class);
 //        digester.addCallMethod("table/row/TEMPLATE_BLOB", "setData", 0,  new Class[]{OfflineBlob.class});

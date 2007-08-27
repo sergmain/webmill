@@ -8,11 +8,13 @@ import java.io.InputStream;
 import java.io.IOException;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.lang.StringUtils;
 
 import org.xml.sax.SAXException;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.bean.CatalogBean;
@@ -23,11 +25,12 @@ import org.riverock.webmill.portal.bean.CatalogBean;
  * Time: 11:12:05
  */
 public class OfflineInternalCatalogDao implements InternalCatalogDao {
-    public static CatalogLanguageBean catalogLanguageBean1 = new CatalogLanguageBean(124L, "mill-right1-en", false, 13L);
-    public static CatalogLanguageBean catalogLanguageBean2 = new CatalogLanguageBean(125L, "mill-right2-en", false, 13L);
-    public static CatalogLanguageBean catalogLanguageBean3 = new CatalogLanguageBean(126L, "mill-right3-en", false, 13L);
-    public static CatalogLanguageBean catalogLanguageBean4 = new CatalogLanguageBean(264L, "action-menu", false, 13L);
-    public static CatalogLanguageBean catalogLanguageBean5 = new CatalogLanguageBean(130L, "mill-topmenu-en", true, 13L);
+    private static final long SITE_LANGUAGE_ID = 13L;
+    public static CatalogLanguageBean catalogLanguageBean1 = new CatalogLanguageBean(124L, "mill-right1-en", false, SITE_LANGUAGE_ID);
+    public static CatalogLanguageBean catalogLanguageBean2 = new CatalogLanguageBean(125L, "mill-right2-en", false, SITE_LANGUAGE_ID);
+    public static CatalogLanguageBean catalogLanguageBean3 = new CatalogLanguageBean(126L, "mill-right3-en", false, SITE_LANGUAGE_ID);
+    public static CatalogLanguageBean catalogLanguageBean4 = new CatalogLanguageBean(264L, "action-menu", false, SITE_LANGUAGE_ID);
+    public static CatalogLanguageBean catalogLanguageBean5 = new CatalogLanguageBean(130L, "mill-topmenu-en", true, SITE_LANGUAGE_ID);
     /*
     124, mill-right1-en, 0, 13
     125, mill-right2-en, 0, 13
@@ -93,7 +96,18 @@ public class OfflineInternalCatalogDao implements InternalCatalogDao {
     }
 
     public Long getCatalogItemId(Long siteId, Locale locale, String pageUrl) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteId, locale.toString());
+        if (siteLanguage.getSiteLanguageId().equals(SITE_LANGUAGE_ID)) {
+            for (CatalogLanguageBean catalogLanguageBean : catalogLanguageBeans) {
+                List<CatalogItem> catalogItems = getCatalogItemList(catalogLanguageBean.getCatalogLanguageId());
+                for (CatalogItem catalogItem : catalogItems) {
+                    if (StringUtils.equals(catalogItem.getUrl(), pageUrl)) {
+                        return catalogItem.getCatalogId();
+                    }
+                }
+            }
+        }
+        return null;  
     }
 
     public Long getCatalogItemId(Long siteId, Locale locale, Long catalogId) {
@@ -132,7 +146,7 @@ public class OfflineInternalCatalogDao implements InternalCatalogDao {
         if (siteLanguageId==null) {
             return null;
         }
-        if (siteLanguageId==13L) {
+        if (siteLanguageId==SITE_LANGUAGE_ID) {
             return (List)catalogLanguageBeans;
         }
         return null;  //To change body of implemented methods use File | Settings | File Templates.

@@ -43,13 +43,13 @@ public final class PortalMenuLanguage implements MenuLanguage {
     private final static Logger log = Logger.getLogger( PortalMenuLanguage.class );
 
     private List<Menu> menu = null;
-    private SiteLanguage item = null;
+    private SiteLanguage siteLanguage = null;
     private boolean isNotInited=true;
 
     public PortalMenuLanguage(){}
 
     public void destroy() {
-        this.item = null;
+        this.siteLanguage = null;
         if (menu!=null) {
             for (Menu menu1 : menu) {
                 ((PortalMenu)menu1).destroy();
@@ -138,7 +138,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
             return;
         }
 
-        this.item = bean;
+        this.siteLanguage = bean;
 
         if (log.isDebugEnabled()) {
             log.debug("#33.07.00 ");
@@ -154,28 +154,28 @@ public final class PortalMenuLanguage implements MenuLanguage {
             return;
         }
         this.menu = new ArrayList<Menu>();
-        List<CatalogLanguageItem> list = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItemList( item.getSiteLanguageId() );
+        List<CatalogLanguageItem> list = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItemList( siteLanguage.getSiteLanguageId() );
 
         for (CatalogLanguageItem catalogLanguageBean : list) {
-            Menu catalog = new PortalMenu(catalogLanguageBean);
+            Menu catalog = new PortalMenu(siteLanguage.getSiteId(), catalogLanguageBean);
             menu.add(catalog);
         }
     }
 
     public String getLocaleStr() {
-        if (item == null) {
+        if (siteLanguage == null) {
             return null;
         }
 
-        return item.getCustomLanguage();
+        return siteLanguage.getCustomLanguage();
     }
 
     public String getLang() {
-        if (item == null) {
+        if (siteLanguage == null) {
             return null;
         }
 
-        return item.getNameCustomLanguage();
+        return siteLanguage.getNameCustomLanguage();
     }
 
     public void reinit() {
