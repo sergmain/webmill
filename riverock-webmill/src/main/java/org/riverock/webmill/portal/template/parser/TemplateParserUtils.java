@@ -1,7 +1,6 @@
-package org.riverock.webmill.template.parser;
+package org.riverock.webmill.portal.template.parser;
 
 import org.riverock.webmill.template.schema.*;
-import org.riverock.webmill.template.TemplateUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 

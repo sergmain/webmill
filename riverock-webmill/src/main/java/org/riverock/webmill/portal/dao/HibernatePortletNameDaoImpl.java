@@ -32,7 +32,7 @@ import org.hibernate.StatelessSession;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.bean.PortletNameBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov

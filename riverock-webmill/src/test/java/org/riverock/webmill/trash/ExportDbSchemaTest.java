@@ -10,7 +10,7 @@ import org.hibernate.Session;
 
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.webmill.utils.HibernateUtilsTest;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.db.DatabaseManager;

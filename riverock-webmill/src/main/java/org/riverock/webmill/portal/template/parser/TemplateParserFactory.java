@@ -1,4 +1,4 @@
-package org.riverock.webmill.template.parser;
+package org.riverock.webmill.portal.template.parser;
 
 /**
  * User: SMaslyukov

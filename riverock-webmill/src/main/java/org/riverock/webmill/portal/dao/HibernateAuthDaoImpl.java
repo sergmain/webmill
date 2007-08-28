@@ -43,7 +43,7 @@ import org.riverock.webmill.portal.bean.AuthInfoImpl;
 import org.riverock.webmill.portal.bean.AuthRelateRole;
 import org.riverock.webmill.portal.bean.RoleBeanImpl;
 import org.riverock.webmill.portal.bean.UserBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov

@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
 
 /**

@@ -39,10 +39,10 @@ import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.url.interpreter.RequestState;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
-import org.riverock.webmill.template.PortalTemplate;
-import org.riverock.webmill.template.PortalTemplateManagerFactory;
-import org.riverock.webmill.template.TemplateUtils;
-import org.riverock.webmill.template.parser.ParsedTemplateElement;
+import org.riverock.webmill.portal.template.PortalTemplate;
+import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
+import org.riverock.webmill.portal.template.TemplateUtils;
+import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 
 /**
  * $Id$

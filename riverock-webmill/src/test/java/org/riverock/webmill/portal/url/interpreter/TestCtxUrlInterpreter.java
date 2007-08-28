@@ -13,7 +13,7 @@ import javax.portlet.WindowState;
 import junit.framework.TestCase;
 
 import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.OfflineDaoFactory;
 import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProvider;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;

@@ -1,4 +1,4 @@
-package org.riverock.webmill.template;
+package org.riverock.webmill.portal.template;
 
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.tools.ContainertStringUtils;

@@ -22,11 +22,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.template;
+package org.riverock.webmill.portal.template;
 
 import java.io.Serializable;
 
-import org.riverock.webmill.template.parser.ParsedTemplateElement;
+import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 
 /**
  * Both attributes, 'nameTemplate' and 'name' are deprecated. Must

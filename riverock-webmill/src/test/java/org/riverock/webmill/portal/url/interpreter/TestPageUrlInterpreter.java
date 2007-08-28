@@ -16,7 +16,7 @@ import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProv
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;
-import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.interfaces.portal.PortalInfo;
 
 /**

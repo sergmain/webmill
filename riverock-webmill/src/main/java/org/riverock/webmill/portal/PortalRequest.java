@@ -6,7 +6,7 @@ import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
-import org.riverock.webmill.template.PortalTemplate;
+import org.riverock.webmill.portal.template.PortalTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

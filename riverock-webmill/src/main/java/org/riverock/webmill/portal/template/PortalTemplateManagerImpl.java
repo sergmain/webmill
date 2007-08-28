@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.template;
+package org.riverock.webmill.portal.template;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.template.parser.TemplateParserFactory;
+import org.riverock.webmill.portal.template.parser.TemplateParserFactory;
 
 /**
  * $Id$

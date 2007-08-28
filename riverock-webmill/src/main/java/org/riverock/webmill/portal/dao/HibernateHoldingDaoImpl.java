@@ -34,7 +34,7 @@ import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.bean.HoldingBean;
 import org.riverock.webmill.portal.bean.HoldingCompanyRelationBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov

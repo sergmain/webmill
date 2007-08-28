@@ -33,7 +33,7 @@ import org.hibernate.Query;
 import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
 
 /**

@@ -21,20 +21,29 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill;
+package org.riverock.webmill.portal.template;
 
 import java.io.Serializable;
 
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 
 /**
  * @author SergeMaslyukov
- *         Date: 30.12.2005
- *         Time: 15:49:56
+ *         Date: 01.01.2006
+ *         Time: 9:11:56
  *         $Id$
  */
-public interface XsltTransformerManager extends Serializable {
-    public XsltTransformer getXslt(String lang);
+public interface PortalTemplate extends Serializable {
+    public Long getTemplateId();
+    public String getRole();
+    public ParsedTemplateElement[] getTemplateElements();
 
-    void destroy();
+    /**
+     * This field used for check template is updated in db or not
+     * 
+     * @return version of db record
+     */
+    int getVersion();
+
+    public String getTemplateName();
 }

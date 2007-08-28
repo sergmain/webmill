@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.main;
+package org.riverock.webmill.css;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.interfaces.portal.bean.Css;
 

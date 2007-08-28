@@ -43,11 +43,11 @@ import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.template.PortalTemplate;
-import org.riverock.webmill.template.PortalTemplateManagerFactory;
+import org.riverock.webmill.portal.template.PortalTemplate;
+import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
 
 /**
  * @author Sergei Maslyukov

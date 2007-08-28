@@ -25,9 +25,8 @@
 package org.riverock.webmill.utils;
 
 import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.dialect.MySQL5Dialect;
 import org.hibernate.dialect.MySQL5InnoDBDialect;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * User: SergeMaslyukov

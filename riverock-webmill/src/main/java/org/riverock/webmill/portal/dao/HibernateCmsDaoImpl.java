@@ -45,7 +45,7 @@ import org.riverock.interfaces.portal.bean.NewsGroup;
 import org.riverock.webmill.portal.bean.ArticleBean;
 import org.riverock.webmill.portal.bean.NewsBean;
 import org.riverock.webmill.portal.bean.NewsGroupBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * User: SergeMaslyukov
