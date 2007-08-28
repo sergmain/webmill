@@ -49,10 +49,10 @@ import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.PortalRequest;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.url.interpreter.CtxUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.RequestState;
-import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
  * User: serg_main
@@ -70,17 +70,20 @@ public final class PortletURLImpl implements PortletURL {
     private Map<String, List<String>> parameters = new HashMap<String, List<String>>();
 
     private boolean secure;
-    private PortalRequest portalRequest = null;
+    private PortalRequestInstance portalRequest = null;
     private RenderRequest portletRequest = null;
+    private PortletContainer portletContainer = null;
     private boolean isActionReqeust = false;
     private Namespace namespace = null;
     private String portletName = null;
     private PortalContext portalContext = null;
 
     public PortletURLImpl(
-        PortalRequest portalRequest, RenderRequest renderRequest,
+        PortalRequestInstance portalRequest, RenderRequest renderRequest,
         boolean isActionReqeust, Namespace namespace, RequestState requestState,
-        String portletName, PortalContext portalContext) {
+        String portletName, PortalContext portalContext,
+        PortletContainer portletContainer
+    ) {
         this.portalRequest = portalRequest;
         this.portletRequest = renderRequest;
         this.secure = portalRequest.getHttpRequest().isSecure();
@@ -90,6 +93,7 @@ public final class PortletURLImpl implements PortletURL {
         this.namespace = namespace;
         this.portletName = portletName;
         this.portalContext = portalContext;
+        this.portletContainer = portletContainer;
     }
 
     /**
@@ -389,7 +393,7 @@ public final class PortletURLImpl implements PortletURL {
             portalRequest.getRequestContext().getDefaultPortletName();
             PortletEntry entry;
             try {
-                entry = portalRequest.getPortalInstance().getPortletContainer().getPortletInstance(porteltNameParam.get(0));
+                entry = portletContainer.getPortletInstance(porteltNameParam.get(0));
             }
             catch (PortletContainerException e) {
                 String es = "Error get PortletEntry";

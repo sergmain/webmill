@@ -26,7 +26,11 @@ package org.riverock.webmill.portal.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.portlet.PortletContext;
 import javax.portlet.PortletPreferences;
@@ -39,7 +43,8 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.generic.InternalRequest;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.portal.PortalRequest;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
@@ -54,7 +59,7 @@ public final class RenderRequestImpl extends WebmillPortletRequest implements Re
 
     public RenderRequestImpl(
         final Map<String, List<String>> parameters,
-        final PortalRequest portalRequest,
+        final PortalRequestInstance portalRequest,
         final Map<String, List<String>> renderParameters,
         final ServletContext servletContext,
         final String contextPath,
@@ -63,13 +68,14 @@ public final class RenderRequestImpl extends WebmillPortletRequest implements Re
         final PortletContext portletContext,
         final PortletDefinition portletDefinition,
         final Namespace namespace,
-        final PortalInfo portalInfo
+        final PortalInfo portalInfo,
+        PortalInstance portalInstance
     ) {
 
         super(
             servletContext, portalRequest.getHttpRequest(), portletPreferences,
             portletProperties, renderParameters, portletContext,
-            portletDefinition, namespace
+            portletDefinition, namespace, portalInstance
         );
 
         prepareRequest( parameters, portalRequest, contextPath, portalInfo );

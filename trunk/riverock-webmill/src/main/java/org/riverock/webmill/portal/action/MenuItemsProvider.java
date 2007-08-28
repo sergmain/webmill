@@ -1,19 +1,20 @@
 package org.riverock.webmill.portal.action;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.bean.PortletName;
-import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portal.bean.PortletName;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.webmill.container.bean.PortletWebApplication;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.PortalRequest;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 
@@ -25,7 +26,7 @@ import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 public class MenuItemsProvider {
     private final static Logger log = Logger.getLogger( MenuItemsProvider.class );
 
-    public static List<ClassQueryItem> getMenuItems(PortalRequest portalRequest, Long siteId, Map<String, Object> parameters) {
+    public static List<ClassQueryItem> getMenuItems(PortalInstance portalInstance, PortalRequestInstance portalRequest, Long siteId, Map<String, Object> parameters) {
         Long portletId = (Long)parameters.get("portletId");
         Long catalogLanguageId = (Long)parameters.get("catalogLanguageId");
         Long contextId = (Long)parameters.get("contextId");
@@ -42,7 +43,7 @@ public class MenuItemsProvider {
             return new ArrayList<ClassQueryItem>(0);
         }
 
-        PortletWebApplication portletWebApplication = portalRequest.getPortalInstance().getPortletContainer().searchPortletItem( bean.getPortletName() );
+        PortletWebApplication portletWebApplication = portalInstance.getPortletContainer().searchPortletItem( bean.getPortletName() );
 
         if (log.isDebugEnabled()) {
             log.debug("portletWebApplication "+portletWebApplication);
@@ -109,7 +110,7 @@ public class MenuItemsProvider {
                         )
                     );
                 }
-                ClassLoader classLoader = portalRequest.getPortalInstance().getPortalClassLoader();
+                ClassLoader classLoader = portalInstance.getPortalClassLoader();
                 obj.setPortalDaoProvider(new PortalDaoProviderImpl(portalRequest.getAuth(), classLoader, siteId));
                 return obj.getList( catalogLanguageId, contextId);
             }

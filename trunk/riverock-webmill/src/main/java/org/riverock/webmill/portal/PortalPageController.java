@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.xml.transform.Source;
@@ -43,6 +44,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.MainTools;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.portal.page_element.PageElement;
+import org.riverock.webmill.portal.page_element.InitPageElements;
 
 /**
  * User: SergeMaslyukov
@@ -56,16 +58,19 @@ public final class PortalPageController {
     /**
      *  Main method for processing pages with portlets
      * @param portalRequestInstance request instance
+     * @param portalInstance portal current instance
      * @throws Exception on any error
      */
-    static void processPortalRequest( PortalRequestInstance portalRequestInstance ) throws Exception {
+    static void processPortalRequest( PortalRequestInstance portalRequestInstance, PortalInstance portalInstance ) throws Exception {
+
+        List<PageElement> pageElements = InitPageElements.initPageElements(portalRequestInstance, portalInstance);
 
         if ( log.isDebugEnabled() ) {
             log.debug( "Dynamic content type: "+portalRequestInstance.getRequestContext().getDefaultPortletName() );
             log.debug( "Template name: "+portalRequestInstance.getRequestContext().getTemplateName() );
             log.debug( "Locale request:\n"+portalRequestInstance.getLocale().toString() );
-            if (portalRequestInstance.template!=null) {
-                log.debug( "template:\n" + portalRequestInstance.template.toString());
+            if (portalRequestInstance.getTemplate()!=null) {
+                log.debug( "template:\n" + portalRequestInstance.getTemplate().toString());
             }
             else {
                 log.debug( "template is null ");
@@ -73,8 +78,8 @@ public final class PortalPageController {
         }
 
         if (!checkTemplateRole(portalRequestInstance)) {
-            portalRequestInstance.byteArrayOutputStream.write(
-                ("You has no sufficient roles. Need: "+portalRequestInstance.template.getRole()).getBytes()
+            portalRequestInstance.getByteArrayOutputStream().write(
+                ("You has no sufficient roles. Need: "+portalRequestInstance.getTemplate().getRole()).getBytes()
             );
             return;
         }
@@ -82,7 +87,7 @@ public final class PortalPageController {
         if (log.isDebugEnabled()) {
             log.debug("Start processing action method");
         }
-        processActionSiteTemplateItems( portalRequestInstance );
+        processActionSiteTemplateItems( portalInstance, portalRequestInstance, pageElements );
         if (portalRequestInstance.getRedirectUrl()!=null) {
             if (log.isDebugEnabled()) {
                 log.debug("RedirectUrl flag is true, terminate processing");
@@ -93,7 +98,7 @@ public final class PortalPageController {
         if (log.isDebugEnabled()) {
             log.debug("Start processing render method");
         }
-        render( portalRequestInstance );
+        render( portalRequestInstance, pageElements );
 
         if (portalRequestInstance.getRedirectUrl()!=null) {
             if (log.isDebugEnabled()) {
@@ -105,7 +110,7 @@ public final class PortalPageController {
         if (log.isDebugEnabled()) {
             log.debug("Start build result page");
         }
-        buildPage( portalRequestInstance );
+        buildPage( portalRequestInstance, pageElements );
 
         if (log.isDebugEnabled()) {
             log.debug("Finish processing page");
@@ -113,8 +118,8 @@ public final class PortalPageController {
     }
 
     private static boolean checkTemplateRole(PortalRequestInstance portalRequestInstance) {
-        if (portalRequestInstance.template==null ||
-            StringUtils.isBlank( portalRequestInstance.template.getRole() ) ) {
+        if (portalRequestInstance.getTemplate()==null ||
+            StringUtils.isBlank( portalRequestInstance.getTemplate().getRole() ) ) {
             return true;
         }
 
@@ -122,7 +127,7 @@ public final class PortalPageController {
             return false;
         }
 
-        StringTokenizer st = new StringTokenizer( portalRequestInstance.template.getRole(), ", ", false);
+        StringTokenizer st = new StringTokenizer( portalRequestInstance.getTemplate().getRole(), ", ", false);
         while (st.hasMoreTokens()) {
             String role = st.nextToken();
             if (portalRequestInstance.isUserInRole(role)) {
@@ -132,13 +137,13 @@ public final class PortalPageController {
         return false;
     }
 
-    private static void processActionSiteTemplateItems( PortalRequestInstance portalRequestInstance ) {
+    private static void processActionSiteTemplateItems( PortalInstance portalInstance, PortalRequestInstance portalRequestInstance, List<PageElement> pageElements ) {
 
         if ( log.isDebugEnabled() ) {
             log.debug( "Start process action" );
         }
 
-        for (PageElement pageElement : portalRequestInstance.getPageElementList()) {
+        for (PageElement pageElement : pageElements) {
 /*
             if (log.isDebugEnabled()) {
                 if (pageElement.getPortalTemplateItem().getTypeObject().getType()== PortalTemplateItemType.PORTLET_TYPE ||
@@ -177,9 +182,9 @@ public final class PortalPageController {
         }
     }
 
-    private static void render( PortalRequestInstance portalRequestInstance ) {
+    private static void render( PortalRequestInstance portalRequestInstance, List<PageElement> pageElements ) {
 
-        for (PageElement pageElement : portalRequestInstance.getPageElementList()) {
+        for (PageElement pageElement : pageElements) {
 /*
             ElementParameter templateItem = pageElement.getPortalTemplateItem();
 
@@ -207,10 +212,10 @@ public final class PortalPageController {
     }
 
     private final static Object syncCtxDebug = new Object();
-    private static void buildPage(PortalRequestInstance portalRequestInstance) throws Exception {
+    private static void buildPage(PortalRequestInstance portalRequestInstance, List<PageElement> pageElements) throws Exception {
 
         ByteArrayOutputStream outputStream = null;
-        Iterator<PageElement> iterator = portalRequestInstance.getPageElementList().iterator();
+        Iterator<PageElement> iterator = pageElements.iterator();
 
         if (!iterator.hasNext()) {
             return;
@@ -259,7 +264,7 @@ public final class PortalPageController {
                     }
                 }
 
-                portalRequestInstance.byteArrayOutputStream.write( item.getData() );
+                portalRequestInstance.getByteArrayOutputStream().write( item.getData() );
             }
             else {
                 // 1st xml element
@@ -312,13 +317,13 @@ public final class PortalPageController {
     private static void transformContent(ByteArrayOutputStream outputStream, PortalRequestInstance portalRequestInstance) throws IOException {
         try {
             ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
-            processTransforming(outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes, portalRequestInstance.getTempPath(),
+            processTransforming(outputStream, portalRequestInstance.getXslt().getTransformer(), tempBytes, portalRequestInstance.getTempPath(),
                 portalRequestInstance.getPortalTransformationParameters()
             );
-            portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
+            portalRequestInstance.getByteArrayOutputStream().write(tempBytes.toByteArray());
         } catch (Exception e) {
             log.warn("Error transform page element", e);
-            portalRequestInstance.byteArrayOutputStream.write("Error transform page element".getBytes());
+            portalRequestInstance.getByteArrayOutputStream().write("Error transform page element".getBytes());
         }
     }
 

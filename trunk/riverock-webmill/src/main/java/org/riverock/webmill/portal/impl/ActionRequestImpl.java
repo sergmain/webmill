@@ -27,9 +27,9 @@ package org.riverock.webmill.portal.impl;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +42,11 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.contenttype.ContentTypeManager;
-import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.portal.PortalRequest;
-import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.webmill.container.portlet.bean.PortletDefinition;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
  * User: Admin
@@ -89,7 +90,7 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
 
     public ActionRequestImpl(
         final Map<String, List<String>> parameters,
-        final PortalRequest portalRequest,
+        final PortalRequestInstance portalRequest,
         final ServletContext servletContext,
         final String contextPath,
         final PortletPreferences portletPreferences,
@@ -97,13 +98,15 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
         final PortletContext portletContext,
         final PortletDefinition portletDefinition,
         final Namespace namespace,
-        final PortalInfo portalInfo
+        final PortalInfo portalInfo,
+        PortalInstance portalInstance
         ) {
 
         super(
             servletContext, portalRequest.getHttpRequest(), portletPreferences,
             portletProperties, new HashMap<String, List<String>>(),
-            portletContext, portletDefinition, namespace
+            portletContext, portletDefinition, namespace,
+            portalInstance
         );
 
         prepareRequest(parameters, portalRequest, contextPath, portalInfo);

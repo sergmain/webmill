@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.portlet.PortalContext;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.PortalContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.ServletResponseWrapper;
@@ -45,9 +45,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.servlet.ServletResponseWrapperInclude;
-import org.riverock.webmill.portal.PortalRequest;
-import org.riverock.webmill.portal.url.interpreter.RequestState;
+import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.portal.url.interpreter.RequestState;
 
 /**
  * User: Admin
@@ -70,13 +71,14 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     private ServletOutputStream wrappedWriter = null;
 
     // global parameters for page
-    private PortalRequest portalRequest = null;
+    private PortalRequestInstance portalRequest = null;
     private RenderRequest renderRequest = null;
 
     private Map<String, List<String>> portletProperties = null;
 
     private ServletResponseWrapper servletResponse = null;
     private PortalContext portalContext = null;
+    private PortletContainer portletContainer = null;
 
     /**
      * Portlet title
@@ -121,10 +123,12 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         title = null;
     }
 
-    public RenderResponseImpl( PortalRequest portalRequest,
+    public RenderResponseImpl( PortalRequestInstance portalRequest,
         RenderRequest renderRequest, HttpServletResponse response, Namespace namespace,
         Map<String, List<String>> portletProperties, RequestState requestState, String portletName,
-        PortalContext portalContext ) {
+        PortalContext portalContext,
+        PortletContainer portletContainer
+    ) {
         super(response);
         this.requestState = requestState;
         this.portalRequest = portalRequest;
@@ -134,6 +138,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         this.portletName = portletName;
         this.servletResponse = new ServletResponseWrapper( new ServletResponseWrapperInclude( portalRequest.getLocale() ) );
         this.portalContext = portalContext;
+        this.portletContainer = portletContainer;
     }
 
     /**
@@ -526,7 +531,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
      * @return a portlet render URL
      */
     public PortletURL createRenderURL() {
-        return new PortletURLImpl(portalRequest, renderRequest, false, namespace, requestState, portletName, portalContext);
+        return new PortletURLImpl(portalRequest, renderRequest, false, namespace, requestState, portletName, portalContext, portletContainer);
     }
 
     /**
@@ -544,7 +549,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
      * @return a portlet action URL
      */
     public PortletURL createActionURL() {
-        return new PortletURLImpl(portalRequest, renderRequest, true, namespace, requestState, portletName, portalContext);
+        return new PortletURLImpl(portalRequest, renderRequest, true, namespace, requestState, portletName, portalContext, portletContainer);
     }
 
     /**
