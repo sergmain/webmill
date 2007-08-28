@@ -22,14 +22,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.url;
+package org.riverock.webmill.portal.url.interpreter;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
-import org.riverock.webmill.portal.PortletParameters;
+import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
+import org.riverock.webmill.portal.url.interpreter.PortletParameters;
+import org.riverock.webmill.portal.url.interpreter.RequestState;
 
 /**
  * @author Sergei Maslyukov
