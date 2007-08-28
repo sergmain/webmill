@@ -21,37 +21,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.template;
+package org.riverock.webmill.portal.xslt;
 
 import java.io.Serializable;
 
+import org.riverock.interfaces.portal.xslt.XsltTransformer;
+
 /**
  * @author SergeMaslyukov
- *         Date: 01.01.2006
- *         Time: 9:45:11
+ *         Date: 30.12.2005
+ *         Time: 15:49:56
  *         $Id$
  */
-public interface PortalTemplateItemType extends Serializable {
-    /**
-     * The custom type
-     */
-    public static final int CUSTOM_TYPE = 0;
+public interface XsltTransformerManager extends Serializable {
+    public XsltTransformer getXslt(String lang);
 
-    /**
-     * The portlet type
-     */
-    public static final int PORTLET_TYPE = 1;
-
-    /**
-     * The dynamic type
-     */
-    public static final int DYNAMIC_TYPE = 2;
-
-    /**
-     * The file type
-     */
-    public static final int FILE_TYPE = 3;
-
-    public int getType();
-    public String toString();
+    void destroy();
 }

@@ -8,8 +8,9 @@ import junit.framework.TestCase;
 
 import org.riverock.common.tools.XmlTools;
 import org.riverock.webmill.template.schema.*;
-import org.riverock.webmill.template.parser.TemplateParserUtils;
+import org.riverock.webmill.portal.template.parser.TemplateParserUtils;
 import org.riverock.webmill.utils.SingletonFactory;
+import org.riverock.webmill.portal.template.TemplateUtils;
 
 /**
  * User: SMaslyukov

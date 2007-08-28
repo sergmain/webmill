@@ -10,14 +10,14 @@ import org.apache.log4j.Logger;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.PortalRequest;
+import org.riverock.webmill.portal.template.TemplateUtils;
+import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.preference.PreferenceFactory;
 import org.riverock.webmill.portal.url.interpreter.PortletParameters;
 import org.riverock.webmill.portal.url.interpreter.RequestState;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
-import org.riverock.webmill.template.TemplateUtils;
-import org.riverock.webmill.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.template.schema.Portlet;
 
 /**

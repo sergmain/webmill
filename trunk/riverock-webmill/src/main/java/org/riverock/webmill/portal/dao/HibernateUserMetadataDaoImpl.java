@@ -33,7 +33,7 @@ import org.hibernate.StatelessSession;
 import org.riverock.interfaces.portal.user.UserMetadataItem;
 import org.riverock.webmill.portal.bean.UserMetadataItemBean;
 import org.riverock.webmill.portal.bean.UserBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov

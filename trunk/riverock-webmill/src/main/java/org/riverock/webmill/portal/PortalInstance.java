@@ -6,8 +6,8 @@ import javax.servlet.ServletConfig;
 
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortalInstanceBase;
-import org.riverock.webmill.template.PortalTemplateManager;
-import org.riverock.webmill.XsltTransformerManager;
+import org.riverock.webmill.portal.template.PortalTemplateManager;
+import org.riverock.webmill.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.portal.search.PortalIndexer;
 
 /**

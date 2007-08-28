@@ -48,12 +48,12 @@ import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.search.PortalIndexerImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
-import org.riverock.webmill.template.PortalTemplateManager;
-import org.riverock.webmill.template.PortalTemplateManagerFactory;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.template.PortalTemplateManager;
+import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.XsltTransformerManager;
-import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
+import org.riverock.webmill.portal.xslt.XsltTransformerManager;
+import org.riverock.webmill.portal.xslt.XsltTransformetManagerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

@@ -34,7 +34,7 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.NewsBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov

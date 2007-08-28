@@ -9,6 +9,9 @@ import junit.framework.TestCase;
 
 import org.riverock.webmill.template.schema.Template;
 import org.riverock.webmill.utils.SingletonFactory;
+import org.riverock.webmill.portal.template.parser.TemplateParserFactory;
+import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
+import org.riverock.webmill.portal.template.parser.TemplateParserUtils;
 import org.riverock.common.tools.XmlTools;
 
 /**

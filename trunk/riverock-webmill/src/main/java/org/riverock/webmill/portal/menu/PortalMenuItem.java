@@ -39,8 +39,8 @@ import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.template.PortalTemplate;
-import org.riverock.webmill.template.PortalTemplateManagerFactory;
+import org.riverock.webmill.portal.template.PortalTemplate;
+import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
 
 /**
  *

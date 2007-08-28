@@ -44,8 +44,8 @@ import net.sf.ehcache.CacheManager;
 import org.riverock.webmill.portal.site.SiteList;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.dao.HibernateUtils;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.common.html.Header;
 

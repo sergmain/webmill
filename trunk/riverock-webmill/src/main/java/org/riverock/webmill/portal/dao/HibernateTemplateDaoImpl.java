@@ -38,7 +38,7 @@ import org.hibernate.StatelessSession;
 
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.webmill.portal.bean.TemplateBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov

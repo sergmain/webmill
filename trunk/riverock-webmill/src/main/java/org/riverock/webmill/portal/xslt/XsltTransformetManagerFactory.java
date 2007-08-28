@@ -1,6 +1,6 @@
-package org.riverock.webmill.xslt;
+package org.riverock.webmill.portal.xslt;
 
-import org.riverock.webmill.XsltTransformerManager;
+import org.riverock.webmill.portal.xslt.XsltTransformerManager;
 
 /**
  * User: SMaslyukov

@@ -32,7 +32,7 @@ import org.hibernate.StatelessSession;
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.bean.UserBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov

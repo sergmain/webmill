@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.utils;
+package org.riverock.webmill.portal.dao;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -144,7 +144,7 @@ public class HibernateUtils {
         }
     }
 
-    static void setAnnotatedClasses(AnnotationConfiguration cfg) {
+    public static void setAnnotatedClasses(AnnotationConfiguration cfg) {
         for (Class clazz : CLASSES) {
             cfg.addAnnotatedClass(clazz);
         }

@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.riverock.webmill.template.parser.ParsedTemplateElement;
+import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 
 /**
  * @author SergeMaslyukov

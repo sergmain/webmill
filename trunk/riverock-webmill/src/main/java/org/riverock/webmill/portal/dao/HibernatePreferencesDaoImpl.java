@@ -34,7 +34,7 @@ import org.hibernate.StatelessSession;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.common.collections.MapWithParameters;
 

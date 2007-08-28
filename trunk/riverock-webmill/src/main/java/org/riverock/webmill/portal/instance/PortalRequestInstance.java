@@ -46,7 +46,7 @@ import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;
@@ -56,8 +56,8 @@ import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.portal.*;
-import org.riverock.webmill.template.PortalTemplate;
-import org.riverock.webmill.template.parser.ParsedTemplateElement;
+import org.riverock.webmill.portal.template.PortalTemplate;
+import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**

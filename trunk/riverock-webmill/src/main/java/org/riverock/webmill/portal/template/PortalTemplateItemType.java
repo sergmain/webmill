@@ -21,29 +21,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.template;
+package org.riverock.webmill.portal.template;
 
 import java.io.Serializable;
-
-import org.riverock.webmill.template.parser.ParsedTemplateElement;
 
 /**
  * @author SergeMaslyukov
  *         Date: 01.01.2006
- *         Time: 9:11:56
+ *         Time: 9:45:11
  *         $Id$
  */
-public interface PortalTemplate extends Serializable {
-    public Long getTemplateId();
-    public String getRole();
-    public ParsedTemplateElement[] getTemplateElements();
+public interface PortalTemplateItemType extends Serializable {
+    /**
+     * The custom type
+     */
+    public static final int CUSTOM_TYPE = 0;
 
     /**
-     * This field used for check template is updated in db or not
-     * 
-     * @return version of db record
+     * The portlet type
      */
-    int getVersion();
+    public static final int PORTLET_TYPE = 1;
 
-    public String getTemplateName();
+    /**
+     * The dynamic type
+     */
+    public static final int DYNAMIC_TYPE = 2;
+
+    /**
+     * The file type
+     */
+    public static final int FILE_TYPE = 3;
+
+    public int getType();
+    public String toString();
 }

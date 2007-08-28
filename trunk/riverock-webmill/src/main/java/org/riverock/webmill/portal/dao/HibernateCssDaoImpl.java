@@ -40,7 +40,7 @@ import org.hibernate.StatelessSession;
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.portal.bean.CssBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * User: SergeMaslyukov

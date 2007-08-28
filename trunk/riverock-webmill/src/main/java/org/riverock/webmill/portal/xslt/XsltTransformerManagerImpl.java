@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.xslt;
+package org.riverock.webmill.portal.xslt;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.XsltTransformerManager;
+import org.riverock.webmill.portal.xslt.XsltTransformerManager;
 
 /**
  * @author Sergei Maslyukov

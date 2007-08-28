@@ -48,7 +48,7 @@ import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.PortalSessionManagerImpl;

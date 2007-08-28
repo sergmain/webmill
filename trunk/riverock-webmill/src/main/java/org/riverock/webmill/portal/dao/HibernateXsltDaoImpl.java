@@ -44,7 +44,7 @@ import org.riverock.common.exception.DatabaseException;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.webmill.portal.bean.PortalXsltBean;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov
