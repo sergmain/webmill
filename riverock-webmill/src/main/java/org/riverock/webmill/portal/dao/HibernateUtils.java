@@ -144,7 +144,7 @@ public class HibernateUtils {
         }
     }
 
-    public static void setAnnotatedClasses(AnnotationConfiguration cfg) {
+    static void setAnnotatedClasses(AnnotationConfiguration cfg) {
         for (Class clazz : CLASSES) {
             cfg.addAnnotatedClass(clazz);
         }

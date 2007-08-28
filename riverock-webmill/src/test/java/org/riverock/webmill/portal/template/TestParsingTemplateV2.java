@@ -1,4 +1,4 @@
-package org.riverock.webmill.template;
+package org.riverock.webmill.portal.template;
 
 import java.io.InputStream;
 import java.lang.Object;

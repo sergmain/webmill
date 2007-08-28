@@ -17,7 +17,7 @@ import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.DatabaseStructureManager;
 import org.riverock.dbrevision.utils.Utils;
 import org.riverock.webmill.portal.dao.HibernateUtils;
-import org.riverock.webmill.utils.HibernateUtilsTest;
+import org.riverock.webmill.portal.dao.HibernateUtilsTest;
 
 /**
  * User: SMaslyukov

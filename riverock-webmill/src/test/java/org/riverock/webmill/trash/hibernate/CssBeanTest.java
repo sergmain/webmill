@@ -33,7 +33,7 @@ import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.portal.bean.CssBean;
 import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
 import org.riverock.webmill.portal.dao.InternalCssDao;
-import org.riverock.webmill.utils.HibernateUtilsTest;
+import org.riverock.webmill.portal.dao.HibernateUtilsTest;
 
 /**
  * @author Sergei Maslyukov
