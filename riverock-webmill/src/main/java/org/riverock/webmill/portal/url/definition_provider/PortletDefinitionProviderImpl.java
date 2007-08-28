@@ -1,4 +1,4 @@
-package org.riverock.webmill.portal.url;
+package org.riverock.webmill.portal.url.definition_provider;
 
 import org.apache.log4j.Logger;
 
