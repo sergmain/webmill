@@ -24,29 +24,14 @@
  */
 package org.riverock.webmill.portal.instance;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
-
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
 import org.hibernate.stat.EntityStatistics;
 import org.hibernate.stat.Statistics;
-
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.search.PortalIndexer;
@@ -54,19 +39,33 @@ import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.container.tools.PortletContainerUtils;
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequest;
+import org.riverock.webmill.portal.PortalResponse;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.portal.namespace.NamespaceFactory;
+import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.search.PortalIndexerImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
-import org.riverock.webmill.portal.namespace.NamespaceMapper;
-import org.riverock.webmill.portal.namespace.NamespaceFactory;
-import org.riverock.webmill.portal.namespace.Namespace;
-import org.riverock.webmill.portal.page_element.PortalPageController;
-import org.riverock.webmill.portal.PortalResponse;
-import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.template.PortalTemplateManager;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.XsltTransformerManager;
+import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author smaslyukov
@@ -75,7 +74,7 @@ import org.riverock.webmill.utils.PortletUtils;
  *         $Id$
  */
 //@SuppressWarnings({"UnusedAssignment"})
-public class PortalInstanceImpl implements PortalInstance  {
+public class PortalInstanceImpl implements PortalInstance {
     private final static Logger log = Logger.getLogger(PortalInstanceImpl.class);
 
     private static final String UNKNOWN_PORTAL_VERSON = "0.0.1";
@@ -101,6 +100,7 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private Long siteId;
 
+    private XsltTransformerManager xsltTransformerManager=null;
     private PortalTemplateManager portalTemplateManager=null;
     private ClassLoader portalClassLoader=null;
 
@@ -115,10 +115,16 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
         siteId=null;
         portalClassLoader = null;
+        portalTemplateManager.destroy();
+        xsltTransformerManager.destroy();
     }
 
     public ClassLoader getPortalClassLoader() {
         return portalClassLoader;
+    }
+
+    public XsltTransformerManager getXsltTransformerManager() {
+        return xsltTransformerManager;
     }
 
     public PortalTemplateManager getPortalTemplateManager() {
@@ -204,6 +210,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
         this.portalIndexer = new PortalIndexerImpl(this.siteId, this.portletContainer, portalClassLoader);
         this.portalTemplateManager = PortalTemplateManagerFactory.getInstance(this.siteId);
+        this.xsltTransformerManager = XsltTransformetManagerFactory.getInstanse(this.siteId);
     }
 
     public Long getSiteId() {
@@ -236,7 +243,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
 
         PortalResponse portalResponse=null;
-        PortalRequestInstance portalRequestInstance=null;
+        PortalRequest portalRequest =null;
         try {
 /*
             boolean isSessionValid = request_.isRequestedSessionIdValid();
@@ -254,9 +261,9 @@ public class PortalInstanceImpl implements PortalInstance  {
                 checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), request_.getSession(false));
             }
 
-            portalRequestInstance = new PortalRequestInstance( request_, response_, this );
-            portalResponse = new PortalResponse();
-            PortalPageController.processPortalRequest(this, portalRequestInstance, portalResponse);
+            portalRequest = new PortalRequestInstance( request_, response_, this );
+            portalResponse = new PortalResponseImpl();
+            PortalPageController.processPortalRequest(this, portalRequest, portalResponse);
         }
         catch (Throwable e) {
             String es = "General error processing request";
@@ -276,11 +283,11 @@ public class PortalInstanceImpl implements PortalInstance  {
                 }
             }
             if (portalResponse==null) {
-                portalResponse = new PortalResponse();
+                portalResponse = new PortalResponseImpl();
             }                                                            
 
-            if (portalRequestInstance==null) {
-                portalRequestInstance = new PortalRequestInstance();
+            if (portalRequest ==null) {
+                portalRequest = new PortalRequestInstance();
             }
 
             portalResponse.getByteArrayOutputStream().reset();
@@ -303,7 +310,7 @@ public class PortalInstanceImpl implements PortalInstance  {
                 }
 //                response_.isOk = true;
 
-                setCookie(portalRequestInstance, response_);
+                setCookie(portalRequest, response_);
 
                 portalResponse.getByteArrayOutputStream().close();
                 portalResponse.setByteArrayOutputStream(null);
@@ -319,7 +326,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             }
 
             portalResponse.getByteArrayOutputStream().close();
-            StringBuilder timeString = getTimeString(counter, portalRequestInstance.getStartMills());
+            StringBuilder timeString = getTimeString(counter, portalRequest.getStartMills());
             final byte[] bytesCopyright = getCopyright().getBytes();
             final byte[] bytes = portalResponse.getByteArrayOutputStream().toByteArray();
             final byte[] bytesTimeString = timeString.toString().getBytes();
@@ -332,10 +339,10 @@ public class PortalInstanceImpl implements PortalInstance  {
             }
 
 //            response_.isOk = true;
-            if (portalRequestInstance.getLocale() != null) {
-                response_.setLocale(portalRequestInstance.getLocale());
+            if (portalRequest.getLocale() != null) {
+                response_.setLocale(portalRequest.getLocale());
             }
-            setCookie(portalRequestInstance, response_);
+            setCookie(portalRequest, response_);
             response_.setHeader("X-Powered-By", PORTAL_INFO);
             response_.setHeader("Server", PORTAL_INFO);
 
@@ -344,8 +351,8 @@ public class PortalInstanceImpl implements PortalInstance  {
             response_.setHeader("Pragma", "no-cache");
             response_.setContentLength(bytesCopyright.length + bytes.length + bytesTimeString.length);
 
-            portalRequestInstance.destroy();
-            portalRequestInstance = null;
+            portalRequest.destroy();
+            portalRequest = null;
 
             OutputStream out = response_.getOutputStream();
             // output copyright
@@ -378,10 +385,10 @@ public class PortalInstanceImpl implements PortalInstance  {
                 log.debug("Start finally-finally block");
             }
             try {
-                if (portalRequestInstance != null) {
-                    portalRequestInstance.destroy();
+                if (portalRequest != null) {
+                    portalRequest.destroy();
                     //noinspection UnusedAssignment
-                    portalRequestInstance=null;
+                    portalRequest =null;
                 }
             }
             catch (Throwable e) {
@@ -509,9 +516,9 @@ public class PortalInstanceImpl implements PortalInstance  {
         return new StringBuilder( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
     }
 
-    private static void setCookie( PortalRequestInstance portalRequestInstance, HttpServletResponse response_ ) {
+    private static void setCookie( PortalRequest portalRequest, HttpServletResponse response_ ) {
         // set Cookie
-        CookieManager cookieManager = portalRequestInstance.getCookieManager();
+        CookieManager cookieManager = portalRequest.getCookieManager();
         if (log.isDebugEnabled() ) {
             log.debug( "CookieManager: " + cookieManager );
         }

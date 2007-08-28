@@ -33,8 +33,8 @@ import org.riverock.interfaces.portal.action.PortalActionExecutor;
 import org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapService;
 import org.riverock.webmill.portal.action.menu.MenuItemsProvider;
 import org.riverock.webmill.portal.action.url_checker.UrlCycleChecker;
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.instance.PortalInstance;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequest;
 
 /**
  * @author Sergei Maslyukov
@@ -65,9 +65,9 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
     private String applicationPath;
     private String portalContext;
     private PortalInstance portalInstance;
-    private PortalRequestInstance portalRequest;
+    private PortalRequest portalRequest;
 
-    public PortalActionExecutorImpl(PortalInstance portalInstance, Long siteId, String applicationPath, String virtualHostUrl, String portalContext, PortalRequestInstance portalRequest) {
+    public PortalActionExecutorImpl(PortalInstance portalInstance, Long siteId, String applicationPath, String virtualHostUrl, String portalContext, PortalRequest portalRequest) {
         this.siteId=siteId;
         this.virtualHostUrl=virtualHostUrl;
         this.applicationPath=applicationPath;

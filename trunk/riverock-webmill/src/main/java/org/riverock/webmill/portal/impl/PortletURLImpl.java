@@ -49,10 +49,10 @@ import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.url.interpreter.CtxUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.RequestState;
+import org.riverock.webmill.portal.PortalRequest;
 
 /**
  * User: serg_main
@@ -70,7 +70,7 @@ public final class PortletURLImpl implements PortletURL {
     private Map<String, List<String>> parameters = new HashMap<String, List<String>>();
 
     private boolean secure;
-    private PortalRequestInstance portalRequest = null;
+    private PortalRequest portalRequest = null;
     private RenderRequest portletRequest = null;
     private PortletContainer portletContainer = null;
     private boolean isActionReqeust = false;
@@ -79,7 +79,7 @@ public final class PortletURLImpl implements PortletURL {
     private PortalContext portalContext = null;
 
     public PortletURLImpl(
-        PortalRequestInstance portalRequest, RenderRequest renderRequest,
+        PortalRequest portalRequest, RenderRequest renderRequest,
         boolean isActionReqeust, Namespace namespace, RequestState requestState,
         String portletName, PortalContext portalContext,
         PortletContainer portletContainer

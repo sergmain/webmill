@@ -55,8 +55,8 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.portlet.bean.Supports;
 import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.instance.PortalInstance;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.action.PortalActionExecutorImpl;
 import org.riverock.webmill.portal.mail.PortalMailServiceProviderImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
@@ -878,7 +878,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     protected void prepareRequest(
-        final Map<String, List<String>> parameters, final PortalRequestInstance portalRequest,
+        final Map<String, List<String>> parameters, final PortalRequest portalRequest,
         final String contextPath, final PortalInfo portalInfo
     ) {
 

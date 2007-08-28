@@ -11,7 +11,6 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 import org.riverock.common.tools.XmlTools;
 import org.riverock.webmill.exception.ParseTemplatePortalException;
-import org.riverock.webmill.template.TemplateUtils;
 import org.riverock.webmill.template.schema.Template;
 import org.riverock.webmill.utils.SingletonFactory;
 
@@ -55,7 +54,7 @@ public class TemplateParser {
             int endTemplate = idx;
 
             List<ParsedTemplateElement> o = new ArrayList<ParsedTemplateElement>();
-            List<Object> list = TemplateUtils.getElements(t);
+            List<Object> list = TemplateParserUtils.getElements(t);
 
             int startText = startTemplate;
             int endText;

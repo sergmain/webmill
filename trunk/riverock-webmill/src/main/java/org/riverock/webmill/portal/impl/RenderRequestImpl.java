@@ -43,8 +43,8 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.generic.InternalRequest;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.instance.PortalInstance;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
@@ -59,7 +59,7 @@ public final class RenderRequestImpl extends WebmillPortletRequest implements Re
 
     public RenderRequestImpl(
         final Map<String, List<String>> parameters,
-        final PortalRequestInstance portalRequest,
+        final PortalRequest portalRequest,
         final Map<String, List<String>> renderParameters,
         final ServletContext servletContext,
         final String contextPath,

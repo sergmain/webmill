@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal;
+package org.riverock.webmill.portal.instance;
 
 import java.io.File;
 import java.util.Enumeration;
@@ -55,12 +55,10 @@ import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.utils.PortalUtils;
-import org.riverock.webmill.portal.instance.PortalInstance;
+import org.riverock.webmill.portal.*;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.xslt.XsltTransformerManager;
-import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
 
 /**
  * User: Admin
@@ -69,7 +67,7 @@ import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
  * <p/>
  * $Id$
  */
-public final class PortalRequestInstance {
+public final class PortalRequestInstance implements PortalRequest {
     private final static Logger log = Logger.getLogger(PortalRequestInstance.class);
 
     private static final int MAX_REQUEST_BODY_SIZE = 25 * 1024 * 1024; // 25Mb
@@ -250,7 +248,7 @@ public final class PortalRequestInstance {
             }
 
             initTemplate(portalInstance);
-            initXslt(portalInfo);
+            initXslt(portalInstance);
         }
         finally {
             if (log.isInfoEnabled()) {
@@ -395,15 +393,8 @@ public final class PortalRequestInstance {
         log.debug("template:\n" + getTemplate().toString());
     }
 
-    private void initXslt(PortalInfo portalInfo) throws PortalException {
-        XsltTransformerManager transformerManager = XsltTransformetManagerFactory.getInstanse(portalInfo.getSiteId());
-        // prepare Xsl objects
-        if (transformerManager == null) {
-            String errorString = "XSL template not defined";
-            log.error(errorString);
-            throw new PortalException(errorString);
-        }
-        xslt = transformerManager.getXslt(getLocale().toString());
+    private void initXslt(PortalInstance portalInstance) throws PortalException {
+        xslt = portalInstance.getXsltTransformerManager().getXslt(getLocale().toString());
         if (getXslt() == null) {
             String errorString = "XSLT for locale " + getLocale().toString() + " not defined.";
             log.error(errorString);

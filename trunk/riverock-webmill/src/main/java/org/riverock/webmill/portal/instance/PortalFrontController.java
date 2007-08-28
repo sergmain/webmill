@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.page_element;
+package org.riverock.webmill.portal.instance;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,11 +43,9 @@ import net.sf.ehcache.CacheManager;
 
 import org.riverock.webmill.portal.site.SiteList;
 import org.riverock.webmill.portal.menu.SiteMenu;
-import org.riverock.webmill.portal.instance.PortalInstanceImpl;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.template.PortalTemplateManagerFactory;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.common.html.Header;
 
@@ -81,7 +79,6 @@ public final class PortalFrontController extends HttpServlet {
         catch (Throwable th) {
             log.warn("Error unload hibernate", th);
         }
-        PortalTemplateManagerFactory.destroyAll();
         PortalInfoImpl.destroyAll();
         SiteMenu.destroyAll();
         CacheManager.getInstance().shutdown();

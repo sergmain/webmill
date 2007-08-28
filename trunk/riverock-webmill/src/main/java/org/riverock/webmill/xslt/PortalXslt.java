@@ -48,7 +48,6 @@ public class PortalXslt implements XsltTransformer {
 
     private Xslt xslt = null;
     private Templates translet = null;
-    private final Object transformerSync = new Object();
 
     protected void finalize() throws Throwable {
         xslt = null;

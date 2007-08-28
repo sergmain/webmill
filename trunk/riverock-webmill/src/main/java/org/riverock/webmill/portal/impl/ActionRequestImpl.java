@@ -44,8 +44,8 @@ import org.apache.log4j.Logger;
 import org.riverock.common.contenttype.ContentTypeManager;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.instance.PortalInstance;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
@@ -90,7 +90,7 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
 
     public ActionRequestImpl(
         final Map<String, List<String>> parameters,
-        final PortalRequestInstance portalRequest,
+        final PortalRequest portalRequest,
         final ServletContext servletContext,
         final String contextPath,
         final PortletPreferences portletPreferences,

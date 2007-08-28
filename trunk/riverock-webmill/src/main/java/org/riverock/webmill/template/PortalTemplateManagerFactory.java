@@ -7,6 +7,8 @@ import java.util.HashMap;
  * User: SMaslyukov
  * Date: 26.07.2007
  * Time: 17:47:21
+ *
+ * $Id: PortalFrontController.java 1370 2007-08-28 13:53:47Z serg_main $
  */
 public class PortalTemplateManagerFactory {
     

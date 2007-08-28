@@ -1,4 +1,4 @@
-package org.riverock.webmill.portal.instance;
+package org.riverock.webmill.portal;
 
 import java.util.Collection;
 
@@ -7,6 +7,7 @@ import javax.servlet.ServletConfig;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortalInstanceBase;
 import org.riverock.webmill.template.PortalTemplateManager;
+import org.riverock.webmill.XsltTransformerManager;
 import org.riverock.interfaces.portal.search.PortalIndexer;
 
 /**
@@ -33,4 +34,6 @@ public interface PortalInstance extends PortalInstanceBase {
     PortalTemplateManager getPortalTemplateManager();
 
     Long getSiteId();
+
+    XsltTransformerManager getXsltTransformerManager();
 }

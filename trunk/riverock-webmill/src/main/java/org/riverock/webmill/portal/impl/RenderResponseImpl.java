@@ -46,9 +46,9 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.servlet.ServletResponseWrapperInclude;
 import org.riverock.webmill.container.portlet.PortletContainer;
-import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.url.interpreter.RequestState;
+import org.riverock.webmill.portal.PortalRequest;
 
 /**
  * User: Admin
@@ -71,7 +71,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     private ServletOutputStream wrappedWriter = null;
 
     // global parameters for page
-    private PortalRequestInstance portalRequest = null;
+    private PortalRequest portalRequest = null;
     private RenderRequest renderRequest = null;
 
     private Map<String, List<String>> portletProperties = null;
@@ -123,7 +123,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         title = null;
     }
 
-    public RenderResponseImpl( PortalRequestInstance portalRequest,
+    public RenderResponseImpl( PortalRequest portalRequest,
         RenderRequest renderRequest, HttpServletResponse response, Namespace namespace,
         Map<String, List<String>> portletProperties, RequestState requestState, String portletName,
         PortalContext portalContext,

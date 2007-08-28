@@ -13,8 +13,8 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.webmill.container.bean.PortletWebApplication;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.instance.PortalInstance;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 
@@ -26,7 +26,7 @@ import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 public class MenuItemsProvider {
     private final static Logger log = Logger.getLogger( MenuItemsProvider.class );
 
-    public static List<ClassQueryItem> getMenuItems(PortalInstance portalInstance, PortalRequestInstance portalRequest, Long siteId, Map<String, Object> parameters) {
+    public static List<ClassQueryItem> getMenuItems(PortalInstance portalInstance, PortalRequest portalRequest, Long siteId, Map<String, Object> parameters) {
         Long portletId = (Long)parameters.get("portletId");
         Long catalogLanguageId = (Long)parameters.get("catalogLanguageId");
         Long contextId = (Long)parameters.get("contextId");

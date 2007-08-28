@@ -33,13 +33,15 @@ import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.XsltTransformerManager;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 07.11.2006
  *         Time: 20:05:34
  *         <p/>
- *         $Id$
+ * 
+ * $Id: PortalFrontController.java 1370 2007-08-28 13:53:47Z serg_main $
  */
 public class XsltTransformerManagerImpl implements XsltTransformerManager {
     private final static Logger log = Logger.getLogger(XsltTransformerManagerImpl.class);
@@ -52,6 +54,13 @@ public class XsltTransformerManagerImpl implements XsltTransformerManager {
     private Long siteId;
     private Map<String, Transformation> map = new HashMap<String, Transformation>();
 
+    public void destroy() {
+        if (map!=null) {
+            map.clear();
+            map=null;
+        }
+        siteId = null;
+    }
 
     public XsltTransformerManagerImpl(Long siteId) {
         this.siteId = siteId;

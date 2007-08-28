@@ -4,21 +4,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.riverock.webmill.portal.PortalResponse;
 
 /**
  * User: SMaslyukov
  * Date: 28.08.2007
  * Time: 16:56:54
  */
-public class PortalResponse {
-    private final static Logger log = Logger.getLogger(PortalResponse.class);
+public class PortalResponseImpl implements PortalResponse {
+    private final static Logger log = Logger.getLogger(PortalResponseImpl.class);
 
     private static final int WEBPAGE_BUFFER_SIZE = 15000;
 
     private ByteArrayOutputStream byteArrayOutputStream = null;
     private String redirectUrl = null;
 
-    public PortalResponse() {
+    public PortalResponseImpl() {
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
     }
 
