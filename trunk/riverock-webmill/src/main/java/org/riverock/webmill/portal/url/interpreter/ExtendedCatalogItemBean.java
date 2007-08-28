@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.bean;
+package org.riverock.webmill.portal.url.interpreter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +44,7 @@ import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
