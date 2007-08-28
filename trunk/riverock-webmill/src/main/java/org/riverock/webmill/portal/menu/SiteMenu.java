@@ -24,13 +24,18 @@
  */
 package org.riverock.webmill.portal.menu;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.Logger;
+
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * $Id$
@@ -141,6 +146,6 @@ public final class SiteMenu implements Observer {
     }
 
     public void update(Observable o, Object arg) {
-        
+        invalidateCache((Long)arg);
     }
 }
