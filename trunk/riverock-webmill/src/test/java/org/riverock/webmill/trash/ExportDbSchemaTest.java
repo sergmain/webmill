@@ -9,7 +9,7 @@ import javax.xml.bind.JAXBException;
 import org.hibernate.Session;
 
 import org.riverock.common.exception.DatabaseException;
-import org.riverock.webmill.utils.HibernateUtilsTest;
+import org.riverock.webmill.portal.dao.HibernateUtilsTest;
 import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.Database;
