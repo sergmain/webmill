@@ -27,17 +27,13 @@ package org.riverock.webmill.portal;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -53,30 +49,19 @@ import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
-import org.riverock.webmill.portal.namespace.Namespace;
-import org.riverock.webmill.portal.namespace.NamespaceFactory;
-import org.riverock.webmill.portal.namespace.NamespaceMapper;
-import org.riverock.webmill.portal.page_element.PageElement;
-import org.riverock.webmill.portal.page_element.PageElementPortlet;
-import org.riverock.webmill.portal.page_element.StringPageElement;
-import org.riverock.webmill.portal.page_element.XsltPageElement;
-import org.riverock.webmill.portal.preference.PreferenceFactory;
-import org.riverock.webmill.portal.url.PortletDefinitionProviderImpl;
-import org.riverock.webmill.portal.url.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
-import org.riverock.webmill.portal.url.RequestState;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;
+import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProviderImpl;
+import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.template.PortalTemplate;
-import org.riverock.webmill.template.TemplateUtils;
 import org.riverock.webmill.template.parser.ParsedTemplateElement;
-import org.riverock.webmill.template.schema.Portlet;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
 import org.riverock.webmill.xslt.XsltTransformerManager;
+import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
 
 /**
  * User: Admin
@@ -88,16 +73,14 @@ import org.riverock.webmill.xslt.XsltTransformerManager;
 public final class PortalRequestInstance {
     private final static Logger log = Logger.getLogger(PortalRequestInstance.class);
 
-    private List<PageElement> pageElementList = new ArrayList<PageElement>();
-
     private static final int WEBPAGE_BUFFER_SIZE = 15000;
     private static final int MAX_REQUEST_BODY_SIZE = 25 * 1024 * 1024; // 25Mb
 
-    ByteArrayOutputStream byteArrayOutputStream = null;
-    XsltTransformer xslt = null;
-    PortalTemplate template = null;
+    private ByteArrayOutputStream byteArrayOutputStream = null;
+    private XsltTransformer xslt = null;
+    private PortalTemplate template = null;
 
-    long startMills;
+    private long startMills;
 
     private UrlInterpreterResult urlInterpreterResult = null;
 
@@ -108,9 +91,7 @@ public final class PortalRequestInstance {
 
     private HttpServletRequest httpRequest = null;
     private HttpServletResponse httpResponse = null;
-    private PortalInstance portalInstance;
     private AuthSession auth = null;
-//    private ActionRequestImpl actionRequest = null;
     private CookieManager cookieManager = new CookieManagerImpl();
 
     private String errorString = null;
@@ -127,14 +108,6 @@ public final class PortalRequestInstance {
     private PortalTransformationParameters portalTransformationParameters = new PortalTransformationParameters();
 
     public void destroy() {
-        if (pageElementList!=null) {
-            for (PageElement pageElement : pageElementList) {
-                pageElement.destroy();
-            }
-            pageElementList.clear();
-            pageElementList=null;
-        }
-
         if (byteArrayOutputStream != null) {
             try {
                 // TODO remove?
@@ -196,6 +169,10 @@ public final class PortalRequestInstance {
         return portalDaoProvider;
     }
 
+    public UrlInterpreterResult getUrlInterpreterResult() {
+        return urlInterpreterResult;
+    }
+
     PortalRequestInstance(
         HttpServletRequest request_,
         HttpServletResponse response_,
@@ -203,7 +180,6 @@ public final class PortalRequestInstance {
     ) throws PortalException {
 
         this.startMills = System.currentTimeMillis();
-        this.portalInstance = portalInstance;
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
 
         if (log.isInfoEnabled()) {
@@ -253,7 +229,7 @@ public final class PortalRequestInstance {
             UrlInterpreterParameter interpreterParameter =
                 new UrlInterpreterParameter(
                     httpRequest.getPathInfo(),
-                    new PortletDefinitionProviderImpl(portalInstance.getPortletContainer()), 
+                    new PortletDefinitionProviderImpl(portalInstance.getPortletContainer()),
                     isMultiPartRequest, requestBodyFile,
                     portalInfo.getSiteId(),
                     PortalUtils.prepareLocale(httpRequest, portalInfo.getSiteId()),
@@ -290,119 +266,12 @@ public final class PortalRequestInstance {
                 log.debug("#10.6, portal context path: " + portalTransformationParameters.getPortalContextPath());
             }
 
-            initTemplate();
+            initTemplate(portalInstance);
             initXslt(portalInfo);
-
-            // init page element list
-            int i = 0;
-            for (ParsedTemplateElement o : template.getTemplateElements()) {
-
-                String portletName;
-                Namespace namespace = null;
-                PortletParameters portletParameters = null;
-                String targetTemplateName;
-
-                if (o.isPortlet() && StringUtils.isNotBlank(o.getPortlet().getTemplate())) {
-                    targetTemplateName = o.getPortlet().getTemplate(); 
-                }
-                else {
-                    targetTemplateName = urlInterpreterResult.getTemplateName();
-                }
-
-                if (o.isPortlet()) {
-                    Portlet p = o.getPortlet();
-                    portletName = TemplateUtils.getFullPortletName( p.getName() );
-
-                    namespace = NamespaceFactory.getNamespace(portletName, targetTemplateName, NamespaceFactory.getTemplateUniqueIndex(o, i++));
-
-                    portletParameters = urlInterpreterResult.getParameters().get(namespace.getNamespace());
-                    if (portletParameters == null) {
-                        portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, List<String>>());
-                    }
-                }
-                else if (o.isDynamic()) {
-                    portletName = urlInterpreterResult.getDefaultPortletName();
-                    namespace = NamespaceFactory.getNamespace(portletName, targetTemplateName, NamespaceFactory.getTemplateUniqueIndex(o, i++));
-
-                    portletParameters = urlInterpreterResult.getParameters().get(namespace.getNamespace());
-
-                    if (portletParameters == null) {
-                        log.error(
-                            "portletParameters object is null, " +
-                                "namespace: " + namespace.getNamespace() + ", " +
-                                "portletName: " + portletName
-                        );
-                        // skip this portlet
-                        continue;
-                    }
-                }
-
-                // chech for template item is not restricted after create namespace
-                // restriction of template item must be processed after
-/*
-                if (!checkTemplateItemRole(o)) {
-                    continue;
-                }
-*/
-
-                PageElement element;
-                switch (o.getType()) {
-                    case PORTLET: {
-                        Portlet p = o.getPortlet();
-                        if (log.isDebugEnabled()) {
-                            log.debug("PageElementPortlet, " +
-                                "name: " + p.getName() + ", " +
-                                ", code: " + p.getCode() + ", xmlRoot: " + p.getXmlRoot());
-                            log.debug("namespace: " + namespace);
-                            log.debug("portletParameters: " + portletParameters);
-                            log.debug("element.getParameters(): " + p.getElementParameter());
-                        }
-
-                        element = new PageElementPortlet(
-                            portalInstance, namespace, portletParameters, targetTemplateName, p.getXmlRoot(), p.getCode(), p.getElementParameter(),
-                            this, TemplateUtils.getFullPortletName( p.getName() ),
-                            new ArrayList<String>(),
-                            PreferenceFactory.getStubPortletPreferencePersistencer()
-                        );
-                        break;
-                    }
-                    case DYNAMIC: {
-                        if (log.isDebugEnabled()) {
-                            log.debug("PageElementPortlet as dynamiic");
-                            log.debug("getDefaultPortletDefinition(): " + urlInterpreterResult.getDefaultPortletName());
-                            log.debug("namespace: " + namespace);
-                            log.debug("portletParameters: " + portletParameters);
-                        }
-                        element = new PageElementPortlet(
-                            portalInstance, namespace, portletParameters, targetTemplateName, null, null, null,
-                            this, urlInterpreterResult.getDefaultPortletName(),
-                            urlInterpreterResult.getExtendedCatalogItem().getRoleList(),
-                            PreferenceFactory.getPortletPreferencePersistencer(urlInterpreterResult.getExtendedCatalogItem().getCatalogId())
-                        );
-                        break;
-                    }
-                    case XSLT:
-                        element = new XsltPageElement(o.getXslt().getName());
-                        break;
-                    case STRING:
-                        element = new StringPageElement(o.getString());
-                        break;
-                    case INCLUDE:
-                        continue;
-                    default:
-                        throw new PortalException("Unknown type of template element: " + o.getType());
-                }
-                if (log.isDebugEnabled()) {
-                    log.debug("#5.20");
-                }
-
-                pageElementList.add(element);
-            }
-
         }
         finally {
             if (log.isInfoEnabled()) {
-                log.info("init PortalRequestInstance for " + (System.currentTimeMillis() - startMills) + " milliseconds");
+                log.info("init PortalRequestInstance for " + (System.currentTimeMillis() - getStartMills()) + " milliseconds");
             }
         }
     }
@@ -449,18 +318,10 @@ public final class PortalRequestInstance {
         return false;
     }
 
-    public List<PageElement> getPageElementList() {
-        return pageElementList;
-    }
-
     public String getErrorString() {
         return errorString;
     }
 
-//    ActionRequestImpl getActionRequest() {
-//        return actionRequest;
-//    }
-//
     public Locale[] getPreferredLocales() {
         return preferredLocales;
     }
@@ -520,10 +381,6 @@ public final class PortalRequestInstance {
         return roleRefAccess;
     }
 
-    public PortalInstance getPortalInstance() {
-        return portalInstance;
-    }
-
     public Locale getLocale() {
         if (urlInterpreterResult == null)
             return null;
@@ -539,16 +396,20 @@ public final class PortalRequestInstance {
         return httpResponse;
     }
 
-    private void initTemplate() throws PortalException {
+    public PortalTemplate getTemplate() {
+        return template;
+    }
+
+    private void initTemplate(PortalInstance portalInstance) throws PortalException {
 
         template = portalInstance.getPortalTemplateManager().getTemplate(urlInterpreterResult.getTemplateName(), getLocale().toString());
 
-        if (template == null) {
+        if (getTemplate() == null) {
             String errorString = "Template '" + urlInterpreterResult.getTemplateName() + "', locale " + getLocale().toString() + ", not found";
             log.warn(errorString);
             throw new PortalException(errorString);
         }
-        log.debug("template:\n" + template.toString());
+        log.debug("template:\n" + getTemplate().toString());
     }
 
     private void initXslt(PortalInfo portalInfo) throws PortalException {
@@ -560,7 +421,7 @@ public final class PortalRequestInstance {
             throw new PortalException(errorString);
         }
         xslt = transformerManager.getXslt(getLocale().toString());
-        if (xslt == null) {
+        if (getXslt() == null) {
             String errorString = "XSLT for locale " + getLocale().toString() + " not defined.";
             log.error(errorString);
             throw new PortalException(errorString);
@@ -619,5 +480,21 @@ public final class PortalRequestInstance {
             // TODO. or set to other dir?
             tempPath = new File(System.getProperty("java.io.tmpdir"));
         }
+    }
+
+    public void setByteArrayOutputStream(ByteArrayOutputStream byteArrayOutputStream) {
+        this.byteArrayOutputStream = byteArrayOutputStream;
+    }
+
+    public ByteArrayOutputStream getByteArrayOutputStream() {
+        return byteArrayOutputStream;
+    }
+
+    public XsltTransformer getXslt() {
+        return xslt;
+    }
+
+    public long getStartMills() {
+        return startMills;
     }
 }

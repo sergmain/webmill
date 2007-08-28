@@ -38,8 +38,8 @@ import javax.portlet.PortletPreferences;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.MainTools;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.bean.SitePortletData;
@@ -47,7 +47,12 @@ import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalSessionManagerImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
@@ -57,13 +62,8 @@ import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.preference.PortletPreferencePersistencer;
 import org.riverock.webmill.portal.preference.PortletPreferencesImpl;
 import org.riverock.webmill.portal.url.interpreter.PortletParameters;
-import org.riverock.webmill.portal.PortalInstance;
-import org.riverock.webmill.portal.PortalSessionManagerImpl;
-import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.template.schema.ElementParameter;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.exception.PortalException;
 
 /**
  * User: SergeMaslyukov
@@ -97,7 +97,7 @@ public final class PageElementPortlet implements PageElement {
     private String fullPortletName=null;
     private Map<String, List<String>> renderRequestParamMap = new HashMap<String, List<String>>();
     private String contextPath=null;
-    private PortalRequest portalRequest =null;
+    private PortalRequestInstance portalRequest =null;
     private PortletPreferences portletPreferences=null;
     private PortletPreferencePersistencer persistencer=null;
     private Map<String, List<String>> portletMetadata=null;
@@ -123,7 +123,7 @@ public final class PageElementPortlet implements PageElement {
         String xmlRoot,
         String code,
         List<ElementParameter> templateParameters,
-        PortalRequest portalRequest,
+        PortalRequestInstance portalRequest,
         String fullPortletName,
         List<String> roleList,
         PortletPreferencePersistencer persistencer
@@ -388,7 +388,8 @@ public final class PageElementPortlet implements PageElement {
                     portletEntry.getPortletConfig().getPortletContext(),
                     portletEntry.getPortletDefinition(),
                     namespace,
-                    portalInfo
+                    portalInfo,
+                    portalInstance
                 );
                 actionRequest.setAttribute(
                     ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
@@ -494,7 +495,8 @@ public final class PageElementPortlet implements PageElement {
                 portletEntry.getPortletConfig().getPortletContext(),
                 portletEntry.getPortletDefinition(),
                 namespace,
-                portalInfo
+                portalInfo,
+                portalInstance
             );
 
             // set portlet specific attribute
@@ -517,7 +519,8 @@ public final class PageElementPortlet implements PageElement {
                 portletEntry.getPortletProperties(),
                 parameters.getRequestState(),
                 portletEntry.getPortletDefinition().getFullPortletName(),
-                portalContext
+                portalContext,
+                portalInstance.getPortletContainer()
             );
             PortletUtils.setContentType(renderResponse);
 
@@ -661,6 +664,7 @@ public final class PageElementPortlet implements PageElement {
             return false;
         }
 
+        //noinspection SimplifiableIfStatement
         if (role.equals(PortalConstants.WEBMILL_AUTHENTIC_ROLE)) {
             return true;
         }
@@ -672,9 +676,9 @@ public final class PageElementPortlet implements PageElement {
         return "Portlet '" + portletName + "' unavailable.";
     }
 
-    private String getContextPath(final PortalRequest portalRequest) {
+    private String getContextPath(final PortalRequestInstance portalRequest) {
         String contextPath;
-        final String portalRealPath = portalRequest.getPortalInstance().getPortalServletConfig().getServletContext().getRealPath("/");
+        final String portalRealPath = portalInstance.getPortalServletConfig().getServletContext().getRealPath("/");
         final String portletRealPath = portletEntry.getServletConfig().getServletContext().getRealPath("/");
         if (log.isDebugEnabled()) {
             log.debug( "portalRealPath: " + portalRealPath );

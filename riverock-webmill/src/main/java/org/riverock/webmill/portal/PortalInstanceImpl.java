@@ -251,7 +251,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             }
 
             portalRequestInstance = new PortalRequestInstance( request_, response_, this );
-            PortalPageController.processPortalRequest( portalRequestInstance );
+            PortalPageController.processPortalRequest( portalRequestInstance, this );
         }
         catch (Throwable e) {
             String es = "General error processing request";
@@ -273,8 +273,8 @@ public class PortalInstanceImpl implements PortalInstance  {
             if (portalRequestInstance==null)
                 portalRequestInstance = new PortalRequestInstance();
 
-            portalRequestInstance.byteArrayOutputStream.reset();
-            portalRequestInstance.byteArrayOutputStream.write(
+            portalRequestInstance.getByteArrayOutputStream().reset();
+            portalRequestInstance.getByteArrayOutputStream().write(
                 ( es + "<br>" + ExceptionTools.getStackTrace(e, NUM_LINES, "<br>") ).getBytes()
             );
             NDC.pop();
@@ -295,23 +295,23 @@ public class PortalInstanceImpl implements PortalInstance  {
 
                 setCookie(portalRequestInstance, response_);
 
-                portalRequestInstance.byteArrayOutputStream.close();
-                portalRequestInstance.byteArrayOutputStream = null;
+                portalRequestInstance.getByteArrayOutputStream().close();
+                portalRequestInstance.setByteArrayOutputStream(null);
 
                 response_.sendRedirect(portalRequestInstance.getRedirectUrl());
                 return;
             }
 
-            if (portalRequestInstance.byteArrayOutputStream == null) {
+            if (portalRequestInstance.getByteArrayOutputStream() == null) {
                 String es = "byteArrayOutputStream is null";
                 log.error(es);
                 throw new PortalException(es);
             }
 
-            portalRequestInstance.byteArrayOutputStream.close();
-            StringBuilder timeString = getTimeString(counter, portalRequestInstance.startMills);
+            portalRequestInstance.getByteArrayOutputStream().close();
+            StringBuilder timeString = getTimeString(counter, portalRequestInstance.getStartMills());
             final byte[] bytesCopyright = getCopyright().getBytes();
-            final byte[] bytes = portalRequestInstance.byteArrayOutputStream.toByteArray();
+            final byte[] bytes = portalRequestInstance.getByteArrayOutputStream().toByteArray();
             final byte[] bytesTimeString = timeString.toString().getBytes();
 
             final String pageContent = new String(bytes, CharEncoding.UTF_8);

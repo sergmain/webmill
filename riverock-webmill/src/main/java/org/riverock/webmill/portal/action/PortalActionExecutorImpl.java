@@ -24,15 +24,15 @@
  */
 package org.riverock.webmill.portal.action;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.action.PortalActionExecutor;
 import org.riverock.webmill.google.sitemap.GoogleSitemapService;
-import org.riverock.webmill.portal.action.MenuItemsProvider;
-import org.riverock.webmill.portal.PortalRequest;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.url.UrlCycleChecker;
 
 /**
@@ -59,27 +59,27 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
         actions.put(URL_CYCLE_CHECK, PortalAction.GET_MENU_ITEMS);
     }
 
-    private ClassLoader portalClassLoader;
     private Long siteId;
     private String virtualHostUrl;
     private String applicationPath;
     private String portalContext;
-    private PortalRequest portalRequest;
+    private PortalInstance portalInstance;
+    private PortalRequestInstance portalRequest;
 
-    public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId, String applicationPath, String virtualHostUrl, String portalContext, PortalRequest portalRequest) {
-        this.portalClassLoader=portalClassLoader;
+    public PortalActionExecutorImpl(PortalInstance portalInstance, Long siteId, String applicationPath, String virtualHostUrl, String portalContext, PortalRequestInstance portalRequest) {
         this.siteId=siteId;
         this.virtualHostUrl=virtualHostUrl;
         this.applicationPath=applicationPath;
         this.portalContext=portalContext;
         this.portalRequest = portalRequest;
+        this.portalInstance = portalInstance;
     }
     
     public Map<String, Object> execute(String command, Map<String, Object> parameters) {
         log.debug("Start PortalActionExecutorImpl.execute()");
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader( portalClassLoader );
+            Thread.currentThread().setContextClassLoader( portalInstance.getPortalClassLoader() );
 
             Map<String, Object> result = new HashMap<String, Object>();
 
@@ -93,7 +93,7 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
                     GoogleSitemapService.createSitemap(siteId, virtualHostUrl, portalContext, applicationPath);
                     return result;
                 case GET_MENU_ITEMS:
-                    result.put("result", MenuItemsProvider.getMenuItems(portalRequest, siteId, parameters));
+                    result.put("result", MenuItemsProvider.getMenuItems(portalInstance, portalRequest, siteId, parameters));
                     return result;
                 case URL_CYCLE_CHECK:
                     result.put("result", UrlCycleChecker.isCycle(parameters));
