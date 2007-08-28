@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.contenttype.ContentTypeManager;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.interfaces.portal.PortalInfo;
 
@@ -89,7 +89,7 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
 
     public ActionRequestImpl(
         final Map<String, List<String>> parameters,
-        final PortalRequestInstance portalRequestInstance,
+        final PortalRequest portalRequest,
         final ServletContext servletContext,
         final String contextPath,
         final PortletPreferences portletPreferences,
@@ -101,16 +101,16 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
         ) {
 
         super(
-            servletContext, portalRequestInstance.getHttpRequest(), portletPreferences,
+            servletContext, portalRequest.getHttpRequest(), portletPreferences,
             portletProperties, new HashMap<String, List<String>>(),
             portletContext, portletDefinition, namespace
         );
 
-        prepareRequest(parameters, portalRequestInstance, contextPath, portalInfo);
-        requestBodyFile = portalRequestInstance.getRequestBodyFile();
-        isMultiPartRequest = portalRequestInstance.isMultiPartRequest();
+        prepareRequest(parameters, portalRequest, contextPath, portalInfo);
+        requestBodyFile = portalRequest.getRequestBodyFile();
+        isMultiPartRequest = portalRequest.isMultiPartRequest();
 
-        contentTypeManager = ContentTypeManager.getInstance(portalRequestInstance.getLocale(), false);
+        contentTypeManager = ContentTypeManager.getInstance(portalRequest.getLocale(), false);
     }
 
     public InputStream getPortletInputStream() throws java.io.IOException {

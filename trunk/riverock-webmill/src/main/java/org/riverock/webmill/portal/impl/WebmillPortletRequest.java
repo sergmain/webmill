@@ -55,7 +55,7 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.portlet.bean.Supports;
 import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.portal.action.PortalActionExecutorImpl;
 import org.riverock.webmill.portal.mail.PortalMailServiceProviderImpl;
@@ -874,18 +874,18 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     protected void prepareRequest(
-        final Map<String, List<String>> parameters, final PortalRequestInstance portalRequestInstance,
+        final Map<String, List<String>> parameters, final PortalRequest portalRequest,
         final String contextPath, final PortalInfo portalInfo
     ) {
 
-        this.httpRequest = portalRequestInstance.getHttpRequest();
+        this.httpRequest = portalRequest.getHttpRequest();
         this.contextPath = contextPath;
-        this.auth = portalRequestInstance.getAuth();
-        this.locale = portalRequestInstance.getLocale();
-        this.preferredLocale = portalRequestInstance.getPreferredLocales();
+        this.auth = portalRequest.getAuth();
+        this.locale = portalRequest.getLocale();
+        this.preferredLocale = portalRequest.getPreferredLocales();
         this.parameters = parameters;
 
-        this.portalContext = new PortalContextImpl(portalRequestInstance.getPortalInstance().getPortalName(), httpRequest.getContextPath(), portalInfo);
+        this.portalContext = new PortalContextImpl(portalRequest.getPortalInstance().getPortalName(), httpRequest.getContextPath(), portalInfo);
 //        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext, namespace);
 
         Cookie[] c = httpRequest.getCookies();
@@ -897,18 +897,18 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             this.cookies = new Cookie[0];
         }
 
-        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER, portalRequestInstance.getPortalDaoProvider() );
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER, portalRequest.getPortalDaoProvider() );
 
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalInfo );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
 
         this.setAttribute( ContainerConstants.PORTAL_QUERY_METHOD_ATTRIBUTE, httpRequest.getMethod() );
 
-        this.setAttribute( ContainerConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE, portalRequestInstance.getCookieManager() );
+        this.setAttribute( ContainerConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE, portalRequest.getCookieManager() );
 
         this.setAttribute( ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE, httpRequest.getRemoteAddr() );
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
-        this.setAttribute( ContainerConstants.PORTAL_PORTAL_INDEXER_ATTRIBUTE, portalRequestInstance.getPortalInstance().getPortalIndexer() );
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_INDEXER_ATTRIBUTE, portalRequest.getPortalInstance().getPortalIndexer() );
 
         PortalMailServiceProviderImpl mailServiceProvider = new PortalMailServiceProviderImpl(
             portalContext.getProperty( ContainerConstants.PORTAL_PROP_SMTP_HOST ),
@@ -953,7 +953,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
                 PropertiesProvider.getApplicationPath(),
                 PortalUtils.buildVirtualHostUrl(httpRequest),
                 portalContext.getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH ),
-                portalRequestInstance
+                portalRequest
             )
         );
     }
