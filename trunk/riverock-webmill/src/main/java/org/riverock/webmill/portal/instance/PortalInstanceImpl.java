@@ -61,7 +61,6 @@ import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.page_element.PortalPageController;
-import org.riverock.webmill.portal.instance.PortalVersion;
 import org.riverock.webmill.portal.PortalResponse;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.template.PortalTemplateManager;
