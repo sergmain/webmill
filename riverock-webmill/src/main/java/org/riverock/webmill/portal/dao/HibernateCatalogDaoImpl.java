@@ -353,9 +353,9 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
         if (siteLanguageId==null) {
             return;
         }
-        observable.notifyObservers();
+        observable.notifyObservers(siteLanguageId);
 //        SiteMenu.invalidateCache(siteLanguageId);
-        PortalInfoImpl.invalidateCache(siteLanguageId);
+//        PortalInfoImpl.invalidateCache(siteLanguageId);
     }
 
     public Long createCatalogItem(CatalogItem catalogItem) {

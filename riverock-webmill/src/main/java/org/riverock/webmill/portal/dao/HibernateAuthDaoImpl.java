@@ -39,11 +39,10 @@ import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.interfaces.portal.bean.User;
-import org.riverock.webmill.a3.bean.AuthInfoImpl;
-import org.riverock.webmill.a3.bean.AuthRelateRole;
-import org.riverock.webmill.a3.bean.RoleBeanImpl;
+import org.riverock.webmill.portal.bean.AuthInfoImpl;
+import org.riverock.webmill.portal.bean.AuthRelateRole;
+import org.riverock.webmill.portal.bean.RoleBeanImpl;
 import org.riverock.webmill.portal.bean.UserBean;
-import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.utils.HibernateUtils;
 
 /**
@@ -522,10 +521,19 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                     "        a04.user_login=? ";
     */
 
-                Long siteId = SiteList.getSiteId( serverName );
-                if ( log.isDebugEnabled() ) {
-                    log.debug( "serverName " + serverName + ", siteId " + siteId);
-                }
+            Long siteId = (Long)session.createQuery(
+                "select host.siteId " +
+                    "from  org.riverock.webmill.portal.bean.VirtualHostBean as host " +
+                    "where host.host=:serverName"
+            ).setString("serverName", serverName.toLowerCase()).uniqueResult();
+//                Long siteId1 = SiteList.getSiteId( serverName );
+            if ( log.isDebugEnabled() ) {
+                log.debug( "serverName " + serverName + ", siteId " + siteId);
+            }
+
+            if (siteId==null) {
+                return false;
+            }
 
                 List list = session.createQuery(
                         "select auth1.authUserId " +

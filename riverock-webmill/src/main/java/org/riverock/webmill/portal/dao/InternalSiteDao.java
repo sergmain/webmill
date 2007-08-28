@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.util.Observer;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
@@ -48,4 +49,6 @@ public interface InternalSiteDao {
     public void updateSite(Site site, List<VirtualHost> hosts);
 
     public Long createSite(Site site, List<VirtualHost> hosts);
+
+    void addObserver(Observer o);
 }

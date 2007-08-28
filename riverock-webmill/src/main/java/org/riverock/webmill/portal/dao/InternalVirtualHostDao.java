@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.util.Observer;
 
 import org.riverock.interfaces.portal.bean.VirtualHost;
 
@@ -41,4 +42,6 @@ public interface InternalVirtualHostDao {
 
     public void deleteVirtualHost(VirtualHost virtualHost);
     public void deleteVirtualHostForSite(Long siteId);
+
+    void addObserver(Observer o);
 }

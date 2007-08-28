@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.riverock.webmill.a3.bean.RequestStatisticBean;
+import org.riverock.webmill.portal.bean.RequestStatisticBean;
 
 /**
  * @author Sergei Maslyukov
