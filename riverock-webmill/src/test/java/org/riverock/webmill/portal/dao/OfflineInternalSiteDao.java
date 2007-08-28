@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Observer;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
@@ -123,5 +124,9 @@ public class OfflineInternalSiteDao implements InternalSiteDao {
 
     public Long createSite(Site site, List<VirtualHost> hosts) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void addObserver(Observer o) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

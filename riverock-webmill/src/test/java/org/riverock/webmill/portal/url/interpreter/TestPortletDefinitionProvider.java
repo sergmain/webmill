@@ -1,6 +1,6 @@
 package org.riverock.webmill.portal.url.interpreter;
 
-import org.riverock.webmill.portal.url.PortletDefinitionProvider;
+import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProvider;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 
 /**

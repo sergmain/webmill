@@ -1,8 +1,6 @@
 package org.riverock.webmill.trash;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Date;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 
@@ -13,15 +11,9 @@ import org.hibernate.Session;
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.webmill.utils.HibernateUtilsTest;
 import org.riverock.webmill.utils.HibernateUtils;
-import org.riverock.webmill.portal.dao.InternalCssDao;
-import org.riverock.webmill.portal.dao.HibernateCssDaoImpl;
-import org.riverock.webmill.main.CssBean;
-import org.riverock.interfaces.portal.bean.Css;
-import org.riverock.dbrevision.system.DbStructureExport;
 import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.db.DatabaseManager;
-import org.riverock.dbrevision.db.DatabaseStructureManager;
 import org.riverock.dbrevision.annotation.schema.db.DbSchema;
 import org.riverock.dbrevision.annotation.schema.db.DbTable;
 import org.riverock.dbrevision.utils.Utils;

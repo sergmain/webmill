@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Arrays;
 
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
@@ -13,9 +12,9 @@ import javax.portlet.WindowState;
 import junit.framework.TestCase;
 
 import org.riverock.webmill.portal.dao.OfflineDaoFactory;
-import org.riverock.webmill.portal.url.PortletDefinitionProvider;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
-import org.riverock.webmill.portal.url.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProvider;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.interfaces.portal.PortalInfo;
