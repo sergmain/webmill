@@ -22,16 +22,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.url;
+package org.riverock.webmill.portal.url.interpreter;
 
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProvider;
 import org.riverock.interfaces.portal.PortalInfo;
 
 /**
