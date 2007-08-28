@@ -31,7 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Observer;
 import java.util.Properties;
+import java.util.Observable;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -45,12 +47,12 @@ import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.menu.SiteMenu;
-import org.riverock.webmill.portal.utils.SiteList;
+import org.riverock.webmill.portal.site.SiteList;
 
 /**
  * $Id$
  */
-public final class PortalInfoImpl implements Serializable, PortalInfo {
+public final class PortalInfoImpl implements Serializable, PortalInfo, Observer {
     private static final long serialVersionUID = 438274672384237876L;
 
     private final static Logger log = Logger.getLogger(PortalInfoImpl.class);
@@ -186,6 +188,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
                 log.debug("#15.01.03 reinit cached value ");
 
                 p = new PortalInfoImpl(siteId);
+                InternalDaoFactory.getInternalCatalogDao().addObserver(p);
                 portatInfoMap.put(siteId, p);
 
                 lastReadData = System.currentTimeMillis();
@@ -323,4 +326,17 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return siteLanguageList;
     }
 
+    /**
+     * This method is called whenever the observed object is changed. An
+     * application calls an <tt>Observable</tt> object's
+     * <code>notifyObservers</code> method to have all the object's
+     * observers notified of the change.
+     *
+     * @param o   the observable object.
+     * @param arg an argument passed to the <code>notifyObservers</code>
+     *            method.
+     */
+    public void update(Observable o, Object arg) {
+        invalidateCache((Long)arg);
+    }
 }
