@@ -1,4 +1,4 @@
-package org.riverock.webmill.portal.action;
+package org.riverock.webmill.portal.action.menu;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

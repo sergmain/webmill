@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.google.sitemap;
+package org.riverock.webmill.portal.action.google.sitemap;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -93,7 +93,7 @@ public class GoogleSitemapService {
         if (log.isDebugEnabled()) {
             log.debug("Urls: " +urls);
         }
-        writeToFile(urls, applicationPath+File.separatorChar + GoogleSitemapServlet.SITEMAP_DIR + siteId);
+        writeToFile(urls, applicationPath+File.separatorChar + GoogleSitemapConstants.SITEMAP_DIR + siteId);
     }
 
     private static void writeToFile(List<Url> urlset, String applicationPath) {
@@ -135,7 +135,7 @@ public class GoogleSitemapService {
 
     }
 
-    static void marshall(List<Url> urlset, OutputStream os) throws JAXBException {
+    public static void marshall(List<Url> urlset, OutputStream os) throws JAXBException {
         log.debug("Start marshall()");
         JAXBContext jc = JAXBContext.newInstance(SITEMAP_PACKAGE_NAME);
         Marshaller m = jc.createMarshaller();

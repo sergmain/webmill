@@ -1,8 +1,11 @@
-package org.riverock.webmill.portal.url;
+package org.riverock.webmill.portal.action.url_checker;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.riverock.webmill.portal.url.UrlProviderFactory;
+import org.riverock.webmill.portal.url.UrlProvider;
 
 /**
  * User: SMaslyukov

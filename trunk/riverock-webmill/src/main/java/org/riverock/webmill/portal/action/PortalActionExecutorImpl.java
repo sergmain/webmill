@@ -30,10 +30,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.action.PortalActionExecutor;
-import org.riverock.webmill.google.sitemap.GoogleSitemapService;
+import org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapService;
+import org.riverock.webmill.portal.action.menu.MenuItemsProvider;
+import org.riverock.webmill.portal.action.url_checker.UrlCycleChecker;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.PortalInstance;
-import org.riverock.webmill.portal.url.UrlCycleChecker;
 
 /**
  * @author Sergei Maslyukov
