@@ -22,16 +22,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.utils;
+package org.riverock.webmill.portal.site;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+import java.util.Observer;
+import java.util.Observable;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.interfaces.portal.bean.VirtualHost;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * @author SergeMaslyukov
@@ -39,7 +41,7 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
  *         Time: 14:01:59
  *         $Id$
  */
-public class SiteList {
+public class SiteList implements Observer {
     private final static Logger log = Logger.getLogger(SiteList.class);
 
     private Map<String, VirtualHost> hashListSite = new HashMap<String, VirtualHost>();
@@ -102,6 +104,7 @@ public class SiteList {
                 mapDefaultHost.put(host.getSiteId(), host);
             }
         }
+        InternalDaoFactory.getInternalSiteDao().addObserver(this);
     }
 
     private VirtualHost searchHost(final String serverName) {
@@ -134,4 +137,17 @@ public class SiteList {
         return host;
     }
 
+    /**
+     * This method is called whenever the observed object is changed. An
+     * application calls an <tt>Observable</tt> object's
+     * <code>notifyObservers</code> method to have all the object's
+     * observers notified of the change.
+     *
+     * @param o   the observable object.
+     * @param arg an argument passed to the <code>notifyObservers</code>
+     *            method.
+     */
+    public void update(Observable o, Object arg) {
+        destroy();
+    }
 }
