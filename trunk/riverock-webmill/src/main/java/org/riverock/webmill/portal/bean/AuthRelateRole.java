@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.a3.bean;
+package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
 
@@ -43,7 +43,6 @@ import javax.persistence.Column;
  */
 @Entity
 @Table(name="WM_AUTH_RELATE_ACCGROUP")
-//@Table(name="wm_auth_relate_accgroup")
 @TableGenerator(
     name="TABLE_AUTH_RELATE_ROLE",
     table="WM_PORTAL_IDS",
