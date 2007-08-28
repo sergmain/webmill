@@ -25,6 +25,8 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.hibernate.Session;
 import org.hibernate.Query;
@@ -33,7 +35,6 @@ import org.hibernate.StatelessSession;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
-import org.riverock.webmill.portal.utils.SiteList;
 
 /**
  * @author Sergei Maslyukov
@@ -43,6 +44,13 @@ import org.riverock.webmill.portal.utils.SiteList;
  *         $Id$
  */
 public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
+
+    private final Observable observable = new Observable();
+
+    public void addObserver(Observer o) {
+        observable.addObserver(o);
+    }
+
     public List<VirtualHost> getVirtualHostsFullList() {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
@@ -87,7 +95,8 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         }
         finally {
             session.close();
-            SiteList.destroy();
+            observable.notifyObservers();
+//            SiteList.destroy();
         }
     }
 
@@ -110,7 +119,8 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         }
         finally {
             session.close();
-            SiteList.destroy();
+            observable.notifyObservers();
+//            SiteList.destroy();
         }
     }
 
@@ -130,7 +140,8 @@ public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
         }
         finally {
             session.close();
-            SiteList.destroy();
+            observable.notifyObservers();
+//            SiteList.destroy();
         }
     }
 

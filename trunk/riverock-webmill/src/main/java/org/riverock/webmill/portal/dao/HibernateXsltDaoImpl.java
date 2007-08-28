@@ -24,23 +24,24 @@
  */
 package org.riverock.webmill.portal.dao;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.common.exception.DatabaseException;
+import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.webmill.portal.bean.PortalXsltBean;
@@ -62,6 +63,57 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
      * @param siteId Long
      * @return Map<String, Xslt>
      */
+    public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId) {
+        StatelessSession session = HibernateUtils.getStatelessSession();
+        try {
+            Query query = session.createQuery(
+                "select customLanguage, xslt from " +
+                    "      org.riverock.webmill.portal.bean.PortalXsltBean as xslt," +
+                    "      org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                    "where xslt.isCurrent=true and xslt.siteLanguageId=siteLanguage.siteLanguageId and " +
+                    "      siteLanguage=:site_id")
+                .setLong("site_id", siteId);
+
+            Map<String, Xslt> map = new HashMap<String, Xslt>();
+            for (Object o : query.list()) {
+                Object[] tuple = (Object[]) o;
+                String language = StringTools.getLocale((String)tuple[0]).toString();
+                PortalXsltBean xslt = (PortalXsltBean)tuple[1];
+                Blob blob = xslt.getXsltBlob();
+                if (blob!=null) {
+                    try {
+                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                    }
+                    catch (UnsupportedEncodingException e) {
+                        String es = "Error get XSLT";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    catch (SQLException e) {
+                        String es = "Error get XSLT";
+                        log.error(es, e);
+                        throw new DatabaseException(es, e);
+                    }
+                    if (log.isDebugEnabled())  {
+                        log.debug("Length of XSLT is "+xslt.getXsltData()!=null?xslt.getXsltData().length():0);
+                    }
+                }
+                map.put(language, xslt);
+            }
+            return map;
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    /**
+     * key is language of site
+     *
+     * @ param siteId Long
+     * @return Map<String, Xslt>
+     */
+/*
     public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
@@ -104,6 +156,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
             session.close();
         }
     }
+*/
 
     public Xslt getCurrentXslt(Long siteLanguageId) {
         if (log.isDebugEnabled()) {
@@ -299,6 +352,29 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
             session.beginTransaction();
             Query query = session.createQuery(
                 "delete org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
+                    "where xslt.siteLanguageId in (" +
+                    "select siteLabguage.siteLanguageId " +
+                    "from org.riverock.webmill.portal.bean.SiteLanguageBean as siteLanguage " +
+                    "where siteLanguage.siteId=:siteId)");
+
+            query.setLong("siteId", siteId).executeUpdate();
+
+            session.flush();
+            session.clear();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+    }
+
+/*
+    public void deleteXsltForSite(Long siteId) {
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery(
+                "delete org.riverock.webmill.portal.bean.PortalXsltBean as xslt " +
                     "where xslt.siteLanguageId = :site_language_id");
 
             List<SiteLanguage> list = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
@@ -314,6 +390,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
             session.close();
         }
     }
+*/
 
     public void deleteXsltForSiteLanguage(Long siteLanguageId) {
         Session session = HibernateUtils.getSession();

@@ -31,7 +31,7 @@ import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.a3.bean.AuthInfoImpl;
+import org.riverock.webmill.portal.bean.AuthInfoImpl;
 import org.riverock.webmill.portal.bean.CompanyBean;
 import org.riverock.webmill.portal.bean.HoldingCompanyRelationBean;
 import org.riverock.webmill.utils.HibernateUtils;

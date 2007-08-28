@@ -27,7 +27,7 @@ package org.riverock.webmill.portal.dao;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
 
-import org.riverock.webmill.a3.bean.RequestStatisticBean;
+import org.riverock.webmill.portal.bean.RequestStatisticBean;
 
 /**
  * @author SergeMaslyukov

@@ -25,6 +25,8 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -35,7 +37,6 @@ import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.bean.*;
-import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.utils.HibernateUtils;
 
 /**
@@ -47,6 +48,12 @@ import org.riverock.webmill.utils.HibernateUtils;
  */
 public class HibernateSiteDaoImpl implements InternalSiteDao {
     private final static Logger log = Logger.getLogger(HibernateSiteDaoImpl.class);
+
+    private final Observable observable = new Observable();
+
+    public void addObserver(Observer o) {
+        observable.addObserver(o);
+    }
 
     public List<Site> getSites() {
         StatelessSession session = HibernateUtils.getStatelessSession();
@@ -350,7 +357,8 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             session.getTransaction().commit();
         }
         finally {
-            SiteList.destroy();
+            observable.notifyObservers();
+//            SiteList.destroy();
             session.close();
         }
     }
