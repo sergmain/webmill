@@ -6,6 +6,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.riverock.webmill.portal.action.url_checker.UrlCycleChecker;
+
 /**
  * User: SMaslyukov
  * Date: 23.08.2007

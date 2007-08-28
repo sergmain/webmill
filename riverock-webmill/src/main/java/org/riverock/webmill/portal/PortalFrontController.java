@@ -43,6 +43,7 @@ import net.sf.ehcache.CacheManager;
 
 import org.riverock.webmill.portal.site.SiteList;
 import org.riverock.webmill.portal.menu.SiteMenu;
+import org.riverock.webmill.portal.instance.PortalInstanceImpl;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.utils.HibernateUtils;
 import org.riverock.webmill.port.PortalInfoImpl;

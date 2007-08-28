@@ -50,7 +50,7 @@ import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.instance.PortalInstance;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.PortalSessionManagerImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;

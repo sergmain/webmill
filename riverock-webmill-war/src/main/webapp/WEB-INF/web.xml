@@ -77,7 +77,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>GooleSitemapServlet</servlet-name>
-		<servlet-class>org.riverock.webmill.google.sitemap.GoogleSitemapServlet</servlet-class>
+		<servlet-class>org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapServlet</servlet-class>
 		<load-on-startup>6</load-on-startup>
 	</servlet>
 

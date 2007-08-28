@@ -34,7 +34,7 @@ import org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapService;
 import org.riverock.webmill.portal.action.menu.MenuItemsProvider;
 import org.riverock.webmill.portal.action.url_checker.UrlCycleChecker;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.instance.PortalInstance;
 
 /**
  * @author Sergei Maslyukov

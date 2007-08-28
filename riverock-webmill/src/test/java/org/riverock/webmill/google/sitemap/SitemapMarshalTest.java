@@ -33,8 +33,8 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
-import org.riverock.webmill.google.sitemap.schema.sitemap.Urlset;
 import org.riverock.webmill.google.sitemap.schema.sitemap.Url;
+import org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapService;
 
 /**
  * @author Sergei Maslyukov
