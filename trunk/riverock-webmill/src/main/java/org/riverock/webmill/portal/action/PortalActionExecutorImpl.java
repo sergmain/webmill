@@ -31,8 +31,8 @@ import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.action.PortalActionExecutor;
 import org.riverock.webmill.google.sitemap.GoogleSitemapService;
-import org.riverock.webmill.portal.menu.MenuItemsProvider;
-import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.action.MenuItemsProvider;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.url.UrlCycleChecker;
 
 /**
@@ -64,15 +64,15 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
     private String virtualHostUrl;
     private String applicationPath;
     private String portalContext;
-    private PortalRequestInstance portalRequestInstance;
+    private PortalRequest portalRequest;
 
-    public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId, String applicationPath, String virtualHostUrl, String portalContext, PortalRequestInstance portalRequestInstance) {
+    public PortalActionExecutorImpl(ClassLoader portalClassLoader, Long siteId, String applicationPath, String virtualHostUrl, String portalContext, PortalRequest portalRequest) {
         this.portalClassLoader=portalClassLoader;
         this.siteId=siteId;
         this.virtualHostUrl=virtualHostUrl;
         this.applicationPath=applicationPath;
         this.portalContext=portalContext;
-        this.portalRequestInstance=portalRequestInstance;
+        this.portalRequest = portalRequest;
     }
     
     public Map<String, Object> execute(String command, Map<String, Object> parameters) {
@@ -93,7 +93,7 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
                     GoogleSitemapService.createSitemap(siteId, virtualHostUrl, portalContext, applicationPath);
                     return result;
                 case GET_MENU_ITEMS:
-                    result.put("result", MenuItemsProvider.getMenuItems(portalRequestInstance, siteId, parameters));
+                    result.put("result", MenuItemsProvider.getMenuItems(portalRequest, siteId, parameters));
                     return result;
                 case URL_CYCLE_CHECK:
                     result.put("result", UrlCycleChecker.isCycle(parameters));
