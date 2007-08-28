@@ -24,9 +24,7 @@
  */
 package org.riverock.webmill.portal;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -57,6 +55,7 @@ import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.utils.PortalUtils;
+import org.riverock.webmill.portal.instance.PortalInstance;
 import org.riverock.webmill.template.PortalTemplate;
 import org.riverock.webmill.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.utils.PortletUtils;
@@ -73,10 +72,8 @@ import org.riverock.webmill.xslt.XsltTransformetManagerFactory;
 public final class PortalRequestInstance {
     private final static Logger log = Logger.getLogger(PortalRequestInstance.class);
 
-    private static final int WEBPAGE_BUFFER_SIZE = 15000;
     private static final int MAX_REQUEST_BODY_SIZE = 25 * 1024 * 1024; // 25Mb
 
-    private ByteArrayOutputStream byteArrayOutputStream = null;
     private XsltTransformer xslt = null;
     private PortalTemplate template = null;
 
@@ -95,7 +92,6 @@ public final class PortalRequestInstance {
     private CookieManager cookieManager = new CookieManagerImpl();
 
     private String errorString = null;
-    private String redirectUrl = null;
 
     /**
      * File with request data, if request is multipart
@@ -108,16 +104,6 @@ public final class PortalRequestInstance {
     private PortalTransformationParameters portalTransformationParameters = new PortalTransformationParameters();
 
     public void destroy() {
-        if (byteArrayOutputStream != null) {
-            try {
-                // TODO remove?
-                byteArrayOutputStream.close();
-            }
-            catch (IOException e) {
-                log.warn("Error close outputStream()");
-            }
-            byteArrayOutputStream = null;
-        }
         xslt = null;
         template = null;
         urlInterpreterResult = null;
@@ -153,7 +139,6 @@ public final class PortalRequestInstance {
         auth = null;
         cookieManager = null;
         errorString = null;
-        redirectUrl = null;
         MainTools.deleteFile(requestBodyFile);
         requestBodyFile = null;
         portalDaoProvider = null;
@@ -162,7 +147,6 @@ public final class PortalRequestInstance {
 
     public PortalRequestInstance() {
         startMills = System.currentTimeMillis();
-        this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
     }
 
     public PortalDaoProvider getPortalDaoProvider() {
@@ -173,14 +157,13 @@ public final class PortalRequestInstance {
         return urlInterpreterResult;
     }
 
-    PortalRequestInstance(
+    public PortalRequestInstance(
         HttpServletRequest request_,
         HttpServletResponse response_,
         PortalInstance portalInstance
     ) throws PortalException {
 
         this.startMills = System.currentTimeMillis();
-        this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
 
         if (log.isInfoEnabled()) {
             log.info("start init PortalRequestInstance ");
@@ -436,14 +419,6 @@ public final class PortalRequestInstance {
         return cookieManager;
     }
 
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
-
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
-    }
-
     public File getRequestBodyFile() {
         return requestBodyFile;
     }
@@ -480,14 +455,6 @@ public final class PortalRequestInstance {
             // TODO. or set to other dir?
             tempPath = new File(System.getProperty("java.io.tmpdir"));
         }
-    }
-
-    public void setByteArrayOutputStream(ByteArrayOutputStream byteArrayOutputStream) {
-        this.byteArrayOutputStream = byteArrayOutputStream;
-    }
-
-    public ByteArrayOutputStream getByteArrayOutputStream() {
-        return byteArrayOutputStream;
     }
 
     public XsltTransformer getXslt() {

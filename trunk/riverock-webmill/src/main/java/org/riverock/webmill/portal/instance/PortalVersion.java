@@ -1,4 +1,4 @@
-package org.riverock.webmill.portal;
+package org.riverock.webmill.portal.instance;
 
 import java.util.StringTokenizer;
 

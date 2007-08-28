@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal;
+package org.riverock.webmill.portal.instance;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,6 +60,10 @@ import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.portal.page_element.PortalPageController;
+import org.riverock.webmill.portal.instance.PortalVersion;
+import org.riverock.webmill.portal.PortalResponse;
+import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.template.PortalTemplateManager;
 import org.riverock.webmill.template.PortalTemplateManagerFactory;
 import org.riverock.webmill.utils.HibernateUtils;
@@ -232,7 +236,8 @@ public class PortalInstanceImpl implements PortalInstance  {
             putMainRequestDebug(counter, request_, response_);
         }
 
-        PortalRequestInstance portalRequestInstance = null;
+        PortalResponse portalResponse=null;
+        PortalRequestInstance portalRequestInstance=null;
         try {
 /*
             boolean isSessionValid = request_.isRequestedSessionIdValid();
@@ -251,7 +256,8 @@ public class PortalInstanceImpl implements PortalInstance  {
             }
 
             portalRequestInstance = new PortalRequestInstance( request_, response_, this );
-            PortalPageController.processPortalRequest( portalRequestInstance, this );
+            portalResponse = new PortalResponse();
+            PortalPageController.processPortalRequest(this, portalRequestInstance, portalResponse);
         }
         catch (Throwable e) {
             String es = "General error processing request";
@@ -270,11 +276,16 @@ public class PortalInstanceImpl implements PortalInstance  {
                     }
                 }
             }
-            if (portalRequestInstance==null)
-                portalRequestInstance = new PortalRequestInstance();
+            if (portalResponse==null) {
+                portalResponse = new PortalResponse();
+            }                                                            
 
-            portalRequestInstance.getByteArrayOutputStream().reset();
-            portalRequestInstance.getByteArrayOutputStream().write(
+            if (portalRequestInstance==null) {
+                portalRequestInstance = new PortalRequestInstance();
+            }
+
+            portalResponse.getByteArrayOutputStream().reset();
+            portalResponse.getByteArrayOutputStream().write(
                 ( es + "<br>" + ExceptionTools.getStackTrace(e, NUM_LINES, "<br>") ).getBytes()
             );
             NDC.pop();
@@ -287,31 +298,31 @@ public class PortalInstanceImpl implements PortalInstance  {
 
         try {
             // work around with redirect
-            if (portalRequestInstance.getRedirectUrl() != null) {
+            if (portalResponse.getRedirectUrl() != null) {
                 if (log.isDebugEnabled()) {
-                    log.debug("redirect to new url: " + portalRequestInstance.getRedirectUrl());
+                    log.debug("redirect to new url: " + portalResponse.getRedirectUrl());
                 }
 //                response_.isOk = true;
 
                 setCookie(portalRequestInstance, response_);
 
-                portalRequestInstance.getByteArrayOutputStream().close();
-                portalRequestInstance.setByteArrayOutputStream(null);
+                portalResponse.getByteArrayOutputStream().close();
+                portalResponse.setByteArrayOutputStream(null);
 
-                response_.sendRedirect(portalRequestInstance.getRedirectUrl());
+                response_.sendRedirect(portalResponse.getRedirectUrl());
                 return;
             }
 
-            if (portalRequestInstance.getByteArrayOutputStream() == null) {
+            if (portalResponse.getByteArrayOutputStream() == null) {
                 String es = "byteArrayOutputStream is null";
                 log.error(es);
                 throw new PortalException(es);
             }
 
-            portalRequestInstance.getByteArrayOutputStream().close();
+            portalResponse.getByteArrayOutputStream().close();
             StringBuilder timeString = getTimeString(counter, portalRequestInstance.getStartMills());
             final byte[] bytesCopyright = getCopyright().getBytes();
-            final byte[] bytes = portalRequestInstance.getByteArrayOutputStream().toByteArray();
+            final byte[] bytes = portalResponse.getByteArrayOutputStream().toByteArray();
             final byte[] bytesTimeString = timeString.toString().getBytes();
 
             final String pageContent = new String(bytes, CharEncoding.UTF_8);
@@ -376,6 +387,16 @@ public class PortalInstanceImpl implements PortalInstance  {
             }
             catch (Throwable e) {
                 log.error("Error destroy portalRequestInstance object", e);
+            }
+            try {
+                if (portalResponse != null) {
+                    portalResponse.destroy();
+                    //noinspection UnusedAssignment
+                    portalResponse=null;
+                }
+            }
+            catch (Throwable e) {
+                log.error("Error destroy portalResponse object", e);
             }
             NDC.pop();
         }

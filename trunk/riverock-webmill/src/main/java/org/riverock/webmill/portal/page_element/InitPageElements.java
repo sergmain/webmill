@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.instance.PortalInstance;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;

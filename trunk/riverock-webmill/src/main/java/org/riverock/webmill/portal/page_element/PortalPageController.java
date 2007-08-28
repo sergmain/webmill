@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal;
+package org.riverock.webmill.portal.page_element;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,8 +43,10 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
 import org.riverock.webmill.container.bean.SitePortletData;
-import org.riverock.webmill.portal.page_element.PageElement;
-import org.riverock.webmill.portal.page_element.InitPageElements;
+import org.riverock.webmill.portal.instance.PortalInstance;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalResponse;
+import org.riverock.webmill.portal.PortalTransformationParameters;
 
 /**
  * User: SergeMaslyukov
@@ -57,11 +59,12 @@ public final class PortalPageController {
 
     /**
      *  Main method for processing pages with portlets
-     * @param portalRequestInstance request instance
      * @param portalInstance portal current instance
+     * @param portalRequestInstance request instance
+     * @param portalResponse portal response
      * @throws Exception on any error
      */
-    static void processPortalRequest( PortalRequestInstance portalRequestInstance, PortalInstance portalInstance ) throws Exception {
+    public static void processPortalRequest(PortalInstance portalInstance, PortalRequestInstance portalRequestInstance, PortalResponse portalResponse) throws Exception {
 
         List<PageElement> pageElements = InitPageElements.initPageElements(portalRequestInstance, portalInstance);
 
@@ -78,7 +81,7 @@ public final class PortalPageController {
         }
 
         if (!checkTemplateRole(portalRequestInstance)) {
-            portalRequestInstance.getByteArrayOutputStream().write(
+            portalResponse.getByteArrayOutputStream().write(
                 ("You has no sufficient roles. Need: "+portalRequestInstance.getTemplate().getRole()).getBytes()
             );
             return;
@@ -87,8 +90,8 @@ public final class PortalPageController {
         if (log.isDebugEnabled()) {
             log.debug("Start processing action method");
         }
-        processActionSiteTemplateItems( portalInstance, portalRequestInstance, pageElements );
-        if (portalRequestInstance.getRedirectUrl()!=null) {
+        processActionSiteTemplateItems(portalResponse, pageElements );
+        if (portalResponse.getRedirectUrl()!=null) {
             if (log.isDebugEnabled()) {
                 log.debug("RedirectUrl flag is true, terminate processing");
             }
@@ -98,9 +101,9 @@ public final class PortalPageController {
         if (log.isDebugEnabled()) {
             log.debug("Start processing render method");
         }
-        render( portalRequestInstance, pageElements );
+        render( portalRequestInstance, portalResponse, pageElements );
 
-        if (portalRequestInstance.getRedirectUrl()!=null) {
+        if (portalResponse.getRedirectUrl()!=null) {
             if (log.isDebugEnabled()) {
                 log.debug("RedirectUrl flag is true, terminate processing");
             }
@@ -110,7 +113,7 @@ public final class PortalPageController {
         if (log.isDebugEnabled()) {
             log.debug("Start build result page");
         }
-        buildPage( portalRequestInstance, pageElements );
+        buildPage( portalRequestInstance, portalResponse, pageElements );
 
         if (log.isDebugEnabled()) {
             log.debug("Finish processing page");
@@ -137,7 +140,8 @@ public final class PortalPageController {
         return false;
     }
 
-    private static void processActionSiteTemplateItems( PortalInstance portalInstance, PortalRequestInstance portalRequestInstance, List<PageElement> pageElements ) {
+    private static void processActionSiteTemplateItems(
+        PortalResponse portalResponse, List<PageElement> pageElements) {
 
         if ( log.isDebugEnabled() ) {
             log.debug( "Start process action" );
@@ -173,16 +177,16 @@ public final class PortalPageController {
 
             // check if request was redirected
             if (pageElement.getIsRedirected()) {
-                portalRequestInstance.setRedirectUrl(pageElement.getRedirectUrl());
+                portalResponse.setRedirectUrl(pageElement.getRedirectUrl());
                 if (log.isDebugEnabled()) {
-                    log.debug("redirectUrl: " + portalRequestInstance.getRedirectUrl());
+                    log.debug("redirectUrl: " + portalResponse.getRedirectUrl());
                 }
                 return;
             }
         }
     }
 
-    private static void render( PortalRequestInstance portalRequestInstance, List<PageElement> pageElements ) {
+    private static void render( PortalRequestInstance portalRequestInstance, PortalResponse portalResponse, List<PageElement> pageElements ) {
 
         for (PageElement pageElement : pageElements) {
 /*
@@ -202,9 +206,9 @@ public final class PortalPageController {
 
             // check if request was redirected
             if (pageElement.getIsRedirected()) {
-                portalRequestInstance.setRedirectUrl(pageElement.getRedirectUrl());
+                portalResponse.setRedirectUrl(pageElement.getRedirectUrl());
                 if (log.isDebugEnabled()) {
-                    log.debug("redirectUrl: " + portalRequestInstance.getRedirectUrl());
+                    log.debug("redirectUrl: " + portalResponse.getRedirectUrl());
                 }
                 return;
             }
@@ -212,7 +216,7 @@ public final class PortalPageController {
     }
 
     private final static Object syncCtxDebug = new Object();
-    private static void buildPage(PortalRequestInstance portalRequestInstance, List<PageElement> pageElements) throws Exception {
+    private static void buildPage(PortalRequestInstance portalRequestInstance, PortalResponse portalResponse, List<PageElement> pageElements) throws Exception {
 
         ByteArrayOutputStream outputStream = null;
         Iterator<PageElement> iterator = pageElements.iterator();
@@ -246,7 +250,7 @@ public final class PortalPageController {
 
                 // transform and output previous page elements
                 if (outputStream!=null) {
-                    transformContent(outputStream, portalRequestInstance);
+                    transformContent(portalRequestInstance, portalResponse, outputStream);
                     outputStream = null;
                 }
 
@@ -264,7 +268,7 @@ public final class PortalPageController {
                     }
                 }
 
-                portalRequestInstance.getByteArrayOutputStream().write( item.getData() );
+                portalResponse.getByteArrayOutputStream().write( item.getData() );
             }
             else {
                 // 1st xml element
@@ -297,7 +301,7 @@ public final class PortalPageController {
                         }
                     }
 
-                    transformContent(outputStream, portalRequestInstance);
+                    transformContent(portalRequestInstance, portalResponse, outputStream);
                     outputStream = null;
                 }
             }
@@ -307,23 +311,26 @@ public final class PortalPageController {
             }
 
             pageElement = pageElementNext;
-            if (iterator.hasNext())
+            if (iterator.hasNext()) {
                 pageElementNext = iterator.next();
-            else
+            }
+            else {
                 pageElementNext = null;
+            }
         }
     }
 
-    private static void transformContent(ByteArrayOutputStream outputStream, PortalRequestInstance portalRequestInstance) throws IOException {
+    private static void transformContent(PortalRequestInstance portalRequestInstance, PortalResponse portalResponse, ByteArrayOutputStream outputStream) throws IOException {
         try {
             ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
             processTransforming(outputStream, portalRequestInstance.getXslt().getTransformer(), tempBytes, portalRequestInstance.getTempPath(),
                 portalRequestInstance.getPortalTransformationParameters()
             );
-            portalRequestInstance.getByteArrayOutputStream().write(tempBytes.toByteArray());
-        } catch (Exception e) {
+            portalResponse.getByteArrayOutputStream().write(tempBytes.toByteArray());
+        }
+        catch (Exception e) {
             log.warn("Error transform page element", e);
-            portalRequestInstance.getByteArrayOutputStream().write("Error transform page element".getBytes());
+            portalResponse.getByteArrayOutputStream().write("Error transform page element".getBytes());
         }
     }
 

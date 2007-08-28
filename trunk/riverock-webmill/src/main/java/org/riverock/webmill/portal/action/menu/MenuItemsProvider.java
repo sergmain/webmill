@@ -14,7 +14,7 @@ import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.webmill.container.bean.PortletWebApplication;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.instance.PortalInstance;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 
