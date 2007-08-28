@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
 
 import net.sf.ehcache.CacheManager;
 
-import org.riverock.webmill.portal.utils.SiteList;
+import org.riverock.webmill.portal.site.SiteList;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.utils.HibernateUtils;
