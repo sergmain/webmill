@@ -10,10 +10,10 @@ import java.util.Map;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.OfflineDaoFactory;
-import org.riverock.webmill.portal.url.PortletDefinitionProvider;
+import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProvider;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
-import org.riverock.webmill.portal.url.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.url.interpreter.TestPortletDefinitionProvider;
 
 /**
