@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.google.sitemap;
+package org.riverock.webmill.portal.action.google.sitemap;
 
 import java.io.IOException;
 import java.io.File;
@@ -51,12 +51,6 @@ import org.riverock.webmill.portal.utils.PortalUtils;
 public class GoogleSitemapServlet extends HttpServlet {
     private final static Logger log = Logger.getLogger( GoogleSitemapServlet.class );
 
-    static final String SITEMAP_DIR = "WEB-INF" + File.separatorChar+ "webmill-data" + File.separatorChar+ "sitemap" + File.separatorChar;
-
-    private static final String SITEMAP_XML = "sitemap.xml.gz";
-    private static final int BUFFER_SIZE = 1024;
-    private static final String APPLICATION_X_GZIP_CONTENT_TYPE = "application/x-gzip";
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
@@ -64,7 +58,7 @@ public class GoogleSitemapServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
-        String sitemapPath = getServletContext().getRealPath("/") + SITEMAP_DIR + p.getSiteId();
+        String sitemapPath = getServletContext().getRealPath("/") + GoogleSitemapConstants.SITEMAP_DIR + p.getSiteId();
 
         File path = new File(sitemapPath);
         if (log.isDebugEnabled()) {
@@ -74,7 +68,7 @@ public class GoogleSitemapServlet extends HttpServlet {
         if (!path.exists()) {
             path.mkdirs();
         }
-        File sitemap = new File(path, SITEMAP_XML);
+        File sitemap = new File(path, GoogleSitemapConstants.SITEMAP_XML);
         if (!sitemap.exists()) {
             GoogleSitemapService.createSitemap(
                 p.getSiteId(), PortalUtils.buildVirtualHostUrl(request), request.getContextPath(), getServletContext().getRealPath("/")
@@ -87,9 +81,9 @@ public class GoogleSitemapServlet extends HttpServlet {
         }
 
         InputStream is = new FileInputStream(sitemap);
-        response.setContentType(APPLICATION_X_GZIP_CONTENT_TYPE);
+        response.setContentType(GoogleSitemapConstants.APPLICATION_X_GZIP_CONTENT_TYPE);
         OutputStream os = response.getOutputStream();
-        byte[] bytes = new byte[BUFFER_SIZE];
+        byte[] bytes = new byte[GoogleSitemapConstants.BUFFER_SIZE];
         int count;
         while ((count=is.read(bytes))!=-1) {
             os.write(bytes, 0, count);
