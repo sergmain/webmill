@@ -26,7 +26,6 @@ package org.riverock.webmill.portal.url;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.url.interpreter.AliasUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.CtxUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.IndexUrlInterpreter;
@@ -34,6 +33,8 @@ import org.riverock.webmill.portal.url.interpreter.PageUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.PageidUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.PortletAliasUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 
 /**
  * @author Sergei Maslyukov
