@@ -49,9 +49,9 @@ import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.url.interpreter.CtxUrlInterpreter;
-import org.riverock.webmill.portal.url.RequestState;
+import org.riverock.webmill.portal.url.interpreter.RequestState;
 import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
@@ -70,7 +70,7 @@ public final class PortletURLImpl implements PortletURL {
     private Map<String, List<String>> parameters = new HashMap<String, List<String>>();
 
     private boolean secure;
-    private PortalRequestInstance portalRequestInstance = null;
+    private PortalRequest portalRequest = null;
     private RenderRequest portletRequest = null;
     private boolean isActionReqeust = false;
     private Namespace namespace = null;
@@ -78,12 +78,12 @@ public final class PortletURLImpl implements PortletURL {
     private PortalContext portalContext = null;
 
     public PortletURLImpl(
-        PortalRequestInstance portalRequestInstance, RenderRequest renderRequest,
+        PortalRequest portalRequest, RenderRequest renderRequest,
         boolean isActionReqeust, Namespace namespace, RequestState requestState,
         String portletName, PortalContext portalContext) {
-        this.portalRequestInstance = portalRequestInstance;
+        this.portalRequest = portalRequest;
         this.portletRequest = renderRequest;
-        this.secure = portalRequestInstance.getHttpRequest().isSecure();
+        this.secure = portalRequest.getHttpRequest().isSecure();
         this.isActionReqeust = isActionReqeust;
         this.state = requestState.getWindowState();
         this.mode = requestState.getPortletMode();
@@ -324,11 +324,11 @@ public final class PortletURLImpl implements PortletURL {
         }
 
         Long contextId=null;
-        if (portalRequestInstance.getRequestContext().getExtendedCatalogItem()!=null) {
-             contextId = portalRequestInstance.getRequestContext().getExtendedCatalogItem().getCatalogId();
+        if (portalRequest.getRequestContext().getExtendedCatalogItem()!=null) {
+             contextId = portalRequest.getRequestContext().getExtendedCatalogItem().getCatalogId();
         }
         if (log.isDebugEnabled()) {
-            log.debug("portalRequestInstance.getRequestContext().getExtendedCatalogItem(): " + portalRequestInstance.getRequestContext().getExtendedCatalogItem());
+            log.debug("portalRequestInstance.getRequestContext().getExtendedCatalogItem(): " + portalRequest.getRequestContext().getExtendedCatalogItem());
             log.debug("contextId: "+contextId);
         }
 
@@ -386,10 +386,10 @@ public final class PortletURLImpl implements PortletURL {
             throw new IllegalStateException("portletName defined more than once in parameters: " + porteltNameParam);
         }
         if (porteltNameParam !=null) {
-            portalRequestInstance.getRequestContext().getDefaultPortletName();
+            portalRequest.getRequestContext().getDefaultPortletName();
             PortletEntry entry;
             try {
-                entry = portalRequestInstance.getPortalInstance().getPortletContainer().getPortletInstance(porteltNameParam.get(0));
+                entry = portalRequest.getPortalInstance().getPortletContainer().getPortletInstance(porteltNameParam.get(0));
             }
             catch (PortletContainerException e) {
                 String es = "Error get PortletEntry";
