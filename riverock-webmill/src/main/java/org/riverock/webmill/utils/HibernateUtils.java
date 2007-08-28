@@ -30,11 +30,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.AnnotationConfiguration;
 
-import org.riverock.webmill.main.CssBean;
+import org.riverock.webmill.portal.bean.CssBean;
 import org.riverock.webmill.portal.bean.*;
-import org.riverock.webmill.a3.bean.AuthInfoImpl;
-import org.riverock.webmill.a3.bean.RoleBeanImpl;
-import org.riverock.webmill.a3.bean.AuthRelateRole;
+import org.riverock.webmill.portal.bean.AuthInfoImpl;
+import org.riverock.webmill.portal.bean.RoleBeanImpl;
+import org.riverock.webmill.portal.bean.AuthRelateRole;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
