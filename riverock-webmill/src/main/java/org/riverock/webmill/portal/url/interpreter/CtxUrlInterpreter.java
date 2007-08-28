@@ -40,14 +40,13 @@ import org.riverock.common.tools.SimpleStringTokenizer;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
-import org.riverock.webmill.portal.PortletParameters;
-import org.riverock.webmill.portal.url.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
-import org.riverock.webmill.portal.url.RequestState;
-import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
+import org.riverock.webmill.portal.url.interpreter.PortletParameters;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.RequestState;
+import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
-import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * $Id$

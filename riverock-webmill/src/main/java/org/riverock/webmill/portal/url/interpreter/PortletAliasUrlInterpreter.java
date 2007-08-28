@@ -1,7 +1,7 @@
 package org.riverock.webmill.portal.url.interpreter;
 
-import org.riverock.webmill.portal.url.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 
 /**
  * User: SMaslyukov

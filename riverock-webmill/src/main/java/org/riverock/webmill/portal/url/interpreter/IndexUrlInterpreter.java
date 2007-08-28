@@ -27,10 +27,8 @@ package org.riverock.webmill.portal.url.interpreter;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.portal.url.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 
 /**
  * $Id$

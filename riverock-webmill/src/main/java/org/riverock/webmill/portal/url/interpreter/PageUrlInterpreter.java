@@ -31,8 +31,8 @@ import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.url.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
