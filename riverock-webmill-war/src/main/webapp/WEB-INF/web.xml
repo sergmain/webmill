@@ -67,7 +67,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>PortalFrontController</servlet-name>
-		<servlet-class>org.riverock.webmill.portal.PortalFrontController</servlet-class>
+		<servlet-class>org.riverock.webmill.portal.page_element.PortalFrontController</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 	<servlet>
