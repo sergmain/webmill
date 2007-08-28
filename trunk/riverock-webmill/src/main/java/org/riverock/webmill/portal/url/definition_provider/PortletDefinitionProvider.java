@@ -1,4 +1,4 @@
-package org.riverock.webmill.portal.url;
+package org.riverock.webmill.portal.url.definition_provider;
 
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 
