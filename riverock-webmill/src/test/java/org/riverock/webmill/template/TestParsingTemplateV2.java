@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 
 import org.riverock.common.tools.XmlTools;
 import org.riverock.webmill.template.schema.*;
+import org.riverock.webmill.template.parser.TemplateParserUtils;
 import org.riverock.webmill.utils.SingletonFactory;
 
 /**
@@ -18,7 +19,7 @@ import org.riverock.webmill.utils.SingletonFactory;
 public class TestParsingTemplateV2 extends TestCase {
 
     public void testNullOperation() {
-        List<Object> elements = TemplateUtils.getElements(null);
+        List<Object> elements = TemplateParserUtils.getElements(null);
         assertNotNull(elements);
         assertTrue(elements.isEmpty());
     }
@@ -189,7 +190,7 @@ public class TestParsingTemplateV2 extends TestCase {
         assertEquals("SearchXml", portlet.getXmlRoot());
         assertEquals("SEARCH_CODE", portlet.getCode());
 
-        List<Object> elements = TemplateUtils.getElements(template);
+        List<Object> elements = TemplateParserUtils.getElements(template);
         assertEquals(3, elements.size());
 
         assertTrue(elements.get(0) instanceof Xslt);

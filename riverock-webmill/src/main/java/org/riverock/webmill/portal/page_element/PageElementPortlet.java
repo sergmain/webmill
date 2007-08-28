@@ -50,9 +50,9 @@ import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portal.instance.PortalInstance;
-import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.PortalSessionManagerImpl;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
@@ -97,7 +97,7 @@ public final class PageElementPortlet implements PageElement {
     private String fullPortletName=null;
     private Map<String, List<String>> renderRequestParamMap = new HashMap<String, List<String>>();
     private String contextPath=null;
-    private PortalRequestInstance portalRequest =null;
+    private PortalRequest portalRequest =null;
     private PortletPreferences portletPreferences=null;
     private PortletPreferencePersistencer persistencer=null;
     private Map<String, List<String>> portletMetadata=null;
@@ -123,7 +123,7 @@ public final class PageElementPortlet implements PageElement {
         String xmlRoot,
         String code,
         List<ElementParameter> templateParameters,
-        PortalRequestInstance portalRequest,
+        PortalRequest portalRequest,
         String fullPortletName,
         List<String> roleList,
         PortletPreferencePersistencer persistencer
@@ -676,7 +676,7 @@ public final class PageElementPortlet implements PageElement {
         return "Portlet '" + portletName + "' unavailable.";
     }
 
-    private String getContextPath(final PortalRequestInstance portalRequest) {
+    private String getContextPath(final PortalRequest portalRequest) {
         String contextPath;
         final String portalRealPath = portalInstance.getPortalServletConfig().getServletContext().getRealPath("/");
         final String portletRealPath = portletEntry.getServletConfig().getServletContext().getRealPath("/");

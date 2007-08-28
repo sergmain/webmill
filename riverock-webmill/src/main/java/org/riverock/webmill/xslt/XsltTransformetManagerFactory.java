@@ -1,5 +1,7 @@
 package org.riverock.webmill.xslt;
 
+import org.riverock.webmill.XsltTransformerManager;
+
 /**
  * User: SMaslyukov
  * Date: 26.07.2007
@@ -9,5 +11,9 @@ public class XsltTransformetManagerFactory {
 
     public static XsltTransformerManager getInstanse(Long siteId) {
         return new XsltTransformerManagerImpl(siteId);
+    }
+
+    public static void destroyAll() {
+
     }
 }

@@ -8,8 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portal.instance.PortalInstance;
-import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.preference.PreferenceFactory;
@@ -28,7 +28,7 @@ import org.riverock.webmill.template.schema.Portlet;
 public class InitPageElements {
     private final static Logger log = Logger.getLogger( InitPageElements.class );
 
-    public static List<PageElement> initPageElements(PortalRequestInstance portalRequest, PortalInstance portalInstance) {
+    public static List<PageElement> initPageElements(PortalRequest portalRequest, PortalInstance portalInstance) {
         List<PageElement> pageElements = new ArrayList<PageElement>();
 
         // init page element list

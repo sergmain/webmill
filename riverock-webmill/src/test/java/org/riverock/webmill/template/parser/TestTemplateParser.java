@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import junit.framework.TestCase;
 
 import org.riverock.webmill.template.schema.Template;
-import org.riverock.webmill.template.TemplateUtils;
 import org.riverock.webmill.utils.SingletonFactory;
 import org.riverock.common.tools.XmlTools;
 
@@ -72,7 +71,7 @@ public class TestTemplateParser extends TestCase {
         InputStream is = TestTemplateParser.class.getResourceAsStream("/xml/resources/template/template_v2_7.xml");
         Template t = XmlTools.getObjectFromXml(Template.class, is, SingletonFactory.getValidationEventHandler());
         assertNotNull(t);
-        List<Object> list = TemplateUtils.getElements(t);
+        List<Object> list = TemplateParserUtils.getElements(t);
         assertNotNull(list);
         assertEquals(12, list.size());
     }
