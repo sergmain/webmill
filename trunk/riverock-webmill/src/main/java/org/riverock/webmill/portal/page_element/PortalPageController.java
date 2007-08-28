@@ -44,8 +44,8 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.MainTools;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.portal.instance.PortalInstance;
+import org.riverock.webmill.portal.instance.PortalResponse;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.PortalResponse;
 import org.riverock.webmill.portal.PortalTransformationParameters;
 
 /**
