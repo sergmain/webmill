@@ -81,8 +81,8 @@ public class OfflineInternalTemplateDao implements InternalTemplateDao{
             return null;
         }
         for (TemplateBean templateBean : templateBeans) {
-            // hack, work only with siteId 16L
-            if (siteId==16L && templateName.equals(templateBean.getTemplateName()) && lang.equals(templateBean.getTemplateLanguage())) {
+            // hack, work only with siteId 16L and locale 'en'
+            if (siteId==16L && templateName.equals(templateBean.getTemplateName()) && lang.equals("en")) {
                 return templateBean;
             }
         }

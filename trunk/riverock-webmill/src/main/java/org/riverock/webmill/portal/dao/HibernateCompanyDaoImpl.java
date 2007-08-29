@@ -243,7 +243,7 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
             session.beginTransaction();
 
             AuthInfoImpl user = (AuthInfoImpl)session.createQuery(
-                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl as auth " +
+                "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl as auth " +
                 "where  auth.userLogin=:userLogin ")
                 .setString("userLogin", userLogin)
                 .uniqueResult();

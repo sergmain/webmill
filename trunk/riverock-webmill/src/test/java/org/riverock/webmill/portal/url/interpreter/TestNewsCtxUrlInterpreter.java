@@ -1,48 +1,36 @@
 package org.riverock.webmill.portal.url.interpreter;
 
 import java.io.File;
-import java.util.Locale;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
 import junit.framework.TestCase;
 
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.OfflineDaoFactory;
 import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProvider;
+import org.riverock.webmill.portal.url.UrlInterpreterIterator;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.UrlInterpreterIterator;
-import org.riverock.webmill.portal.info.PortalInfoImpl;
-import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * User: SMaslyukov
- * Date: 27.08.2007
- * Time: 16:14:26
+ * Date: 21.08.2007
+ * Time: 11:24:21
  */
-public class TestPageUrlInterpreter extends TestCase {
+public class TestNewsCtxUrlInterpreter extends TestCase {
 
-    public void testPage() throws Exception {
-        UrlInterpreterResult result = prepareUrl();
-
-        assertEquals(Locale.ENGLISH, result.getLocale());
-//        assertEquals("dynamic_me.askmore", result.getTemplateName());
-        assertEquals("::mill.article_plain", result.getDefaultPortletName());
-        assertFalse(result.getDefaultRequestState().isActionRequest());
-        assertEquals(PortletMode.VIEW, result.getDefaultRequestState().getPortletMode());
-        assertEquals(WindowState.NORMAL, result.getDefaultRequestState().getWindowState());
-
-        
-    }
-
-    public static UrlInterpreterResult prepareUrl() throws Exception {
+    public void testInvokeNewsUrl() throws Exception {
         OfflineDaoFactory.init();
 
-        String pathInfo = "/page/en/action/download";
+        String pathInfo = "/ctx/en,templ-mill-dyn1-en,mill.news_block,r,ns48,228/ctx";
         PortletDefinitionProvider portletDefinitionProvider = new TestPortletDefinitionProvider();
         boolean isMultiPartRequest = false;
 
@@ -51,6 +39,10 @@ public class TestPageUrlInterpreter extends TestCase {
         Locale predictedLocale = Locale.ENGLISH;
 
         Map<String, List<String>> httpRequestParameter = new HashMap<String, List<String>>();
+        httpRequestParameter.put("mill.template", Arrays.asList("dynamic_me.askmore"));
+        httpRequestParameter.put("mill.xmlroot", Arrays.asList("XmlNewsItem"));
+        httpRequestParameter.put("news.type", Arrays.asList("item"));
+        httpRequestParameter.put("mill.id_news_item", Arrays.asList("296"));
 
         PortalInfo portalInfo = PortalInfoImpl.getInstance(siteId);
 
@@ -65,6 +57,13 @@ public class TestPageUrlInterpreter extends TestCase {
             portalInfo
         );
         UrlInterpreterResult result = UrlInterpreterIterator.interpretUrl(factoryParameter);
-        return result;
+        assertEquals(Locale.ENGLISH, result.getLocale());
+        assertEquals(228, (long)result.getContextId());
+//        assertEquals("dynamic_me.askmore", result.getTemplateName());
+        assertEquals("::mill.news_block", result.getDefaultPortletName());
+        assertFalse(result.getDefaultRequestState().isActionRequest());
+        assertEquals(PortletMode.VIEW, result.getDefaultRequestState().getPortletMode());
+        assertEquals(WindowState.NORMAL, result.getDefaultRequestState().getWindowState());
+
     }
 }

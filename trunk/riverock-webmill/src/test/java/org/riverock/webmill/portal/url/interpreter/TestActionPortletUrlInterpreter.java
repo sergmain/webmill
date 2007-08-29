@@ -24,25 +24,12 @@ import org.riverock.interfaces.portal.PortalInfo;
  * Date: 27.08.2007
  * Time: 16:14:26
  */
-public class TestPageUrlInterpreter extends TestCase {
+public class TestActionPortletUrlInterpreter extends TestCase {
 
     public void testPage() throws Exception {
-        UrlInterpreterResult result = prepareUrl();
-
-        assertEquals(Locale.ENGLISH, result.getLocale());
-//        assertEquals("dynamic_me.askmore", result.getTemplateName());
-        assertEquals("::mill.article_plain", result.getDefaultPortletName());
-        assertFalse(result.getDefaultRequestState().isActionRequest());
-        assertEquals(PortletMode.VIEW, result.getDefaultRequestState().getPortletMode());
-        assertEquals(WindowState.NORMAL, result.getDefaultRequestState().getWindowState());
-
-        
-    }
-
-    public static UrlInterpreterResult prepareUrl() throws Exception {
         OfflineDaoFactory.init();
 
-        String pathInfo = "/page/en/action/download";
+        String pathInfo = "/page/en/admin";
         PortletDefinitionProvider portletDefinitionProvider = new TestPortletDefinitionProvider();
         boolean isMultiPartRequest = false;
 
@@ -65,6 +52,10 @@ public class TestPageUrlInterpreter extends TestCase {
             portalInfo
         );
         UrlInterpreterResult result = UrlInterpreterIterator.interpretUrl(factoryParameter);
-        return result;
+        assertEquals(Locale.ENGLISH, result.getLocale());
+        assertEquals("::mill.language", result.getDefaultPortletName());
+        assertTrue(result.getDefaultRequestState().isActionRequest());
+        assertEquals(PortletMode.VIEW, result.getDefaultRequestState().getPortletMode());
+        assertEquals(WindowState.NORMAL, result.getDefaultRequestState().getWindowState());
     }
 }

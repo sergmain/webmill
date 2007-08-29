@@ -15,7 +15,7 @@ import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.manager.DbRevisionManager;
 import org.riverock.webmill.admin.AdminConstants;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * User: SergeMaslyukov
