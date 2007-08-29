@@ -294,7 +294,7 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
             }
 
             session.createQuery(
-            "delete org.riverock.webmill.main.CssBean as css where css.siteId = :site_id")
+            "delete org.riverock.webmill.portal.bean.CssBean as css where css.siteId = :site_id")
                 .setLong("site_id", siteId)
                 .executeUpdate();
 

@@ -24,21 +24,20 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.Session;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.apache.log4j.Logger;
+
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.AnnotationConfiguration;
 
-import org.riverock.webmill.portal.bean.CssBean;
+import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.bean.*;
-import org.riverock.webmill.portal.bean.AuthInfoImpl;
-import org.riverock.webmill.portal.bean.RoleBeanImpl;
-import org.riverock.webmill.portal.bean.AuthRelateRole;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.naming.Context;
 
 /**
  * This is 1st version of Hibernate utils class. initializer is very simple
@@ -50,6 +49,7 @@ import javax.naming.Context;
  * $Id$
  */
 public class HibernateUtils {
+    private final static Logger log = Logger.getLogger( HibernateUtils.class );
     static SessionFactory sessionFactory=null;
 
     public static final Class[] CLASSES = {
@@ -138,9 +138,11 @@ public class HibernateUtils {
             SessionFactory sessionFactoryReference = cfg.buildSessionFactory();
             sessionFactory = sessionFactoryReference;
 
-        } catch (Throwable ex) {
-            // Log exception!
-            throw new ExceptionInInitializerError(ex);
+        }
+        catch (Throwable ex) {
+            String es = "Error prepare hibernate session";
+            log.error(es);
+            throw new PortalException(es, ex);
         }
     }
 

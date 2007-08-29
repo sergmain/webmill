@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Template xmlns:element="http://webmill.riverock.org/xsd/riverock-template-page-elements.xsd">
+    <element:xslt name="SeparatorDynStart"/>
+    <element:dynamic/>
+    <element:xslt name="Footer"/>
+</Template>

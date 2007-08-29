@@ -114,4 +114,41 @@ public class TestTemplateParser extends TestCase {
         assertNotNull(template[3].getPortlet().getElementParameter());
         assertEquals(2, template[3].getPortlet().getElementParameter().size());
     }
+
+    public void testTemplateParsing_9() throws Exception {
+
+        InputStream is = TestTemplateParser.class.getResourceAsStream("/xml/resources/template/template_v2_9.xml");
+        ParsedTemplateElement[] template = TemplateParserFactory.getTemplateParser().parse(is);
+        assertNotNull(template);
+        assertEquals(31, template.length);
+
+        assertTrue(template[0].isString());
+        assertTrue(StringUtils.isBlank(template[0].getString()));
+        assertTrue(template[1].isXslt());
+        assertTrue(StringUtils.isBlank(template[2].getString()));
+        assertTrue(template[3].isXslt());
+        assertTrue(StringUtils.isBlank(template[4].getString()));
+        assertTrue(template[5].isXslt());
+        assertTrue(template[19].isDynamic());
+    }
+
+    public void testTemplateParsing_10() throws Exception {
+
+        InputStream is = TestTemplateParser.class.getResourceAsStream("/xml/resources/template/template_v2_10.xml");
+        ParsedTemplateElement[] template = TemplateParserFactory.getTemplateParser().parse(is);
+        assertNotNull(template);
+        assertEquals(7, template.length);
+
+        assertTrue(template[0].isString());
+        assertTrue(StringUtils.isBlank(template[0].getString()));
+        assertTrue(template[1].isXslt());
+        assertTrue(template[2].isString());
+        assertTrue(StringUtils.isBlank(template[2].getString()));
+        assertTrue(template[3].isDynamic());
+        assertTrue(template[4].isString());
+        assertTrue(StringUtils.isBlank(template[4].getString()));
+        assertTrue(template[5].isXslt());
+        assertTrue(template[4].isString());
+        assertTrue(StringUtils.isBlank(template[4].getString()));
+    }
 }

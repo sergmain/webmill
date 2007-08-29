@@ -67,12 +67,12 @@
 	</servlet>
 	<servlet>
 		<servlet-name>PortalFrontController</servlet-name>
-		<servlet-class>org.riverock.webmill.portal.page_element.PortalFrontController</servlet-class>
+		<servlet-class>org.riverock.webmill.portal.instance.PortalFrontController</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 	<servlet>
 		<servlet-name>ServletCSS</servlet-name>
-		<servlet-class>org.riverock.webmill.main.ServletCSS</servlet-class>
+		<servlet-class>org.riverock.webmill.css.ServletCSS</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
 	<servlet>
@@ -91,15 +91,7 @@
     </servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>PortalFrontController</servlet-name>
-		<url-pattern>/ctx/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>PortalFrontController</servlet-name>
-		<url-pattern>/page/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>PortalFrontController</servlet-name>
-		<url-pattern>/pageid/*</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Set the default session timeout (in minutes) -->
@@ -162,10 +154,6 @@
 	<mime-mapping>
 		<extension>etx</extension>
 		<mime-type>text/x-setext</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>ps</extension>
-		<mime-type>application/x-postscript</mime-type>
 	</mime-mapping>
 	<mime-mapping>
 		<extension>class</extension>
@@ -318,10 +306,6 @@
 	<mime-mapping>
 		<extension>gz</extension>
 		<mime-type>application/x-gzip</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>Z</extension>
-		<mime-type>application/x-compress</mime-type>
 	</mime-mapping>
 	<mime-mapping>
 		<extension>z</extension>

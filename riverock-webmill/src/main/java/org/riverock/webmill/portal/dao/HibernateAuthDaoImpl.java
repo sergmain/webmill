@@ -60,7 +60,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
             UserBean user = (UserBean)session.createQuery(
                 "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
-                " org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                " org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                 "where user.userId = auth.userId and auth.userLogin=:userLogin ")
                 .setString("userLogin", userLogin)
                 .uniqueResult();
@@ -75,7 +75,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             List<AuthInfoImpl> authInfos = session.createQuery(
-                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                 "where auth.userLogin=:userLogin ")
                 .setString("userLogin", username)
                 .list();
@@ -115,14 +115,14 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 .list();
 /*
         Query query = session.createQuery(
-            "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
+            "select auth1.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth1 " +
             "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
             "union " +
-            "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
+            "select relate2.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth2, " +
             " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
             "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
             "union " +
-            "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+            "select company3.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth3, " +
             " org.riverock.webmill.portal.bean.CompanyBean company3 " +
             "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 ");
 
@@ -153,10 +153,10 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
             List<Long> list = session.createSQLQuery( sql_ )
     /*
-                "select auth1.holdingId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
+                "select auth1.holdingId from org.riverock.webmill.portal.bean.AuthInfoImpl auth1 " +
                 "where  auth1.isHolding=true and auth1.userLogin=:userLogin1 " +
                 "union " +
-                "select holding2.holdingId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
+                "select holding2.holdingId from org.riverock.webmill.portal.bean.AuthInfoImpl auth2, " +
                 " org.riverock.webmill.portal.bean.HoldingBean holding2 " +
                 "where  auth2.isRoot=true and auth3.userLogin=:userLogin2 ")
     */
@@ -229,7 +229,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
 
             AuthInfoImpl auth = (AuthInfoImpl)session.createQuery(
-                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl as auth," +
+                "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl as auth," +
                 "where auth.authUserId=:id_auth_user_owner ")
                 .setLong("id_auth_user_owner", id_auth_user_owner)
                 .uniqueResult();
@@ -238,20 +238,20 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             if (auth!=null) {
                 id = (Long)session.createQuery(
                     "select auth.authUserId " +
-                        "from  org.riverock.webmill.a3.bean.AuthInfoImpl as auth, " +
+                        "from  org.riverock.webmill.portal.bean.AuthInfoImpl as auth, " +
                         "      org.riverock.webmill.portal.bean.UserBean as user " +
                         "where auth.authUserId = :id_auth_user_check and auth.userId=user.userId and " +
                         "      user.companyId in ( :companyIds )" )
     /*
 
-                        "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
+                        "select auth1.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth1 " +
                         "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
                         "union " +
-                        "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
+                        "select relate2.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth2," +
                         " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
                         "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
                         "union " +
-                        "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                        "select company3.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth3, " +
                         " org.riverock.webmill.portal.bean.CompanyBean company3 " +
                         "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
                         ")")
@@ -278,13 +278,14 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             return false;
 
         long startMills = 0;
-        if ( log.isInfoEnabled() )
+        if ( log.isInfoEnabled() ) {
             startMills = System.currentTimeMillis();
+        }
 
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
                 AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
-                    "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                    "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                     "where auth.userLogin=:userLogin and auth.userPassword=:userPassword")
                     .setString("userLogin", userLogin)
                     .setString("userPassword", userPassword)
@@ -304,9 +305,9 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 
                 Long authUserId = (Long)session.createQuery(
                     "select auth.authUserId " +
-                        "from  org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
-                        "      org.riverock.webmill.a3.bean.AuthRelateRole relateRole, " +
-                        "      org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+                        "from  org.riverock.webmill.portal.bean.AuthInfoImpl auth, " +
+                        "      org.riverock.webmill.portal.bean.AuthRelateRole relateRole, " +
+                        "      org.riverock.webmill.portal.bean.RoleBeanImpl role " +
                         "where auth.userLogin=:userLogin and auth.authUserId=relateRole.authUserId and " +
                         "      relateRole.roleId=role.roleId and role.name=:roleName ")
                     .setString("userLogin", userLogin)
@@ -325,7 +326,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
 
             AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
-                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                     "where auth.userLogin=:userLogin and auth.userPassword=:userPassword")
                 .setString("userLogin", login_)
                 .setString("userPassword", pass_)
@@ -346,7 +347,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
 
             AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
-                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                     "where auth.authUserId=:authUserId")
                 .setLong("authUserId", authUserId)
                 .uniqueResult();
@@ -368,19 +369,19 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             List<AuthInfoImpl> authInfos = session.createQuery(
-                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
+                "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl auth, " +
                     "     org.riverock.webmill.portal.bean.UserBean as user " +
                     "where auth.userId=user.userId and user.companyId in (:companyIds) ")
     /*
 
-                    "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
+                    "select auth1.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth1 " +
                     "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
                     "union " +
-                    "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
+                    "select relate2.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth2," +
                     " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
                     "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
                     "union " +
-                    "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                    "select company3.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth3, " +
                     " org.riverock.webmill.portal.bean.CompanyBean company3 " +
                     "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
                     ")")
@@ -433,18 +434,18 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 .list();
 
             list = session.createQuery(
-                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                     "where auth.authUserId in ( :ids ) ")
     /*
 
                     "select auth1.authUserId " +
-                    "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth1, " +
+                    "from   org.riverock.webmill.portal.bean.AuthInfoImpl auth1, " +
                     "       org.riverock.webmill.portal.bean.SiteBean site1 " +
                     "where  auth1.isCompany=true and auth1.companyId=site1.companyId and " +
                     "       auth1.userId=:userId1 and site1.siteId=:siteId1 " +
                     "union " +
                     "select auth2.authUserId " +
-                    "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
+                    "from   org.riverock.webmill.portal.bean.AuthInfoImpl auth2, " +
                     "       org.riverock.webmill.portal.bean.SiteBean site2, " +
                     "       org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
                     "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and " +
@@ -452,7 +453,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                     "       auth2.userId=:userId2 and site2.siteId=:siteId2 " +
                     "union " +
                     "select auth3.authUserId " +
-                    "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                    "from   org.riverock.webmill.portal.bean.AuthInfoImpl auth3, " +
                     "       org.riverock.webmill.portal.bean.CompanyBean company3, " +
                     "       org.riverock.webmill.portal.bean.SiteBean site3 " +
                     "where  auth3.isRoot=true and company3.companyId=site3.companyId and " +
@@ -488,7 +489,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 
                 AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
                     "select auth " +
-                        "from  org.riverock.webmill.a3.bean.AuthInfoImpl auth, " +
+                        "from  org.riverock.webmill.portal.bean.AuthInfoImpl auth, " +
                         "      org.riverock.webmill.portal.bean.UserBean as user " +
                         "where auth.userLogin=:userLogin and auth.userPassword=:userPassword and " +
                         "      auth.userId=user.userId and user.isDeleted=false")
@@ -537,7 +538,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 
                 List list = session.createQuery(
                         "select auth1.authUserId " +
-                        "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth1, " +
+                        "from   org.riverock.webmill.portal.bean.AuthInfoImpl auth1, " +
                         "       org.riverock.webmill.portal.bean.SiteBean site1 " +
                         "where  auth1.isCompany=true and auth1.companyId=site1.companyId and " +
                         "       auth1.userLogin=:userLogin1 and site1.siteId=:siteId1 "
@@ -551,7 +552,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 
                 list = session.createQuery(
                         "select auth2.authUserId " +
-                        "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth2, " +
+                        "from   org.riverock.webmill.portal.bean.AuthInfoImpl auth2, " +
                         "       org.riverock.webmill.portal.bean.SiteBean site2, " +
                         "       org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
                         "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and " +
@@ -567,7 +568,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 
                 list = session.createQuery(
                     "select auth3.authUserId " +
-                        "from   org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                        "from   org.riverock.webmill.portal.bean.AuthInfoImpl auth3, " +
                         "       org.riverock.webmill.portal.bean.CompanyBean company3, " +
                         "       org.riverock.webmill.portal.bean.SiteBean site3 " +
                         "where  auth3.isRoot=true and company3.companyId=site3.companyId and " +
@@ -595,8 +596,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 */
             List<RoleBeanImpl> roles = session.createQuery(
                 "select role " +
-                    "from  org.riverock.webmill.a3.bean.RoleBeanImpl role, " +
-                    "      org.riverock.webmill.a3.bean.AuthRelateRole relate " +
+                    "from  org.riverock.webmill.portal.bean.RoleBeanImpl role, " +
+                    "      org.riverock.webmill.portal.bean.AuthRelateRole relate " +
                     "where role.roleId=relate.roleId and relate.authUserId=:authUserId ")
                 .setLong("authUserId", authSession.getAuthInfo().getAuthUserId())
                 .list();
@@ -618,7 +619,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             );
 */
             List<RoleBeanImpl> roles = session.createQuery(
-                "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role ")
+                "select role from  org.riverock.webmill.portal.bean.RoleBeanImpl role ")
                 .list();
 
             return (List)roles;
@@ -641,8 +642,8 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 */
             List<RoleBeanImpl> roles = session.createQuery(
                 "select role " +
-                    "from  org.riverock.webmill.a3.bean.RoleBeanImpl role, " +
-                    "      org.riverock.webmill.a3.bean.AuthRelateRole relate " +
+                    "from  org.riverock.webmill.portal.bean.RoleBeanImpl role, " +
+                    "      org.riverock.webmill.portal.bean.AuthRelateRole relate " +
                     "where role.roleId=relate.roleId and relate.authUserId=:authUserId ")
                 .setLong("authUserId", authUserId)
                 .list();
@@ -677,7 +678,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             session.beginTransaction();
 
             RoleBeanImpl bean = (RoleBeanImpl) session.createQuery(
-                "select role from org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+                "select role from org.riverock.webmill.portal.bean.RoleBeanImpl role " +
                     "where role.roleId=:roleId")
                 .setLong("roleId", roleBean.getRoleId())
                 .uniqueResult();
@@ -702,7 +703,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
             session.beginTransaction();
             session.createQuery(
-            "delete org.riverock.webmill.a3.bean.RoleBeanImpl role where role.roleId=:roleId")
+            "delete org.riverock.webmill.portal.bean.RoleBeanImpl role where role.roleId=:roleId")
                 .setLong("roleId", roleBean.getRoleId())
                 .executeUpdate();
 
@@ -799,7 +800,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
             session.beginTransaction();
             AuthInfoImpl bean = (AuthInfoImpl) session.createQuery(
-                "select auth from org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                     "where auth.authUserId=:authUserId")
                 .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
                 .uniqueResult();
@@ -855,7 +856,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 continue;
             }
             AuthRelateRole relate = (AuthRelateRole) session.createQuery(
-                "select relate from org.riverock.webmill.a3.bean.AuthRelateRole relate " +
+                "select relate from org.riverock.webmill.portal.bean.AuthRelateRole relate " +
                     "where relate.roleId=:roleId and relate.authUserId=:authUserId")
                 .setLong("roleId", roleBeanImpl.getRoleId())
                 .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
@@ -895,11 +896,11 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
             session.beginTransaction();
             session.createQuery(
-            "delete org.riverock.webmill.a3.bean.AuthRelateRole relate where relate.authUserId=:authUserId ")
+            "delete org.riverock.webmill.portal.bean.AuthRelateRole relate where relate.authUserId=:authUserId ")
                 .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
                 .executeUpdate();
             session.createQuery(
-            "delete org.riverock.webmill.a3.bean.AuthInfoImpl auth where auth.authUserId=:authUserId ")
+            "delete org.riverock.webmill.portal.bean.AuthInfoImpl auth where auth.authUserId=:authUserId ")
                 .setLong("authUserId", infoAuth.getAuthInfo().getAuthUserId())
                 .executeUpdate();
 
@@ -924,14 +925,14 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 "select user from org.riverock.webmill.portal.bean.UserBean as user " +
                     "where user.isDeleted=false and user.companyId in ( :companyIds )")
     /*
-                    "select auth1.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth1 " +
+                    "select auth1.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth1 " +
                     "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
                     "union " +
-                    "select relate2.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth2," +
+                    "select relate2.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth2," +
                     " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
                     "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
                     "union " +
-                    "select company3.companyId from org.riverock.webmill.a3.bean.AuthInfoImpl auth3, " +
+                    "select company3.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth3, " +
                     " org.riverock.webmill.portal.bean.CompanyBean company3 " +
                     "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
                     ")")
@@ -956,7 +957,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             RoleBeanImpl bean = (RoleBeanImpl)session.createQuery(
-                "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+                "select role from  org.riverock.webmill.portal.bean.RoleBeanImpl role " +
                 "where role.roleId=:roleId ")
                 .setLong("roleId", roleId)
                 .uniqueResult();
@@ -975,7 +976,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             RoleBeanImpl bean = (RoleBeanImpl)session.createQuery(
-                "select role from  org.riverock.webmill.a3.bean.RoleBeanImpl role " +
+                "select role from  org.riverock.webmill.portal.bean.RoleBeanImpl role " +
                 "where role.name=:name ")
                 .setString("name", roleName)
                 .uniqueResult();

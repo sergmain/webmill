@@ -10,7 +10,7 @@ import org.riverock.dbrevision.db.DatabaseStructureManager;
 import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.utils.Utils;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

@@ -22,7 +22,7 @@ import org.riverock.dbrevision.utils.Utils;
 import org.riverock.webmill.admin.CompanySessionBean;
 import org.riverock.webmill.admin.bean.UploadedFileBean;
 import org.riverock.webmill.admin.servlet.DbExportServlet;
-import org.riverock.webmill.utils.HibernateUtils;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * User: SMaslyukov

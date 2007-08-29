@@ -24,14 +24,34 @@
  */
 package org.riverock.webmill.portal.instance;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.hibernate.stat.EntityStatistics;
 import org.hibernate.stat.Statistics;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.search.PortalIndexer;
@@ -42,30 +62,18 @@ import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.PortalResponse;
+import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.search.PortalIndexerImpl;
-import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.portal.template.PortalTemplateManager;
 import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
-import org.riverock.webmill.portal.dao.HibernateUtils;
-import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.portal.xslt.XsltTransformerManager;
 import org.riverock.webmill.portal.xslt.XsltTransformetManagerFactory;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import org.riverock.webmill.utils.PortletUtils;
 
 /**
  * @author smaslyukov
@@ -81,10 +89,10 @@ public class PortalInstanceImpl implements PortalInstance {
     private static final String WEBMILL_PROPERTIES = "/org/riverock/webmill/portal/webmill.properties";
 
     private static PortalVersion portalVersion = new PortalVersion( getPortalVersion() );
-    private static final String PORTAL_INFO = "WebMill/"+getPortalVersion();
+    private static final String PORTAL_INFO = "Webmill/"+getPortalVersion();
 
     private static String PORTAL_VERSION = null;
-    private static final String COPYRIGHT =
+    private static final String COPYRIGHT =                           
         "<!--\n" +
         "  Portal: "+PORTAL_INFO +"\n"+
         "Homepage: http://webmill.riverock.org\n" +
@@ -286,10 +294,6 @@ public class PortalInstanceImpl implements PortalInstance {
                 portalResponse = new PortalResponseImpl();
             }                                                            
 
-            if (portalRequest ==null) {
-                portalRequest = new PortalRequestInstance();
-            }
-
             portalResponse.getByteArrayOutputStream().reset();
             portalResponse.getByteArrayOutputStream().write(
                 ( es + "<br>" + ExceptionTools.getStackTrace(e, NUM_LINES, "<br>") ).getBytes()
@@ -327,6 +331,7 @@ public class PortalInstanceImpl implements PortalInstance {
 
             portalResponse.getByteArrayOutputStream().close();
             StringBuilder timeString = getTimeString(counter, portalRequest.getStartMills());
+
             final byte[] bytesCopyright = getCopyright().getBytes();
             final byte[] bytes = portalResponse.getByteArrayOutputStream().toByteArray();
             final byte[] bytesTimeString = timeString.toString().getBytes();

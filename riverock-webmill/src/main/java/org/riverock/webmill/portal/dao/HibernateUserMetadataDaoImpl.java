@@ -52,7 +52,7 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
             UserMetadataItemBean bean = (UserMetadataItemBean)session.createQuery(
                 "select meta " +
                     "from  org.riverock.webmill.portal.bean.UserMetadataItemBean as meta," +
-                    "      org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                    "      org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                     "where auth.userLogin=:userLogin and meta.metadataName=:metadataName and meta.siteId=:siteId and meta.userId=auth.userId")
                 .setString("userLogin", userLogin)
                 .setString("metadataName", metadataName)
@@ -73,7 +73,7 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
 
             UserBean user = (UserBean)session.createQuery(
                 "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
-                "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "       org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                 "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
                 .setString("userLogin", userLogin)
                 .uniqueResult();
@@ -123,7 +123,7 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
 
             UserBean user = (UserBean)session.createQuery(
                 "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
-                "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "       org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                 "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
                 .setString("userLogin", userLogin)
                 .uniqueResult();
@@ -173,7 +173,7 @@ public class HibernateUserMetadataDaoImpl implements InternalUserMetadataDao {
 
             UserBean user = (UserBean)session.createQuery(
                 "select user from org.riverock.webmill.portal.bean.UserBean as user, " +
-                "       org.riverock.webmill.a3.bean.AuthInfoImpl auth " +
+                "       org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                 "where  user.userId = auth.userId and auth.userLogin=:userLogin ")
                 .setString("userLogin", userLogin)
                 .uniqueResult();

@@ -68,13 +68,16 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
             }
         }
 
-        PortalTemplate template = hashId.get(templateId);
+        //noinspection UnnecessaryBoxing
+        Long templateIdAsLong = new Long(templateId);
+
+        PortalTemplate template = hashId.get(templateIdAsLong);
         if (template!=null) {
             return template;
         }
 
         synchronized(syncObject) {
-            template = hashId.get(templateId);
+            template = hashId.get(templateIdAsLong);
             if (template!=null) {
                 return template;
             }

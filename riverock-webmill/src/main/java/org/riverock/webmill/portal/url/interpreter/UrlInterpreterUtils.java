@@ -32,13 +32,8 @@ import org.apache.log4j.Logger;
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.url.interpreter.PortletParameters;
-import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
-import org.riverock.webmill.portal.url.interpreter.RequestState;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.template.PortalTemplate;
 import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
 import org.riverock.webmill.portal.template.TemplateUtils;
@@ -101,7 +96,6 @@ public final class UrlInterpreterUtils {
         }
         for (ParsedTemplateElement templateItem : template.getTemplateElements()) {
 
-            // we change request status if portlet is 'always_process_as_action'
             RequestState requestState;
 
             if (templateItem.isPortlet()) {
@@ -155,6 +149,8 @@ public final class UrlInterpreterUtils {
             else {
                 continue;
             }
+
+            // we change request state if portlet is 'always_process_as_action'
             if (PortletService.getBooleanParam(urlInterpreterResult.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.always_process_as_action, false)) {
                 log.debug("Set explicitly action status for portlet");
                 requestState.setActionRequest(true);

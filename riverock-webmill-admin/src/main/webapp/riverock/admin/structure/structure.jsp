@@ -73,13 +73,13 @@
     <h:form id="company_form">
 
         <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
-                         styleClass="top-button-action"/>
+                         styleClass="top-button-action" rendered="#{structureService.manager.allCompleted}"/>
         <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
-                         styleClass="top-button-action"/>
+                         styleClass="top-button-action" rendered="#{structureService.manager.allCompleted}"/>
         <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
-                         styleClass="top-button-action"/>
+                         styleClass="top-button-action" rendered="#{structureService.manager.allCompleted}"/>
         <h:commandButton id="db-list-action" action="db" value="#{manager.db_button}"
-                         styleClass="top-button-action"/>
+                         styleClass="top-button-action" rendered="#{structureService.manager.allCompleted}"/>
 
         <t:dataTable id="messagesTable"
                       var="message"
