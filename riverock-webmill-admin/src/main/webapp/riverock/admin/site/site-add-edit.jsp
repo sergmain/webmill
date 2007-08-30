@@ -42,6 +42,14 @@
             <f:selectItems value="#{siteService.companyList}"/>
         </h:selectOneMenu>
     </h:panelGroup>
+    <h:outputText value="#{msg.site_timezone}"/>
+    <h:panelGroup id="select-timezones-group">
+        <h:selectOneMenu id="select-one-timezone" value="#{siteSessionBean.siteExtended.site.serverTimeZone}"
+                         styleClass="selectOneMenu" required="true"
+            >
+            <f:selectItems value="#{siteService.timeZones}"/>
+        </h:selectOneMenu>
+    </h:panelGroup>
 
     <h:outputText value="#{msg.site_locale}"/>
     <h:inputText id="site-locale-field" value="#{siteSessionBean.siteExtended.locales}"/>

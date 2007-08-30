@@ -124,6 +124,13 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                 log.debug("    country: " + site.getDefCountry());
                 log.debug("    variant: " + site.getDefVariant());
                 log.debug("    companyId: " + site.getCompanyId());
+                log.debug("    timezone: " + site.getServerTimeZone());
+            }
+            if (hosts!=null) {
+                log.debug("    virtual hosts;");
+                for (VirtualHost host : hosts) {
+                    log.debug("      "+host.getHost());
+                }
             }
         }
 

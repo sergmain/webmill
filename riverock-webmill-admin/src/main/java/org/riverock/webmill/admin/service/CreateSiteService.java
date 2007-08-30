@@ -72,7 +72,8 @@ public class CreateSiteService {
                     for (VirtualHostBean virtualHost : hostFullList) {
                         log.debug("   virtual host: " + virtualHost.getHost() + ", siteId: " + virtualHost.getSiteId());
                     }
-                } else {
+                }
+                else {
                     log.debug("   no virtual host for this site");
                 }
             }
@@ -88,6 +89,8 @@ public class CreateSiteService {
             siteBean.setDefLanguage(locale.getLanguage());
             siteBean.setDefVariant(locale.getVariant());
             siteBean.setCompanyId(siteExtended.getSite().getCompanyId());
+            siteBean.setServerTimeZone(siteExtended.getSite().getServerTimeZone());
+            
             Long siteId = dao.createSite(siteBean);
 
             if (log.isDebugEnabled()) {

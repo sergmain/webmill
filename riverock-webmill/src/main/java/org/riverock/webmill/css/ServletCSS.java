@@ -64,9 +64,6 @@ public final class ServletCSS extends HttpServlet {
 
         Writer out = null;
         try {
-            response.setContentType( "text/css" );
-            out = response.getWriter();
-
             PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
 
             if ( log.isDebugEnabled() )
@@ -86,6 +83,8 @@ public final class ServletCSS extends HttpServlet {
                 }
 
                 Css css = InternalDaoFactory.getInternalCssDao().getCssCurrent( siteId );
+                response.setContentType( "text/css" );
+                out = response.getWriter();
                 if ( css == null ) {
                     out.write( "<style type=\"text/css\"><!-- --></style>" );
                 }
@@ -107,7 +106,8 @@ public final class ServletCSS extends HttpServlet {
                         log.debug( "RequestDispatcher is null" );
                     }
 
-                    out.write( "Error get dispatcher for path " + cssFile );
+                    out = response.getWriter();
+                    out.write( "<!-- Error get dispatcher for path " + cssFile + " -->" );
                 }
                 else {
                     dispatcher.forward( request, response );
@@ -121,8 +121,18 @@ public final class ServletCSS extends HttpServlet {
         }
         finally {
             if (out!=null) {
-                out.flush();
-                out.close();
+                try {
+                    out.flush();
+                }
+                catch (IOException e) {
+                    log.error("Error flush CSS writer");
+                }
+                try {
+                    out.close();
+                }
+                catch (IOException e) {
+                    log.error("Error close CSS writer");
+                }
                 out = null;
             }
         }
