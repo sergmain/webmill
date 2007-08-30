@@ -3,18 +3,18 @@
 dbrevision-structure.xsd">
 
 
-	<Table schema="TEST" name="WM_PORTAL_IDS" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_IDS">
 		<Field name="sequence_name" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
 		<Field name="sequence_next_value" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 	</Table>
-	<Table schema="TEST" name="WM_AUTH_ACCESS_GROUP" type="TABLE">
+	<Table schema="TEST" name="WM_AUTH_ACCESS_GROUP">
 		<PrimaryKey schemaName="TEST" tableName="WM_AUTH_ACCESS_GROUP" pkName="ID_AG_AAG_PK">
 			<Column columnName="ID_ACCESS_GROUP" keySeq="1" />
 		</PrimaryKey>
 		<Field name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Field name="NAME_ACCESS_GROUP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 	</Table>
-	<Table schema="TEST" name="WM_AUTH_RELATE_ACCGROUP" type="TABLE">
+	<Table schema="TEST" name="WM_AUTH_RELATE_ACCGROUP">
 		<PrimaryKey schemaName="TEST" tableName="WM_AUTH_RELATE_ACCGROUP" pkName="ID_REL_AG_ARA_PK">
 			<Column columnName="ID_RELATE_ACCGROUP" keySeq="1" />
 		</PrimaryKey>
@@ -32,7 +32,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_AUTH_USER" type="TABLE">
+	<Table schema="TEST" name="WM_AUTH_USER">
 		<PrimaryKey schemaName="TEST" tableName="WM_AUTH_USER" pkName="ID_AUTH_USR_AUN_PK">
 			<Column columnName="ID_AUTH_USER" keySeq="1" />
 		</PrimaryKey>
@@ -57,7 +57,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_NEWS_LIST" type="TABLE">
+	<Table schema="TEST" name="WM_NEWS_LIST">
 		<PrimaryKey schemaName="TEST" tableName="WM_NEWS_LIST" pkName="ID_NEWS_MLN_PK">
 			<Column columnName="ID_NEWS" keySeq="1" />
 		</PrimaryKey>
@@ -74,7 +74,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_NEWS_ITEM" type="TABLE">
+	<Table schema="TEST" name="WM_NEWS_ITEM">
 		<PrimaryKey schemaName="TEST" tableName="WM_NEWS_ITEM" pkName="ID_MN_PK">
 			<Column columnName="ID" keySeq="1" />
 		</PrimaryKey>
@@ -93,13 +93,13 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_NEWS_ITEM_IMAGE" type="TABLE">
+	<Table schema="TEST" name="WM_NEWS_ITEM_IMAGE">
 		<Field name="ID_MAIN_NEWS_IMAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 		<Field name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="120" nullable="1"/>
 		<Field name="ALT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
 		<Field name="ID_MAIN_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 	</Table>
-    <Table schema="TEST" name="WM_LIST_COMPANY" type="TABLE">
+    <Table schema="TEST" name="WM_LIST_COMPANY">
         <PrimaryKey schemaName="TEST" tableName="WM_LIST_COMPANY" pkName="ID_FIRM_MLF_PK">
             <Column columnName="ID_FIRM" keySeq="1" />
         </PrimaryKey>
@@ -125,7 +125,7 @@ dbrevision-structure.xsd">
         <Field name="IS_EXTERNAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
         <Field name="UNIQUE_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
     </Table>
-	<Table schema="TEST" name="WM_LIST_HOLDING" type="TABLE">
+	<Table schema="TEST" name="WM_LIST_HOLDING">
 		<PrimaryKey schemaName="TEST" tableName="WM_LIST_HOLDING" pkName="ID_HOLDING_LH_PK">
 			<Column columnName="ID_HOLDING" keySeq="1" />
 		</PrimaryKey>
@@ -133,7 +133,7 @@ dbrevision-structure.xsd">
 		<Field name="FULL_NAME_HOLDING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="1"/>
 		<Field name="NAME_HOLDING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
 	</Table>
-	<Table schema="TEST" name="WM_LIST_R_HOLDING_COMPANY" type="TABLE">
+	<Table schema="TEST" name="WM_LIST_R_HOLDING_COMPANY">
 		<PrimaryKey schemaName="TEST" tableName="WM_LIST_R_HOLDING_COMPANY" pkName="ID_RELHOLDING_LRHC_PK">
 			<Column columnName="ID_REL_HOLDING" keySeq="1" />
 		</PrimaryKey>
@@ -151,7 +151,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_LIST_USER" type="TABLE">
+	<Table schema="TEST" name="WM_LIST_USER">
 		<PrimaryKey schemaName="TEST" tableName="WM_LIST_USER" pkName="ID_USER_MUI_PK">
 			<Column columnName="ID_USER" keySeq="1" />
 		</PrimaryKey>
@@ -177,7 +177,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_LIST_USER_METADATA" type="TABLE">
+	<Table schema="TEST" name="WM_LIST_USER_METADATA">
 		<PrimaryKey schemaName="TEST" tableName="WM_LIST_USER_METADATA" pkName="ID_MAIN_USER_META_MUM_PK">
 			<Column columnName="ID_MAIN_USER_METADATA" keySeq="1" />
 		</PrimaryKey>
@@ -199,7 +199,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_LOG_ERROR" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_LOG_ERROR">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_LOG_ERROR" pkName="ID_LOG_ERR_MLE_PK">
 			<Column columnName="ID_LOG_ERROR" keySeq="1" />
 		</PrimaryKey>
@@ -208,7 +208,7 @@ dbrevision-structure.xsd">
 		<Field name="TEXT_ERROR" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
 		<Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_LOG_ERROR_TEXT" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_LOG_ERROR_TEXT">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_LOG_ERROR_TEXT" pkName="ID_LGERRTXTXMLETPK">
 			<Column columnName="ID_LOG_ERROR_TEXT" keySeq="1" />
 		</PrimaryKey>
@@ -221,7 +221,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_ACCESS_STAT" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_ACCESS_STAT">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_ACCESS_STAT" pkName="ID_ACC_STAT_SAS_PK">
 			<Column columnName="ID_SITE_ACCESS_STAT" keySeq="1" />
 		</PrimaryKey>
@@ -237,21 +237,21 @@ dbrevision-structure.xsd">
 		<Field name="IS_PARAM_TOO_BIG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<Field name="SERVER_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_ACCESS_URL" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_ACCESS_URL">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_ACCESS_URL" pkName="ID_ACCS_URL_SAU_PK">
 			<Column columnName="ID_SITE_ACCESS_URL" keySeq="1" />
 		</PrimaryKey>
 		<Field name="ID_SITE_ACCESS_URL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
 		<Field name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_ACCESS_USERAGENT" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_ACCESS_USERAGENT">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_ACCESS_USERAGENT" pkName="ID_ACUSRAG_SAUA_PK">
 			<Column columnName="ID_SITE_USER_AGENT" keySeq="1" />
 		</PrimaryKey>
 		<Field name="ID_SITE_USER_AGENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
 		<Field name="USER_AGENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="1"/>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_CSS" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_CSS">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_CSS" pkName="ID_CNT_CSS_SCC_PK">
 			<Column columnName="ID_SITE_CONTENT_CSS" keySeq="1"/>
 		</PrimaryKey>
@@ -268,7 +268,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_CATALOG" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_CATALOG">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_CATALOG" pkName="ID_CTX_CAT_SCC_PK">
 			<Column columnName="ID_SITE_CTX_CATALOG" keySeq="1" />
 		</PrimaryKey>
@@ -306,7 +306,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_CATALOG_LANGUAGE" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_CATALOG_LANGUAGE">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_CATALOG_LANGUAGE" pkName="ID_LNGCAT_ISCLC_PK">
 			<Column columnName="ID_SITE_CTX_LANG_CATALOG" keySeq="1" />
 		</PrimaryKey>
@@ -320,14 +320,14 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_PORTLET_NAME" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_PORTLET_NAME">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_PORTLET_NAME" pkName="ID_CTX_TYPE_SCT_PK">
 			<Column columnName="ID_SITE_CTX_TYPE" keySeq="1" />
 		</PrimaryKey>
 		<Field name="ID_SITE_CTX_TYPE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
 		<Field name="TYPE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="0"/>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_LIST_SITE" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_LIST_SITE">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_LIST_SITE" pkName="ID_SITE_SLS_PK">
 			<Column columnName="ID_SITE" keySeq="1" />
 		</PrimaryKey>
@@ -352,7 +352,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table schema="TEST" name="WM_PORTAL_SITE_LANGUAGE" type="TABLE">
+	<Table schema="TEST" name="WM_PORTAL_SITE_LANGUAGE">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_SITE_LANGUAGE" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
 			<Column columnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" />
 		</PrimaryKey>
@@ -369,7 +369,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table name="WM_PORTAL_TEMPLATE" type="TABLE">
+	<Table name="WM_PORTAL_TEMPLATE">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_TEMPLATE" pkName="ID_SITETEMPL_ST_PK">
 			<Column columnName="ID_SITE_TEMPLATE" keySeq="1" />
 		</PrimaryKey>
@@ -389,7 +389,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-    <Table name="WM_PORTAL_PORTLET_ALIAS" type="TABLE">
+    <Table name="WM_PORTAL_PORTLET_ALIAS">
         <PrimaryKey tableName="WM_PORTAL_PORTLET_ALIAS" pkName="ID_PORT_ALIAS_WPPA_PK">
             <Column columnName="ID_PORTLET_ALIAS" keySeq="1" />
         </PrimaryKey>
@@ -409,7 +409,7 @@ dbrevision-structure.xsd">
             <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
         </ForeignKey>
     </Table>
-    <Table name="WM_PORTAL_URL_ALIAS" type="TABLE">
+    <Table name="WM_PORTAL_URL_ALIAS">
         <PrimaryKey tableName="WM_PORTAL_URL_ALIAS" pkName="ID_URL_ALIAS_WPUA_PK">
             <Column columnName="ID_URL_ALIAS" keySeq="1" />
         </PrimaryKey>
@@ -423,7 +423,7 @@ dbrevision-structure.xsd">
             <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
         </ForeignKey>
     </Table>
-	<Table name="WM_PORTAL_VIRTUAL_HOST" type="TABLE">
+	<Table name="WM_PORTAL_VIRTUAL_HOST">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_VIRTUAL_HOST" pkName="ID_VIRT_HST_SVH_PK">
 			<Column columnName="ID_SITE_VIRTUAL_HOST" keySeq="1" />
 		</PrimaryKey>
@@ -437,7 +437,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-	<Table name="WM_PORTAL_XSLT" type="TABLE">
+	<Table name="WM_PORTAL_XSLT">
 		<PrimaryKey schemaName="TEST" tableName="WM_PORTAL_XSLT" pkName="ID_SITE_XSLT_SX_PK">
 			<Column columnName="ID_SITE_XSLT" keySeq="1" />
 		</PrimaryKey>
@@ -454,7 +454,7 @@ dbrevision-structure.xsd">
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ForeignKey>
 	</Table>
-    <Table schema="TEST" name="WM_PORTLET_ARTICLE" type="TABLE">
+    <Table schema="TEST" name="WM_PORTLET_ARTICLE">
         <PrimaryKey schemaName="TEST" tableName="WM_PORTLET_ARTICLE" pkName="ID_CTX_ATCL_SCA_PK">
             <Column columnName="ID_SITE_CTX_ARTICLE" keySeq="1" />
         </PrimaryKey>
@@ -478,7 +478,7 @@ dbrevision-structure.xsd">
             <Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
         </ForeignKey>
     </Table>
-    <Table schema="TEST" name="WM_PORTLET_SEARCH" type="TABLE">
+    <Table schema="TEST" name="WM_PORTLET_SEARCH">
         <Field name="ID_SEARCH" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
         <Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
         <Field name="SEARCH_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
