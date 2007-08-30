@@ -27,18 +27,19 @@ package org.riverock.webmill.admin.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.faces.model.SelectItem;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.webmill.admin.bean.CompanyBean;
 import org.riverock.webmill.admin.bean.SiteBean;
 import org.riverock.webmill.admin.bean.SiteExtended;
 import org.riverock.webmill.admin.bean.VirtualHostBean;
 import org.riverock.webmill.admin.dao.DaoFactory;
-import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * @author SergeMaslyukov
@@ -51,6 +52,15 @@ public class SiteService implements Serializable {
     private static final long serialVersionUID = 2058005507L;
 
     public SiteService() {
+    }
+
+    public List<SelectItem> getTimeZones() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        String[] ids = TimeZone.getAvailableIDs();
+        for (String id : ids) {
+            list.add(new SelectItem(id, id));
+        }
+        return list;
     }
 
     public List<SelectItem> getSiteList() {

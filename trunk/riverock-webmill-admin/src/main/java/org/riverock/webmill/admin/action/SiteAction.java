@@ -106,6 +106,7 @@ public class SiteAction implements Serializable {
                 log.debug("    country: " + siteExtended.getSite().getDefCountry());
                 log.debug("    variant: " + siteExtended.getSite().getDefVariant());
                 log.debug("    companyId: " + siteExtended.getSite().getCompanyId());
+                log.debug("    timezone: " + siteExtended.getSite().getServerTimeZone());
                 log.debug("    objectType: " + siteSessionBean.getObjectType());
                 log.debug("    objectId: " + siteSessionBean.getId());
             }

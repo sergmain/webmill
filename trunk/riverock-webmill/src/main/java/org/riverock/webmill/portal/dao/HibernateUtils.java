@@ -132,6 +132,10 @@ public class HibernateUtils {
                 .setProperty("hibernate.search.autoregister_listeners", "false")
             ;
 
+            if (hibernateFamily.equals("org.hibernate.dialect.HSQLDialect")) {
+                cfg.setProperty("hibernate.jdbc.batch_size", "0");
+            }
+
             setAnnotatedClasses(cfg);
             
             //noinspection UnnecessaryLocalVariable
