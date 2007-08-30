@@ -107,7 +107,6 @@ public class MenuDataProvider implements Serializable {
         MenuItemBean menuItemTemp = menuSessionBean.getMenuItem().getMenuItem();
         Long portletId = menuItemTemp.getPortletId();
 
-        List<SelectItem> list = new ArrayList<SelectItem>();
         PortletRequest portletRequest = FacesTools.getPortletRequest();
         PortalActionExecutor executor =
             (PortalActionExecutor)portletRequest.getAttribute(ContainerConstants.PORTAL_PORTAL_ACTION_EXECUTOR);
@@ -119,8 +118,11 @@ public class MenuDataProvider implements Serializable {
         map = executor.execute("get-menu-items", map);
 
         List<ClassQueryItem> items = (List<ClassQueryItem>) map.get("result");
-        for (ClassQueryItem classQueryItem : items) {
-            list.add( new SelectItem(classQueryItem.getIndex(), classQueryItem.getValue()));
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        if (items!=null) {
+            for (ClassQueryItem classQueryItem : items) {
+                list.add( new SelectItem(classQueryItem.getIndex(), classQueryItem.getValue()));
+            }
         }
         contextList=list;
 
