@@ -15,6 +15,7 @@
     <module>riverock-webmill-container</module>
     <module>riverock-webmill</module>
     <module>riverock-webmill-updater</module>
+    <module>riverock-webmill-war</module>
     <module>riverock-webmill-admin</module>
     <module>riverock-module</module>
     <module>riverock-portlet</module>

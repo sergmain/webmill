@@ -18,6 +18,7 @@
 -->
     <module>riverock-webmill</module>
     <module>riverock-webmill-updater</module>
+    <module>riverock-webmill-war</module>
     <module>riverock-webmill-admin</module>
     <module>riverock-portlet</module>
     <module>riverock-forum</module>
