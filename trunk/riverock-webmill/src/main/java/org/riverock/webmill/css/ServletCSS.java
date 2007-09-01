@@ -24,10 +24,12 @@
  */
 package org.riverock.webmill.css;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.FileInputStream;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,9 +39,10 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.webmill.portal.info.PortalInfoImpl;
-import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.interfaces.portal.bean.Css;
+import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 
 /**
  * @author Serge Maslyukov
@@ -50,21 +53,14 @@ import org.riverock.interfaces.portal.bean.Css;
  */
 public final class ServletCSS extends HttpServlet {
     private final static Logger log = Logger.getLogger( ServletCSS.class );
+    private static final String TEXT_CSS = "text/css";
 
-    public ServletCSS() {
-    }
-
-    public void doPost( final HttpServletRequest request, final HttpServletResponse response )
-        throws ServletException, IOException {
-        doGet( request, response );
-    }
-
-    public void doGet( final HttpServletRequest request, final HttpServletResponse response )
+    public static void doService( HttpServletRequest request, HttpServletResponse response, String realPath, Long siteId )
         throws ServletException, IOException {
 
-        Writer out = null;
+        OutputStream out = null;
         try {
-            PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
+            PortalInfoImpl p = PortalInfoImpl.getInstance( siteId );
 
             if ( log.isDebugEnabled() )
                 log.debug( "Dynamic status " + p.getSite().getCssDynamic() );
@@ -77,24 +73,56 @@ public final class ServletCSS extends HttpServlet {
                     log.debug( "Referer: " + Header.getReferer( request ) );
                 }
 
-                Long siteId = p.getSiteId();
                 if ( log.isDebugEnabled() ) {
                     log.debug( "siteId: " + siteId );
                 }
 
                 Css css = InternalDaoFactory.getInternalCssDao().getCssCurrent( siteId );
-                response.setContentType( "text/css" );
-                out = response.getWriter();
+                response.setContentType(TEXT_CSS);
+                out = response.getOutputStream();
                 if ( css == null ) {
-                    out.write( "<style type=\"text/css\"><!-- --></style>" );
+                    out.write( "<style type=\"text/css\"><!-- --></style>".getBytes() );
                 }
                 else {
-                    out.write( css.getCss() );
+                    out.write( css.getCss().getBytes() );
                 }
             }
             else {
-                String cssFile = ( p.getSite().getCssFile() != null ?p.getSite().getCssFile() :"//styles.css" );
+                String cssFile = ( p.getSite().getCssFile() != null ?p.getSite().getCssFile() :"/styles.css" );
 
+                File realPathFile = new File(realPath);
+                if (!realPathFile.exists()) {
+                    throw new PortalException("Real path not exists, " + realPathFile.getAbsolutePath());
+                }
+
+                File file;
+                if (cssFile.charAt(0)=='/') {
+                    file = new File(realPathFile, cssFile.substring(1));
+                }
+                else {
+                    file = new File(realPathFile, cssFile);
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("CSS file: " + file.getAbsolutePath());
+                }
+
+                if (!file.exists()) {
+                    out = response.getOutputStream();
+                    out.write( ("<!-- CSS file not exists " + file.getAbsolutePath() + " -->").getBytes() );
+                    return;
+                }
+                InputStream is = new FileInputStream(file);
+                response.setContentType(TEXT_CSS);
+                out = response.getOutputStream();
+                byte[] bytes = new byte[0x200];
+                int count;
+                while ((count=is.read(bytes))!=-1) {
+                    out.write(bytes, 0, count);
+                }
+                is.close();
+                //noinspection UnusedAssignment
+                is=null;
+/*
                 RequestDispatcher dispatcher = request.getRequestDispatcher( cssFile );
                 if ( log.isDebugEnabled() ) {
                     log.debug( "forvard to static CSS: " + cssFile );
@@ -112,6 +140,7 @@ public final class ServletCSS extends HttpServlet {
                 else {
                     dispatcher.forward( request, response );
                 }
+*/
             }
         }
         catch( Exception e ) {
@@ -125,14 +154,15 @@ public final class ServletCSS extends HttpServlet {
                     out.flush();
                 }
                 catch (IOException e) {
-                    log.error("Error flush CSS writer");
+                    log.error("Error flush CSS output stream");
                 }
                 try {
                     out.close();
                 }
                 catch (IOException e) {
-                    log.error("Error close CSS writer");
+                    log.error("Error close CSS output stream");
                 }
+                //noinspection UnusedAssignment
                 out = null;
             }
         }

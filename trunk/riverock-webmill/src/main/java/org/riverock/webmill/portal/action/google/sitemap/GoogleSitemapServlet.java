@@ -24,21 +24,17 @@
  */
 package org.riverock.webmill.portal.action.google.sitemap;
 
-import java.io.IOException;
 import java.io.File;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.OutputStream;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.utils.PortalUtils;
+import org.riverock.webmill.utils.ServletUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -48,17 +44,13 @@ import org.riverock.webmill.portal.utils.PortalUtils;
  *         $Id$
  */
 @SuppressWarnings({"UnusedAssignment"})
-public class GoogleSitemapServlet extends HttpServlet {
+public class GoogleSitemapServlet {
     private final static Logger log = Logger.getLogger( GoogleSitemapServlet.class );
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public static void doService(HttpServletRequest request, HttpServletResponse response, String realPath, Long siteId) throws ServletException, IOException {
         
-        PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
-        String sitemapPath = getServletContext().getRealPath("/") + GoogleSitemapConstants.SITEMAP_DIR + p.getSiteId();
+//        PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
+        String sitemapPath = realPath + GoogleSitemapConstants.SITEMAP_DIR + siteId;
 
         File path = new File(sitemapPath);
         if (log.isDebugEnabled()) {
@@ -71,7 +63,7 @@ public class GoogleSitemapServlet extends HttpServlet {
         File sitemap = new File(path, GoogleSitemapConstants.SITEMAP_XML);
         if (!sitemap.exists()) {
             GoogleSitemapService.createSitemap(
-                p.getSiteId(), PortalUtils.buildVirtualHostUrl(request), request.getContextPath(), getServletContext().getRealPath("/")
+                siteId, PortalUtils.buildVirtualHostUrl(request), request.getContextPath(), realPath
             );
             if (!sitemap.exists()) {
                 log.warn("Google sitemap not created for unknown reason");
@@ -80,20 +72,9 @@ public class GoogleSitemapServlet extends HttpServlet {
             }
         }
 
-        InputStream is = new FileInputStream(sitemap);
-        response.setContentType(GoogleSitemapConstants.APPLICATION_X_GZIP_CONTENT_TYPE);
-        OutputStream os = response.getOutputStream();
-        byte[] bytes = new byte[GoogleSitemapConstants.BUFFER_SIZE];
-        int count;
-        while ((count=is.read(bytes))!=-1) {
-            os.write(bytes, 0, count);
-        }
-        os.flush();
-        os.close();
-        os=null;
-        is.close();
-        is=null;
+        ServletUtils.outputFileToResponse(response, sitemap, GoogleSitemapConstants.APPLICATION_X_GZIP_CONTENT_TYPE);
         sitemap=null;
         path=null;
     }
+
 }
