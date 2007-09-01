@@ -25,19 +25,15 @@ package org.riverock.common.config;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.XmlTools;
 
 /**
  * $Id$
@@ -57,7 +53,7 @@ public class ConfigObject {
         return configObject;
     }
 
-    public static ConfigObject load(String nameJndiCtx, String nameConfigParam, String nameConfigFile_, Class configClass) {
+    public static <T> ConfigObject load(String nameJndiCtx, String nameConfigParam, String nameConfigFile_, Class<T> configClass) {
         ConfigObject config = new ConfigObject();
         File configFile = null;
         if (PropertiesProvider.getIsServletEnv()) {
@@ -102,15 +98,17 @@ public class ConfigObject {
             if (config.nameConfigFile == null) {
                 log.warn("Config file not defined. isLocal: " + isLocal);
             }
-        } else {
+        }
+        else {
             String defURL = null;
             if (PropertiesProvider.getConfigPath() == null) {
                 String es = "Config path not resolved";
                 log.fatal(es);
                 throw new IllegalStateException(es);
             }
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("#15.100");
+            }
 
             defURL = PropertiesProvider.getConfigPath() +
                 (PropertiesProvider.getConfigPath().endsWith(File.separator) ? "" : File.separator) +
@@ -145,13 +143,14 @@ public class ConfigObject {
         }
 
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("Start unmarshalling file " + nameConfigFile_);
+        }
 
         try {
-            System.out.println("Start unmarshal config file: " + configFile);
+            // System.out.println("Start unmarshal config file: " + configFile);
             FileInputStream stream = new FileInputStream(configFile);
-            config.configObject = unmarshal(stream, configClass);
+            config.configObject = XmlTools.getObjectFromXml(configClass, stream);
         }
         catch (Throwable e) {
             String es = "Error while unmarshalling config file ";
@@ -162,6 +161,7 @@ public class ConfigObject {
         return config;
     }
 
+/*
     private static Object unmarshal(FileInputStream configFile, Class clazz) throws JAXBException, FileNotFoundException {
         JAXBContext jaxbContext = JAXBContext.newInstance ( clazz.getPackage().getName());
 
@@ -169,4 +169,5 @@ public class ConfigObject {
         Source source =  new StreamSource( configFile );
         return unmarshaller.unmarshal( source, clazz).getValue();
     }
+*/
 }
