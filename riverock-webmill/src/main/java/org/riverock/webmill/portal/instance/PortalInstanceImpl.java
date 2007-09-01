@@ -42,13 +42,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.NDC;
-
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
 import org.hibernate.stat.EntityStatistics;
 import org.hibernate.stat.Statistics;
 
@@ -81,7 +79,6 @@ import org.riverock.webmill.utils.PortletUtils;
  *         Time: 18:00:18
  *         $Id$
  */
-//@SuppressWarnings({"UnusedAssignment"})
 public class PortalInstanceImpl implements PortalInstance {
     private final static Logger log = Logger.getLogger(PortalInstanceImpl.class);
 
@@ -225,13 +222,9 @@ public class PortalInstanceImpl implements PortalInstance {
         return siteId;
     }
 
-    private final static Object syncCounter = new Object();
-    private static int counterNDC = 0;
-
-    public void process(HttpServletRequest httpServletRequest, HttpServletResponse httpResponse )
+    public void process(HttpServletRequest httpServletRequest, HttpServletResponse httpResponse, String counterNDC )
         throws IOException, ServletException {
 
-        int counter;
         HttpServletRequest request_;
         HttpServletResponse response_;
 //        request_ = new InternalServletRequestWrapper( httpServletRequest );
@@ -239,19 +232,8 @@ public class PortalInstanceImpl implements PortalInstance {
         request_ = httpServletRequest;
         response_ = httpResponse;
 
-        // Prepare Nested Diagnostic Contexts
-        synchronized (syncCounter) {
-            counter = counterNDC;
-            ++counterNDC;
-        }
-        NDC.push("" + counter);
-
-        if (log.isDebugEnabled()) {
-            putMainRequestDebug(counter, request_, response_);
-        }
-
         PortalResponse portalResponse=null;
-        PortalRequest portalRequest =null;
+        PortalRequest portalRequest;
         try {
 /*
             boolean isSessionValid = request_.isRequestedSessionIdValid();
@@ -298,7 +280,6 @@ public class PortalInstanceImpl implements PortalInstance {
             portalResponse.getByteArrayOutputStream().write(
                 ( es + "<br>" + ExceptionTools.getStackTrace(e, NUM_LINES, "<br>") ).getBytes()
             );
-            NDC.pop();
             return;
         }
 
@@ -330,7 +311,7 @@ public class PortalInstanceImpl implements PortalInstance {
             }
 
             portalResponse.getByteArrayOutputStream().close();
-            StringBuilder timeString = getTimeString(counter, portalRequest.getStartMills());
+            StringBuilder timeString = getTimeString(counterNDC, portalRequest.getStartMills());
 
             final byte[] bytesCopyright = getCopyright().getBytes();
             final byte[] bytes = portalResponse.getByteArrayOutputStream().toByteArray();
@@ -409,7 +390,6 @@ public class PortalInstanceImpl implements PortalInstance {
             catch (Throwable e) {
                 log.error("Error destroy portalResponse object", e);
             }
-            NDC.pop();
         }
     }
 
@@ -496,28 +476,7 @@ public class PortalInstanceImpl implements PortalInstance {
     }
 */
 
-    private static void putMainRequestDebug(int counter, HttpServletRequest request_, HttpServletResponse response_) {
-        log.debug("counter #6 " + counter);
-        log.debug("request_ " + request_);
-        log.debug("response_ " + response_);
-        log.debug("Request methos type - " + request_.getMethod() );
-        log.debug("Request URL - " + request_.getRequestURL());
-        log.debug("Request query string - " + request_.getQueryString());
-
-        for (Enumeration e = request_.getParameterNames(); e.hasMoreElements();) {
-            String s = (String) e.nextElement();
-            log.debug("Request parameter - " + s + ", value - " + request_.getParameter(s) );
-        }
-        log.debug( "This request made with cookie" );
-        Cookie[] cookies = request_.getCookies();
-        if (cookies!=null) {
-            for (final Cookie newVar : cookies) {
-                log.debug(cookieToString(newVar));
-            }
-        }
-    }
-
-    private static StringBuilder getTimeString( int counter, long startMills ) {
+    private static StringBuilder getTimeString( String counter, long startMills ) {
         return new StringBuilder( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
     }
 
