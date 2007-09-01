@@ -72,7 +72,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>ServletCSS</servlet-name>
-		<servlet-class>org.riverock.webmill.css.ServletCSS</servlet-class>
+		<servlet-class>org.riverock.webmill.portal.internal_servlet.css.ServletCSS</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
 	<servlet>

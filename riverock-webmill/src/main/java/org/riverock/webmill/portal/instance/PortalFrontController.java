@@ -45,7 +45,7 @@ import org.apache.log4j.NDC;
 
 import org.riverock.common.html.Header;
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.webmill.css.ServletCSS;
+import org.riverock.webmill.portal.internal_servlet.css.ServletCSS;
 import org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapServlet;
 import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.webmill.portal.info.PortalInfoImpl;
