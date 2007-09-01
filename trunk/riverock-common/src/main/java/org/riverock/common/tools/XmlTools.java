@@ -26,26 +26,26 @@
 package org.riverock.common.tools;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.StringReader;
-import java.io.InputStream;
 import java.io.File;
-import java.io.OutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationEventHandler;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.log4j.Logger;
-
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Author: mill
@@ -156,7 +156,7 @@ public final class XmlTools {
             }
         }
 
-        if (rootElement != null && rootElement.trim().length() > 0) {
+        if (StringUtils.isNotBlank(rootElement)) {
             // http://weblogs.java.net/blog/kohsuke/archive/2005/10/101_ways_to_mar.html
             marshaller.marshal( new JAXBElement(new QName("",rootElement), obj.getClass(), obj ), fos);
         }

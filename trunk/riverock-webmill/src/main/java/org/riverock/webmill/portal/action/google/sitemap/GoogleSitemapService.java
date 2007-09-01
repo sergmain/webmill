@@ -31,18 +31,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
+import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.google.sitemap.schema.sitemap.ObjectFactory;
 import org.riverock.webmill.google.sitemap.schema.sitemap.Url;
 import org.riverock.webmill.google.sitemap.schema.sitemap.Urlset;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
@@ -59,7 +57,6 @@ public class GoogleSitemapService {
     private final static Logger log = Logger.getLogger( GoogleSitemapService.class );
 
     private static final String SITEMAP_XML_GZ = "sitemap.xml.gz";
-    private static final String SITEMAP_PACKAGE_NAME = ObjectFactory.class.getPackage().getName();
 
     public static void createSitemap(Long siteId, String virtualHostUrl, String portalContext, String applicationPath) {
         if (log.isDebugEnabled()) {
@@ -137,26 +134,22 @@ public class GoogleSitemapService {
 
     public static void marshall(List<Url> urlset, OutputStream os) throws JAXBException {
         log.debug("Start marshall()");
-        JAXBContext jc = JAXBContext.newInstance(SITEMAP_PACKAGE_NAME);
-        Marshaller m = jc.createMarshaller();
-        
-        // create an element for marshalling
-        Urlset set = (new ObjectFactory()).createUrlset();
-        set.setUrl(urlset);
 
-        // create a Marshaller and marshal to System.out
-        m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
-        m.marshal( set, os );
+        Urlset set =  new Urlset();
+        set.setUrl(urlset);
+        XmlTools.writeMarshalToOutputStream(set, "utf-8", null, os, false, null);
     }
 
     private static void processMenuItem(String virtualHostUrl, String localeName, String portalContext, List<CatalogItem> menuItemList, List<Url> urls) {
         for (CatalogItem catalogItem : menuItemList) {
             Url url = new Url();
 
-            if (catalogItem.getUrl() == null)
+            if (catalogItem.getUrl() == null) {
                 url.setLoc(virtualHostUrl+PortletService.pageid(portalContext) + '/' + localeName + '/' + catalogItem.getId());
-            else
+            }
+            else {
                 url.setLoc(virtualHostUrl+PortletService.page(portalContext) + '/' + localeName + '/' + catalogItem.getUrl());
+            }
 
             url.setChangefreq("weekly");
             urls.add(url);
