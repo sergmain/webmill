@@ -122,25 +122,6 @@ public final class ServletCSS extends HttpServlet {
                 is.close();
                 //noinspection UnusedAssignment
                 is=null;
-/*
-                RequestDispatcher dispatcher = request.getRequestDispatcher( cssFile );
-                if ( log.isDebugEnabled() ) {
-                    log.debug( "forvard to static CSS: " + cssFile );
-                    log.debug( "RequestDispatcher - " + dispatcher );
-                }
-
-                if ( dispatcher == null ) {
-                    if ( log.isDebugEnabled() ) {
-                        log.debug( "RequestDispatcher is null" );
-                    }
-
-                    out = response.getWriter();
-                    out.write( "<!-- Error get dispatcher for path " + cssFile + " -->" );
-                }
-                else {
-                    dispatcher.forward( request, response );
-                }
-*/
             }
         }
         catch( Exception e ) {

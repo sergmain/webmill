@@ -49,7 +49,6 @@ public class GoogleSitemapServlet {
 
     public static void doService(HttpServletRequest request, HttpServletResponse response, String realPath, Long siteId) throws ServletException, IOException {
         
-//        PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
         String sitemapPath = realPath + GoogleSitemapConstants.SITEMAP_DIR + siteId;
 
         File path = new File(sitemapPath);
