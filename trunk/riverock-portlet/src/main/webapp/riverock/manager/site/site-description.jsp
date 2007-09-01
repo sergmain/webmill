@@ -54,6 +54,9 @@
     <h:outputText value="#{msg.site_css_file}"/>
     <h:outputText value="#{siteSessionBean.siteExtended.site.cssFile}"/>
 
+    <h:outputText value="#{msg.site_timezone}"/>
+    <h:outputText value="#{siteSessionBean.siteExtended.site.serverTimeZone}"/>
+
 </h:panelGrid>
 
 <h:panelGrid columns="1">

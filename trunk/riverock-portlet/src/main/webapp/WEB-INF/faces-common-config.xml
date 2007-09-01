@@ -49,11 +49,11 @@
 
     <!-- Validator -->
     <validator>
-        <description></description>
+        <description>Riverock text validator</description>
         <validator-id>TextValidator</validator-id>
         <validator-class>org.riverock.portlet.jsf.validator.TextValidator</validator-class>
         <attribute>
-            <description></description>
+            <description>type of text for validation</description>
             <attribute-name>type</attribute-name>
             <attribute-class>java.lang.String</attribute-class>
         </attribute>

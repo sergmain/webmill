@@ -135,8 +135,8 @@
                                action="#{siteAction.selectSite}"
                     >
 
-                    <t:graphicImage id="site-tree-sile-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                    <t:graphicImage id="site-tree-sile-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                    <t:graphicImage id="site-tree-sile-image-open" value="/images/user.png" rendered="#{t.nodeExpanded}" border="0"/>
+                    <t:graphicImage id="site-tree-sile-image-close" value="/images/user.png" rendered="#{!t.nodeExpanded}" border="0"/>
 
                     <h:outputText id="site-tree-site-name" value="#{node.description}"/>
 

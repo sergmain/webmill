@@ -26,6 +26,7 @@ package org.riverock.portlet.manager.site;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.faces.model.SelectItem;
 
@@ -60,6 +61,15 @@ public class SiteService implements Serializable {
     private static final long serialVersionUID = 2058005507L;
 
     public SiteService() {
+    }
+
+    public List<SelectItem> getTimeZones() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        String[] ids = TimeZone.getAvailableIDs();
+        for (String id : ids) {
+            list.add(new SelectItem(id, id));
+        }
+        return list;
     }
 
     public List<SelectItem> getSiteList() {
