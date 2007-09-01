@@ -25,7 +25,6 @@ package org.riverock.sso.config;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.sso.annotation.schema.config.Auth;
 import org.riverock.sso.annotation.schema.config.SsoConfig;
@@ -53,14 +52,16 @@ public class SsoConfigProcessor {
     }
 
     private final static Object syncReadConfig = new Object();
-    private static void readConfig() throws ConfigException {
-        if (isConfigProcessed)
+    private static void readConfig() {
+        if (isConfigProcessed) {
             return;
+        }
 
         synchronized (syncReadConfig)
         {
-            if (isConfigProcessed)
+            if (isConfigProcessed) {
                 return;
+            }
 
             if (log.isDebugEnabled()) {
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -73,24 +74,27 @@ public class SsoConfigProcessor {
                 JNDI_SSO_CONFIG_FILE , CONFIG_FILE_PARAM_NAME,  NAME_CONFIG_FILE, SsoConfig.class
             );
 
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("#15.006");
+            }
 
             isConfigProcessed = true;
         }
     }
 
-    public static Auth getAuth()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
+    public static Auth getAuth() {
+
+        if (log.isDebugEnabled()) {
             log.debug("#20.110");
+        }
 
-        if (!isConfigProcessed)
+        if (!isConfigProcessed) {
             readConfig();
+        }
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("#20.111");
+        }
 
         return getConfig().getAuth();
     }
