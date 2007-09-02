@@ -1,9 +1,0 @@
-ALTER TABLE WM_FORUM 
- ADD (
-  IS_USE_LOCALE NUMBER (1, 0) DEFAULT 0 NOT NULL
- )
-/
-
-alter table WM_FORUM
-drop column S_USE_LOCALE
-/
