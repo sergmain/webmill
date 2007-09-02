@@ -22,13 +22,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.dao;
+package org.riverock.webmill.portal.spi;
 
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.portal.spi.PortalHoldingSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * @author SergeMaslyukov

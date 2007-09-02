@@ -16,7 +16,7 @@ import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.dao.PortalSpiProviderImpl;
+import org.riverock.webmill.portal.spi.PortalSpiProviderImpl;
 
 /**
  * User: SMaslyukov

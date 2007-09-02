@@ -13,7 +13,7 @@ public interface PortletAlias {
 
     Long getTemplateId();
 
-    String getPortletName();
+    Long getPortletNameId();
 
     String getShortUrl();
 }

@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.dao;
+package org.riverock.webmill.portal.spi;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ import org.riverock.interfaces.portal.bean.Article;
 import org.riverock.interfaces.portal.spi.PortalCmsArticleSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.bean.ArticleBean;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * @author Sergei Maslyukov

@@ -1,10 +1,11 @@
-package org.riverock.webmill.portal.dao;
+package org.riverock.webmill.portal.spi;
 
 import java.util.List;
 import java.util.Map;
 
 import org.riverock.interfaces.portal.spi.PortalPreferencesSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * User: SMaslyukov

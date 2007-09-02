@@ -41,23 +41,27 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.CatalogItem;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portal.info.PortalInfoImpl;
+import org.riverock.webmill.portal.CookieManagerImpl;
+import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.portal.PortalInstance;
+import org.riverock.webmill.portal.PortalRequest;
+import org.riverock.webmill.portal.PortalTransformationParameters;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.dao.PortalSpiProviderImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
+import org.riverock.webmill.portal.spi.PortalSpiProviderImpl;
+import org.riverock.webmill.portal.template.PortalTemplate;
+import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;
 import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProviderImpl;
 import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.utils.PortalUtils;
-import org.riverock.webmill.portal.*;
-import org.riverock.webmill.portal.template.PortalTemplate;
-import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -96,7 +100,7 @@ public final class PortalRequestInstance implements PortalRequest {
      */
     private File requestBodyFile = null;
     private boolean isMultiPartRequest = false;
-    private PortalDaoProvider portalDaoProvider = null;
+    private PortalSpiProvider portalDaoProvider = null;
     private File tempPath = null;
 
     private PortalTransformationParameters portalTransformationParameters = new PortalTransformationParameters();
@@ -147,7 +151,7 @@ public final class PortalRequestInstance implements PortalRequest {
         startMills = System.currentTimeMillis();
     }
 
-    public PortalDaoProvider getPortalDaoProvider() {
+    public PortalSpiProvider getPortalSpiProvider() {
         return portalDaoProvider;
     }
 
