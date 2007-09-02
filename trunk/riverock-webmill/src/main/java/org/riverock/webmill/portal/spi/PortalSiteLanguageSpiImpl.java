@@ -22,88 +22,89 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.dao;
+package org.riverock.webmill.portal.spi;
 
 import java.util.List;
 
-import org.riverock.interfaces.portal.bean.Css;
-import org.riverock.interfaces.portal.spi.PortalCssSpi;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.spi.PortalSiteLanguageSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 18.05.2006
- *         Time: 13:32:44
+ *         Date: 17.05.2006
+ *         Time: 14:10:47
  */
-public class PortalCssSpiImpl implements PortalCssSpi {
+public class PortalSiteLanguageSpiImpl implements PortalSiteLanguageSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCssSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalSiteLanguageSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }
 
-    public Css getCssCurrent(Long siteId) {
+    public List<SiteLanguage> getSiteLanguageList(Long siteId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCssDao().getCssCurrent(siteId);
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Css getCss(Long cssId) {
+    public SiteLanguage getSiteLanguage(Long siteLanguageId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCssDao().getCss(cssId);
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Long createCss(Css css) {
+    public SiteLanguage getSiteLanguage(Long siteId, String languageLocale) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCssDao().createCss(css);
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteId, languageLocale);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void updateCss(Css css) {
+    public Long createSiteLanguage(SiteLanguage siteLanguage) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalCssDao().updateCss(css);
+            return InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguage);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void deleteCss(Long cssId) {
+    public void updateSiteLanguage(SiteLanguage siteLanguage) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalCssDao().deleteCss(cssId);
+            InternalDaoFactory.getInternalSiteLanguageDao().updateSiteLanguage(siteLanguage);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public List<Css> getCssList(Long siteId) {
+    public void deleteSiteLanguage(Long siteLanguageId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCssDao().getCssList(siteId);
+            InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguage(siteLanguageId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
