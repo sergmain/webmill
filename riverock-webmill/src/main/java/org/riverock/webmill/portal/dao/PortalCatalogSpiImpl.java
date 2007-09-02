@@ -24,12 +24,12 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import java.util.Locale;
 import java.util.List;
+import java.util.Locale;
 
-import org.riverock.interfaces.portal.dao.PortalCatalogDao;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.interfaces.portal.spi.PortalCatalogSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
@@ -37,11 +37,11 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  *         Date: 17.05.2006
  *         Time: 13:59:34
  */
-public class PortalCatalogDaoImpl implements PortalCatalogDao {
+public class PortalCatalogSpiImpl implements PortalCatalogSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCatalogDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalCatalogSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

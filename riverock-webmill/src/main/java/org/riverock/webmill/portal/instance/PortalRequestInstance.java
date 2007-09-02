@@ -48,7 +48,7 @@ import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
+import org.riverock.webmill.portal.dao.PortalSpiProviderImpl;
 import org.riverock.webmill.portal.url.UrlInterpreterIterator;
 import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProviderImpl;
 import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
@@ -189,7 +189,7 @@ public final class PortalRequestInstance implements PortalRequest {
 
             this.auth = AuthTools.getAuthSession(httpRequest);
             ClassLoader classLoader = portalInstance.getPortalClassLoader();
-            this.portalDaoProvider = new PortalDaoProviderImpl(auth, classLoader, portalInstance.getSiteId());
+            this.portalDaoProvider = new PortalSpiProviderImpl(auth, classLoader, portalInstance.getSiteId());
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
                 log.debug("portal requet instance class loader:\n" + classLoader + "\nhash: " + classLoader.hashCode());

@@ -27,8 +27,10 @@ import java.util.List;
 
 import org.riverock.interfaces.portal.bean.NewsGroup;
 import org.riverock.interfaces.portal.bean.News;
+import org.riverock.interfaces.portal.spi.PortalCmsNewsSpi;
 
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalCmsNewsSpi
  * @author Sergei Maslyukov
  *         Date: 20.11.2006
  *         Time: 21:00:43

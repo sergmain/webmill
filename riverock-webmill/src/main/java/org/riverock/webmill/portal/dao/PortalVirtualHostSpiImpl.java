@@ -26,74 +26,51 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
-import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.interfaces.portal.dao.PortalCompanyDao;
+import org.riverock.interfaces.portal.bean.VirtualHost;
+import org.riverock.interfaces.portal.spi.PortalVirtualHostSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
- * @author SergeMaslyukov
- *         Date: 30.01.2006
- *         Time: 1:59:09
- *         $Id$
+ * @author Sergei Maslyukov
+ *         Date: 17.05.2006
+ *         Time: 14:16:08
  */
-public class PortalCompanyDaoImpl implements PortalCompanyDao {
+public class PortalVirtualHostSpiImpl implements PortalVirtualHostSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCompanyDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalVirtualHostSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }
 
-    public Company getCompany(Long id) {
+    public List<VirtualHost> getVirtualHostsFullList() {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCompanyDao().getCompany( id, authSession );
+            return InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public List<Company> getCompanyList() {
+    public List<VirtualHost> getVirtualHosts(Long siteId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCompanyDao().getCompanyList( authSession );
+            return InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(siteId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Long processAddCompany(Company companyBean, String userLogin, Long holdingId) {
+    public Long createVirtualHost(VirtualHost virtualHost) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, userLogin, holdingId, authSession );
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void processSaveCompany(Company companyBean) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalCompanyDao().processSaveCompany( companyBean, authSession );
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void processDeleteCompany(Company companyBean) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalCompanyDao().processDeleteCompany( companyBean, authSession );
+            return InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

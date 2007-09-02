@@ -24,8 +24,8 @@
  */
 package org.riverock.webmill.portal.dao;
 
+import org.riverock.interfaces.portal.spi.PortalAuthSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.portal.dao.PortalAuthDao;
 
 /**
  * @author SergeMaslyukov
@@ -33,11 +33,11 @@ import org.riverock.interfaces.portal.dao.PortalAuthDao;
  *         Time: 2:07:09
  *         $Id$
  */
-public class PortalAuthDaoImpl implements PortalAuthDao {
+public class PortalAuthSpiImpl implements PortalAuthSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalAuthDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalAuthSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

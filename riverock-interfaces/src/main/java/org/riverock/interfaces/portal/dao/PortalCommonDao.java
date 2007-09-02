@@ -28,13 +28,14 @@ import java.util.List;
 import org.riverock.interfaces.portal.bean.Template;
 
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalCommonSpi
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 23:31:06
  *         $Id$
  */
 public interface PortalCommonDao {
-    public Template getTemplate(Long templateId);
-    public List<Template> getTemplateList( Long siteId );
-    public List<Template> getTemplateLanguageList( Long siteLanguageId );
+    Template getTemplate(Long templateId);
+    List<Template> getTemplateList( Long siteId );
+    List<Template> getTemplateLanguageList( Long siteLanguageId );
 }

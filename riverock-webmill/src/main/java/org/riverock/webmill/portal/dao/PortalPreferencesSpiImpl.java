@@ -3,19 +3,19 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.riverock.interfaces.portal.spi.PortalPreferencesSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.portal.dao.PortalPreferencesDao;
 
 /**
  * User: SMaslyukov
  * Date: 11.05.2007
  * Time: 20:24:45
  */
-public class PortalPreferencesDaoImpl implements PortalPreferencesDao {
+public class PortalPreferencesSpiImpl implements PortalPreferencesSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalPreferencesDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalPreferencesSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }

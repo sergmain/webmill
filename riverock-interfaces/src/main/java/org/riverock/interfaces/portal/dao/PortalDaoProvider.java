@@ -23,30 +23,33 @@
  */
 package org.riverock.interfaces.portal.dao;
 
+import org.riverock.interfaces.portal.spi.*;
+
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalSpiProvider
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 0:44:37
  *         $Id$
  */
 public interface PortalDaoProvider {
-    public PortalCommonDao getPortalCommonDao();
-    public PortalAuthDao getPortalAuthDao();
-    public PortalCompanyDao getPortalCompanyDao();
-    public PortalHoldingDao getPortalHoldingDao();
+    public PortalCommonSpi getPortalCommonDao();
+    public PortalAuthSpi getPortalAuthDao();
+    public PortalCompanySpi getPortalCompanyDao();
+    public PortalHoldingSpi getPortalHoldingDao();
 
-    public PortalCatalogDao getPortalCatalogDao();
-    public PortalPortletNameDao getPortalPortletNameDao();
-    public PortalSiteDao getPortalSiteDao();
-    public PortalSiteLanguageDao getPortalSiteLanguageDao();
-    public PortalTemplateDao getPortalTemplateDao();
-    public PortalVirtualHostDao getPortalVirtualHostDao();
-    public PortalXsltDao getPortalXsltDao();
+    public PortalCatalogSpi getPortalCatalogDao();
+    public PortalPortletNameSpi getPortalPortletNameDao();
+    public PortalSiteSpi getPortalSiteDao();
+    public PortalSiteLanguageSpi getPortalSiteLanguageDao();
+    public PortalTemplateSpi getPortalTemplateDao();
+    public PortalVirtualHostSpi getPortalVirtualHostDao();
+    public PortalXsltSpi getPortalXsltDao();
 
-    public PortalCssDao getPortalCssDao();
-    public PortalUserMetadataDao getPortalUserMetadataDao();
-    public PortalUserDao getPortalUserDao();
-    public PortalCmsArticleDao getPortalCmsArticleDao();
-    public PortalCmsNewsDao getPortalCmsNewsDao();
-    public PortalPreferencesDao getPortalPreferencesDao();
+    public PortalCssSpi getPortalCssDao();
+    public PortalUserMetadataSpi getPortalUserMetadataDao();
+    public PortalUserSpi getPortalUserDao();
+    public PortalCmsArticleSpi getPortalCmsArticleDao();
+    public PortalCmsNewsSpi getPortalCmsNewsDao();
+    public PortalPreferencesSpi getPortalPreferencesDao();
 }

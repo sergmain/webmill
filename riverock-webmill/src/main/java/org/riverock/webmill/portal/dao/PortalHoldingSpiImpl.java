@@ -24,60 +24,79 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import java.util.Date;
+import java.util.List;
 
-import org.riverock.interfaces.portal.user.UserMetadataItem;
-import org.riverock.interfaces.portal.dao.PortalUserMetadataDao;
+import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.spi.PortalHoldingSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 26.05.2006
- *         Time: 21:18:50
+ * @author SergeMaslyukov
+ *         Date: 30.01.2006
+ *         Time: 1:59:09
+ *         $Id$
  */
-public class PortalUserMetadataDaoImpl implements PortalUserMetadataDao {
+public class PortalHoldingSpiImpl implements PortalHoldingSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalUserMetadataDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalHoldingSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }
 
-    public UserMetadataItem getMetadata(String userLogin, Long siteId, String metadataName) {
+    public Holding loadHolding(Long id) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalUserMetadataDao().getMetadata(userLogin, siteId, metadataName);
+            return InternalDaoFactory.getInternalHoldingDao().loadHolding( id, authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void setMetadataIntValue(String userLogin, Long siteId, String metadataName, Long intValue) {
+    public List<Holding> getHoldingList() {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalUserMetadataDao().setMetadataIntValue(userLogin, siteId, metadataName, intValue);
+            return InternalDaoFactory.getInternalHoldingDao().getHoldingList( authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void setMetadataStringValue(String userLogin, Long siteId, String metadataName, String stringValue) {
+    public Long processAddHolding(Holding holdingBean ) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalUserMetadataDao().setMetadataStringValue(userLogin, siteId, metadataName, stringValue);
+            return InternalDaoFactory.getInternalHoldingDao().processAddHolding( holdingBean, authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void setMetadataDateValue(String userLogin, Long siteId, String metadataName, Date dateValue) {
-        InternalDaoFactory.getInternalUserMetadataDao().setMetadataDateValue(userLogin, siteId, metadataName, dateValue);
+    public void processSaveHolding(Holding holdingBean) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalHoldingDao().processSaveHolding( holdingBean, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
+    public void processDeleteHolding(Holding holdingBean) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalHoldingDao().processDeleteHolding( holdingBean, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

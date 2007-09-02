@@ -26,131 +26,89 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
-import org.riverock.interfaces.portal.dao.PortalCmsNewsDao;
-import org.riverock.interfaces.portal.bean.NewsGroup;
-import org.riverock.interfaces.portal.bean.News;
+import org.riverock.interfaces.portal.bean.Article;
+import org.riverock.interfaces.portal.spi.PortalCmsArticleSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.webmill.portal.bean.ArticleBean;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 20.11.2006
- *         Time: 21:08:19
+ *         Time: 21:03:25
  *         <p/>
  *         $Id$
  */
-public class PortalCmsNewDaoImpl implements PortalCmsNewsDao {
+public class PortalCmsArticleSpiImpl implements PortalCmsArticleSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalCmsNewDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalCmsArticleSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }
 
-    public List<NewsGroup> getNewsGroupList(Long siteLanguageId) {
+    public List<Article> getArticleList(Long siteLanguageId, boolean isXml) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCmsDao().getNewsGroupList(siteLanguageId);
+            return InternalDaoFactory.getInternalCmsDao().getArticleList(siteLanguageId, isXml);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public List<News> getNewsList(Long newsGroupId) {
+    public Article getArticle(Long articleId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCmsDao().getNewsList(newsGroupId);
+            return InternalDaoFactory.getInternalCmsDao().getArticle(articleId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public NewsGroup getNewsGroup(Long newsGroupId) {
+    public Article getArticleByCode(Long siteLanguageId, String articleCode) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCmsDao().getNewsGroup(newsGroupId);
+            return InternalDaoFactory.getInternalCmsDao().getArticleByCode(siteLanguageId, articleCode);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public News getNews(Long newsId) {
+    public Long createArticle(Article article) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCmsDao().getNews(newsId);
+            ArticleBean articleBean = new ArticleBean(article);
+            articleBean.setUserId(authSession.getUser().getUserId());
+            return InternalDaoFactory.getInternalCmsDao().createArticle(articleBean);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Long createNews(News news) {
+    public void updateArticle(Article article) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCmsDao().createNews(news);
+            InternalDaoFactory.getInternalCmsDao().updateArticle(article);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void updateNews(News news) {
+    public void deleteArticle(Long articleId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalCmsDao().updateNews(news);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void deleteNews(Long newsId) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalCmsDao().deleteNews(newsId);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public Long createNewsGroup(NewsGroup newsGroup) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalCmsDao().createNewsGroup(newsGroup);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void deleteNewsGroup(Long newsGroupId) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalCmsDao().deleteNewsGroup(newsGroupId);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void updateNewsGroup(NewsGroup newsGroup) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalCmsDao().updateNewsGroup(newsGroup);
+            InternalDaoFactory.getInternalCmsDao().deleteArticle(articleId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

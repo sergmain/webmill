@@ -23,7 +23,10 @@
  */
 package org.riverock.interfaces.portal.dao;
 
+import org.riverock.interfaces.portal.spi.PortalAuthSpi;
+
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalAuthSpi
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:49:07
