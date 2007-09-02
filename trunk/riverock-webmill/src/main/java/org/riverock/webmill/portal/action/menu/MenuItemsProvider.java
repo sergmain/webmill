@@ -16,7 +16,7 @@ import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
+import org.riverock.webmill.portal.dao.PortalSpiProviderImpl;
 
 /**
  * User: SMaslyukov
@@ -111,7 +111,7 @@ public class MenuItemsProvider {
                     );
                 }
                 ClassLoader classLoader = portalInstance.getPortalClassLoader();
-                obj.setPortalDaoProvider(new PortalDaoProviderImpl(portalRequest.getAuth(), classLoader, siteId));
+                obj.setPortalDaoProvider(new PortalSpiProviderImpl(portalRequest.getAuth(), classLoader, siteId));
                 return obj.getList( catalogLanguageId, contextId);
             }
             return new ArrayList<ClassQueryItem>(0);

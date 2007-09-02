@@ -24,125 +24,76 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import java.util.Map;
 import java.util.List;
 
-import org.riverock.interfaces.portal.dao.PortalXsltDao;
-import org.riverock.interfaces.portal.bean.Xslt;
+import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.spi.PortalCompanySpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
- * @author Sergei Maslyukov
- *         Date: 17.05.2006
- *         Time: 14:17:22
+ * @author SergeMaslyukov
+ *         Date: 30.01.2006
+ *         Time: 1:59:09
+ *         $Id$
  */
-public class PortalXsltDaoImpl implements PortalXsltDao {
+public class PortalCompanySpiImpl implements PortalCompanySpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalXsltDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalCompanySpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }
 
-/*
-    public StringBuilder getXsltData(Long xsltId) {
+    public Company getCompany(Long id) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalXsltDao().getXsltData(xsltId);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-*/
-
-    /**
-     * key is language of site
-     */
-    public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalXsltDao().getCurrentXsltForSiteAsMap(siteId);
+            return InternalDaoFactory.getInternalCompanyDao().getCompany( id, authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Xslt getCurrentXslt(Long siteLanguageId) {
+    public List<Company> getCompanyList() {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalXsltDao().getCurrentXslt(siteLanguageId);
+            return InternalDaoFactory.getInternalCompanyDao().getCompanyList( authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Xslt getXslt(Long xsltId) {
+    public Long processAddCompany(Company companyBean, String userLogin, Long holdingId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalXsltDao().getXslt(xsltId);
+            return InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, userLogin, holdingId, authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Xslt getXslt(String xsltName, Long siteLanguageId) {
+    public void processSaveCompany(Company companyBean) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalXsltDao().getXslt(xsltName, siteLanguageId);
+            InternalDaoFactory.getInternalCompanyDao().processSaveCompany( companyBean, authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Long createXslt(Xslt xslt) {
+    public void processDeleteCompany(Company companyBean) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalXsltDao().createXslt(xslt);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void updateXslt(Xslt xslt) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalXsltDao().updateXslt(xslt);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void deleteXslt(Long xsltId) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalXsltDao().deleteXslt(xsltId);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public List<Xslt> getXsltList(Long siteLanguageId) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalXsltDao().getXsltList(siteLanguageId);
+            InternalDaoFactory.getInternalCompanyDao().processDeleteCompany( companyBean, authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

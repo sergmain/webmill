@@ -28,6 +28,7 @@ import java.util.List;
 import org.riverock.interfaces.portal.bean.Company;
 
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalCompanySpi
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:48:52

@@ -26,8 +26,10 @@ package org.riverock.interfaces.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Article;
+import org.riverock.interfaces.portal.spi.PortalCmsArticleSpi;
 
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalCmsArticleSpi
  * @author Sergei Maslyukov
  *         Date: 20.11.2006
  *         Time: 20:53:11

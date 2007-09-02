@@ -26,8 +26,10 @@ package org.riverock.interfaces.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.portal.spi.PortalHoldingSpi;
 
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalHoldingSpi
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:48:52

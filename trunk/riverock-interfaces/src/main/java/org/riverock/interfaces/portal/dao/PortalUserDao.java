@@ -26,8 +26,10 @@ package org.riverock.interfaces.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.User;
+import org.riverock.interfaces.portal.spi.PortalUserSpi;
 
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalUserSpi
  * @author Sergei Maslyukov
  *         Date: 29.05.2006
  *         Time: 15:20:48

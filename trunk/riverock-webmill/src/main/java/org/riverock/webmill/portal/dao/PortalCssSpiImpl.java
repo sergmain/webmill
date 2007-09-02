@@ -26,85 +26,84 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
-import org.riverock.interfaces.portal.bean.PortletName;
-import org.riverock.interfaces.portal.dao.PortalPortletNameDao;
+import org.riverock.interfaces.portal.bean.Css;
+import org.riverock.interfaces.portal.spi.PortalCssSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
- * @author SergeMaslyukov
- *         Date: 30.01.2006
- *         Time: 1:59:09
- *         $Id$
+ * @author Sergei Maslyukov
+ *         Date: 18.05.2006
+ *         Time: 13:32:44
  */
-public class PortalPortletNameDaoImpl implements PortalPortletNameDao {
+public class PortalCssSpiImpl implements PortalCssSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalPortletNameDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalCssSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }
 
-    public PortletName getPortletName(Long portletId) {
+    public Css getCssCurrent(Long siteId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalPortletNameDao().getPortletName(portletId);
+            return InternalDaoFactory.getInternalCssDao().getCssCurrent(siteId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public PortletName getPortletName(String portletName) {
+    public Css getCss(Long cssId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalPortletNameDao().getPortletName(portletName);
+            return InternalDaoFactory.getInternalCssDao().getCss(cssId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public List<PortletName> getPortletNameList() {
+    public Long createCss(Css css) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalPortletNameDao().getPortletNameList();
+            return InternalDaoFactory.getInternalCssDao().createCss(css);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Long createPortletName(PortletName portletName) {
+    public void updateCss(Css css) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalPortletNameDao().createPortletName(portletName);
+            InternalDaoFactory.getInternalCssDao().updateCss(css);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void updatePortletName(PortletName portletNameBean) {
+    public void deleteCss(Long cssId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalPortletNameDao().updatePortletName(portletNameBean);
+            InternalDaoFactory.getInternalCssDao().deleteCss(cssId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void deletePortletName(PortletName portletNameBean) {
+    public List<Css> getCssList(Long siteId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalPortletNameDao().deletePortletName(portletNameBean);
+            return InternalDaoFactory.getInternalCssDao().getCssList(siteId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

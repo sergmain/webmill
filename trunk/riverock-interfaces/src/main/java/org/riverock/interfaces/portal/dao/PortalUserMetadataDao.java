@@ -26,8 +26,10 @@ package org.riverock.interfaces.portal.dao;
 import java.util.Date;
 
 import org.riverock.interfaces.portal.user.UserMetadataItem;
+import org.riverock.interfaces.portal.spi.PortalUserMetadataSpi;
 
 /**
+ * @deprecated use org.riverock.interfaces.portal.spi.PortalUserMetadataSpi
  * @author Sergei Maslyukov
  *         Date: 26.05.2006
  *         Time: 21:22:26

@@ -26,74 +26,84 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
-import org.riverock.interfaces.portal.bean.Holding;
-import org.riverock.interfaces.portal.dao.PortalHoldingDao;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.spi.PortalSiteLanguageSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
- * @author SergeMaslyukov
- *         Date: 30.01.2006
- *         Time: 1:59:09
- *         $Id$
+ * @author Sergei Maslyukov
+ *         Date: 17.05.2006
+ *         Time: 14:10:47
  */
-public class PortalHoldingDaoImpl implements PortalHoldingDao {
+public class PortalSiteLanguageSpiImpl implements PortalSiteLanguageSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalHoldingDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalSiteLanguageSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }
 
-    public Holding loadHolding(Long id) {
+    public List<SiteLanguage> getSiteLanguageList(Long siteId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalHoldingDao().loadHolding( id, authSession );
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public List<Holding> getHoldingList() {
+    public SiteLanguage getSiteLanguage(Long siteLanguageId) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalHoldingDao().getHoldingList( authSession );
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Long processAddHolding(Holding holdingBean ) {
+    public SiteLanguage getSiteLanguage(Long siteId, String languageLocale) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalHoldingDao().processAddHolding( holdingBean, authSession );
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteId, languageLocale);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void processSaveHolding(Holding holdingBean) {
+    public Long createSiteLanguage(SiteLanguage siteLanguage) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalHoldingDao().processSaveHolding( holdingBean, authSession );
+            return InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguage);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public void processDeleteHolding(Holding holdingBean) {
+    public void updateSiteLanguage(SiteLanguage siteLanguage) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalHoldingDao().processDeleteHolding( holdingBean, authSession );
+            InternalDaoFactory.getInternalSiteLanguageDao().updateSiteLanguage(siteLanguage);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
+    }
+
+    public void deleteSiteLanguage(Long siteLanguageId) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguage(siteLanguageId);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

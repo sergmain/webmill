@@ -24,89 +24,60 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import java.util.List;
+import java.util.Date;
 
-import org.riverock.interfaces.portal.dao.PortalSiteLanguageDao;
-import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.spi.PortalUserMetadataSpi;
+import org.riverock.interfaces.portal.user.UserMetadataItem;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 17.05.2006
- *         Time: 14:10:47
+ *         Date: 26.05.2006
+ *         Time: 21:18:50
  */
-public class PortalSiteLanguageDaoImpl implements PortalSiteLanguageDao {
+public class PortalUserMetadataSpiImpl implements PortalUserMetadataSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
 
-    PortalSiteLanguageDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalUserMetadataSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
     }
 
-    public List<SiteLanguage> getSiteLanguageList(Long siteId) {
+    public UserMetadataItem getMetadata(String userLogin, Long siteId, String metadataName) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
+            return InternalDaoFactory.getInternalUserMetadataDao().getMetadata(userLogin, siteId, metadataName);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public SiteLanguage getSiteLanguage(Long siteLanguageId) {
+    public void setMetadataIntValue(String userLogin, Long siteId, String metadataName, Long intValue) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+            InternalDaoFactory.getInternalUserMetadataDao().setMetadataIntValue(userLogin, siteId, metadataName, intValue);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public SiteLanguage getSiteLanguage(Long siteId, String languageLocale) {
+    public void setMetadataStringValue(String userLogin, Long siteId, String metadataName, String stringValue) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteId, languageLocale);
+            InternalDaoFactory.getInternalUserMetadataDao().setMetadataStringValue(userLogin, siteId, metadataName, stringValue);
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
         }
     }
 
-    public Long createSiteLanguage(SiteLanguage siteLanguage) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguage);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void updateSiteLanguage(SiteLanguage siteLanguage) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalSiteLanguageDao().updateSiteLanguage(siteLanguage);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
-    }
-
-    public void deleteSiteLanguage(Long siteLanguageId) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader( classLoader );
-            InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguage(siteLanguageId);
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( oldLoader );
-        }
+    public void setMetadataDateValue(String userLogin, Long siteId, String metadataName, Date dateValue) {
+        InternalDaoFactory.getInternalUserMetadataDao().setMetadataDateValue(userLogin, siteId, metadataName, dateValue);
     }
 }

@@ -26,8 +26,8 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
-import org.riverock.interfaces.portal.dao.PortalTemplateDao;
 import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.interfaces.portal.spi.PortalTemplateSpi;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.bean.TemplateBean;
 
@@ -36,12 +36,12 @@ import org.riverock.webmill.portal.bean.TemplateBean;
  *         Date: 17.05.2006
  *         Time: 14:12:05
  */
-public class PortalTemplateDaoImpl implements PortalTemplateDao {
+public class PortalTemplateSpiImpl implements PortalTemplateSpi {
     private AuthSession authSession = null;
     private ClassLoader classLoader = null;
     private Long siteId = null;
 
-    PortalTemplateDaoImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
+    PortalTemplateSpiImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.authSession = authSession;
         this.classLoader = classLoader;
         this.siteId = siteId;
