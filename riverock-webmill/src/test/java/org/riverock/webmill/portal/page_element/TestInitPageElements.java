@@ -1,25 +1,25 @@
 package org.riverock.webmill.portal.page_element;
 
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
-import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
-import org.riverock.webmill.portal.url.interpreter.TestPageUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
+import org.riverock.interfaces.portal.CookieManager;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
+import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.PortalTransformationParameters;
 import org.riverock.webmill.portal.template.PortalTemplate;
 import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.interfaces.portal.CookieManager;
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
-import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
+import org.riverock.webmill.portal.url.interpreter.TestPageUrlInterpreter;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 
 /**
  * User: SMaslyukov
@@ -57,7 +57,7 @@ public class TestInitPageElements extends TestCase {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
 
-            public PortalDaoProvider getPortalDaoProvider() {
+            public PortalSpiProvider getPortalSpiProvider() {
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 

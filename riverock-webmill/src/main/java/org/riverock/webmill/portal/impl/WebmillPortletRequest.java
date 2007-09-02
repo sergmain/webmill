@@ -900,7 +900,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             this.cookies = new Cookie[0];
         }
 
-        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER, portalRequest.getPortalDaoProvider() );
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER, portalRequest.getPortalSpiProvider() );
 
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalInfo );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );

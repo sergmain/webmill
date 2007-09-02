@@ -1,29 +1,28 @@
 package org.riverock.webmill.portal;
 
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.interfaces.portal.CookieManager;
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
-import org.riverock.webmill.portal.template.PortalTemplate;
+import java.io.File;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
-import java.io.File;
+
+import org.riverock.interfaces.portal.CookieManager;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
+import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.webmill.portal.template.PortalTemplate;
+import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
+import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 
 /**
- * Created by IntelliJ IDEA.
  * User: SergeMaslyukov
  * Date: 28.08.2007
  * Time: 22:05:00
- * To change this template use File | Settings | File Templates.
  */
 public interface PortalRequest {
     void destroy();
 
-    PortalDaoProvider getPortalDaoProvider();
+    PortalSpiProvider getPortalSpiProvider();
 
     UrlInterpreterResult getUrlInterpreterResult();
 
