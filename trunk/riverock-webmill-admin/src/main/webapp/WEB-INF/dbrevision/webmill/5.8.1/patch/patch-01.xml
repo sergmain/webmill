@@ -44,8 +44,8 @@
             <Field name="ID_PORTLET_ALIAS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
             <Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
             <Field name="ID_PORTLET_NAME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
-            <Field name="SHORT_URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="0"/>
             <Field name="ID_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+            <Field name="SHORT_URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="0"/>
             <ForeignKey pkTableName="WM_PORTAL_LIST_SITE" fkTableName="WM_PORTAL_PORTLET_ALIAS" fkName="ID_SITE_WPPA_FK" pkName="ID_SITE_SLS_PK">
                 <Column pkColumnName="ID_SITE" fkColumnName="ID_SITE" keySeq="1" />
                 <DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
