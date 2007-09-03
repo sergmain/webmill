@@ -41,6 +41,16 @@ import org.riverock.interfaces.portal.bean.UrlAlias;
     @Column(name="ALIAS")
     private String alias;
 
+    public UrlAliasBean() {
+    }
+
+    public UrlAliasBean(UrlAlias urlAlias) {
+        this.urlAliasId = urlAlias.getUrlAliasId();
+        this.siteId = urlAlias.getSiteId();
+        this.url = urlAlias.getUrl();
+        this.alias = urlAlias.getAlias();
+    }
+
     public Long getUrlAliasId() {
         return urlAliasId;
     }
