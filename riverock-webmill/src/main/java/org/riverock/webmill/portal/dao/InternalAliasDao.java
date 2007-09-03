@@ -1,4 +1,4 @@
-package org.riverock.interfaces.portal.spi;
+package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
@@ -7,10 +7,11 @@ import org.riverock.interfaces.portal.bean.UrlAlias;
 
 /**
  * User: SergeMaslyukov
- * Date: 02.09.2007
- * Time: 12:19:14
+ * Date: 04.09.2007
+ * Time: 0:05:22
+ * $Id$
  */
-public interface PortalAliasSpi {
+public interface InternalAliasDao {
     public PortletAlias getPortletAlias(Long portletAliasId);
 
     public Long createPortletAlias(PortletAlias portletAlias);
@@ -30,5 +31,4 @@ public interface PortalAliasSpi {
     public void deleteUrlAlias(UrlAlias urlAlias);
 
     public List<UrlAlias> getUrlAliases(Long siteId);
-
 }

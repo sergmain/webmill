@@ -44,6 +44,17 @@ import org.riverock.interfaces.portal.bean.PortletAlias;
     @Column(name="SHORT_URL")
     private String shortUrl;
 
+    public PortletAliasBean() {
+    }
+
+    public PortletAliasBean(PortletAlias portletAlias) {
+        this.portletAliasId = portletAlias.getPortletAliasId();
+        this.siteId = portletAlias.getSiteId();
+        this.templateId = portletAlias.getTemplateId();
+        this.portletNameId = portletAlias.getPortletNameId();
+        this.shortUrl = portletAlias.getShortUrl();
+    }
+
     public Long getPortletAliasId() {
         return portletAliasId;
     }

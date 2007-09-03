@@ -47,6 +47,11 @@ public class InternalDaoFactory {
     private static InternalPreferencesDao internalPreferencesDao = new HibernatePreferencesDaoImpl();
     private static InternalTemplateDao internalTemplateDao = new HibernateTemplateDaoImpl();
     private static InternalCmsDao internalCmsDao = new HibernateCmsDaoImpl();
+    private static InternalAliasDao internalAliasDao = new HibernateAliasDaoImpl();
+
+    public static InternalAliasDao getInternalAliasDao() {
+        return internalAliasDao;
+    }
 
     public static InternalPreferencesDao getInternalPreferencesDao() {
         return internalPreferencesDao;
