@@ -39,7 +39,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portlet.PortletResultObject;
 import org.riverock.interfaces.portlet.PortletResultContent;
 
@@ -132,6 +132,6 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
         return null;
     }
 
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
     }
 }

@@ -45,7 +45,7 @@ import org.riverock.portlet.faq.schema.FaqGroupType;
 import org.riverock.portlet.faq.schema.FaqItemType;
 import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.interfaces.portlet.PortletResultObject;
 
@@ -158,8 +158,8 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
         return null;
     }
     
-    private PortalDaoProvider provider;
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    private PortalSpiProvider provider;
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
         this.provider=provider;
     }
 }

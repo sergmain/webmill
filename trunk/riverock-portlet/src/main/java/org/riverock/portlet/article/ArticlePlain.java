@@ -23,27 +23,29 @@
  */
 package org.riverock.portlet.article;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.riverock.common.tools.DateTools;
-import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.interfaces.portal.bean.Article;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.portlet.cms.article.bean.ArticleBean;
-import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.interfaces.ContainerConstants;
-import org.riverock.interfaces.portlet.PortletResultContent;
-import org.riverock.interfaces.portlet.PortletResultObject;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.DateTools;
+import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.bean.Article;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
+import org.riverock.interfaces.portlet.PortletResultContent;
+import org.riverock.interfaces.portlet.PortletResultObject;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.portlet.cms.article.bean.ArticleBean;
+import org.riverock.portlet.tools.ContentTypeTools;
 
 /**
  * Author: mill
@@ -138,7 +140,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 */
 
     public PortletResultContent getInstance( Long articleId ) throws PortletException {
-        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        PortalSpiProvider provider = (PortalSpiProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         Article article = provider.getPortalCmsArticleDao().getArticle(articleId);
         PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
         this.article = article;
@@ -154,7 +156,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
         Long siteLangaugeId = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
 
-        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        PortalSpiProvider provider = (PortalSpiProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         Article article = provider.getPortalCmsArticleDao().getArticleByCode(siteLangaugeId, articleCode);
         if (article==null) {
             ArticleBean bean = new ArticleBean();
@@ -175,8 +177,8 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         return ArticleUtils.getListInternal(provider, idSiteCtxLangCatalog, idContext, true);
     }
 
-    private PortalDaoProvider provider;
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    private PortalSpiProvider provider;
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
         this.provider=provider;
     }
 

@@ -39,7 +39,7 @@ import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.XmlTools;
 import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.menu.Menu;
@@ -565,7 +565,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         return null;
     }
 
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
     }
 
 /*
