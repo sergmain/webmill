@@ -28,8 +28,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portal.bean.Article;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.tools.ContentTypeTools;
@@ -113,7 +113,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     }
 
     public PortletResultContent getInstance( Long articleId ) {
-        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        PortalSpiProvider provider = (PortalSpiProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         Article article = provider.getPortalCmsArticleDao().getArticle(articleId);
         PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
         this.article = article;
@@ -129,7 +129,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
         Long siteLangaugeId = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
 
-        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        PortalSpiProvider provider = (PortalSpiProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         Article article = provider.getPortalCmsArticleDao().getArticleByCode(siteLangaugeId, articleCode);
         if (article==null) {
             ArticleBean bean = new ArticleBean();
@@ -150,8 +150,8 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         return ArticleUtils.getListInternal(provider, idSiteCtxLangCatalog, idContext, false);
     }
 
-    private PortalDaoProvider provider;
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    private PortalSpiProvider provider;
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
         this.provider=provider;
     }
 }

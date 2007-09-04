@@ -57,6 +57,10 @@
     <h:outputText value="#{msg.site_css_file}"/>
     <h:inputText id="site-css-file-field" value="#{siteSessionBean.siteExtended.site.cssFile}"/>
 
+
+    <h:outputText value="#{msg.site_enable_navigation}"/>
+    <h:selectBooleanCheckbox id="site_enable_navigation" value="#{siteSessionBean.siteExtended.site.enableNavigation}"/>
+
     <h:outputText value="#{msg.site_timezone}"/>
     <h:panelGroup id="select-timezones-group">
         <h:selectOneMenu id="select-one-timezone" value="#{siteSessionBean.siteExtended.site.serverTimeZone}"

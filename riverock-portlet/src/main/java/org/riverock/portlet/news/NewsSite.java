@@ -38,9 +38,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portal.bean.News;
 import org.riverock.interfaces.portal.bean.NewsGroup;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.news.schema.NewsBlockType;
@@ -145,7 +145,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
         Long siteLangaugeId = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
 
-        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        PortalSpiProvider provider = (PortalSpiProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         List<org.riverock.interfaces.portal.bean.NewsGroup> newsGroup = provider.getPortalCmsNewsDao().getNewsGroupList(siteLangaugeId);
 
         NewsBlockType nb = new NewsBlockType();
@@ -214,6 +214,6 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         return null;
     }
 
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
     }
 }

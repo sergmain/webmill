@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 
 /**
  * Author: Serg Malyukov
@@ -133,6 +133,6 @@ public class FaqGroup implements PortletGetList {
         return null;
     }
 
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
     }
 }

@@ -54,6 +54,12 @@
     <h:outputText value="#{msg.site_css_file}"/>
     <h:outputText value="#{siteSessionBean.siteExtended.site.cssFile}"/>
 
+    <h:outputText value="#{msg.site_enable_navigation}"/>
+    <h:panelGroup id="company-level-group">
+        <t:graphicImage value="/images/yes.gif" rendered="#{siteSessionBean.siteExtended.site.enableNavigation}" border="0"/>
+        <t:graphicImage value="/images/no.gif" rendered="#{!siteSessionBean.siteExtended.site.enableNavigation}" border="0"/>
+    </h:panelGroup>
+
     <h:outputText value="#{msg.site_timezone}"/>
     <h:outputText value="#{siteSessionBean.siteExtended.site.serverTimeZone}"/>
 

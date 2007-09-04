@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 
@@ -47,8 +47,8 @@ public class LanguagePerSite implements PortletGetList {
     public LanguagePerSite() {
     }
 
-    private PortalDaoProvider provider;
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    private PortalSpiProvider provider;
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
         this.provider=provider;
     }
 
