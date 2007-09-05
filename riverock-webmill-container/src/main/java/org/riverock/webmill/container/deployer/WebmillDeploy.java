@@ -187,7 +187,7 @@ public class WebmillDeploy {
 */
 
             System.out.println("Attempting to add portlet.tld to war...");
-            InputStream is = this.getClass().getResourceAsStream("/org/riverock/webmill/container/tags/portlet.tld");
+            InputStream is = WebmillDeploy.class.getResourceAsStream("/org/riverock/webmill/container/tags/portlet.tld");
             if (is == null) {
                 System.out.println("Failed to find portlet.tld in classpath");
             }

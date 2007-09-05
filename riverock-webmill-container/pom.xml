@@ -4,7 +4,7 @@
     <groupId>org.riverock</groupId>
     <artifactId>riverock-webmill-container</artifactId>
     <packaging>jar</packaging>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
     <name>Portlet container for Webmill portal</name>
     <url>http://webmill.riverock.org</url>
 
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
-            <version>[1.3]</version>
+            <version>1.3</version>
         </dependency>
 
         <dependency>
