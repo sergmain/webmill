@@ -1,65 +1,74 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<!--
+  <parent>
     <groupId>org.riverock</groupId>
-    <artifactId>riverock-webmill-war</artifactId>
-    <packaging>war</packaging>
-    <version>5.8.1</version>
-    <name>Webmill portal deployment package for Tomcat</name>
-    <url>http://webmill.riverock.org</url>
-    <licenses>
-        <license>
-            <name>GNU General Public License, GPLv2</name>
-            <url>http://www.gnu.org/licenses/gpl.txt</url>
-        </license>
-    </licenses>
-    <repositories>
-        <repository>
-            <id>Riverock repo</id>
-            <url>http://riverock.sourceforge.net/repo</url>
-        </repository>
-        <repository>
-            <id>ibiblio.org</id>
-            <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-        </repository>
-        <repository>
-            <id>snapshots</id>
-            <name>Maven Snapshot Development Repository</name>
-            <url>http://snapshots.maven.codehaus.org/maven2</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-      <relocation>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-      </relocation>
-    </distributionManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.riverock</groupId>
-            <artifactId>riverock-webmill</artifactId>
-            <version>[5.8.1-SNAPSHOT]</version>
-        </dependency>
-    </dependencies>
-    <build>
-        <finalName>ROOT</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <artifactId>riverock-webmill</artifactId>
+    <version>5.8.1-SNAPSHOT</version>
+    <relativePath>pom-jar.xml</relativePath>
+  </parent>
+-->
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.riverock</groupId>
+	<artifactId>riverock-webmill-war</artifactId>
+	<packaging>war</packaging>
+	<version>5.8.1</version>
+	<name>Webmill portal deployment package for Tomcat</name>
+	<url>http://webmill.riverock.org</url>
+	<licenses>
+		<license>
+			<name>GNU General Public License, GPLv2</name>
+			<url>http://www.gnu.org/licenses/gpl.txt</url>
+		</license>
+	</licenses>
+	<repositories>
+		<repository>
+			<id>Riverock repo</id>
+			<url>http://riverock.sourceforge.net/repo</url>
+		</repository>
+		<repository>
+			<id>ibiblio.org</id>
+			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+		</repository>
+		<repository>
+			<id>snapshots</id>
+			<name>Maven Snapshot Development Repository</name>
+			<url>http://snapshots.maven.codehaus.org/maven2</url>
+		</repository>
+	</repositories>
+	<distributionManagement>
+		<relocation>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</relocation>
+	</distributionManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.riverock</groupId>
+			<artifactId>riverock-webmill</artifactId>
+			<version>[5.8.1-SNAPSHOT]</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>ROOT</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<webResources>
+						<archiveClasses>true</archiveClasses>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
