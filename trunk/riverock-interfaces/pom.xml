@@ -29,6 +29,11 @@
       <id>riverock-repository</id>
       <name>Riverock repository</name>
       <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/repo</url>
+<!--
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+-->
     </repository>
   </distributionManagement>
 
