@@ -73,7 +73,7 @@ public class PortalUserAction implements Serializable {
     public String processAddPortalUser() {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-        Long id = FacesTools.getPortalDaoProvider().getPortalUserDao().addUser(portalUserSessionBean.getPortalUser());
+        Long id = FacesTools.getPortalSpiProvider().getPortalUserDao().addUser(portalUserSessionBean.getPortalUser());
 
         portalUserSessionBean.setCurrentPortalUserId(id);
         loadCurrentPortalUser();
@@ -88,7 +88,7 @@ public class PortalUserAction implements Serializable {
     public String processEditPortalUser() {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-        FacesTools.getPortalDaoProvider().getPortalUserDao().updateUser(portalUserSessionBean.getPortalUser());
+        FacesTools.getPortalSpiProvider().getPortalUserDao().updateUser(portalUserSessionBean.getPortalUser());
         return "portal-user";
     }
 
@@ -100,7 +100,7 @@ public class PortalUserAction implements Serializable {
     public String processDeletePortalUser() {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-        FacesTools.getPortalDaoProvider().getPortalUserDao().deleteUser(portalUserSessionBean.getPortalUser());
+        FacesTools.getPortalSpiProvider().getPortalUserDao().deleteUser(portalUserSessionBean.getPortalUser());
         portalUserSessionBean.setPortalUser(null);
         return "portal-user";
     }
@@ -115,9 +115,9 @@ public class PortalUserAction implements Serializable {
             portalUserSessionBean.setPortalUser(null);
             return;
         }
-        User user = FacesTools.getPortalDaoProvider().getPortalUserDao().getUser(portalUserSessionBean.getCurrentPortalUserId());
+        User user = FacesTools.getPortalSpiProvider().getPortalUserDao().getUser(portalUserSessionBean.getCurrentPortalUserId());
         PortalUserBeanImpl portalUser = new PortalUserBeanImpl(user);
-        Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(
+        Company company = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompany(
             portalUser.getCompanyId()
         );
         portalUser.setCompanyName(company.getName());

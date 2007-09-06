@@ -96,7 +96,7 @@ public class CssAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
-            Long cssId = FacesTools.getPortalDaoProvider().getPortalCssDao().createCss(
+            Long cssId = FacesTools.getPortalSpiProvider().getPortalCssDao().createCss(
                 getSessionObject()
             );
             setSessionObject(null);
@@ -130,7 +130,7 @@ public class CssAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
-            FacesTools.getPortalDaoProvider().getPortalCssDao().updateCss(getSessionObject());
+            FacesTools.getPortalSpiProvider().getPortalCssDao().updateCss(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -166,7 +166,7 @@ public class CssAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalCssDao().deleteCss(getSessionObject().getCssId());
+            FacesTools.getPortalSpiProvider().getPortalCssDao().deleteCss(getSessionObject().getCssId());
             setSessionObject(null);
             siteSessionBean.setId(null);
             siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);

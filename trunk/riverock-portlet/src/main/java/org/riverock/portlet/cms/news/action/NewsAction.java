@@ -105,7 +105,7 @@ public class NewsAction implements Serializable {
             }
 
             NewsBean news = getSessionObject();
-            Long newsId = FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().createNews(news);
+            Long newsId = FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().createNews(news);
             setSessionObject(null);
             newsSessionBean.setId(newsId);
             cleadDataProviderObject();
@@ -139,7 +139,7 @@ public class NewsAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
-            FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().updateNews(getSessionObject());
+            FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().updateNews(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -174,7 +174,7 @@ public class NewsAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
-            FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().deleteNews(getSessionObject().getNewsId());
+            FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().deleteNews(getSessionObject().getNewsId());
             setSessionObject(null);
             newsSessionBean.setId(null);
             newsSessionBean.setObjectType(NewsSessionBean.UNKNOWN_TYPE);

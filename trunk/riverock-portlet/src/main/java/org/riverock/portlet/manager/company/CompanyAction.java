@@ -71,7 +71,7 @@ public class CompanyAction implements Serializable {
 
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-		Long companyId = FacesTools.getPortalDaoProvider().getPortalCompanyDao().processAddCompany(
+		Long companyId = FacesTools.getPortalSpiProvider().getPortalCompanyDao().processAddCompany(
 			sessionBean.getCompany(),
 			authSessionBean.getUserLogin(),
 			authSessionBean.getHoldingId()
@@ -90,7 +90,7 @@ public class CompanyAction implements Serializable {
 	public String processEditCompany() {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processSaveCompany(sessionBean.getCompany() );
+		FacesTools.getPortalSpiProvider().getPortalCompanyDao().processSaveCompany(sessionBean.getCompany() );
 		
 		return "company";
 	}
@@ -103,7 +103,7 @@ public class CompanyAction implements Serializable {
 	public String processDeleteCompany() {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processDeleteCompany(sessionBean.getCompany());
+		FacesTools.getPortalSpiProvider().getPortalCompanyDao().processDeleteCompany(sessionBean.getCompany());
 		sessionBean.setCompany( null );
 		return "company";
 	}
@@ -114,7 +114,7 @@ public class CompanyAction implements Serializable {
 	}
 
 	private void loadCurrentCompany() {
-		Company bean = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(
+		Company bean = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompany(
 			sessionBean.getCurrentCompanyId()
         );
 		sessionBean.setCompany( bean );

@@ -21,9 +21,7 @@ import org.riverock.interfaces.portal.search.PortalIndexerParameter;
 import org.riverock.interfaces.portal.search.PortletIndexerContent;
 import org.riverock.portlet.tools.FacesTools;
 import org.riverock.common.utils.PortletUtils;
-import org.riverock.portlet.webclip.WebclipConstants;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.common.utils.PortletUtils;
 
 /**
  * User: SMaslyukov
@@ -132,7 +130,7 @@ public class IndexerAction implements Serializable {
             Long siteId = getSiteId();
             result.add("Result of work for "+MAX_TIME_FOR_OPERATION_IN_MINUTES+" minutes.");
 
-            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
             PortalIndexer portalIndexer = getPortalIndexer();
 
             List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);

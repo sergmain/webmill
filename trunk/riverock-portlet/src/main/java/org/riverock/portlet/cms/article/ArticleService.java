@@ -55,7 +55,7 @@ public class ArticleService implements Serializable {
 
     public List<SelectItem> getSiteList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+        List<Site> sites = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSites();
 
         for (Site site : sites) {
             if (site.getSiteId() == null) {
@@ -69,7 +69,7 @@ public class ArticleService implements Serializable {
 
     public List<SelectItem> getPortletList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<PortletName> portletNames = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletNameList();
+        List<PortletName> portletNames = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().getPortletNameList();
 
         for (PortletName portletName : portletNames) {
             if (portletName.getPortletId() == null) {
@@ -83,7 +83,7 @@ public class ArticleService implements Serializable {
 
     public List<Site> getSites() {
         List<Site> list = new ArrayList<Site>();
-        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+        List<Site> sites = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSites();
         for (Site site : sites) {
             list.add(new SiteBean(site));
         }
@@ -91,13 +91,13 @@ public class ArticleService implements Serializable {
     }
 
     public Site getSite(Long siteId) {
-        Site site = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId);
+        Site site = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSite(siteId);
         return new SiteBean(site);
     }
 
     public List<ArticleBean> getArticleList(Long siteLanguageId, boolean isXml) {
         List<ArticleBean> beans = new ArrayList<ArticleBean>();
-        List<Article> list = FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().getArticleList(siteLanguageId, isXml);
+        List<Article> list = FacesTools.getPortalSpiProvider().getPortalCmsArticleDao().getArticleList(siteLanguageId, isXml);
         for (Article article : list) {
             beans.add( new ArticleBean(article));
         }
@@ -106,7 +106,7 @@ public class ArticleService implements Serializable {
 
     public List<SiteLanguageBean> getSiteLanguageList(Long siteId) {
         List<SiteLanguageBean> list = new ArrayList<SiteLanguageBean>();
-        List<SiteLanguage> siteLanguages = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
+        List<SiteLanguage> siteLanguages = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
         for (SiteLanguage item : siteLanguages) {
             list.add(new SiteLanguageBean(item));
         }
@@ -115,9 +115,9 @@ public class ArticleService implements Serializable {
 
     public SiteExtended getSiteExtended(Long siteId) {
         SiteExtended siteExtended = new SiteExtended();
-        siteExtended.setSite(FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId));
+        siteExtended.setSite(FacesTools.getPortalSpiProvider().getPortalSiteDao().getSite(siteId));
         Long companyId = siteExtended.getSite().getCompanyId();
-        Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(companyId);
+        Company company = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompany(companyId);
         if (log.isDebugEnabled()) {
             log.debug("companyId: " + companyId);
             log.debug("company: " + company);
@@ -127,7 +127,7 @@ public class ArticleService implements Serializable {
     }
 
     public SiteLanguage getSiteLanguage(Long siteLanguageId) {
-        SiteLanguage siteLanguage = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+        SiteLanguage siteLanguage = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
         if (siteLanguage != null) {
             return new SiteLanguageBean(siteLanguage);
         } else {
@@ -136,7 +136,7 @@ public class ArticleService implements Serializable {
     }
 
     public ArticleBean getArticle(Long articleId) {
-        return new ArticleBean(FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().getArticle(articleId));
+        return new ArticleBean(FacesTools.getPortalSpiProvider().getPortalCmsArticleDao().getArticle(articleId));
     }
 }
 

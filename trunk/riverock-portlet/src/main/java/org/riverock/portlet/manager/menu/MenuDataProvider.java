@@ -84,7 +84,7 @@ public class MenuDataProvider implements Serializable {
     public String getUrlToPage() {
         if (menuItem!=null) {
             PortletRequest renderRequest = FacesTools.getPortletRequest();
-            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
             CatalogLanguageItem bean = portalDaoProvider
                 .getPortalCatalogDao()
                 .getCatalogLanguageItem(menuItem.getMenuItem().getCatalogLanguageId());

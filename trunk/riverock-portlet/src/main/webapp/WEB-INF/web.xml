@@ -43,7 +43,8 @@
             /WEB-INF/faces-article-config.xml,
             /WEB-INF/faces-indexer-manager-config.xml,
             /WEB-INF/faces-webclip-manager-config.xml,
-            /WEB-INF/faces-manager-monitor-config.xml
+            /WEB-INF/faces-manager-monitor-config.xml,
+            /WEB-INF/faces-navigation-config.xml
         </param-value>
 	</context-param>
 	<context-param>

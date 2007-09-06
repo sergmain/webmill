@@ -123,7 +123,7 @@ public class ArticleDataProvider implements Serializable {
             log.debug("articleId: " + articleSessionBean.getId());
         }
         if (article ==null) {
-            article = new ArticleBean(FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().getArticle(articleId));
+            article = new ArticleBean(FacesTools.getPortalSpiProvider().getPortalCmsArticleDao().getArticle(articleId));
         }
 
         if (article.getArticleId()==null) {
@@ -132,7 +132,7 @@ public class ArticleDataProvider implements Serializable {
 
         if (!article.getArticleId().equals(articleId)) {
             log.warn("Mismatch articleId");
-            article = new ArticleBean(FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().getArticle(articleId));
+            article = new ArticleBean(FacesTools.getPortalSpiProvider().getPortalCmsArticleDao().getArticle(articleId));
         }
 
         return article;

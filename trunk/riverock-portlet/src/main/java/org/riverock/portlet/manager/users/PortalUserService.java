@@ -68,7 +68,7 @@ public class PortalUserService implements Serializable {
     }
 
     public List<User> getPortalUserList() {
-        List<User> list = FacesTools.getPortalDaoProvider().getPortalUserDao().getUserList();
+        List<User> list = FacesTools.getPortalSpiProvider().getPortalUserDao().getUserList();
         if (list==null) {
             return null;
         }

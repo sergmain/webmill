@@ -144,7 +144,7 @@ public class WebclipAction implements Serializable {
         try {
             result.add("Result of work for "+MAX_TIME_FOR_OPERATION_IN_MINUTES+" minutes.");
 
-            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
             List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
             log.debug("siteLanguage: " + languages);
             Map<Long, String> map = new HashMap<Long, String>();
@@ -221,7 +221,7 @@ public class WebclipAction implements Serializable {
         WebclipStatisticBean statisticBean = PortletDaoFactory.getWebclipDao().getStatistic(siteId);
 
         try {
-            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
             WebclipUrlChecker urlChecker = new WebclipUrlCheckerImpl(portalDaoProvider, siteId);
 
             List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
@@ -303,7 +303,7 @@ public class WebclipAction implements Serializable {
         Long siteId = getSiteId();
 
         try {
-            PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+            PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
             PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(WebclipConstants.WEBMILL_WIKI_WEBCLIP);
             CatalogLanguageItem catalogLanguageItem = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItem(webclipSessionBean.getCatalogLanguageId());
             Template template = portalDaoProvider.getPortalTemplateDao().getDefaultDynamicTemplate(catalogLanguageItem.getSiteLanguageId());

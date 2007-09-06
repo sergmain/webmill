@@ -60,7 +60,7 @@ public class MenuService implements Serializable {
 
     public List<SelectItem> getSiteList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+        List<Site> sites = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSites();
 
         for (Site site : sites) {
             if (site.getSiteId() == null) {
@@ -74,7 +74,7 @@ public class MenuService implements Serializable {
 
     public List<SelectItem> getPortletList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<PortletName> portletNames = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletNameList();
+        List<PortletName> portletNames = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().getPortletNameList();
 
         for (PortletName portletName : portletNames) {
             if (portletName.getPortletId() == null) {
@@ -88,7 +88,7 @@ public class MenuService implements Serializable {
 
     public List<Site> getSites() {
         List<Site> list = new ArrayList<Site>();
-        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+        List<Site> sites = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSites();
         for (Site site : sites) {
             list.add(new SiteBean(site));
         }
@@ -96,13 +96,13 @@ public class MenuService implements Serializable {
     }
 
     public Site getSite(Long siteId) {
-        Site site = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId);
+        Site site = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSite(siteId);
         return new SiteBean(site);
     }
 
     public List<CatalogLanguageItem> getMenuCatalogList(Long siteLanguageId) {
         List<CatalogLanguageItem> list = new ArrayList<CatalogLanguageItem>();
-        List<CatalogLanguageItem> items = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItemList(siteLanguageId);
+        List<CatalogLanguageItem> items = FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogLanguageItemList(siteLanguageId);
         for (CatalogLanguageItem item : items) {
             list.add(new MenuCatalogBean(item));
         }
@@ -111,7 +111,7 @@ public class MenuService implements Serializable {
 
     public List<SiteLanguage> getSiteLanguageList(Long siteId) {
         List<SiteLanguage> list = new ArrayList<SiteLanguage>();
-        List<SiteLanguage> siteLanguages = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
+        List<SiteLanguage> siteLanguages = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
         for (SiteLanguage item : siteLanguages) {
             list.add(new SiteLanguageBean(item));
         }
@@ -120,9 +120,9 @@ public class MenuService implements Serializable {
 
     public SiteExtended getSiteExtended(Long siteId) {
         SiteExtended siteExtended = new SiteExtended();
-        siteExtended.setSite(FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId));
+        siteExtended.setSite(FacesTools.getPortalSpiProvider().getPortalSiteDao().getSite(siteId));
         Long companyId = siteExtended.getSite().getCompanyId();
-        Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(companyId);
+        Company company = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompany(companyId);
         if (log.isDebugEnabled()) {
             log.debug("companyId: " + companyId);
             log.debug("company: " + company);
@@ -132,7 +132,7 @@ public class MenuService implements Serializable {
     }
 
     public SiteLanguage getSiteLanguage(Long siteLanguageId) {
-        SiteLanguage siteLanguage = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+        SiteLanguage siteLanguage = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
         if (siteLanguage != null) {
             return new SiteLanguageBean(siteLanguage);
         } else {
@@ -142,17 +142,17 @@ public class MenuService implements Serializable {
 
     public MenuItemExtended getMenuItem(Long catalogId) {
         MenuItemExtended menuExtended = new MenuItemExtended();
-        menuExtended.setMenuItem(FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItem(catalogId));
-        menuExtended.setPortletName(FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletName(menuExtended.getMenuItem().getPortletId()));
+        menuExtended.setMenuItem(FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogItem(catalogId));
+        menuExtended.setPortletName(FacesTools.getPortalSpiProvider().getPortalPortletNameDao().getPortletName(menuExtended.getMenuItem().getPortletId()));
         if (menuExtended.getMenuItem().getTemplateId()!=null) {
-            menuExtended.setTemplate(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplate(menuExtended.getMenuItem().getTemplateId()));
+            menuExtended.setTemplate(FacesTools.getPortalSpiProvider().getPortalTemplateDao().getTemplate(menuExtended.getMenuItem().getTemplateId()));
         }
         return menuExtended;
     }
 
     public List<CatalogItem> getMenuItemList(Long menuCatalogId) {
         List<CatalogItem> list = new ArrayList<CatalogItem>();
-        List<CatalogItem> items = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItemList(menuCatalogId);
+        List<CatalogItem> items = FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogItemList(menuCatalogId);
         items = (List<CatalogItem>)(List) TreeUtils.rebuildTree((List<TreeItem>)((List)items));
 
         for (CatalogItem item : items) {
@@ -162,7 +162,7 @@ public class MenuService implements Serializable {
     }
 
     public MenuCatalogBean getMenuCatalog(Long menuCatalogId) {
-        CatalogLanguageItem bean = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId);
+        CatalogLanguageItem bean = FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId);
         if (bean != null) {
             return new MenuCatalogBean(bean);
         } else {

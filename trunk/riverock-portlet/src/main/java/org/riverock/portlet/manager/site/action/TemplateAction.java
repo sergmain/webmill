@@ -96,7 +96,7 @@ public class TemplateAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
-            Long templateId = FacesTools.getPortalDaoProvider().getPortalTemplateDao().createTemplate(
+            Long templateId = FacesTools.getPortalSpiProvider().getPortalTemplateDao().createTemplate(
                 getSessionObject()
             );
             setSessionObject(null);
@@ -130,7 +130,7 @@ public class TemplateAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
-            FacesTools.getPortalDaoProvider().getPortalTemplateDao().updateTemplate(getSessionObject());
+            FacesTools.getPortalSpiProvider().getPortalTemplateDao().updateTemplate(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -166,7 +166,7 @@ public class TemplateAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalTemplateDao().deleteTemplate(getSessionObject().getTemplateId());
+            FacesTools.getPortalSpiProvider().getPortalTemplateDao().deleteTemplate(getSessionObject().getTemplateId());
             setSessionObject(null);
             siteSessionBean.setId(null);
             siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);

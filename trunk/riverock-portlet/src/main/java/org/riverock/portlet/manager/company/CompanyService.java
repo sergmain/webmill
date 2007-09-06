@@ -44,7 +44,7 @@ public class CompanyService implements Serializable {
 	}
 
 	public List<Company> getCompanyList() {
-		List<Company> list = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompanyList();
+		List<Company> list = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompanyList();
 		if (list==null) {
 			return null;
 		}

@@ -150,7 +150,7 @@ public class NewsDataProvider implements Serializable {
             log.debug("newsId: " + newsSessionBean.getId());
         }
         if (news ==null) {
-            news = new NewsBean(FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNews(newsId));
+            news = new NewsBean(FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().getNews(newsId));
         }
 
         if (news.getNewsId()==null) {
@@ -159,7 +159,7 @@ public class NewsDataProvider implements Serializable {
 
         if (!news.getNewsId().equals(newsId)) {
             log.warn("Mismatch newsId");
-            news = new NewsBean(FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNews(newsId));
+            news = new NewsBean(FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().getNews(newsId));
         }
 
         return news;

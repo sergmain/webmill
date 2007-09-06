@@ -61,29 +61,84 @@
         <h:panelGrid columns="1">
 
             <h:panelGroup id="site-tree-site-change-group">
-                <h:selectOneMenu id="select-one-site" value="#{siteSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
-                    <f:selectItems value="#{siteService.siteList}"/>
+                <h:selectOneMenu id="select-one-site" value="#{navSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
+                    <f:selectItems value="#{navService.siteList}"/>
                 </h:selectOneMenu>
-                <h:commandButton id="site-change-site-action" action="#{siteAction.changeSite}"
+                <h:commandButton id="site-change-site-action" action="#{navAction.changeSite}"
                                  value="Ok"
                                  styleClass="site-button-action"
                     >
                 </h:commandButton>
             </h:panelGroup>
 
-            <h:panelGroup id="site-tree-site-change-group">
-                <h:panelGrid columns="2">
-                    <h:outputText value="#{msg.site_css_file}"/>
-                    <h:selectOneMenu id="select-one-site" value="#{siteSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
-                        <f:selectItems value="#{siteService.siteList}"/>
-                    </h:selectOneMenu>
+            <h:outputText value="#{msg.temlate_types}" />
+            <h:panelGrid columns="2">
+                <t:dataTable id="siteLanguageDataTable"
+                             var="siteLanguageBean"
+                             value="#{navDataProvider.siteLanguageList}"
+                             preserveDataModel="true" >
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.header_table_portlet_name_name}" />
+                        </f:facet>
+                        <t:commandLink action="nav" immediate="true" >
+                            <h:outputText value="#{siteLanguageBean.customLanguage}, #{siteLanguageBean.nameCustomLanguage}" />
+                            <t:updateActionListener property="#{navSessionBean.currentSiteLanguageId}" value="#{siteLanguageBean.siteLanguageId}" />
+                        </t:commandLink>
+                    </h:column>
 
+                </t:dataTable>
 
+                <h:panelGroup id="site-tree-site-change-group">
+                </h:panelGroup>
 
-                </h:panelGrid>
+            </h:panelGrid>
 
-            </h:panelGroup>
+            <h:outputText value="#{msg.portlet_aliases}" />
+            <h:panelGrid columns="2">
+                <t:dataTable id="siteLanguageDataTable"
+                             var="siteLanguageBean"
+                             value="#{navDataProvider.siteLanguageList}"
+                             preserveDataModel="true" >
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.header_table_portlet_name_name}" />
+                        </f:facet>
+                        <t:commandLink action="nav" immediate="true" >
+                            <h:outputText value="#{siteLanguageBean.customLanguage}, #{siteLanguageBean.nameCustomLanguage}" />
+                            <t:updateActionListener property="#{navSessionBean.currentSiteLanguageId}" value="#{siteLanguageBean.siteLanguageId}" />
+                        </t:commandLink>
+                    </h:column>
 
+                </t:dataTable>
+
+                <h:panelGroup id="site-tree-site-change-group">
+                </h:panelGroup>
+
+            </h:panelGrid>
+
+            <h:outputText value="#{msg.url_aliases}" />
+            <h:panelGrid columns="2">
+                <t:dataTable id="siteLanguageDataTable"
+                             var="siteLanguageBean"
+                             value="#{navDataProvider.siteLanguageList}"
+                             preserveDataModel="true" >
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.header_table_portlet_name_name}" />
+                        </f:facet>
+                        <t:commandLink action="nav" immediate="true" >
+                            <h:outputText value="#{siteLanguageBean.customLanguage}, #{siteLanguageBean.nameCustomLanguage}" />
+                            <t:updateActionListener property="#{navSessionBean.currentSiteLanguageId}" value="#{siteLanguageBean.siteLanguageId}" />
+                        </t:commandLink>
+                    </h:column>
+
+                </t:dataTable>
+
+                <h:panelGroup id="site-tree-site-change-group">
+                </h:panelGroup>
+
+            </h:panelGrid>
 
 
         </h:panelGrid>
