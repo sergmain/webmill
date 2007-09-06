@@ -57,7 +57,7 @@ public class NewsService implements Serializable {
 
     public List<SelectItem> getSiteList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+        List<Site> sites = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSites();
 
         for (Site site : sites) {
             if (site.getSiteId() == null) {
@@ -71,7 +71,7 @@ public class NewsService implements Serializable {
 
     public List<SelectItem> getPortletList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<PortletName> portletNames = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletNameList();
+        List<PortletName> portletNames = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().getPortletNameList();
 
         for (PortletName portletName : portletNames) {
             if (portletName.getPortletId() == null) {
@@ -85,7 +85,7 @@ public class NewsService implements Serializable {
 
     public List<Site> getSites() {
         List<Site> list = new ArrayList<Site>();
-        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+        List<Site> sites = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSites();
         for (Site site : sites) {
             list.add(new SiteBean(site));
         }
@@ -93,13 +93,13 @@ public class NewsService implements Serializable {
     }
 
     public Site getSite(Long siteId) {
-        Site site = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId);
+        Site site = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSite(siteId);
         return new SiteBean(site);
     }
 
     public List<NewsGroupBean> getNewsGroupList(Long siteLanguageId) {
         List<NewsGroupBean> beans = new ArrayList<NewsGroupBean>();
-        List<NewsGroup> list = FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNewsGroupList(siteLanguageId);
+        List<NewsGroup> list = FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().getNewsGroupList(siteLanguageId);
         for (NewsGroup newsGroup : list) {
             beans.add(new NewsGroupBean(newsGroup));
         }
@@ -108,7 +108,7 @@ public class NewsService implements Serializable {
 
     public List<SiteLanguageBean> getSiteLanguageList(Long siteId) {
         List<SiteLanguageBean> list = new ArrayList<SiteLanguageBean>();
-        List<SiteLanguage> siteLanguages = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
+        List<SiteLanguage> siteLanguages = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
         for (SiteLanguage item : siteLanguages) {
             list.add(new SiteLanguageBean(item));
         }
@@ -117,9 +117,9 @@ public class NewsService implements Serializable {
 
     public SiteExtended getSiteExtended(Long siteId) {
         SiteExtended siteExtended = new SiteExtended();
-        siteExtended.setSite(FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId));
+        siteExtended.setSite(FacesTools.getPortalSpiProvider().getPortalSiteDao().getSite(siteId));
         Long companyId = siteExtended.getSite().getCompanyId();
-        Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(companyId);
+        Company company = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompany(companyId);
         if (log.isDebugEnabled()) {
             log.debug("companyId: " + companyId);
             log.debug("company: " + company);
@@ -129,7 +129,7 @@ public class NewsService implements Serializable {
     }
 
     public SiteLanguage getSiteLanguage(Long siteLanguageId) {
-        SiteLanguage siteLanguage = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+        SiteLanguage siteLanguage = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
         if (siteLanguage != null) {
             return new SiteLanguageBean(siteLanguage);
         } else {
@@ -139,7 +139,7 @@ public class NewsService implements Serializable {
 
     public List<NewsBean> getNewsList(Long newsGroupId) {
         List<NewsBean> beans = new ArrayList<NewsBean>();
-        List<News> newses = FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNewsList(newsGroupId);
+        List<News> newses = FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().getNewsList(newsGroupId);
         for (News news : newses) {
             beans.add( new NewsBean(news));
         }
@@ -147,6 +147,6 @@ public class NewsService implements Serializable {
     }
 
     public NewsGroupBean getNewsGroup(Long newsGroupId) {
-        return new NewsGroupBean(FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().getNewsGroup(newsGroupId));
+        return new NewsGroupBean(FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().getNewsGroup(newsGroupId));
     }
 }

@@ -96,7 +96,7 @@ public class SiteLanguageAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
-            Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().createSiteLanguage(
+            Long siteLanguageId = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().createSiteLanguage(
                 getSessionObject()
             );
             setSessionObject(null);
@@ -130,7 +130,7 @@ public class SiteLanguageAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
-            FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().updateSiteLanguage(
+            FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().updateSiteLanguage(
                 getSessionObject()
             );
             cleadDataProviderObject();
@@ -168,7 +168,7 @@ public class SiteLanguageAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().deleteSiteLanguage(getSessionObject().getSiteLanguageId());
+            FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().deleteSiteLanguage(getSessionObject().getSiteLanguageId());
             setSessionObject(null);
             siteSessionBean.setId(null);
             siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);

@@ -21,7 +21,26 @@ public class NavigationSessionBean {
     private Long popupTemplateId;
     private Long maximazedTemplateId;
 
+    private Long currentSiteId;
+    private Long currentSiteLanguageId;
+
     public NavigationSessionBean() {
+    }
+
+    public Long getCurrentSiteLanguageId() {
+        return currentSiteLanguageId;
+    }
+
+    public void setCurrentSiteLanguageId(Long currentSiteLanguageId) {
+        this.currentSiteLanguageId = currentSiteLanguageId;
+    }
+
+    public Long getCurrentSiteId() {
+        return currentSiteId;
+    }
+
+    public void setCurrentSiteId(Long currentSiteId) {
+        this.currentSiteId = currentSiteId;
     }
 
     public Long getDynamicTemplateId() {

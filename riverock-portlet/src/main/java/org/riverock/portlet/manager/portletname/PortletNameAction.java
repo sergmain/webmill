@@ -76,7 +76,7 @@ public class PortletNameAction implements Serializable {
     public String processAddPortletName() {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-        Long id = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().createPortletName( portletNameSessionBean.getPortletName() );
+        Long id = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().createPortletName( portletNameSessionBean.getPortletName() );
         portletNameSessionBean.setCurrentPortletNameId( id );
         loadCurrentPortletName();
         return "portlet-name";
@@ -90,7 +90,7 @@ public class PortletNameAction implements Serializable {
     public String processEditPortletName() {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-        FacesTools.getPortalDaoProvider().getPortalPortletNameDao().updatePortletName( portletNameSessionBean.getPortletName() );
+        FacesTools.getPortalSpiProvider().getPortalPortletNameDao().updatePortletName( portletNameSessionBean.getPortletName() );
         return "portlet-name";
     }
 
@@ -102,7 +102,7 @@ public class PortletNameAction implements Serializable {
     public String processDeletePortletName() {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
-        FacesTools.getPortalDaoProvider().getPortalPortletNameDao().deletePortletName( portletNameSessionBean.getPortletName() );
+        FacesTools.getPortalSpiProvider().getPortalPortletNameDao().deletePortletName( portletNameSessionBean.getPortletName() );
         portletNameSessionBean.setPortletName( null );
         return "portlet-name";
     }
@@ -113,7 +113,7 @@ public class PortletNameAction implements Serializable {
     }
 
     private void loadCurrentPortletName() {
-        PortletName bean = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletName( portletNameSessionBean.getCurrentPortletNameId() );
+        PortletName bean = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().getPortletName( portletNameSessionBean.getCurrentPortletNameId() );
         portletNameSessionBean.setPortletName( new PortletNameBean(bean) );
     }
 }

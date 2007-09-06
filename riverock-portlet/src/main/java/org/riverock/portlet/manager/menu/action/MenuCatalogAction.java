@@ -79,10 +79,10 @@ public class MenuCatalogAction implements Serializable {
 
     // changeTemplateForCatalogLanguageAction
     public String changeTemplateForCatalogLanguageAction() {
-        Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(
+        Long siteLanguageId = FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogLanguageItem(
             getSessionObject().getCatalogLanguageId()
         ).getSiteLanguageId();
-        menuSessionBean.setTemplates(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
+        menuSessionBean.setTemplates(FacesTools.getPortalSpiProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
         menuSessionBean.setTemplateId(null);
 
         return "menu-catalog-change-template";
@@ -94,7 +94,7 @@ public class MenuCatalogAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), MenuAction.ROLES);
 
         if( getSessionObject() !=null ) {
-            FacesTools.getPortalDaoProvider().getPortalCatalogDao().changeTemplateForCatalogLanguage(
+            FacesTools.getPortalSpiProvider().getPortalCatalogDao().changeTemplateForCatalogLanguage(
                     getSessionObject().getCatalogLanguageId(), menuSessionBean.getTemplateId()
             );
             cleadDataProviderObject();
@@ -131,7 +131,7 @@ public class MenuCatalogAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), MenuAction.ROLES);
 
         if( getSessionObject() !=null ) {
-            Long cssId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogLanguageItem(
+            Long cssId = FacesTools.getPortalSpiProvider().getPortalCatalogDao().createCatalogLanguageItem(
                 getSessionObject()
             );
             setSessionObject(null);
@@ -165,7 +165,7 @@ public class MenuCatalogAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), MenuAction.ROLES);
 
         if( getSessionObject() !=null ) {
-            FacesTools.getPortalDaoProvider().getPortalCatalogDao().updateCatalogLanguageItem(getSessionObject());
+            FacesTools.getPortalSpiProvider().getPortalCatalogDao().updateCatalogLanguageItem(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -201,7 +201,7 @@ public class MenuCatalogAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), MenuAction.ROLES);
 
         if( getSessionObject() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalCatalogDao().deleteCatalogLanguageItem(getSessionObject().getCatalogLanguageId());
+            FacesTools.getPortalSpiProvider().getPortalCatalogDao().deleteCatalogLanguageItem(getSessionObject().getCatalogLanguageId());
             setSessionObject(null);
             menuSessionBean.setId(null);
             menuSessionBean.setObjectType(MenuSessionBean.UNKNOWN_TYPE);

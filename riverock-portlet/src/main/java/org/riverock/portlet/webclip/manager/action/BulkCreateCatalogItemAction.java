@@ -49,7 +49,7 @@ public class BulkCreateCatalogItemAction implements Serializable {
     }
 
     public String processAddPortletName() {
-        Long id = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().createPortletName( portletNameSessionBean.getPortletName() );
+        Long id = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().createPortletName( portletNameSessionBean.getPortletName() );
         portletNameSessionBean.setCurrentPortletNameId( id );
         loadCurrentPortletName();
         return "portlet-name";
@@ -61,7 +61,7 @@ public class BulkCreateCatalogItemAction implements Serializable {
     }
 
     public String processEditPortletName() {
-        FacesTools.getPortalDaoProvider().getPortalPortletNameDao().updatePortletName( portletNameSessionBean.getPortletName() );
+        FacesTools.getPortalSpiProvider().getPortalPortletNameDao().updatePortletName( portletNameSessionBean.getPortletName() );
         return "portlet-name";
     }
 
@@ -71,7 +71,7 @@ public class BulkCreateCatalogItemAction implements Serializable {
     }
 
     public String processDeletePortletName() {
-        FacesTools.getPortalDaoProvider().getPortalPortletNameDao().deletePortletName( portletNameSessionBean.getPortletName() );
+        FacesTools.getPortalSpiProvider().getPortalPortletNameDao().deletePortletName( portletNameSessionBean.getPortletName() );
         portletNameSessionBean.setPortletName( null );
         return "portlet-name";
     }
@@ -82,7 +82,7 @@ public class BulkCreateCatalogItemAction implements Serializable {
     }
 
     private void loadCurrentPortletName() {
-        PortletName bean = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletName( portletNameSessionBean.getCurrentPortletNameId() );
+        PortletName bean = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().getPortletName( portletNameSessionBean.getCurrentPortletNameId() );
         portletNameSessionBean.setPortletName( new PortletNameBean(bean) );
     }
 }

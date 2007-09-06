@@ -44,7 +44,7 @@ public class PortletNameService implements Serializable {
     }
 
     public List<PortletName> getPortletNameList() {
-        List<PortletName> list = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletNameList();
+        List<PortletName> list = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().getPortletNameList();
         if (list==null) {
             return null;
         }

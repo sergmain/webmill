@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
@@ -45,8 +45,8 @@ import org.riverock.interfaces.ContainerConstants;
  *         $Id$
  */
 public class FacesTools {
-    public static PortalDaoProvider getPortalDaoProvider() {
-        return (PortalDaoProvider)FacesTools.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+    public static PortalSpiProvider getPortalSpiProvider() {
+        return (PortalSpiProvider)FacesTools.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
     }
 
     public static Long getLong( UIComponent component, String name ) {

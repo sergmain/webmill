@@ -123,7 +123,7 @@ public class SiteAction implements Serializable {
         }
 
         if( siteSessionBean.getSiteExtended()!=null ) {
-            Long siteId = FacesTools.getPortalDaoProvider().getPortalSiteDao().createSiteWithVirtualHost(
+            Long siteId = FacesTools.getPortalSpiProvider().getPortalSiteDao().createSiteWithVirtualHost(
                 siteSessionBean.getSiteExtended().getSite(), (List)siteSessionBean.getSiteExtended().getVirtualHosts()
             );
             siteSessionBean.setSiteExtended(null);
@@ -160,7 +160,7 @@ public class SiteAction implements Serializable {
             if (log.isDebugEnabled()) {
                 log.debug("virtual hosts: " +siteSessionBean.getSiteExtended().getVirtualHosts());
             }
-            FacesTools.getPortalDaoProvider().getPortalSiteDao().updateSiteWithVirtualHost(
+            FacesTools.getPortalSpiProvider().getPortalSiteDao().updateSiteWithVirtualHost(
                 siteSessionBean.getSiteExtended().getSite(), (List)siteSessionBean.getSiteExtended().getVirtualHosts()
             );
             dataProvider.clearSite();
@@ -197,7 +197,7 @@ public class SiteAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( siteSessionBean.getSiteExtended() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalSiteDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
+            FacesTools.getPortalSpiProvider().getPortalSiteDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
             siteSessionBean.setCurrentSiteId(null);
             siteSessionBean.setSiteExtended( null );
             siteSessionBean.setId(null);

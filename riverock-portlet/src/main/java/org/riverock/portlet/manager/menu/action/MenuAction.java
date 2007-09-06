@@ -92,13 +92,13 @@ public class MenuAction implements Serializable {
         if (menuSessionBean.getCurrentMenuCatalogId() != null) {
             menuCatalogId =  menuSessionBean.getCurrentMenuCatalogId();
         } else {
-            CatalogItem catalogItem = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItem(
+            CatalogItem catalogItem = FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogItem(
                 menuSessionBean.getCurrentMenuItemId()
             );
             menuCatalogId = catalogItem.getCatalogLanguageId();
         }
-        Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId).getSiteLanguageId();
-        menuSessionBean.setTemplates(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
+        Long siteLanguageId = FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId).getSiteLanguageId();
+        menuSessionBean.setTemplates(FacesTools.getPortalSpiProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
 
         return "menu-add";
     }
@@ -123,14 +123,14 @@ public class MenuAction implements Serializable {
                 menuItem.setCatalogLanguageId( menuSessionBean.getCurrentMenuCatalogId() );
                 menuItem.setTopCatalogId(0L);
             } else {
-                CatalogItem catalogItem = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItem(
+                CatalogItem catalogItem = FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogItem(
                     menuSessionBean.getCurrentMenuItemId()
                 );
                 menuItem.setCatalogLanguageId( catalogItem.getCatalogLanguageId() );
                 menuItem.setTopCatalogId( catalogItem.getCatalogId() );
             }
 
-            Long menuItemId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogItem(menuItem);
+            Long menuItemId = FacesTools.getPortalSpiProvider().getPortalCatalogDao().createCatalogItem(menuItem);
             setSessionObject(null);
             menuSessionBean.setPreviousCreatedPortletId(menuItem.getPortletId());
             menuSessionBean.setId(menuItemId);
@@ -155,8 +155,8 @@ public class MenuAction implements Serializable {
         log.info("Edit menu item action.");
 
         Long menuCatalogId = getSessionObject().getMenuItem().getCatalogLanguageId();
-        Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId).getSiteLanguageId();
-        menuSessionBean.setTemplates(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
+        Long siteLanguageId = FacesTools.getPortalSpiProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId).getSiteLanguageId();
+        menuSessionBean.setTemplates(FacesTools.getPortalSpiProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
 
         return "menu-edit";
     }
@@ -176,7 +176,7 @@ public class MenuAction implements Serializable {
                     log.debug("Menu item is null.");
                 }
             }
-            FacesTools.getPortalDaoProvider().getPortalCatalogDao().updateCatalogItem(getSessionObject().getMenuItem());
+            FacesTools.getPortalSpiProvider().getPortalCatalogDao().updateCatalogItem(getSessionObject().getMenuItem());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -215,7 +215,7 @@ public class MenuAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
-            FacesTools.getPortalDaoProvider().getPortalCatalogDao().deleteCatalogItem(getSessionObject().getMenuItem().getCatalogId());
+            FacesTools.getPortalSpiProvider().getPortalCatalogDao().deleteCatalogItem(getSessionObject().getMenuItem().getCatalogId());
             setSessionObject(null);
             menuSessionBean.setId(null);
             menuSessionBean.setObjectType(MenuSessionBean.UNKNOWN_TYPE);

@@ -98,7 +98,7 @@ public class ArticleAction implements Serializable {
         if (getSessionObject() != null) {
 
             ArticleBean article = getSessionObject();
-            Long articleId = FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().createArticle(article);
+            Long articleId = FacesTools.getPortalSpiProvider().getPortalCmsArticleDao().createArticle(article);
             setSessionObject(null);
             articleSessionBean.setId(articleId);
             cleadDataProviderObject();
@@ -130,7 +130,7 @@ public class ArticleAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
-            FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().updateArticle(getSessionObject());
+            FacesTools.getPortalSpiProvider().getPortalCmsArticleDao().updateArticle(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -165,7 +165,7 @@ public class ArticleAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if (getSessionObject() != null) {
-            FacesTools.getPortalDaoProvider().getPortalCmsArticleDao().deleteArticle(getSessionObject().getArticleId());
+            FacesTools.getPortalSpiProvider().getPortalCmsArticleDao().deleteArticle(getSessionObject().getArticleId());
             setSessionObject(null);
             articleSessionBean.setId(null);
             articleSessionBean.setObjectType(ArticleSessionBean.UNKNOWN_TYPE);

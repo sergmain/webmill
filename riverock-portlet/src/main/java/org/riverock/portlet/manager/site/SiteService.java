@@ -74,7 +74,7 @@ public class SiteService implements Serializable {
 
     public List<SelectItem> getSiteList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+        List<Site> sites = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSites();
 
         for (Site site : sites) {
             if (site.getSiteId() == null) {
@@ -89,7 +89,7 @@ public class SiteService implements Serializable {
     @SuppressWarnings({"RedundantStringConstructorCall"})
     public List<SelectItem> getCompanyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<Company> companies = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompanyList();
+        List<Company> companies = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompanyList();
 
         for (Company company : companies) {
             if (company.getId() == null) {
@@ -105,13 +105,13 @@ public class SiteService implements Serializable {
     }
 
     public Site getSite(Long siteId) {
-        Site site = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId);
+        Site site = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSite(siteId);
         return new SiteBean(site);
     }
 
     public List<Site> getSites() {
         List<Site> list = new ArrayList<Site>();
-        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+        List<Site> sites = FacesTools.getPortalSpiProvider().getPortalSiteDao().getSites();
         for (Site site: sites) {
             list.add( new SiteBean(site) );
         }
@@ -120,7 +120,7 @@ public class SiteService implements Serializable {
 
     public List<SiteLanguage> getSiteLanguageList(Long siteId) {
         List<SiteLanguage> list = new ArrayList<SiteLanguage>();
-        List<SiteLanguage> siteLanguages = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
+        List<SiteLanguage> siteLanguages = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().getSiteLanguageList(siteId);
         for (SiteLanguage item: siteLanguages) {
             list.add( new SiteLanguageBean(item) );
         }
@@ -129,7 +129,7 @@ public class SiteService implements Serializable {
 
     public List<Template> getTemplateList(Long siteLanguageId) {
         List<Template> list = new ArrayList<Template>();
-        List<Template> templates = FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId);
+        List<Template> templates = FacesTools.getPortalSpiProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId);
         for (Template item: templates) {
             list.add( new TemplateBean(item) );
         }
@@ -138,7 +138,7 @@ public class SiteService implements Serializable {
 
     public List<Xslt> getXsltList(Long siteLanguageId) {
         List<Xslt> list = new ArrayList<Xslt>();
-        List<Xslt> xslts = FacesTools.getPortalDaoProvider().getPortalXsltDao().getXsltList(siteLanguageId);
+        List<Xslt> xslts = FacesTools.getPortalSpiProvider().getPortalXsltDao().getXsltList(siteLanguageId);
         for (Xslt xslt: xslts) {
             list.add( new XsltBean(xslt) );
         }
@@ -147,15 +147,15 @@ public class SiteService implements Serializable {
 
     public SiteExtended getSiteExtended(Long siteId) {
         SiteExtended siteExtended = new SiteExtended();
-        siteExtended.setSite(FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId));
-        List<VirtualHost> virtualHosts = FacesTools.getPortalDaoProvider().getPortalVirtualHostDao().getVirtualHosts(siteExtended.getSite().getSiteId());
+        siteExtended.setSite(FacesTools.getPortalSpiProvider().getPortalSiteDao().getSite(siteId));
+        List<VirtualHost> virtualHosts = FacesTools.getPortalSpiProvider().getPortalVirtualHostDao().getVirtualHosts(siteExtended.getSite().getSiteId());
         List<VirtualHostBean> hosts = new ArrayList<VirtualHostBean>();
         for (VirtualHost host : virtualHosts) {
             hosts.add( new VirtualHostBean(host) );
         }
         siteExtended.setVirtualHosts(hosts);
         Long companyId = siteExtended.getSite().getCompanyId();
-        Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(companyId);
+        Company company = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompany(companyId);
         if (log.isDebugEnabled()) {
             log.debug("companyId: " + companyId);
             log.debug("company: " + company);
@@ -165,7 +165,7 @@ public class SiteService implements Serializable {
     }
 
     public SiteLanguage getSiteLanguage(Long siteLanguageId) {
-        SiteLanguage siteLanguage = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+        SiteLanguage siteLanguage = FacesTools.getPortalSpiProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
 	if (siteLanguage!=null) {
 		return new SiteLanguageBean(siteLanguage);
 	}
@@ -175,7 +175,7 @@ public class SiteService implements Serializable {
     }
 
     public Template getTemplate(Long templateId) {
-	Template bean = FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplate(templateId);
+	Template bean = FacesTools.getPortalSpiProvider().getPortalTemplateDao().getTemplate(templateId);
 	if (bean!=null) {
         	return new TemplateBean(bean);
 	}
@@ -185,7 +185,7 @@ public class SiteService implements Serializable {
     }
 
     public Xslt getXslt(Long xsltId) {
-	Xslt bean = FacesTools.getPortalDaoProvider().getPortalXsltDao().getXslt(xsltId);
+	Xslt bean = FacesTools.getPortalSpiProvider().getPortalXsltDao().getXslt(xsltId);
 	if (bean!=null) {
         	return new XsltBean(bean);
 	}
@@ -195,7 +195,7 @@ public class SiteService implements Serializable {
     }
 
     public Css getCss(Long cssId) {
-	Css css = FacesTools.getPortalDaoProvider().getPortalCssDao().getCss(cssId);
+	Css css = FacesTools.getPortalSpiProvider().getPortalCssDao().getCss(cssId);
 	if (css!=null) {
         	return new CssBean(css);
 	}
@@ -206,7 +206,7 @@ public class SiteService implements Serializable {
 
     public List<? extends Css> getCssList(Long siteId) {
         List<Css> list = new ArrayList<Css>();
-        List<Css> cssList = FacesTools.getPortalDaoProvider().getPortalCssDao().getCssList(siteId);
+        List<Css> cssList = FacesTools.getPortalSpiProvider().getPortalCssDao().getCssList(siteId);
         for (Css css: cssList) {
             list.add( new CssBean(css) );
         }

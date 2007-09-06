@@ -32,7 +32,7 @@ public class WebclipService implements Serializable {
 
         Long siteId = new Long( FacesTools.getPortletRequest().getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         log.debug("siteId: " + siteId);
-        PortalDaoProvider portalDaoProvider = FacesTools.getPortalDaoProvider();
+        PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
 
         List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
         for (SiteLanguage language : languages) {

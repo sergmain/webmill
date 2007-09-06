@@ -111,7 +111,7 @@ public class HoldingAction implements Serializable {
             return;
         }
         CompanyBean company = new CompanyBean(
-            FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany( companyId )
+            FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompany( companyId )
         );
 
         holdingSessionBean.getHoldingBean().getCompanies().add( company );
@@ -134,7 +134,7 @@ public class HoldingAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( holdingSessionBean.getHoldingBean() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
+            FacesTools.getPortalSpiProvider().getPortalHoldingDao().processAddHolding(
                 holdingSessionBean.getHoldingBean()
             );
             holdingSessionBean.setHoldingBean( null );
@@ -167,7 +167,7 @@ public class HoldingAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding( 
+		FacesTools.getPortalSpiProvider().getPortalHoldingDao().processSaveHolding(
 			holdingSessionBean.getHoldingBean() 
 		);
             holdingSessionBean.setHoldingBean( null );
@@ -207,7 +207,7 @@ public class HoldingAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding( 
+		FacesTools.getPortalSpiProvider().getPortalHoldingDao().processDeleteHolding(
 			holdingSessionBean.getHoldingBean() 
 		);
 

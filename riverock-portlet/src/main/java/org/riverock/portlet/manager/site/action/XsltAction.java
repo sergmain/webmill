@@ -96,7 +96,7 @@ public class XsltAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
-            Long xsltId = FacesTools.getPortalDaoProvider().getPortalXsltDao().createXslt(
+            Long xsltId = FacesTools.getPortalSpiProvider().getPortalXsltDao().createXslt(
                 getSessionObject()
             );
             setSessionObject(null);
@@ -130,7 +130,7 @@ public class XsltAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() !=null ) {
-            FacesTools.getPortalDaoProvider().getPortalXsltDao().updateXslt(getSessionObject());
+            FacesTools.getPortalSpiProvider().getPortalXsltDao().updateXslt(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -166,7 +166,7 @@ public class XsltAction implements Serializable {
         PortletUtils.checkRights(FacesTools.getPortletRequest(), ROLES);
 
         if( getSessionObject() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalXsltDao().deleteXslt(getSessionObject().getId());
+            FacesTools.getPortalSpiProvider().getPortalXsltDao().deleteXslt(getSessionObject().getId());
             setSessionObject(null);
             siteSessionBean.setId(null);
             siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);

@@ -90,7 +90,7 @@ public class NewsGroupAction implements Serializable {
         log.info( "Procss add news group action." );
 
         if( getSessionObject() !=null ) {
-            Long newsGroupId = FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().createNewsGroup( getSessionObject() );
+            Long newsGroupId = FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().createNewsGroup( getSessionObject() );
             setSessionObject(null);
             newsSessionBean.setId(newsGroupId);
             cleadDataProviderObject();
@@ -120,7 +120,7 @@ public class NewsGroupAction implements Serializable {
         log.info( "Save changes news group action." );
 
         if( getSessionObject() !=null ) {
-            FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().updateNewsGroup(getSessionObject());
+            FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().updateNewsGroup(getSessionObject());
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -153,7 +153,7 @@ public class NewsGroupAction implements Serializable {
         log.info( "Process delete news group action. getSessionObject().getCatalogLanguageId(): " +getSessionObject().getNewsGroupId() );
 
         if( getSessionObject() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalCmsNewsDao().deleteNewsGroup(getSessionObject().getNewsGroupId());
+            FacesTools.getPortalSpiProvider().getPortalCmsNewsDao().deleteNewsGroup(getSessionObject().getNewsGroupId());
             setSessionObject(null);
             newsSessionBean.setId(null);
             newsSessionBean.setObjectType(NewsSessionBean.UNKNOWN_TYPE);

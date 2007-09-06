@@ -76,7 +76,7 @@ public class HoldingDataProvider implements Serializable {
     public List<SelectItem> getCompanyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
 //        List<Company> companies = authSessionBean.getAuthSession().getCompanyList();
-        List<Company> companies = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompanyList();
+        List<Company> companies = FacesTools.getPortalSpiProvider().getPortalCompanyDao().getCompanyList();
         for (Company companyBean : companies) {
             if (!isAlreadyBinded(companyBean)) {
                 String companyName = companyBean.getName();
@@ -118,7 +118,7 @@ public class HoldingDataProvider implements Serializable {
             return list;
         }
 
-        List<Holding> holdings = FacesTools.getPortalDaoProvider().getPortalHoldingDao().getHoldingList();
+        List<Holding> holdings = FacesTools.getPortalSpiProvider().getPortalHoldingDao().getHoldingList();
         List<Company> companies = authSession.getCompanyList();
         for (Holding holding : holdings) {
             HoldingBean holdingBean = new HoldingBean(holding);
