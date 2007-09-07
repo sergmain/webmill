@@ -29,6 +29,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.apache.log4j.Logger;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
@@ -36,8 +37,15 @@ import org.hibernate.StatelessSession;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.portal.bean.*;
-import org.riverock.webmill.portal.dao.HibernateUtils;
+import org.riverock.webmill.portal.bean.ArticleBean;
+import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.bean.CatalogLanguageBean;
+import org.riverock.webmill.portal.bean.NewsBean;
+import org.riverock.webmill.portal.bean.NewsGroupBean;
+import org.riverock.webmill.portal.bean.PortalXsltBean;
+import org.riverock.webmill.portal.bean.SiteBean;
+import org.riverock.webmill.portal.bean.TemplateBean;
+import org.riverock.webmill.portal.bean.VirtualHostBean;
 
 /**
  * @author Sergei Maslyukov

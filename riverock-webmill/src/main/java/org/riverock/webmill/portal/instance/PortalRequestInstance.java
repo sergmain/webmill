@@ -202,7 +202,7 @@ public final class PortalRequestInstance implements PortalRequest {
             }
             this.preferredLocales = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
 
-            PortalInfo portalInfo = PortalInfoImpl.getInstance(portalInstance.getSiteId());
+            PortalInfo portalInfo = PortalInfoImpl.getInstance(portalInstance.getPortalClassLoader(), portalInstance.getSiteId());
             if (portalInfo==null) {
                throw new IllegalArgumentException(
                   "PortalInfo object not created for host '"+httpRequest.getServerName()+"', siteId: " +portalInstance.getSiteId()

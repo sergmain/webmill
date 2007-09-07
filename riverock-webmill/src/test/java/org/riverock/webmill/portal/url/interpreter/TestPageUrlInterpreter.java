@@ -1,23 +1,21 @@
 package org.riverock.webmill.portal.url.interpreter;
 
 import java.io.File;
-import java.util.Locale;
-import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
 import junit.framework.TestCase;
 
-import org.riverock.webmill.portal.dao.OfflineDaoFactory;
-import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProvider;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.UrlInterpreterIterator;
-import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.webmill.portal.dao.OfflineDaoFactory;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
+import org.riverock.webmill.portal.url.UrlInterpreterIterator;
+import org.riverock.webmill.portal.url.definition_provider.PortletDefinitionProvider;
 
 /**
  * User: SMaslyukov
@@ -52,7 +50,7 @@ public class TestPageUrlInterpreter extends TestCase {
 
         Map<String, List<String>> httpRequestParameter = new HashMap<String, List<String>>();
 
-        PortalInfo portalInfo = PortalInfoImpl.getInstance(siteId);
+        PortalInfo portalInfo = PortalInfoImpl.getInstance(TestPageUrlInterpreter.class.getClassLoader(), siteId);
 
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,

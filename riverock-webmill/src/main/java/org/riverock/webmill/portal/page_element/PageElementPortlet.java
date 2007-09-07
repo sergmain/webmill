@@ -377,7 +377,7 @@ public final class PageElementPortlet implements PageElement {
                     false
                 );
 
-                PortalInfo portalInfo = PortalInfoImpl.getInstance( portalRequest.getHttpRequest().getServerName() );
+                PortalInfo portalInfo = PortalInfoImpl.getInstance(portalInstance.getPortalClassLoader(), portalRequest.getHttpRequest().getServerName() );
                 actionRequest = new ActionRequestImpl(
                     actionRequestParamMap,
                     portalRequest,
@@ -483,7 +483,7 @@ public final class PageElementPortlet implements PageElement {
                 }
             }
 
-            PortalInfo portalInfo = PortalInfoImpl.getInstance( portalRequest.getHttpRequest().getServerName() );
+            PortalInfo portalInfo = PortalInfoImpl.getInstance( portalInstance.getPortalClassLoader(),  portalRequest.getHttpRequest().getServerName() );
             renderRequest = new RenderRequestImpl(
                 renderRequestParamMap,
                 portalRequest,

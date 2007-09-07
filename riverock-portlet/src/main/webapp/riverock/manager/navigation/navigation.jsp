@@ -28,6 +28,7 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Navigation" var="msg"/>
 
 <style type="text/css">
     TD {
@@ -71,7 +72,7 @@
                 </h:commandButton>
             </h:panelGroup>
 
-            <h:outputText value="#{msg.temlate_types}" />
+            <h:outputText value="#{msg.type_of_template}" />
             <h:panelGrid columns="2">
                 <t:dataTable id="siteLanguageDataTable"
                              var="siteLanguageBean"
@@ -89,7 +90,23 @@
 
                 </t:dataTable>
 
-                <h:panelGroup id="site-tree-site-change-group">
+                <h:panelGroup>
+                    <h:panelGrid columns="2" rendered="#{!empty navSessionBean.currentSiteLanguageId}">
+                        <h:outputText value="#{msg.header_table_portlet_name_name}" />
+                        <h:selectOneMenu value="#{navSessionBean.dynamicTemplateId}" styleClass="selectOneMenu" required="true">
+                            <f:selectItems value="#{navDataProvider.templateList}"/>
+                        </h:selectOneMenu>
+
+                        <h:outputText value="#{msg.header_table_portlet_name_name}" />
+                        <h:selectOneMenu value="#{navSessionBean.popupTemplateId}" styleClass="selectOneMenu" required="true">
+                            <f:selectItems value="#{navDataProvider.templateList}"/>
+                        </h:selectOneMenu>
+
+                        <h:outputText value="#{msg.header_table_portlet_name_name}" />
+                        <h:selectOneMenu value="#{navSessionBean.maximazedTemplateId}" styleClass="selectOneMenu" required="true">
+                            <f:selectItems value="#{navDataProvider.templateList}"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
                 </h:panelGroup>
 
             </h:panelGrid>

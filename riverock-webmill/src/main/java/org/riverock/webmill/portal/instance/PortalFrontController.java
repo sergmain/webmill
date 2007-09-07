@@ -37,18 +37,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.ehcache.CacheManager;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
+import net.sf.ehcache.CacheManager;
+
 import org.riverock.common.html.Header;
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.webmill.portal.internal_servlet.css.ServletCSS;
+import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapServlet;
 import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.webmill.portal.info.PortalInfoImpl;
+import org.riverock.webmill.portal.internal_servlet.css.ServletCSS;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.site.SiteList;
 import org.riverock.webmill.portal.static_content.StaticContent;
@@ -161,7 +163,7 @@ public final class PortalFrontController extends HttpServlet {
             String pathInfo = httpRequest.getPathInfo();
             String realPath = portalServletConfig.getServletContext().getRealPath("/");
             if (pathInfo.startsWith("/css")) {
-                ServletCSS.doService(httpRequest, httpResponse, realPath, host.getSiteId());
+                ServletCSS.doService(httpRequest, httpResponse, realPath, PortalInfoImpl.getInstance(classLoader, host.getSiteId()));
                 return;
             }
             else if (pathInfo.equals("/sitemap.xml.gz")) {

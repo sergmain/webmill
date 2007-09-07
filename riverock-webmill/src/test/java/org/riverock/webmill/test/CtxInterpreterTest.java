@@ -42,7 +42,7 @@ public class CtxInterpreterTest {
         httpRequestParameter.put("news.type", Arrays.asList("item"));
         httpRequestParameter.put("mill.id_news_item", Arrays.asList("289"));
 
-        PortalInfo portalInfo = PortalInfoImpl.getInstance(siteId);
+        PortalInfo portalInfo = PortalInfoImpl.getInstance(CtxInterpreterTest.class.getClassLoader(), siteId);
 
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,

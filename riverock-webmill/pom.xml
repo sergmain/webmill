@@ -168,6 +168,12 @@
 			<artifactId>hibernate-annotations</artifactId>
 			<version>3.3.0.ga</version>
 		</dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-commons-annotations</artifactId>
+            <version>3.3.0.ga</version>
+        </dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -203,39 +209,6 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<finalName>${pom.artifactId}-${pom.version}.jar</finalName>
-					<forceCreation>true</forceCreation>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>war</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<archiveClasses>true</archiveClasses>
-					<warName>ROOT</warName>
-				</configuration>
-			</plugin>
--->
 		</plugins>
 	</build>
 </project>

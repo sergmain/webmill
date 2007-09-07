@@ -72,6 +72,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo, Observer 
 
     private transient Long siteId = null;
     private transient Map<String, String> portalProperties = null;
+    private ClassLoader classLoader = null;
 
     public Map<String, String> getPortalProperties() {
         return portalProperties;
@@ -160,16 +161,16 @@ public final class PortalInfoImpl implements Serializable, PortalInfo, Observer 
     private final static long LENGTH_TIME_PERIOD = 30000;
     private final static Object syncObject = new Object();
 
-    public static PortalInfoImpl getInstance(String serverName) {
+    public static PortalInfoImpl getInstance(ClassLoader classLoader, String serverName) {
         Long id = SiteList.getSiteId(serverName);
         if (log.isDebugEnabled()) {
             log.debug("ServerName:" + serverName + ", siteId: " + id);
         }
 
-        return getInstance(id);
+        return getInstance(classLoader, id);
     }
 
-    public static PortalInfoImpl getInstance(Long siteId) {
+    public static PortalInfoImpl getInstance(ClassLoader classLoader, Long siteId) {
         if (siteId==null) {
             log.warn("siteId is null");
             return null;
@@ -187,7 +188,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo, Observer 
 
                 log.debug("#15.01.03 reinit cached value ");
 
-                p = new PortalInfoImpl(siteId);
+                p = new PortalInfoImpl(classLoader, siteId);
                 InternalDaoFactory.getInternalCatalogDao().addObserver(p);
                 portatInfoMap.put(siteId, p);
 
@@ -197,7 +198,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo, Observer 
         return p;
     }
 
-    private PortalInfoImpl(Long siteId) {
+    private PortalInfoImpl(ClassLoader classLoader, Long siteId) {
+        this.classLoader = classLoader;
         this.siteId = siteId;
         siteBean = InternalDaoFactory.getInternalSiteDao().getSite( siteId );
 
@@ -306,20 +308,36 @@ public final class PortalInfoImpl implements Serializable, PortalInfo, Observer 
     }
 
     public MenuLanguage getMenu(String locale) {
-        MenuLanguage tempCat = null;
-        if (locale != null)
-            tempCat = languageMenuMap.get(locale);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            MenuLanguage tempCat = null;
+            if (locale != null) {
+                tempCat = languageMenuMap.get(locale);
+            }
 
-        if (tempCat != null)
-            return tempCat;
-        else
-            log.warn("Menu for locale " + locale + " not found");
-
-        return null;
+            if (tempCat != null) {
+                return tempCat;
+            }
+            else {
+                log.warn("Menu for locale " + locale + " not found");
+            }
+            return null;
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Site getSite() {
-        return siteBean;
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return siteBean;
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     private List<SiteLanguage> getSiteLanguageList() {
