@@ -39,7 +39,7 @@ public class TestActionPortletUrlInterpreter extends TestCase {
 
         Map<String, List<String>> httpRequestParameter = new HashMap<String, List<String>>();
 
-        PortalInfo portalInfo = PortalInfoImpl.getInstance(siteId);
+        PortalInfo portalInfo = PortalInfoImpl.getInstance(this.getClass().getClassLoader(), siteId);
 
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,

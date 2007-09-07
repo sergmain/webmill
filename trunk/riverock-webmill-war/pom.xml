@@ -1,12 +1,4 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<!--
-  <parent>
-    <groupId>org.riverock</groupId>
-    <artifactId>riverock-webmill</artifactId>
-    <version>5.8.1-SNAPSHOT</version>
-    <relativePath>pom-jar.xml</relativePath>
-  </parent>
--->
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.riverock</groupId>
 	<artifactId>riverock-webmill-war</artifactId>

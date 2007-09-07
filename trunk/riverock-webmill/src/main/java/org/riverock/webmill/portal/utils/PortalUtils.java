@@ -75,7 +75,7 @@ public class PortalUtils {
         // Todo - filter preferredLocale with locale defined for this site
         Locale tempLocale = getPreferredLocaleFromRequest( request, siteId );
         if (tempLocale==null) {
-            PortalInfo portalInfo = PortalInfoImpl.getInstance( siteId );
+            PortalInfo portalInfo = PortalInfoImpl.getInstance( PortalUtils.class.getClassLoader(), siteId );
             tempLocale = portalInfo.getDefaultLocale();
         }
 

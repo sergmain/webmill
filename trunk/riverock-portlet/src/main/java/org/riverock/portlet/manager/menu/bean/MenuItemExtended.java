@@ -28,6 +28,7 @@ import java.io.Serializable;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.portlet.manager.bean.TemplateBean;
 
 /**
  * @author Sergei Maslyukov

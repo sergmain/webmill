@@ -25,10 +25,10 @@ package org.riverock.portlet.manager.site;
 
 import java.io.Serializable;
 
+import org.riverock.portlet.manager.bean.TemplateBean;
 import org.riverock.portlet.manager.site.bean.CssBean;
 import org.riverock.portlet.manager.site.bean.SiteExtended;
 import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
-import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.manager.site.bean.XsltBean;
 
 /**

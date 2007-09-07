@@ -30,8 +30,8 @@ import java.util.TimeZone;
 
 import javax.faces.model.SelectItem;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Css;
@@ -40,13 +40,13 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.portal.bean.Xslt;
+import org.riverock.portlet.manager.bean.TemplateBean;
 import org.riverock.portlet.manager.site.bean.CssBean;
 import org.riverock.portlet.manager.site.bean.SiteBean;
 import org.riverock.portlet.manager.site.bean.SiteExtended;
 import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
-import org.riverock.portlet.manager.site.bean.TemplateBean;
-import org.riverock.portlet.manager.site.bean.XsltBean;
 import org.riverock.portlet.manager.site.bean.VirtualHostBean;
+import org.riverock.portlet.manager.site.bean.XsltBean;
 import org.riverock.portlet.tools.FacesTools;
 
 /**

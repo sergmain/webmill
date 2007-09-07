@@ -27,12 +27,12 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.manager.bean.TemplateBean;
 import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
-import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author Sergei Maslyukov

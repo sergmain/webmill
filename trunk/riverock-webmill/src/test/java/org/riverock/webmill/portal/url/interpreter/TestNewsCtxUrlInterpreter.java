@@ -44,7 +44,7 @@ public class TestNewsCtxUrlInterpreter extends TestCase {
         httpRequestParameter.put("news.type", Arrays.asList("item"));
         httpRequestParameter.put("mill.id_news_item", Arrays.asList("296"));
 
-        PortalInfo portalInfo = PortalInfoImpl.getInstance(siteId);
+        PortalInfo portalInfo = PortalInfoImpl.getInstance(this.getClass().getClassLoader(), siteId);
 
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,

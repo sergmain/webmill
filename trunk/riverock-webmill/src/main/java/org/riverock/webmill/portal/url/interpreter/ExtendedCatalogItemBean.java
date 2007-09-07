@@ -34,17 +34,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.info.PortalInfoImpl;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.template.PortalTemplate;
 import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
@@ -203,8 +200,7 @@ public final class ExtendedCatalogItemBean {
             return null;
         }
         
-        PortalInfo portalInfo = PortalInfoImpl.getInstance( factoryParameter.getSiteId() );
-        PortalTemplate template = PortalTemplateManagerFactory.getInstance(portalInfo.getSiteId()).getTemplate( templateName, locale.toString());
+        PortalTemplate template = PortalTemplateManagerFactory.getInstance(factoryParameter.getSiteId()).getTemplate( templateName, locale.toString());
         if (template==null) {
             return null;
         }
