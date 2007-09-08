@@ -52,6 +52,8 @@ public final class SiteMenu implements Observer {
      */
     private final static Map<Long, SiteMenu> siteMenuLaguage = new ConcurrentHashMap<Long, SiteMenu>();
 
+    private ClassLoader classLoader;
+
     public List<MenuLanguage> getMenuLanguage() {
         return menuLanguage;
     }
@@ -75,11 +77,12 @@ public final class SiteMenu implements Observer {
             menuLanguage.clear();
             menuLanguage=null;
         }
+        classLoader=null;
     }
 
     private final static Object syncObject = new Object();
 
-    public static SiteMenu getInstance( final Long siteId) {
+    public static SiteMenu getInstance(ClassLoader classLoader, final Long siteId) {
 
         SiteMenu tempLangMenu = siteMenuLaguage.get( siteId );
 
@@ -92,7 +95,7 @@ public final class SiteMenu implements Observer {
             if (tempLangMenu!=null) {
                 return tempLangMenu;
             }
-            SiteMenu temp = new SiteMenu( siteId );
+            SiteMenu temp = new SiteMenu(classLoader, siteId );
             InternalDaoFactory.getInternalCatalogDao().addObserver(temp);
             siteMenuLaguage.put( siteId,  temp);
             return temp;
@@ -129,7 +132,8 @@ public final class SiteMenu implements Observer {
         return new PortalMenuLanguage();
     }
 
-    private SiteMenu( final Long siteId) {
+    private SiteMenu( ClassLoader classLoader, final Long siteId) {
+        this.classLoader=classLoader;
         if (log.isDebugEnabled()) {
             log.debug("#33.60.00. Get List of language for siteId " + siteId );
         }
@@ -141,7 +145,7 @@ public final class SiteMenu implements Observer {
         }
 
         for (SiteLanguage bean : list) {
-            menuLanguage.add(new PortalMenuLanguage(bean));
+            menuLanguage.add(new PortalMenuLanguage(classLoader, bean));
         }
     }
 

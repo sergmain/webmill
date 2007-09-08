@@ -135,3 +135,12 @@
 
 </h:panelGrid>
 
+<h:panelGrid columns="1">
+    <h:panelGroup>
+        <h:panelGrid rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager']}">
+            <h:commandButton id="navigation-action" action="nav" value="Navigation" styleClass="top-button-action"/>
+            <h:outputText value="Navigation" styleClass="top-info-text"/>
+        </h:panelGrid>
+    </h:panelGroup>
+</h:panelGrid>
+

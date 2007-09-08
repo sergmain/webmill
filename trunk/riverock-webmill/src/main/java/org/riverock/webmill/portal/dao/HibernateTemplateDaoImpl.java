@@ -38,7 +38,6 @@ import org.hibernate.StatelessSession;
 
 import org.riverock.common.exception.DatabaseException;
 import org.riverock.webmill.portal.bean.TemplateBean;
-import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -334,15 +333,113 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
     }
 
     public void setMaximizedTemplate(Long templateId) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (log.isDebugEnabled()) {
+            log.debug("Start setMaximizedTemplate() for templateId "+ templateId);
+        }
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.templateId=:templateId ")
+                .setLong("templateId", templateId)
+                .uniqueResult();
+
+            if (bean!=null) {
+
+                if (log.isDebugEnabled()) {
+                    log.debug("session: " + session);
+                    log.debug("bean: " + bean);
+                    log.debug("bean.getSiteLanguageId(): " + bean.getSiteLanguageId());
+                }
+                TemplateBean prevBean = (TemplateBean)session.createQuery(
+                    "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                        "where template.siteLanguageId=:siteLanguageId and template.isMaximizedTemplate=true ")
+                    .setLong("siteLanguageId", bean.getSiteLanguageId())
+                    .uniqueResult();
+                
+                if (prevBean!=null) {
+                    prevBean.setMaximizedTemplate(false);
+                }
+                bean.setMaximizedTemplate(true);
+            }
+            session.flush();
+            session.clear();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void setDefaultDynamic(Long templateId) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (log.isDebugEnabled()) {
+            log.debug("Start setDefaultDynamic() for templateId "+ templateId);
+        }
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.templateId=:templateId ")
+                .setLong("templateId", templateId)
+                .uniqueResult();
+
+            if (bean!=null) {
+                TemplateBean prevBean = (TemplateBean)session.createQuery(
+                    "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                        "where template.siteLanguageId=:siteLanguageId and template.isDefaultDynamic=true ")
+                    .setLong("siteLanguageId", bean.getSiteLanguageId())
+                    .uniqueResult();
+                if (prevBean!=null) {
+                    prevBean.setDefaultDynamic(false);
+                }
+
+                bean.setDefaultDynamic(true);
+            }
+            session.flush();
+            session.clear();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public void setPopupTemplate(Long templateId) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (log.isDebugEnabled()) {
+            log.debug("Start setPopupTemplate() for templateId "+ templateId);
+        }
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+
+            TemplateBean bean = (TemplateBean)session.createQuery(
+                "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                    "where template.templateId=:templateId ")
+                .setLong("templateId", templateId)
+                .uniqueResult();
+
+            if (bean!=null) {
+                TemplateBean prevBean = (TemplateBean)session.createQuery(
+                    "select template from org.riverock.webmill.portal.bean.TemplateBean as template " +
+                        "where template.siteLanguageId=:siteLanguageId and template.isPopupTemplate=true ")
+                    .setLong("siteLanguageId", bean.getSiteLanguageId())
+                    .uniqueResult();
+                if (prevBean!=null) {
+                    prevBean.setPopupTemplate(false);
+                }
+                bean.setPopupTemplate(true);
+            }
+            session.flush();
+            session.clear();
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     public TemplateBean getMaximizedTemplate(Long siteLanguageId) {

@@ -25,8 +25,6 @@ package org.riverock.webmill.portal.xslt;
 
 import java.io.Serializable;
 
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
-
 /**
  * @author SergeMaslyukov
  *         Date: 30.12.2005

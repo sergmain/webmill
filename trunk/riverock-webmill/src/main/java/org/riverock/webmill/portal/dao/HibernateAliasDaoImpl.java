@@ -119,7 +119,7 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
         try {
             List<PortletAliasBean> list = session.createQuery(
                 "select bean from org.riverock.webmill.portal.bean.PortletAliasBean as bean " +
-                    "where bean.siteId=:siteId")
+                    "where bean.siteId = :siteId ")
             .setLong("siteId", siteId)
                 .list();
             return (List)list;

@@ -144,8 +144,9 @@ public class DataProvider implements Serializable {
         List<SelectItem> list = new ArrayList<SelectItem>();
         List<Holding> holdings = authSessionBean.getAuthSession().getHoldingList();
 
-    if (holdings==null)
-        return list;
+        if (holdings==null) {
+            return list;
+        }
 
         for (Holding holding : holdings) {
             list.add(new SelectItem(holding.getId(), holding.getName()));

@@ -29,11 +29,9 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.xslt.XsltTransformerManager;
 
 /**
  * @author Sergei Maslyukov

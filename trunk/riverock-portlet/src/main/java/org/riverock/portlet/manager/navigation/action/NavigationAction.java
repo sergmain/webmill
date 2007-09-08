@@ -2,9 +2,11 @@ package org.riverock.portlet.manager.navigation.action;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.manager.navigation.NavigationDataProvider;
 import org.riverock.portlet.manager.navigation.NavigationSessionBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * User: SergeMaslyukov
@@ -48,6 +50,19 @@ public class NavigationAction {
 
     public String changeSite() {
         log.info( "Change site action." );
+
+        return NAV;
+    }
+
+    public String applyTemplateChanges() {
+        log.info( "Apply template changes." );
+
+        PortalSpiProvider portalSpiProvider = FacesTools.getPortalSpiProvider();
+
+        portalSpiProvider.getPortalTemplateDao().setDefaultDynamic(navigationSessionBean.getDynamicTemplateId());
+        portalSpiProvider.getPortalTemplateDao().setMaximizedTemplate(navigationSessionBean.getMaximazedTemplateId());
+        portalSpiProvider.getPortalTemplateDao().setPopupTemplate(navigationSessionBean.getPopupTemplateId());
+
 
         return NAV;
     }

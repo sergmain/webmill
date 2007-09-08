@@ -11,7 +11,6 @@ import junit.framework.TestCase;
 
 import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.spi.PortalSpiProvider;
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.PortalTransformationParameters;
@@ -20,6 +19,7 @@ import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
 import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.url.interpreter.TestPageUrlInterpreter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
+import org.riverock.webmill.portal.xslt.XsltTransformer;
 
 /**
  * User: SMaslyukov

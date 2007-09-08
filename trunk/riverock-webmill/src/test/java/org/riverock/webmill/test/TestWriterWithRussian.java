@@ -42,7 +42,7 @@ public class TestWriterWithRussian extends TestCase {
 
     public void testConvertSequenceWithRussianChars() throws Exception {
 
-        System.out.println( "version: "+System.getProperty( "java.runtime.version" ) );
+//        System.out.println( "version: "+System.getProperty( "java.runtime.version" ) );
 
         String utf8 = new String( bytes, "utf-8" );
 

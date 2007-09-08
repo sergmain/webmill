@@ -55,11 +55,11 @@
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
     <h:form rendered="#{isUserInRole['webmill.authentic']}">
 
-        <f:subview id="site-top-actions-subview">
-            <jsp:include page="top-action.jsp"/>
-        </f:subview>
-
         <h:panelGrid columns="1">
+
+            <f:subview id="site-top-actions-subview">
+                <jsp:include page="top-action.jsp"/>
+            </f:subview>
 
             <h:panelGroup id="site-tree-site-change-group">
                 <h:selectOneMenu id="select-one-site" value="#{navSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
@@ -72,94 +72,92 @@
                 </h:commandButton>
             </h:panelGroup>
 
-            <h:outputText value="#{msg.type_of_template}" />
-            <h:panelGrid columns="2">
-                <t:dataTable id="siteLanguageDataTable"
-                             var="siteLanguageBean"
-                             value="#{navDataProvider.siteLanguageList}"
-                             preserveDataModel="true" >
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{msg.header_table_portlet_name_name}" />
-                        </f:facet>
-                        <t:commandLink action="nav" immediate="true" >
-                            <h:outputText value="#{siteLanguageBean.customLanguage}, #{siteLanguageBean.nameCustomLanguage}" />
-                            <t:updateActionListener property="#{navSessionBean.currentSiteLanguageId}" value="#{siteLanguageBean.siteLanguageId}" />
-                        </t:commandLink>
-                    </h:column>
+            <h:panelGrid columns="1" rendered="#{!empty navSessionBean.currentSiteId}">
+                <h:outputText value="#{msg.type_of_template}" />
+                <h:panelGrid columns="2">
+                    <t:dataTable var="siteLanguageBean" value="#{navDataProvider.siteLanguageList}" preserveDataModel="true" >
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg.site_locale_list}" />
+                            </f:facet>
+                            <t:commandLink action="nav" immediate="true" >
+                                <h:outputText value="#{siteLanguageBean.customLanguage}, #{siteLanguageBean.nameCustomLanguage}" />
+                                <t:updateActionListener property="#{navSessionBean.currentSiteLanguageId}" value="#{siteLanguageBean.siteLanguageId}" />
+                            </t:commandLink>
+                        </h:column>
 
-                </t:dataTable>
+                    </t:dataTable>
 
-                <h:panelGroup>
-                    <h:panelGrid columns="2" rendered="#{!empty navSessionBean.currentSiteLanguageId}">
-                        <h:outputText value="#{msg.header_table_portlet_name_name}" />
-                        <h:selectOneMenu value="#{navSessionBean.dynamicTemplateId}" styleClass="selectOneMenu" required="true">
-                            <f:selectItems value="#{navDataProvider.templateList}"/>
-                        </h:selectOneMenu>
+                    <h:panelGroup>
+                        <h:panelGroup rendered="#{!empty navSessionBean.currentSiteLanguageId}">
+                            <h:panelGrid columns="2">
+                                <h:outputText value="#{msg.dynamic_template}" />
+                                <h:selectOneMenu value="#{navSessionBean.dynamicTemplateId}" styleClass="selectOneMenu" required="true">
+                                    <f:selectItems value="#{navDataProvider.templateList}"/>
+                                </h:selectOneMenu>
 
-                        <h:outputText value="#{msg.header_table_portlet_name_name}" />
-                        <h:selectOneMenu value="#{navSessionBean.popupTemplateId}" styleClass="selectOneMenu" required="true">
-                            <f:selectItems value="#{navDataProvider.templateList}"/>
-                        </h:selectOneMenu>
+                                <h:outputText value="#{msg.popup_template}" />
+                                <h:selectOneMenu value="#{navSessionBean.popupTemplateId}" styleClass="selectOneMenu" required="true">
+                                    <f:selectItems value="#{navDataProvider.templateList}"/>
+                                </h:selectOneMenu>
 
-                        <h:outputText value="#{msg.header_table_portlet_name_name}" />
-                        <h:selectOneMenu value="#{navSessionBean.maximazedTemplateId}" styleClass="selectOneMenu" required="true">
-                            <f:selectItems value="#{navDataProvider.templateList}"/>
-                        </h:selectOneMenu>
-                    </h:panelGrid>
-                </h:panelGroup>
+                                <h:outputText value="#{msg.maximazed_template}" />
+                                <h:selectOneMenu value="#{navSessionBean.maximazedTemplateId}" styleClass="selectOneMenu" required="true">
+                                    <f:selectItems value="#{navDataProvider.templateList}"/>
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+
+                            <h:commandButton action="#{navAction.applyTemplateChanges}"
+                                             value="#{msg.apply_template_changes}"
+                                             styleClass="site-button-action"
+                                >
+                            </h:commandButton>
+
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:outputText value="#{msg.portlet_aliases}" />
+                <h:panelGrid columns="2">
+                    <t:dataTable var="portletAlias" value="#{navDataProvider.portletAliases}" preserveDataModel="true" >
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg.portlet_aliases_list}" />
+                            </f:facet>
+                            <t:commandLink action="nav" immediate="true" >
+                                <h:outputText value="#{portletAlias.shortUrl}, #{portletAlias.portletName}, #{portletAlias.templateName}" />
+                                <t:updateActionListener property="#{navSessionBean.currentPortletAliasId}" value="#{portletAlias.portletAliasId}" />
+                            </t:commandLink>
+                        </h:column>
+                    </t:dataTable>
+                    <h:panelGroup>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:outputText value="#{msg.url_aliases}" />
+                <h:panelGrid columns="2">
+                    <t:dataTable var="urlAlias" value="#{navDataProvider.urlAliases}" preserveDataModel="true" >
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg.url_aliases_list}" />
+                            </f:facet>
+                            <t:commandLink action="nav" immediate="true" >
+                                <h:outputText value="#{urlAlias.url} -&gt; #{urlAlias.alias}" />
+                                <t:updateActionListener property="#{navSessionBean.currentUrlAliasId}" value="#{urlAlias.urlAliasId}" />
+                            </t:commandLink>
+                        </h:column>
+
+                    </t:dataTable>
+
+                    <h:panelGroup>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
 
             </h:panelGrid>
-
-            <h:outputText value="#{msg.portlet_aliases}" />
-            <h:panelGrid columns="2">
-                <t:dataTable id="siteLanguageDataTable"
-                             var="siteLanguageBean"
-                             value="#{navDataProvider.siteLanguageList}"
-                             preserveDataModel="true" >
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{msg.header_table_portlet_name_name}" />
-                        </f:facet>
-                        <t:commandLink action="nav" immediate="true" >
-                            <h:outputText value="#{siteLanguageBean.customLanguage}, #{siteLanguageBean.nameCustomLanguage}" />
-                            <t:updateActionListener property="#{navSessionBean.currentSiteLanguageId}" value="#{siteLanguageBean.siteLanguageId}" />
-                        </t:commandLink>
-                    </h:column>
-
-                </t:dataTable>
-
-                <h:panelGroup id="site-tree-site-change-group">
-                </h:panelGroup>
-
-            </h:panelGrid>
-
-            <h:outputText value="#{msg.url_aliases}" />
-            <h:panelGrid columns="2">
-                <t:dataTable id="siteLanguageDataTable"
-                             var="siteLanguageBean"
-                             value="#{navDataProvider.siteLanguageList}"
-                             preserveDataModel="true" >
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{msg.header_table_portlet_name_name}" />
-                        </f:facet>
-                        <t:commandLink action="nav" immediate="true" >
-                            <h:outputText value="#{siteLanguageBean.customLanguage}, #{siteLanguageBean.nameCustomLanguage}" />
-                            <t:updateActionListener property="#{navSessionBean.currentSiteLanguageId}" value="#{siteLanguageBean.siteLanguageId}" />
-                        </t:commandLink>
-                    </h:column>
-
-                </t:dataTable>
-
-                <h:panelGroup id="site-tree-site-change-group">
-                </h:panelGroup>
-
-            </h:panelGrid>
-
-
         </h:panelGrid>
-
-
     </h:form>
 </f:view>
