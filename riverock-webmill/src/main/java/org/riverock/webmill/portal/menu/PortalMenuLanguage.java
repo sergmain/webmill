@@ -45,6 +45,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
     private List<Menu> menu = null;
     private SiteLanguage siteLanguage = null;
     private boolean isNotInited=true;
+    private ClassLoader classLoader;
 
     public PortalMenuLanguage(){}
 
@@ -57,87 +58,124 @@ public final class PortalMenuLanguage implements MenuLanguage {
             menu.clear();
             menu=null;
         }
+        classLoader=null;
     }
 
     // return name of template for 'index' page
     public MenuItem getIndexMenuItem(){
-        if (isNotInited) {
-            initMenus();
-        }
-        if (log.isDebugEnabled()){
-            log.debug("menu: "+menu);
-        }
-
-        for (Menu catalog : this.menu) {
-            MenuItem item = catalog.getIndexMenuItem();
-            if (item != null) {
-                return item;
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            if (isNotInited) {
+                initMenus();
             }
+            if (log.isDebugEnabled()){
+                log.debug("menu: "+menu);
+            }
+
+            for (Menu catalog : this.menu) {
+                MenuItem item = catalog.getIndexMenuItem();
+                if (item != null) {
+                    return item;
+                }
+            }
+            return null;
         }
-        return null;
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     // return name of template for 'index' page
     public String getIndexTemplate(){
-        if (isNotInited) {
-            initMenus();
-        }
-        MenuItem indexTemplate = getIndexMenuItem();
-        if (indexTemplate != null) {
-            return indexTemplate.getNameTemplate();
-        }
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            if (isNotInited) {
+                initMenus();
+            }
+            MenuItem indexTemplate = getIndexMenuItem();
+            if (indexTemplate != null) {
+                return indexTemplate.getNameTemplate();
+            }
 
-        return null;
+            return null;
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Menu getDefault() {
-        if (isNotInited) {
-            initMenus();
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            if (isNotInited) {
+                initMenus();
+            }
+            for (Menu catalog : this.menu) {
+                if (catalog.getIsDefault())
+                    return catalog;
+            }
+            return null;
         }
-        for (Menu catalog : this.menu) {
-            if (catalog.getIsDefault())
-                return catalog;
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
         }
-        return null;
     }
 
     public Menu getCatalogByCode( String code ) {
-        if (code==null) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            if (code==null) {
+                return null;
+            }
+
+            if (isNotInited) {
+                initMenus();
+            }
+            for (Menu catalog : this.menu) {
+                if (code.equals(catalog.getCatalogCode()))
+                    return catalog;
+            }
             return null;
         }
-
-        if (isNotInited) {
-            initMenus();
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
         }
-        for (Menu catalog : this.menu) {
-            if (code.equals(catalog.getCatalogCode()))
-                return catalog;
-        }
-        return null;
     }
 
     public MenuItem searchMenuItem(Long id) {
-        if (id==null) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            if (id==null) {
+                return null;
+            }
+
+            if (isNotInited) {
+                initMenus();
+            }
+            for (Menu menu : this.menu) {
+                MenuItem ci = menu.searchMenuItem(id);
+                if (ci != null) {
+                    return ci;
+                }
+            }
             return null;
         }
-
-        if (isNotInited) {
-            initMenus();
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
         }
-        for (Menu menu : this.menu) {
-            MenuItem ci = menu.searchMenuItem(id);
-            if (ci != null) {
-                return ci;
-            }
-        }
-        return null;
     }
 
-    public PortalMenuLanguage(SiteLanguage bean) {
+    public PortalMenuLanguage(ClassLoader classLoader, SiteLanguage bean) {
         if (bean == null) {
             return;
         }
 
+        this.classLoader = classLoader;
         this.siteLanguage = bean;
 
         if (log.isDebugEnabled()) {

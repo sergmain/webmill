@@ -28,4 +28,5 @@ public interface PortalSpiProvider extends PortalDaoProvider {
     public PortalCmsArticleSpi getPortalCmsArticleDao();
     public PortalCmsNewsSpi getPortalCmsNewsDao();
     public PortalPreferencesSpi getPortalPreferencesDao();
+    public PortalAliasSpi getPortalAliasSpi();
 }

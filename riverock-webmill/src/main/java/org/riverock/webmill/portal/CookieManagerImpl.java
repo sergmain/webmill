@@ -40,12 +40,14 @@ import org.riverock.interfaces.portal.CookieManager;
  */
 public final class CookieManagerImpl implements CookieManager {
     private List<Cookie> list = new ArrayList<Cookie>();
+    private ClassLoader classLoader=null;
 
     protected void finalize() throws Throwable {
         if (list!=null) {
             list.clear();
             list = null;
         }
+        classLoader = null;
         super.finalize();
     }
 

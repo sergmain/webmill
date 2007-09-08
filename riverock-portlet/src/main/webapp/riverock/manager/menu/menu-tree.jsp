@@ -27,7 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Menu" var="msgMenu"/>
 
 <h:panelGroup id="menu-tree-group">
 
@@ -63,7 +63,7 @@
                 <h:outputText id="menu-tree-menu-catalog-list-name" value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText id="menu-tree-menu-catalog-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-menu-catalog-action-id" action="#{menuCatalogAction.addMenuCatalogAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_menu_catalog_button_alt}">
+                    image="/images/add.gif" style="border : 0" alt="#{msgMenu.add_new_menu_catalog_button_alt}">
 
                     <t:updateActionListener property="#{menuSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuCatalogType}"/>
@@ -106,7 +106,7 @@
                     <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuCatalogType}"/>
                 </h:commandLink>
                 <h:commandButton id="add-menu-item-action-id" action="#{menuAction.addMenuItemAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_menu_item_button_alt}">
+                    image="/images/add.gif" style="border : 0" alt="#{msgMenu.add_new_menu_item_button_alt}">
 
                     <t:updateActionListener property="#{menuSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuItemType}"/>
@@ -128,7 +128,7 @@
                     <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuItemType}"/>
                 </h:commandLink>
                 <h:commandButton id="add-menu-item-action-id" action="#{menuAction.addMenuItemAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_menu_item_button_alt}">
+                    image="/images/add.gif" style="border : 0" alt="#{msgMenu.add_new_menu_item_button_alt}">
 
                     <t:updateActionListener property="#{menuSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuItemType}"/>

@@ -26,6 +26,11 @@
     "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 <faces-config>
     <managed-bean>
+        <managed-bean-name>navService</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.navigation.NavigationService</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>navSessionBean</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.navigation.NavigationSessionBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
@@ -35,18 +40,13 @@
         <managed-bean-class>org.riverock.portlet.manager.navigation.NavigationDataProvider</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>
-            <property-name>navService</property-name>
+            <property-name>navigationService</property-name>
             <value>#{navService}</value>
         </managed-property>
         <managed-property>
-            <property-name>navSessionBean</property-name>
+            <property-name>navigationSessionBean</property-name>
             <value>#{navSessionBean}</value>
         </managed-property>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>navService</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.manager.navigation.NavigationService</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
     <!-- Actions -->
     <managed-bean>
@@ -54,7 +54,7 @@
         <managed-bean-class>org.riverock.portlet.manager.navigation.action.NavigationAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>
-            <property-name>navSessionBean</property-name>
+            <property-name>navigationSessionBean</property-name>
             <value>#{navSessionBean}</value>
         </managed-property>
         <managed-property>
@@ -62,7 +62,7 @@
             <value>#{authSessionBean}</value>
         </managed-property>
         <managed-property>
-            <property-name>navDataProvider</property-name>
+            <property-name>navigationDataProvider</property-name>
             <value>#{navDataProvider}</value>
         </managed-property>
     </managed-bean>

@@ -51,6 +51,7 @@ public class PortalSpiProviderImpl implements PortalSpiProvider {
     private PortalCmsArticleSpi portalCmsArticleDao = null;
     private PortalCmsNewsSpi portalCmsNewsDao = null;
     private PortalPreferencesSpi portalPreferencesDao = null;
+    private PortalAliasSpi portalAliasSpi = null;
 
     public PortalSpiProviderImpl(AuthSession authSession, ClassLoader classLoader, Long siteId) {
         this.portalCompanyDao = new PortalCompanySpiImpl(authSession, classLoader, siteId);
@@ -70,6 +71,11 @@ public class PortalSpiProviderImpl implements PortalSpiProvider {
         this.portalCmsArticleDao = new PortalCmsArticleSpiImpl(authSession, classLoader, siteId);
         this.portalCmsNewsDao = new PortalCmsNewSpiImpl(authSession, classLoader, siteId);
         this.portalPreferencesDao = new PortalPreferencesSpiImpl(authSession, classLoader, siteId);
+        this.portalAliasSpi = new PortalAliasSpiImpl(authSession, classLoader, siteId);
+    }
+
+    public PortalAliasSpi getPortalAliasSpi() {
+        return portalAliasSpi;
     }
 
     public PortalCmsArticleSpi getPortalCmsArticleDao() {

@@ -20,15 +20,37 @@ public class PortletAliasBean implements PortletAlias {
 
     private String shortUrl;
 
+    private String portletName;
+
+    private String templateName;
+
     public PortletAliasBean() {
     }
 
-    public PortletAliasBean(PortletAlias portletAlias) {
+    public PortletAliasBean(PortletAlias portletAlias, String portletName, String templateName) {
         this.portletAliasId = portletAlias.getPortletAliasId();
         this.siteId = portletAlias.getSiteId();
         this.templateId = portletAlias.getTemplateId();
         this.portletNameId = portletAlias.getPortletNameId();
         this.shortUrl = portletAlias.getShortUrl();
+        this.portletName = portletName;
+        this.templateName = templateName;
+    }
+
+    public String getPortletName() {
+        return portletName;
+    }
+
+    public void setPortletName(String portletName) {
+        this.portletName = portletName;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public Long getPortletAliasId() {

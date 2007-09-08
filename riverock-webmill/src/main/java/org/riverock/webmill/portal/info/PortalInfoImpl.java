@@ -300,7 +300,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo, Observer 
         if (log.isDebugEnabled()) log.debug("start get menu for site " + siteId);
 
         // Build menu
-        SiteMenu sc = SiteMenu.getInstance(siteId);
+        SiteMenu sc = SiteMenu.getInstance(classLoader, siteId);
         languageMenuMap = new HashMap<String, MenuLanguage>();
         for (MenuLanguage menuLanguageInterface : sc.getMenuLanguage()) {
             languageMenuMap.put(menuLanguageInterface.getLocaleStr(), menuLanguageInterface);

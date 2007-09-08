@@ -42,7 +42,6 @@ import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.spi.PortalSpiProvider;
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.exception.PortalException;
@@ -62,6 +61,7 @@ import org.riverock.webmill.portal.url.interpreter.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.utils.PortalUtils;
+import org.riverock.webmill.portal.xslt.XsltTransformer;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**

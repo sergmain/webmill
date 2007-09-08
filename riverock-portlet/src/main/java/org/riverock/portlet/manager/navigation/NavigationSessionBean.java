@@ -1,7 +1,12 @@
 package org.riverock.portlet.manager.navigation;
 
+import org.apache.log4j.Logger;
+
 import org.riverock.interfaces.portal.bean.PortletAlias;
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.UrlAlias;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * User: SergeMaslyukov
@@ -10,6 +15,7 @@ import org.riverock.interfaces.portal.bean.UrlAlias;
  * $Id$
  */
 public class NavigationSessionBean {
+    private final static Logger log = Logger.getLogger(NavigationSessionBean.class);
 
     private PortletAlias portletAlias = null;
     private Long currentPortletAliasId = null;

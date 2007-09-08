@@ -64,7 +64,7 @@
                          styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.user-manager']}"/>
         <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
                          styleClass="top-button-action"
- rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.site,webmill.template,webmill.css,webmill.xslt']}"/>
+                         rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.site,webmill.template,webmill.css,webmill.xslt']}"/>
 
         <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.portal-manager']}">
             <h:commandButton value="#{msg.action_role_add_role}" action="#{roleAction.addRole}"

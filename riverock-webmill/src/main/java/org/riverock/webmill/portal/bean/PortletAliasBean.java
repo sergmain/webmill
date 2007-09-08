@@ -38,7 +38,7 @@ import org.riverock.interfaces.portal.bean.PortletAlias;
     @Column(name="ID_TEMPLATE")
     private Long templateId;
 
-    @Column(name="ID_SITE")
+    @Column(name="ID_PORTLET_NAME")
     private Long portletNameId;
 
     @Column(name="SHORT_URL")

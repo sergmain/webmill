@@ -37,7 +37,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.Xslt;
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**

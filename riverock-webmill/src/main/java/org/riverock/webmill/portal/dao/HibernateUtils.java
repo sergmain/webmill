@@ -72,7 +72,9 @@ public class HibernateUtils {
         ArticleBean.class,
         NewsBean.class,
         NewsGroupBean.class,
-        UserMetadataItemBean.class
+        UserMetadataItemBean.class,
+        PortletAliasBean.class,
+        UrlAliasBean.class
     };
 
     public static synchronized void destroy() {

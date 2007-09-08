@@ -133,6 +133,7 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                 log.debug("    variant: " + site.getDefVariant());
                 log.debug("    companyId: " + site.getCompanyId());
                 log.debug("    timezone: " + site.getServerTimeZone());
+                log.debug("    enable navigation: " + site.isEnableNavigation());
             }
             if (hosts!=null) {
                 log.debug("    virtual hosts;");
@@ -191,6 +192,8 @@ public class HibernateSiteDaoImpl implements InternalSiteDao {
                 bean.setRegisterAllowed(site.getRegisterAllowed());
                 bean.setSiteName(site.getSiteName());
                 bean.setProperties(site.getProperties());
+                bean.setEnableNavigation(site.isEnableNavigation());
+                bean.setServerTimeZone(site.getServerTimeZone());
             }
             if (bean!=null && hosts!=null) {
                 List<VirtualHostBean> list = session.createQuery(
