@@ -12,5 +12,6 @@ public class OfflineDaoFactory {
         InternalDaoFactory.setInternalCatalogDao( new OfflineInternalCatalogDao() );
         InternalDaoFactory.setInternalTemplateDao( new OfflineInternalTemplateDao() );
         InternalDaoFactory.setInternalPortletNameDao( new OfflineInternalPortletNameDao() );
+        InternalDaoFactory.setInternalAliasDao( new OfflineInternalAliasDao() );
     }
 }

@@ -1,10 +1,10 @@
 package org.riverock.portlet.manager.navigation;
 
-import org.apache.log4j.Logger;
+import java.io.Serializable;
 
-import org.riverock.interfaces.portal.bean.PortletAlias;
 import org.riverock.interfaces.portal.bean.UrlAlias;
 import org.riverock.portlet.manager.navigation.bean.PortletAliasBean;
+import org.riverock.portlet.manager.navigation.bean.UrlAliasBean;
 
 /**
  * User: SergeMaslyukov
@@ -12,13 +12,12 @@ import org.riverock.portlet.manager.navigation.bean.PortletAliasBean;
  * Time: 22:17:57
  * $Id$
  */
-public class NavigationSessionBean {
-    private final static Logger log = Logger.getLogger(NavigationSessionBean.class);
-
+public class NavigationSessionBean implements Serializable {
+    
     private PortletAliasBean portletAlias = null;
     private Long currentPortletAliasId = null;
 
-    private UrlAlias urlAlias=null;
+    private UrlAliasBean urlAlias=null;
     private Long currentUrlAliasId=null;
 
     private Long dynamicTemplateId;
@@ -91,11 +90,11 @@ public class NavigationSessionBean {
         this.currentPortletAliasId = currentPortletAliasId;
     }
 
-    public UrlAlias getUrlAlias() {
+    public UrlAliasBean getUrlAlias() {
         return urlAlias;
     }
 
-    public void setUrlAlias(UrlAlias urlAlias) {
+    public void setUrlAlias(UrlAliasBean urlAlias) {
         this.urlAlias = urlAlias;
     }
 

@@ -28,19 +28,19 @@ public class TestCycleChecker extends TestCase {
     }
 
     public void testCycle() {
-        List<String> path = UrlCycleChecker.isCycle( urlProvider, "bbb", "eee");
+        List<String> path = UrlCycleChecker.isCycle( urlProvider, 16L, "bbb", "eee");
         assertNotNull(path);
 
-        path = UrlCycleChecker.isCycle( urlProvider, "bbb", "ddd");
+        path = UrlCycleChecker.isCycle( urlProvider, 16L,"bbb", "ddd");
         assertNotNull(path);
 
-        path = UrlCycleChecker.isCycle( urlProvider, "bbb", "ddd");
+        path = UrlCycleChecker.isCycle( urlProvider, 16L,"bbb", "ddd");
         assertNotNull(path);
 
-        path = UrlCycleChecker.isCycle( urlProvider, "eee", "bbb");
+        path = UrlCycleChecker.isCycle( urlProvider, 16L,"eee", "bbb");
         assertNotNull(path);
 
-        path = UrlCycleChecker.isCycle( urlProvider, "eee", "zzz");
+        path = UrlCycleChecker.isCycle( urlProvider, 16L,"eee", "zzz");
         assertNull(path);
 
     }

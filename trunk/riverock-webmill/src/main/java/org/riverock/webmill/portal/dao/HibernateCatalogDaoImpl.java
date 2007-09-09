@@ -49,7 +49,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
     private final static Logger log = Logger.getLogger(HibernateCatalogDaoImpl.class);
     private static final MenuItemComparator MENU_ITEM_COMPARATOR = new MenuItemComparator();
 
-    private final Observable observable = new Observable();
+    private final ChangableObservable observable = new ChangableObservable();
 
     public void addObserver(Observer o) {
         observable.addObserver(o);

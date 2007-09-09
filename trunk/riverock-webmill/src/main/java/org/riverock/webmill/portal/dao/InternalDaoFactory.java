@@ -180,4 +180,8 @@ public class InternalDaoFactory {
     static void setInternalXsltDao(InternalXsltDao internalXsltDao) {
         InternalDaoFactory.internalXsltDao = internalXsltDao;
     }
+
+    public static void setInternalAliasDao(InternalAliasDao internalAliasDao) {
+        InternalDaoFactory.internalAliasDao = internalAliasDao;
+    }
 }

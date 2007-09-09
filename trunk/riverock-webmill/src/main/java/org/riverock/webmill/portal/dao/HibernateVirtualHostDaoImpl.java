@@ -45,7 +45,7 @@ import org.riverock.webmill.portal.bean.VirtualHostBean;
  */
 public class HibernateVirtualHostDaoImpl implements InternalVirtualHostDao {
 
-    private final Observable observable = new Observable();
+    private final ChangableObservable observable = new ChangableObservable();
 
     public void addObserver(Observer o) {
         observable.addObserver(o);

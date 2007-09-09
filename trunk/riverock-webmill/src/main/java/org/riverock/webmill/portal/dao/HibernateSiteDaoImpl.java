@@ -57,7 +57,7 @@ import org.riverock.webmill.portal.bean.VirtualHostBean;
 public class HibernateSiteDaoImpl implements InternalSiteDao {
     private final static Logger log = Logger.getLogger(HibernateSiteDaoImpl.class);
 
-    private final Observable observable = new Observable();
+    private final ChangableObservable observable = new ChangableObservable();
 
     public void addObserver(Observer o) {
         observable.addObserver(o);

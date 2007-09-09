@@ -3,8 +3,6 @@ package org.riverock.webmill.portal.aliases;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.riverock.webmill.portal.aliases.UrlProvider;
-
 /**
  * User: SMaslyukov
  * Date: 23.08.2007
@@ -12,9 +10,9 @@ import org.riverock.webmill.portal.aliases.UrlProvider;
  */
 public class UrlCycleChecker {
 
-    public static List<String> isCycle(UrlProvider urlProvider, String url, String alias) {
+    public static List<String> isCycle(UrlProvider urlProvider, Long siteId, String url, String alias) {
         List<String> list = new ArrayList<String>();
-        String aliasTemp = urlProvider.getAlias(url);
+        String aliasTemp = urlProvider.getAlias(siteId, url);
         if (aliasTemp!=null) {
             list.add(url);
             list.add(aliasTemp);
@@ -30,7 +28,7 @@ public class UrlCycleChecker {
                 return list;
             }
             sourceUrl = targetUrl;
-            targetUrl = urlProvider.getAlias(targetUrl);
+            targetUrl = urlProvider.getAlias(siteId, targetUrl);
             if (targetUrl==null) {
                 return null;
             }
