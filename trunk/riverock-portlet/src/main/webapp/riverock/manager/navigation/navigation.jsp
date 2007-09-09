@@ -49,6 +49,12 @@
         width: 80px;
         height: 22px;
     }
+    .first-column-table {
+        width:40%;
+    }
+    .second-column-table {
+        width:60%;
+    }
 </style>
 
 <f:view>
@@ -61,11 +67,11 @@
                 <jsp:include page="top-action.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="site-tree-site-change-group">
-                <h:selectOneMenu id="select-one-site" value="#{navSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
+            <h:panelGroup>
+                <h:selectOneMenu value="#{navSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
                     <f:selectItems value="#{navService.siteList}"/>
                 </h:selectOneMenu>
-                <h:commandButton id="site-change-site-action" action="#{navAction.changeSite}"
+                <h:commandButton action="#{navAction.changeSite}"
                                  value="Ok"
                                  styleClass="site-button-action"
                     >
@@ -74,7 +80,7 @@
 
             <h:panelGrid columns="1" rendered="#{!empty navSessionBean.currentSiteId}">
                 <h:outputText value="#{msg.type_of_template}" />
-                <h:panelGrid columns="2">
+                <h:panelGrid columns="2" columnClasses="first-column-table, second-column-table">
                     <t:dataTable var="siteLanguageBean" value="#{navDataProvider.siteLanguageList}" preserveDataModel="true" >
                         <h:column>
                             <f:facet name="header">
@@ -112,39 +118,61 @@
                                              styleClass="site-button-action"
                                 >
                             </h:commandButton>
-
                         </h:panelGroup>
                     </h:panelGroup>
-
                 </h:panelGrid>
 
-                <h:outputText value="#{msg.portlet_aliases}" />
-                <h:panelGrid columns="2">
-                    <t:dataTable var="portletAlias" value="#{navDataProvider.portletAliases}" preserveDataModel="true" >
+                
+                <h:panelGroup>
+                    <h:outputText value="#{msg.portlet_aliases}" />
+                    <h:commandButton action="#{navAction.addPortletAlias}" image="/images/add.gif" style="border:0" alt="#{msg.add_new_portlet_alias_alt}"/>
+                </h:panelGroup>
+                
+                <h:panelGrid columns="2" columnClasses="first-column-table, second-column-table">
+                    <t:dataTable var="portletAlias" value="#{navDataProvider.portletAliases}">
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{msg.portlet_aliases_list}" />
                             </f:facet>
-                            <t:commandLink action="nav" immediate="true" >
+                            <t:commandLink action="#{navAction.loadPortletAlias}" >
                                 <h:outputText value="#{portletAlias.shortUrl}, #{portletAlias.portletName}, #{portletAlias.templateName}" />
                                 <t:updateActionListener property="#{navSessionBean.currentPortletAliasId}" value="#{portletAlias.portletAliasId}" />
                             </t:commandLink>
                         </h:column>
                     </t:dataTable>
-                    <h:panelGroup>
-                    </h:panelGroup>
 
+
+                    <h:panelGroup>
+                        <f:subview id="nav-portlet-alias-add-subview" rendered="#{navDataProvider.addPortletAliasState}">
+                            <jsp:include page="portlet-alias-add.jsp"/>
+                        </f:subview>
+                        <h:panelGroup rendered="#{!empty navSessionBean.currentPortletAliasId}">
+                            <f:subview id="nav-portlet-alias-view-subview" rendered="#{navDataProvider.viewPortletAliasState}">
+                                <jsp:include page="portlet-alias-view.jsp"/>
+                            </f:subview>
+                            <f:subview id="nav-portlet-alias-edit-subview" rendered="#{navDataProvider.editPortletAliasState}">
+                                <jsp:include page="portlet-alias-edit.jsp"/>
+                            </f:subview>
+                            <f:subview id="nav-portlet-alias-delete-subview" rendered="#{navDataProvider.deletePortletAliasState}">
+                                <jsp:include page="portlet-alias-delete.jsp"/>
+                            </f:subview>
+                        </h:panelGroup>
+                    </h:panelGroup>
                 </h:panelGrid>
 
-                <h:outputText value="#{msg.url_aliases}" />
-                <h:panelGrid columns="2">
-                    <t:dataTable var="urlAlias" value="#{navDataProvider.urlAliases}" preserveDataModel="true" >
+
+                <h:panelGroup>
+                    <h:outputText value="#{msg.url_aliases}" />
+                    <h:commandButton action="#{navAction.addUrlAlias}" image="/images/add.gif" style="border : 0" alt="#{msg.add_new_url_alias_alt}"/>
+                </h:panelGroup>
+                <h:panelGrid columns="2" columnClasses="first-column-table, second-column-table">
+                    <t:dataTable var="urlAlias" value="#{navDataProvider.urlAliases}">
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{msg.url_aliases_list}" />
                             </f:facet>
-                            <t:commandLink action="nav" immediate="true" >
-                                <h:outputText value="#{urlAlias.url} -&gt; #{urlAlias.alias}" />
+                            <t:commandLink action="#{navAction.loadUrlAlias}" >
+                                <h:outputText value="#{urlAlias.url} -> #{urlAlias.alias}" />
                                 <t:updateActionListener property="#{navSessionBean.currentUrlAliasId}" value="#{urlAlias.urlAliasId}" />
                             </t:commandLink>
                         </h:column>
@@ -152,6 +180,20 @@
                     </t:dataTable>
 
                     <h:panelGroup>
+                        <f:subview id="nav-url-alias-add-subview" rendered="#{navDataProvider.addUrlAliasState}">
+                            <jsp:include page="url-alias-add.jsp"/>
+                        </f:subview>
+                        <h:panelGroup rendered="#{!empty navSessionBean.currentUrlAliasId}">
+                            <f:subview id="nav-url-alias-view-subview" rendered="#{navDataProvider.viewUrlAliasState}">
+                                <jsp:include page="url-alias-view.jsp"/>
+                            </f:subview>
+                            <f:subview id="nav-url-alias-edit-subview" rendered="#{navDataProvider.editUrlAliasState}">
+                                <jsp:include page="url-alias-edit.jsp"/>
+                            </f:subview>
+                            <f:subview id="nav-url-alias-delete-subview" rendered="#{navDataProvider.deleteUrlAliasState}">
+                                <jsp:include page="url-alias-delete.jsp"/>
+                            </f:subview>
+                        </h:panelGroup>
                     </h:panelGroup>
 
                 </h:panelGrid>

@@ -131,14 +131,14 @@ public class MenuDataProvider implements Serializable {
 
     public List<SelectItem> getTemplateList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<Template> portletNames = menuSessionBean.getTemplates();
+        List<Template> templates = menuSessionBean.getTemplates();
 
-        for (Template portletName : portletNames) {
-            if (portletName.getTemplateId() == null) {
-                throw new IllegalStateException("id is null, name: " + portletName.getTemplateName());
+        for (Template template : templates) {
+            if (template.getTemplateId() == null) {
+                throw new IllegalStateException("id is null, name: " + template.getTemplateName());
             }
 
-            list.add(new SelectItem(portletName.getTemplateId(), portletName.getTemplateName()));
+            list.add(new SelectItem(template.getTemplateId(), template.getTemplateName()));
         }
         return list;
     }

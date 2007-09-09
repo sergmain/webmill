@@ -1,11 +1,9 @@
-package org.riverock.webmill.portal.action.url_checker;
+package org.riverock.webmill.portal.aliases;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.riverock.webmill.portal.url.UrlProviderFactory;
-import org.riverock.webmill.portal.url.UrlProvider;
+import org.riverock.webmill.portal.aliases.UrlProvider;
 
 /**
  * User: SMaslyukov
@@ -13,16 +11,6 @@ import org.riverock.webmill.portal.url.UrlProvider;
  * Time: 12:52:18
  */
 public class UrlCycleChecker {
-
-    public static List<String> isCycle(Map<String, Object> parameters) {
-        String url = (String)parameters.get("url");
-        String alias = (String)parameters.get("alias");
-        return isCycle(UrlProviderFactory.getUrlProvider(), url, alias);
-    }
-
-    public static List<String> isCycle(String url, String alias) {
-        return isCycle(UrlProviderFactory.getUrlProvider(), url, alias);
-    }
 
     public static List<String> isCycle(UrlProvider urlProvider, String url, String alias) {
         List<String> list = new ArrayList<String>();

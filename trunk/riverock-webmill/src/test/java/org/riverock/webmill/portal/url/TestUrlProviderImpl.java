@@ -3,6 +3,8 @@ package org.riverock.webmill.portal.url;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.riverock.webmill.portal.aliases.UrlProvider;
+
 /**
  * User: SMaslyukov
  * Date: 23.08.2007

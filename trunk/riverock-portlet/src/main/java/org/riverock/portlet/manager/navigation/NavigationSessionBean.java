@@ -3,10 +3,8 @@ package org.riverock.portlet.manager.navigation;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.PortletAlias;
-import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.UrlAlias;
-import org.riverock.interfaces.portal.spi.PortalSpiProvider;
-import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.manager.navigation.bean.PortletAliasBean;
 
 /**
  * User: SergeMaslyukov
@@ -17,7 +15,7 @@ import org.riverock.portlet.tools.FacesTools;
 public class NavigationSessionBean {
     private final static Logger log = Logger.getLogger(NavigationSessionBean.class);
 
-    private PortletAlias portletAlias = null;
+    private PortletAliasBean portletAlias = null;
     private Long currentPortletAliasId = null;
 
     private UrlAlias urlAlias=null;
@@ -29,6 +27,10 @@ public class NavigationSessionBean {
 
     private Long currentSiteId;
     private Long currentSiteLanguageId;
+
+    private NavigationConstants.NavigationState portletAliasState = NavigationConstants.NavigationState.VIEW;
+
+    private NavigationConstants.NavigationState urlAliasState = NavigationConstants.NavigationState.VIEW; 
 
     public NavigationSessionBean() {
     }
@@ -73,11 +75,11 @@ public class NavigationSessionBean {
         this.maximazedTemplateId = maximazedTemplateId;
     }
 
-    public PortletAlias getPortletAlias() {
+    public PortletAliasBean getPortletAlias() {
         return portletAlias;
     }
 
-    public void setPortletAlias(PortletAlias portletAlias) {
+    public void setPortletAlias(PortletAliasBean portletAlias) {
         this.portletAlias = portletAlias;
     }
 
@@ -103,5 +105,21 @@ public class NavigationSessionBean {
 
     public void setCurrentUrlAliasId(Long currentUrlAliasId) {
         this.currentUrlAliasId = currentUrlAliasId;
+    }
+
+    public NavigationConstants.NavigationState getPortletAliasState() {
+        return portletAliasState;
+    }
+
+    public void setPortletAliasState(NavigationConstants.NavigationState portletAliasState) {
+        this.portletAliasState = portletAliasState;
+    }
+
+    public NavigationConstants.NavigationState getUrlAliasState() {
+        return urlAliasState;
+    }
+
+    public void setUrlAliasState(NavigationConstants.NavigationState urlAliasState) {
+        this.urlAliasState = urlAliasState;
     }
 }

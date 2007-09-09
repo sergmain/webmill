@@ -147,7 +147,7 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
     private UrlAliasBean getUrlAliasInternal(Session session, Long siteId, String url, String alias) {
         List<UrlAliasBean> beans = session.createQuery(
             "select bean from org.riverock.webmill.portal.bean.UrlAliasBean as bean " +
-                "where bean.url=:url and bean.siteId=:siteId bean.alias=:alias")
+                "where bean.url=:url and bean.siteId=:siteId and bean.alias=:alias")
             .setString("url", url)
             .setString("alias", alias)
             .setLong("siteId", siteId)
