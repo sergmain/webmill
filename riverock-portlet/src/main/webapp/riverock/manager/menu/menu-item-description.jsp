@@ -53,6 +53,12 @@
             <h:outputText value="#{msg.menu_item_url}"/>
             <h:outputText value="#{menuSessionBean.menuItem.menuItem.url}"/>
 
+            <h:outputText value="#{msg.menu_item_is_include_in_sitemap}"/>
+            <h:panelGroup>
+                <t:graphicImage value="/images/yes.gif" rendered="#{menuSessionBean.menuItem.menuItem.includeInSitemap}" border="0"/>
+                <t:graphicImage value="/images/no.gif" rendered="#{!menuSessionBean.menuItem.menuItem.includeInSitemap}" border="0"/>
+            </h:panelGroup>
+
         </h:panelGrid>
 
         <h:outputText value="#{msg.menu_item_role}"/>

@@ -76,4 +76,11 @@
             </ForeignKey>
         </Table>
     </Patch>
+    <Patch>
+        <Name>patch-1-8</Name>
+        <PreviousName>patch-1-7</PreviousName>
+        <SqlAction>
+            <Sql>update WM_PORTAL_CATALOG set IS_INCLUDE_IN_SITEMAP=1</Sql>
+        </SqlAction>
+    </Patch>
 </Patches>

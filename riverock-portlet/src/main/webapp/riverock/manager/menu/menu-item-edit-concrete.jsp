@@ -69,6 +69,8 @@
     <h:outputText value="#{msg.menu_item_keyword}"/>
     <h:inputText id="menu-keyword-field" value="#{menuSessionBean.menuItem.menuItem.keyword}"/>
 
+    <h:outputText value="#{msg.menu_item_is_include_in_sitemap}"/>
+    <h:selectBooleanCheckbox id="include-in-sitemap-field" value="#{menuSessionBean.menuItem.menuItem.includeInSitemap}"/>
 </h:panelGrid>
 
 <h:panelGrid columns="1">

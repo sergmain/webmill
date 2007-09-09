@@ -142,6 +142,10 @@ public class GoogleSitemapService {
 
     private static void processMenuItem(String virtualHostUrl, String localeName, String portalContext, List<CatalogItem> menuItemList, List<Url> urls) {
         for (CatalogItem catalogItem : menuItemList) {
+            if (!catalogItem.isIncludeInSitemap()) {
+                continue;
+            }
+            
             Url url = new Url();
 
             if (catalogItem.getUrl() == null) {
