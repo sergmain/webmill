@@ -26,15 +26,7 @@ package org.riverock.webmill.portal.url;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.portal.url.interpreter.AliasUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.CtxUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.IndexUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.PageUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.PageidUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.PortletAliasUrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreter;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
+import org.riverock.webmill.portal.url.interpreter.*;
 
 /**
  * @author Sergei Maslyukov
@@ -45,7 +37,7 @@ public class UrlInterpreterIterator {
     private final static Logger log = Logger.getLogger( UrlInterpreterIterator.class );
 
     private static final UrlInterpreter[] INTERPRETER = new UrlInterpreter[]{
-        new AliasUrlInterpreter(),
+        new UrlAliasInterpreter(),
         new PortletAliasUrlInterpreter(),
         new PageUrlInterpreter(),
         new PageidUrlInterpreter(),

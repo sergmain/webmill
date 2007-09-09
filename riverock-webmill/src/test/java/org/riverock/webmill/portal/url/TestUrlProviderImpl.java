@@ -2,6 +2,7 @@ package org.riverock.webmill.portal.url;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Observable;
 
 import org.riverock.webmill.portal.aliases.UrlProvider;
 
@@ -21,7 +22,11 @@ public class TestUrlProviderImpl implements UrlProvider {
         this.aliases = aliases;
     }
 
-    public String getAlias(String url) {
+    public String getAlias(Long siteId, String url) {
         return aliases.get(url);
+    }
+
+    public void update(Observable o, Object arg) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

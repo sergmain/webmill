@@ -2,6 +2,7 @@ package org.riverock.portlet.manager.navigation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 import javax.faces.model.SelectItem;
 
@@ -22,7 +23,7 @@ import org.riverock.portlet.tools.FacesTools;
  * Time: 0:01:17
  * $Id$
  */
-public class NavigationDataProvider {
+public class NavigationDataProvider implements Serializable {
     private NavigationSessionBean navigationSessionBean;
 
     private NavigationService navigationService;

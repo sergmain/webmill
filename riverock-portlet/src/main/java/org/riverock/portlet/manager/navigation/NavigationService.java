@@ -2,6 +2,7 @@ package org.riverock.portlet.manager.navigation;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 import javax.faces.model.SelectItem;
 
@@ -16,7 +17,7 @@ import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
  * Time: 22:18:25
  * $Id$
  */
-public class NavigationService {
+public class NavigationService implements Serializable {
 
     public List<SelectItem> getSiteList() {
         List<SelectItem> list = new ArrayList<SelectItem>();

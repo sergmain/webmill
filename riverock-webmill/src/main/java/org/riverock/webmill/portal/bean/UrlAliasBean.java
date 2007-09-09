@@ -44,6 +44,13 @@ import org.riverock.interfaces.portal.bean.UrlAlias;
     public UrlAliasBean() {
     }
 
+    public UrlAliasBean(Long urlAliasId, Long siteId, String url, String alias) {
+        this.urlAliasId = urlAliasId;
+        this.siteId = siteId;
+        this.url = url;
+        this.alias = alias;
+    }
+
     public UrlAliasBean(UrlAlias urlAlias) {
         this.urlAliasId = urlAlias.getUrlAliasId();
         this.siteId = urlAlias.getSiteId();
@@ -81,5 +88,9 @@ import org.riverock.interfaces.portal.bean.UrlAlias;
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public String toString() {
+        return "["+urlAliasId+";siteId="+siteId+";url="+url+";alias="+alias+"]";
     }
 }

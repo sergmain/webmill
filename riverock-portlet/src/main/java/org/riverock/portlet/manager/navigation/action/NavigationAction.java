@@ -1,5 +1,7 @@
 package org.riverock.portlet.manager.navigation.action;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -22,7 +24,7 @@ import org.riverock.portlet.tools.FacesTools;
  * Time: 22:19:15
  * $Id$
  */
-public class NavigationAction {
+public class NavigationAction implements Serializable {
     private final static Logger log = Logger.getLogger(NavigationAction.class);
 
     private NavigationSessionBean navigationSessionBean;
@@ -144,10 +146,15 @@ public class NavigationAction {
     }
 
     private static void prepareShortUrl(PortletAliasBean portletAlias) {
-        portletAlias.setShortUrl(portletAlias.getShortUrl().trim());
-        if (!portletAlias.getShortUrl().startsWith("/")) {
-            portletAlias.setShortUrl("/"+portletAlias.getShortUrl());
+        portletAlias.setShortUrl( prepareUrl(portletAlias.getShortUrl()) );
+    }
+
+    private static String prepareUrl(String url) {
+        String s = url.trim();
+        if (!s.startsWith("/")) {
+            return "/"+s;
         }
+        return s;
     }
 
     public String editPortletAlias() {
@@ -258,7 +265,7 @@ public class NavigationAction {
     public String processAddUrlAlias() {
         log.info( "Start addUrlAliasAction()" );
 
-        UrlAlias urlAlias = navigationSessionBean.getUrlAlias();
+        UrlAliasBean urlAlias = navigationSessionBean.getUrlAlias();
         if (StringUtils.isBlank(urlAlias.getUrl())) {
             return NavigationConstants.NAV;
         }
@@ -266,6 +273,9 @@ public class NavigationAction {
         if (StringUtils.isBlank(urlAlias.getAlias())) {
             return NavigationConstants.NAV;
         }
+
+        urlAlias.setUrl(prepareUrl(urlAlias.getUrl()));
+        urlAlias.setAlias(prepareUrl(urlAlias.getAlias()));
 
         PortalSpiProvider portalSpiProvider = FacesTools.getPortalSpiProvider();
         Long id = portalSpiProvider.getPortalAliasSpi().createUrlAlias(urlAlias);

@@ -1,6 +1,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.util.Observer;
 
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
@@ -16,6 +17,12 @@ import org.riverock.webmill.portal.bean.UrlAliasBean;
  * Time: 12:27:38
  */
 public class HibernateAliasDaoImpl implements InternalAliasDao {
+
+    private final ChangableObservable observable = new ChangableObservable();
+
+    public void addObserver(Observer o) {
+        observable.addObserver(o);
+    }
 
     public PortletAlias getPortletAlias(Long portletAliasId) {
         StatelessSession session = HibernateUtils.getStatelessSession();
@@ -49,6 +56,9 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
     }
 
     public Long createPortletAlias(PortletAlias portletAlias) {
+        if (portletAlias==null) {
+            return null;
+        }
         Session session = HibernateUtils.getSession();
         try {
             session.beginTransaction();
@@ -58,6 +68,9 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
                 session.flush();
                 session.clear();
                 session.getTransaction().commit();
+
+                observable.notifyObservers();
+
                 return bean.getPortletAliasId();
             }
             return null;
@@ -85,6 +98,8 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
             session.flush();
             session.clear();
             session.getTransaction().commit();
+
+            observable.notifyObservers();
         }
         finally {
             session.close();
@@ -108,6 +123,8 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
             session.flush();
             session.clear();
             session.getTransaction().commit();
+
+            observable.notifyObservers();
         }
         finally {
             session.close();
@@ -169,6 +186,9 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
                 session.flush();
                 session.clear();
                 session.getTransaction().commit();
+
+                observable.notifyObservers();
+
                 return bean.getUrlAliasId();
             }
             return null;
@@ -196,6 +216,8 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
             session.flush();
             session.clear();
             session.getTransaction().commit();
+
+            observable.notifyObservers();
         }
         finally {
             session.close();
@@ -219,6 +241,8 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
             session.flush();
             session.clear();
             session.getTransaction().commit();
+
+            observable.notifyObservers();
         }
         finally {
             session.close();

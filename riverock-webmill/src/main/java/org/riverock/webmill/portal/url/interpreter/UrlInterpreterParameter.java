@@ -71,6 +71,10 @@ public final class UrlInterpreterParameter {
         }
     }
 
+    public void setPathInfo(String pathInfo) {
+        this.pathInfo = pathInfo;
+    }
+
     public PortalInfo getPortalInfo() {
         return portalInfo;
     }
