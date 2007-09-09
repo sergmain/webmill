@@ -430,6 +430,7 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             bean.setTemplateId(catalogItem.getTemplateId());
             bean.setTopCatalogId(catalogItem.getTopCatalogId());
             bean.setKeyMessage(catalogItem.getKeyMessage());
+            bean.setIncludeInSitemap(catalogItem.isIncludeInSitemap());
 
             if (log.isDebugEnabled()) {
                 log.debug("contextId: " + catalogItem.getContextId());
