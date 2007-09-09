@@ -6,7 +6,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.riverock.webmill.portal.action.url_checker.UrlCycleChecker;
+import org.riverock.webmill.portal.aliases.UrlCycleChecker;
+import org.riverock.webmill.portal.aliases.UrlProvider;
 
 /**
  * User: SMaslyukov

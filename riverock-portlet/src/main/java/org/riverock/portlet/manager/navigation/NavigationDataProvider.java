@@ -102,6 +102,35 @@ public class NavigationDataProvider {
 
     }
 
+    public List<SelectItem> getSiteTemplateList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        Long siteId = navigationSessionBean.getCurrentSiteId();
+        if (siteId==null) {
+            return list;
+        }
+
+        PortalSpiProvider portalSpiProvider = FacesTools.getPortalSpiProvider();
+        List<SiteLanguage> siteLanguages = portalSpiProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
+        for (SiteLanguage siteLanguage : siteLanguages) {
+            List<Template> templates = portalSpiProvider.getPortalTemplateDao().getTemplateLanguageList(siteLanguage.getSiteLanguageId());
+            for (Template item: templates) {
+                list.add(new SelectItem(item.getTemplateId(), siteLanguage.getNameCustomLanguage()+" -> "+item.getTemplateName()));
+            }
+
+        }
+        return list;
+
+    }
+
+    public List<SelectItem> getPortletNameList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        List<PortletName> portletNames = FacesTools.getPortalSpiProvider().getPortalPortletNameDao().getPortletNameList();
+        for (PortletName item: portletNames) {
+            list.add(new SelectItem(item.getPortletId(), item.getPortletName()));
+        }
+        return list;
+    }
+
     public List<PortletAliasBean> getPortletAliases() {
         List<PortletAliasBean> list = new ArrayList<PortletAliasBean>();
         Long siteId = navigationSessionBean.getCurrentSiteId();
@@ -114,7 +143,9 @@ public class NavigationDataProvider {
         for (PortletAlias item: aliases) {
             PortletName portletName = portalSpiProvider.getPortalPortletNameDao().getPortletName(item.getPortletNameId());
             Template template = portalSpiProvider.getPortalTemplateDao().getTemplate(item.getTemplateId());
-            list.add( new PortletAliasBean(item, portletName.getPortletName(), template.getTemplateName()) );
+            SiteLanguage siteLanguage = portalSpiProvider.getPortalSiteLanguageDao().getSiteLanguage(template.getSiteLanguageId());
+
+            list.add( new PortletAliasBean(item, portletName.getPortletName(), siteLanguage.getNameCustomLanguage() + " -> " + template.getTemplateName()) );
         }
         return list;
 
@@ -127,18 +158,7 @@ public class NavigationDataProvider {
             return list;
         }
 
-        PortalSpiProvider portalSpiProvider = FacesTools.getPortalSpiProvider();
-        List<UrlAlias> aliases = portalSpiProvider.getPortalAliasSpi().getUrlAliases(siteId);
-        return aliases;
-/*
-        for (UrlAlias item: aliases) {
-            PortletName portletName = portalSpiProvider.getPortalPortletNameDao().getPortletName(item.getPortletNameId());
-            Template template = portalSpiProvider.getPortalTemplateDao().getTemplate(item.getTemplateId());
-            list.add( new PortletAliasBean(item, portletName.getPortletName(), template.getTemplateName()) );
-        }
-        return list;
-*/
-
+        return FacesTools.getPortalSpiProvider().getPortalAliasSpi().getUrlAliases(siteId);
     }
 
     public List<Template> getTemplates() {
@@ -156,5 +176,36 @@ public class NavigationDataProvider {
 
     }
 
+    public boolean isViewPortletAliasState() {
+        return navigationSessionBean.getPortletAliasState()==NavigationConstants.NavigationState.VIEW;
+    }
+
+    public boolean isEditPortletAliasState() {
+        return navigationSessionBean.getPortletAliasState()==NavigationConstants.NavigationState.EDIT;
+    }
+
+    public boolean isAddPortletAliasState() {
+        return navigationSessionBean.getPortletAliasState()==NavigationConstants.NavigationState.ADD;
+    }
+
+    public boolean isDeletePortletAliasState() {
+        return navigationSessionBean.getPortletAliasState()==NavigationConstants.NavigationState.DELETE;
+    }
+
+    public boolean isViewUrlAliasState() {
+        return navigationSessionBean.getUrlAliasState()==NavigationConstants.NavigationState.VIEW;
+    }
+
+    public boolean isEditUrlAliasState() {
+        return navigationSessionBean.getUrlAliasState()==NavigationConstants.NavigationState.EDIT;
+    }
+
+    public boolean isAddUrlAliasState() {
+        return navigationSessionBean.getUrlAliasState()==NavigationConstants.NavigationState.ADD;
+    }
+
+    public boolean isDeleteUrlAliasState() {
+        return navigationSessionBean.getUrlAliasState()==NavigationConstants.NavigationState.DELETE;
+    }
 
 }

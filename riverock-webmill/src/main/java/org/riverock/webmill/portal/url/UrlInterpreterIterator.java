@@ -53,20 +53,6 @@ public class UrlInterpreterIterator {
         new IndexUrlInterpreter()
     };
 
-    /*
-        public static final int UNKNOWN_SERVLET_IDX = 0;
-        public static final int PAGEID_SERVLET_IDX = 1;
-        public static final int PAGE_SERVLET_IDX = 2;
-        public static final int CTX_SERVLET_IDX = 3;
-        private static Map<String, Integer> requestContextMap = new HashMap<String, Integer>();
-
-        static {
-            requestContextMap.put(ContainerConstants.PAGEID_SERVLET_NAME, PAGEID_SERVLET_IDX);
-            requestContextMap.put(ContainerConstants.PAGE_SERVLET_NAME, PAGE_SERVLET_IDX);
-            requestContextMap.put(ContainerConstants.URI_CTX_MANAGER, CTX_SERVLET_IDX);
-        }
-
-    */
     /**
      * init context type and name of template, if type of context is null, set it to 'index_page'
      *
@@ -85,7 +71,6 @@ public class UrlInterpreterIterator {
             }
         }
         return null;
-//        throw new PortalException("Error interpret url");
     }
 
 }

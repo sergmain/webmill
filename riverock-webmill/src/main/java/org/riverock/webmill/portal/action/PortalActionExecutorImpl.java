@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portal.action.PortalActionExecutor;
 import org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapService;
 import org.riverock.webmill.portal.action.menu.MenuItemsProvider;
-import org.riverock.webmill.portal.action.url_checker.UrlCycleChecker;
 import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.PortalRequest;
 
@@ -46,18 +45,16 @@ import org.riverock.webmill.portal.PortalRequest;
 public class PortalActionExecutorImpl implements PortalActionExecutor {
     private final static Logger log = Logger.getLogger( PortalActionExecutorImpl.class );
 
-    private static enum PortalAction {CREATE_GOOGLE_SITEMAP_TYPE, GET_MENU_ITEMS, URL_CYCLE_CHECK}
+    private static enum PortalAction {CREATE_GOOGLE_SITEMAP_TYPE, GET_MENU_ITEMS}
 
     private static Map<String, PortalAction> actions = new HashMap<String, PortalAction>();
 
     private static final String CREATE_GOOGLE_SITEMAP_ACTION = "create-google-sitemap";
     private static final String GET_MENU_ITEMS = "get-menu-items";
-    private static final String URL_CYCLE_CHECK = "url-cycle-check";
 
     static {
         actions.put(CREATE_GOOGLE_SITEMAP_ACTION, PortalAction.CREATE_GOOGLE_SITEMAP_TYPE);
         actions.put(GET_MENU_ITEMS, PortalAction.GET_MENU_ITEMS);
-        actions.put(URL_CYCLE_CHECK, PortalAction.GET_MENU_ITEMS);
     }
 
     private Long siteId;
@@ -95,9 +92,6 @@ public class PortalActionExecutorImpl implements PortalActionExecutor {
                     return result;
                 case GET_MENU_ITEMS:
                     result.put("result", MenuItemsProvider.getMenuItems(portalInstance, portalRequest, siteId, parameters));
-                    return result;
-                case URL_CYCLE_CHECK:
-                    result.put("result", UrlCycleChecker.isCycle(parameters));
                     return result;
                 default:
                     log.warn("Unknown value of actionIndex: " + action);

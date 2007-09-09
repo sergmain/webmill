@@ -1,4 +1,4 @@
-package org.riverock.webmill.portal.url;
+package org.riverock.webmill.portal.aliases;
 
 /**
  * User: SMaslyukov
