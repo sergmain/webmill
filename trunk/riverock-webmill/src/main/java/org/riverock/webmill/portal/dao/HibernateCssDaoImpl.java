@@ -110,7 +110,7 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                         throw new DatabaseException(es, e);
                     }
                     if (log.isDebugEnabled())  {
-                        log.debug("Length of CSS is "+css.getCss()!=null?css.getCss().length():0);
+                        log.debug("Length of CSS is "+(css.getCss()!=null?css.getCss().length():0));
                     }
                 }
             }
@@ -148,7 +148,7 @@ public class HibernateCssDaoImpl implements InternalCssDao {
                         throw new DatabaseException(es, e);
                     }
                     if (log.isDebugEnabled())  {
-                        log.debug("Length of CSS is "+css.getCss()!=null?css.getCss().length():0);
+                        log.debug("Length of CSS is "+(css.getCss()!=null?css.getCss().length():0));
                     }
                 }
             }

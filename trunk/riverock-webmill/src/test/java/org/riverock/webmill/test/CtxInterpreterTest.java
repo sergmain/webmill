@@ -44,6 +44,7 @@ public class CtxInterpreterTest {
 
         PortalInfo portalInfo = PortalInfoImpl.getInstance(CtxInterpreterTest.class.getClassLoader(), siteId);
 
+        String portalContextPath = "";
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,
             portletDefinitionProvider,
@@ -52,7 +53,8 @@ public class CtxInterpreterTest {
             siteId,
             predictedLocale,
             httpRequestParameter,
-            portalInfo
+            portalInfo,
+            portalContextPath
         );
         UrlInterpreterResult result = UrlInterpreterIterator.interpretUrl(factoryParameter);
         System.out.println("result = " + result);

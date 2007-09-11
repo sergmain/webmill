@@ -72,7 +72,7 @@ public class PortalAliasSpiImpl implements PortalAliasSpi {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return InternalDaoFactory.getInternalAliasDao().getPortletAliases( siteId );
+            return (List)InternalDaoFactory.getInternalAliasDao().getPortletAliases( siteId );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );

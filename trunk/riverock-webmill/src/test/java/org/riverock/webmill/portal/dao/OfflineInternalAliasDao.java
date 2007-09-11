@@ -6,6 +6,7 @@ import java.util.Observer;
 
 import org.riverock.interfaces.portal.bean.PortletAlias;
 import org.riverock.interfaces.portal.bean.UrlAlias;
+import org.riverock.webmill.portal.bean.PortletAliasBean;
 import org.riverock.webmill.portal.bean.UrlAliasBean;
 
 /**
@@ -24,6 +25,15 @@ public class OfflineInternalAliasDao implements InternalAliasDao {
         new UrlAliasBean(5L, 16L, "/ddd", "/rrr")
     );
 
+    private List<PortletAliasBean> portletAlias = (List)Arrays.asList(
+        new PortletAliasBean(
+            1L, 16L,
+            88L,
+            3L,
+            "/aaaa"
+        )
+    );
+
     public PortletAlias getPortletAlias(Long portletAliasId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -40,8 +50,8 @@ public class OfflineInternalAliasDao implements InternalAliasDao {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<PortletAlias> getPortletAliases(Long siteId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<PortletAliasBean> getPortletAliases(Long siteId) {
+        return portletAlias;
     }
 
     public UrlAlias getUrlAlias(Long urlAliasId) {

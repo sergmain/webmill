@@ -84,6 +84,7 @@ public class MenuAction implements Serializable {
         log.info("Add menu item action.");
 
         MenuItemBean menuItemBean = new MenuItemBean();
+
         menuItemBean.setCatalogId(menuSessionBean.getId());
         setSessionObject(new MenuItemExtended(menuItemBean, null, null));
         menuSessionBean.getMenuItem().getMenuItem().setPortletId(menuSessionBean.getPreviousCreatedPortletId());

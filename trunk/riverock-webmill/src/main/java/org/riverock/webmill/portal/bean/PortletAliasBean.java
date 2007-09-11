@@ -1,12 +1,15 @@
 package org.riverock.webmill.portal.bean;
 
+import java.util.Locale;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
 
 import org.riverock.interfaces.portal.bean.PortletAlias;
 
@@ -44,7 +47,24 @@ import org.riverock.interfaces.portal.bean.PortletAlias;
     @Column(name="SHORT_URL")
     private String shortUrl;
 
+    @Transient
+    private String portletName;
+
+    @Transient
+    private String templateName;
+
+    @Transient
+    private Locale locale;
+
     public PortletAliasBean() {
+    }
+
+    public PortletAliasBean(Long portletAliasId, Long siteId, Long templateId, Long portletNameId, String shortUrl) {
+        this.portletAliasId = portletAliasId;
+        this.siteId = siteId;
+        this.templateId = templateId;
+        this.portletNameId = portletNameId;
+        this.shortUrl = shortUrl;
     }
 
     public PortletAliasBean(PortletAlias portletAlias) {
@@ -53,6 +73,30 @@ import org.riverock.interfaces.portal.bean.PortletAlias;
         this.templateId = portletAlias.getTemplateId();
         this.portletNameId = portletAlias.getPortletNameId();
         this.shortUrl = portletAlias.getShortUrl();
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public String getPortletName() {
+        return portletName;
+    }
+
+    public void setPortletName(String portletName) {
+        this.portletName = portletName;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public Long getPortletAliasId() {
