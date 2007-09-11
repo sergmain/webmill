@@ -41,6 +41,7 @@ public class TestActionPortletUrlInterpreter extends TestCase {
 
         PortalInfo portalInfo = PortalInfoImpl.getInstance(this.getClass().getClassLoader(), siteId);
 
+        String portalContextPath = "";
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,
             portletDefinitionProvider,
@@ -49,7 +50,8 @@ public class TestActionPortletUrlInterpreter extends TestCase {
             siteId,
             predictedLocale,
             httpRequestParameter,
-            portalInfo
+            portalInfo,
+            portalContextPath
         );
         UrlInterpreterResult result = UrlInterpreterIterator.interpretUrl(factoryParameter);
         assertEquals(Locale.ENGLISH, result.getLocale());

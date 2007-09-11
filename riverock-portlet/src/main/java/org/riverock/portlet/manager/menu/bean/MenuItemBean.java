@@ -53,7 +53,7 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     private String metadata;
     private String portletRole;
     private List<CatalogItem> subCatalogItemList = null;
-    private boolean isIncludeInSitemap;
+    private boolean isIncludeInSitemap=true;
 
     public MenuItemBean(){}
 

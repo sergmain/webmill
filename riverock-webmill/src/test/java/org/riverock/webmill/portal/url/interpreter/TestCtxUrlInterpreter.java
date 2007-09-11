@@ -38,6 +38,7 @@ public class TestCtxUrlInterpreter extends TestCase {
         Map<String, List<String>> httpRequestParameter = new HashMap<String, List<String>>();
         PortalInfo portalInfo = PortalInfoImpl.getInstance(this.getClass().getClassLoader(), siteId);
 
+        String portalContextPath = "";
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,
             portletDefinitionProvider,
@@ -46,7 +47,8 @@ public class TestCtxUrlInterpreter extends TestCase {
             siteId,
             predictedLocale,
             httpRequestParameter,
-            portalInfo
+            portalInfo,
+            portalContextPath
         );
         UrlInterpreterResult result = UrlInterpreterIterator.interpretUrl(factoryParameter);
     }
@@ -70,6 +72,7 @@ public class TestCtxUrlInterpreter extends TestCase {
 
         PortalInfo portalInfo = PortalInfoImpl.getInstance(this.getClass().getClassLoader(), siteId);
 
+        String portalContextPath = "";
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,
             portletDefinitionProvider,
@@ -78,7 +81,8 @@ public class TestCtxUrlInterpreter extends TestCase {
             siteId,
             predictedLocale,
             httpRequestParameter,
-            portalInfo
+            portalInfo,
+            portalContextPath
         );
         UrlInterpreterResult result = UrlInterpreterIterator.interpretUrl(factoryParameter);
         assertEquals(Locale.ENGLISH, result.getLocale());

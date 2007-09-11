@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import org.riverock.interfaces.portal.bean.PortletAlias;
 import org.riverock.interfaces.portal.bean.UrlAlias;
+import org.riverock.webmill.portal.bean.PortletAliasBean;
 
 /**
  * User: SergeMaslyukov
@@ -21,7 +22,7 @@ public interface InternalAliasDao {
 
     public void deletePortletAlias(PortletAlias portletAlias);
 
-    public List<PortletAlias> getPortletAliases(Long siteId);
+    public List<PortletAliasBean> getPortletAliases(Long siteId);
 
     public UrlAlias getUrlAlias(Long urlAliasId);
 

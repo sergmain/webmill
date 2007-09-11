@@ -222,7 +222,8 @@ public final class PortalRequestInstance implements PortalRequest {
                         ?null
                         :PortalUtils.prepareParameters(httpRequest, portalInfo.getSite().getPortalCharset())
                     ),
-                    portalInfo
+                    portalInfo,
+                    httpRequest.getContextPath()
                 );
 
             this.urlInterpreterResult = UrlInterpreterIterator.interpretUrl(interpreterParameter);

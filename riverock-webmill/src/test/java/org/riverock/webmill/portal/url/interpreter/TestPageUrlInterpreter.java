@@ -52,6 +52,7 @@ public class TestPageUrlInterpreter extends TestCase {
 
         PortalInfo portalInfo = PortalInfoImpl.getInstance(TestPageUrlInterpreter.class.getClassLoader(), siteId);
 
+        String portalContextPath = "";
         UrlInterpreterParameter factoryParameter = new UrlInterpreterParameter(
             pathInfo,
             portletDefinitionProvider,
@@ -60,7 +61,8 @@ public class TestPageUrlInterpreter extends TestCase {
             siteId,
             predictedLocale,
             httpRequestParameter,
-            portalInfo
+            portalInfo,
+            portalContextPath
         );
         UrlInterpreterResult result = UrlInterpreterIterator.interpretUrl(factoryParameter);
         return result;

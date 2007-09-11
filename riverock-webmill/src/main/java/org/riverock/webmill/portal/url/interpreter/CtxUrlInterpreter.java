@@ -63,12 +63,13 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         "[[/<CONTEXT>]/ctx/<LOCALE>,<TEMPLATE_NAME>[PORTLET_NAME[,REQUEST_STATE[,NAMESPACE[,CONTEXT_ID]]]]" +
             "[/<PARAMETERS_OF_OTHER_PORTLETS>]]/ctx?";
 
+
     /**
      * format of returned url:<br>
      * [&lt;CONTEXT>]/ctx/&lt;LOCALE>,&lt;TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE],[NAMESPACE],[CONTEXT_ID] <br>
      * /&lt;PARAMETERS_OF_OTHER_PORTLETS>/ctx?<br>
      *
-     * 
+     *
      * @param portletRequest portlet request, ActionReqest or RenderRequest
      * @param portletName name of portlet
      * @param templateName name of template
@@ -81,20 +82,43 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
     public static StringBuilder encodeUrl(
         final PortletRequest portletRequest, final String portletName, final String templateName,
         Locale locale, boolean isActionReqeust, Namespace namespace, Long contextId) {
+        return encodeUrl(
+            portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH ),
+            portletName, templateName, locale, isActionReqeust, namespace, contextId
+        );
+    }
+
+    /**
+     * format of returned url:<br>
+     * [&lt;CONTEXT>]/ctx/&lt;LOCALE>,&lt;TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE],[NAMESPACE],[CONTEXT_ID] <br>
+     * /&lt;PARAMETERS_OF_OTHER_PORTLETS>/ctx?<br>
+     *
+     * 
+     * @param portalContextPath portal context path
+     * @param portletName name of portlet
+     * @param templateName name of template
+     * @param locale locale
+     * @param isActionReqeust is current request is 'action'
+     * @param namespace namespace
+     * @param contextId if requestState is actionRequest, then CONTEXT_ID is requeired
+     * @return url
+     */
+    public static StringBuilder encodeUrl(
+        final String portalContextPath, final String portletName, final String templateName,
+        Locale locale, boolean isActionReqeust, Namespace namespace, Long contextId) {
 
         if (isActionReqeust) {
             if (contextId==null) {
                 log.warn("portletName: " + portletName);
                 log.warn("templateName: " + templateName);
-                log.warn("locale: " + locale!=null?locale.toString():"null");
+                log.warn("locale: " + (locale!=null?locale.toString():"null"));
                 log.warn("isActionReqeust: " + isActionReqeust);
-                log.warn("namespace: " + namespace!=null?namespace.getNamespace():"null");
+                log.warn("namespace: " + (namespace!=null?namespace.getNamespace():"null"));
                 log.warn("contextId: " + contextId);
             }
         }
 
         StringBuilder b = new StringBuilder();
-        String portalContextPath = portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
         if (portalContextPath.equals("/") || portalContextPath.equals("") ) {
             b.append( ContainerConstants.URI_CTX_MANAGER );
         }
@@ -121,7 +145,9 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             b.append('r');
         }
         b.append( ',' );
-        b.append( namespace.getNamespace() );
+        if (namespace!=null) {
+            b.append( namespace.getNamespace() );
+        }
 
         if (contextId!=null) {
             b.append( ',' );

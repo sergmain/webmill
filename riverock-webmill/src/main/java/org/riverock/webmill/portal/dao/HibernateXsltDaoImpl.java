@@ -94,7 +94,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                         throw new DatabaseException(es, e);
                     }
                     if (log.isDebugEnabled())  {
-                        log.debug("Length of XSLT is "+xslt.getXsltData()!=null?xslt.getXsltData().length():0);
+                        log.debug("Length of XSLT is "+(xslt.getXsltData()!=null?xslt.getXsltData().length():0));
                     }
                 }
                 map.put(language, xslt);
@@ -142,7 +142,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                             throw new DatabaseException(es, e);
                         }
                         if (log.isDebugEnabled())  {
-                            log.debug("Length of XSLT is "+xslt.getXsltData()!=null?xslt.getXsltData().length():0);
+                            log.debug("Length of XSLT is "+(xslt.getXsltData()!=null?xslt.getXsltData().length():0));
                         }
                     }
                     String lang = StringTools.getLocale(siteLanguage.getCustomLanguage()).toString();
@@ -334,7 +334,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                         throw new DatabaseException(es, e);
                     }
                     if (log.isDebugEnabled())  {
-                        log.debug("Length of XSLT is "+xslt.getXsltData()!=null?xslt.getXsltData().length():0);
+                        log.debug("Length of XSLT is "+(xslt.getXsltData()!=null?xslt.getXsltData().length():0));
                     }
                 }
             }

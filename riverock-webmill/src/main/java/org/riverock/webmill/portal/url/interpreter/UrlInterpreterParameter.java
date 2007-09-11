@@ -47,12 +47,14 @@ public final class UrlInterpreterParameter {
     private Map<String, List<String>> httpRequestParameter;
     private String pathInfo;
     private PortalInfo portalInfo;
+    private String portalContextPath;
 
     public UrlInterpreterParameter(
         String pathInfo, PortletDefinitionProvider portletDefinitionProvider,
         boolean isMultiPartRequest, File requestBodyFile,
         Long siteId, Locale predictedLocale, Map<String, List<String>> httpRequestParameter,
-        PortalInfo portalInfo
+        PortalInfo portalInfo,
+        String portalContextPath
     ) {
         this.siteId = siteId;
         this.pathInfo = pathInfo;
@@ -62,6 +64,7 @@ public final class UrlInterpreterParameter {
         this.predictedLocale = predictedLocale;
         this.httpRequestParameter = httpRequestParameter;
         this.portalInfo=portalInfo;
+        this.portalContextPath=portalContextPath;
 
         if ((isMultiPartRequest && httpRequestParameter!=null) || (!isMultiPartRequest && requestBodyFile!=null)) {
             throw new PortalException(
@@ -69,6 +72,14 @@ public final class UrlInterpreterParameter {
                     ", requestBodyFile!=null: " + (requestBodyFile!=null)
             );
         }
+    }
+
+    public String getPortalContextPath() {
+        return portalContextPath;
+    }
+
+    public void setPortalContextPath(String portalContextPath) {
+        this.portalContextPath = portalContextPath;
     }
 
     public void setPathInfo(String pathInfo) {

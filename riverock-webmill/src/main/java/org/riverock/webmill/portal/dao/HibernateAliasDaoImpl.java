@@ -131,15 +131,15 @@ public class HibernateAliasDaoImpl implements InternalAliasDao {
         }
     }
 
-    public List<PortletAlias> getPortletAliases(Long siteId) {
+    public List<PortletAliasBean> getPortletAliases(Long siteId) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             List<PortletAliasBean> list = session.createQuery(
                 "select bean from org.riverock.webmill.portal.bean.PortletAliasBean as bean " +
                     "where bean.siteId = :siteId ")
-            .setLong("siteId", siteId)
+                .setLong("siteId", siteId)
                 .list();
-            return (List)list;
+            return list;
         }
         finally {
             session.close();
