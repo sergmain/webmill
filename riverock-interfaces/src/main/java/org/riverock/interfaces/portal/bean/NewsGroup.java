@@ -39,6 +39,6 @@ public interface NewsGroup extends Serializable {
     String getNewsGroupName();
     String getNewsGroupCode();
     int getCountNewsPerGroup();
-    int getOrderField();
+    Integer getOrderField();
     boolean isDeleted();
 }

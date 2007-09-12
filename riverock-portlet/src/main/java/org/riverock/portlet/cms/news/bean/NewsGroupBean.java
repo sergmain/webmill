@@ -48,7 +48,7 @@ public class NewsGroupBean implements NewsGroup, Serializable {
     public NewsGroupBean(NewsGroup item){
         this.siteLanguageId=item.getSiteLanguageId();
         this.newsGroupId=item.getNewsGroupId();
-        this.maxNews=new Long(item.getCountNewsPerGroup());
+        this.maxNews=(long)item.getCountNewsPerGroup();
         this.orderValue=item.getOrderField();
         this.newsGroupName=item.getNewsGroupName();
         this.newsGroupCode=item.getNewsGroupCode();
@@ -112,13 +112,15 @@ public class NewsGroupBean implements NewsGroup, Serializable {
     }
 
     public int getCountNewsPerGroup() {
-        if (maxNews==null)
+        if (maxNews==null) {
             return 0;
-        else
+        }
+        else {
             return maxNews.intValue();
+        }
     }
 
-    public int getOrderField() {
+    public Integer getOrderField() {
         return orderValue;
     }
 

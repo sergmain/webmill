@@ -4,7 +4,7 @@
     <groupId>org.riverock</groupId>
     <artifactId>riverock-interfaces</artifactId>
     <packaging>jar</packaging>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.8-SNAPSHOT</version>
     <name>Riverock interfaces</name>
     <url>http://www.riverock.org</url>
     <repositories>
