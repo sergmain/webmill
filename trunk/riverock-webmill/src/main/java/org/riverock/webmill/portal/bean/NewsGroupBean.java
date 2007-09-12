@@ -38,7 +38,6 @@ import java.io.Serializable;
  */
 @javax.persistence.Entity
 @Table(name="WM_NEWS_LIST")
-//@Table(name="wm_news_list")
 @TableGenerator(
     name="TABLE_NEWS_LIST",
     table="WM_PORTAL_IDS",
@@ -68,7 +67,7 @@ public class NewsGroupBean implements NewsGroup, Serializable {
     private int countNewsPerGroup;
 
     @Column(name="ORDER_FIELD")
-    private int orderField;
+    private Integer orderField;
 
     @Column(name="IS_DELETED")
     private boolean isDeleted;
@@ -126,11 +125,11 @@ public class NewsGroupBean implements NewsGroup, Serializable {
         this.countNewsPerGroup = countNewsPerGroup;
     }
 
-    public int getOrderField() {
+    public Integer getOrderField() {
         return orderField;
     }
 
-    public void setOrderField(int orderField) {
+    public void setOrderField(Integer orderField) {
         this.orderField = orderField;
     }
 

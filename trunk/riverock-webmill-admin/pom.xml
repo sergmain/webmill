@@ -37,6 +37,12 @@
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
+            <artifactId>riverock-interfaces</artifactId>
+            <version>1.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.riverock</groupId>
             <artifactId>riverock-webmill-updater</artifactId>
             <version>[5.8.1-SNAPSHOT]</version>
         </dependency>
