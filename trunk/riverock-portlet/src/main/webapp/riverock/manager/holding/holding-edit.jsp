@@ -83,12 +83,12 @@
 
                     <h:panelGroup id="edit-delete-actions">
                         <h:commandButton id="save-holding-action" action="#{holdingAction.saveHoldingAction}"
-                                         value="#{msg['save_holding_action']}" styleClass="holding-button-action"
+                                         value="#{msg.save_holding_action}" styleClass="holding-button-action"
                             >
                         </h:commandButton>
                         <h:commandButton id="cancel-edit-holding-action"
                                          action="#{holdingAction.cancelEditHoldingAction}"
-                                         value="#{msg['cancel_edit_holding_action']}" styleClass="holding-button-action"
+                                         value="#{msg.cancel_edit_holding_action}" styleClass="holding-button-action"
                             >
                         </h:commandButton>
                     </h:panelGroup>

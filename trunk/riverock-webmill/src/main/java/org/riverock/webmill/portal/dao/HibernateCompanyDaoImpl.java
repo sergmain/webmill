@@ -208,7 +208,7 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
 
             session.createQuery(
             "delete org.riverock.webmill.portal.bean.CompanyBean as company " +
-                "where  company.companyId=:companyId")
+                "where  company.id=:companyId")
                 .setLong("companyId", company.getId())
                 .executeUpdate();
 
@@ -296,7 +296,7 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
 
             CompanyBean company = (CompanyBean)session.createQuery(
                 "select company from org.riverock.webmill.portal.bean.CompanyBean as company " +
-                "where  company.id=:companyId and companyId in ( :companyIds)")
+                "where  company.id=:companyId and company.id in (:companyIds)")
                 .setParameterList("companyIds", authSession.getGrantedCompanyIdList() )
                 .setLong("companyId", companyBean.getId())
                 .uniqueResult();
@@ -335,7 +335,7 @@ public class HibernateCompanyDaoImpl implements InternalCompanyDao {
 
             session.createQuery(
             "delete from org.riverock.webmill.portal.bean.CompanyBean as company " +
-                "where  company.id=:companyId and companyId in (:companyIds)")
+                "where  company.id=:companyId and  company.id in (:companyIds)")
                 .setParameterList("companyIds", authSession.getGrantedCompanyIdList() )
                 .setLong("companyId", companyBean.getId())
                 .executeUpdate();

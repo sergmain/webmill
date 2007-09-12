@@ -112,9 +112,8 @@
                 </h:selectOneMenu>
             </h:panelGroup>
 
-            <h:outputText value="Holding:"/>
-
-            <h:panelGroup id="select-holding-group">
+            <h:outputText value="Holding:" rendered="#{!empty dataProvider.holdingList}"/>
+            <h:panelGroup id="select-holding-group" rendered="#{!empty dataProvider.holdingList}">
                 <h:selectBooleanCheckbox id="select_holding_checkbox"
                                          value="#{dataProvider.currentUser.authInfo.holding}"/>
 

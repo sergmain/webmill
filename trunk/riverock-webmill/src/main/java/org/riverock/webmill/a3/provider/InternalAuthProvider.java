@@ -150,6 +150,9 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
     }
 
     public Long checkHoldingId(Long holdingId, AuthSession authSession ) {
+        if (holdingId==null) {
+            return null;
+        }
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );

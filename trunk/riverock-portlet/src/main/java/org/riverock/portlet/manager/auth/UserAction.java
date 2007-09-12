@@ -180,6 +180,7 @@ public class UserAction implements Serializable {
         }
 
         userSessionBean.resetStatus();
+        loadCurrentUser();
         return "auth";
     }
 

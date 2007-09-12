@@ -34,16 +34,15 @@
 <h:outputText value="#{msg['role_list']}" styleClass="standard_bold"/>
 <f:verbatim><br/><br/></f:verbatim>
 
-<h:selectOneMenu value="#{dataProvider.currentUser.newRoleId}"
-                 styleClass="selectOneMenu" required="false"
-    >
-    <f:selectItems value="#{dataProvider.roleList}"/>
-</h:selectOneMenu>
-
-<t:commandButton value="#{msg['add_role']}" action="#{authUserAction.addRoleAction}"
-                 styleClass="auth-sub-button-action"
-    >
-</t:commandButton>
+<h:panelGroup rendered="#{!empty dataProvider.roleList}">
+    <h:selectOneMenu value="#{dataProvider.currentUser.newRoleId}"
+                     styleClass="selectOneMenu" required="false"
+        >
+        <f:selectItems value="#{dataProvider.roleList}"/>
+    </h:selectOneMenu>
+    <t:commandButton value="#{msg['add_role']}" action="#{authUserAction.addRoleAction}"
+                     styleClass="auth-sub-button-action"/>
+</h:panelGroup>
 
 <f:verbatim><br/></f:verbatim>
 

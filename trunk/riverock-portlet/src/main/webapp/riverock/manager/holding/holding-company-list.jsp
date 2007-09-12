@@ -34,13 +34,15 @@
 <h:outputText value="#{msg['company_list']}" styleClass="standard_bold"/>
 <f:verbatim><br/><br/></f:verbatim>
 
-<h:selectOneMenu value="#{holdingDataProvider.currentHolding.newCompanyId}"
-                 styleClass="selectOneMenu" required="false"
-    >
-    <f:selectItems value="#{holdingDataProvider.companyList}"/>
-</h:selectOneMenu>
+<h:panelGroup rendered="#{!empty holdingDataProvider.companyList}">
+    <h:selectOneMenu value="#{holdingDataProvider.currentHolding.newCompanyId}"
+                     styleClass="selectOneMenu" required="false"
+        >
+        <f:selectItems value="#{holdingDataProvider.companyList}"/>
+    </h:selectOneMenu>
 
-<t:commandButton value="#{msg.holding_add_company_action}" action="#{holdingAction.addCompanyAction}"/>
+    <t:commandButton value="#{msg.holding_add_company_action}" action="#{holdingAction.addCompanyAction}"/>
+</h:panelGroup>
 
 <f:verbatim><br/></f:verbatim>
 
