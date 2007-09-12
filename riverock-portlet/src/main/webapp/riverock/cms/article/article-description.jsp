@@ -43,7 +43,9 @@
         <h:outputText value="#{articleSessionBean.article.articleCode}"/>
 
         <h:outputText value="#{msg.article_text}"/>
-        <h:outputText value="#{articleSessionBean.article.articleText}"/>
+        <h:inputTextarea 
+            value="#{articleSessionBean.article.articleText}" style="height: 400px; width: 100%;font-size:8pt; border:1px solid;margin:0;padding:5px;"
+            readonly="true" />
 
     </h:panelGrid>
 </h:panelGroup>

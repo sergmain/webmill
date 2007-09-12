@@ -37,10 +37,14 @@
         <h:outputText value="#{newsSessionBean.news.newsHeader}"/>
 
         <h:outputText value="#{msg.news_anons}"/>
-        <h:outputText value="#{newsSessionBean.news.newsAnons}"/>
+        <h:inputTextarea 
+            value="#{newsSessionBean.news.newsAnons}" style="height: 150px; width: 100%;font-size:8pt; border:1px solid;margin:0;padding:5px;"
+            readonly="true" />
 
         <h:outputText value="#{msg.news_text}"/>
-        <h:outputText value="#{newsSessionBean.news.newsText}"/>
+        <h:inputTextarea
+            value="#{newsSessionBean.news.newsText}" style="height: 300px; width: 100%;font-size:8pt; border:1px solid;margin:0;padding:5px;"
+            readonly="true" />
 
     </h:panelGrid>
 </h:panelGroup>
