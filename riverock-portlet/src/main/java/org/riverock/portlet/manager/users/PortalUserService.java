@@ -30,6 +30,8 @@ import java.util.Iterator;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.portlet.main.AuthSessionBean;
@@ -62,7 +64,11 @@ public class PortalUserService implements Serializable {
         List<Company> companies = authSessionBean.getAuthSession().getCompanyList();
 
         for (Company companyBean : companies) {
-            list.add(new SelectItem(companyBean.getId(), companyBean.getName()));
+            String companyName = companyBean.getName();
+            if (StringUtils.isBlank(companyName)) {
+                companyName = "<empty company name>";
+            }
+            list.add(new SelectItem(companyBean.getId(), companyName));
         }
         return list;
     }
