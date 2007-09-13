@@ -61,28 +61,21 @@ import org.riverock.interfaces.portlet.PortletResultObject;
 public final class MenuSimple implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Logger log = Logger.getLogger(MenuSimple.class);
 
-    public final static int UNKNOWN_LEVEL = 0;
-    public final static int EQUAL_LEVEL = 1;
-    public final static int LESS_THAN_LEVEL = 2;
-    public final static int GREAT_THAN_LEVEL = 3;
-    public final static int LESS_OR_EQUAL_LEVEL = 4;
-    public final static int GREAT_OR_EQUAL_LEVEL = 5;
-
     public MenuSimpleType menuSimple = new MenuSimpleType();
 
     private MenuModuleType currentMenuModule = null;
 
     private RenderRequest renderRequest = null;
-    private RenderResponse renderResponse = null;
+//    private RenderResponse renderResponse = null;
 
     public void setParameters(final RenderRequest renderRequest, final RenderResponse renderResponse, final PortletConfig portletConfig) {
         this.renderRequest = renderRequest;
-        this.renderResponse = renderResponse;
+//        this.renderResponse = renderResponse;
     }
 
     protected void destroy() {
         renderRequest = null;
-        renderResponse = null;
+//        renderResponse = null;
         menuSimple = null;
         currentMenuModule = null;
     }
@@ -116,14 +109,14 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             }
             Menu catalog = menuLanguage.getCatalogByCode(portletCode_);
 
-//            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
-            Long defaultCatalogId = null;
+            Long currentCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
+//            Long currentCatalogId = null;
 
             if (log.isDebugEnabled()) {
-                log.debug("defaultCatalogId: " + defaultCatalogId);
+                log.debug("currentCatalogId: " + currentCatalogId);
             }
 
-            processInstance( catalog, defaultCatalogId  );
+            processInstance( catalog, currentCatalogId);
 
             return this;
         }
@@ -166,8 +159,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private void processInstance(Menu menu, Long currentCtxId) throws PortletException {
-        initMenuSimple(menu, currentCtxId);
+    private void processInstance(Menu menu, Long currentCatalogId) throws PortletException {
+        initMenuSimple(menu, currentCatalogId);
         processPortletParameters();
     }
 
@@ -195,21 +188,24 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
         try {
             String levelTemp = PortletUtils.getString(renderRequest, "level", null);
-            if (levelTemp == null)
+            if (levelTemp == null) {
                 return;
+            }
             String compareTemp = PortletUtils.getString(renderRequest, "type_level", null);
-            if (compareTemp == null)
+            if (compareTemp == null) {
                 return;
+            }
 
             if (log.isDebugEnabled()) {
                 log.debug("levelTemp - " + levelTemp + ", compareTemp " + compareTemp);
             }
 
             int level = new Integer(levelTemp);
-            int compareLevel = decodeLevel(compareTemp);
+            MenuLevel compareLevel = decodeLevel(compareTemp);
 
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("level - " + level + ", compareLevel " + compareLevel);
+            }
 
             processMenuLevel(level, compareLevel);
 
@@ -221,23 +217,29 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    static int decodeLevel(String compareTemp) {
-        int compareLevel = UNKNOWN_LEVEL;
+    static MenuLevel decodeLevel(String compareTemp) {
+        if (compareTemp == null) {
+            return MenuLevel.UNKNOWN_LEVEL;
+        }
 
-        if (compareTemp == null)
-            return UNKNOWN_LEVEL;
-
-        if ("less".equalsIgnoreCase(compareTemp))
-            compareLevel = LESS_THAN_LEVEL;
-        else if ("equal".equalsIgnoreCase(compareTemp))
-            compareLevel = EQUAL_LEVEL;
-        else if ("great".equalsIgnoreCase(compareTemp))
-            compareLevel = GREAT_THAN_LEVEL;
-        else if ("less_or_equal".equalsIgnoreCase(compareTemp))
-            compareLevel = LESS_OR_EQUAL_LEVEL;
-        else if ("great_or_equal".equalsIgnoreCase(compareTemp))
-            compareLevel = GREAT_OR_EQUAL_LEVEL;
-        return compareLevel;
+        if ("less".equalsIgnoreCase(compareTemp)) {
+            return MenuLevel.LESS_THAN_LEVEL;
+        }
+        else if ("equal".equalsIgnoreCase(compareTemp)) {
+            return MenuLevel.EQUAL_LEVEL;
+        }
+        else if ("great".equalsIgnoreCase(compareTemp)) {
+            return MenuLevel.GREAT_THAN_LEVEL;
+        }
+        else if ("less_or_equal".equalsIgnoreCase(compareTemp)) {
+            return MenuLevel.LESS_OR_EQUAL_LEVEL;
+        }
+        else if ("great_or_equal".equalsIgnoreCase(compareTemp)) {
+            return MenuLevel.GREAT_OR_EQUAL_LEVEL;
+        }
+        else {
+            return MenuLevel.UNKNOWN_LEVEL;
+        }
     }
 
     private void markAsCurrentThread(MenuModuleType temp) {
@@ -291,7 +293,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    void processMenuLevel(final int level, final int compareLevel) throws ConfigException {
+    void processMenuLevel(final int level, final MenuLevel compareLevel) throws ConfigException {
         if (log.isDebugEnabled()) {
             log.debug("processMenuLevel(), level: " + level + ", compareLevel: " + compareLevel);
         }
@@ -299,22 +301,25 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         switch (compareLevel) {
             case EQUAL_LEVEL:
                 {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Start 'equals' level");
-
+                    }
                     List<MenuModuleType> result = getMenuModuleWithLevel(menuSimple.getMenuModule(), level, 0);
 
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Result menu - " + result);
-
-                    if (result == null)
-                        menuSimple = new MenuSimpleType();
-                    else {
-                        menuSimple.getMenuModule().addAll(result);
                     }
+                    MenuSimpleType menuSimpleTemp = new MenuSimpleType();
+                    if (result != null) {
+                        menuSimpleTemp.getMenuModule().addAll(result);
+                    }
+                    menuSimple = menuSimpleTemp;
                 }
                 break;
             case LESS_THAN_LEVEL:
+                {
+
+                }
                 break;
             case GREAT_THAN_LEVEL:
                 {
@@ -457,12 +462,6 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
             m.setModuleName(item.getMenuName());
             // set menu URL
-/*
-            if (item.getUrl() == null)
-                m.setModuleUrl(renderResponse.encodeURL(PortletService.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getId()));
-            else
-                m.setModuleUrl(renderResponse.encodeURL(PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getUrl()));
-*/
             if (StringUtils.isBlank(item.getUrl())) {
                 m.setModuleUrl(PortletUtils.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getId());
             }
@@ -493,8 +492,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     vv.add(menuModule);
                 }
             }
-            if (isCurrentThread)
+            if (isCurrentThread) {
                 m.setIsCurrentThread(1);
+            }
 
             m.getMenuModule().addAll(vv);
 

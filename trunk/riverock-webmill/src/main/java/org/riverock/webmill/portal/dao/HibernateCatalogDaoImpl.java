@@ -33,8 +33,6 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
-//import org.riverock.webmill.portal.menu.SiteMenu;
-import org.riverock.webmill.portal.dao.HibernateUtils;
 
 import java.util.*;
 
@@ -353,8 +351,6 @@ public class HibernateCatalogDaoImpl implements InternalCatalogDao {
             return;
         }
         observable.notifyObservers(siteLanguageId);
-//        SiteMenu.invalidateCache(siteLanguageId);
-//        PortalInfoImpl.invalidateCache(siteLanguageId);
     }
 
     public Long createCatalogItem(CatalogItem catalogItem) {

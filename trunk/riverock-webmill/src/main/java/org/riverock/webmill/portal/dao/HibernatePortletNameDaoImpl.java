@@ -163,7 +163,8 @@ public class HibernatePortletNameDaoImpl implements InternalPortletNameDao {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             List<PortletNameBean> list = session.createQuery(
-                "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet")
+                "select portlet from org.riverock.webmill.portal.bean.PortletNameBean as portlet " +
+                "order by portlet.portletName asc")
                 .list();
             return (List)list;
         }

@@ -503,10 +503,10 @@ public final class PageElementPortlet implements PageElement {
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, code);
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, xmlRoot);
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
-            renderRequest.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, targetTemplateName );
-
-            // todo current implementation not support 'current catalog ID'
-//            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getCatalogItemId() );
+            renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, targetTemplateName);
+            if (portalRequest.getDefaultCtx()!=null) {
+                renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE, portalRequest.getDefaultCtx().getCatalogId());
+            }
 
             PortalContext portalContext = new PortalContextImpl(
                 portalInstance.getPortalName(), portalRequest.getHttpRequest().getContextPath(), portalInfo
