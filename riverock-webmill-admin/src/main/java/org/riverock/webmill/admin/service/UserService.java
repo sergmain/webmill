@@ -31,6 +31,8 @@ import java.util.Iterator;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.webmill.admin.bean.CompanyBean;
 import org.riverock.webmill.admin.bean.UserBean;
 import org.riverock.webmill.admin.dao.DaoFactory;
@@ -51,7 +53,11 @@ public class UserService implements Serializable {
         List<CompanyBean> companies = DaoFactory.getWebmillAdminDao().getCompanyList();
 
         for (CompanyBean companyBean : companies) {
-            list.add(new SelectItem(companyBean.getId(), companyBean.getName()));
+            String companyName = companyBean.getName();
+            if (StringUtils.isBlank(companyName)) {
+                companyName = "<empty company name>";
+            }
+            list.add(new SelectItem(companyBean.getId(), companyName));
         }
         return list;
     }

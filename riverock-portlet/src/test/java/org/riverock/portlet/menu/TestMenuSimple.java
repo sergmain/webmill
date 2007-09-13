@@ -36,12 +36,12 @@ import junit.framework.TestCase;
 public class  TestMenuSimple extends TestCase {
     
     public void testDecodeLevel() {
-        Assert.assertEquals(MenuSimple.UNKNOWN_LEVEL, MenuSimple.decodeLevel("hkfjsdhfksdj"));
-        Assert.assertEquals(MenuSimple.UNKNOWN_LEVEL, MenuSimple.decodeLevel(null));
-        Assert.assertEquals(MenuSimple.EQUAL_LEVEL, MenuSimple.decodeLevel("equal"));
-        Assert.assertEquals(MenuSimple.GREAT_OR_EQUAL_LEVEL, MenuSimple.decodeLevel("great_or_equal"));
-        Assert.assertEquals(MenuSimple.GREAT_THAN_LEVEL, MenuSimple.decodeLevel("great"));
-        Assert.assertEquals(MenuSimple.LESS_OR_EQUAL_LEVEL, MenuSimple.decodeLevel("less_or_equal"));
-        Assert.assertEquals(MenuSimple.LESS_THAN_LEVEL, MenuSimple.decodeLevel("less"));
+        Assert.assertEquals(MenuLevel.UNKNOWN_LEVEL, MenuSimple.decodeLevel("hkfjsdhfksdj"));
+        Assert.assertEquals(MenuLevel.UNKNOWN_LEVEL, MenuSimple.decodeLevel(null));
+        Assert.assertEquals(MenuLevel.EQUAL_LEVEL, MenuSimple.decodeLevel("equal"));
+        Assert.assertEquals(MenuLevel.GREAT_OR_EQUAL_LEVEL, MenuSimple.decodeLevel("great_or_equal"));
+        Assert.assertEquals(MenuLevel.GREAT_THAN_LEVEL, MenuSimple.decodeLevel("great"));
+        Assert.assertEquals(MenuLevel.LESS_OR_EQUAL_LEVEL, MenuSimple.decodeLevel("less_or_equal"));
+        Assert.assertEquals(MenuLevel.LESS_THAN_LEVEL, MenuSimple.decodeLevel("less"));
     }
 }
