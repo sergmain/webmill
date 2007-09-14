@@ -24,11 +24,10 @@
  */
 package org.riverock.webmill.portal.url.interpreter;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
-import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 
 /**
  * $Id$
@@ -41,6 +40,10 @@ public class IndexUrlInterpreter implements UrlInterpreter {
 
     public UrlInterpreterResult interpret(UrlInterpreterParameter factoryParameter) {
 
+        if (StringUtils.isNotBlank(factoryParameter.getPathInfo()) && !StringUtils.equals("/", factoryParameter.getPathInfo())) {
+            return null;
+        }
+        
         // process current request as 'index'
         MenuLanguage menu = factoryParameter.getPortalInfo().getMenu(factoryParameter.getPredictedLocale().toString());
         if (menu==null){

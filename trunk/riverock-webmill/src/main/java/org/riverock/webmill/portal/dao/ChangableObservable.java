@@ -17,4 +17,9 @@ class ChangableObservable extends Observable {
         super.setChanged();
         super.notifyObservers();
     }
+
+    public void notifyObservers(Object obj) {
+        super.setChanged();
+        super.notifyObservers(obj);
+    }
 }

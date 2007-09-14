@@ -39,6 +39,7 @@ import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.SimpleStringTokenizer;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
@@ -185,31 +186,45 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             log.debug("path: " + path);
         }
 
-        int idxSlash = path.indexOf('/', 1);
-        if (log.isDebugEnabled()) log.debug("idxSlash: " + idxSlash);
-        if (idxSlash == -1) {
+        if (StringUtils.isBlank(path)) {
+            factoryParameter.setPathInfo("");
             return null;
         }
+        int idxSlash = path.indexOf('/', 1);
+        if (log.isDebugEnabled()) {
+            log.debug("idxSlash: " + idxSlash);
+        }
+        String localeFromUrl="";
+        if (idxSlash==-1) {
+            localeFromUrl = path.substring(1);
+        }
+        else {
+            localeFromUrl = path.substring(1, idxSlash);
+        }
 
-        String localeFromUrl = path.substring(1, idxSlash);
         StringTokenizer st = new StringTokenizer(localeFromUrl, ",", false);
         if (log.isDebugEnabled()) {
             log.debug("st.countTokens(): " + st.countTokens());
         }
 
-        if (st.countTokens() < 2) {
-            return null;
-        }
-
         // init locale
-        Locale locale = StringTools.getLocale(st.nextToken());
-        if (log.isDebugEnabled()) {
-            log.debug("token with locale: " + locale);
+
+        Locale locale=null;
+        if (st.hasMoreTokens()) {
+            locale = StringTools.getLocale(st.nextToken());
+            if (log.isDebugEnabled()) {
+                log.debug("token with locale: " + locale);
+            }
         }
 
         List<String> localeNameTemp = factoryParameter.getHttpRequestParameter().get(ContainerConstants.NAME_LANG_PARAM);
         if (localeNameTemp!=null && !localeNameTemp.isEmpty()) {
             locale = StringTools.getLocale(localeNameTemp.get(0));
+        }
+
+        if (locale==null) {
+            factoryParameter.setPathInfo("");
+            return null;
         }
 
         UrlInterpreterResult bean = new UrlInterpreterResult();
@@ -219,7 +234,10 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         }
 
         // init template name
-        bean.setTemplateName( st.nextToken() );
+        String templateName=null;
+        if (st.hasMoreTokens()) {
+            templateName = st.nextToken();
+        }
 
         // init portlet name
         String portletName = null;
@@ -254,10 +272,6 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
         if (log.isDebugEnabled()) {
             log.debug("Final portletName: " + portletName);
         }
-        if (portletName==null) {
-            return null;
-        }
-        bean.setDefaultPortletName( portletName );
 
         // Init request state: action/render, windows state, portlet mode
         RequestState requestState = new RequestState();
@@ -294,12 +308,43 @@ public final class CtxUrlInterpreter implements UrlInterpreter {
             log.debug("Result of parsing path");
             log.debug("     path: " + path );
             log.debug("     locale: " + bean.getLocale().toString() );
-            log.debug("     templateName: " + bean.getTemplateName());
-            log.debug("     portletName: " + bean.getDefaultPortletName() );
+            log.debug("     templateName: " + templateName);
+            log.debug("     portletName: " + portletName);
             log.debug("     isAction: " + requestState.isActionRequest() );
             log.debug("     default ns: " + bean.getDefaultNamespace() );
             log.debug("     contextId: " + bean.getContextId() );
         }
+
+        if (portletName==null || templateName==null) {
+            log.debug("Interpret as index page");
+            factoryParameter.setPathInfo("");
+            // process current request as 'index'
+            MenuLanguage menu = factoryParameter.getPortalInfo().getMenu(bean.getLocale().toString());
+            if (menu==null){
+                log.warn( "Menu for locale: "+factoryParameter.getPredictedLocale().toString() +" not defined" );
+                return null;
+            }
+
+            if (menu.getIndexMenuItem() == null) {
+                log.warn("menu: " + menu);
+                log.warn("locale: " + factoryParameter.getPredictedLocale().toString());
+                log.warn("Menu item pointed to 'index' portlet not defined");
+                factoryParameter.setPathInfo("");
+                return null;
+            }
+
+            Long ctxId = menu.getIndexMenuItem().getId();
+            if (ctxId==null) {
+                log.warn("Menu item with 'index' portlet not found");
+                factoryParameter.setPathInfo("");
+                return null;
+            }
+
+            return UrlInterpreterUtils.getRequestContextBean(factoryParameter, ctxId);
+        }
+        bean.setDefaultPortletName( portletName );
+        bean.setTemplateName(templateName);
+
 
         Long ctxId;
         if (bean.getContextId()!=null) {
