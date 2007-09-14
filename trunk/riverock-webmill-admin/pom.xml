@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-webmill</artifactId>
-            <version>[5.8.2]</version>
+            <version>[5.8.3-SNAPSHOT]</version>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-webmill-updater</artifactId>
-            <version>[5.8.2]</version>
+            <version>[5.8.3-SNAPSHOT]</version>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
