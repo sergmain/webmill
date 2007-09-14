@@ -251,7 +251,11 @@ public class PortalInstanceImpl implements PortalInstance {
                 checkDestroyedPortlet(PortalInstanceImpl.destroyedPortlet(), request_.getSession(false));
             }
 
-            portalRequest = new PortalRequestInstance( request_, response_, this );
+            portalRequest = PortalRequestInstance.getInstance( request_, response_, this );
+            if (portalRequest==null) {
+                response_.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
             portalResponse = new PortalResponseImpl();
             PortalPageController.processPortalRequest(this, portalRequest, portalResponse);
         }

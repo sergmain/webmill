@@ -159,7 +159,7 @@ public final class PortalRequestInstance implements PortalRequest {
         return urlInterpreterResult;
     }
 
-    public PortalRequestInstance(
+    private PortalRequestInstance(
         HttpServletRequest request_,
         HttpServletResponse response_,
         PortalInstance portalInstance
@@ -227,8 +227,9 @@ public final class PortalRequestInstance implements PortalRequest {
                 );
 
             this.urlInterpreterResult = UrlInterpreterIterator.interpretUrl(interpreterParameter);
+            // Page not found
             if (urlInterpreterResult == null) {
-                throw new IllegalArgumentException("General error for access portal page");
+                return;
             }
 
             if (urlInterpreterResult.getExtendedCatalogItem()!=null || urlInterpreterResult.getContextId()!=null) {
@@ -459,5 +460,17 @@ public final class PortalRequestInstance implements PortalRequest {
 
     public long getStartMills() {
         return startMills;
+    }
+
+    public static PortalRequestInstance getInstance(
+        HttpServletRequest request_,
+        HttpServletResponse response_,
+        PortalInstance portalInstance
+    ) throws PortalException {
+        PortalRequestInstance requestInstance = new PortalRequestInstance(request_, response_, portalInstance);
+        if (requestInstance.getUrlInterpreterResult()==null) {
+            return null;
+        }
+        return requestInstance;
     }
 }

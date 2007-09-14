@@ -198,6 +198,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
             Menu catalog = new PortalMenu(siteLanguage.getSiteId(), catalogLanguageBean);
             menu.add(catalog);
         }
+        isNotInited = false;
     }
 
     public String getLocaleStr() {
