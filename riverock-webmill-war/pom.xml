@@ -3,7 +3,7 @@
 	<groupId>org.riverock</groupId>
 	<artifactId>riverock-webmill-war</artifactId>
 	<packaging>war</packaging>
-	<version>5.8.2</version>
+	<version>5.8.3-SNAPSHOT</version>
 	<name>Webmill portal deployment package for Tomcat</name>
 	<url>http://webmill.riverock.org</url>
 	<licenses>
