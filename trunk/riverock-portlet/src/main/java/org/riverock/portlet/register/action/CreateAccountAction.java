@@ -86,7 +86,7 @@ public class CreateAccountAction implements Action {
         String remodeAddr = (String) moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE);
 
         String s = moduleActionRequest.getResourceBundle().getString("reg.mail_body");
-        String mailMessage = MessageFormat.format(s, new Object[]{bean.getUserLogin(), bean.getUserPassword()});
+        String mailMessage = MessageFormat.format(s, bean.getUserLogin(), bean.getUserPassword());
         messages.put(PortalUserManager.CREATE_ACCOUNT_BODY_MESSAGE, mailMessage + "\n\nProcess of registration was made from IP " + remodeAddr);
         messages.put(PortalUserManager.CREATE_ACCOUNT_SUBJECT_MESSAGE, "Confirm registration");
 

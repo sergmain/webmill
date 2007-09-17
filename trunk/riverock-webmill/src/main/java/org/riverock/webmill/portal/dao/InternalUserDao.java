@@ -37,7 +37,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
 public interface InternalUserDao {
     public User getUser(Long portalUserId, AuthSession authSession);
 
-    public User getUserByEMail(String eMail);
+    public List<User> getUserByEMail(String eMail);
 
     public List<User> getUserList(AuthSession authSession);
 

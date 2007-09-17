@@ -61,13 +61,12 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
                 log.debug("PortalSessionManagerImpl class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
             }
 
-            PortletSession session = actionRequest.getPortletSession();
-            AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
-
             // don't check if login or password is null.
             if ( StringUtils.isBlank(userLogin) || StringUtils.isBlank(userLogin) ) {
                 return false;
             }
+
+            AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
 
             if (auth_==null) {
                 auth_ = new AuthSessionImpl( userLogin, userPassword );
@@ -84,12 +83,17 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
                     "checkAccess status for server name '"+actionRequest.getServerName()+"' " +
                         " is " + checkAccess + ", auth: " + auth_ );
             }
+
             if (checkAccess) {
+                PortletSession session = actionRequest.getPortletSession(true);
                 session.setAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, auth_, PortletSession.APPLICATION_SCOPE);
                 return true;
             }
             else {
-                session.removeAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, PortletSession.APPLICATION_SCOPE );
+                PortletSession session = actionRequest.getPortletSession(false);
+                if (session!=null) {
+                    session.removeAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, PortletSession.APPLICATION_SCOPE );
+                }
                 return false;
             }
         }

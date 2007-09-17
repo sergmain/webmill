@@ -26,13 +26,13 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.portal.bean.UserBean;
-import org.riverock.webmill.portal.dao.HibernateUtils;
 
 /**
  * @author Sergei Maslyukov
@@ -64,20 +64,26 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         }
     }
 
-    public User getUserByEMail(String eMail) {
-        if (eMail == null) {
+    /**
+     * deleted user have not an e-mail
+     * 
+     * @param eMail
+     * @return
+     */
+    public List<User> getUserByEMail(String eMail) {
+        if (StringUtils.isBlank(eMail)) {
             return null;
         }
 
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-            UserBean bean = (UserBean)session.createQuery(
+            List<UserBean> bean = session.createQuery(
                 "select user from org.riverock.webmill.portal.bean.UserBean as user " +
-                "where  user.email=:email")
-                .setString("email", eMail)
-                .uniqueResult();
+                "where  lower(user.email)=:email")
+                .setString("email", eMail.toLowerCase())
+                .list();
 
-            return bean;
+            return (List)bean;
         }
         finally {
             session.close();
@@ -166,13 +172,21 @@ public class HibernateUserDaoImpl implements InternalUserDao {
         Session session = HibernateUtils.getSession();
         try {
             session.beginTransaction();
-
-            session.createQuery(
-            "delete org.riverock.webmill.portal.bean.UserBean user " +
-                "where  user.userId=:userId and user.isDeleted=false and user.companyId in (:companyIds)")
+            UserBean bean = (UserBean)session.createQuery(
+                "select user from org.riverock.webmill.portal.bean.UserBean as user " +
+                "where  user.userId=:userId and user.companyId in (:companyIds)")
                 .setParameterList("companyIds", authSession.getGrantedCompanyIdList())
                 .setLong("userId", portalUserBean.getUserId())
-                .executeUpdate();
+                .uniqueResult();
+
+            if (bean==null) {
+                return;
+            }
+
+            InternalDaoFactory.getInternalAuthDao().deleteAuthInfo(session, bean.getUserId());
+            
+            bean.setEmail(null);
+            bean.setDeleted(true);
 
             session.flush();
             session.clear();

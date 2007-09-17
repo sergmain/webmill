@@ -33,17 +33,17 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
-import org.riverock.interfaces.portal.bean.User;
 import org.riverock.webmill.portal.bean.AuthInfoImpl;
 import org.riverock.webmill.portal.bean.AuthRelateRole;
 import org.riverock.webmill.portal.bean.RoleBeanImpl;
 import org.riverock.webmill.portal.bean.UserBean;
-import org.riverock.webmill.portal.dao.HibernateUtils;
+import org.riverock.webmill.portal.site.SiteList;
 
 /**
  * @author Sergei Maslyukov
@@ -213,18 +213,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public boolean checkRigthOnUser( Long id_auth_user_check, Long id_auth_user_owner ) {
-/*
-        WmAuthUserItemType auth = GetWmAuthUserItem.getInstance(db, id_auth_user_owner).item;
-        if (auth==null)
-            return false;
 
-        ps = db.prepareStatement(
-            "select null " +
-            "from   WM_AUTH_USER a, WM_LIST_USER b " +
-            "where  a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
-            "       b.ID_FIRM  in ("+getGrantedCompanyId(db, auth.getUserLogin())+") "
-        );
-*/
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
 
@@ -271,15 +260,12 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public boolean isUserInRole( String userLogin, String userPassword, final String role_ ) {
-        if ( log.isDebugEnabled() )
+        if ( log.isDebugEnabled() ) {
             log.debug( "role '" + role_ + "', user login '" + userLogin + "'  " );
+        }
 
-        if ( StringUtils.isBlank(userLogin) || userPassword == null || StringUtils.isBlank(role_))
+        if ( StringUtils.isBlank(userLogin) || userPassword == null || StringUtils.isBlank(role_)) {
             return false;
-
-        long startMills = 0;
-        if ( log.isInfoEnabled() ) {
-            startMills = System.currentTimeMillis();
         }
 
         StatelessSession session = HibernateUtils.getStatelessSession();
@@ -291,17 +277,21 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                     .setString("userPassword", userPassword)
                     .uniqueResult();
 
-                if ( authInfo == null )
+                if ( authInfo == null ) {
                     return false;
+                }
 
-                if ( log.isDebugEnabled() )
+                if ( log.isDebugEnabled() ) {
                     log.debug( "userLogin " + userLogin + " role " + role_ );
+                }
 
-                if ( authInfo.isRoot() )
+                if ( authInfo.isRoot() ) {
                     return true;
+                }
 
-                if ( log.isDebugEnabled() )
+                if ( log.isDebugEnabled() ) {
                     log.debug( "#1.011" );
+                }
 
                 Long authUserId = (Long)session.createQuery(
                     "select auth.authUserId " +
@@ -360,12 +350,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     }
 
     public List<AuthInfo> getAuthInfoList(AuthSession authSession) {
-        /*
-        "select a.* " +
-                "from   WM_AUTH_USER a, WM_LIST_USER b " +
-                "where  a.ID_USER=b.ID_USER and  " +
-                "       b.ID_FIRM  in ("+getGrantedCompanyId(db, authSession.getUserLogin())+") "
-        */
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             List<AuthInfoImpl> authInfos = session.createQuery(
@@ -476,58 +460,81 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         }
     }
 
+    public void deleteAuthInfo(Long userId) {
+        log.info("Start deleteAuthInfo(Long userId)");
+
+        if (userId==null) {
+            return;
+        }
+        Session session = HibernateUtils.getSession();
+        try {
+            session.beginTransaction();
+            deleteAuthInfo(session, userId);
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    public void deleteAuthInfo(Session session, Long userId) {
+        log.info("Start deleteAuthInfo(Session session, Long userId)");
+
+        if (userId==null) {
+            return;
+        }
+
+        List ids = session.createSQLQuery(
+            "select ID_AUTH_USER from WM_AUTH_USER where ID_USER=? " )
+            .addScalar("ID_AUTH_USER", Hibernate.LONG)
+            .setLong(0, userId)
+            .list();
+
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
+                "where  auth.authUserId in (:ids) ")
+            .setParameterList("ids", ids)
+            .executeUpdate();
+
+        session.createQuery(
+            "delete org.riverock.webmill.portal.bean.AuthRelateRole relate " +
+                "where  relate.authUserId in (:ids) ")
+            .setParameterList("ids", ids)
+            .executeUpdate();
+
+        session.flush();
+        session.clear();
+    }
+
     public boolean checkAccess( String userLogin, String userPassword, final String serverName ) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
+            AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
+                "select auth " +
+                    "from  org.riverock.webmill.portal.bean.AuthInfoImpl auth, " +
+                    "      org.riverock.webmill.portal.bean.UserBean as user " +
+                    "where auth.userLogin=:userLogin and auth.userPassword=:userPassword and " +
+                    "      auth.userId=user.userId and user.isDeleted=false")
+                .setString("userLogin", userLogin)
+                .setString("userPassword", userPassword)
+                .uniqueResult();
+
+            if ( authInfo==null ) {
+                return false;
+            }
+
+            if (  authInfo.isRoot() ) {
+                return true;
+            }
 
 /*
-        String sql_ =
-            "select a.* from WM_AUTH_USER a, WM_LIST_USER b " +
-            "where  a.USER_LOGIN=? and a.USER_PASSWORD=? and " +
-            "       a.ID_USER = b.ID_USER and b.is_deleted=0";
-*/
-
-                AuthInfoImpl authInfo = (AuthInfoImpl)session.createQuery(
-                    "select auth " +
-                        "from  org.riverock.webmill.portal.bean.AuthInfoImpl auth, " +
-                        "      org.riverock.webmill.portal.bean.UserBean as user " +
-                        "where auth.userLogin=:userLogin and auth.userPassword=:userPassword and " +
-                        "      auth.userId=user.userId and user.isDeleted=false")
-                    .setString("userLogin", userLogin)
-                    .setString("userPassword", userPassword)
-                    .uniqueResult();
-
-                if ( authInfo==null )
-                    return false;
-
-                if (  authInfo.isRoot() ) {
-                    return true;
-                }
-
-    /*
-                sql_ =
-                    "select  a01.id_firm, a01.user_login, a01.id_user, a01.id_auth_user " +
-                    "from    WM_AUTH_USER a01, WM_PORTAL_LIST_SITE f01 " +
-                    "where   a01.is_use_current_firm = 1 and a01.ID_FIRM = f01.ID_FIRM and f01.ID_SITE=? and " +
-                    "        a01.user_login=? " +
-                    "union " +
-                    "select  d02.ID_COMPANY, a02.user_login, a02.id_user, a02.id_auth_user " +
-                    "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_COMPANY d02, WM_PORTAL_LIST_SITE f02 " +
-                    "where   a02.IS_HOLDING = 1 and a02.ID_HOLDING = d02.ID_HOLDING and " +
-                    "        d02.ID_COMPANY = f02.ID_FIRM and f02.ID_SITE=? and a02.user_login=? " +
-                    "union " +
-                    "select  b04.id_firm, a04.user_login, a04.id_user, a04.id_auth_user " +
-                    "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04, WM_PORTAL_LIST_SITE f04 " +
-                    "where   a04.is_root = 1 and b04.ID_FIRM = f04.ID_FIRM and f04.ID_SITE=? and " +
-                    "        a04.user_login=? ";
-    */
-
             Long siteId = (Long)session.createQuery(
                 "select host.siteId " +
                     "from  org.riverock.webmill.portal.bean.VirtualHostBean as host " +
                     "where host.host=:serverName"
             ).setString("serverName", serverName.toLowerCase()).uniqueResult();
-//                Long siteId1 = SiteList.getSiteId( serverName );
+*/
+            Long siteId = SiteList.getSiteId( serverName );
             if ( log.isDebugEnabled() ) {
                 log.debug( "serverName " + serverName + ", siteId " + siteId);
             }
@@ -587,13 +594,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     public List<RoleBean> getUserRoleList( AuthSession authSession ) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-/*
-            ps = db.prepareStatement(
-                "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP " +
-                "from   WM_AUTH_ACCESS_GROUP c, WM_AUTH_RELATE_ACCGROUP b " +
-                "where  b.ID_AUTH_USER=? and b.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP "
-            );
-*/
             List<RoleBeanImpl> roles = session.createQuery(
                 "select role " +
                     "from  org.riverock.webmill.portal.bean.RoleBeanImpl role, " +
@@ -612,12 +612,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     public List<RoleBean> getRoleList( AuthSession authSession ) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-/*
-            ps = db.prepareStatement(
-                "select  ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
-                "from    WM_AUTH_ACCESS_GROUP "
-            );
-*/
             List<RoleBeanImpl> roles = session.createQuery(
                 "select role from  org.riverock.webmill.portal.bean.RoleBeanImpl role ")
                 .list();
@@ -632,14 +626,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
     public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
-/*
-            ps = db.prepareStatement(
-                "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP  " +
-                "from   WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_ACCESS_GROUP c " +
-                "where  b.ID_AUTH_USER=? and " +
-                "       b.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP"
-            );
-*/
             List<RoleBeanImpl> roles = session.createQuery(
                 "select role " +
                     "from  org.riverock.webmill.portal.bean.RoleBeanImpl role, " +
@@ -924,22 +910,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
             users = session.createQuery(
                 "select user from org.riverock.webmill.portal.bean.UserBean as user " +
                     "where user.isDeleted=false and user.companyId in ( :companyIds )")
-    /*
-                    "select auth1.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth1 " +
-                    "where  auth1.isCompany=true and auth1.userLogin=:userLogin1 " +
-                    "union " +
-                    "select relate2.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth2," +
-                    " org.riverock.webmill.portal.bean.HoldingCompanyRelationBean relate2 " +
-                    "where  auth2.isHolding=true and auth2.holdingId=relate2.holdingId and auth2.userLogin=:userLogin2 " +
-                    "union " +
-                    "select company3.companyId from org.riverock.webmill.portal.bean.AuthInfoImpl auth3, " +
-                    " org.riverock.webmill.portal.bean.CompanyBean company3 " +
-                    "where  auth3.isRoot=true and auth3.userLogin=:userLogin3 " +
-                    ")")
-                    .setString("userLogin1", authSession.getUserLogin())
-                    .setString("userLogin2", authSession.getUserLogin())
-                    .setString("userLogin3", authSession.getUserLogin())
-    */
                 .setParameterList("companyIds", getGrantedCompanyIdList(authSession.getUserLogin()) )
                 .list();
 
