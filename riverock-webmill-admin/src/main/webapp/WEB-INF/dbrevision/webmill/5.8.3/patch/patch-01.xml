@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Patches xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision.xsd">
+    <Patch>
+        <Name>patch-1-1</Name>
+        <SqlAction>
+            <Sql>update WM_LIST_USER set IS_DELETED=1 where IS_DELETED!=0</Sql>
+        </SqlAction>
+    </Patch>
+    <Patch>
+        <Name>patch-1-2</Name>
+        <PreviousName>patch-1-1</PreviousName>
+        <SqlAction>
+            <Sql>update WM_LIST_USER set EMAIL=null where IS_DELETED=1</Sql>
+        </SqlAction>
+    </Patch>
+    <Patch>
+        <Name>patch-1-3</Name>
+        <PreviousName>patch-1-2</PreviousName>
+        <CustomClassAction>
+            <Class>org.riverock.update.webmill.v583.prepare_users.PrepareUsers</Class>
+        </CustomClassAction>
+    </Patch>
+</Patches>

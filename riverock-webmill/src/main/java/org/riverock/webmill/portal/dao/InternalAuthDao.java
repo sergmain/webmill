@@ -27,6 +27,8 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 import java.io.Serializable;
 
+import org.hibernate.Session;
+
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
@@ -81,4 +83,7 @@ public interface InternalAuthDao extends Serializable {
     public List<User> getUserInfoList(AuthSession authSession);
 
     public List<AuthInfo> getAuthInfo(Long userId, Long siteId);
+    public void deleteAuthInfo(Long userId);
+
+    void deleteAuthInfo(Session session, Long userId);
 }
