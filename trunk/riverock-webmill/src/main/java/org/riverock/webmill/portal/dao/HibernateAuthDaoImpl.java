@@ -417,6 +417,10 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 .setLong(5, userId)
                 .list();
 
+            if (ids.isEmpty()) {
+                return list;
+            }
+
             list = session.createQuery(
                 "select auth from org.riverock.webmill.portal.bean.AuthInfoImpl auth " +
                     "where auth.authUserId in ( :ids ) ")

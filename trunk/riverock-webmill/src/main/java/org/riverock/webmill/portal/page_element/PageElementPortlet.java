@@ -426,11 +426,7 @@ public final class PageElementPortlet implements PageElement {
 
     void initRender() {
         try {
-            if (portletEntry==null) {
-                throw new IllegalStateException("portletEntry is null");
-            }
-
-            if (portletEntry.getIsPermanent()) {
+            if (portletEntry==null || portletEntry.getIsPermanent()) {
                 errorString = "Portlet '"+ fullPortletName + "' permanent unavailable.";
                 log.error(errorString);
                 log.error("Exception message: " + portletEntry.getExceptionMessage());

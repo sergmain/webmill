@@ -101,14 +101,8 @@ public class MenuItemsProvider {
                     throw new IllegalStateException(es, e);
                 }
 
-                if (log.isDebugEnabled())
-                {
+                if (log.isDebugEnabled()) {
                     log.debug("#12.12.008 object " + obj);
-                    log.debug("#12.12.009 localePack  " +
-                        PortletService.getStringParam(
-                            portletWebApplication.getPortletDefinition(), ContainerConstants.locale_name_package
-                        )
-                    );
                 }
                 ClassLoader classLoader = portalInstance.getPortalClassLoader();
                 obj.setPortalDaoProvider(new PortalSpiProviderImpl(portalRequest.getAuth(), classLoader, siteId));

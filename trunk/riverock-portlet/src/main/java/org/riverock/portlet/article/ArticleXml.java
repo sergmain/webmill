@@ -63,6 +63,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     private TimeZone serverTimeZone=null;
 
     private RenderRequest renderRequest = null;
+    private PortalSpiProvider provider;
 
     public ArticleXml() {
     }
@@ -78,32 +79,39 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     public byte[] getXml(String rootName) throws Exception {
         if(log.isDebugEnabled()) {
             log.debug( "ArticleXml. method is 'Xml'. Root: "+rootName );
-            log.debug( "Article date: " + article.getPostDate() );
+            if (article!=null) {
+                log.debug( "Article date: " + article.getPostDate() );
+            }
             log.debug( "renderRequest: " + renderRequest );
         }
-        String dateText = DateTools.getStringDate(article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), serverTimeZone);
-        String timeText = DateTools.getStringDate(article.getPostDate(), "HH:mm", renderRequest.getLocale(), serverTimeZone);
-
-        String xml = new StringBuilder().
+        StringBuilder sb = new StringBuilder().
             append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).
-            append( "<" ).append( rootName ).
-            append( "><ArticleDate>" ).append( dateText ).append( "</ArticleDate>" ).
-            append( "<ArticleTime>" ).append( timeText ).append( "</ArticleTime>" ).
-            append( "<ArticleName>" ).
-            append( article.getArticleName()!=null? StringEscapeUtils.escapeXml(article.getArticleName()):"" ).
-            append( "</ArticleName>" ).
-            append( "<ArticleText>" ).append( article.getArticleData()!=null?article.getArticleData():"" ).append( "</ArticleText></" ).
-            append( rootName == null ?DEFAULT_ROOT_NAME :rootName ).append( ">" ).toString();
+            append( "<" ).append( rootName == null ?DEFAULT_ROOT_NAME :rootName ).append( '>');
 
-        if (log.isDebugEnabled())
-            log.debug( "ArticleXml. getXml - "+xml );
+        if (article!=null) {
+            String dateText = DateTools.getStringDate(article.getPostDate(), "dd.MMM.yyyy", renderRequest.getLocale(), serverTimeZone);
+            String timeText = DateTools.getStringDate(article.getPostDate(), "HH:mm", renderRequest.getLocale(), serverTimeZone);
 
-        return xml.getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
+            sb.append("<ArticleDate>" ).append( dateText ).append( "</ArticleDate>" ).
+                append( "<ArticleTime>" ).append( timeText ).append( "</ArticleTime>" ).
+                append( "<ArticleName>" ).
+                append( article.getArticleName()!=null? StringEscapeUtils.escapeXml(article.getArticleName()):"" ).
+                append( "</ArticleName>" ).
+                append( "<ArticleText>" ).append( article.getArticleData()!=null?article.getArticleData():"" ).append( "</ArticleText>");
+
+        }
+        sb.append("</" ).append( rootName == null ?DEFAULT_ROOT_NAME :rootName ).append( ">" );
+        if (log.isDebugEnabled()) {
+            log.debug( "ArticleXml. getXml - "+sb.toString() );
+        }
+
+        return sb.toString().getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 
     public byte[] getXml() throws Exception {
-        if(log.isDebugEnabled())
+        if(log.isDebugEnabled()) {
             log.debug("ArticleXml. method is 'Xml'");
+        }
 
         return getXml(DEFAULT_ROOT_NAME);
     }
@@ -116,6 +124,16 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         PortalSpiProvider provider = (PortalSpiProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         Article article = provider.getPortalCmsArticleDao().getArticle(articleId);
         PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
+        Long siteLangaugeId = portalInfo.getSiteLanguageId( renderRequest.getLocale() );
+        if (article==null) {
+            ArticleBean bean = new ArticleBean();
+            bean.setArticleText("Article with Id '"+articleId+"' not found");
+            bean.setCreated(new Date());
+            bean.setXml(true);
+            bean.setDeleted(false);
+            bean.setSiteLanguageId(siteLangaugeId);
+            article = bean;
+        }
         this.article = article;
         this.serverTimeZone = TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone());
         return this;
@@ -146,11 +164,9 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     }
 
     public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
-
         return ArticleUtils.getListInternal(provider, idSiteCtxLangCatalog, idContext, false);
     }
 
-    private PortalSpiProvider provider;
     public void setPortalDaoProvider(PortalSpiProvider provider) {
         this.provider=provider;
     }

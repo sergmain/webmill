@@ -79,10 +79,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
             <value>mill.id_shop</value>
         </init-param>
         <init-param>
-            <name>locale-name-package</name>
-            <value>mill.locale._price_list</value>
-        </init-param>
-        <init-param>
             <name>name-portlet-code-string</name>
             <value>mill.shop_code</value>
         </init-param>
@@ -112,10 +108,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
     <portlet>
         <portlet-name>mill.invoice</portlet-name>
         <portlet-class>org.riverock.commerce.invoice.InvoicePortlet</portlet-class>
-        <init-param>
-            <name>locale-name-package</name>
-            <value>mill.locale._price_list</value>
-        </init-param>
         <supports>
             <mime-type>text/html</mime-type>
         </supports>

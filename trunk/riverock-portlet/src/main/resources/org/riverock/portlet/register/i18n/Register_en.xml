@@ -57,7 +57,17 @@
 
 
     <entry key="reg.send-password.your-password">
-        Your password is {0}
+        Your login and password:
+
+        Login: {0}
+        Password: {1}
+    </entry>
+    <entry key="reg.send-password.start-body.your-password">
+        Your logins and passwords:
+    </entry>
+    <entry key="reg.send-password.end-body.your-password">
+
+        Each login/password pair has unique roles. Ask your site administrator for concrete info about those roles.
     </entry>
     <entry key="reg.send-password.info">Requested info</entry>
     <entry key="reg.mail_body">You succesfully registered.

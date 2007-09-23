@@ -28,10 +28,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<portlet-name>riverock.forum</portlet-name>
 		<portlet-class>org.riverock.forum.ForumPortlet</portlet-class>
 		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.forum</value>
-		</init-param>
-		<init-param>
 			<name>messages-per-page</name>
 			<value>20</value>
 		</init-param>
@@ -66,10 +62,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
 		<portlet-name>riverock.forum-list-manager</portlet-name>
 		<portlet-class>org.riverock.forum.ForumListManagerPortlet</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.forum</value>
-		</init-param>
 		<init-param>
 			<name>wm-forum-action-config</name>
 			<value>/WEB-INF/action/forum-action-manage-list.xml</value>
