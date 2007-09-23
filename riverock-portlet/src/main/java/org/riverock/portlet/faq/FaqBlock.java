@@ -81,13 +81,13 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
     public FaqBlock() {
     }
 
-    public PortletResultContent getInstance()
-        throws PortletException {
+    public PortletResultContent getInstance() throws PortletException {
 
         String sql_ =
             "select ID_SITE_PORTLET_FAQ from WM_PORTLET_FAQ where ID_SITE_SUPPORT_LANGUAGE=?";
 
         v = new ArrayList<FaqGroup>();
+        if (true) return this;
 
         PreparedStatement ps = null;
         ResultSet rs = null;

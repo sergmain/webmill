@@ -64,6 +64,14 @@ public class SendPasswordAction implements Action {
             PortalUserManager.SEND_PASSWORD_BODY_ONE_PASSWORD_MESSAGE,
             moduleActionRequest.getResourceBundle().getString( "reg.send-password.your-password" )
         );
+        messages.put(
+            PortalUserManager.SEND_PASSWORD_START_BODY_MANY_PASSWORDS_MESSAGE,
+            moduleActionRequest.getResourceBundle().getString( "reg.send-password.start-body.your-password" )
+        );
+        messages.put(
+            PortalUserManager.SEND_PASSWORD_END_BODY_MANY_PASSWORDS_MESSAGE,
+            moduleActionRequest.getResourceBundle().getString( "reg.send-password.end-body.your-password" )
+        );
 
         UserOperationStatus status = portalUserManager.sendPassword(email, messages);
         if (status.getOperationCode()==PortalUserManager.STATUS_OK_OPERATION) {

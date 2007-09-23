@@ -56,7 +56,17 @@
     <entry key="reg.error-captcha-wrong">Проверочное слово введено не верно.</entry>
 
     <entry key="reg.send-password.your-password">
-        Ваш пароль {0}
+        Ваш логин и пароль:
+
+        Логин: {0}
+        Пароль: {1}
+    </entry>
+    <entry key="reg.send-password.start-body.your-password">
+        Ваш логины и пароли:
+    </entry>
+    <entry key="reg.send-password.end-body.your-password">
+
+        Каждая логин/пароль пара имеет уникальные роли. Более подробную информацию об этих ролях, вы можере узнать у администратора сайта. 
     </entry>
     <entry key="reg.send-password.info">Запрошенная информация</entry>
     <entry key="reg.mail_body">Вы успешно прошли регистрацию.

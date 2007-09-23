@@ -221,10 +221,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<value>true</value>
 		</init-param>
 		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.site_hamradio</value>
-		</init-param>
-		<init-param>
 			<name>name-portlet-code-string</name>
 			<value>mill.menu_code</value>
 		</init-param>
@@ -406,10 +402,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<portlet-name>mill.news_plain</portlet-name>
 		<portlet-class>org.riverock.portlet.news.NewsPortlet</portlet-class>
 		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.site_hamradio</value>
-		</init-param>
-		<init-param>
 			<name>name-portlet-code-string</name>
 			<value>mill.news_block_code</value>
 		</init-param>
@@ -428,10 +420,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
 		<portlet-name>mill.news_subscribe</portlet-name>
 		<portlet-class>org.riverock.portlet.news.NewsSubscribePortlet</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.site_hamradio</value>
-		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
@@ -449,10 +437,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
 		<portlet-name>mill.login</portlet-name>
 		<portlet-class>org.riverock.portlet.login.LoginPlainPortlet</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.auth</value>
-		</init-param>
 		<expiration-cache>-1</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>
@@ -465,10 +449,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
 		<portlet-name>mill.login_plain</portlet-name>
 		<portlet-class>org.riverock.portlet.login.LoginPlainPortlet</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.auth</value>
-		</init-param>
 		<expiration-cache>-1</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>
@@ -484,10 +464,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<init-param>
 			<name>is-xml</name>
 			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.auth</value>
 		</init-param>
 		<expiration-cache>-1</expiration-cache>
 		<supports>
@@ -537,10 +513,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
 		<portlet-name>mill.register</portlet-name>
 		<portlet-class>org.riverock.portlet.register.RegisterPortlet</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale._price_list</value>
-		</init-param>
 		<init-param>
 			<name>action-config</name>
 			<value>/WEB-INF/action/register-action.xml</value>
