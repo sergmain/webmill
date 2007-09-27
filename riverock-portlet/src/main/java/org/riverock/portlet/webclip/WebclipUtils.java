@@ -1,22 +1,22 @@
 package org.riverock.portlet.webclip;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.GZIPInputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.portlet.dao.PortletDaoFactory;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 
 /**
  * User: SMaslyukov
@@ -62,7 +62,7 @@ public class WebclipUtils {
     }
 
     public static void processStoredContent(
-        WebclipBean webclip, String hrefPrefix, String hrefStartPart, PortalDaoProvider portalDaoProvider,
+        WebclipBean webclip, String hrefPrefix, String hrefStartPart, PortalSpiProvider portalDaoProvider,
         Long siteLanguageId, WebclipUrlChecker urlChecker
     ) throws IOException {
 

@@ -128,8 +128,11 @@ public class ActionConfigInstance {
 
     }
     public static ActionConfigInstance getInstance(InputStream inputStream) throws ActionException {
+        return new ActionConfigInstance(parseConfig(inputStream));
+    }
 
-        ActionConfig bean = null;
+    public static ActionConfig parseConfig(InputStream inputStream) throws ActionException {
+        ActionConfig bean;
         try {
             bean = XmlTools.getObjectFromXml(ActionConfig.class, inputStream);
         }
@@ -138,68 +141,9 @@ public class ActionConfigInstance {
             log.error(es, e);
             throw new ActionException( es, e);
         }
-
-        return new ActionConfigInstance(bean);
-
-    }
-
-/*
-    private static ActionConfigBean digisterConfigFile(File configFile) throws IOException, SAXException {
-
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        if (log.isDebugEnabled()) {
-            log.debug("Start digest file: " + configFile.getName() );
-            try {
-                log.debug("classloader: " + cl +"\nhashCode: " + cl.hashCode() );
-                Class c = cl.loadClass("org.riverock.module.factory.bean.ActionConfigBean");
-                log.debug("result of loading class: " + c);
-            }
-            catch (ClassNotFoundException e) {
-                log.error("Error load class ActionConfigBean", e);
-            }
-        }
-
-        Digester digester = new Digester();
-        digester.setClassLoader( cl );
-        digester.setEntityResolver( new EntityResolverImpl() );
-        digester.setValidating(false);
-        ActionConfigBean bean = null;
-
-        digester.addObjectCreate("action-config", ActionConfigBean.class);
-
-        digester.addObjectCreate("action-config/default-forward", ForwardBean.class);
-        digester.addCallMethod("action-config/role","addRole", 0);
-        digester.addSetNext("action-config/default-forward", "addForwards");
-        digester.addSetProperties("action-config/default-forward", "name", "name");
-        digester.addSetProperties("action-config/default-forward", "path", "path");
-
-        digester.addObjectCreate("action-config/action", ActionBean.class);
-        digester.addSetNext("action-config/action", "addActions");
-        digester.addCallMethod("action-config/default-action","setDefaultAction", 0);
-
-        digester.addSetProperties("action-config/action", "name", "name");
-        digester.addSetProperties("action-config/action", "path", "path");
-        digester.addSetProperties("action-config/action", "type", "type");
-        digester.addSetProperties("action-config/action", "default-forward", "defaultForward");
-        digester.addSetProperties("action-config/action", "is-redirect", "redirect");
-
-        digester.addCallMethod("action-config/action/role","addRole", 0);
-
-        digester.addObjectCreate("action-config/action/forward", ForwardBean.class);
-        digester.addSetNext("action-config/action/forward", "addForwards");
-        digester.addSetProperties("action-config/action/forward", "name", "name");
-        digester.addSetProperties("action-config/action/forward", "path", "path");
-
-        bean = (ActionConfigBean) digester.parse(configFile);
-        if (bean==null ) {
-            // Tofo decide return null or throw exception
-            return null;
-        }
         return bean;
-
     }
 
-*/
     public ActionConfigurationBean getDefaultAction() {
         return defaultAction;
     }

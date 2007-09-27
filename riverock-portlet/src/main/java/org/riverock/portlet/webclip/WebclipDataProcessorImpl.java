@@ -36,7 +36,6 @@ import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.html.dom.HTMLDocumentImpl;
 import org.apache.log4j.Logger;
-
 import org.cyberneko.html.parsers.DOMFragmentParser;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -47,7 +46,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.html.HTMLDocument;
 import org.xml.sax.InputSource;
 
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 
 /**
  * @author Sergei Maslyukov
@@ -94,7 +93,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     // document's fragment
     private Node fragmentNode = null;
 
-    private PortalDaoProvider portalDaoProvider;
+    private PortalSpiProvider portalDaoProvider;
     private Long siteLanguageId;
     private static final String NOFOLLOW_VALUE = "nofollow";
 
@@ -146,7 +145,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
      */
     public WebclipDataProcessorImpl(
         WebclipUrlProducer urlProducer,
-        byte[] bytes, int elementType, String elementId, PortalDaoProvider portalDaoProvider,
+        byte[] bytes, int elementType, String elementId, PortalSpiProvider portalDaoProvider,
         Long siteLanguageId, WebclipUrlChecker checker) {
 
         this.urlProducer = urlProducer;

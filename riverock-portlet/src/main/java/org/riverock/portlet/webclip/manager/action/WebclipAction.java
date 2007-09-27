@@ -15,25 +15,25 @@ import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import org.riverock.common.utils.PortletUtils;
+import org.riverock.interfaces.ContainerConstants;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.common.utils.PortletUtils;
-import org.riverock.portlet.webclip.WebclipConstants;
-import org.riverock.portlet.webclip.WebclipUtils;
-import org.riverock.portlet.webclip.WebclipUrlChecker;
-import org.riverock.portlet.webclip.WebclipUrlCheckerSimpleImpl;
-import org.riverock.portlet.webclip.WebclipUrlCheckerImpl;
 import org.riverock.portlet.webclip.WebclipBeanExtended;
+import org.riverock.portlet.webclip.WebclipConstants;
+import org.riverock.portlet.webclip.WebclipUrlChecker;
+import org.riverock.portlet.webclip.WebclipUrlCheckerImpl;
+import org.riverock.portlet.webclip.WebclipUrlCheckerSimpleImpl;
+import org.riverock.portlet.webclip.WebclipUtils;
 import org.riverock.portlet.webclip.manager.WebclipSessionBean;
 import org.riverock.portlet.webclip.manager.bean.MenuItem;
 import org.riverock.portlet.webclip.manager.bean.WebclipStatisticBean;
-import org.riverock.interfaces.ContainerConstants;
 
 /**
  * User: SMaslyukov
@@ -144,7 +144,7 @@ public class WebclipAction implements Serializable {
         try {
             result.add("Result of work for "+MAX_TIME_FOR_OPERATION_IN_MINUTES+" minutes.");
 
-            PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
+            PortalSpiProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
             List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
             log.debug("siteLanguage: " + languages);
             Map<Long, String> map = new HashMap<Long, String>();
@@ -221,7 +221,7 @@ public class WebclipAction implements Serializable {
         WebclipStatisticBean statisticBean = PortletDaoFactory.getWebclipDao().getStatistic(siteId);
 
         try {
-            PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
+            PortalSpiProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
             WebclipUrlChecker urlChecker = new WebclipUrlCheckerImpl(portalDaoProvider, siteId);
 
             List<SiteLanguage> languages = portalDaoProvider.getPortalSiteLanguageDao().getSiteLanguageList(siteId);
@@ -303,7 +303,7 @@ public class WebclipAction implements Serializable {
         Long siteId = getSiteId();
 
         try {
-            PortalDaoProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
+            PortalSpiProvider portalDaoProvider = FacesTools.getPortalSpiProvider();
             PortletName portlet = portalDaoProvider.getPortalPortletNameDao().getPortletName(WebclipConstants.WEBMILL_WIKI_WEBCLIP);
             CatalogLanguageItem catalogLanguageItem = portalDaoProvider.getPortalCatalogDao().getCatalogLanguageItem(webclipSessionBean.getCatalogLanguageId());
             Template template = portalDaoProvider.getPortalTemplateDao().getDefaultDynamicTemplate(catalogLanguageItem.getSiteLanguageId());
@@ -399,16 +399,16 @@ public class WebclipAction implements Serializable {
 
     // Private methods
 
-    private WebclipBeanExtended getWebclip(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, String msg) {
+    private WebclipBeanExtended getWebclip(PortalSpiProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, String msg) {
         Map<String, List<String>> m = portalDaoProvider.getPortalPreferencesDao().initMetadata(catalogItem.getMetadata());
         return WebclipUtils.getWebclip(siteId, m, msg, false);
     }
 
-    private String reloadWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem) {
+    private String reloadWebclipContent(PortalSpiProvider portalDaoProvider, Long siteId, CatalogItem catalogItem) {
         return reloadWebclipContent(portalDaoProvider, siteId, catalogItem, false);
     }
 
-    private String reloadWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, boolean isForce) {
+    private String reloadWebclipContent(PortalSpiProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, boolean isForce) {
         log.debug("    start reloadWebclipContent()");
 
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
@@ -436,11 +436,11 @@ public class WebclipAction implements Serializable {
         return msg + "OK";
     }
 
-    private String processWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, WebclipUrlChecker urlChecker) {
+    private String processWebclipContent(PortalSpiProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, WebclipUrlChecker urlChecker) {
         return processWebclipContent(portalDaoProvider, siteId, catalogItem, false, urlChecker);
     }
 
-    private String processWebclipContent(PortalDaoProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, boolean isForce, WebclipUrlChecker urlChecker) {
+    private String processWebclipContent(PortalSpiProvider portalDaoProvider, Long siteId, CatalogItem catalogItem, boolean isForce, WebclipUrlChecker urlChecker) {
         log.debug("    start processWebclipContent()");
 
         String msg = catalogItem.getKeyMessage()+", url: "+ catalogItem.getUrl()+". Status: ";
