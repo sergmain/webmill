@@ -36,7 +36,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.codec.binary.Base64;
 
 // OID 1.2.840.113549.1.1.4 - md5WithRSAEncryption
 /**
@@ -47,7 +46,7 @@ import org.apache.commons.codec.binary.Base64;
 
 public class SecurityTools
 {
-    private static Logger cat = Logger.getLogger( "org.riverock.security.SecurityTools"   );
+    private static Logger cat = Logger.getLogger( SecurityTools.class   );
 
     public final static String providerName = "Forge";
 
@@ -106,9 +105,11 @@ public class SecurityTools
         {
             cat.debug("Get bytes");
             byte bytes[] = getBytesFromFile(fileName);
+/*
             Base64 base64 = new Base64();
 
             byte decodedBytes[] = base64.decode(bytes);
+*/
 
             cat.debug("Make RSA private key");
 /*

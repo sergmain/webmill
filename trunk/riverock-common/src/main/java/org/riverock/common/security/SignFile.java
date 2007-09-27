@@ -42,7 +42,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.annotation.schema.transfer.TransferFileConfigType;
@@ -189,6 +188,7 @@ public class SignFile {
 //                getFileBytes(
 //                        new FileInputStream(tempFile), 10000000));
 
+/*
         Base64 base64 = new Base64();
         tf.setFileContent64(
             new String(
@@ -196,7 +196,7 @@ public class SignFile {
                     getFileBytes(new FileInputStream(tempFile), 10000000))
             )
         );
-//        tf.fileContent64 = "data".getBytes();
+*/
         tf.setFileName(path + File.separatorChar + fileToEncrypt.getName());
 
         String s = tempFile.getAbsolutePath();
