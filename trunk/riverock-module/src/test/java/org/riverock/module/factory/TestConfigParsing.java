@@ -15,7 +15,7 @@ public class TestConfigParsing extends TestCase {
 
     public void testParsing() throws Exception {
         InputStream is = TestConfigParsing.class.getResourceAsStream("/xml/register-action.xml");
-        ActionConfigInstance.getInstance(is);
+        ActionConfigInstance.parseConfig(is);
         assertNotNull(is);
     }
 

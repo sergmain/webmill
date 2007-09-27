@@ -27,9 +27,8 @@ import org.riverock.portlet.dao.PortletDaoFactory;
 import org.riverock.portlet.tools.HibernateUtils;
 import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.ContainerConstants;
-import org.riverock.common.utils.PortletUtils;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 
 import org.apache.commons.lang.StringUtils;
@@ -71,7 +70,7 @@ public class WebclipPortlet implements Portlet {
             Long webclipId = getWebclipId(request);
             Long siteId = new Long( request.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
-            PortalDaoProvider portalDaoProvider = (PortalDaoProvider)request.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+            PortalSpiProvider portalDaoProvider = (PortalSpiProvider)request.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
             PortalInfo portalInfo = (PortalInfo)request.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
             Long siteLanguageId = portalInfo.getSiteLanguageId(request.getLocale());
             if (siteLanguageId==null) {
@@ -193,7 +192,7 @@ public class WebclipPortlet implements Portlet {
         }
     }
 
-    private void processWebclipData(PortletRequest request, Long webclipId, Long siteId, PortalDaoProvider portalDaoProvider, Long siteLanguageId) throws IOException {
+    private void processWebclipData(PortletRequest request, Long webclipId, Long siteId, PortalSpiProvider portalDaoProvider, Long siteLanguageId) throws IOException {
         log.info("Start processWebclipData()");
 
         String url = getUrl(request);
