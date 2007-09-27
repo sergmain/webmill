@@ -1,0 +1,1 @@
+C:\opt2\jaxb-ri-20070711\bin\xjc.bat riverock-module-config.xsd -p org.riverock.module.config.schema -b module-config.xjb -d ../java

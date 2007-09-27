@@ -23,21 +23,20 @@
  */
 package org.riverock.module.factory;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.module.Constants;
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
+import org.riverock.module.config.schema.Action;
+import org.riverock.module.config.schema.Forward;
 import org.riverock.module.exception.ActionException;
-import org.riverock.module.factory.config.ActionConfig;
 import org.riverock.module.factory.bean.ActionConfigurationBean;
-import org.riverock.module.factory.bean.ActionBean;
-import org.riverock.module.factory.bean.ForwardBean;
-import org.riverock.module.web.user.ModuleUser;
+import org.riverock.module.factory.config.ActionConfigInstance;
 import org.riverock.module.web.request.ModuleRequest;
+import org.riverock.module.web.user.ModuleUser;
 
 /**
  * @author Serge Maslyukov
@@ -48,7 +47,7 @@ import org.riverock.module.web.request.ModuleRequest;
 public abstract class ActionFactoryImpl implements ActionFactory {
     private static final Logger log = Logger.getLogger(WebmillPortletActionFactoryImpl.class);
 
-    protected ActionConfig actionConfig = null;
+    protected ActionConfigInstance actionConfigInstance = null;
 
     public String doAction(ModuleActionRequest moduleActionRequest) throws ActionException {
         ModuleUser user = moduleActionRequest.getRequest().getUser();
@@ -75,9 +74,9 @@ public abstract class ActionFactoryImpl implements ActionFactory {
             log.debug("result actionConfigurationBean: " + actionConfigurationBean);
         }
 
-        ActionBean actionBean = actionConfigurationBean.getActionBean();
+        Action actionBean = actionConfigurationBean.getActionBean();
         // check global roles
-        String forwardPath = checkAccess(actionConfig.getConfigBean().getRoles(), actionBean, moduleActionRequest.getRequest());
+        String forwardPath = checkAccess(actionConfigInstance.getConfigBean().getRoles(), actionBean, moduleActionRequest.getRequest());
         if (forwardPath!=null){
             return forwardPath;
         }
@@ -88,7 +87,7 @@ public abstract class ActionFactoryImpl implements ActionFactory {
             return forwardPath;
         }
 
-        ForwardBean forward = null;
+        Forward forward;
         String forwardName = actionConfigurationBean.getAction().execute(moduleActionRequest);
         if (log.isDebugEnabled()) {
             log.debug("forwardName after execute action: " + forwardName);
@@ -102,7 +101,7 @@ public abstract class ActionFactoryImpl implements ActionFactory {
                 if (log.isDebugEnabled()) {
                     log.debug("forwardName is null defaultForward for action '" + moduleActionRequest.getActionName() + "' is null");
                 }
-                forward = getForwardPath(actionBean, Action.DEFAULT_FORWARD_ERROR);
+                forward = getForwardPath(actionBean, ActionInstance.DEFAULT_FORWARD_ERROR);
                 if (forward == null) {
                     throw new IllegalStateException();
                 }
@@ -141,9 +140,9 @@ public abstract class ActionFactoryImpl implements ActionFactory {
             throw new ActionException("actionConfigurationBean not created. actionName: " + actionName);
         }
 
-        ActionBean actionBean = actionConfigurationBean.getActionBean();
+        Action actionBean = actionConfigurationBean.getActionBean();
 
-        ForwardBean forward = getForwardPath(actionBean, forwardName);
+        Forward forward = getForwardPath(actionBean, forwardName);
         if (forward == null) {
             throw new IllegalStateException("Forward with name '"+forwardName+"' not found");
         }
@@ -153,15 +152,12 @@ public abstract class ActionFactoryImpl implements ActionFactory {
         return forward.getPath();
     }
 
-    private String checkAccess(List roles, ActionBean actionBean, ModuleRequest moduleRequest) {
-        boolean isDenied = true;
-        ForwardBean forward = null;
+    private String checkAccess(List<String> roles, Action actionBean, ModuleRequest moduleRequest) {
+        Forward forward;
         if (!roles.isEmpty()) {
             log.debug("Check roles");
             // check role.
-            Iterator it = roles.iterator();
-            while (it.hasNext()) {
-                String role = (String) it.next();
+            for (String role : roles) {
                 if (log.isDebugEnabled()) {
                     log.debug("   role: " + role + ", user has this role: " + moduleRequest.isUserInRole(role));
                 }
@@ -170,41 +166,50 @@ public abstract class ActionFactoryImpl implements ActionFactory {
                 }
             }
             if (log.isDebugEnabled()) {
-                log.debug("isDenied: " + isDenied);
+                log.debug("isDenied");
             }
-            if (isDenied) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Start search forward '" + Action.DEFAULT_FORWARD_ACCESS_DENIED + "'");
-                }
-                forward = getForwardPath(actionBean, Action.DEFAULT_FORWARD_ACCESS_DENIED);
-
-                if (forward == null) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Start search forward '" + Action.DEFAULT_FORWARD_ERROR + "'");
-                    }
-                    forward = getForwardPath(actionBean, Action.DEFAULT_FORWARD_ERROR);
-                }
-
-                if (forward == null) {
-                    throw new IllegalStateException();
-                }
-
-                if (log.isDebugEnabled()) {
-                    log.debug("Result forward path: " + forward.getPath());
-                }
-                return forward.getPath();
+            if (log.isDebugEnabled()) {
+                log.debug("Start search forward '" + ActionInstance.DEFAULT_FORWARD_ACCESS_DENIED + "'");
             }
+            forward = getForwardPath(actionBean, ActionInstance.DEFAULT_FORWARD_ACCESS_DENIED);
+
+            if (forward == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Start search forward '" + ActionInstance.DEFAULT_FORWARD_ERROR + "'");
+                }
+                forward = getForwardPath(actionBean, ActionInstance.DEFAULT_FORWARD_ERROR);
+            }
+
+            if (forward == null) {
+                throw new IllegalStateException();
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("Result forward path: " + forward.getPath());
+            }
+            return forward.getPath();
         }
         return null;
     }
 
-    private ForwardBean getForwardPath(ActionBean actionBean, String name) {
-        ForwardBean forward = (ForwardBean) actionBean.getForwards().get(name);
+    private Forward getForwardPath(Action actionBean, String name) {
+        Forward forward=null;
+        for (Forward f : actionBean.getForwards()) {
+            if (f.getName().equals(name)) {
+                forward=f;
+                break;
+            }
+        }
         if (log.isDebugEnabled()) {
             log.debug("ForwardBean for name '" + name + "' is " + forward);
         }
         if (forward == null) {
-            forward = (ForwardBean) actionConfig.getConfigBean().getForwards().get(name);
+            for (Forward f : actionConfigInstance.getConfigBean().getForwards()) {
+                if (f.getName().equals(name)) {
+                    forward=f;
+                    break;
+                }
+            }
         }
         if (log.isDebugEnabled()) {
             log.debug("Result forwardBean for name '" + name + "' is " + forward);
@@ -213,16 +218,16 @@ public abstract class ActionFactoryImpl implements ActionFactory {
     }
 
     public void destroy() {
-        if (actionConfig != null) {
-            actionConfig.destroy();
+        if (actionConfigInstance != null) {
+            actionConfigInstance.destroy();
         }
     }
 
     public ActionConfigurationBean getAction(String actionName) {
-        return actionConfig.getActionConfiguredBean(actionName);
+        return actionConfigInstance.getActionConfiguredBean(actionName);
     }
 
     public ActionConfigurationBean getDefaultAction() {
-        return actionConfig.getDefaultAction();
+        return actionConfigInstance.getDefaultAction();
     }
 }

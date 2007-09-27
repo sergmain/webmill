@@ -25,8 +25,7 @@ package org.riverock.module.factory;
 
 import org.riverock.module.web.config.ModuleConfig;
 import org.riverock.module.exception.ActionException;
-import org.riverock.module.factory.config.ActionConfig;
-import org.riverock.common.tools.StringTools;
+import org.riverock.module.factory.config.ActionConfigInstance;
 
 import java.io.File;
 
@@ -42,7 +41,7 @@ public abstract class PortletActionFactoryImpl extends ActionFactoryImpl {
 
     protected abstract File getConfigFile(String actionConfigFile);
 
-    public ActionConfig getActionConfig(ModuleConfig moduleConfig, String factoryCode) throws ActionException {
+    public ActionConfigInstance getActionConfig(ModuleConfig moduleConfig, String factoryCode) throws ActionException {
         String actionConfigFile = moduleConfig.getInitParameter( factoryCode );
         if (StringUtils.isEmpty( actionConfigFile ) ) {
             throw new ActionException("Factory code "+factoryCode+ " not found in init parameter of portlet");
@@ -53,9 +52,9 @@ public abstract class PortletActionFactoryImpl extends ActionFactoryImpl {
             throw new ActionException("File "+actionConfigFile+" not found");
         }
 
-        ActionConfig actionConfig = ActionConfig.getInstance( configFile );
+        ActionConfigInstance actionConfigInstance = ActionConfigInstance.getInstance( configFile );
 
-        return actionConfig;
+        return actionConfigInstance;
     }
 
 }

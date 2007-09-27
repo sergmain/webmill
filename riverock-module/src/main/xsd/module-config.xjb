@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+
+
+    <jaxb:bindings schemaLocation="riverock-module-config.xsd" node="//xs:complexType[@name='ActionConfig']">
+        <jaxb:bindings node=".//xs:element[@name='action']">
+            <jaxb:property name="actions"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="riverock-module-config.xsd" node="//xs:complexType[@name='ActionConfig']">
+        <jaxb:bindings node=".//xs:element[@name='role']">
+            <jaxb:property name="roles"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="riverock-module-config.xsd" node="//xs:complexType[@name='Action']">
+        <jaxb:bindings node=".//xs:element[@name='role']">
+            <jaxb:property name="roles"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="riverock-module-config.xsd" node="//xs:complexType[@name='ActionConfig']">
+        <jaxb:bindings node=".//xs:element[@name='default-forward']">
+            <jaxb:property name="forwards"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="riverock-module-config.xsd" node="//xs:complexType[@name='Action']">
+        <jaxb:bindings node=".//xs:element[@name='forward']">
+            <jaxb:property name="forwards"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="riverock-module-config.xsd" node="//xs:complexType[@name='Action']">
+        <jaxb:bindings node=".//xs:attribute[@name='is-redirect']">
+            <jaxb:property name="redirect"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+</jaxb:bindings>
