@@ -24,8 +24,6 @@
 package org.riverock.portlet.resource;
 
 import org.apache.log4j.Logger;
-import org.riverock.common.resource.CustomXmlResourceBundle;
-
 
 /**
  * @author Serge Maslyukov

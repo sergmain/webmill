@@ -21,31 +21,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.module.factory.bean;
+package org.riverock.module.action;
+
+import org.riverock.module.exception.ActionException;
 
 /**
- * @author SMaslyukov
- *         Date: 26.04.2005
- *         Time: 19:32:08
- *         $Id$
+ * ActionInstance interface
  */
-public class ForwardBean {
-    private String name = null;
-    private String path = null;
+public interface ActionInstance {
 
-    public String getName() {
-        return name;
-    }
+    public static final String DEFAULT_FORWARD_ACCESS_DENIED = "access-denied";
+    public static final String DEFAULT_FORWARD_NOT_LOGGED = "not-logged";
+    public static final String DEFAULT_FORWARD_ERROR = "error";
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
+    /**
+     * execute a certain function
+     *
+     * @param moduleActionRequest   ModuleActionRequest
+     * @return forward page
+     * @throws org.riverock.module.exception.ActionException
+     *          ActionException
+     */
+    public String execute(ModuleActionRequest moduleActionRequest) throws ActionException;
 }

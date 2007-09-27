@@ -23,7 +23,8 @@
  */
 package org.riverock.module.factory.bean;
 
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
+import org.riverock.module.config.schema.Action;
 
 /**
  * @author SMaslyukov
@@ -32,22 +33,22 @@ import org.riverock.module.action.Action;
  *         $Id$
  */
 public class ActionConfigurationBean {
-    private ActionBean actionBean = null;
-    private Action action = null;
+    private Action actionBean = null;
+    private ActionInstance actionInstance = null;
 
-    public ActionBean getActionBean() {
+    public Action getActionBean() {
         return actionBean;
     }
 
-    public void setActionBean(ActionBean actionBean) {
+    public void setActionBean(Action actionBean) {
         this.actionBean = actionBean;
     }
 
-    public Action getAction() {
-        return action;
+    public ActionInstance getAction() {
+        return actionInstance;
     }
 
-    public void setAction(Action action) {
-        this.action = action;
+    public void setAction(ActionInstance actionInstance) {
+        this.actionInstance = actionInstance;
     }
 }

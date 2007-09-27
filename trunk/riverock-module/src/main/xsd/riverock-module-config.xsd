@@ -4,7 +4,7 @@
   ~
   ~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
   ~
-  ~ Riverock -- The Open-source Java Development Community
+  ~ Riverock - The Open-source Java Development Community
   ~ http://www.riverock.org
   ~
   ~
@@ -22,20 +22,20 @@
   ~ License along with this library; if not, write to the Free Software
   ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
   -->
-<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:element name="action-config" type="ActionConfigType"/>
-	<xs:complexType name="ActionConfigType">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="action-config" type="ActionConfig"/>
+	<xs:complexType name="ActionConfig">
 		<xs:sequence>
 			<xs:element name="default-action" type="xs:string"/>
 			<xs:element name="role" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="default-forward" type="ForwardType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="action" type="ActionType" maxOccurs="unbounded"/>
+			<xs:element name="default-forward" type="Forward" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="action" type="Action" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ActionType">
+	<xs:complexType name="Action">
 		<xs:sequence>
 			<xs:element name="role" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="forward" type="ForwardType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="forward" type="Forward" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="path" type="xs:string" use="required"/>
@@ -43,14 +43,14 @@
 		<xs:attribute name="type" type="xs:string"/>
 		<xs:attribute name="is-redirect" type="xs:boolean" default="false"/>
 	</xs:complexType>
-	<xs:complexType name="DefaultActionType">
+	<xs:complexType name="DefaultAction">
 		<xs:sequence>
 			<xs:element name="name" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ForwardType">
+	<xs:complexType name="Forward">
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="path" type="xs:string" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="SecurityRoleType"/>
+	<xs:complexType name="SecurityRole"/>
 </xs:schema>

@@ -25,7 +25,7 @@ package org.riverock.module.factory;
 
 import org.riverock.module.web.config.ModuleConfig;
 import org.riverock.module.exception.ActionException;
-import org.riverock.module.factory.config.ActionConfig;
+import org.riverock.module.factory.config.ActionConfigInstance;
 import org.riverock.common.config.PropertiesProvider;
 import org.apache.log4j.Logger;
 
@@ -41,8 +41,8 @@ public class WebmillPortletActionFactoryImpl extends PortletActionFactoryImpl {
     private static final Logger log = Logger.getLogger(WebmillPortletActionFactoryImpl.class);
 
     public WebmillPortletActionFactoryImpl(ModuleConfig moduleConfig, String factoryCode) throws ActionException {
-        ActionConfig actionConfig = getActionConfig( moduleConfig, factoryCode );
-        this.actionConfig = actionConfig;
+        ActionConfigInstance actionConfigInstance = getActionConfig( moduleConfig, factoryCode );
+        this.actionConfigInstance = actionConfigInstance;
     }
 
     protected File getConfigFile(String actionConfigFile) {

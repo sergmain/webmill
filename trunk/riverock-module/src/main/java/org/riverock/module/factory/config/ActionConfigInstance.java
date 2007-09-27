@@ -24,22 +24,23 @@
 package org.riverock.module.factory.config;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.digester.Digester;
-import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
+import javax.xml.bind.JAXBException;
 
-import org.riverock.common.xml.EntityResolverImpl;
-import org.riverock.module.action.Action;
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.XmlTools;
+import org.riverock.module.action.ActionInstance;
+import org.riverock.module.config.schema.Action;
+import org.riverock.module.config.schema.ActionConfig;
 import org.riverock.module.exception.ActionException;
-import org.riverock.module.factory.bean.ActionBean;
-import org.riverock.module.factory.bean.ActionConfigBean;
 import org.riverock.module.factory.bean.ActionConfigurationBean;
-import org.riverock.module.factory.bean.ForwardBean;
 
 /**
  * @author Serge Maslyukov
@@ -47,10 +48,10 @@ import org.riverock.module.factory.bean.ForwardBean;
  *         Time: 21:20:58
  *         $Id$
  */
-public class ActionConfig {
-    static private final Logger log = Logger.getLogger(ActionConfig.class);
+public class ActionConfigInstance {
+    static private final Logger log = Logger.getLogger(ActionConfigInstance.class);
 
-    private ActionConfigBean configBean = null;
+    private ActionConfig configBean = null;
     private ActionConfigurationBean defaultAction = null;
     private Map<String, ActionConfigurationBean> actions = new HashMap<String, ActionConfigurationBean>();
 
@@ -63,28 +64,27 @@ public class ActionConfig {
         }
     }
 
-    private ActionConfig(ActionConfigBean configBean) throws ActionException {
+    private ActionConfigInstance(ActionConfig configBean) throws ActionException {
+        if (configBean==null) {
+            throw new IllegalArgumentException("Config bean is null");
+        }
         this.configBean = configBean;
 
         if (log.isDebugEnabled()) {
             log.debug("configBean: " + configBean);
-            if (configBean!=null) {
-                log.debug("Default action:" + configBean.getDefaultAction());
-            }
+            log.debug("Default action:" + configBean.getDefaultAction());
         }
         try {
-            Iterator it = configBean.getActions().iterator();
-            while (it.hasNext()) {
-                ActionBean actionBean = (ActionBean) it.next();
-                final Object o = Class.forName(actionBean.getType()).newInstance();
-                Action action = (Action) o;
+            for (Action action : configBean.getActions()) {
+                final Object o = Class.forName(action.getType()).newInstance();
+                ActionInstance actionInstance = (ActionInstance) o;
                 ActionConfigurationBean configurationBean = new ActionConfigurationBean();
-                configurationBean.setAction( action );
-                configurationBean.setActionBean( actionBean );
+                configurationBean.setAction(actionInstance);
+                configurationBean.setActionBean( action );
 
-                actions.put( actionBean.getPath(), configurationBean );
+                actions.put( action.getPath(), configurationBean );
             }
-            this.defaultAction = (ActionConfigurationBean)actions.get(configBean.getDefaultAction());
+            this.defaultAction = actions.get(configBean.getDefaultAction());
             if (defaultAction==null) {
                 throw new ActionException("Default action not defined");
             }
@@ -104,27 +104,46 @@ public class ActionConfig {
         }
     }
 
-    public static ActionConfig getInstance(File configFile) throws ActionException {
-
-        ActionConfigBean bean = null;
+    public static ActionConfigInstance getInstance(File configFile) throws ActionException {
+        InputStream inputStream = null;
         try {
-            bean = digisterConfigFile(configFile);
+            inputStream= new FileInputStream(configFile);
+            return getInstance(inputStream);
         }
-        catch (IOException e) {
+        catch (FileNotFoundException e) {
             String es = "Error";
             log.error(es, e);
             throw new ActionException( es, e);
         }
-        catch (SAXException e) {
+        finally{
+            if (inputStream!=null) {
+                try {
+                    inputStream.close();
+                }
+                catch (IOException e) {
+                    log.warn("Error", e);
+                }
+            }
+        }
+
+    }
+    public static ActionConfigInstance getInstance(InputStream inputStream) throws ActionException {
+
+        ActionConfig bean = null;
+        try {
+            bean = XmlTools.getObjectFromXml(ActionConfig.class, inputStream);
+        }
+        catch (JAXBException e) {
             String es = "Error";
             log.error(es, e);
             throw new ActionException( es, e);
         }
 
-        return new ActionConfig(bean);
+        return new ActionConfigInstance(bean);
 
     }
 
+/*
     private static ActionConfigBean digisterConfigFile(File configFile) throws IOException, SAXException {
 
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -180,24 +199,25 @@ public class ActionConfig {
 
     }
 
+*/
     public ActionConfigurationBean getDefaultAction() {
         return defaultAction;
     }
 
     public ActionConfigurationBean getActionConfiguredBean(String actionName) {
-        return (ActionConfigurationBean)actions.get(actionName);
+        return actions.get(actionName);
     }
 
-    public ActionConfigBean getConfigBean() {
+    public ActionConfig getConfigBean() {
         return configBean;
     }
 
     public static void main(String[] args) throws Exception {
         File file = new File("forum-action.xml");
-        ActionConfigBean c = digisterConfigFile( file );
+        ActionConfigInstance c = getInstance( file );
 
         file = new File("forum-action-manage-list.xml ");
-        c = digisterConfigFile( file );
+        c = getInstance( file );
 
         boolean isFound = c!=null;
         System.out.println("isFound = " + isFound);
