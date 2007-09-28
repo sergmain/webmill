@@ -130,7 +130,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 return new UserOperationStatusBean(PortalUserManager.STATUS_OK_OPERATION);
             }
             catch (Exception e) {
-                String es = "Error search user for e-mail: " + eMail;
+                String es = "Error send password for e-mail: " + eMail;
                 log.error(es, e);
                 throw new IllegalStateException(es, e);
             }

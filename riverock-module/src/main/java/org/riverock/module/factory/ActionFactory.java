@@ -38,5 +38,5 @@ public interface ActionFactory {
     public ActionConfigurationBean getDefaultAction();
     public void destroy();
     public String doAction(ModuleActionRequest moduleActionRequest) throws ActionException;
-    public String getForwardPath(String actionName, String forwardName) throws ActionException;
+    public String getForwardPath(String actionName, String forwardName);
 }
