@@ -128,7 +128,7 @@ public abstract class ActionFactoryImpl implements ActionFactory {
         return forward.getPath();
     }
 
-    public String getForwardPath(String actionName, String forwardName) throws ActionException {
+    public String getForwardPath(String actionName, String forwardName) {
         ActionConfigurationBean actionConfigurationBean = null;
         if (actionName!=null) {
             actionConfigurationBean = getAction(actionName);
@@ -137,7 +137,7 @@ public abstract class ActionFactoryImpl implements ActionFactory {
             actionConfigurationBean = getDefaultAction();
         }
         if (actionConfigurationBean==null) {
-            throw new ActionException("actionConfigurationBean not created. actionName: " + actionName);
+            throw new IllegalStateException("actionConfigurationBean not created. actionName: " + actionName);
         }
 
         Action actionBean = actionConfigurationBean.getActionBean();
