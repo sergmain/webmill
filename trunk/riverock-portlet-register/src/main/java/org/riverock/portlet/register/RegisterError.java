@@ -23,6 +23,7 @@
  */
 package org.riverock.portlet.register;
 
+import org.riverock.module.action.ActionMessage;
 import org.riverock.module.action.ModuleActionRequest;
 
 /**
@@ -40,8 +41,9 @@ public class RegisterError {
         return PortletErrors.error(actionBean, RegisterConstants.EMAIL_IS_EMPTY);
     }
 
-    public static String noSuchEmail( ModuleActionRequest actionBean ) {
-        return PortletErrors.error(actionBean, RegisterConstants.NO_SUCH_EMAIL);
+    public static String noSuchEmail( ModuleActionRequest actionBean, String email ) {
+        ActionMessage actionMessage = new ActionMessage(actionBean.getResourceBundle(), RegisterConstants.NO_SUCH_EMAIL, email);
+        return PortletErrors.error(actionBean.getRequest(), actionMessage);
     }
 
     public static String systemError( ModuleActionRequest actionBean ) {
@@ -70,6 +72,10 @@ public class RegisterError {
 
     public static String userEmailIsNull(ModuleActionRequest moduleActionRequest) {
         return PortletErrors.error(moduleActionRequest, RegisterConstants.USER_EMAIL_IS_NULL);
+    }
+
+    public static String userFirstNameIsNull(ModuleActionRequest moduleActionRequest) {
+        return PortletErrors.error(moduleActionRequest, RegisterConstants.USER_FIRST_NAME_IS_NULL);
     }
 
     public static String captchaWrong(ModuleActionRequest moduleActionRequest) {

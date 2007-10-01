@@ -24,6 +24,7 @@
 package org.riverock.module.action;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 /**
@@ -38,7 +39,24 @@ public class ActionMessage implements Serializable {
     /**
      * Constructor, Create a new ActionMessage object.
      *
-     * @param bundle
+     * @param bundle resource bundle
+     * @param key    a certain key define in properties file.
+     * @param params params
+     */
+    public ActionMessage(ResourceBundle bundle, String key, Object ... params) {
+        try {
+            this.value = bundle.getString(key);
+            this.value = MessageFormat.format(value, params);
+        }
+        catch (Exception e) {
+            this.value = key;
+        }
+    }
+
+    /**
+     * Constructor, Create a new ActionMessage object.
+     *
+     * @param bundle resource bundle
      * @param key    a certain key define in properties file.
      */
     public ActionMessage(ResourceBundle bundle, String key) {

@@ -37,6 +37,7 @@ import org.riverock.portlet.register.Constants;
 import org.riverock.portlet.register.PortletErrors;
 import org.riverock.portlet.register.RegisterConstants;
 import org.riverock.portlet.register.RegisterError;
+import org.riverock.portlet.register.RegisterUtils;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
@@ -53,6 +54,11 @@ public class SendPasswordAction implements ActionInstance {
 
         if( StringUtils.isBlank( email ) ) {
             return RegisterError.emailIsEmpty( moduleActionRequest );
+        }
+
+        String checkStatus = RegisterUtils.checkCaptcha(moduleActionRequest, moduleActionRequest.getRequest());
+        if (checkStatus != null) {
+            return checkStatus;
         }
 
         PortalUserManager portalUserManager = (PortalUserManager)
@@ -78,10 +84,10 @@ public class SendPasswordAction implements ActionInstance {
             return Constants.OK_EXECUTE_STATUS;
         }
         else if (status.getOperationCode()==PortalUserManager.STATUS_NO_SUCH_EMAIL) {
-            return RegisterError.noSuchEmail( moduleActionRequest );
+            return noSuchEmailMessage(moduleActionRequest, email);
         }
         else if (status.getOperationCode()==PortalUserManager.STATUS_NOT_REGISTERED) {
-            return RegisterError.noSuchEmail( moduleActionRequest );
+            return noSuchEmailMessage(moduleActionRequest, email);
         }
         else {
             if (status.getInternalErrorMessage()!=null) {
@@ -91,5 +97,14 @@ public class SendPasswordAction implements ActionInstance {
                 return PortletErrors.error(moduleActionRequest, "unknown error" );
             }
         }
+    }
+
+    private String noSuchEmailMessage(ModuleActionRequest moduleActionRequest, String email) {
+        return RegisterError.noSuchEmail(moduleActionRequest, email);
+/*
+        ActionMessage actionMessage = new ActionMessage(moduleActionRequest.getResourceBundle(), RegisterConstants.NO_SUCH_EMAIL, email);
+        PortletErrors.initMessage(moduleActionRequest.getRequest(), actionMessage);
+        return Constants.OK_EXECUTE_STATUS;
+*/
     }
 }

@@ -35,11 +35,17 @@
 
 	<action name="Send password action" path="send-password" type="org.riverock.portlet.register.action.SendPasswordAction">
 		<forward name="ok" path="/riverock/register/jsp/send-password-ok.jsp"/>
+<!--
 		<forward name="error" path="/riverock/register/jsp/send-password-error.jsp"/>
+-->
+        <forward name="error" path="/riverock/register/jsp/home.jsp"/>
 	</action>
 
 	<action name="Create account action" path="create-account" type="org.riverock.portlet.register.action.CreateAccountAction">
 		<forward name="ok" path="/riverock/register/jsp/create-account-ok.jsp"/>
+<!--
 		<forward name="error" path="/riverock/register/jsp/create-account-error.jsp"/>
+-->
+		<forward name="error" path="/riverock/register/jsp/home.jsp"/>
 	</action>
 </action-config>

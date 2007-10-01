@@ -32,7 +32,6 @@ import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.common.utils.PortletUtils;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.common.utils.PortletUtils;
 
 /**
  * @author SergeMaslyukov
@@ -234,6 +233,11 @@ public class UserAction implements Serializable {
                 if (userBean.getAuthInfo().getAuthUserId().equals(authUserId))
                     resultAuthUserExtendedInfoImpl = userBean;
             }
+        }
+
+        if (resultAuthUserExtendedInfoImpl!=null) {
+            resultAuthUserExtendedInfoImpl.setCompanyName(dataProvider.getCompanyName(resultAuthUserExtendedInfoImpl.getAuthInfo().getCompanyId()));
+            resultAuthUserExtendedInfoImpl.setHoldingName(dataProvider.getHoldingName(resultAuthUserExtendedInfoImpl.getAuthInfo().getHoldingId()));
         }
 
         log.info( "end search user");

@@ -40,6 +40,7 @@
     <entry key="reg.password">Пароль:</entry>
     <entry key="reg.password_repeat">Повторить пароль:</entry>
     <entry key="reg.first_name">Имя:</entry>
+    <entry key="reg.middle_name">Отчество:</entry>
     <entry key="reg.last_name">Фамилия:</entry>
     <entry key="reg.telephone">Контактный телефон:</entry>
     <entry key="reg.address">Адрес:</entry>
@@ -53,7 +54,9 @@
     <entry key="reg.error-user-password-is-null">Пароль не введен.</entry>
     <entry key="reg.error-user-password-is-mismatch">Введеные пароли не совпадают.</entry>
     <entry key="reg.error-user-email-is-null">Адрес электронной почты не введен.</entry>
+    <entry key="reg.error-user-first-name-is-null">Имя пользователя не указано.</entry>
     <entry key="reg.error-captcha-wrong">Проверочное слово введено не верно.</entry>
+    <entry key="reg.no_such_email">Учетная запись для адреса электронной почты {0} не существует.</entry>
 
     <entry key="reg.send-password.your-password">
         Ваш логин и пароль:

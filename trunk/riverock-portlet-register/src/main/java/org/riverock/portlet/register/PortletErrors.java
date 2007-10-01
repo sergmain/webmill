@@ -52,23 +52,23 @@ public class PortletErrors {
     }
 
     public static String error(ModuleRequest request, ResourceBundle resourceBundle, String errorCode) {
-/*
-        // hack to output where exception is created
-        try {
-            getException();
-        }
-        catch (Exception e) {
-            log.error("error", e);
-        }
-*/
-        ActionMessages actionMessages = new ActionMessages();
-        actionMessages.getMessages().add(new ActionMessage(resourceBundle, errorCode));
-        request.setAttribute( Constants.ACTION_MESSAGE,actionMessages);
+
+        ActionMessage message = new ActionMessage(resourceBundle, errorCode);
+        return error(request, message);
+    }
+
+    public static String error(ModuleRequest request, ActionMessage message) {
+        initMessage(request, message);
 
         return Constants.ERROR_EXECUTE_STATUS;
     }
 
-    private static void getException() throws Exception {
-        throw new Exception();
+    public static void initMessage(ModuleRequest request, ActionMessage message) {
+        ActionMessages actionMessages = (ActionMessages)request.getAttribute(Constants.ACTION_MESSAGE);
+        if (actionMessages==null) {
+            actionMessages = new ActionMessages();
+            request.setAttribute( Constants.ACTION_MESSAGE,actionMessages);
+        }
+        actionMessages.getMessages().add(message);
     }
 }

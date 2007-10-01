@@ -44,13 +44,14 @@ public class RegisterConstants {
 
     // resourcebundle key
     public static final String NAME_EMAIL = "email";
-    public static final String NO_SUCH_EMAIL = "no_such_email";
-    public static final String ROLE_IS_NULL = "role_is_null";
+    public static final String NO_SUCH_EMAIL = "reg.no_such_email";
+    public static final String ROLE_IS_NULL = "reg.role_is_null";
     public static final String LOGIN_ALREADY_REGISTERED = "reg.error-login-already-registered";
     public static final String USER_LOGIN_IS_NULL = "reg.error-user-login-is-null";
     public static final String USER_PASSWORD_IS_NULL = "reg.error-user-password-is-null";
     public static final String USER_PASSWORD_IS_MISMATCH = "reg.error-user-password-is-mismatch";
     public static final String USER_EMAIL_IS_NULL = "reg.error-user-email-is-null";
+    public static final String USER_FIRST_NAME_IS_NULL = "reg.error-user-first-name-is-null";
     public static final String CAPTCHA_WRONG = "reg.error-captcha-wrong";
 
 

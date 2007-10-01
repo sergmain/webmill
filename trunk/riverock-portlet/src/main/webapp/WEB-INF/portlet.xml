@@ -511,21 +511,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</portlet-info>
 	</portlet>
 	<portlet>
-		<portlet-name>mill.register</portlet-name>
-		<portlet-class>org.riverock.portlet.register.RegisterPortlet</portlet-class>
-		<init-param>
-			<name>action-config</name>
-			<value>/WEB-INF/action/register-action.xml</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.register.i18n.Register</resource-bundle>
-		<portlet-info>
-			<title>Registration portlet</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
 		<portlet-name>mill.image.upload_image</portlet-name>
 		<portlet-class>org.riverock.portlet.image.ImageUploadPortlet</portlet-class>
 		<supports>
