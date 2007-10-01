@@ -33,19 +33,6 @@
   </component>
   <component name="DebuggerManager">
     <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterUtils.java" line="23" class="org.riverock.portlet.register.RegisterUtils" package="org.riverock.portlet.register">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/captcha/ImageCaptchaServlet.java" line="42" class="org.riverock.portlet.captcha.ImageCaptchaServlet" package="org.riverock.portlet.captcha">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
@@ -104,10 +91,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="home.jsp" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/riverock/register/jsp/home.jsp">
+      <file leaf-file-name="CreateAccountAction.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/action/CreateAccountAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="105" column="44" selection-start="4246" selection-end="4246" vertical-scroll-proportion="0.6089172">
+            <state line="96" column="95" selection-start="4573" selection-end="4573" vertical-scroll-proportion="0.29675812">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserOperationStatus.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://C:\Documents and Settings\SMaslyukov\.m2\repository\org\riverock\riverock-interfaces\1.7\riverock-interfaces-1.7.jar!/org/riverock/interfaces/portal/bean/UserOperationStatus.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="17" selection-start="177" selection-end="177" vertical-scroll-proportion="0.08478803">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserRegistrationBean.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/bean/UserRegistrationBean.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="186" column="0" selection-start="4499" selection-end="4499" vertical-scroll-proportion="3.4339151">
               <folding />
             </state>
           </provider>
@@ -116,7 +121,7 @@
       <file leaf-file-name="Register_en.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/org/riverock/portlet/register/i18n/Register_en.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="26" selection-start="2245" selection-end="2245" vertical-scroll-proportion="0.522293">
+            <state line="53" column="0" selection-start="2739" selection-end="2889" vertical-scroll-proportion="0.76305735">
               <folding />
             </state>
           </provider>
@@ -125,28 +130,17 @@
       <file leaf-file-name="Register_ru.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/org/riverock/portlet/register/i18n/Register_ru.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="41" selection-start="2311" selection-end="2311" vertical-scroll-proportion="0.32738853">
+            <state line="54" column="0" selection-start="2975" selection-end="2975" vertical-scroll-proportion="0.588535">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CreateAccountAction.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/action/CreateAccountAction.java">
+      <file leaf-file-name="RegisterError.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterError.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="42" selection-start="3483" selection-end="3483" vertical-scroll-proportion="0.49127182">
+            <state line="61" column="98" selection-start="2579" selection-end="2579" vertical-scroll-proportion="0.43890274">
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RegisterUtils.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterUtils.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="57" selection-start="1028" selection-end="1028" vertical-scroll-proportion="0.50249374">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -154,16 +148,7 @@
       <file leaf-file-name="RegisterConstants.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterConstants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="60" column="54" selection-start="2485" selection-end="2494" vertical-scroll-proportion="0.33291772">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RegisterPortlet.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterPortlet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="59" column="13" selection-start="2284" selection-end="2284" vertical-scroll-proportion="-0.5400254">
+            <state line="49" column="93" selection-start="1909" selection-end="1943" vertical-scroll-proportion="0.3541147">
               <folding />
             </state>
           </provider>
@@ -868,20 +853,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/captcha/ImageCaptchaServlet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="75" selection-start="1461" selection-end="1461" vertical-scroll-proportion="0.33290815">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/captcha/CaptchaServiceSingleton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="0" selection-start="676" selection-end="676" vertical-scroll-proportion="0.36862245">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:\Documents and Settings\SMaslyukov\.m2\repository\com\octo\captcha\jcaptcha-all\1.0-RC3\jcaptcha-all-1.0-RC3.jar!/com/octo/captcha/service/AbstractManageableCaptchaService.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="13" column="53" selection-start="750" selection-end="750" vertical-scroll-proportion="0.36823106">
@@ -903,37 +874,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/bean/UserRegistrationBean.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="60" selection-start="2027" selection-end="2027" vertical-scroll-proportion="0.36034912">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/jdk1.5.0_08/src.zip!/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="844" column="19" selection-start="34163" selection-end="34163" vertical-scroll-proportion="0.33291772">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterError.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="50" selection-start="2389" selection-end="2389" vertical-scroll-proportion="0.34289277">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/org/riverock/portlet/register/i18n/Register_en.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="26" selection-start="2245" selection-end="2245" vertical-scroll-proportion="0.522293">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/org/riverock/portlet/register/i18n/Register_ru.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="41" selection-start="2311" selection-end="2311" vertical-scroll-proportion="0.32738853">
           <folding />
         </state>
       </provider>
@@ -945,6 +888,15 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="0" selection-start="808" selection-end="808" vertical-scroll-proportion="0.41770574">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterPortlet.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="59" column="13" selection-start="2284" selection-end="2284" vertical-scroll-proportion="-0.5400254">
@@ -952,26 +904,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/action/CreateAccountAction.java">
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
+      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorReferencesProvider">
+        <state />
+      </provider>
+      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorProvider">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="42" selection-start="3483" selection-end="3483" vertical-scroll-proportion="0.49127182">
+        <state line="73" column="115" selection-start="2761" selection-end="2761" vertical-scroll-proportion="0.16184211">
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleGeneralEditorProvider">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="54" selection-start="2485" selection-end="2494" vertical-scroll-proportion="0.33291772">
+        <state line="49" column="93" selection-start="1909" selection-end="1943" vertical-scroll-proportion="0.3541147">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterUtils.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/RegisterError.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="57" selection-start="1028" selection-end="1028" vertical-scroll-proportion="0.50249374">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="61" column="98" selection-start="2579" selection-end="2579" vertical-scroll-proportion="0.43890274">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/org/riverock/portlet/register/i18n/Register_en.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="0" selection-start="2739" selection-end="2889" vertical-scroll-proportion="0.76305735">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/org/riverock/portlet/register/i18n/Register_ru.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="0" selection-start="2975" selection-end="2975" vertical-scroll-proportion="0.588535">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/bean/UserRegistrationBean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="186" column="0" selection-start="4499" selection-end="4499" vertical-scroll-proportion="3.4339151">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:\Documents and Settings\SMaslyukov\.m2\repository\org\riverock\riverock-interfaces\1.7\riverock-interfaces-1.7.jar!/org/riverock/interfaces/portal/bean/UserOperationStatus.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="17" selection-start="177" selection-end="177" vertical-scroll-proportion="0.08478803">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/riverock/portlet/register/action/CreateAccountAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="96" column="95" selection-start="4573" selection-end="4573" vertical-scroll-proportion="0.29675812">
+          <folding />
         </state>
       </provider>
     </entry>

@@ -47,6 +47,7 @@ public class RegisterConstants {
     public static final String NO_SUCH_EMAIL = "reg.no_such_email";
     public static final String ROLE_IS_NULL = "reg.role_is_null";
     public static final String LOGIN_ALREADY_REGISTERED = "reg.error-login-already-registered";
+    public static final String EMAIL_ALREADY_REGISTERED = "reg.error-email-already-registered";
     public static final String USER_LOGIN_IS_NULL = "reg.error-user-login-is-null";
     public static final String USER_PASSWORD_IS_NULL = "reg.error-user-password-is-null";
     public static final String USER_PASSWORD_IS_MISMATCH = "reg.error-user-password-is-mismatch";

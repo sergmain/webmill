@@ -70,14 +70,14 @@ public class CreateAccountAction implements ActionInstance {
         bean.setAddress(moduleActionRequest.getRequest().getString(RegisterConstants.ADDRESS_PARAM));
         bean.setEmail(moduleActionRequest.getRequest().getString(RegisterConstants.EMAIL_PARAM));
 
+        setRegisterDataAcctribute(moduleActionRequest, bean);
+
         String checkStatus = checkRegisterData(bean, moduleActionRequest);
         if (checkStatus != null) {
-            setRegisterDataAcctribute(moduleActionRequest, bean);
             return checkStatus;
         }
         checkStatus = RegisterUtils.checkCaptcha(moduleActionRequest, moduleActionRequest.getRequest());
         if (checkStatus != null) {
-            setRegisterDataAcctribute(moduleActionRequest, bean);
             return checkStatus;
         }
 
@@ -112,11 +112,14 @@ public class CreateAccountAction implements ActionInstance {
             case PortalUserManager.STATUS_LOGIN_ALREADY_REGISTERED:
                 return RegisterError.loginAlreadyRegistered(moduleActionRequest);
 
+            case PortalUserManager.STATUS_EMAIL_ALREADY_REGISTERED:
+                return RegisterError.emailAlreadyRegistered(moduleActionRequest);
+
             case PortalUserManager.STATUS_OK_OPERATION:
                 return RegisterConstants.OK_EXECUTE_STATUS;
 
             default:
-                throw new IllegalStateException("unknown action status: " + status);
+                throw new IllegalStateException("Unknown action status: " + status.getOperationCode());
         }
     }
 

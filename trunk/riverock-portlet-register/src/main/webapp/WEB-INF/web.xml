@@ -58,6 +58,7 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
+<!--
 	<servlet>
 		<description>Shutdown helper servlet</description>
 		<display-name>Shutdown helper servlet</display-name>
@@ -65,6 +66,7 @@
 		<servlet-class>org.riverock.portlet.ShutdownHelperServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+-->
 
     <servlet>
         <servlet-name>jcaptcha</servlet-name>

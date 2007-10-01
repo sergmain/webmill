@@ -49,7 +49,10 @@
     <entry key="reg.captcha">Проверочное слово</entry>
     <entry key="reg.go-back">Вернуться назад</entry>
 
-    <entry key="reg.error-login-already-registered">Введенный вами логин уже используется. Выберите другой.</entry>
+    <entry key="reg.error-login-already-registered">Введеный вами логин уже используется. Выберите другой.</entry>
+    <entry key="reg.error-email-already-registered">Введеный вами адрес электронной почты уже используется.
+        Пожалуйста выберите другой адрес или запросите восстановление пароля.
+    </entry>
     <entry key="reg.error-user-login-is-null">Логин не введен.</entry>
     <entry key="reg.error-user-password-is-null">Пароль не введен.</entry>
     <entry key="reg.error-user-password-is-mismatch">Введеные пароли не совпадают.</entry>

@@ -50,6 +50,7 @@
     <entry key="reg.go-back">Go back</entry>
 
     <entry key="reg.error-login-already-registered">Entered login already used. Please choose other login.</entry>
+    <entry key="reg.error-email-already-registered">Entered e-mail already used. Please choose other e-mail address or recover your password.</entry>
     <entry key="reg.error-user-login-is-null">User login isn't entered.</entry>
     <entry key="reg.error-user-password-is-null">User password isn't entered.</entry>
     <entry key="reg.error-user-password-is-mismatch">Entered passwords is mismatch.</entry>
