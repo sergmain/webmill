@@ -123,6 +123,24 @@ public class DataProvider implements Serializable {
         return false;
     }
 
+    public String getCompanyName(Long companyId) {
+        for (SelectItem selectItem : getCompanyList()) {
+            if (selectItem.getValue().equals(companyId)) {
+                return selectItem.getLabel();
+            }
+        }
+        return null;
+    }
+
+    public String getHoldingName(Long holdingId) {
+        for (SelectItem selectItem : getHoldingList()) {
+            if (selectItem.getValue().equals(holdingId)) {
+                return selectItem.getLabel();
+            }
+        }
+        return null;
+    }
+
     public List<SelectItem> getCompanyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
         List<Company> companies = authSessionBean.getAuthSession().getCompanyList();

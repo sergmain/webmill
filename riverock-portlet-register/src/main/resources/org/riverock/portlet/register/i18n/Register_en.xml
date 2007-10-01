@@ -40,6 +40,7 @@
     <entry key="reg.password">Password:</entry>
     <entry key="reg.password_repeat">Repeat password:</entry>
     <entry key="reg.first_name">First name:</entry>
+    <entry key="reg.middle_name">Middle name:</entry>
     <entry key="reg.last_name">Last name:</entry>
     <entry key="reg.telephone">Contact phone:</entry>
     <entry key="reg.address">Address:</entry>
@@ -53,7 +54,9 @@
     <entry key="reg.error-user-password-is-null">User password isn't entered.</entry>
     <entry key="reg.error-user-password-is-mismatch">Entered passwords is mismatch.</entry>
     <entry key="reg.error-user-email-is-null">User e-mail isn't entered.</entry>
+    <entry key="reg.error-user-first-name-is-null">User first name isn't entered.</entry>
     <entry key="reg.error-captcha-wrong">Verification word isn't correct.</entry>
+    <entry key="reg.no_such_email">Account for e-mail {0} not registered.</entry>
 
 
     <entry key="reg.send-password.your-password">

@@ -44,6 +44,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *         Time: 17:10:11
  */
 public class ImageCaptchaServlet extends HttpServlet {
+    private static final String CAPTCHA_ID = "captchaId";
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -55,7 +56,7 @@ public class ImageCaptchaServlet extends HttpServlet {
         // the output stream to render the captcha image as jpeg into
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
         try {
-            String captchaId = httpServletRequest.getParameter("id");
+            String captchaId = httpServletRequest.getParameter(CAPTCHA_ID);
 
             // call the ImageCaptchaService getChallenge method
             BufferedImage challenge = CaptchaServiceSingleton.getInstance().getImageChallengeForID(
@@ -65,10 +66,12 @@ public class ImageCaptchaServlet extends HttpServlet {
             // a jpeg encoder
             JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(jpegOutputStream);
             jpegEncoder.encode(challenge);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
-        } catch (CaptchaServiceException e) {
+        }
+        catch (CaptchaServiceException e) {
             httpServletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }

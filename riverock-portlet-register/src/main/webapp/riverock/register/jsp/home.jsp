@@ -36,18 +36,36 @@
 <fmt:setLocale value="${locale}" scope="request"/>
 <fmt:setBundle basename="org.riverock.portlet.register.i18n.Register" scope="request"/>
 
+<c:if test="${not empty actionMessage}">
+    <table width="95%" border="0" cellspacing="1" cellpadding="5">
+        <c:forEach items="${actionMessage.messages}" var="msg">
+            <tr >
+                <td ><span style="color:red;"><c:out value="${msg.value}"/></span></td>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>
 
 <table border="0">
     <tr>
-        <td width="25%"></td><td></td>
+        <td width="25%">&nbsp;</td><td>&nbsp;</td>
     </tr>
     <td colspan="2"><fmt:message key="reg.forgot_password"/></td>
 
     <form method="POST" action="<c:out value='${registerBean.baseModuleUrl}'/>">
         <input type="hidden" name="action" value="send-password">
+        <input type="hidden" name="captchaId" value="<c:out value='${captchaId}'/>">
+
         <tr>
             <td><fmt:message key="reg.email"/></td>
             <td><input type="text" name="email" size="50"></td>
+        </tr>
+        <tr>
+            <td><span style="color:red">*</span><fmt:message key="reg.captcha"/></td>
+            <td>
+                <img src="<%= request.getContextPath() %>/jcaptcha?id=<c:out value='${captchaId}'/>" alt="captcha">&nbsp;
+                <input type="text" name="j_captcha_response" value="" size="15">
+            </td>
         </tr>
         <tr>
             <td colspan="2"><input type="submit" value="<fmt:message key='reg.send_password'/>"></td>
@@ -68,7 +86,7 @@
         <input type="hidden" name="captchaId" value="<c:out value='${captchaId}'/>">
         <tr>
             <td><span style="color:red">*</span><fmt:message key="reg.login"/></td>
-            <td><input type="text" name="username" size="50" maxlength="20"></td>
+            <td><input type="text" name="username" size="50" maxlength="20" value="<c:out value="${registerData.userLogin}"/>"></td>
         </tr>
         <tr>
             <td><span style="color:red">*</span><fmt:message key="reg.password"/></td>
@@ -81,30 +99,34 @@
             <td><input type="password" name="password2" size="50" maxlength="20"></td>
         </tr>
         <tr>
-            <td><fmt:message key="reg.first_name"/></td>
-            <td><input type="text" name="first_name" size="50" maxlength="50"></td>
+            <td><span style="color:red">*</span><fmt:message key="reg.first_name"/></td>
+            <td><input type="text" name="first_name" size="50" maxlength="50" value="<c:out value="${registerData.firstName}"/>"></td>
+        </tr>
+        <tr>
+            <td><fmt:message key="reg.middle_name"/></td>
+            <td><input type="text" name="middle_name" size="50" maxlength="50" value="<c:out value="${registerData.middleName}"/>"></td>
         </tr>
         <tr>
             <td><fmt:message key="reg.last_name"/></td>
-            <td><input type="text" name="last_name" size="50" maxlength="50"></td>
+            <td><input type="text" name="last_name" size="50" maxlength="50" value="<c:out value="${registerData.lastName}"/>"></td>
         </tr>
         <tr>
             <td><fmt:message key="reg.telephone"/></td>
-            <td><input type="text" name="phone" size="50" maxlength="25"></td>
+            <td><input type="text" name="phone" size="50" maxlength="25" value="<c:out value="${registerData.phone}"/>"></td>
         </tr>
         <tr>
             <td><fmt:message key="reg.address"/></td>
-            <td><input type="text" name="addr" size="50" maxlength="50"></td>
+            <td><input type="text" name="addr" size="50" maxlength="50" value="<c:out value="${registerData.address}"/>"></td>
         </tr>
         <tr>
             <td><span style="color:red">*</span><fmt:message key="reg.email"/></td>
-            <td><input type="text" name="email" size="50" maxlength="30"></td>
+            <td><input type="text" name="email" size="50" maxlength="30" value="<c:out value="${registerData.email}"/>"></td>
         </tr>
         <tr>
             <td><span style="color:red">*</span><fmt:message key="reg.captcha"/></td>
             <td>
-                <img src="<%= request.getContextPath() %>/jcaptcha?id=<c:out value='${captchaId}'/>" alt="captcha"><br/>
-                <input type="text" name="j_captcha_response" value="">
+                <img src="<%= request.getContextPath() %>/jcaptcha?id=<c:out value='${captchaId}'/>" alt="captcha">&nbsp;
+                <input type="text" name="j_captcha_response" value="" size="15">
             </td>
         </tr>
         <tr>

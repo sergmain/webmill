@@ -27,7 +27,6 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.octo.captcha.service.CaptchaServiceException;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 
@@ -36,10 +35,9 @@ import org.riverock.interfaces.portal.user.PortalUserManager;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.action.ActionInstance;
 import org.riverock.module.exception.ActionException;
-import org.riverock.module.web.request.ModuleRequest;
-import org.riverock.portlet.captcha.CaptchaServiceSingleton;
 import org.riverock.portlet.register.RegisterConstants;
 import org.riverock.portlet.register.RegisterError;
+import org.riverock.portlet.register.RegisterUtils;
 import org.riverock.portlet.register.bean.UserRegistrationBean;
 import org.riverock.interfaces.ContainerConstants;
 
@@ -66,16 +64,20 @@ public class CreateAccountAction implements ActionInstance {
         bean.setUserPassword1(password1);
 
         bean.setFirstName(moduleActionRequest.getRequest().getString(RegisterConstants.FIRST_NAME_PARAM));
-        bean.setLastName(moduleActionRequest.getRequest().getString(RegisterConstants.LAST_NAME_PARAM));
         bean.setMiddleName(moduleActionRequest.getRequest().getString(RegisterConstants.MIDDLE_NAME_PARAM));
+        bean.setLastName(moduleActionRequest.getRequest().getString(RegisterConstants.LAST_NAME_PARAM));
+        bean.setPhone(moduleActionRequest.getRequest().getString(RegisterConstants.PHONE_PARAM));
+        bean.setAddress(moduleActionRequest.getRequest().getString(RegisterConstants.ADDRESS_PARAM));
         bean.setEmail(moduleActionRequest.getRequest().getString(RegisterConstants.EMAIL_PARAM));
 
         String checkStatus = checkRegisterData(bean, moduleActionRequest);
         if (checkStatus != null) {
+            setRegisterDataAcctribute(moduleActionRequest, bean);
             return checkStatus;
         }
-        checkStatus = checkCaptcha(moduleActionRequest, moduleActionRequest.getRequest());
+        checkStatus = RegisterUtils.checkCaptcha(moduleActionRequest, moduleActionRequest.getRequest());
         if (checkStatus != null) {
+            setRegisterDataAcctribute(moduleActionRequest, bean);
             return checkStatus;
         }
 
@@ -93,6 +95,10 @@ public class CreateAccountAction implements ActionInstance {
         UserOperationStatus status = portalUserManager.registerNewUser(bean, messages);
 
         return sendStatus(moduleActionRequest, status);
+    }
+
+    private static void setRegisterDataAcctribute(ModuleActionRequest moduleActionRequest, UserRegistrationBean bean) {
+        moduleActionRequest.getRequest().setAttribute("registerData", bean);
     }
 
     private String sendStatus( ModuleActionRequest moduleActionRequest, UserOperationStatus status) {
@@ -132,28 +138,8 @@ public class CreateAccountAction implements ActionInstance {
             return RegisterError.userEmailIsNull(moduleActionRequest);
         }
 
-        return null;
-    }
-
-    private String checkCaptcha(ModuleActionRequest moduleActionRequest, ModuleRequest moduleRequest) {
-        Boolean isResponseCorrect;
-        String captchaId = moduleRequest.getParameter(RegisterConstants.CAPTCHA_ID);
-        //retrieve the response
-        String response = moduleRequest.getParameter("j_captcha_response");
-
-        if (log.isDebugEnabled()) {
-            log.debug("captchaId: " + captchaId);
-            log.debug("j_captcha_response: " + response);
-        }
-        // Call the Service method
-        try {
-            isResponseCorrect = CaptchaServiceSingleton.getInstance().validateResponseForID(captchaId, response);
-        } catch (CaptchaServiceException e) {
-            return RegisterError.captchaWrong(moduleActionRequest);
-        }
-
-        if (isResponseCorrect==null || !isResponseCorrect) {
-            return RegisterError.captchaWrong(moduleActionRequest);
+        if (StringUtils.isBlank(bean.getFirstName())) {
+            return RegisterError.userFirstNameIsNull(moduleActionRequest);
         }
 
         return null;
