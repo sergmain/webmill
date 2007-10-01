@@ -43,7 +43,6 @@ import org.riverock.interfaces.portal.bean.UserRegistration;
 import org.riverock.interfaces.portal.mail.PortalMailServiceProvider;
 import org.riverock.interfaces.portal.user.PortalUserManager;
 import org.riverock.interfaces.sso.a3.AuthInfo;
-import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.webmill.portal.bean.AuthInfoImpl;
@@ -51,7 +50,6 @@ import org.riverock.webmill.portal.bean.RoleEditableBeanImpl;
 import org.riverock.webmill.portal.bean.UserBean;
 import org.riverock.webmill.portal.bean.UserOperationStatusBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.sso.a3.AuthSessionImpl;
 
 /**
  * @author Sergei Maslyukov
@@ -62,7 +60,7 @@ import org.riverock.sso.a3.AuthSessionImpl;
 public class PortalUserManagerImpl implements PortalUserManager {
     private final static Logger log = Logger.getLogger(PortalUserManagerImpl.class);
 
-    public static final String USER_DEFAULT_ROLE_METADATA = "register-default-role";
+    public static final String USER_DEFAULT_ROLE_METADATA = "webmill.register-default-role";
 
     private PortalMailServiceProvider mailServiceProvider = null;
     private Long siteId = null;
@@ -165,12 +163,31 @@ public class PortalUserManagerImpl implements PortalUserManager {
                     log.debug("Account for e-mail " + userRegistration.getEmail() + " already registered: " + (users != null));
                 }
 
+                List<User> grantedUsers = new ArrayList<User>();
+                for (User user : users) {
+                    if (user.isDeleted()) {
+                        continue;
+                    }
+
+                    List<AuthInfo> authInfos = InternalDaoFactory.getInternalAuthDao().getAuthInfo(user.getUserId(), siteId);
+                    if (authInfos == null || authInfos.isEmpty()) {
+                        continue;
+                    }
+                    grantedUsers.add(user);
+                }
+
+                if (!grantedUsers.isEmpty()) {
+                    return new UserOperationStatusBean(PortalUserManager.STATUS_EMAIL_ALREADY_REGISTERED);
+                }
+
+/*
                 for (User user : users) {
                     AuthSession authSession = new AuthSessionImpl(user);
                     if (authSession.checkCompanyId(companyId)!=null) {
                         return new UserOperationStatusBean(PortalUserManager.STATUS_EMAIL_ALREADY_REGISTERED);
                     }
                 }
+*/
 
                 UserBean user = new UserBean(userRegistration);
                 user.setCreatedDate(new Date(System.currentTimeMillis()));

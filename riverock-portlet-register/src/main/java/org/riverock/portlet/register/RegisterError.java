@@ -58,6 +58,10 @@ public class RegisterError {
         return PortletErrors.error(moduleActionRequest, RegisterConstants.LOGIN_ALREADY_REGISTERED);
     }
 
+    public static String emailAlreadyRegistered(ModuleActionRequest moduleActionRequest) {
+        return PortletErrors.error(moduleActionRequest, RegisterConstants.EMAIL_ALREADY_REGISTERED);
+    }
+
     public static String userLoginIsNull(ModuleActionRequest moduleActionRequest) {
         return PortletErrors.error(moduleActionRequest, RegisterConstants.USER_LOGIN_IS_NULL);
     }
