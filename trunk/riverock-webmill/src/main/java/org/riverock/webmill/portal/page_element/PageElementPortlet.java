@@ -45,19 +45,20 @@ import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.container.portlet.PortletEntry;
+import org.riverock.webmill.container.portlet.PortletNotRegisteredException;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portal.PortalInstance;
-import org.riverock.webmill.portal.PortalSessionManagerImpl;
 import org.riverock.webmill.portal.PortalRequest;
+import org.riverock.webmill.portal.PortalSessionManagerImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
 import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
+import org.riverock.webmill.portal.info.PortalInfoImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.preference.PortletPreferencePersistencer;
 import org.riverock.webmill.portal.preference.PortletPreferencesImpl;
@@ -429,7 +430,9 @@ public final class PageElementPortlet implements PageElement {
             if (portletEntry==null || portletEntry.getIsPermanent()) {
                 errorString = "Portlet '"+ fullPortletName + "' permanent unavailable.";
                 log.error(errorString);
-                log.error("Exception message: " + portletEntry.getExceptionMessage());
+                if (portletEntry!=null) {
+                    log.error("Exception message: " + portletEntry.getExceptionMessage());
+                }
                 return;
             }
 
@@ -558,7 +561,13 @@ public final class PageElementPortlet implements PageElement {
 
             // load portlet preferences
             portletMetadata = persistencer.load();
-            portletEntry = portalInstance.getPortletContainer().getPortletInstance(fullPortletName);
+            try {
+                portletEntry = portalInstance.getPortletContainer().getPortletInstance(fullPortletName);
+            }
+            catch (PortletNotRegisteredException e) {
+                errorString = portletUnavailable(fullPortletName);
+                return;
+            }
 
             if (portletEntry == null) {
                 errorString = portletUnavailable(fullPortletName);

@@ -32,10 +32,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletRequestWrapper;
 import javax.servlet.ServletResponse;
+import javax.servlet.ServletResponseWrapper;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.generic.InternalRequest;
+import org.riverock.interfaces.generic.InternalResponse;
 
 /**
  * User: SergeMaslyukov
@@ -83,13 +85,16 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 
         InternalRequest internalRequest = getInternalRequest(request);
+        InternalResponse internalResponse = getInternalResponse(response);
 
-        boolean isIncluded = (internalRequest.isIncluded());
+        boolean isIncludedRequest = (internalRequest.isIncluded());
+        boolean isIncludedResponse = (internalResponse.isIncluded());
         try {
             internalRequest.setIncluded(true);
+            internalResponse.setIncluded(true);
             internalRequest.setIncludedQueryString(queryString);
 
-            requestDispatcher.include( (ServletRequest) internalRequest, response);
+            requestDispatcher.include( (ServletRequest) internalRequest, (ServletResponse)internalResponse);
         }
         catch( java.io.IOException e ) {
             String es = "IOException include new request";
@@ -102,7 +107,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
             throw new ServletException( es, e );
         }
         finally {
-            internalRequest.setIncluded(isIncluded);
+            internalRequest.setIncluded(isIncludedRequest);
+            internalResponse.setIncluded(isIncludedResponse);
         }
     }
 
@@ -115,6 +121,17 @@ public class RequestDispatcherImpl implements RequestDispatcher {
             }
         }
         return (InternalRequest) request;
+    }
+
+    private static InternalResponse getInternalResponse(ServletResponse response) {
+        while (!(response instanceof InternalResponse)) {
+            response = ((ServletResponseWrapper) response).getResponse();
+            if (response == null) {
+                throw new IllegalStateException(
+                        "The internal response cannot be found.");
+            }
+        }
+        return (InternalResponse) response;
     }
 
 }

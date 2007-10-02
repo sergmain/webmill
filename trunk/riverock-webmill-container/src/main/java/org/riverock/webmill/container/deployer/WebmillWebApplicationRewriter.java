@@ -23,12 +23,12 @@
  */
 package org.riverock.webmill.container.deployer;
 
-import java.lang.String;
-import java.math.BigInteger;
-
 import org.riverock.webmill.container.definition.DefinitionUtils;
-import org.riverock.webmill.container.definition.web_xml_v2_4.*;
-import org.riverock.webmill.container.portlet.register.PortletRegisterServlet;
+import org.riverock.webmill.container.definition.WebAppDefinition;
+import org.riverock.webmill.container.definition.web_xml_abstract.Servlet;
+import org.riverock.webmill.container.definition.web_xml_v2_4.JspConfigType;
+import org.riverock.webmill.container.definition.web_xml_v2_4.PathType;
+import org.riverock.webmill.container.definition.web_xml_v2_4.TaglibType;
 
 /**
  * Utilities for manipulating the web.xml deployment descriptor
@@ -41,8 +41,9 @@ import org.riverock.webmill.container.portlet.register.PortletRegisterServlet;
  *          Exp $
  */
 public class WebmillWebApplicationRewriter {
-    private static final String WEBMILL_PORTLET_REGISTER = "WebmillPortletRegister";
-    private static final String PORTLET_URI = "http://java.sun.com/portlet";
+    public static final String WEBMILL_PORTLET_REGISTER = "WebmillPortletRegister";
+    public static final String PORTLET_URI = "http://java.sun.com/portlet";
+    public static final String WEB_INF_TLD_PORTLET_TLD = "/WEB-INF/tld/portlet.tld";
 
     static final String WEB_XML_VERSION_XPATH = "/web-app/@version";
     static final String WEBMILL_SERVLET_XPATH = "/web-app/servlet/servlet-name[contains(child::text(), \"" + WEBMILL_PORTLET_REGISTER + "\")]";
@@ -62,11 +63,10 @@ public class WebmillWebApplicationRewriter {
         "description", "distributable", "context-param", "filter", "filter-mapping", "listener", "servlet",
         "servlet-mapping", "session-config", "mime-mapping", "welcome-file-list", "error-page", "taglib"};
 
-    private WebAppType webXml;
+    private WebAppDefinition webXml;
     private String realPortletTldFile = null;
-    private static final String WEB_INF_TLD_PORTLET_TLD = "/WEB-INF/tld/portlet.tld";
 
-    public WebmillWebApplicationRewriter(WebAppType webXml) {
+    public WebmillWebApplicationRewriter(WebAppDefinition webXml) {
         if (webXml==null) {
             throw new DeployException("webApp object is null");
         }
@@ -86,77 +86,24 @@ public class WebmillWebApplicationRewriter {
     public void processWebXML() {
         try {
 
-            if (new Double(webXml.getVersion()).floatValue()<2.4) {
-                throw new IllegalStateException("web.xml file must be version 2.4 or higher");
-            }
-            
-            ServletType registerServlet = DefinitionUtils.getServlet(webXml, WEBMILL_PORTLET_REGISTER);
-            if (DefinitionUtils.getCountTaglib(webXml, PORTLET_URI)>1) {
+            Servlet registerServlet = DefinitionUtils.getServlet(webXml, WEBMILL_PORTLET_REGISTER);
+            if (webXml.getCountTaglib(PORTLET_URI)>1) {
                 throw new IllegalStateException("Invalid web.xml file. URI http://java.sun.com/portlet defined more than once");
             }
 
             // process servlet for registering webmill portlet
             if (registerServlet == null) {
-                ServletType servlet = new ServletType();
-                initWebmillRegisterServlet(servlet);
-                webXml.getDescriptionAndDisplayNameAndIcon().add(servlet);
+                webXml.initWebmillRegisterServlet();
             }
             else {
-                initWebmillRegisterServlet(registerServlet);
+                webXml.initWebmillRegisterServlet(registerServlet);
             }
 
-            TaglibType portletTaglib = DefinitionUtils.getTaglib(webXml, PORTLET_URI);
-            JspConfigType jspConfig = DefinitionUtils.getJspConfig(webXml);
-            if (jspConfig==null) {
-                jspConfig = new JspConfigType();
-                webXml.getDescriptionAndDisplayNameAndIcon().add(jspConfig);
-            }
-
-            if (portletTaglib == null) {
-                realPortletTldFile = WEB_INF_TLD_PORTLET_TLD;
-
-                TaglibType taglib = new TaglibType();
-                PathType path= new PathType();
-                path.setValue(realPortletTldFile);
-                taglib.setTaglibLocation(path);
-                org.riverock.webmill.container.definition.web_xml_v2_4.String uri = new org.riverock.webmill.container.definition.web_xml_v2_4.String();
-                uri.setValue(PORTLET_URI);
-                taglib.setTaglibUri(uri);
-                jspConfig.getTaglib().add(taglib);
-            }
-            else {
-                if (portletTaglib.getTaglibLocation()==null || portletTaglib.getTaglibLocation().getValue()==null) {
-                    PathType path= new PathType();
-                    path.setValue(WEB_INF_TLD_PORTLET_TLD);
-                    portletTaglib.setTaglibLocation(path);
-                }
-                realPortletTldFile = portletTaglib.getTaglibLocation().getValue();
-            }
+            realPortletTldFile = webXml.prepareTaglib();
         }
         catch (Exception e) {
             throw new DeployException("Unable to process web.xml for infusion " + e.toString(), e);
         }
-    }
-
-    private void initWebmillRegisterServlet(ServletType servlet) {
-        ServletNameType servletName = new ServletNameType();
-        servletName.setValue(WEBMILL_PORTLET_REGISTER);
-        servlet.setServletName(servletName);
-        DescriptionType description = new DescriptionType();
-        description.setValue("Webmill servlet for register portlet application archive");
-        servlet.getDescription().add(description);
-
-        DisplayNameType displayName = new DisplayNameType();
-        displayName.setValue("Webmill portlet register");
-        servlet.getDisplayName().add(displayName);
-        FullyQualifiedClassType clazzName = new FullyQualifiedClassType();
-        clazzName.setValue(PortletRegisterServlet.class.getName());
-        servlet.setServletClass(clazzName);
-
-
-        XsdIntegerType xsdInteger = new XsdIntegerType();
-        xsdInteger.setValue(new BigInteger("1"));
-        servlet.setLoadOnStartup(xsdInteger);
     }
 
     public String getRealPortletTldFile() {
