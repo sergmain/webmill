@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import org.riverock.webmill.container.definition.web_xml_v2_4.WebAppType;
 
 /**
@@ -13,9 +15,11 @@ import org.riverock.webmill.container.definition.web_xml_v2_4.WebAppType;
  */
 public interface WebXmlDefinitionProcessor {
 
-    WebAppType process( File webXmlFile );
+    WebAppDefinition process( File webXmlFile );
 
-    WebAppType process(InputStream inputStream);
+    WebAppDefinition process(InputStream inputStream);
 
-    void marshall(WebAppType webApp, OutputStream outputStream, String rootElement);
+    void marshall(WebAppDefinition webApp, OutputStream outputStream, String rootElement);
+
+    WebAppVersion getWebAppVersion(byte[] bytes) throws Exception;
 }

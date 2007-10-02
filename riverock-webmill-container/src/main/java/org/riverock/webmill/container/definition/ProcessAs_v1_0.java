@@ -135,12 +135,12 @@ public class ProcessAs_v1_0 {
                 def.setExpirationCache(portletType.getExpirationCache().getValue());
             }
             def.setInitParam(initInitParam(portletType.getInitParam()));
-            def.setPortletClass(portletType.getPortletClass());
+            def.setPortletClass(portletType.getPortletClass().trim());
             def.setPortletInfo(initPortletInfo(portletType.getPortletInfo()));
             def.setPortletName(portletType.getPortletName().getValue());
             def.setPreferences(initPreferences(portletType.getPortletPreferences()));
             if (portletType.getResourceBundle()!=null) {
-                def.setResourceBundle(portletType.getResourceBundle().getValue());
+                def.setResourceBundle(portletType.getResourceBundle().getValue().trim());
             }
             def.setSecurityRoleRef(initSecurityRoleRef(portletType.getSecurityRoleRef()));
             def.setSupportedLocale(initSupportedLocale(portletType.getSupportedLocale()));

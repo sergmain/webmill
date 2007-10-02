@@ -35,7 +35,7 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 import org.riverock.webmill.container.definition.DefinitionProcessorFactory;
-import org.riverock.webmill.container.definition.web_xml_v2_4.WebAppType;
+import org.riverock.webmill.container.definition.WebAppDefinition;
 
 /**
  * Makes a web application Deploy-ready for Webmill.
@@ -89,7 +89,7 @@ public class WebmillDeploy {
             // copy over all of the files in the input war to the output
             // war except for web.xml, portlet.xml, and context.xml which
             // we parse for use later
-            WebAppType webXml = null;
+            WebAppDefinition webXml = null;
 //            PortletApplication portletXml = null;
 
 //            Document contextXml = null;
@@ -280,7 +280,7 @@ public class WebmillDeploy {
         }
     }
 
-    private void addWebXmlFile(String path, WebAppType webApp, JarOutputStream jos) throws IOException {
+    private void addWebXmlFile(String path, WebAppDefinition webApp, JarOutputStream jos) throws IOException {
         System.out.println("Add web.xml file");
         jos.putNextEntry( new ZipEntry(path) );
         try {

@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 
 import org.riverock.webmill.container.definition.DefinitionProcessorFactory;
 import org.riverock.webmill.container.definition.WebXmlDefinitionProcessor;
+import org.riverock.webmill.container.definition.WebAppDefinition;
 import org.riverock.webmill.container.definition.web_xml_v2_4.WebAppType;
 
 /**
@@ -37,7 +38,7 @@ public class WebXmlXPathTest extends TestCase {
     public void testWebXml() throws Exception {
 
         String[] files = {
-            "/xml/web.xml"
+            "/xml/web-app/v2_4/web.xml"
         };
 
         for (String fileName : files) {
@@ -45,16 +46,15 @@ public class WebXmlXPathTest extends TestCase {
 
             InputStream inputStream = WebXmlXPathTest.class.getResourceAsStream(fileName);
             WebXmlDefinitionProcessor processor = DefinitionProcessorFactory.getWebXmlDefinitionProcessor();
-            WebAppType webApp = processor.process(inputStream);
-            int i = 0;
+            WebAppDefinition webApp = processor.process(inputStream);
+            assertNotNull(webApp);
         }
-
     }
 
     public void testXPath() throws Exception {
 
         String[] files = {
-            "/xml/web.xml"
+            "/xml/web-app/v2_4/web.xml"
         };
 
         for (String fileName : files) {

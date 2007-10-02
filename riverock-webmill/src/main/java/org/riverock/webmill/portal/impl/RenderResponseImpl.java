@@ -45,10 +45,11 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.servlet.ServletResponseWrapperInclude;
+import org.riverock.interfaces.generic.InternalResponse;
 import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.portal.PortalRequest;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.url.interpreter.RequestState;
-import org.riverock.webmill.portal.PortalRequest;
 
 /**
  * User: Admin
@@ -57,7 +58,7 @@ import org.riverock.webmill.portal.PortalRequest;
  *
  * $Id$
  */
-public final class RenderResponseImpl extends HttpServletResponseWrapper implements RenderResponse {
+public final class RenderResponseImpl extends HttpServletResponseWrapper implements RenderResponse, InternalResponse {
     private final static Logger log = Logger.getLogger( RenderResponseImpl.class );
 
     private boolean isRedirected = false;
@@ -87,6 +88,8 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     // current request state
     private RequestState requestState = null;
+
+    private boolean included = false;
 
     public byte[] getBytes() {
         if (servletResponse!=null &&
@@ -611,4 +614,11 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         return servletResponse.getCharacterEncoding();
     }
 
+    public void setIncluded(boolean included) {
+        this.included = included;
+    }
+
+    public boolean isIncluded() {
+        return included;
+    }
 }

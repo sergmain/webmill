@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+	<xs:element name="web-app">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="icon" minOccurs="0"/>
+				<xs:element ref="display-name" minOccurs="0"/>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="distributable" minOccurs="0"/>
+				<xs:element ref="context-param" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="filter" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="filter-mapping" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="listener" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="servlet" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="servlet-mapping" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="session-config" minOccurs="0"/>
+				<xs:element ref="mime-mapping" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="welcome-file-list" minOccurs="0"/>
+				<xs:element ref="error-page" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="taglib" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="resource-env-ref" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="resource-ref" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="security-constraint" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="login-config" minOccurs="0"/>
+				<xs:element ref="security-role" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="env-entry" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ejb-ref" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ejb-local-ref" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="auth-constraint">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="role-name" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="auth-method">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="context-param">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param-name"/>
+				<xs:element ref="param-value"/>
+				<xs:element ref="description" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="description">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="display-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="distributable">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ejb-link">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ejb-local-ref">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="ejb-ref-name"/>
+				<xs:element ref="ejb-ref-type"/>
+				<xs:element ref="local-home"/>
+				<xs:element ref="local"/>
+				<xs:element ref="ejb-link" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ejb-ref">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="ejb-ref-name"/>
+				<xs:element ref="ejb-ref-type"/>
+				<xs:element ref="home"/>
+				<xs:element ref="remote"/>
+				<xs:element ref="ejb-link" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ejb-ref-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ejb-ref-type">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="env-entry">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="env-entry-name"/>
+				<xs:element ref="env-entry-value" minOccurs="0"/>
+				<xs:element ref="env-entry-type"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="env-entry-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="env-entry-type">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="env-entry-value">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="error-code">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="error-page">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice>
+					<xs:element ref="error-code"/>
+					<xs:element ref="exception-type"/>
+				</xs:choice>
+				<xs:element ref="location"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="exception-type">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="extension">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="filter">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="icon" minOccurs="0"/>
+				<xs:element ref="filter-name"/>
+				<xs:element ref="display-name" minOccurs="0"/>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="filter-class"/>
+				<xs:element ref="init-param" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="filter-class">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="filter-mapping">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="filter-name"/>
+				<xs:choice>
+					<xs:element ref="url-pattern"/>
+					<xs:element ref="servlet-name"/>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="filter-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="form-error-page">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="form-login-config">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="form-login-page"/>
+				<xs:element ref="form-error-page"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="form-login-page">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="home">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="http-method">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="icon">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="small-icon" minOccurs="0"/>
+				<xs:element ref="large-icon" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="init-param">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param-name"/>
+				<xs:element ref="param-value"/>
+				<xs:element ref="description" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="jsp-file">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="large-icon">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="listener">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="listener-class"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="listener-class">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="load-on-startup">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="local">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="local-home">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="location">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="login-config">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="auth-method" minOccurs="0"/>
+				<xs:element ref="realm-name" minOccurs="0"/>
+				<xs:element ref="form-login-config" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="mime-mapping">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="extension"/>
+				<xs:element ref="mime-type"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="mime-type">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="param-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="param-value">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="realm-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="remote">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="res-auth">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="res-ref-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="res-sharing-scope">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="res-type">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="resource-env-ref">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="resource-env-ref-name"/>
+				<xs:element ref="resource-env-ref-type"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="resource-env-ref-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="resource-env-ref-type">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="resource-ref">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="res-ref-name"/>
+				<xs:element ref="res-type"/>
+				<xs:element ref="res-auth"/>
+				<xs:element ref="res-sharing-scope" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="role-link">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="role-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="run-as">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="role-name"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="security-constraint">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="display-name" minOccurs="0"/>
+				<xs:element ref="web-resource-collection" maxOccurs="unbounded"/>
+				<xs:element ref="auth-constraint" minOccurs="0"/>
+				<xs:element ref="user-data-constraint" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="security-role">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="role-name"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="security-role-ref">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="role-name"/>
+				<xs:element ref="role-link" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="servlet">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="icon" minOccurs="0"/>
+				<xs:element ref="servlet-name"/>
+				<xs:element ref="display-name" minOccurs="0"/>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:choice>
+					<xs:element ref="servlet-class"/>
+					<xs:element ref="jsp-file"/>
+				</xs:choice>
+				<xs:element ref="init-param" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="load-on-startup" minOccurs="0"/>
+				<xs:element ref="run-as" minOccurs="0"/>
+				<xs:element ref="security-role-ref" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="servlet-class">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="servlet-mapping">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="servlet-name"/>
+				<xs:element ref="url-pattern"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="servlet-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="session-config">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="session-timeout" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="session-timeout">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="small-icon">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="taglib">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="taglib-uri"/>
+				<xs:element ref="taglib-location"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="taglib-location">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="taglib-uri">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="transport-guarantee">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="url-pattern">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="user-data-constraint">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="transport-guarantee"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="web-resource-collection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="web-resource-name"/>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="url-pattern" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="http-method" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="web-resource-name">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="welcome-file">
+		<xs:complexType mixed="true">
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="welcome-file-list">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="welcome-file" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
