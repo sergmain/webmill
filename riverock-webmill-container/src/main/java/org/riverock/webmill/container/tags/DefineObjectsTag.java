@@ -56,9 +56,9 @@ public class DefineObjectsTag extends TagSupport {
      * @return <CODE>SKIP_BODY</CODE>
      */
     public int doStartTag() throws JspException {
-        PortletRequest renderRequest = (PortletRequest) pageContext.getRequest();
-        RenderResponse renderResponse = (RenderResponse) pageContext.getResponse();
-        PortletConfig portletConfig = (PortletConfig) pageContext.getRequest().getAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE);
+        PortletRequest renderRequest = (PortletRequest) pageContext.getRequest().getAttribute(ContainerConstants.jAVAX_PORTLET_REQUEST);
+        RenderResponse renderResponse = (RenderResponse) pageContext.getRequest().getAttribute(ContainerConstants.jAVAX_PORTLET_RESPONSE);
+        PortletConfig portletConfig = (PortletConfig) pageContext.getRequest().getAttribute(ContainerConstants.jAVAX_PORTLET_CONFIG);
 
         if (pageContext.getAttribute("renderRequest") == null) {
             pageContext.setAttribute("renderRequest", renderRequest, PageContext.PAGE_SCOPE);

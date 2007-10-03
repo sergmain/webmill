@@ -91,6 +91,8 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     private boolean included = false;
 
+    private boolean isSupportHttpSendRedirect = false;
+
     public byte[] getBytes() {
         if (servletResponse!=null &&
             servletResponse.getResponse()!=null &&
@@ -130,7 +132,8 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         RenderRequest renderRequest, HttpServletResponse response, Namespace namespace,
         Map<String, List<String>> portletProperties, RequestState requestState, String portletName,
         PortalContext portalContext,
-        PortletContainer portletContainer
+        PortletContainer portletContainer,
+        boolean isSupportHttpSendRedirect
     ) {
         super(response);
         this.requestState = requestState;
@@ -142,6 +145,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         this.servletResponse = new ServletResponseWrapper( new ServletResponseWrapperInclude( portalRequest.getLocale() ) );
         this.portalContext = portalContext;
         this.portletContainer = portletContainer;
+        this.isSupportHttpSendRedirect = isSupportHttpSendRedirect;
     }
 
     /**
@@ -248,8 +252,13 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public void sendRedirect( String url ) {
-        if (url==null)
+        if (!isSupportHttpSendRedirect) {
+            log.info("RenderResponse.sendRedirect() not enabled in portlet.xml");
             return;
+        }
+        if (url==null) {
+            return;
+        }
 
         if ( log.isDebugEnabled() ) {
             log.debug( "sendRedirect to new url: " + url );
@@ -393,12 +402,13 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
             log.debug( "response: "+servletResponse.getClass().getName() );
         }
 
-        if ( isUsingStream )
+        if ( isUsingStream ) {
             throw new IllegalStateException( "getWriter can't be used after getOutputStream was invoked" );
-
+        }
         isUsingWriter = true;
-
-        return servletResponse.getWriter();
+        //noinspection UnnecessaryLocalVariable
+        PrintWriter writer = servletResponse.getWriter();
+        return writer;
     }
 
     /**

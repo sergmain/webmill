@@ -33,6 +33,7 @@ package org.riverock.common.contenttype;
 
 
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -83,15 +84,25 @@ public class CharsetMapper {
      */
     public CharsetMapper(String name) {
 
+        InputStream stream=null;
         try {
-            InputStream stream = CharsetMapper.class.getResourceAsStream(name);
+            stream = CharsetMapper.class.getResourceAsStream(name);
             map.load(stream);
-            stream.close();
-        } catch (Throwable t) {
-	    String es = "Error create CharsetMapper object";
+        }
+        catch (Throwable t) {
+            String es = "Error create CharsetMapper object";
             throw new IllegalArgumentException( es, t );
         }
-
+        finally {
+            if (stream!=null) {
+                try {
+                    stream.close();
+                }
+                catch (IOException e) {
+                    //
+                }
+            }
+        }
 
     }
 

@@ -70,10 +70,12 @@ public class ContentTypeManager {
             charset = charsetMapper.getCharset(locale);
         }
 
-        if (charset == null)
+        if (charset == null) {
             contentType = new ContentType("text/html", DEFAULT_CHARSET);
-        else
+        }
+        else {
             contentType = new ContentType("text/html", Charset.forName(charset));
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("contentType: " + contentType);
@@ -95,8 +97,9 @@ public class ContentTypeManager {
     public String getContentType() {
 
         StringBuilder content = contentType.getContentTypeStringBuilder();
-        if (content==null)
+        if (content==null) {
             return null;
+        }
 
         String charset = getCharacterEncoding();
         if (charset==null) {
@@ -134,13 +137,15 @@ public class ContentTypeManager {
             log.debug("contentType.getCharset(): " + type.getCharset());
         }
 
-        StringBuilder contentTypeTemp = null;
-        if (type.getContentType() != null)
+        StringBuilder contentTypeTemp;
+        if (type.getContentType() != null) {
             contentTypeTemp = type.getContentTypeStringBuilder();
-        else
+        }
+        else {
             contentTypeTemp = new StringBuilder(DEFAULT_CONTENT_TYPE);
+        }
 
-        Charset charsetTemp = null;
+        Charset charsetTemp;
         if (type.getCharset() != null) {
             charsetTemp = type.getCharset();
         }

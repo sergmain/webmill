@@ -510,6 +510,9 @@ public final class PageElementPortlet implements PageElement {
             PortalContext portalContext = new PortalContextImpl(
                 portalInstance.getPortalName(), portalRequest.getHttpRequest().getContextPath(), portalInfo
             );
+
+            boolean isSupportHttpSendRedirect = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), "webmill.is-support-http-send-redirect", Boolean.FALSE);
+
             renderResponse = new RenderResponseImpl(
                 portalRequest,
                 renderRequest,
@@ -519,7 +522,8 @@ public final class PageElementPortlet implements PageElement {
                 parameters.getRequestState(),
                 portletEntry.getPortletDefinition().getFullPortletName(),
                 portalContext,
-                portalInstance.getPortletContainer()
+                portalInstance.getPortletContainer(),
+                isSupportHttpSendRedirect
             );
             PortletUtils.setContentType(renderResponse);
 
