@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>org.riverock</groupId>
 			<artifactId>riverock-sso</artifactId>
-			<version>1.1</version>
+			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
