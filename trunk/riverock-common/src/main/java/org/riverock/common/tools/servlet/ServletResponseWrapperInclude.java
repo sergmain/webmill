@@ -84,6 +84,106 @@ public class ServletResponseWrapperInclude implements ServletResponse {
             }
             super.write(s);
         }
+
+        public void print(boolean b) {
+            super.print(b);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void print(char c) {
+            super.print(c);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void print(double d) {
+            super.print(d);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void print(float f) {
+            super.print(f);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void print(int i) {
+            super.print(i);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void print(long l) {
+            super.print(l);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void print(Object obj) {
+            super.print(obj);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void print(char s[]) {
+            super.print(s);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void print(String s) {
+            super.print(s);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public PrintWriter printf(String format, Object... args) {
+            return super.printf(format, args);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public PrintWriter printf(Locale l, String format, Object... args) {
+            return super.printf(l, format, args);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println() {
+            super.println();    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(boolean x) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(char x) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(char x[]) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(double x) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(float x) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(int x) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(long x) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(Object x) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void println(String x) {
+            super.println(x);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void write(char buf[]) {
+            super.write(buf);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void write(char buf[], int off, int len) {
+            super.write(buf, off, len);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void write(int c) {
+            super.write(c);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void write(String s, int off, int len) {
+            super.write(s, off, len);    //To change body of overridden methods use File | Settings | File Templates.
+        }
     }
 
     public ServletResponseWrapperInclude( Locale locale) {
@@ -92,6 +192,10 @@ public class ServletResponseWrapperInclude implements ServletResponse {
     }
 
     public byte[] getBytes() {
+        if (realWriter!=null) {
+            realWriter.flush();
+            realWriter.close();
+        }
         return outputStream.toByteArray();
     }
 

@@ -85,16 +85,17 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 
         InternalRequest internalRequest = getInternalRequest(request);
-        InternalResponse internalResponse = getInternalResponse(response);
+//        InternalResponse internalResponse = getInternalResponse(response);
 
         boolean isIncludedRequest = (internalRequest.isIncluded());
-        boolean isIncludedResponse = (internalResponse.isIncluded());
+//        boolean isIncludedResponse = (internalResponse.isIncluded());
         try {
             internalRequest.setIncluded(true);
-            internalResponse.setIncluded(true);
+//            internalResponse.setIncluded(true);
             internalRequest.setIncludedQueryString(queryString);
 
-            requestDispatcher.include( (ServletRequest) internalRequest, (ServletResponse)internalResponse);
+//            requestDispatcher.include( (ServletRequest) internalRequest, (ServletResponse)internalResponse);
+            requestDispatcher.include( (ServletRequest) internalRequest, response);
         }
         catch( java.io.IOException e ) {
             String es = "IOException include new request";
@@ -108,7 +109,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         }
         finally {
             internalRequest.setIncluded(isIncludedRequest);
-            internalResponse.setIncluded(isIncludedResponse);
+//            internalResponse.setIncluded(isIncludedResponse);
         }
     }
 
