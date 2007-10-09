@@ -906,6 +906,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
 
         this.setAttribute( ContainerConstants.PORTAL_QUERY_METHOD_ATTRIBUTE, httpRequest.getMethod() );
+        this.setAttribute( ContainerConstants.PORTAL_PATH_INFO_ATTRIBUTE, httpRequest.getPathInfo() );
 
         this.setAttribute( ContainerConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE, portalRequest.getCookieManager() );
 

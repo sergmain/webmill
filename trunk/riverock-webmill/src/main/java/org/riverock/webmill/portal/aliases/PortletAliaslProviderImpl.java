@@ -32,8 +32,13 @@ public class PortletAliaslProviderImpl implements PortletAliaslProvider {
             aliases = loadAliases(siteId);
             this.aliases.put(siteId, aliases);
         }
+        for (Map.Entry<String, PortletAliasBean> entry : aliases.entrySet()) {
+            if (targetUrl.startsWith(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
 
-        return aliases.get(targetUrl);
+        return null;
     }
 
     public synchronized void invalidateCache() {
