@@ -66,6 +66,7 @@ public class ContainerConstants {
 
     public static final String PORTAL_REMOTE_ADDRESS_ATTRIBUTE = "org.riverock.webmill.PORTAL_REMOTE_ADDRESS_ATTRIBUTE";
     public static final String PORTAL_USER_AGENT_ATTRIBUTE = "org.riverock.webmill.PORTAL_USER_AGENT_ATTRIBUTE";
+    public static final String PORTAL_PATH_INFO_ATTRIBUTE = "org.riverock.webmill.PORTAL_PATH_INFO_ATTRIBUTE";
 
     public static final String PORTAL_PORTLET_CODE_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_CODE_ATTRIBUTE";
     public static final String PORTAL_PORTLET_XML_ROOT_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE";
