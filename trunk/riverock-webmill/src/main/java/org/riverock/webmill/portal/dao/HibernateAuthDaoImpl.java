@@ -143,7 +143,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         String sql_ =
             "select  a01.ID_HOLDING "+
             "from    WM_AUTH_USER a01 "+
-            "where   a01.IS_HOLDING=1 and a01.user_login=?  "+
+            "where   a01.IS_HOLDING=1 and a01.user_login=?  and a01.ID_HOLDING is not null "+
             "union "+
             "select  b04.ID_HOLDING "+
             "from    WM_AUTH_USER a04, WM_LIST_HOLDING b04 "+
@@ -152,14 +152,6 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             List<Long> list = session.createSQLQuery( sql_ )
-    /*
-                "select auth1.holdingId from org.riverock.webmill.portal.bean.AuthInfoImpl auth1 " +
-                "where  auth1.isHolding=true and auth1.userLogin=:userLogin1 " +
-                "union " +
-                "select holding2.holdingId from org.riverock.webmill.portal.bean.AuthInfoImpl auth2, " +
-                " org.riverock.webmill.portal.bean.HoldingBean holding2 " +
-                "where  auth2.isRoot=true and auth3.userLogin=:userLogin2 ")
-    */
                 .addScalar("ID_HOLDING", Hibernate.LONG)
                 .setString(0, username)
                 .setString(1, username)

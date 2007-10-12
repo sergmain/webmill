@@ -222,7 +222,7 @@ public class PortalInstanceImpl implements PortalInstance {
         return siteId;
     }
 
-    public void process(HttpServletRequest httpServletRequest, HttpServletResponse httpResponse, String counterNDC )
+    public void process(HttpServletRequest httpServletRequest, HttpServletResponse httpResponse, final String counterNDC, final long startTimeMills )
         throws IOException, ServletException {
 
         HttpServletRequest request_;
@@ -315,15 +315,11 @@ public class PortalInstanceImpl implements PortalInstance {
             }
 
             portalResponse.getByteArrayOutputStream().close();
-            StringBuilder timeString = getTimeString(counterNDC, portalRequest.getStartMills());
-
             final byte[] bytesCopyright = getCopyright().getBytes();
             final byte[] bytes = portalResponse.getByteArrayOutputStream().toByteArray();
-            final byte[] bytesTimeString = timeString.toString().getBytes();
-
-            final String pageContent = new String(bytes, CharEncoding.UTF_8);
 
             if (log.isDebugEnabled()) {
+                final String pageContent = new String(bytes, CharEncoding.UTF_8);
                 log.debug("ContentLength: " + bytes.length);
                 log.debug("pageContent:\n" + pageContent);
             }
@@ -339,6 +335,13 @@ public class PortalInstanceImpl implements PortalInstance {
             PortletUtils.setContentType(response_);
             response_.setHeader("Cache-Control", "no-cache");
             response_.setHeader("Pragma", "no-cache");
+
+
+            final long endTimeMills = System.currentTimeMillis();
+            StringBuilder timeString = getTimeString(counterNDC, startTimeMills, endTimeMills);
+            final byte[] bytesTimeString = timeString.toString().getBytes();
+
+
             response_.setContentLength(bytesCopyright.length + bytes.length + bytesTimeString.length);
 
             portalRequest.destroy();
@@ -361,7 +364,8 @@ public class PortalInstanceImpl implements PortalInstance {
             log.warn(
                 "free memory " + Runtime.getRuntime().freeMemory() +
                     " total memory " + Runtime.getRuntime().totalMemory() +
-                    " max memory " + Runtime.getRuntime().maxMemory()
+                    " max memory " + Runtime.getRuntime().maxMemory() +
+                    ", " + (endTimeMills - startTimeMills) + "ms"
             );
             writeCacheStatistics();
         }
@@ -480,8 +484,8 @@ public class PortalInstanceImpl implements PortalInstance {
     }
 */
 
-    private static StringBuilder getTimeString( String counter, long startMills ) {
-        return new StringBuilder( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
+    private static StringBuilder getTimeString( final String counter, final long startMills, final long endCurrentTimeMills ) {
+        return new StringBuilder( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( endCurrentTimeMills - startMills ).append( " milliseconds -->" );
     }
 
     private static void setCookie( PortalRequest portalRequest, HttpServletResponse response_ ) {
