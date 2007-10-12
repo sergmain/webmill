@@ -46,7 +46,6 @@ import net.sf.ehcache.CacheManager;
 
 import org.riverock.common.html.Header;
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.webmill.portal.PortalInstance;
 import org.riverock.webmill.portal.action.google.sitemap.GoogleSitemapServlet;
 import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.webmill.portal.info.PortalInfoImpl;
@@ -109,6 +108,7 @@ public final class PortalFrontController extends HttpServlet {
     private static int counterNDC = 0;
 
     public void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException, ServletException {
+        final long startTimeMills = System.currentTimeMillis();
 
         // Prepare Nested Diagnostic Contexts
         int counter;
@@ -116,7 +116,7 @@ public final class PortalFrontController extends HttpServlet {
             counter = counterNDC;
             ++counterNDC;
         }
-        String counterNDC = Integer.toString(counter);
+        final String counterNDC = Integer.toString(counter);
         NDC.push(counterNDC);
         try {
             if (log.isDebugEnabled()) {
@@ -179,7 +179,7 @@ public final class PortalFrontController extends HttpServlet {
             if (portalInstance == null) {
                 portalInstance = createNewPortalInstance(host.getSiteId());
             }
-            portalInstance.process(httpRequest, httpResponse, counterNDC);
+            portalInstance.process(httpRequest, httpResponse, counterNDC, startTimeMills);
         }
         finally {
             NDC.pop();

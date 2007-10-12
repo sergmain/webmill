@@ -79,7 +79,7 @@ public final class PortalRequestInstance implements PortalRequest {
     private XsltTransformer xslt = null;
     private PortalTemplate template = null;
 
-    private long startMills;
+    private long startMills = System.currentTimeMillis();
 
     private UrlInterpreterResult urlInterpreterResult = null;
 
@@ -148,7 +148,6 @@ public final class PortalRequestInstance implements PortalRequest {
     }
 
     public PortalRequestInstance() {
-        startMills = System.currentTimeMillis();
     }
 
     public PortalSpiProvider getPortalSpiProvider() {
@@ -164,8 +163,6 @@ public final class PortalRequestInstance implements PortalRequest {
         HttpServletResponse response_,
         PortalInstance portalInstance
     ) throws PortalException {
-
-        this.startMills = System.currentTimeMillis();
 
         if (log.isInfoEnabled()) {
             log.info("start init PortalRequestInstance ");
