@@ -16,7 +16,6 @@ import java.sql.Blob;
  */
 @Entity
 @Table(name="WM_PORTLET_ARTICLE")
-//@Table(name="wm_portlet_article")
 @TableGenerator(
     name="TABLE_PORTLET_ARTICLE",
     table="WM_PORTAL_IDS",
@@ -70,7 +69,7 @@ public class ArticleBean implements Article, Serializable {
         this.postDate = article.getPostDate();
         this.articleCode = article.getArticleCode();
         this.articleName = article.getArticleName();
-        isPlain = article.isPlain();
+        this.isPlain = article.isPlain();
         this.articleData = article.getArticleData();
         this.userId = article.getUserId();
         this.isDeleted = article.isDeleted();
