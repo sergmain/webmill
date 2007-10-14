@@ -22,13 +22,6 @@
             <id>ibiblio.org</id>
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
         </repository>
-<!--
-        <repository>
-            <id>snapshots</id>
-            <name>Maven Snapshot Development Repository</name>
-            <url>http://snapshots.maven.codehaus.org/maven2</url>
-        </repository>
--->
     </repositories>
 
     <dependencies>
@@ -48,6 +41,11 @@
             <artifactId>riverock-webmill-container</artifactId>
             <version>1.5</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.riverock</groupId>
+            <artifactId>dbrevision</artifactId>
+            <version>[1.0.3]</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
