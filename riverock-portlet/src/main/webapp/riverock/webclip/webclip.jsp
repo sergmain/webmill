@@ -102,22 +102,22 @@ function displayInvoice() {
 --%>
 
 <%
-    Object locale = request.getAttribute("request-locale");
+    if (request.isUserInRole("webmill.webclip-manager") ||
+        request.isUserInRole("webmill.portal-manager")) {
 
-    if (!(locale instanceof String) || StringUtils.isBlank((String)locale)) {
-        locale = "en";
-    }
-    pageContext.setAttribute("locale", locale);
+
+        Object locale = request.getAttribute("request-locale");
+
+        if (!(locale instanceof String) || StringUtils.isBlank((String)locale)) {
+            locale = "en";
+        }
+        pageContext.setAttribute("locale", locale);
 %>
 
 <fmt:setLocale value="${locale}" scope="request"/>
 <fmt:setBundle basename="org.riverock.portlet.resource.Webclip" scope="request"/>
 
     
-    <%
-        if (request.isUserInRole("webmill.webclip-manager") ||
-            request.isUserInRole("webmill.portal-manager")) {
-    %>
 <table border="0">
     <portlet:actionURL var="portletUrl"/>
     <form method="POST" action="<c:out value='${portletUrl}'/>">
