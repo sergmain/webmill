@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dbrevision-structure:SchemaElement xmlns:dbrevision-structure="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                    xsi:schemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd
+dbrevision-structure.xsd">
+
+    <Table name="WM_PORTLET_F_ARTICLE">
+        <PrimaryKey pkName="ID_ARTICLE_WPFA_PK">
+            <Column columnName="ID_ARTICLE" keySeq="1"/>
+        </PrimaryKey>
+        <Field name="ID_ARTICLE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" nullable="0"/>
+        <Field name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" nullable="0"/>
+        <Field name="THEME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
+        <Field name="ARTICLE_TEXT" dataType="CLOB" javaType="2005" javaStringType="java.sql.Types.CLOB" size="1" nullable="0"/>
+        <Field name="IMAGE_URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="1"/>
+        <Field name="CREATE_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="0"/>
+    </Table>
+</dbrevision-structure:SchemaElement>
