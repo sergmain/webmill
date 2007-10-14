@@ -370,6 +370,12 @@ public final class PageElementPortlet implements PageElement {
                     actionRequestParamMap.putAll(parameters.getParameters());
                 }
 
+                for (ElementParameter p : templateParameters) {
+                    List<String> list = new ArrayList<String>(1);
+                    list.add(p.getValue());
+                    actionRequestParamMap.put(p.getName(), list);
+                }
+
                 this.portletPreferences = new PortletPreferencesImpl(
                     new HashMap<String, List<String>>(portletMetadata),
                     persistencer,

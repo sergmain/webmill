@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ org.riverock.portlet - Portlet Library
+  ~
+  ~ Copyright (C) 2006, Riverock Software, All Rights Reserved.
+  ~
+  ~ Riverock - The Open-source Java Development Community
+  ~ http://www.riverock.org
+  ~
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public
+  ~ License as published by the Free Software Foundation; either
+  ~ version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This library is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public
+  ~ License along with this library; if not, write to the Free Software
+  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+  -->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>Resource for register portlet</comment>
+    <entry key="reg.succes_send_password">The password has been successfully sent on your address.</entry>
+    <entry key="reg.succes_register">Registration was successfull.
+        For confirm registration, please follow by the link, which you can find in confirmation letter.</entry>
+    <entry key="reg.role_is_null">Can not add new user because default role not specified in metadata</entry>
+    <entry key="reg.error_register_portlet">Error execute register portlet</entry>
+    <entry key="reg.already_logged">You already logged in</entry>
+    <entry key="reg.login_exists">Login {0} already exist.</entry>
+    <entry key="reg.continue">Continue</entry>
+    <entry key="reg.forgot_password">Forgot password? Enter your e-mail address and we shall send on it your password.</entry>
+    <entry key="reg.send_password">Send</entry>
+    <entry key="reg.need_register">You not registered?</entry>
+    <entry key="reg.login">Login:</entry>
+    <entry key="reg.password">Password:</entry>
+    <entry key="reg.password_repeat">Repeat password:</entry>
+    <entry key="reg.first_name">First name:</entry>
+    <entry key="reg.middle_name">Middle name:</entry>
+    <entry key="reg.last_name">Last name:</entry>
+    <entry key="reg.telephone">Contact phone:</entry>
+    <entry key="reg.address">Address:</entry>
+    <entry key="reg.email">E-Mail:</entry>
+    <entry key="reg.register">Register</entry>
+    <entry key="reg.captcha">Verification word (Captcha)</entry>
+    <entry key="reg.go-back">Go back</entry>
+
+    <entry key="reg.error-login-already-registered">Entered login already used. Please choose other login.</entry>
+    <entry key="reg.error-email-already-registered">Entered e-mail already used. Please choose other e-mail address or recover your password.</entry>
+    <entry key="reg.error-user-login-is-null">User login isn't entered.</entry>
+    <entry key="reg.error-user-password-is-null">User password isn't entered.</entry>
+    <entry key="reg.error-user-password-is-mismatch">Entered passwords is mismatch.</entry>
+    <entry key="reg.error-user-email-is-null">User e-mail isn't entered.</entry>
+    <entry key="reg.error-user-first-name-is-null">User first name isn't entered.</entry>
+    <entry key="reg.error-captcha-wrong">Verification word isn't correct.</entry>
+    <entry key="reg.no_such_email">Account for e-mail {0} not registered.</entry>
+
+
+    <entry key="reg.send-password.your-password">
+        Your login and password:
+
+        Login: {0}
+        Password: {1}
+    </entry>
+    <entry key="reg.send-password.start-body.your-password">
+        Your logins and passwords:
+    </entry>
+    <entry key="reg.send-password.end-body.your-password">
+
+        Each login/password pair has unique roles. Ask your site administrator for concrete info about those roles.
+    </entry>
+    <entry key="reg.send-password.info">Requested info</entry>
+    <entry key="reg.mail_body">You succesfully registered.
+        Your login and password:
+
+        Login: {0}
+        Password: {1}
+    </entry>
+</properties>
+
+
+

@@ -23,24 +23,24 @@
  */
 package org.riverock.portlet.news;
 
+import java.util.TimeZone;
+
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.bean.News;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.common.portlet.PortletMetadataService;
+import org.riverock.common.utils.PortletUtils;
 import org.riverock.interfaces.ContainerConstants;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.bean.News;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.interfaces.portlet.PortletResultObject;
-import org.riverock.common.utils.PortletUtils;
-import org.riverock.common.portlet.PortletMetadataService;
-
-import java.util.TimeZone;
+import org.riverock.portlet.tools.ContentTypeTools;
 
 /**
  *
@@ -66,7 +66,7 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
 
     public NewsItemSimple getNews() {
         Long newsId = PortletUtils.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
-        PortalDaoProvider provider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        PortalSpiProvider provider = (PortalSpiProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
         PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
         this.news = provider.getPortalCmsNewsDao().getNews(newsId);
         this.serverTimeZone = TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone());

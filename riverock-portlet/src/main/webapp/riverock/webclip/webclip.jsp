@@ -26,10 +26,7 @@
 
 <%@ taglib prefix="c" uri="jstl/core" %>
 <%@ taglib prefix="fmt" uri="jstl/format" %>
-<%@ taglib prefix="request" uri="/tld/jakarta-request" %>
 <%@ taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
-
-<portlet:defineObjects/>
 
 <%--
 <script language="JavaScript" type="text/javascript">
@@ -113,6 +110,8 @@ function displayInvoice() {
         }
         pageContext.setAttribute("locale", locale);
 %>
+
+<portlet:defineObjects/>
 
 <fmt:setLocale value="${locale}" scope="request"/>
 <fmt:setBundle basename="org.riverock.portlet.resource.Webclip" scope="request"/>
