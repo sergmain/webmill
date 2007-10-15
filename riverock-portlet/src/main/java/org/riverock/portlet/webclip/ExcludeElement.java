@@ -9,6 +9,7 @@ class ExcludeElement {
     public static final int ID_ATTRIBUTE_TYPE = 1;
     public static final int CLASS_ATTRIBUTE_TYPE = 2;
     public static final int LONGDESC_ATTRIBUTE_TYPE = 3;
+    public static final int SRC_ATTRIBUTE_TYPE = 4;
 
     String name;
     /**
@@ -16,6 +17,7 @@ class ExcludeElement {
      * 1 - 'id' attr
      * 2 - 'class' attr
      * 3 - 'longdesc' attr
+     * 4 - 'src' attr
      */
     int typeOfAttribute;
     String value;
