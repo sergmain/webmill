@@ -72,6 +72,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     private static final String ID_ATTR = "id";
     private static final String CLASS_ATTR = "class";
     private static final String LONGDESC_ATTR = "longdesc";
+    private static final String SRC_ATTR = "src";
 
     private static final String A_ELEMENT = "A";
     private static final String AREA_ELEMENT = "AREA";
@@ -132,7 +133,8 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
         new ExcludeElement(H3_ELEMENT, ExcludeElement.ID_ATTRIBUTE_TYPE, "siteSub"), //  'From Wikipedia, the free encyclopedia' msg
 
-        new ExcludeElement(IMG_ELEMENT, ExcludeElement.LONGDESC_ATTRIBUTE_TYPE, "/wiki/Image:Replace_this_image1.svg") // not uploaded image
+        new ExcludeElement(IMG_ELEMENT, ExcludeElement.LONGDESC_ATTRIBUTE_TYPE, "/wiki/Image:Replace_this_image1.svg"), // not uploaded image
+        new ExcludeElement(IMG_ELEMENT, ExcludeElement.SRC_ATTRIBUTE_TYPE, "http://upload.wikimedia.org/wikipedia/en/thumb/7/7e/Replace_this_image_male.svg/225px-Replace_this_image_male.svg.png") // not uploaded image
     };
 
     /**
@@ -393,6 +395,12 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                             break;
                         case ExcludeElement.LONGDESC_ATTRIBUTE_TYPE:
                             if (tempNode.getNodeName().equalsIgnoreCase(LONGDESC_ATTR) &&
+                                tempNode.getNodeValue().equals(exclude.value)) {
+                                return true;
+                            }
+                            break;
+                        case ExcludeElement.SRC_ATTRIBUTE_TYPE:
+                            if (tempNode.getNodeName().equalsIgnoreCase(SRC_ATTR) &&
                                 tempNode.getNodeValue().equals(exclude.value)) {
                                 return true;
                             }
