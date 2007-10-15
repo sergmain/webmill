@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dbrevision-structure:SchemaElement xmlns:dbrevision-structure="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                                     xsi:schemaLocation="http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd
-dbrevision-structure.xsd">
+http://dbrevision.sourceforge.net/xsd/dbrevision-structure.xsd">
 
     <Table name="WM_PORTLET_F_ARTICLE">
-        <PrimaryKey pkName="ID_ARTICLE_WPFA_PK">
+        <PrimaryKey tableName="WM_PORTLET_F_ARTICLE" pkName="ID_ARTICLE_WPFA_PK">
             <Column columnName="ID_ARTICLE" keySeq="1"/>
         </PrimaryKey>
         <Field name="ID_ARTICLE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" nullable="0"/>

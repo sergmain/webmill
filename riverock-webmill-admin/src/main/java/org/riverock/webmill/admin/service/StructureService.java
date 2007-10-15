@@ -35,6 +35,13 @@ public class StructureService implements Serializable {
         return manager;
     }
 
+    protected void finalize() throws Throwable {
+        if (manager!=null) {
+            manager.destroy();
+        }
+        super.finalize();
+    }
+
     public void init() {
         String family;
         String name = AdminConstants.JAVA_COMP_ENV_DB_FAMILY;
