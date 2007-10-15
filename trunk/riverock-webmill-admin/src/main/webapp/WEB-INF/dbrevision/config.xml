@@ -10,4 +10,11 @@
             <Version>5.8.3</Version>
         </Versions>
     </Module>
+    <Module>
+        <Description>'Featured article' portlet</Description>
+        <Name>featured-article</Name>
+        <Versions>
+            <Version>1.0</Version>
+        </Versions>
+    </Module>
 </DbRevision>
