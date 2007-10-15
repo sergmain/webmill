@@ -58,7 +58,7 @@ public class FeaturedArticlePortlet implements Portlet {
             Long siteId = new Long( actionRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
             String theme = actionRequest.getParameter(THEME_PARAM);
             if (theme==null) {
-                actionRequest.setAttribute(FEATURE_ARTICLE_ERROR_MESSAGE, "'theme' parameter not defined.");
+                actionResponse.setRenderParameter(FEATURE_ARTICLE_ERROR_MESSAGE, "'theme' parameter not defined.");
                 return;
             }
 
