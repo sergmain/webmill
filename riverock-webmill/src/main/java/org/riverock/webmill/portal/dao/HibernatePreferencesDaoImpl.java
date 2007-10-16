@@ -24,19 +24,22 @@
  */
 package org.riverock.webmill.portal.dao;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.io.*;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 
-import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
-
-import org.riverock.webmill.portal.dao.HibernateUtils;
-import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.common.collections.MapWithParameters;
+import org.riverock.webmill.portal.bean.CatalogBean;
 
 /**
  * @author Sergei Maslyukov
@@ -109,8 +112,10 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
                 return;
             }
 
-            StatelessSession session = HibernateUtils.getStatelessSession();
+            Session session = HibernateUtils.getSession();
             try {
+                session.beginTransaction();
+
                 CatalogBean bean = (CatalogBean)session.createQuery(
                     "select catalog " +
                         "from  org.riverock.webmill.portal.bean.CatalogBean as catalog " +
@@ -121,6 +126,10 @@ public class HibernatePreferencesDaoImpl implements InternalPreferencesDao {
                 if (bean!=null) {
                     bean.setMetadata(s);
                 }
+
+                session.flush();
+                session.clear();
+                session.getTransaction().commit();
             }
             finally {
                 session.close();

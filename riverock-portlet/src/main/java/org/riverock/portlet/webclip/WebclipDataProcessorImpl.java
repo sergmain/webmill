@@ -94,7 +94,6 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
     // document's fragment
     private Node fragmentNode = null;
 
-    private PortalSpiProvider portalDaoProvider;
     private Long siteLanguageId;
     private static final String NOFOLLOW_VALUE = "nofollow";
 
@@ -152,9 +151,26 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         byte[] bytes, int elementType, String elementId, PortalSpiProvider portalDaoProvider,
         Long siteLanguageId, WebclipUrlChecker checker) {
 
+        this(urlProducer, new InputSource(new ByteArrayInputStream(bytes)), elementType, elementId, portalDaoProvider, siteLanguageId, checker);
+    }
+
+    /**
+     *
+     * @param urlProducer UrlProducer url producer
+     * @param inputSource input source
+     * @param elementType int 1- table element, 2 - div element
+     * @param elementId String
+     * @param portalDaoProvider portal DOA provider
+     * @param siteLanguageId ID of site language
+     * @param checker url checker for check exist or not this url on site
+     */
+    public WebclipDataProcessorImpl(
+        WebclipUrlProducer urlProducer,
+        InputSource inputSource, int elementType, String elementId, PortalSpiProvider portalDaoProvider,
+        Long siteLanguageId, WebclipUrlChecker checker) {
+
         this.urlProducer = urlProducer;
         this.siteLanguageId = siteLanguageId;
-        this.portalDaoProvider = portalDaoProvider;
         this.checker = checker;
 
         DOMFragmentParser parser = new DOMFragmentParser();
@@ -164,11 +180,11 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         fragment = document.createDocumentFragment();
 
         try {
-            InputSource inputSource = new InputSource(new ByteArrayInputStream(bytes));
             inputSource.setEncoding(CharEncoding.UTF_8);
             parser.parse(inputSource, fragment);
             fragmentNode = searchNode(fragment, elementType, elementId);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String es="Error parse HTML fragment.";
             log.error(es, e);
             throw new IllegalStateException(es +' ' + e.getMessage());
