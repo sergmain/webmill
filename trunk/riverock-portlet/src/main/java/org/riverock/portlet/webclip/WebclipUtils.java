@@ -62,7 +62,7 @@ public class WebclipUtils {
     }
 
     public static void processStoredContent(
-        WebclipBean webclip, String hrefPrefix, String hrefStartPart, PortalSpiProvider portalDaoProvider,
+        WebclipBean webclip, String hrefPrefix, String hrefStartPart, PortalSpiProvider portalSpiProvider,
         Long siteLanguageId, WebclipUrlChecker urlChecker
     ) throws IOException {
 
@@ -82,7 +82,7 @@ public class WebclipUtils {
 
         WebclipUrlProducer producer = new WebclipUrlProducerImpl(hrefPrefix, hrefStartPart);
         WebclipDataProcessor processor = new WebclipDataProcessorImpl(
-            producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content", portalDaoProvider, siteLanguageId, urlChecker
+            producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content", portalSpiProvider, siteLanguageId, urlChecker
         );
 
         os = new ByteArrayOutputStream();
