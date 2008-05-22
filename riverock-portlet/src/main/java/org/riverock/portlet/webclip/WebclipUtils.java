@@ -82,7 +82,7 @@ public class WebclipUtils {
 
         WebclipUrlProducer producer = new WebclipUrlProducerImpl(hrefPrefix, hrefStartPart);
         WebclipDataProcessor processor = new WebclipDataProcessorImpl(
-            producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content", portalSpiProvider, siteLanguageId, urlChecker
+            producer, bytes, WebclipConstants.DIV_NODE_TYPE, "content", siteLanguageId, urlChecker
         );
 
         os = new ByteArrayOutputStream();

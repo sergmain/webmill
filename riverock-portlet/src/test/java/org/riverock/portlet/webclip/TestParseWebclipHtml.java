@@ -1,7 +1,6 @@
 package org.riverock.portlet.webclip;
 
 import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 
 import junit.framework.TestCase;
 import org.apache.commons.lang.CharEncoding;
@@ -28,7 +27,7 @@ public class TestParseWebclipHtml extends TestCase {
 
         WebclipUrlProducer producer = new WebclipUrlProducerImpl("/hrefPrefix", "/hrefStartPart");
         WebclipDataProcessor processor = new WebclipDataProcessorImpl(
-            producer, inputSource, WebclipConstants.DIV_NODE_TYPE, "content", null, 10L, urlChecker
+            producer, inputSource, WebclipConstants.DIV_NODE_TYPE, "content", 10L, urlChecker
         );
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
