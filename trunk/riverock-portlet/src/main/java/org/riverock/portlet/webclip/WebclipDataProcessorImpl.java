@@ -110,6 +110,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "metadata plainlinks ambox ambox-content"),
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "metadata plainlinks ambox ambox-notice"),
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "metadata plainlinks ambox ambox-merge"),
+        new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "metadata plainlinks ambox ambox-style"),
         new ExcludeElement(TABLE_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "infobox sisterproject"),
 
         new ExcludeElement(SPAN_ELEMENT, ExcludeElement.CLASS_ATTRIBUTE_TYPE, "noprint plainlinksneverexpand"),
@@ -143,16 +144,15 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
      * @param bytes content for modification
      * @param elementType int 1- table element, 2 - div element
      * @param elementId String
-     * @param portalDaoProvider portal DOA provider
      * @param siteLanguageId ID of site language
      * @param checker url checker for check exist or not this url on site
      */
     public WebclipDataProcessorImpl(
         WebclipUrlProducer urlProducer,
-        byte[] bytes, int elementType, String elementId, PortalSpiProvider portalDaoProvider,
+        byte[] bytes, int elementType, String elementId,
         Long siteLanguageId, WebclipUrlChecker checker) {
 
-        this(urlProducer, new InputSource(new ByteArrayInputStream(bytes)), elementType, elementId, portalDaoProvider, siteLanguageId, checker);
+        this(urlProducer, new InputSource(new ByteArrayInputStream(bytes)), elementType, elementId, siteLanguageId, checker);
     }
 
     /**
@@ -161,13 +161,12 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
      * @param inputSource input source
      * @param elementType int 1- table element, 2 - div element
      * @param elementId String
-     * @param portalDaoProvider portal DOA provider
      * @param siteLanguageId ID of site language
      * @param checker url checker for check exist or not this url on site
      */
     public WebclipDataProcessorImpl(
         WebclipUrlProducer urlProducer,
-        InputSource inputSource, int elementType, String elementId, PortalSpiProvider portalDaoProvider,
+        InputSource inputSource, int elementType, String elementId,
         Long siteLanguageId, WebclipUrlChecker checker) {
 
         this.urlProducer = urlProducer;
