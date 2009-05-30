@@ -65,7 +65,7 @@ public final class TreeUtils {
         Collections.sort(sortedTreeItems, comparator);
         List<TreeItem> result = null;
         List<TreeItem> v = new ArrayList<TreeItem>();
-        Long id = 0L;
+        Long id = null;
 
         if (log.isDebugEnabled()) log.debug("Before rebuid. Size of treeItems " + treeItems.size());
 
@@ -73,7 +73,11 @@ public final class TreeUtils {
             if (log.isDebugEnabled()) log.debug("#1.01.01 treeItems.size() - " + treeItems.size() + "; ID -  " + id);
 
             for (TreeItem item : treeItems ) {
-                if ( id.equals( item.getTopId() ) )
+                if (
+                    (item.getTopId()==null && id==null) ||
+                        (id==null && item.getTopId()==0) ||
+                        (item.getTopId()!=null && id!=null && id.equals( item.getTopId() ))
+                    )
                     v.add(item);
             }
 

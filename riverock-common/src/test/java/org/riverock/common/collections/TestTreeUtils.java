@@ -80,11 +80,11 @@ public class TestTreeUtils extends TestCase {
         }
 
         public Long getTopId() {
-            return (long)topId.intValue();
+            return topId!=null?topId.longValue():null;
         }
 
         public Long getId() {
-            return (long) id.intValue();
+            return id!=null?id.longValue():null;
         }
 
         public List<TreeItem> getSubTree() {
@@ -268,6 +268,65 @@ public class TestTreeUtils extends TestCase {
         list.add( new IntegerTreeItem(63, 35, null) );
         list.add( new IntegerTreeItem(64, 35, null) );
         list.add( new IntegerTreeItem(79, 0, null) );
+        list.add( new IntegerTreeItem(78, 34, null) );
+
+
+
+        List<IntegerTreeItem> result = (List<IntegerTreeItem>)(List)TreeUtils.rebuildTree(list);
+
+        System.out.println("result.size() = " + result.size());
+        assertTrue(result.size()==4 );
+
+        for (IntegerTreeItem item : result) {
+            if (item.id==72) {
+                assertNull(item.getSubTree());
+            }
+            if (item.id==30) {
+                assertNull(item.getSubTree());
+            }
+            if (item.id==33) {
+                assertTrue(item.getSubTree().size()==1);
+            }
+            if (item.id==79) {
+                assertTrue(item.getSubTree().size()==2);
+                for (IntegerTreeItem treeItem : (List<IntegerTreeItem>)(List)item.getSubTree()) {
+                    if (treeItem.id==34) {
+                        assertTrue(treeItem.getSubTree().size()==2);
+                    }
+
+                    if (treeItem.id==35) {
+                        assertTrue(treeItem.getSubTree().size()==8);
+                    }
+                }
+            }
+        }
+    }
+
+    public void testRebuildUnsorderTreeWithNull() throws Exception {
+        List<TreeItem> list = new ArrayList<TreeItem>();
+        list.add( new IntegerTreeItem(66, 58, null) );
+        list.add( new IntegerTreeItem(68, 35, null) );
+        list.add( new IntegerTreeItem(71, 34, null) );
+        list.add( new IntegerTreeItem(72, 0, null) );
+        list.add( new IntegerTreeItem(30, 0, null) );
+        list.add( new IntegerTreeItem(34, 79, null) );
+        list.add( new IntegerTreeItem(35, 79, null) );
+        list.add( new IntegerTreeItem(33, null, null) );
+
+        list.add( new IntegerTreeItem(38, 35, null) );
+        list.add( new IntegerTreeItem(39, 35, null) );
+        list.add( new IntegerTreeItem(40, 35, null) );
+        list.add( new IntegerTreeItem(57, 35, null) );
+        list.add( new IntegerTreeItem(56, 35, null) );
+        list.add( new IntegerTreeItem(58, 33, null) );
+
+        list.add( new IntegerTreeItem(59, 58, null) );
+        list.add( new IntegerTreeItem(60, 58, null) );
+        list.add( new IntegerTreeItem(61, 58, null) );
+
+        list.add( new IntegerTreeItem(63, 35, null) );
+        list.add( new IntegerTreeItem(64, 35, null) );
+        list.add( new IntegerTreeItem(79, null, null) );
         list.add( new IntegerTreeItem(78, 34, null) );
 
 
