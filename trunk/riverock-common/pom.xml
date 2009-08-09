@@ -4,7 +4,7 @@
     <groupId>org.riverock</groupId>
     <artifactId>riverock-common</artifactId>
     <packaging>jar</packaging>
-    <version>1.9-SNAPWHOT</version>
+    <version>1.9</version>
     <name>Common utilities</name>
     <url>http://www.riverock.org</url>
     <licenses>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
-            <version>1.8</version>
+            <version>1.10</version>
             <scope>provided</scope>
         </dependency>
 
