@@ -4,7 +4,7 @@
     <groupId>org.riverock</groupId>
     <artifactId>riverock-common</artifactId>
     <packaging>jar</packaging>
-    <version>1.9</version>
+    <version>1.10-SNAPSHOT</version>
     <name>Common utilities</name>
     <url>http://www.riverock.org</url>
     <licenses>
