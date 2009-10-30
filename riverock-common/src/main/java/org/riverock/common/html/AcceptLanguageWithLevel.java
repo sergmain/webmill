@@ -26,8 +26,6 @@ package org.riverock.common.html;
 import java.util.Locale;
 
 import org.riverock.common.tools.StringTools;
-import org.apache.log4j.Logger;
-
 /**
  * Author: mill
  * Date: Apr 2, 2003
@@ -35,10 +33,7 @@ import org.apache.log4j.Logger;
  *
  * $Id$
  */
-public class AcceptLanguageWithLevel
-{
-    private static Logger log = Logger.getLogger( AcceptLanguageWithLevel.class );
-
+public class AcceptLanguageWithLevel {
     public Locale locale;
     public float level;
 
@@ -98,7 +93,6 @@ public class AcceptLanguageWithLevel
                 catch (NumberFormatException numberFormatException)
                 {
                     String es = "Exception parsing string '"+levelString.substring(2)+"' ";
-                    log.error( es, numberFormatException);
                     throw new IllegalArgumentException( es+ numberFormatException.toString());
                 }
             }

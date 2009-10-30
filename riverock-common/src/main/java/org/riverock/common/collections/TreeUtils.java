@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Collections;
 
-import org.apache.log4j.Logger;
-
 import org.riverock.interfaces.common.TreeItem;
 
 /**
@@ -38,7 +36,6 @@ import org.riverock.interfaces.common.TreeItem;
  */
 public final class TreeUtils {
 
-    private static Logger log = Logger.getLogger( TreeUtils.class );
     private static TreeItemComparator comparator = new TreeItemComparator();
 
     /**
@@ -67,10 +64,7 @@ public final class TreeUtils {
         List<TreeItem> v = new ArrayList<TreeItem>();
         Long id = null;
 
-        if (log.isDebugEnabled()) log.debug("Before rebuid. Size of treeItems " + treeItems.size());
-
         while (treeItems.size()>0) {
-            if (log.isDebugEnabled()) log.debug("#1.01.01 treeItems.size() - " + treeItems.size() + "; ID -  " + id);
 
             for (TreeItem item : treeItems ) {
                 if (
@@ -81,24 +75,16 @@ public final class TreeUtils {
                     v.add(item);
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("#1.01.02 v.size() - " + v.size());
-                if (result != null) log.debug("#1.01.05 result.size() -  " + result.size());
-            }
-
             if (result == null) {
-                if (log.isDebugEnabled()) log.debug("Init result Vector");
 
                 result = new ArrayList<TreeItem>();
                 for (TreeItem vItem : v)
                     result.add(vItem);
 
-                if (log.isDebugEnabled()) log.debug("Finish init result Vector. result.size() - " + result.size());
             }
-            else
+            else {
                 putList(result, v, id);
-
-            if (log.isDebugEnabled()) log.debug("#1.01.07 result.size() - " + result.size());
+            }
 
             treeItems.removeAll(v);
             sortedTreeItems.removeAll(v);
@@ -106,15 +92,7 @@ public final class TreeUtils {
                 throw new RuntimeException("sizes of lists are miismatch");
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("#1.01.09 treeItems.size() - " + treeItems.size());
-            }
-
             v.clear();
-            if (log.isDebugEnabled()) {
-                log.debug("#1.01.11 ctx.List.size() - " + treeItems.size());
-                log.debug("#1.01.13 result.size() - " + result.size());
-            }
 
             if (sortedTreeItems.size() > 0) {
                 id = sortedTreeItems.get(0).getTopId();
@@ -122,12 +100,12 @@ public final class TreeUtils {
         }
         treeItems.clear();
 
-        if (result != null)
+        if (result != null) {
             treeItems = result;
-        else
+        }
+        else {
             treeItems = new ArrayList<TreeItem>();
-
-        if (log.isDebugEnabled()) log.debug("After rebuid. Size of treeItems " + treeItems.size());
+        }
 
         return treeItems;
     }

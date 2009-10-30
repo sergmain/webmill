@@ -45,7 +45,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * Author: mill
@@ -55,7 +54,6 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class XmlTools {
-    private static Logger log = Logger.getLogger(XmlTools.class);
 
     public XmlTools() {
     }
@@ -84,14 +82,7 @@ public final class XmlTools {
     }
 
     public static String getXmlAsString(final Object obj, final String rootElement) throws JAXBException {
-        if (log.isDebugEnabled()) {
-            byte b[] = getXml(obj, rootElement);
-            log.debug("new String(b) " + new String(b));
-            return new String(b);
-        }
-        else {
-            return new String(getXml(obj, rootElement));
-        }
+      return new String(getXml(obj, rootElement));
     }
 
     public static byte[] getXml(final Object obj, final String rootElement) throws JAXBException {
@@ -99,11 +90,6 @@ public final class XmlTools {
     }
 
     public static byte[] getXml(final Object obj, final String rootElement, final String encoding) throws JAXBException {
-        if (log.isDebugEnabled()) {
-            log.debug("getXml(). Object to marshaling " + obj);
-            log.debug("getXml(). rootElement " + rootElement);
-            log.debug("getXml(). encoding " + encoding);
-        }
         return getXml(obj, rootElement, encoding, false, null);
     }
 
@@ -118,16 +104,7 @@ public final class XmlTools {
      * @throws JAXBException
      */
     public static byte[] getXml(final Object obj, final String rootElement, final String encoding, boolean isIndent, NamespacePrefixMapper[] namespacePrefixMappers) throws JAXBException {
-        if (log.isDebugEnabled()) {
-            log.debug("getXml(). Object to marshaling " + obj);
-            log.debug("getXml(). rootElement " + rootElement);
-            log.debug("getXml(). encoding " + encoding);
-        }
         ByteArrayOutputStream fos = new ByteArrayOutputStream(1000);
-
-        if (log.isDebugEnabled()) {
-            log.debug("ByteArrayOutputStream object - " + fos);
-        }
 
         writeMarshalToOutputStream(obj, encoding, rootElement, fos, isIndent, namespacePrefixMappers);
         return fos.toByteArray();

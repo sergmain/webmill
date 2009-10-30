@@ -34,13 +34,10 @@ import java.sql.Types;
 import java.util.Calendar;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
-
 /**
  * $Id$
  */
 public final class RsetTools {
-    private static Logger log = Logger.getLogger( RsetTools.class );
 
     public static void setString(final PreparedStatement ps, final int index, final String data)
         throws SQLException {
@@ -154,7 +151,6 @@ public final class RsetTools {
             return calendar;
         }
         catch (SQLException e) {
-            log.error("Error get Calendar value from field '" + f + "' ", e);
             throw e;
         }
     }
@@ -171,7 +167,6 @@ public final class RsetTools {
                 return null;
         }
         catch (SQLException exc) {
-            log.error("Error get timestamp field '" + f + "'", exc);
             throw exc;
         }
 
@@ -221,7 +216,6 @@ public final class RsetTools {
             return temp;
         }
         catch (SQLException exc) {
-            log.error("Error get Integer field '" + f + "' from ResultSet", exc);
             throw exc;
         }
     }
@@ -254,7 +248,6 @@ public final class RsetTools {
             return temp;
         }
         catch (SQLException exc) {
-            log.error("Error get Long field '" + f + "'", exc);
             throw exc;
         }
     }
@@ -286,7 +279,6 @@ public final class RsetTools {
             return temp;
         }
         catch (SQLException exc) {
-            log.error("Error get Float field '" + f + "' from ResultSet", exc);
             throw exc;
         }
     }
@@ -319,7 +311,6 @@ public final class RsetTools {
                 return d;
         }
         catch (SQLException exc) {
-            log.error("Error get Double field '" + f + "' from ResultSet", exc);
             throw exc;
         }
     }
@@ -347,7 +338,6 @@ public final class RsetTools {
             return i;
         }
         catch (SQLException exc) {
-            log.error("Error get BigDecimal field '" + f + "' from ResultSet", exc);
             throw exc;
         }
     }
@@ -380,7 +370,6 @@ public final class RsetTools {
             return obj.toString();
         }
         catch (SQLException exc) {
-            log.error("Error get String field '" + f + "' from ResultSet, sql error code ", exc);
             throw exc;
         }
     }

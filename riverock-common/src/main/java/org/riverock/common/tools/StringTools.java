@@ -26,9 +26,7 @@ package org.riverock.common.tools;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * Public tools for work with strings.
@@ -36,7 +34,6 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public class StringTools {
-    private static Logger log = Logger.getLogger(StringTools.class);
 
     /**
      * Converts a string array to a string.
@@ -62,9 +59,6 @@ public class StringTools {
     }
 
     public static String getUserName(String firstName, String middleName, String lastName) {
-        if (log.isDebugEnabled()) {
-            log.debug("firstName: " + firstName+ ", middleName: " +middleName+ ", lastName: " + lastName );
-        }
 
         StringBuilder s = new StringBuilder();
         if (StringUtils.isNotBlank(firstName)) {
@@ -248,9 +242,6 @@ public class StringTools {
     public static byte[] formatArray( final byte bytes[]) {
         int newLength = bytes.length + bytes.length / 57;
 
-        if (log.isDebugEnabled())
-            log.debug("Old length: " + bytes.length + "\nNew length: " + newLength);
-
         byte bf[] = new byte[newLength];
 
         int charCount = 0;
@@ -264,8 +255,6 @@ public class StringTools {
             // Add newline every 76 output chars (that's 57 input chars)
             if ((i != 0) && (i % 57 == 0))
             {
-                if (log.isDebugEnabled())
-                    log.debug(" " + i + " " + charCount);
 
                 bf[charCount++] = (byte) '\n';
             }
@@ -282,7 +271,6 @@ public class StringTools {
             return s.getBytes("utf-8");
         }
         catch (java.io.UnsupportedEncodingException e) {
-            log.warn("String.getBytes(\"utf-8\") not supported");
             return new byte[0];
         }
     }

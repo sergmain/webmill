@@ -28,10 +28,6 @@ import java.text.DateFormatSymbols;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import org.apache.log4j.Logger;
-
-import org.riverock.common.config.StringLocaleManager;
-
 /**
  * User: serg_main
  * Date: 28.11.2003
@@ -40,14 +36,11 @@ import org.riverock.common.config.StringLocaleManager;
  * $Id: ConfigService.java 1010 2006-09-24 21:09:34Z serg_main $
  */
 public final class ConfigService {
-    private static Logger log = Logger.getLogger( ConfigService.class );
 
     private final static String localeLanguage[] = {"ru"};
 
     public static void initLocale() {
         for (String aLocaleLanguage : localeLanguage) {
-            if (log.isDebugEnabled())
-                log.debug("#15.001  load resource for lang " + aLocaleLanguage);
 
             try {
                 Locale loc = new Locale(aLocaleLanguage, "");
@@ -77,7 +70,6 @@ public final class ConfigService {
             }
             catch (MissingResourceException e) {
                 final String es = "Error getting resource for language " + aLocaleLanguage;
-                log.error(es, e);
                 throw new ConfigException(es, e);
             }
         }

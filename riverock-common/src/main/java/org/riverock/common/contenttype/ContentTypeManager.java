@@ -26,8 +26,6 @@ package org.riverock.common.contenttype;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author SergeMaslyukov
  *         Date: 15.01.2006
@@ -35,7 +33,6 @@ import org.apache.log4j.Logger;
  *         $Id$
  */
 public class ContentTypeManager {
-    private static Logger log = Logger.getLogger(ContentTypeManager.class);
 
     private ContentType contentType = null;
 
@@ -56,10 +53,6 @@ public class ContentTypeManager {
     }
 
     private ContentTypeManager(Locale locale, boolean isUseMapper) {
-        if (log.isDebugEnabled()) {
-            log.debug("start initContentType");
-            log.debug("locale: " + locale);
-        }
         if (locale == null) {
             contentType = new ContentType(DEFAULT_CONTENT_TYPE, DEFAULT_CHARSET);
             return;
@@ -76,17 +69,9 @@ public class ContentTypeManager {
         else {
             contentType = new ContentType("text/html", Charset.forName(charset));
         }
-
-        if (log.isDebugEnabled()) {
-            log.debug("contentType: " + contentType);
-        }
     }
 
     public void setContentType(String contentTypeString ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug( "set new contentType: " + contentTypeString );
-        }
-
         this.contentType = prepareContentType( contentTypeString );
     }
 
@@ -111,18 +96,6 @@ public class ContentTypeManager {
     }
 
     public String getCharacterEncoding() {
-
-        if ( log.isDebugEnabled()) {
-            log.debug("start getCharacterEncoding");
-            log.debug("contentType: " + contentType );
-            if (contentType!=null ) {
-                log.debug("contentType: " + contentType.getCharset().toString() );
-            }
-            else {
-                log.debug( "contentType is null" );
-            }
-        }
-
         if ( contentType.getCharset()!=null )
             return contentType.getCharset().toString();
         else
@@ -131,11 +104,6 @@ public class ContentTypeManager {
 
     static ContentType prepareContentType(String contentTypeString) {
         ContentType type = new ContentType(contentTypeString);
-        if (log.isDebugEnabled()) {
-            log.debug("parsed contentType: " + type);
-            log.debug("contentType.getContentType(): " + type.getContentType());
-            log.debug("contentType.getCharset(): " + type.getCharset());
-        }
 
         StringBuilder contentTypeTemp;
         if (type.getContentType() != null) {
@@ -153,13 +121,6 @@ public class ContentTypeManager {
             charsetTemp = DEFAULT_CHARSET;
         }
 
-        ContentType contentType = new ContentType(contentTypeTemp, charsetTemp);
-
-        if (log.isDebugEnabled()) {
-            log.debug("result contentType.charset " + contentType.getCharset());
-            log.debug("result contentType.contentType " + contentType.getContentType());
-        }
-
-        return contentType;
+        return new ContentType(contentTypeTemp, charsetTemp);
     }
 }

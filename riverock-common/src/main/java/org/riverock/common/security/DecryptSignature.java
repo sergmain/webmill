@@ -29,7 +29,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.security.PrivateKey;
@@ -42,8 +41,6 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -58,8 +55,6 @@ import org.apache.log4j.Logger;
  */
 public class DecryptSignature
 {
-    private static Logger cat = Logger.getLogger("org.riverock.security.DecryptSignature" );
-
     private byte[] lock_data = null; // Lock data
     private X509Certificate their_cert = null; // Senders Authentication Certificate.
     private SecretKey aes_key = null; // AES key.
@@ -89,7 +84,7 @@ public class DecryptSignature
 
     public DecryptSignature()
     {
-    };
+    }
 
     /**
      * zero out the passed in byte array
@@ -122,7 +117,6 @@ public class DecryptSignature
     {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC"); // Get Cipher object.
 
-        cat.debug("Cipher - "+cipher);
         //
         // Initialize Cipher object with SecretKey and IV for the Symmetric cipher (AES)
         //
@@ -131,8 +125,6 @@ public class DecryptSignature
 
         FileOutputStream file_str = new FileOutputStream(file_out); // Where to save plain text.
 
-        cat.debug("target file - "+file_out);
-        cat.debug("target file - "+file_str);
         //
         // Input source file, via DataInputStream wrapper.
         //
@@ -155,11 +147,6 @@ public class DecryptSignature
                 l = data_str.readInt(); // Get length of data.
                 data_str.readFully(buf, 0, l); // Read data.
 
-                cat.debug("length of data  - "+l);
-                cat.debug("target file - "+file_str);
-                cat.debug("Cipher - "+cipher);
-                cat.debug("buf  - "+buf);
-
                 _out = cipher.update(buf,0,l);
                 if (_out != null)
                 {
@@ -167,7 +154,7 @@ public class DecryptSignature
                 }
                 else
                 {
-                    cat.error("Cipher.update -is null.Need report to bouncycastle.org");
+                    throw new RuntimeException("Cipher.update -is null.Need report to bouncycastle.org");
                 }
 
                 System.out.print(".");
@@ -184,7 +171,7 @@ public class DecryptSignature
                 }
                 else
                 {
-                    cat.error("Cipher.doFinal -is null.Need report to bouncycastle.org");
+                    throw new RuntimeException("Cipher.doFinal -is null.Need report to bouncycastle.org");
                 }
                 System.out.println("!");
                 break;

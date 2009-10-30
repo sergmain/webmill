@@ -29,14 +29,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 /**
  * $Id$
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class MainTools {
-    private static Logger log = Logger.getLogger(MainTools.class);
 
     public static void putKey(final Map<String, Object> map, final String key, final Object value) {
         Object obj = map.get(key);
@@ -123,7 +120,7 @@ public final class MainTools {
 
         out = null;
 
-        return full_file_name + " создан успешно";
+        return full_file_name + " пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
     }
 
     public static boolean deleteFile(final String fileName) {
@@ -144,49 +141,19 @@ public final class MainTools {
     public static Object createCustomObject(final String s)
         throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         Object obj = null;
-        try {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            if (log.isDebugEnabled()) {
-                log.debug("Starting create class object for name '" + s + "'");
-                log.debug("    class loader:\n" + classLoader +"\nhash: "+ classLoader.hashCode() );
-            }
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-            if (s == null)
-                return null;
+        if (s == null)
+            return null;
 
-            Class className = null;
+        Class className = null;
 
-            if (log.isDebugEnabled())
-                log.debug("Create class for name '" + s + "'");
-
-            className = Class.forName(s, true, classLoader);
+        className = Class.forName(s, true, classLoader);
             
-            if (log.isDebugEnabled())
-                log.debug("Class for name '" + s + "' is " + className);
+        if (className == null)
+            throw new ClassNotFoundException("Error create class for name " + s);
 
-            if (className == null)
-                throw new ClassNotFoundException("Error create class for name " + s);
-
-            if (log.isDebugEnabled())
-                log.debug("Create object for name '" + s + "'");
-
-            obj = className.newInstance();
-
-            if (log.isDebugEnabled())
-                log.debug("Object for name '" + s + "' is " + obj);
-        }
-        catch (ClassNotFoundException e) {
-            log.error("Error create reflection object for class name '" + s + "'", e);
-            throw e;
-        }
-        catch (InstantiationException e) {
-            log.error("Error create reflection object for class name '" + s + "'", e);
-            throw e;
-        }
-        catch (IllegalAccessException e) {
-            log.error("Error create reflection object for class name '" + s + "'", e);
-            throw e;
-        }
+        obj = className.newInstance();
         return obj;
     }
 }

@@ -30,8 +30,6 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-
 /**
  *
  * Author: Serg Malyukov
@@ -42,7 +40,6 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class TransferFile {
-    private static Logger log = Logger.getLogger( TransferFile.class );
 
     public static byte[] getFileBytes(InputStream in, int sizeBuff)
         throws Exception
