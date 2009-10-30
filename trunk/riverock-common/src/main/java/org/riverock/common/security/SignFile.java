@@ -42,7 +42,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.log4j.Logger;
 
 import org.riverock.common.annotation.schema.transfer.TransferFileConfigType;
 import org.riverock.common.annotation.schema.transfer.TransferFileContentType;
@@ -52,7 +51,6 @@ import org.riverock.common.tools.MainTools;
 public class SignFile {
     private static final Object syncDebug = new Object();
 
-    private static Logger log = Logger.getLogger(SignFile.class);
     private static int MAXFILES = 300;
 
     private static TransferFileConfigType tfc = null;
@@ -126,10 +124,7 @@ public class SignFile {
             new FileInputStream(fileToEncrypt), 10000000
         );
 
-        log.debug("Length to gzip " + bytes.length);
-
         byte[] bytesToEncrypt = null;
-        log.debug("Gzip flag is  " + tfc.isIsGzip());
         if (Boolean.TRUE.equals(tfc.isIsGzip())) {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 
@@ -161,10 +156,9 @@ public class SignFile {
             }
 */
         }
-        else
+        else {
             bytesToEncrypt = bytes;
-
-        log.debug("Length to encrypt is " + bytesToEncrypt.length);
+        }
 
         EncryptFileSignature encFile = new EncryptFileSignature();
 
@@ -213,11 +207,9 @@ public class SignFile {
             fileArr = dirName.list();
         }
         catch (Exception e) {
-            log.error("Error get file list in " + dirName.getAbsolutePath() + " directory.", e);
             return;
         }
         if (fileArr == null) {
-            log.info("Not found directory " + dirName.getAbsolutePath());
             return;
         }
 
@@ -225,11 +217,9 @@ public class SignFile {
             String s = tfc.getBaseDirectory() + File.separatorChar +
                 parent + File.separatorChar +
                 fileArr[i];
-            log.debug("Process file: " + s);
             File file_ = new File(s);
 
             if (tfc.getExclude().indexOf(file_.getName()) != -1) {
-                log.debug("Skip path " + file_.getName());
                 continue;
             }
 
@@ -294,18 +284,6 @@ public class SignFile {
         );
         fileList.setIsGzip(tfc.isIsGzip());
 
-        log.debug("Base dir: " + tfc.getBaseDirectory());
-        log.debug("is Gzip: " + tfc.isIsGzip());
-        log.debug("ExportFile: " + tfc.getExportFile());
-
-        for (String processDir : tfc.getDirectory()) {
-            log.debug("Directory: " + processDir);
-        }
-        for (String excludeDir : tfc.getExclude()) {
-            log.debug("Exclude: " + excludeDir);
-        }
-
-        log.debug("Run processing");
         for (String processDir : tfc.getDirectory()) {
             dir(processDir);
         }

@@ -33,8 +33,6 @@ import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.Security;
 
-import org.apache.log4j.Logger;
-
 /**
 *
 * Author: Serg Malyukov
@@ -49,7 +47,6 @@ import org.apache.log4j.Logger;
  */
 public class DecryptFileSignature
 {
-    private static Logger cat = Logger.getLogger("org.riverock.security.DecryptFileSignature" );
 
     private byte[] inArray = null;
     private File file_out = null;
@@ -117,7 +114,7 @@ public class DecryptFileSignature
         }
         catch (Exception ex)
         {
-            cat.error("Error get instance of SecureRandom", ex);
+            throw new RuntimeException("Error get instance of SecureRandom", ex);
         }
 
         //
@@ -134,7 +131,7 @@ public class DecryptFileSignature
         //
         if (!keystore_file.exists())
         {
-            cat.error("Keystore file not found. File: " + keystoreFile);
+            throw new RuntimeException("Keystore file not found. File: " + keystoreFile);
         }
 
 //        boolean stop = false; // Reused boolean for controlling loops.
@@ -156,7 +153,7 @@ public class DecryptFileSignature
             }
             catch (Exception ex)
             {
-                cat.error("Error create instance of KeyStore", ex);
+                throw new RuntimeException("Error create instance of KeyStore", ex);
             }
 
             //
@@ -170,12 +167,12 @@ public class DecryptFileSignature
             }
             catch (Exception ex)
             {
-                cat.error("Error get private key", ex);
+                throw new RuntimeException("Error get private key", ex);
             }
         }
         catch (Exception ex)
         {
-            cat.error("Error initParam for decrypt", ex);
+            throw new RuntimeException("Error initParam for decrypt", ex);
         }
     }
 

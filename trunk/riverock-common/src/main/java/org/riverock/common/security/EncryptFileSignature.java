@@ -37,8 +37,6 @@ import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
-import org.apache.log4j.Logger;
-
 /**
  *
  * Author: Serg Malyukov
@@ -51,8 +49,6 @@ import org.apache.log4j.Logger;
  */
 public class EncryptFileSignature
 {
-    private static Logger cat = Logger.getLogger("org.riverock.security.EncryptFileSignature" );
-
     /**
      * Encrypt a file and use signatures MD5 with RSA for message validation and authentication.
      * This class can be used as a command line tool..
@@ -116,15 +112,6 @@ public class EncryptFileSignature
     {
         sec_rand = null; // Secure random number
 
-        if(cat.isDebugEnabled())
-        {
-            cat.debug( "Store file "+storeFile );
-            cat.debug( "Certificate file "+certificateFile );
-            cat.debug( "Keystore file "+keystoreFile );
-            cat.debug( "password keystore "+passwordKS );
-            cat.debug( "alias keystore "+aliasKS );
-        }
-
         //
         // Add BouncyCastle JCE as a provider and create and seed the random number generator.
         //
@@ -149,7 +136,6 @@ public class EncryptFileSignature
         }
         catch (Exception ex)
         {
-            cat.error("Error create instance of SecureRandom", ex);
             throw ex;
         }
 
@@ -168,7 +154,6 @@ public class EncryptFileSignature
 
         if (!cert_file.exists()) // Does it _not_ exist.
         {
-            cat.debug("Certificate file not found. File " + certificateFile);
             return;
         }
 
@@ -180,7 +165,6 @@ public class EncryptFileSignature
 
         if (!keystore_file.exists()) // Does it _not_ exist.
         {
-            cat.debug("Keystore file not found. File " + keystoreFile);
             return;
         }
 
@@ -210,7 +194,6 @@ public class EncryptFileSignature
             }
             catch (Exception ex)
             {
-                cat.error("Error loading keystore " + keystoreFile, ex);
                 throw ex;
             }
 
@@ -227,7 +210,6 @@ public class EncryptFileSignature
             }
             catch (Exception ex)
             {
-                cat.error("Error get private key / Alias " + aliasKS, ex);
                 throw ex;
             }
 
@@ -237,13 +219,11 @@ public class EncryptFileSignature
             }
             catch (Exception ex)
             {
-                cat.error("Error create x509 certificate", ex);
                 throw ex;
             }
 
             if (my_private == null)
             {
-                cat.debug("Private key is null");
                 return;
             }
 
@@ -253,8 +233,6 @@ public class EncryptFileSignature
             // The certificate contains the public key that the recipient uses for encryption.
             // See javadoc for CertificateFactory for more info..
             //
-
-            cat.debug("Reading recipients certificate file.");
 
             byte[] raw = new byte[(int) cert_file.length()]; // Create new array
             DataInputStream din = new DataInputStream(new FileInputStream(cert_file)); // Some stream wrapper.
@@ -274,7 +252,6 @@ public class EncryptFileSignature
         }
         catch (Exception ex)
         {
-            cat.error("Error init encryption parameters", ex);
             throw ex;
         }
     }

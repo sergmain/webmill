@@ -64,9 +64,9 @@ public class TestCaseNumberTools extends TestCase
 
 
 
-//    int maxPrecision = 4; // количество цифр после запятой
-//    int maxDecimalPart = 4; // количество цифр до запятой
-//    int multiplyDigit = 6; // количество цифр в множителе
+//    int maxPrecision = 4; // РєРѕР»РёС‡РµСЃС‚РІРѕ С†РёС„СЂ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№
+//    int maxDecimalPart = 4; // РєРѕР»РёС‡РµСЃС‚РІРѕ С†РёС„СЂ РґРѕ Р·Р°РїСЏС‚РѕР№
+//    int multiplyDigit = 6; // РєРѕР»РёС‡РµСЃС‚РІРѕ С†РёС„СЂ РІ РјРЅРѕР¶РёС‚РµР»Рµ
 //    int count = 50000;
     private void testDoubleMultiply( int maxPrecision, int maxDecimalPart, int multiplyDigit)
     {
@@ -151,7 +151,7 @@ public class TestCaseNumberTools extends TestCase
     }
 
     public void testTruncate() throws Throwable {
-        
+
         InternalNumberToolsTruncate[] testDateWithMaskArray =
             {
                 new InternalNumberToolsTruncate(198.123, 198.123, 4, false),

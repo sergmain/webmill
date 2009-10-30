@@ -35,8 +35,6 @@ import java.security.Signature;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
-import org.apache.log4j.Logger;
-
 // OID 1.2.840.113549.1.1.4 - md5WithRSAEncryption
 /**
  *
@@ -46,8 +44,6 @@ import org.apache.log4j.Logger;
 
 public class SecurityTools
 {
-    private static Logger cat = Logger.getLogger( SecurityTools.class   );
-
     public final static String providerName = "Forge";
 
     public static byte[] getBytesFromFile(String fileName)
@@ -56,7 +52,6 @@ public class SecurityTools
         File file_ = null;
         InputStreamReader in = null;
         byte retBytes[] = null;
-        cat.debug("Start bytes from file");
         try
         {
             file_ = new File(fileName);
@@ -74,7 +69,6 @@ public class SecurityTools
 
             retBytes = new byte[i];
             System.arraycopy(buffBytes, 0, retBytes, 0, i);
-            cat.debug("End bytes from file");
         }
         catch (Exception e)
         {
@@ -103,7 +97,6 @@ public class SecurityTools
     {
         try
         {
-            cat.debug("Get bytes");
             byte bytes[] = getBytesFromFile(fileName);
 /*
             Base64 base64 = new Base64();
@@ -111,7 +104,6 @@ public class SecurityTools
             byte decodedBytes[] = base64.decode(bytes);
 */
 
-            cat.debug("Make RSA private key");
 /*
             au.com.forge.security.pkcs1.RSAPrivateKey rsaPrivateKey =
                     new au.com.forge.security.pkcs1.RSAPrivateKey(null);
@@ -139,28 +131,23 @@ public class SecurityTools
     {
         try
         {
-            cat.debug("#4.0001 create x509 certificate instance, file " + fileName);
             CertificateFactory cf =
                     CertificateFactory.getInstance("X.509");
 
             if (cf == null)
             {
-                cat.error("#4.0002 Error create x509 certificate instance, cf is null, file name "+ fileName);
                 return null;
             }
 
             byte bytes[] = getBytesFromFile(fileName);
-            cat.debug("#4.00021 total bytes " + bytes.length);
 
             ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 
-            cat.debug("#4.0004 return certificate");
             return (X509Certificate) cf.generateCertificate(bais);
 
         }
         catch (Exception e)
         {
-            cat.error("Exception while create x509 certificate instance", e);
             throw new SecurityException(e.toString());
         }
 
@@ -169,9 +156,7 @@ public class SecurityTools
     public static PublicKey getPublicKeyFromCertPEM(String fileName)
             throws Exception
     {
-        cat.debug("#3.0001 get x509 certificate");
         X509Certificate cert = getX509CertPEM(fileName);
-        cat.debug("#3.0002 certificate is " + cert.toString());
         return cert.getPublicKey();
     }
 
@@ -181,25 +166,19 @@ public class SecurityTools
         byte signature[] = null;
         try
         {
-            cat.debug("Get private key");
             PrivateKey privKey = getPrivateKeyDER(fileNamePrivateKey);
 
-            cat.debug("Creating a signature object");
             Signature signingSign = Signature.getInstance(alg);
 
-            cat.debug("#2.001");
             signingSign.initSign(privKey);
 
-            cat.debug("Signing data");
             signingSign.update(dataToSign);
 
-            cat.debug("#2.003");
             signature = signingSign.sign();
 
         }
         catch (Exception e)
         {
-            cat.error("Error signing data", e);
             throw new SecurityException(e.toString());
         }
         return signature;
@@ -212,25 +191,18 @@ public class SecurityTools
     {
         try
         {
-            cat.debug("Get public key");
             PublicKey pubKey = getPublicKeyFromCertPEM(fileNamePublicKey);
-            cat.debug("Create signature instance");
             Signature verifySig = Signature.getInstance(alg);
-            cat.debug("Init verify");
             verifySig.initVerify(pubKey);
 
-            cat.debug("Update data for verifying");
             verifySig.update(dataToVerify);
 
-            cat.debug("Verifying the signature");
             boolean sigOK = verifySig.verify(signature);
 
-            cat.debug("return value "+sigOK);
             return sigOK;
         }
         catch (Exception e)
         {
-            cat.error("Error of verify data", e);
             throw new SecurityException(e.toString());
         }
     }

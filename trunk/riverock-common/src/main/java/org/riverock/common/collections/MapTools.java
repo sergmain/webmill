@@ -25,10 +25,6 @@ package org.riverock.common.collections;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
-import org.riverock.common.tools.ServletTools;
-
 /**
  * User: SergeMaslyukov
  * Date: 12.01.2005
@@ -36,8 +32,6 @@ import org.riverock.common.tools.ServletTools;
  * $Id$
  */
 public class MapTools {
-
-    private static Logger log = Logger.getLogger( ServletTools.class );
 
     public static String getString( final Map map, final String f ) {
         return getString( map, f, null );
@@ -59,7 +53,6 @@ public class MapTools {
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn( "Exception in getInt(), def value will be return", exc );
             }
         }
         return def;
@@ -86,7 +79,6 @@ public class MapTools {
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn( "Exception in getInt(), def value will be return", exc );
             }
         }
         return i_;
@@ -114,7 +106,6 @@ public class MapTools {
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn( "Exception in getLong(), def value will be return", exc );
             }
         }
         return i_;
@@ -145,7 +136,6 @@ public class MapTools {
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn( "Exception in getFloat(), def value will be return", exc );
             }
         }
         return i_;
@@ -176,7 +166,6 @@ public class MapTools {
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn( "Exception in getDouble(), def value will be return", exc );
             }
         }
         return i_;

@@ -40,8 +40,6 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
 
-import org.apache.log4j.Logger;
-
 /**
  *
  * Author: Serg Malyukov
@@ -52,10 +50,7 @@ import org.apache.log4j.Logger;
  *
  * Class housing methods to encrypt files with signatures.
  */
-public class EncryptSignature
-{
-    private static Logger cat = Logger.getLogger("org.riverock.security.EncryptSignature" );
-
+public class EncryptSignature {
     //
     // Define our block header values.
     //
@@ -266,14 +261,9 @@ public class EncryptSignature
         // Read while length is > -1
         //
 
-        while ((l = inStream.read(buf)) > -1)
-        {
-            cat.debug("length - " + l);
+        while ((l = inStream.read(buf)) > -1) {
             out = output_cipher.update(buf, 0, l); // Encrypt data.
-            if (out != null)
-            {
-                cat.debug("out.length - " + out.length);
-
+            if (out != null) {
                 data_str.writeShort(DATA_BLOCK); // Write data block header.
                 data_str.writeInt(out.length); // Write length.
                 data_str.write(out); // Write encrypted data.

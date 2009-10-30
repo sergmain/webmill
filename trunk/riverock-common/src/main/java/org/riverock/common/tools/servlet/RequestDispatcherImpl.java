@@ -34,8 +34,6 @@ import javax.servlet.ServletRequestWrapper;
 import javax.servlet.ServletResponse;
 import javax.servlet.ServletResponseWrapper;
 
-import org.apache.log4j.Logger;
-
 import org.riverock.interfaces.generic.InternalRequest;
 import org.riverock.interfaces.generic.InternalResponse;
 
@@ -46,8 +44,6 @@ import org.riverock.interfaces.generic.InternalResponse;
  * $Id$
  */
 public class RequestDispatcherImpl implements RequestDispatcher {
-    private static Logger log = Logger.getLogger( RequestDispatcherImpl.class );
-
     private RequestDispatcher requestDispatcher = null;
     private String queryString=null;
 
@@ -61,22 +57,16 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     public void forward( ServletRequest servletRequest, ServletResponse servletResponse ) throws ServletException, IOException {
-        if ( log.isDebugEnabled() ) {
-            log.debug( "forward new context" );
-        }
-
         try {
             requestDispatcher.include( servletRequest, servletResponse );
             servletResponse.flushBuffer();
         }
         catch( java.io.IOException e ) {
             String es = "IOException include new request";
-            log.error( es, e );
             throw e;
         }
         catch( ServletException e ) {
             String es = "Error include new request";
-            log.error( es, e );
             throw new ServletException( es, e );
         }
     }
@@ -85,31 +75,20 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 
         InternalRequest internalRequest = getInternalRequest(request);
-//        InternalResponse internalResponse = getInternalResponse(response);
 
         boolean isIncludedRequest = (internalRequest.isIncluded());
-//        boolean isIncludedResponse = (internalResponse.isIncluded());
         try {
             internalRequest.setIncluded(true);
-//            internalResponse.setIncluded(true);
             internalRequest.setIncludedQueryString(queryString);
 
-//            requestDispatcher.include( (ServletRequest) internalRequest, (ServletResponse)internalResponse);
             requestDispatcher.include( (ServletRequest) internalRequest, response);
-        }
-        catch( java.io.IOException e ) {
-            String es = "IOException include new request";
-            log.error( es, e );
-            throw e;
         }
         catch( ServletException e ) {
             String es = "Error include new request";
-            log.error( es, e );
             throw new ServletException( es, e );
         }
         finally {
             internalRequest.setIncluded(isIncludedRequest);
-//            internalResponse.setIncluded(isIncludedResponse);
         }
     }
 

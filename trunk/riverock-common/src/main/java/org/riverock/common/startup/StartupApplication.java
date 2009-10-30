@@ -75,7 +75,6 @@ public final class StartupApplication {
             PropertyConfigurator.configure(
                 PropertiesProvider.getConfigPath() + File.separatorChar + log4jFileName
             );
-            log.info("Application path: " + PropertiesProvider.getApplicationPath());
 
             isInit = true;
         }

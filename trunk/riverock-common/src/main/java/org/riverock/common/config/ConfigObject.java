@@ -31,15 +31,12 @@ import java.util.Map;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
-
 import org.riverock.common.tools.XmlTools;
 
 /**
  * $Id$
  */
 public class ConfigObject {
-    private static Logger log = Logger.getLogger(ConfigObject.class);
     public static final String LOCAL_CONFIG_PARAM_NAME = "is-local-config";
 
     private String nameConfigFile = null;
@@ -67,10 +64,6 @@ public class ConfigObject {
                         PropertiesProvider.getParameter(nameConfigParam);
             }
             else {
-                if (log.isDebugEnabled()) {
-                    ClassLoader cl = Thread.currentThread().getContextClassLoader();
-                    log.debug("classLoader: " + cl + "\nhash: " + cl.hashCode());
-                }
                 String name = "java:comp/env/" + nameJndiCtx;
                 try {
                     InitialContext ic = new InitialContext();
@@ -84,45 +77,31 @@ public class ConfigObject {
                         Iterator<Map.Entry> iterator = map.entrySet().iterator();
                         while (iterator.hasNext()) {
                             Map.Entry entry = iterator.next();
-                            log.error("key: " + entry.getKey() + ", value: " + entry.getValue());
                         }
                     }
                     catch (Throwable th) {
-                        log.error("erorr", th);
+                        //
                     }
-                    log.error(es, e);
-//                    return config;
                     throw new ConfigException(es, e);
                 }
-            }
-            if (config.nameConfigFile == null) {
-                log.warn("Config file not defined. isLocal: " + isLocal);
             }
         }
         else {
             String defURL = null;
             if (PropertiesProvider.getConfigPath() == null) {
                 String es = "Config path not resolved";
-                log.fatal(es);
                 throw new IllegalStateException(es);
-            }
-            if (log.isDebugEnabled()) {
-                log.debug("#15.100");
             }
 
             defURL = PropertiesProvider.getConfigPath() +
                 (PropertiesProvider.getConfigPath().endsWith(File.separator) ? "" : File.separator) +
                 nameConfigFile_;
 
-            if (log.isDebugEnabled())
-                log.debug("#15.101" + defURL);
-
             config.nameConfigFile = defURL;
         }
 
         if (config.nameConfigFile == null) {
             String errorString = "name of config file not determinated";
-            log.error(errorString);
             throw new IllegalArgumentException(errorString);
         }
 
@@ -130,21 +109,11 @@ public class ConfigObject {
             File.separatorChar == '/' ? '\\' : '/', File.separatorChar
         );
 
-        if (log.isInfoEnabled()) {
-            log.info("nameConfigFile: " + config.nameConfigFile);
-        }
-
         configFile = new File(config.nameConfigFile);
 
         if (!configFile.exists()) {
             String errorString = "Config file '" + configFile.getName() + "' not found";
-            log.error(errorString);
             throw new IllegalArgumentException(errorString);
-        }
-
-
-        if (log.isDebugEnabled()) {
-            log.debug("Start unmarshalling file " + nameConfigFile_);
         }
 
         try {
@@ -154,20 +123,9 @@ public class ConfigObject {
         }
         catch (Throwable e) {
             String es = "Error while unmarshalling config file ";
-            log.fatal(es, e);
             throw new ConfigException(es, e);
         }
 
         return config;
     }
-
-/*
-    private static Object unmarshal(FileInputStream configFile, Class clazz) throws JAXBException, FileNotFoundException {
-        JAXBContext jaxbContext = JAXBContext.newInstance ( clazz.getPackage().getName());
-
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        Source source =  new StreamSource( configFile );
-        return unmarshaller.unmarshal( source, clazz).getValue();
-    }
-*/
 }

@@ -32,15 +32,12 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
-
 /**
  * Tool class for wotk with Servlet's objects
  *
  * $Id$
  */
 public final class ServletTools {
-    private static Logger log = Logger.getLogger(ServletTools.class);
 
     /**
      * Remove all attributes in session context. We try 3 times remove all attributes.
@@ -62,9 +59,6 @@ public final class ServletTools {
                      e = session.getAttributeNames()
                     ) {
                     String name = (java.lang.String) e.nextElement();
-
-                    if (log.isDebugEnabled())
-                        log.debug("Attribute: " + name);
 
                     session.removeAttribute(name);
                 }
@@ -106,24 +100,16 @@ public final class ServletTools {
 
         Object obj = session.getAttribute(attr);
         try {
-            if (log.isDebugEnabled())
-                log.debug("#12.12.001 search method 'clearObject'");
-
             Class cl = obj.getClass();
             Method m = cl.getMethod("clearObject", (Class[]) null);
 
-            if (log.isDebugEnabled())
-                log.debug("#12.12.002 invoke method 'clearObject'");
-
-            if (m != null)
+            if (m != null) {
                 m.invoke(obj, (Object[]) null);
+            }
 
-            if (log.isDebugEnabled())
-                log.debug("#12.12.003 complete invoke method 'clearObject'");
         }
         catch (Exception e) {
-            if (log.isInfoEnabled())
-                log.info("#12.12.003  method 'clearObject' not found.",  e);
+            //
         }
 
         session.removeAttribute(attr);
@@ -155,11 +141,11 @@ public final class ServletTools {
     }
 
     /**
-     * Возвращает int значение переменной. Если переменная не инициализирована, возвращает 0
-     * Параметры:
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ int Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№. Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
+     * РџР°СЂР°РјРµС‚СЂС‹:
      * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * String f - имя переменной для получения значения<br>
+     * HttpServletRequest request	- РѕР±С‹С‡РЅРѕ СЌС‚Рѕ request РёР· РѕРєСЂСѓР¶РµРЅРёСЏ JSP<br>
+     * String f - РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ<br>
      * </blockquote>
      */
     public static Integer getInt(final HttpServletRequest request, final String f) {
@@ -167,12 +153,12 @@ public final class ServletTools {
     }
 
     /**
-     * Возвращает int значение переменной. Если переменная не инициализирована, возвращает 0
-     * Параметры:
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ int Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№. Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
+     * РџР°СЂР°РјРµС‚СЂС‹:
      * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * String f - имя переменной для получения значения<br>
-     * int def - значение по молчанию<br>
+     * HttpServletRequest request	- РѕР±С‹С‡РЅРѕ СЌС‚Рѕ request РёР· РѕРєСЂСѓР¶РµРЅРёСЏ JSP<br>
+     * String f - РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ<br>
+     * int def - Р·РЅР°С‡РµРЅРёРµ РїРѕ РјРѕР»С‡Р°РЅРёСЋ<br>
      * </blockquote>
      */
     public static Integer getInt(final HttpServletRequest request, final String f, final Integer def) {
@@ -184,18 +170,17 @@ public final class ServletTools {
             }
             catch (Exception exc) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn("Exception in getInt(), def value will be return", exc);
             }
         }
         return i_;
     }
 
     /**
-     * Возвращает long значение переменной. Если переменная не инициализирована, возвращает 0
-     * Параметры:
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ long Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№. Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
+     * РџР°СЂР°РјРµС‚СЂС‹:
      * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * String f - имя переменной для получения значения<br>
+     * HttpServletRequest request	- РѕР±С‹С‡РЅРѕ СЌС‚Рѕ request РёР· РѕРєСЂСѓР¶РµРЅРёСЏ JSP<br>
+     * String f - РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ<br>
      * </blockquote>
      */
     public static Long getLong(final HttpServletRequest request, final String f) {
@@ -203,12 +188,12 @@ public final class ServletTools {
     }
 
     /**
-     * Возвращает long значение переменной. Если переменная не инициализирована, возвращает 0
-     * Параметры:
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ long Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№. Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
+     * РџР°СЂР°РјРµС‚СЂС‹:
      * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * String f - имя переменной для получения значения<br>
-     * long def - значение по молчанию
+     * HttpServletRequest request	- РѕР±С‹С‡РЅРѕ СЌС‚Рѕ request РёР· РѕРєСЂСѓР¶РµРЅРёСЏ JSP<br>
+     * String f - РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ<br>
+     * long def - Р·РЅР°С‡РµРЅРёРµ РїРѕ РјРѕР»С‡Р°РЅРёСЋ
      * </blockquote>
      */
     public static Long getLong(final HttpServletRequest request, final String f, final Long def) {
@@ -220,18 +205,17 @@ public final class ServletTools {
             }
             catch (Exception exc) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn("Exception in getLong(), def value will be return", exc);
             }
         }
         return i_;
     }
 
     /**
-     * Возвращает float значение переменной. Если переменная не инициализирована, возвращает 0
-     * Параметры:
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ float Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№. Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
+     * РџР°СЂР°РјРµС‚СЂС‹:
      * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * String f - имя переменной для получения значения<br>
+     * HttpServletRequest request	- РѕР±С‹С‡РЅРѕ СЌС‚Рѕ request РёР· РѕРєСЂСѓР¶РµРЅРёСЏ JSP<br>
+     * String f - РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ<br>
      * </blockquote>
      */
     public static Float getFloat(final HttpServletRequest request, final String f) {
@@ -239,12 +223,12 @@ public final class ServletTools {
     }
 
     /**
-     * Возвращает float значение переменной. Если переменная не инициализирована, возвращает 0
-     * Параметры:
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ float Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№. Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
+     * РџР°СЂР°РјРµС‚СЂС‹:
      * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * String f - имя переменной для получения значения<br>
-     * float def - значение по умолчанию
+     * HttpServletRequest request	- РѕР±С‹С‡РЅРѕ СЌС‚Рѕ request РёР· РѕРєСЂСѓР¶РµРЅРёСЏ JSP<br>
+     * String f - РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ<br>
+     * float def - Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
      * </blockquote>
      */
     public static Float getFloat(final HttpServletRequest request, final String f, final Float def) {
@@ -258,7 +242,6 @@ public final class ServletTools {
             }
             catch (Exception exc) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn("Exception in getFloat(), def value will be return", exc);
             }
         }
         return i_;
@@ -269,12 +252,12 @@ public final class ServletTools {
     }
 
     /**
-     * Возвращает double значение переменной. Если переменная не инициализирована, возвращает 0
-     * Параметры:
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ double Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№. Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
+     * РџР°СЂР°РјРµС‚СЂС‹:
      * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * String f - имя переменной для получения значения<br>
-     * double def - значение по умолчанию
+     * HttpServletRequest request	- РѕР±С‹С‡РЅРѕ СЌС‚Рѕ request РёР· РѕРєСЂСѓР¶РµРЅРёСЏ JSP<br>
+     * String f - РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ<br>
+     * double def - Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
      * </blockquote>
      */
     public static Double getDouble(final HttpServletRequest request, final String f, final Double def) {
@@ -288,7 +271,6 @@ public final class ServletTools {
             }
             catch (Exception exc) {
                 // not rethrow exception 'cos this method return def value in this case
-                log.warn("Exception in getDouble(), def value will be return", exc);
             }
         }
         return i_;
