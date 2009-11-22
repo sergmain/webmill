@@ -44,6 +44,7 @@ import org.riverock.interfaces.generic.InternalResponse;
  * $Id$
  */
 public class RequestDispatcherImpl implements RequestDispatcher {
+
     private RequestDispatcher requestDispatcher = null;
     private String queryString=null;
 
@@ -82,6 +83,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
             internalRequest.setIncludedQueryString(queryString);
 
             requestDispatcher.include( (ServletRequest) internalRequest, response);
+        }
+        catch( java.io.IOException e ) {
+            String es = "IOException include new request";
+            throw e;
         }
         catch( ServletException e ) {
             String es = "Error include new request";

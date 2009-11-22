@@ -47,7 +47,6 @@ import java.security.Security;
  */
 public class DecryptFileSignature
 {
-
     private byte[] inArray = null;
     private File file_out = null;
     private PrivateKey priv_key = null;

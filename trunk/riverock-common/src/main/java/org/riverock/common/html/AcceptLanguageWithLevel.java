@@ -26,6 +26,7 @@ package org.riverock.common.html;
 import java.util.Locale;
 
 import org.riverock.common.tools.StringTools;
+
 /**
  * Author: mill
  * Date: Apr 2, 2003
@@ -33,7 +34,8 @@ import org.riverock.common.tools.StringTools;
  *
  * $Id$
  */
-public class AcceptLanguageWithLevel {
+public class AcceptLanguageWithLevel
+{
     public Locale locale;
     public float level;
 
@@ -93,7 +95,7 @@ public class AcceptLanguageWithLevel {
                 catch (NumberFormatException numberFormatException)
                 {
                     String es = "Exception parsing string '"+levelString.substring(2)+"' ";
-                    throw new IllegalArgumentException( es+ numberFormatException.toString());
+                    throw new IllegalArgumentException( es+ numberFormatException.toString(), numberFormatException);
                 }
             }
         }
