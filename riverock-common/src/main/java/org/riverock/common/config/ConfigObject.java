@@ -71,17 +71,6 @@ public class ConfigObject {
                 }
                 catch (NamingException e) {
                     String es = "Error get value from JDNI context. Name: " + name;
-                    try {
-                        InitialContext ic = new InitialContext();
-                        Map map = ic.getEnvironment();
-                        Iterator<Map.Entry> iterator = map.entrySet().iterator();
-                        while (iterator.hasNext()) {
-                            Map.Entry entry = iterator.next();
-                        }
-                    }
-                    catch (Throwable th) {
-                        //
-                    }
                     throw new ConfigException(es, e);
                 }
             }
@@ -117,7 +106,6 @@ public class ConfigObject {
         }
 
         try {
-            // System.out.println("Start unmarshal config file: " + configFile);
             FileInputStream stream = new FileInputStream(configFile);
             config.configObject = XmlTools.getObjectFromXml(configClass, stream);
         }

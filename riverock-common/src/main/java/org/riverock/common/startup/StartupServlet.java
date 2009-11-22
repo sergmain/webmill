@@ -39,21 +39,18 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.common.config.ConfigService;
 import org.riverock.common.config.PropertiesProvider;
 import org.riverock.common.main.Constants;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.LogManager;
 
 /**
  * $Id$
  */
 public final class StartupServlet extends HttpServlet {
-    private static Logger log = Logger.getLogger(StartupServlet.class);
     private static final String LOG_CONFIG_FILE_PARAM_NAME = "log-config-file";
     private static final String LOG_PATH_PARAM_NAME = "log-path";
 
@@ -91,14 +88,8 @@ public final class StartupServlet extends HttpServlet {
         }
         catch (ConfigException exc) {
             String es = "Error init locale from resource bundle";
-            log.error(es, exc);
             throw new ServletException(es, exc);
         }
-
-        log.warn("Server info: " + config.getServletContext().getServerInfo());
-        log.warn("Servlet container version: " +
-            config.getServletContext().getMajorVersion() + '.' +
-            config.getServletContext().getMinorVersion());
     }
 
     private void putAllConfigParameters(ServletConfig config) {

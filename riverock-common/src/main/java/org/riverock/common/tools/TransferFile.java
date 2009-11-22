@@ -25,7 +25,6 @@
  */
 package org.riverock.common.tools;
 
-import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;

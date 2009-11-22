@@ -244,7 +244,6 @@ public class ServletResponseWrapperInclude implements ServletResponse {
     }
 
     public void flushBuffer() throws IOException {
-
         if (realWriter!=null) {
             realWriter.flush();
         }

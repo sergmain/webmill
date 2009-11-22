@@ -255,7 +255,6 @@ public class StringTools {
             // Add newline every 76 output chars (that's 57 input chars)
             if ((i != 0) && (i % 57 == 0))
             {
-
                 bf[charCount++] = (byte) '\n';
             }
 

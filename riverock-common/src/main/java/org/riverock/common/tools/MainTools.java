@@ -120,7 +120,7 @@ public final class MainTools {
 
         out = null;
 
-        return full_file_name + " пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+        return full_file_name + " создан успешно";
     }
 
     public static boolean deleteFile(final String fileName) {
@@ -128,32 +128,23 @@ public final class MainTools {
     }
 
     public static boolean deleteFile(final File file_) {
-        if (file_==null) {
-            return true;
-        }
-        if (file_.exists()) {
-            return file_.delete();
-        }
+        return file_ == null || !file_.exists() || file_.delete();
 
-        return true;
     }
 
     public static Object createCustomObject(final String s)
         throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Object obj = null;
+        
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-        if (s == null)
+        if (s == null) {
             return null;
+        }
 
-        Class className = null;
-
-        className = Class.forName(s, true, classLoader);
-            
-        if (className == null)
+        if (Class.forName(s, true, classLoader) == null) {
             throw new ClassNotFoundException("Error create class for name " + s);
+        }
 
-        obj = className.newInstance();
-        return obj;
+        return ((Class) Class.forName(s, true, classLoader)).newInstance();
     }
 }

@@ -82,7 +82,7 @@ public final class XmlTools {
     }
 
     public static String getXmlAsString(final Object obj, final String rootElement) throws JAXBException {
-      return new String(getXml(obj, rootElement));
+        return new String(getXml(obj, rootElement));
     }
 
     public static byte[] getXml(final Object obj, final String rootElement) throws JAXBException {

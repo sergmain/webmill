@@ -50,7 +50,8 @@ import javax.crypto.spec.IvParameterSpec;
  *
  * Class housing methods to encrypt files with signatures.
  */
-public class EncryptSignature {
+public class EncryptSignature
+{
     //
     // Define our block header values.
     //
@@ -261,9 +262,11 @@ public class EncryptSignature {
         // Read while length is > -1
         //
 
-        while ((l = inStream.read(buf)) > -1) {
+        while ((l = inStream.read(buf)) > -1)
+        {
             out = output_cipher.update(buf, 0, l); // Encrypt data.
-            if (out != null) {
+            if (out != null)
+            {
                 data_str.writeShort(DATA_BLOCK); // Write data block header.
                 data_str.writeInt(out.length); // Write length.
                 data_str.write(out); // Write encrypted data.
