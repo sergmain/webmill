@@ -120,7 +120,7 @@ public final class MainTools {
 
         out = null;
 
-        return full_file_name + " создан успешно";
+        return full_file_name + " СЃРѕР·РґР°РЅ СѓСЃРїРµС€РЅРѕ";
     }
 
     public static boolean deleteFile(final String fileName) {
@@ -134,7 +134,7 @@ public final class MainTools {
 
     public static Object createCustomObject(final String s)
         throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        
+
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
         if (s == null) {

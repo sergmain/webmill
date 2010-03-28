@@ -30,28 +30,36 @@ import java.util.Iterator;
  * @author Sergei Maslyukov
  *         Date: 10.11.2006
  *         Time: 21:27:33
- *         <p/>
- *         $Id$
  */
 public class ListUtils {
-    public static String listToString(List<Long> list) {
-        if (list.isEmpty())
-            return "NULL";
 
-        Iterator<Long> iterator = list.iterator();
+    public static String listToString(List<Long> list) {
+        return listAsString(list, "NULL");
+    }
+
+    public static String listAsString(List<?> list) {
+        return listAsString(list, "NULL");
+    }
+
+    public static String listAsString(List<?> list, String defValue) {
+        if (list.isEmpty()) {
+            return defValue;
+        }
+
+        Iterator<?> iterator = list.iterator();
         StringBuilder sb = new StringBuilder();
         boolean isFirst = true;
         while (iterator.hasNext()) {
-            Long aLong = iterator.next();
+            Object obj = iterator.next();
 
             if (isFirst) {
-		isFirst = false;
-	    }
-	    else {
+                isFirst = false;
+            }
+            else {
                 sb.append( ',' );
             }
 
-            sb.append( aLong );
+            sb.append( obj.toString() );
         }
         return sb.toString();
     }
