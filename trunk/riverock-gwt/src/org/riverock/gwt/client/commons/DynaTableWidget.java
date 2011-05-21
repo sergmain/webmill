@@ -24,6 +24,7 @@ public abstract class DynaTableWidget extends Composite {
     protected static class WaitDialog extends DialogBox {
         
         public WaitDialog() {
+        	super();
             setWidth("65px");
             setHeight("65px");
             if (loadingImage==null) {
@@ -43,6 +44,7 @@ public abstract class DynaTableWidget extends Composite {
         private HTML body = new HTML("");
 
         public ErrorDialog() {
+        	super();
             setStylePrimaryName("gwt-DialogBox");
             Button closeButton = new Button("Закрыть", this);
             VerticalPanel panel = new VerticalPanel();
@@ -244,6 +246,7 @@ public abstract class DynaTableWidget extends Composite {
 
     public DynaTableWidget() {
         super();
+        initWidget(outer);
     }
 
     public void setCustomToolbarItems(TableToolbarItem[] customToolbarItems) {
@@ -309,7 +312,6 @@ public abstract class DynaTableWidget extends Composite {
 
         this.isNavBarEnabled = isNavBarEnabled;
         this.provider = provider;
-        initWidget(outer);
         grid.setWidth("100%");
         outer.setWidth("100%");
         
