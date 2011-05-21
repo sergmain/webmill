@@ -10,6 +10,7 @@
   
   <!-- Compiler options -->
   
+  <property name="result.version.jar" value="1.2"/>
   <property name="compiler.debug" value="on"/>
   <property name="compiler.generate.no.warnings" value="off"/>
   <property name="compiler.args" value=""/>
@@ -79,7 +80,8 @@
   <!-- Project Libraries -->
   
   <path id="library.gwt-user.classpath">
-    <pathelement location="C:/opt2/gwt-windows-1.7.1/gwt-user.jar"/>
+    <!--<pathelement location="C:/opt2/gwt-windows-1.7.1/gwt-user.jar"/>-->
+    <pathelement location="C:/opt/gwt-2.2.0/gwt-user.jar"/>
   </path>
   
   
@@ -192,7 +194,7 @@
 
   <target name="jar" depends="compile.gwt.gwt">
       <jar
-          jarfile="riverock-gwt.jar"
+          jarfile="riverock-gwt-${result.version.jar}.jar"
           basedir="${gwt.output.dir}"
           includes="org/**"
           excludes=""
