@@ -22,10 +22,6 @@
 			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
 		</repository>
 
-		<repository>
-			<id>ibiblio.org</id>
-			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-		</repository>
 <repository>
   <id>java.net</id>
   <url>http://download.java.net/maven/1</url>
