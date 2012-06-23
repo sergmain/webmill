@@ -45,7 +45,10 @@
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-common</artifactId>
+<!--
             <version>1.13</version>
+-->
+            <version>1.2</version>
         </dependency>
 
         <dependency>
