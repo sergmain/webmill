@@ -24,7 +24,7 @@ public abstract class DynaTableWidget extends Composite {
     protected static class WaitDialog extends DialogBox {
         
         public WaitDialog() {
-        	super();
+            super();
             setWidth("65px");
             setHeight("65px");
             if (loadingImage==null) {
@@ -44,7 +44,7 @@ public abstract class DynaTableWidget extends Composite {
         private HTML body = new HTML("");
 
         public ErrorDialog() {
-        	super();
+            super();
             setStylePrimaryName("gwt-DialogBox");
             Button closeButton = new Button("Закрыть", this);
             VerticalPanel panel = new VerticalPanel();
@@ -302,7 +302,7 @@ public abstract class DynaTableWidget extends Composite {
         final TableDataProvider provider, final String[] columns, final String[] columnStyles, final int rowCount,
         final TableToolbarItem[] items, final DynaTableWidget lookupWidget, final boolean isNavBarEnabled) {
 
-        if (columns.length < 1) {
+        if (columns.length == 0) {
             throw new IllegalArgumentException("expecting a positive number of columns");
         }
 

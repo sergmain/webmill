@@ -10,7 +10,8 @@
   
   <!-- Compiler options -->
   
-  <property name="result.version.jar" value="1.2"/>
+  <property name="result.version.jar" value="1.4"/>
+
   <property name="compiler.debug" value="on"/>
   <property name="compiler.generate.no.warnings" value="off"/>
   <property name="compiler.args" value=""/>
@@ -80,8 +81,7 @@
   <!-- Project Libraries -->
   
   <path id="library.gwt-user.classpath">
-    <!--<pathelement location="C:/opt2/gwt-windows-1.7.1/gwt-user.jar"/>-->
-    <pathelement location="C:/opt/gwt-2.2.0/gwt-user.jar"/>
+    <pathelement location="${gwt.sdk.home}/gwt-user.jar"/>
   </path>
   
   

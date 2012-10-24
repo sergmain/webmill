@@ -1,7 +1,3 @@
 <module>
-
     <inherits name='com.google.gwt.user.User'/>
-<!--
-    <entry-point class='org.riverock.gwt.client.RiverockGwt'/>
--->
 </module>

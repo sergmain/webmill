@@ -1,4 +1,4 @@
-package ru.transinfocom.sai.report.client.widgets;
+package org.riverock.gwt.client.commons;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -7,7 +7,6 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -22,11 +21,8 @@ import com.google.gwt.user.datepicker.client.*;
 
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-
-public class MonthPicker extends Composite implements HasValue<Date> {
+public class MonthDatePicker extends Composite implements HasValue<Date> {
 
 	private PushButton backwards;
 	private PushButton forwards;
@@ -51,7 +47,7 @@ public class MonthPicker extends Composite implements HasValue<Date> {
 		}
 	}
 
-	public MonthPicker() {
+	public MonthDatePicker() {
 
 		value = new Date();
 
