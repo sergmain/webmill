@@ -12,6 +12,7 @@ import com.google.gwt.core.client.GWT;
  * A composite Widget that implements the main interface for the dynamic table,
  * including the data table, status indicators, and paging buttons.
  */
+@SuppressWarnings("GWTStyleCheck")
 public abstract class DynaTableWidget extends Composite {
 
     private static final HTML separator = new HTML();
@@ -46,7 +47,7 @@ public abstract class DynaTableWidget extends Composite {
         public ErrorDialog() {
             super();
             setStylePrimaryName("gwt-DialogBox");
-            Button closeButton = new Button("Закрыть", this);
+            Button closeButton = new Button("Close", this);
             VerticalPanel panel = new VerticalPanel();
             panel.setSpacing(4);
             panel.add(body);
@@ -150,7 +151,7 @@ public abstract class DynaTableWidget extends Composite {
                 String[] srcRowData = tableRow.getCols();
 
                 if ((srcRowData.length+tableRow.getButtons().length) != destColCount) {
-                    putGlobalError( "Fatal error. Column count mismatch. "+ (srcRowData.length+tableRow.getButtons().length)+",  "+ destColCount  );
+                    putGlobalError( "Fatal error. Column count mismatch. Expected: "+ (srcRowData.length+tableRow.getButtons().length)+",  actual: "+ destColCount  );
                 }
 
                 int srcColIndex = 0;
@@ -234,11 +235,11 @@ public abstract class DynaTableWidget extends Composite {
     protected final VerticalPanel mainWidget = new VerticalPanel();
     protected Widget lookupWidget = null;
     protected Hyperlink closeLookup = null;
-    protected DialogBoxWithUpdater deleteDialogBox = null;
-    protected DialogBoxWithUpdater updateDialogBox = null;
+    protected DeleteItemDialog deleteDialogBox = null;
+    protected UpdateItemDialog updateDialogBox = null;
     private boolean isNavBarEnabled;
     protected final HTML processingStatus = new HTML();
-    protected TableToolbarItem[] customToolbarItems=null;
+    private TableToolbarItem[] customToolbarItems=null;
 
     private TableDataProvider provider;
 
@@ -249,6 +250,7 @@ public abstract class DynaTableWidget extends Composite {
         initWidget(outer);
     }
 
+    @Deprecated
     public void setCustomToolbarItems(TableToolbarItem[] customToolbarItems) {
         this.customToolbarItems = customToolbarItems;
     }
@@ -273,9 +275,10 @@ public abstract class DynaTableWidget extends Composite {
         outer.insert(l, 0);
     }
 
+    @Deprecated
     public void initialize(
         final TableDataProvider provider, final String[] columns, final String[] columnStyles, final int rowCount,
-        final DialogBoxWithUpdater createDialogBox, final LookupWidget lookupWidget, final boolean isNavBarEnabled) {
+        final CreateItemDialog createDialogBox, final LookupWidget lookupWidget, final boolean isNavBarEnabled) {
 
 
         int size = customToolbarItems!=null?customToolbarItems.length:0;
@@ -290,7 +293,7 @@ public abstract class DynaTableWidget extends Composite {
                 }
             }
             if (createDialogBox!=null) {
-                items[i++] = new TableToolbarItem(createDialogBox, "Новая запись");
+                items[i+1] = new TableToolbarItem(createDialogBox, "New record");
             }
         }
 
@@ -366,7 +369,7 @@ public abstract class DynaTableWidget extends Composite {
 
         if (lookupWidget!=null) {
             closeLookup = new Hyperlink();
-            closeLookup.setText("Вернуться");
+            closeLookup.setText("Back");
             closeLookup.setStyleName("asButton");
             closeLookup.addClickHandler(
                 new ClickHandler() {
