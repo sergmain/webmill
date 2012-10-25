@@ -33,6 +33,11 @@ public class TableRow {
         this.buttons = buttons;
     }
 
+    public TableRow(String[] cols) {
+        this.cols = cols;
+        this.buttons = new Widget[0];
+    }
+
     public String[] getCols() {
         return cols;
     }

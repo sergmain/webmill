@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.DialogBox;
  * Time: 21:52:54
  * $Id$
  */
-public interface DialogBoxWithUpdater {
+public abstract interface DialogBoxWithUpdater {
 
     DialogBox getDialogBox();
 
