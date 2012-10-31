@@ -80,7 +80,7 @@ public class MonthDatePicker extends Composite implements HasValue<Date> {
 	    grid.setWidget(0, 0, backwards);
 	    grid.setWidget(0, 2, forwards);
 
-	    CellFormatter formatter = grid.getCellFormatter();
+	    final CellFormatter formatter = grid.getCellFormatter();
 	    formatter.setStyleName(0, 1, "datePickerMonth");
 	    formatter.setWidth(0, 0, "1");
 	    formatter.setWidth(0, 1, "100%");
