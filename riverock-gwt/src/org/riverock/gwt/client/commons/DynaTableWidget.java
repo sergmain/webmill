@@ -31,7 +31,7 @@ public abstract class DynaTableWidget extends Composite {
             if (loadingImage==null) {
                 loadingImage = "<img src=\""+ GWT.getModuleBaseURL()+"images/ring64.gif\" />";
             }
-            HTML html = new HTML(loadingImage);
+            final HTML html = new HTML(loadingImage);
             add(html);
             center();
             hide();
@@ -47,8 +47,8 @@ public abstract class DynaTableWidget extends Composite {
         public ErrorDialog() {
             super();
             setStylePrimaryName("gwt-DialogBox");
-            Button closeButton = new Button("Close", this);
-            VerticalPanel panel = new VerticalPanel();
+            final Button closeButton = new Button("Close", this);
+            final VerticalPanel panel = new VerticalPanel();
             panel.setSpacing(4);
             panel.add(body);
             panel.add(closeButton);
@@ -83,7 +83,7 @@ public abstract class DynaTableWidget extends Composite {
             bar.setStyleName("navbar");
             status.setStyleName("status");
 
-            HorizontalPanel buttons = new HorizontalPanel();
+            final HorizontalPanel buttons = new HorizontalPanel();
             buttons.add(gotoFirst);
             buttons.add(gotoPrev);
             buttons.add(gotoNext);
@@ -102,7 +102,7 @@ public abstract class DynaTableWidget extends Composite {
         }
 
         public void onClick(ClickEvent event) {
-            Object source = event.getSource();
+            final Object source = event.getSource();
             if (source == gotoNext) {
                 startRow += getDataRowCount();
                 refresh();
@@ -147,15 +147,15 @@ public abstract class DynaTableWidget extends Composite {
             int countButtons =0;
             for (int srcRowIndex = 0; srcRowIndex < srcRowCount; ++srcRowIndex, ++destRowIndex) {
 
-                TableRow tableRow = data.get(srcRowIndex);
-                String[] srcRowData = tableRow.getCols();
+                final TableRow tableRow = data.get(srcRowIndex);
+                final String[] srcRowData = tableRow.getCols();
 
                 if ((srcRowData.length+tableRow.getButtons().length) != destColCount) {
                     putGlobalError( "Fatal error. Column count mismatch. Expected: "+ (srcRowData.length+tableRow.getButtons().length)+",  actual: "+ destColCount  );
                 }
 
                 int srcColIndex = 0;
-                for (String cellHTML : srcRowData) {
+                for (final String cellHTML : srcRowData) {
                     grid.setText(destRowIndex, srcColIndex, cellHTML);
                     if (tableRow.getCellStyles() != null && tableRow.getCellStyles()[srcColIndex] != null) {
                         grid.getCellFormatter().setStyleName(destRowIndex, srcColIndex, tableRow.getCellStyles()[srcColIndex]);
@@ -167,7 +167,7 @@ public abstract class DynaTableWidget extends Composite {
                 }
                 startButtons=srcColIndex;
                 countButtons = tableRow.getButtons().length;
-                for (Widget widget : tableRow.getButtons()) {
+                for (final Widget widget : tableRow.getButtons()) {
                     if (widget==null) {
                         grid.setWidget(destRowIndex, srcColIndex++, new InlineHTML("&nbsp;"));
                     }
@@ -206,8 +206,10 @@ public abstract class DynaTableWidget extends Composite {
         public void failed(Throwable caught) {
             setStatusText("Error");
             if (errorDialog == null) {
-                errorDialog = new ErrorDialog();
+                throw new IllegalStateException("Error Dialog is null");
+//                errorDialog = new ErrorDialog();
             }
+
             if (caught instanceof InvocationException) {
                 errorDialog.setText("An RPC server could not be reached");
                 errorDialog.setBody(NO_CONNECTION_MESSAGE);
@@ -228,7 +230,7 @@ public abstract class DynaTableWidget extends Composite {
 
     private final NavBar navbar = new NavBar();
 
-    protected ErrorDialog errorDialog = new ErrorDialog();
+    protected final ErrorDialog errorDialog = new ErrorDialog();
     protected final WaitDialog waitDialog = new WaitDialog();
 
     protected final VerticalPanel outer = new VerticalPanel();
@@ -243,7 +245,7 @@ public abstract class DynaTableWidget extends Composite {
 
     private TableDataProvider provider;
 
-    private int startRow = 0;
+    protected int startRow = 0;
 
     public DynaTableWidget() {
         super();
@@ -270,7 +272,7 @@ public abstract class DynaTableWidget extends Composite {
     }
 
     protected void putGlobalError(String text) {
-        Label l = new  Label(text);
+        final Label l = new  Label(text);
         l.setStyleName("errorText");
         outer.insert(l, 0);
     }
@@ -303,7 +305,7 @@ public abstract class DynaTableWidget extends Composite {
 
     public void initializeNew(
         final TableDataProvider provider, final String[] columns, final String[] columnStyles, final int rowCount,
-        final TableToolbarItem[] items, final DynaTableWidget lookupWidget, final boolean isNavBarEnabled) {
+        final TableToolbarItem[] items, final LookupWidget lookupWidget, final boolean isNavBarEnabled) {
 
         if (columns.length == 0) {
             throw new IllegalArgumentException("expecting a positive number of columns");
@@ -384,7 +386,7 @@ public abstract class DynaTableWidget extends Composite {
             closeLookup.setVisible(false);
             outer.add(closeLookup);
             
-            HTML html = new HTML("&nbsp;");
+            final HTML html = new HTML("&nbsp;");
             outer.add(html);
             
             lookupWidget.setWidth("100%");
