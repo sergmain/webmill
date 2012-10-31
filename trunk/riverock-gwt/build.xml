@@ -10,7 +10,7 @@
 
     <!-- Compiler options -->
 
-    <property name="result.version.jar" value="2.3"/>
+    <property name="result.version.jar" value="2.4"/>
 
     <property name="compiler.debug" value="on"/>
     <property name="compiler.generate.no.warnings" value="off"/>
@@ -147,6 +147,7 @@
         <javac destdir="${gwt.output.dir}" debug="${compiler.debug}"
                nowarn="${compiler.generate.no.warnings}"
                memorymaximumsize="${compiler.max.memory}"
+               source="1.6" target="1.6"
                fork="true"
                executable="${module.jdk.bin.gwt}/javac"
                encoding="utf-8">
