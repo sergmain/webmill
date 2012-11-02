@@ -235,7 +235,7 @@ public abstract class DynaTableWidget extends Composite {
 
     protected final VerticalPanel outer = new VerticalPanel();
     protected final VerticalPanel mainWidget = new VerticalPanel();
-    protected Widget lookupWidget = null;
+    protected LookupWidget lookupWidget = null;
     protected Hyperlink closeLookup = null;
     protected DeleteItemDialog deleteDialogBox = null;
     protected UpdateItemDialog updateDialogBox = null;
@@ -376,10 +376,7 @@ public abstract class DynaTableWidget extends Composite {
             closeLookup.addClickHandler(
                 new ClickHandler() {
                     public void onClick(ClickEvent sender) {
-                        mainWidget.setVisible(true);
-                        closeLookup.setVisible(false);
-                        lookupWidget.setVisible(false);
-                        lookupWidget.startRow = 0;
+                        hideLookupWidget();
                     }
                 }
             );
@@ -397,6 +394,27 @@ public abstract class DynaTableWidget extends Composite {
         initTable(columns, columnStyles, rowCount);
     }
 
+    public void hideLookupWidget() {
+        if (lookupWidget!=null) {
+            lookupWidget.hideAllWidget();
+        }
+        mainWidget.setVisible(true);
+        if (lookupWidget!=null) {
+            closeLookup.setVisible(false);
+            lookupWidget.setVisible(false);
+            lookupWidget.startRow=0;
+        }
+    }
+
+    protected void hideAllWidget() {
+        mainWidget.setVisible(false);
+        if (lookupWidget!=null) {
+            closeLookup.setVisible(false);
+            lookupWidget.setVisible(false);
+            lookupWidget.startRow=0;
+            lookupWidget.hideAllWidget();
+        }
+    }
 
     public void clearStatusText() {
         if (isNavBarEnabled) {
