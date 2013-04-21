@@ -12,6 +12,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
  * Time: 13:22:41
  */
 public abstract class FilteredDynaTableWidget extends DynaTableWidget {
+	public FilteredDynaTableWidget() {
+	}
 
     protected static final String processingStatusText = "Идет загрузка. Пожалуйста подождите.";
 

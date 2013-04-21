@@ -1,12 +1,12 @@
 package org.riverock.gwt.client.commons;
 
-import java.util.List;
-
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.core.client.GWT;
+
+import java.util.List;
 
 /**
  * A composite Widget that implements the main interface for the dynamic table,
@@ -102,22 +102,24 @@ public abstract class DynaTableWidget extends Composite {
         }
 
         public void onClick(ClickEvent event) {
+            // putGlobalError( "startRow #1.1: "+ startRow  );
             final Object source = event.getSource();
             if (source == gotoNext) {
-                startRow += getDataRowCount();
-                refresh();
+//                startRow += getDataRowCount();
+                startRow += rowCount;
             }
             else if (source == gotoPrev) {
-                startRow -= getDataRowCount();
+//                startRow -= getDataRowCount();
+                startRow -= rowCount;
                 if (startRow < 0) {
                     startRow = 0;
                 }
-                refresh();
             }
             else if (source == gotoFirst) {
                 startRow = 0;
-                refresh();
             }
+            // putGlobalError( "startRow #1.2: "+ startRow  );
+            refresh();
         }
     }
 
@@ -194,9 +196,9 @@ public abstract class DynaTableWidget extends Composite {
             }
 
             // Synchronize the nav buttons.
-            navbar.gotoNext.setEnabled(!isLastPage);
             navbar.gotoFirst.setEnabled(startRow > 0);
             navbar.gotoPrev.setEnabled(startRow > 0);
+            navbar.gotoNext.setEnabled((grid.getRowCount()-1)==rowCount);
 
             // Update the status message.
             final String statusText = ""+(startRow + (data.size() != 0 ? 1 : 0)) + " - " + (startRow + srcRowCount);
@@ -205,11 +207,13 @@ public abstract class DynaTableWidget extends Composite {
 
         public void failed(Throwable caught) {
             setStatusText("Error");
+/*
             if (errorDialog == null) {
                 throw new IllegalStateException("Error Dialog is null");
 //                errorDialog = new ErrorDialog();
             }
 
+*/
             if (caught instanceof InvocationException) {
                 errorDialog.setText("An RPC server could not be reached");
                 errorDialog.setBody(NO_CONNECTION_MESSAGE);
@@ -246,17 +250,20 @@ public abstract class DynaTableWidget extends Composite {
     private TableDataProvider provider;
 
     protected int startRow = 0;
+    protected int rowCount = 0;
 
     public DynaTableWidget() {
         super();
         initWidget(outer);
     }
 
+/*
     @Deprecated
     public void setCustomToolbarItems(TableToolbarItem[] customToolbarItems) {
         this.customToolbarItems = customToolbarItems;
     }
 
+*/
     protected void showMainWidget() {
         processingStatus.setVisible(false);
         mainWidget.setVisible(true);
@@ -276,6 +283,25 @@ public abstract class DynaTableWidget extends Composite {
         l.setStyleName("errorText");
         outer.insert(l, 0);
     }
+
+/*
+     * use something like that
+     *
+     final TableToolbarItem[] items = new TableToolbarItem[]{
+        new TableToolbarItem(createDialogBox(), "New User")
+     };
+     initializeNew(new UserProvider(), COLUMNS_NAME, null, 20, items, null, false);
+     mainWidget.setVisible(true);
+
+     *
+     *
+     * @param provider
+     * @param columns
+     * @param columnStyles
+     * @param rowCount
+     * @param createDialogBox
+     * @param lookupWidget
+     * @param isNavBarEnabled
 
     @Deprecated
     public void initialize(
@@ -302,6 +328,7 @@ public abstract class DynaTableWidget extends Composite {
         // putGlobalError( "rowCount: "+ rowCount  );
         initializeNew(provider, columns, columnStyles,  rowCount, items, lookupWidget, isNavBarEnabled);
     }
+*/
 
     public void initializeNew(
         final TableDataProvider provider, final String[] columns, final String[] columnStyles, final int rowCount,
@@ -315,8 +342,10 @@ public abstract class DynaTableWidget extends Composite {
             throw new IllegalArgumentException("expecting as many styles as columns");
         }
 
+        this.rowCount = rowCount;
         this.isNavBarEnabled = isNavBarEnabled;
         this.provider = provider;
+
         grid.setWidth("100%");
         outer.setWidth("100%");
         
@@ -431,12 +460,17 @@ public abstract class DynaTableWidget extends Composite {
             navbar.gotoNext.setEnabled(false);
             setStatusText("Please wait...");
         }
-        provider.updateRowData(startRow, grid.getRowCount() - 1, acceptor);
+//        provider.updateRowData(startRow, grid.getRowCount() - 1, acceptor);
+        provider.updateRowData(startRow, rowCount, acceptor);
     }
 
+/*
+     * @deprecated
+     * @param rows
     public void setRowCount(int rows) {
         grid.resizeRows(rows);
     }
+*/
 
     public void setStatusText(String text) {
         if (isNavBarEnabled) {
@@ -445,6 +479,8 @@ public abstract class DynaTableWidget extends Composite {
     }
 
     private int getDataRowCount() {
+        // putGlobalError( "grid.getRowCount(): "+ grid.getRowCount()  );
+        // 1 - size of table header
         return grid.getRowCount() - 1;
     }
 
