@@ -1,6 +1,7 @@
 package org.riverock.gwt.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * User: SergeMaslyukov
@@ -9,5 +10,6 @@ import com.google.gwt.core.client.EntryPoint;
  */
 public class RiverockGwt implements EntryPoint {
     public void onModuleLoad() {
+        RootPanel rootPanel = RootPanel.get();
     }
 }
