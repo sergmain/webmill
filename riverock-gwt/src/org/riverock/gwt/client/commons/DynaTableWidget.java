@@ -38,36 +38,16 @@ public abstract class DynaTableWidget extends Composite {
         }
     }
 
-    /**
+    /*
      * A dialog box for displaying an error.
      */
-    protected static class ErrorDialog extends DialogBox implements ClickHandler {
-        private HTML body = new HTML("");
-
+/*
+    protected static class ErrorDialog extends SimpleDialogBox {
         public ErrorDialog() {
             super();
-            setStylePrimaryName("gwt-DialogBox");
-            final Button closeButton = new Button("Close", this);
-            final VerticalPanel panel = new VerticalPanel();
-            panel.setSpacing(4);
-            panel.add(body);
-            panel.add(closeButton);
-            panel.setCellHorizontalAlignment(closeButton, VerticalPanel.ALIGN_RIGHT);
-            setWidget(panel);
-        }
-
-        public String getBody() {
-            return body.getHTML();
-        }
-
-        public void onClick(ClickEvent event) {
-            hide();
-        }
-
-        public void setBody(String html) {
-            body.setHTML(html);
         }
     }
+*/
 
     private class NavBar extends Composite implements ClickHandler {
 
@@ -105,11 +85,9 @@ public abstract class DynaTableWidget extends Composite {
             // putGlobalError( "startRow #1.1: "+ startRow  );
             final Object source = event.getSource();
             if (source == gotoNext) {
-//                startRow += getDataRowCount();
                 startRow += rowCount;
             }
             else if (source == gotoPrev) {
-//                startRow -= getDataRowCount();
                 startRow -= rowCount;
                 if (startRow < 0) {
                     startRow = 0;
@@ -207,13 +185,6 @@ public abstract class DynaTableWidget extends Composite {
 
         public void failed(Throwable caught) {
             setStatusText("Error");
-/*
-            if (errorDialog == null) {
-                throw new IllegalStateException("Error Dialog is null");
-//                errorDialog = new ErrorDialog();
-            }
-
-*/
             if (caught instanceof InvocationException) {
                 errorDialog.setText("An RPC server could not be reached");
                 errorDialog.setBody(NO_CONNECTION_MESSAGE);
@@ -234,7 +205,7 @@ public abstract class DynaTableWidget extends Composite {
 
     private final NavBar navbar = new NavBar();
 
-    protected final ErrorDialog errorDialog = new ErrorDialog();
+    protected final SimpleDialogBox errorDialog = new SimpleDialogBox();
     protected final WaitDialog waitDialog = new WaitDialog();
 
     protected final VerticalPanel outer = new VerticalPanel();
@@ -257,13 +228,17 @@ public abstract class DynaTableWidget extends Composite {
         initWidget(outer);
     }
 
-/*
-    @Deprecated
-    public void setCustomToolbarItems(TableToolbarItem[] customToolbarItems) {
-        this.customToolbarItems = customToolbarItems;
+    public SimpleDialogBox getErrorDialog() {
+        return errorDialog;
     }
 
-*/
+    /*
+        @Deprecated
+        public void setCustomToolbarItems(TableToolbarItem[] customToolbarItems) {
+            this.customToolbarItems = customToolbarItems;
+        }
+
+    */
     protected void showMainWidget() {
         processingStatus.setVisible(false);
         mainWidget.setVisible(true);
@@ -460,7 +435,6 @@ public abstract class DynaTableWidget extends Composite {
             navbar.gotoNext.setEnabled(false);
             setStatusText("Please wait...");
         }
-//        provider.updateRowData(startRow, grid.getRowCount() - 1, acceptor);
         provider.updateRowData(startRow, rowCount, acceptor);
     }
 

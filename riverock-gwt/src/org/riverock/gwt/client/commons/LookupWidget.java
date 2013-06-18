@@ -6,4 +6,9 @@ package org.riverock.gwt.client.commons;
  * Time: 17:42:11
  */
 public abstract class LookupWidget extends DynaTableWidget {
+
+    public void turnVisibleOn() {
+        mainWidget.setVisible(true);
+        this.setVisible(true);
+    }
 }
