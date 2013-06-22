@@ -59,7 +59,7 @@ public abstract class DynaTableWidget extends Composite {
 
         public NavBar() {
             initWidget(bar);
-            
+
             bar.setStyleName("navbar");
             status.setStyleName("status");
 
@@ -104,6 +104,10 @@ public abstract class DynaTableWidget extends Composite {
     private class RowDataAcceptorImpl implements TableDataProvider.RowDataAcceptor {
         public void accept(int startRow, List<TableRow> data) {
 
+            // dynamicly resize table
+            if (rowCount==0) {
+                grid.resizeRows(data.size()+1);
+            }
 
             int destRowCount = getDataRowCount();
 
@@ -210,7 +214,7 @@ public abstract class DynaTableWidget extends Composite {
 
     protected final VerticalPanel outer = new VerticalPanel();
     protected final VerticalPanel mainWidget = new VerticalPanel();
-    protected LookupWidget lookupWidget = null;
+    protected LookupWidget[] lookupWidgets = null;
     protected Hyperlink closeLookup = null;
     protected DeleteItemDialog deleteDialogBox = null;
     protected UpdateItemDialog updateDialogBox = null;
@@ -306,8 +310,23 @@ public abstract class DynaTableWidget extends Composite {
 */
 
     public void initializeNew(
+            final TableDataProvider provider, final String[] columns, final String[] columnStyles, final int rowCount,
+            final TableToolbarItem[] items, final LookupWidget lookupWidget, final boolean isNavBarEnabled) {
+
+
+        LookupWidget[] lookupWidgets;
+        if (lookupWidget!=null) {
+            lookupWidgets = new LookupWidget[]{lookupWidget};
+        }
+        else {
+            lookupWidgets = new LookupWidget[0];
+        }
+        init(provider, columns, columnStyles, rowCount, items, lookupWidgets, isNavBarEnabled);
+    }
+
+    public void init(
         final TableDataProvider provider, final String[] columns, final String[] columnStyles, final int rowCount,
-        final TableToolbarItem[] items, final LookupWidget lookupWidget, final boolean isNavBarEnabled) {
+        final TableToolbarItem[] items, final LookupWidget[] lookupWidgets, final boolean isNavBarEnabled) {
 
         if (columns.length == 0) {
             throw new IllegalArgumentException("expecting a positive number of columns");
@@ -325,7 +344,7 @@ public abstract class DynaTableWidget extends Composite {
         outer.setWidth("100%");
         
         mainWidget.setWidth("100%");
-        this.lookupWidget = lookupWidget;
+        this.lookupWidgets = lookupWidgets;
 
         processingStatus.setVisible(false);
         mainWidget.add(processingStatus);
@@ -373,7 +392,9 @@ public abstract class DynaTableWidget extends Composite {
 
         outer.add(mainWidget);
 
-        if (lookupWidget!=null) {
+//        Window.alert("Step #10.10 " + lookupWidgets);
+
+        if (lookupWidgets!=null) {
             closeLookup = new Hyperlink();
             closeLookup.setText("Back");
             closeLookup.setStyleName("asButton");
@@ -389,34 +410,49 @@ public abstract class DynaTableWidget extends Composite {
             
             final HTML html = new HTML("&nbsp;");
             outer.add(html);
-            
-            lookupWidget.setWidth("100%");
-            lookupWidget.setVisible(false);
-            outer.add(lookupWidget);
+
+//            Window.alert("Step #20.10 ");
+            for (LookupWidget lookupWidget : lookupWidgets) {
+//                Window.alert("Step #20.20 " + lookupWidget);
+                lookupWidget.setWidth("100%");
+                lookupWidget.setVisible(false);
+                outer.add(lookupWidget);
+            }
         }
 
         initTable(columns, columnStyles, rowCount);
     }
 
     public void hideLookupWidget() {
-        if (lookupWidget!=null) {
-            lookupWidget.hideAllWidget();
+
+        int i=0;
+//        Window.alert("#30.0");
+        for (LookupWidget lookupWidget : lookupWidgets) {
+//            Window.alert("Step #30.1 " + (i++) + " " + lookupWidget);
+
+            if (lookupWidget!=null) {
+                lookupWidget.hideAllWidget();
+                closeLookup.setVisible(false);
+                lookupWidget.setVisible(false);
+                lookupWidget.startRow=0;
+            }
         }
         mainWidget.setVisible(true);
-        if (lookupWidget!=null) {
-            closeLookup.setVisible(false);
-            lookupWidget.setVisible(false);
-            lookupWidget.startRow=0;
-        }
     }
 
     protected void hideAllWidget() {
         mainWidget.setVisible(false);
-        if (lookupWidget!=null) {
-            closeLookup.setVisible(false);
-            lookupWidget.setVisible(false);
-            lookupWidget.startRow=0;
-            lookupWidget.hideAllWidget();
+        int i=0;
+//        Window.alert("#40.0");
+        for (LookupWidget lookupWidget : lookupWidgets) {
+//            Window.alert("Step #40.1 " + (i++) + " " + lookupWidget);
+
+            if (lookupWidget!=null) {
+                closeLookup.setVisible(false);
+                lookupWidget.setVisible(false);
+                lookupWidget.startRow=0;
+                lookupWidget.hideAllWidget();
+            }
         }
     }
 
