@@ -10,7 +10,7 @@
 
     <!-- Compiler options -->
 
-    <property name="result.version.jar" value="2.14"/>
+    <property name="result.version.jar" value="2.16"/>
 
     <property name="compiler.debug" value="on"/>
     <property name="compiler.generate.no.warnings" value="off"/>
@@ -177,9 +177,11 @@
     <!-- Run GWT compiler for GWT module ${gwt.module.name} -->
     <target name="run.gwt.compiler.gwt" description="Run GWT compiler">
         <java fork="true" jvm="${module.jdk.bin.gwt}/java" classname="com.google.gwt.dev.Compiler">
+            <jvmarg line="-Xms256m"/>
             <jvmarg line="-Xmx512m"/>
             <jvmarg line="-XX:+UseConcMarkSweepGC"/>
             <classpath>
+                <fileset dir="${gwt.sdk.home}" includes="validation-api-1.0.0.GA*.jar"/>
                 <pathelement location="${gwt.sdk.home}/${gwt.sdk.dev.jar.name}"/>
                 <path refid="gwt.module.sourcepath"/>
                 <path refid="gwt.runtime.module.classpath"/>
