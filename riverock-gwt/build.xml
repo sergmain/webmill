@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="gwt" default="all">
+<project name="gwt" default="jar">
 
 
     <property file="gwt.properties"/>
@@ -10,7 +10,7 @@
 
     <!-- Compiler options -->
 
-    <property name="result.version.jar" value="2.16"/>
+    <property name="result.version.jar" value="2.18"/>
 
     <property name="compiler.debug" value="on"/>
     <property name="compiler.generate.no.warnings" value="off"/>

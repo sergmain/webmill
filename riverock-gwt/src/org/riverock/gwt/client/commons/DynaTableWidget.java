@@ -180,7 +180,9 @@ public abstract class DynaTableWidget extends Composite {
             // Synchronize the nav buttons.
             navbar.gotoFirst.setEnabled(startRow > 0);
             navbar.gotoPrev.setEnabled(startRow > 0);
-            navbar.gotoNext.setEnabled((grid.getRowCount()-1)==rowCount);
+
+//            putGlobalError( "getDataRowCount(): "+ getDataRowCount()+", data.size(): " + data.size() );
+            navbar.gotoNext.setEnabled(getDataRowCount() == data.size());
 
             // Update the status message.
             final String statusText = ""+(startRow + (data.size() != 0 ? 1 : 0)) + " - " + (startRow + srcRowCount);
@@ -321,6 +323,8 @@ public abstract class DynaTableWidget extends Composite {
         else {
             lookupWidgets = new LookupWidget[0];
         }
+
+//        putGlobalError( "#11.1 rowCount: "+ rowCount );
         init(provider, columns, columnStyles, rowCount, items, lookupWidgets, isNavBarEnabled);
     }
 
@@ -334,6 +338,10 @@ public abstract class DynaTableWidget extends Composite {
 
         if (columnStyles != null && columns.length != columnStyles.length) {
             throw new IllegalArgumentException("expecting as many styles as columns");
+        }
+
+        if (rowCount!=0 && !isNavBarEnabled) {
+            putGlobalError( "Navigation bar can be disabled only for dynamic tables. Set 'rowCount' to 0 or disable navigation bar" );
         }
 
         this.rowCount = rowCount;
@@ -497,7 +505,13 @@ public abstract class DynaTableWidget extends Composite {
     protected void initTable(String[] columns, String[] columnStyles, int rowCount) {
         // Set up the header row. It's one greater than the number of visible rows.
         //
+        if (isNavBarEnabled && this.rowCount!=rowCount) {
+            putGlobalError( "Wrong reinitialize table with navigation bar. Origin count of rows: "+ this.rowCount+", new value: " + rowCount);
+        }
+
         grid.resize(rowCount + 1, columns.length);
+//        putGlobalError( "#11.6 grid.getRowCount(): "+ grid.getRowCount() );
+
         for (int i = 0, n = columns.length; i < n; i++) {
             if (StringUtils.isBlank(columns[i])) {
                 grid.setHTML(0, i, "&nbsp;");
