@@ -13,7 +13,20 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * Time: 23:24
  */
 public class SimpleDialogBox extends DialogBox implements ClickHandler {
-    private HTML body = new HTML("");
+    private final HTML body = new HTML("");
+
+    public SimpleDialogBox(String text, String bodyStr) {
+        this();
+        makeVisible(text, bodyStr);
+    }
+
+    public void makeVisible(String text, String bodyStr) {
+        setText(text);
+        setBody(bodyStr);
+        center();
+        show();
+    }
+
 
     public SimpleDialogBox() {
         super();
