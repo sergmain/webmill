@@ -10,7 +10,7 @@
 
     <!-- Compiler options -->
 
-    <property name="result.version.jar" value="2.18"/>
+    <property name="result.version.jar" value="2.20"/>
 
     <property name="compiler.debug" value="on"/>
     <property name="compiler.generate.no.warnings" value="off"/>
