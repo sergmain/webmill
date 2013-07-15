@@ -64,11 +64,13 @@ public class TableRow {
     }
 
     private DataCell[] dataCells;
-    private String cols[];
-    private Widget[] buttons;
-    private String cellStyles[]=null;
     private String rowStyle=null;
 
+
+    public TableRow(DataCell[] dataCells, String rowStyle) {
+        this.dataCells = dataCells;
+        this.rowStyle = rowStyle;
+    }
 
     /**
      * user   TableRow(DataCell[], rowStyle)
@@ -109,9 +111,6 @@ public class TableRow {
 
         dataCells = dc.toArray(new DataCell[dc.size()]);
 
-        this.cols = cols;
-        this.buttons = buttons;
-        this.cellStyles = cellStyles;
         this.rowStyle = rowStyle;
     }
 
