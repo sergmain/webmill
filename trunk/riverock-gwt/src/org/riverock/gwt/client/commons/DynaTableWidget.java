@@ -132,31 +132,30 @@ public abstract class DynaTableWidget extends Composite {
             for (int srcRowIndex = 0; srcRowIndex < srcRowCount; ++srcRowIndex, ++destRowIndex) {
 
                 final TableRow tableRow = data.get(srcRowIndex);
-                final String[] srcRowData = tableRow.getCols();
 
-                if ((srcRowData.length+tableRow.getButtons().length) != destColCount) {
-                    putGlobalError( "Fatal error. Column count mismatch. Expected: "+ (srcRowData.length+tableRow.getButtons().length)+",  actual: "+ destColCount  );
+                if (tableRow.getDataCells().length != destColCount) {
+                    putGlobalError( "Fatal error. Column count mismatch. Expected: "+ (tableRow.getDataCells().length)+",  actual: "+ destColCount  );
                 }
 
                 int srcColIndex = 0;
-                for (final String cellHTML : srcRowData) {
-                    grid.setText(destRowIndex, srcColIndex, cellHTML);
-                    if (tableRow.getCellStyles() != null && tableRow.getCellStyles()[srcColIndex] != null) {
-                        grid.getCellFormatter().setStyleName(destRowIndex, srcColIndex, tableRow.getCellStyles()[srcColIndex]);
+                for (TableRow.DataCell dataCell : tableRow.getDataCells()) {
+                    switch (dataCell.getCellType()) {
+                        case STRING:
+                            grid.setText(destRowIndex, srcColIndex, dataCell.getString());
+                            if (dataCell.getCellStyles()!=null) {
+                                grid.getCellFormatter().setStyleName(destRowIndex, srcColIndex, dataCell.getCellStyles());
+                            }
+                            srcColIndex++;
+                            break;
+                        case WIDGET:
+                            grid.getColumnFormatter().setStyleName(srcColIndex, "buttonColumn");
+                            grid.setWidget(destRowIndex, srcColIndex++, dataCell.getWidget());
+                            break;
+                        default:
+                            throw new IllegalStateException("Error");
                     }
-                    srcColIndex++;
-                }
-                if (tableRow.getRowStyle()!=null) {
-                    grid.getRowFormatter().setStyleName(destRowIndex, tableRow.getRowStyle());
-                }
-                startButtons=srcColIndex;
-                countButtons = tableRow.getButtons().length;
-                for (final Widget widget : tableRow.getButtons()) {
-                    if (widget==null) {
-                        grid.setWidget(destRowIndex, srcColIndex++, new InlineHTML("&nbsp;"));
-                    }
-                    else {
-                        grid.setWidget(destRowIndex, srcColIndex++, widget);
+                    if (tableRow.getRowStyle()!=null) {
+                        grid.getRowFormatter().setStyleName(destRowIndex, tableRow.getRowStyle());
                     }
                 }
             }
