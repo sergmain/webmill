@@ -2,6 +2,7 @@ package org.riverock.gwt.client.commons;
 
 import com.google.gwt.user.client.ui.Widget;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,14 @@ public class TableRow {
 
         public DataCell(String str) {
             this(str, null);
+        }
+
+        public DataCell(BigDecimal value) {
+            this(value.toString(), null);
+        }
+
+        public DataCell(long value) {
+            this(Long.toString(value), null);
         }
 
         public DataCell(String str, String cellStyles) {
