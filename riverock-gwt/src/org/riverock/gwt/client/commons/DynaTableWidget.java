@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.ui.*;
+import org.riverock.gwt.client.exception.Http403ForbiddenException;
 
 import java.util.List;
 
@@ -190,15 +191,16 @@ public abstract class DynaTableWidget extends Composite {
 
         public void failed(Throwable caught) {
             setStatusText("Error");
-            if (caught instanceof InvocationException) {
-                errorDialog.setText("An RPC server could not be reached");
-                errorDialog.setBody(NO_CONNECTION_MESSAGE);
+            if((caught instanceof com.google.gwt.user.client.rpc.StatusCodeException) &&
+                    ((com.google.gwt.user.client.rpc.StatusCodeException)caught).getStatusCode()==403) {
+                throw new Http403ForbiddenException();
+            }
+            else if (caught instanceof InvocationException) {
+                errorDialog.makeVisible("An server could not be reached", NO_CONNECTION_MESSAGE);
             }
             else {
-                errorDialog.setText("Unexcepted Error processing remote call");
-                errorDialog.setBody(caught.getMessage());
+                errorDialog.makeVisible("Unexcepted Error processing remote call", caught.getMessage());
             }
-            errorDialog.center();
         }
     }
 
