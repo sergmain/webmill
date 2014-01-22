@@ -10,7 +10,7 @@
 
     <!-- Compiler options -->
 
-    <property name="result.version.jar" value="2.21"/>
+    <property name="result.version.jar" value="2.22"/>
 
     <property name="compiler.debug" value="on"/>
     <property name="compiler.generate.no.warnings" value="off"/>
@@ -54,9 +54,9 @@
 
     <!-- JDK definitions -->
 
-    <property name="jdk.bin.1.6" value="${jdk.home.1.6}/bin"/>
-    <path id="jdk.classpath.1.6">
-        <fileset dir="${jdk.home.1.6}">
+    <property name="jdk.home.bin" value="${jdk.home}/bin"/>
+    <path id="jdk.classpath">
+        <fileset dir="${jdk.home}">
             <include name="jre/lib/charsets.jar"/>
             <include name="jre/lib/deploy.jar"/>
             <include name="jre/lib/javaws.jar"/>
@@ -74,9 +74,9 @@
         </fileset>
     </path>
 
-    <property name="project.jdk.home" value="${jdk.home.1.6}"/>
-    <property name="project.jdk.bin" value="${jdk.bin.1.6}"/>
-    <property name="project.jdk.classpath" value="jdk.classpath.1.6"/>
+    <property name="project.jdk.home" value="${jdk.home}"/>
+    <property name="project.jdk.bin" value="${jdk.home.bin}"/>
+    <property name="project.jdk.classpath" value="jdk.classpath"/>
 
 
     <!-- Project Libraries -->
@@ -105,8 +105,10 @@
 
     <property name="compiler.args.gwt" value="${compiler.args}"/>
 
-    <property name="gwt.output.dir" value="${module.gwt.basedir}/out/production/gwt"/>
-    <property name="gwt.testoutput.dir" value="${module.gwt.basedir}/out/test/gwt"/>
+    <property name="gwt.unitcache.dir" value="${module.gwt.basedir}/gwt-unitCache"/>
+    <property name="gwt.outbase.dir" value="${module.gwt.basedir}/out"/>
+    <property name="gwt.output.dir" value="${gwt.outbase.dir}/production/gwt"/>
+    <property name="gwt.testoutput.dir" value="${gwt.outbase.dir}/test/gwt"/>
 
     <path id="gwt.module.bootclasspath">
         <!-- Paths to be included in compilation bootclasspath -->
@@ -147,7 +149,7 @@
         <javac destdir="${gwt.output.dir}" debug="${compiler.debug}"
                nowarn="${compiler.generate.no.warnings}"
                memorymaximumsize="${compiler.max.memory}"
-               source="1.6" target="1.6"
+               source="1.7" target="1.7"
                fork="true"
                executable="${module.jdk.bin.gwt}/javac"
                encoding="utf-8">
@@ -170,6 +172,9 @@
             description="compile module gwt; test classes" unless="skip.tests"/>
 
     <target name="clean.module.gwt" description="cleanup module">
+        <echo message="${gwt.output.dir}"/>
+        <delete dir="${gwt.unitcache.dir}"/>
+        <delete dir="${gwt.outbase.dir}"/>
         <delete dir="${gwt.output.dir}"/>
         <delete dir="${gwt.testoutput.dir}"/>
     </target>

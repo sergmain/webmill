@@ -1,5 +1,6 @@
 package org.riverock.gwt.client.commons;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -15,7 +16,9 @@ public abstract class FilteredDynaTableWidget extends DynaTableWidget {
 	public FilteredDynaTableWidget() {
 	}
 
-    protected static final String processingStatusText = "Идет загрузка. Пожалуйста подождите.";
+    private static final FilteredDynaTableConstants filteredDynaTableConstants = GWT.create(FilteredDynaTableConstants.class);
+
+    protected static final String processingStatusText = filteredDynaTableConstants.loading();
 
     public abstract Widget createFilterWidget();
 
@@ -23,19 +26,17 @@ public abstract class FilteredDynaTableWidget extends DynaTableWidget {
     private Widget filterWidget;
     private boolean isResultPaged=false;
     private boolean isFilterShowed = true;
-    private final static String SHOW_FILTER = "Показать фильтр";
-    private final static String HIDE_FILTER = "Убрать фильтр";
 
     protected final Widget getFilterShowedButton() {
         final Hyperlink hyperlink = new Hyperlink();
-        hyperlink.setText(HIDE_FILTER);
+        hyperlink.setText(filteredDynaTableConstants.hideFilter());
         hyperlink.setStyleName("asButton");
         hyperlink.addClickHandler(
                 new ClickHandler() {
                     public void onClick(ClickEvent sender) {
                         isFilterShowed = !isFilterShowed;
                         filterWidget.setVisible(isFilterShowed);
-                        hyperlink.setText(isFilterShowed?HIDE_FILTER:SHOW_FILTER);
+                        hyperlink.setText(isFilterShowed? filteredDynaTableConstants.hideFilter() : filteredDynaTableConstants.showFilter());
                     }
                 }
         );
