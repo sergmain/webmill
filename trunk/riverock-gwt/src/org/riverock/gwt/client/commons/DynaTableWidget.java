@@ -16,6 +16,8 @@ import java.util.List;
 @SuppressWarnings("GWTStyleCheck")
 public abstract class DynaTableWidget extends Composite {
 
+    private static final DynaTableConstants dynaTableConstants = GWT.create(DynaTableConstants.class);
+
     private static final HTML separator = new HTML();
     static {
     	separator.setHTML("&nbsp;");
@@ -128,14 +130,12 @@ public abstract class DynaTableWidget extends Composite {
 
             int srcRowCount = data.size();
             int destRowIndex = 1; // skip navbar row
-            int startButtons=-1;
-            int countButtons =0;
             for (int srcRowIndex = 0; srcRowIndex < srcRowCount; ++srcRowIndex, ++destRowIndex) {
 
                 final TableRow tableRow = data.get(srcRowIndex);
 
                 if (tableRow.getDataCells().length != destColCount) {
-                    putGlobalError( "Fatal error. Column count mismatch. Expected: "+ (tableRow.getDataCells().length)+",  actual: "+ destColCount  );
+                    putGlobalError( "Fatal error. Column count mismatch. Expected: "+ destColCount+",  actual: "+ (tableRow.getDataCells().length)  );
                 }
 
                 int srcColIndex = 0;
@@ -171,12 +171,6 @@ public abstract class DynaTableWidget extends Composite {
                 }
             }
 
-            if (startButtons!=-1) {
-                for (int i=0; i<countButtons; i++) {
-                    grid.getColumnFormatter().setStyleName(startButtons+i, "buttonColumn");
-                }
-            }
-
             // Synchronize the nav buttons.
             navbar.gotoFirst.setEnabled(startRow > 0);
             navbar.gotoPrev.setEnabled(startRow > 0);
@@ -190,21 +184,19 @@ public abstract class DynaTableWidget extends Composite {
         }
 
         public void failed(Throwable caught) {
-            setStatusText("Error");
+            setStatusText(dynaTableConstants.error());
             if((caught instanceof com.google.gwt.user.client.rpc.StatusCodeException) &&
                     ((com.google.gwt.user.client.rpc.StatusCodeException)caught).getStatusCode()==403) {
                 throw new Http403ForbiddenException();
             }
             else if (caught instanceof InvocationException) {
-                errorDialog.makeVisible("An server could not be reached", NO_CONNECTION_MESSAGE);
+                errorDialog.makeVisible("An server could not be reached", dynaTableConstants.noConnection() );
             }
             else {
                 errorDialog.makeVisible("Unexcepted Error processing remote call", caught.getMessage());
             }
         }
     }
-
-    private static final String NO_CONNECTION_MESSAGE = "<p>No connection</p>";
 
     protected final TableDataProvider.RowDataAcceptor acceptor = new RowDataAcceptorImpl();
 
@@ -405,7 +397,7 @@ public abstract class DynaTableWidget extends Composite {
 
         if (lookupWidgets!=null) {
             closeLookup = new Hyperlink();
-            closeLookup.setText("Back");
+            closeLookup.setText( dynaTableConstants.back() );
             closeLookup.setStyleName("asButton");
             closeLookup.addClickHandler(
                 new ClickHandler() {
@@ -478,7 +470,7 @@ public abstract class DynaTableWidget extends Composite {
             navbar.gotoFirst.setEnabled(false);
             navbar.gotoPrev.setEnabled(false);
             navbar.gotoNext.setEnabled(false);
-            setStatusText("Please wait...");
+            setStatusText( dynaTableConstants.pleaseWait() );
         }
         provider.updateRowData(startRow, rowCount, acceptor);
     }

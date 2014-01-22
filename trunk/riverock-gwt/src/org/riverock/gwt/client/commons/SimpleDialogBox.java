@@ -1,5 +1,6 @@
 package org.riverock.gwt.client.commons;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -14,6 +15,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class SimpleDialogBox extends DialogBox implements ClickHandler {
     private final HTML body = new HTML("");
+
+    private static final SimpleDialogBoxConstants SIMPLE_DIALOG_BOX_CONSTANTS = GWT.create(SimpleDialogBoxConstants.class);
 
     public SimpleDialogBox(String text, String bodyStr) {
         this();
@@ -32,7 +35,7 @@ public class SimpleDialogBox extends DialogBox implements ClickHandler {
         super();
         //noinspection GWTStyleCheck
         setStylePrimaryName("gwt-DialogBox");
-        final Button closeButton = new Button("Close", this);
+        final Button closeButton = new Button( SIMPLE_DIALOG_BOX_CONSTANTS.close(), this);
         final VerticalPanel panel = new VerticalPanel();
         panel.setSpacing(4);
         panel.add(body);
