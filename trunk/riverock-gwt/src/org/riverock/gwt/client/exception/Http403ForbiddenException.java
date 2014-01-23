@@ -8,6 +8,9 @@ import java.io.Serializable;
  * Time: 22:02
  */
 public class Http403ForbiddenException extends RuntimeException implements Serializable {
+
+    public static final Http403ForbiddenException HTTP_403_FORBIDDEN_EXCEPTION = new Http403ForbiddenException();
+
     public Http403ForbiddenException() {
     }
 
