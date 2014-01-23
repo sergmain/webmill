@@ -8,11 +8,11 @@ package org.riverock.gwt.client.commons;
 public class SimpleHolder<T> {
     private T obj;
 
-    T getObj() {
+    public T getObj() {
         return obj;
     }
 
-    void setObj(T obj) {
+    public void setObj(T obj) {
         this.obj = obj;
     }
 }
