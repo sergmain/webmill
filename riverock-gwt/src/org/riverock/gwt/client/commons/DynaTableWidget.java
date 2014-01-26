@@ -380,6 +380,7 @@ public abstract class DynaTableWidget extends Composite {
                             }
                         }
                     );
+                    item.setButton(hyperlink);
                     hp.add(hyperlink);
                 }
             }
