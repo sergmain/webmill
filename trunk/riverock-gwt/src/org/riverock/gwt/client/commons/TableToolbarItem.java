@@ -11,6 +11,7 @@ public class TableToolbarItem {
     private DialogBoxWithUpdater widget;
     private String buttonText;
     private Widget simpleWidget;
+    private Widget button;
 
     public TableToolbarItem(DialogBoxWithUpdater widget, String buttonText) {
         this.widget = widget;
@@ -22,6 +23,14 @@ public class TableToolbarItem {
     }
 
     public TableToolbarItem() {
+    }
+
+    public Widget getButton() {
+        return button;
+    }
+
+    public void setButton(Widget button) {
+        this.button = button;
     }
 
     public Widget getSimpleWidget() {
