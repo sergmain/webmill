@@ -14,7 +14,7 @@ import java.util.List;
  * including the data table, status indicators, and paging buttons.
  */
 @SuppressWarnings("GWTStyleCheck")
-public abstract class DynaTableWidget extends Composite {
+public abstract class DynaTableWidget extends Composite implements Refreshable {
 
     private static final DynaTableConstants dynaTableConstants = GWT.create(DynaTableConstants.class);
 
