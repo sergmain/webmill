@@ -36,20 +36,10 @@ public class TestTextValidator extends TestCase {
         );
         assertNotNull(s);
 
-        //TODO this check is broken. need investigate the follow error:
-/**
- Warning:  org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
- Warning:  org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
-
- junit.framework.AssertionFailedError
- at org.riverock.portlet.jsf.validator.TestTextValidator.testXsltValidator(TestTextValidator.java:42)
-  */
-/*
         s = TextValidator.validateAsXslt(
             getResourceAsString("/xml/jsf/validator/xslt/valid_1.xslt")
         );
         assertNull(s);
-*/
 
     }
 
