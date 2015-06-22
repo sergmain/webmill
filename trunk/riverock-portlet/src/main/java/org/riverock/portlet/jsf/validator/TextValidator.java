@@ -1,7 +1,10 @@
 package org.riverock.portlet.jsf.validator;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringReader;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.StateHolder;
@@ -12,18 +15,13 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.ErrorListener;
+import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 
 /**
  * User: SMaslyukov
@@ -122,6 +120,7 @@ public class TextValidator implements Validator, StateHolder {
             factory.newTemplates(xslSource);
         }
         catch (Throwable e) {
+            // e.printStackTrace();
             return e.toString();
         }
         return null;
