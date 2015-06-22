@@ -2,26 +2,26 @@ package org.riverock.webmill.admin.servlet;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
-import org.riverock.dbrevision.annotation.schema.db.DbSchema;
-import org.riverock.dbrevision.annotation.schema.db.DbTable;
-import org.riverock.dbrevision.annotation.schema.db.DbDataTable;
+import org.riverock.dbrevision.db.Database;
+import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.DatabaseManager;
 import org.riverock.dbrevision.db.DatabaseStructureManager;
-import org.riverock.dbrevision.db.DatabaseFactory;
-import org.riverock.dbrevision.db.Database;
+import org.riverock.dbrevision.schema.db.v3.DbDataTable;
+import org.riverock.dbrevision.schema.db.v3.DbSchema;
+import org.riverock.dbrevision.schema.db.v3.DbTable;
 import org.riverock.dbrevision.utils.Utils;
 import org.riverock.webmill.portal.dao.HibernateUtils;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 import java.io.*;
 import java.sql.Connection;
-import java.util.zip.ZipOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * User: SMaslyukov
@@ -87,14 +87,14 @@ public class DbExportServlet extends HttpServlet {
 
         zipFile(out, schema, DB_SCHEMA_XML, null);
         for (DbTable table : schema.getTables()) {
-            if (isSkipTable(table.getName()))  {
+            if (isSkipTable(table.getT()))  {
                 continue;
             }
             DbDataTable data = DatabaseStructureManager.getDataTable(db, table);
-            table.setData(data);
-            zipFile(out, table, DB_FILE_PREFIX +table.getName()+".xml", "TableData");
+            table.setD(data);
+            zipFile(out, table, DB_FILE_PREFIX +table.getT()+".xml", "TableData");
             data = null;
-            table.setData(null);
+            table.setD(null);
         }
         out.flush();
         out.close();
