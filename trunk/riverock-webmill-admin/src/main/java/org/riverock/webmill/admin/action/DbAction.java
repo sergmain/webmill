@@ -1,28 +1,26 @@
 package org.riverock.webmill.admin.action;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
-
 import org.hibernate.Session;
-
-import org.riverock.dbrevision.annotation.schema.db.DbSchema;
-import org.riverock.dbrevision.annotation.schema.db.DbTable;
-import org.riverock.dbrevision.db.DatabaseStructureManager;
-import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.Database;
+import org.riverock.dbrevision.db.DatabaseFactory;
+import org.riverock.dbrevision.db.DatabaseStructureManager;
+import org.riverock.dbrevision.schema.db.v3.DbSchema;
+import org.riverock.dbrevision.schema.db.v3.DbTable;
 import org.riverock.dbrevision.system.DbStructureImport;
 import org.riverock.dbrevision.utils.Utils;
 import org.riverock.webmill.admin.CompanySessionBean;
 import org.riverock.webmill.admin.bean.UploadedFileBean;
 import org.riverock.webmill.admin.servlet.DbExportServlet;
 import org.riverock.webmill.portal.dao.HibernateUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * User: SMaslyukov
@@ -98,7 +96,7 @@ public class DbAction  implements Serializable {
 
                     log.debug("Table for processing:");
                     for (DbTable dbTable : schema.getTables()) {
-                        log.debug( "    table name: "+ dbTable.getName() );
+                        log.debug( "    table name: "+ dbTable.getT() );
                     }
 
                     log.debug("Import DB structure");

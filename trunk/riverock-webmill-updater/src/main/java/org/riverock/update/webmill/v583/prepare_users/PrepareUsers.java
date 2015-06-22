@@ -1,26 +1,14 @@
 package org.riverock.update.webmill.v583.prepare_users;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.ByteArrayInputStream;
-
-import javax.xml.bind.JAXBException;
-
-import org.apache.commons.lang.StringUtils;
-
+import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.manager.patch.PatchAction;
 import org.riverock.dbrevision.manager.patch.PatchStatus;
-import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.utils.DbUtils;
-import org.riverock.dbrevision.utils.Utils;
-import org.riverock.update.webmill.v580.convert_template.schema.SiteTemplate;
-import org.riverock.update.webmill.v580.convert_template.schema.Template;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * User: SergeMaslyukov
