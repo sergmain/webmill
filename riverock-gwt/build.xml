@@ -10,7 +10,8 @@
 
     <!-- Compiler options -->
 
-    <property name="result.version.jar" value="2.22"/>
+    <!--  начиная с версии 2.28 компилится c GWT 2.8 -->
+    <property name="result.version.jar" value="2.28"/>
 
     <property name="compiler.debug" value="on"/>
     <property name="compiler.generate.no.warnings" value="off"/>
@@ -105,6 +106,7 @@
 
     <property name="compiler.args.gwt" value="${compiler.args}"/>
 
+    <property name="gwt.GWTCompilerOutputgwt.dir" value="${module.gwt.basedir}/GWTCompilerOutputgwt"/>
     <property name="gwt.unitcache.dir" value="${module.gwt.basedir}/gwt-unitCache"/>
     <property name="gwt.outbase.dir" value="${module.gwt.basedir}/out"/>
     <property name="gwt.output.dir" value="${gwt.outbase.dir}/production/gwt"/>
@@ -149,7 +151,7 @@
         <javac destdir="${gwt.output.dir}" debug="${compiler.debug}"
                nowarn="${compiler.generate.no.warnings}"
                memorymaximumsize="${compiler.max.memory}"
-               source="1.7" target="1.7"
+               source="1.8" target="1.8"
                fork="true"
                executable="${module.jdk.bin.gwt}/javac"
                encoding="utf-8">
@@ -172,7 +174,9 @@
             description="compile module gwt; test classes" unless="skip.tests"/>
 
     <target name="clean.module.gwt" description="cleanup module">
-        <echo message="${gwt.output.dir}"/>
+        <echo message="delete ${gwt.output.dir}"/>
+        <echo message="delete ${gwt.GWTCompilerOutputgwt.dir}"/>
+        <delete dir="${gwt.GWTCompilerOutputgwt.dir}"/>
         <delete dir="${gwt.unitcache.dir}"/>
         <delete dir="${gwt.outbase.dir}"/>
         <delete dir="${gwt.output.dir}"/>
