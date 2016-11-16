@@ -323,7 +323,7 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
 
     public void init(
         final TableDataProvider provider, final String[] columns, final String[] columnStyles, final int rowCount,
-        final TableToolbarItem[] items, final LookupWidget[] lookupWidgets, final boolean isNavBarEnabled) {
+        final TableToolbarItem[] items, final LookupWidget[] _lookupWidgets, final boolean isNavBarEnabled) {
 
         if (columns.length == 0) {
             throw new IllegalArgumentException("expecting a positive number of columns");
@@ -345,7 +345,7 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
         outer.setWidth("100%");
         
         mainWidget.setWidth("100%");
-        this.lookupWidgets = lookupWidgets;
+        this.lookupWidgets = _lookupWidgets!=null ?  _lookupWidgets : new LookupWidget[0];
 
         processingStatus.setVisible(false);
         mainWidget.add(processingStatus);
@@ -369,16 +369,13 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
                     final Hyperlink hyperlink = new Hyperlink();
                     hyperlink.setText(item.getButtonText());
                     hyperlink.setStyleName("asButton");
-                    hyperlink.addClickHandler(
-                        new ClickHandler() {
-                            public void onClick(ClickEvent sender) {
+                    hyperlink.addClickHandler( sender -> {
                                 for (final FieldUpdater fieldUpdater : item.getWidget().getFieldUpdater()) {
                                     fieldUpdater.update();
                                 }
                                 item.getWidget().getDialogBox().center();
                                 item.getWidget().getDialogBox().show();
                             }
-                        }
                     );
                     item.setButton(hyperlink);
                     hp.add(hyperlink);
@@ -394,19 +391,13 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
 
         outer.add(mainWidget);
 
-//        Window.alert("Step #10.10 " + lookupWidgets);
+//        Window.alert("Step #10.10 " + _lookupWidgets);
 
-        if (lookupWidgets!=null) {
+        if (this.lookupWidgets!=null && this.lookupWidgets.length>0) {
             closeLookup = new Hyperlink();
             closeLookup.setText( dynaTableConstants.back() );
             closeLookup.setStyleName("asButton");
-            closeLookup.addClickHandler(
-                new ClickHandler() {
-                    public void onClick(ClickEvent sender) {
-                        hideLookupWidget();
-                    }
-                }
-            );
+            closeLookup.addClickHandler( sender -> hideLookupWidget() );
             closeLookup.setVisible(false);
             outer.add(closeLookup);
             
@@ -414,7 +405,7 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
             outer.add(html);
 
 //            Window.alert("Step #20.10 ");
-            for (LookupWidget lookupWidget : lookupWidgets) {
+            for (LookupWidget lookupWidget : this.lookupWidgets) {
 //                Window.alert("Step #20.20 " + lookupWidget);
                 lookupWidget.setWidth("100%");
                 lookupWidget.setVisible(false);
@@ -426,11 +417,10 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
     }
 
     public void hideLookupWidget() {
-
         int i=0;
-//        Window.alert("#30.0");
+        // Window.alert("#30.0");
         for (LookupWidget lookupWidget : lookupWidgets) {
-//            Window.alert("Step #30.1 " + (i++) + " " + lookupWidget);
+            // Window.alert("Step #30.1 " + (i++) + " " + lookupWidget);
 
             if (lookupWidget!=null) {
                 lookupWidget.hideAllWidget();
@@ -439,23 +429,30 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
                 lookupWidget.startRow=0;
             }
         }
+        // Window.alert("#30.10");
         mainWidget.setVisible(true);
+        // Window.alert("#30.15");
     }
 
     protected void hideAllWidget() {
         mainWidget.setVisible(false);
+        if (lookupWidgets==null) {
+            return;
+        }
+        // Window.alert("#40.0");
         int i=0;
-//        Window.alert("#40.0");
         for (LookupWidget lookupWidget : lookupWidgets) {
-//            Window.alert("Step #40.1 " + (i++) + " " + lookupWidget);
+            // Window.alert("Step #40.1 " + (i++) + " " + lookupWidget);
 
             if (lookupWidget!=null) {
                 closeLookup.setVisible(false);
                 lookupWidget.setVisible(false);
                 lookupWidget.startRow=0;
                 lookupWidget.hideAllWidget();
+                // Window.alert("Step #40.5 ");
             }
         }
+        // Window.alert("Step #40.10 ");
     }
 
     public void clearStatusText() {
