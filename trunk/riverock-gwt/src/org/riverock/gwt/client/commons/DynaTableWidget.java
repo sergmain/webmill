@@ -303,7 +303,7 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
         initializeNew(provider, columns, columnStyles,  rowCount, items, lookupWidget, isNavBarEnabled);
     }
 */
-
+    @Deprecated
     public void initializeNew(
             final TableDataProvider provider, final String[] columns, final String[] columnStyles, final int rowCount,
             final TableToolbarItem[] items, final LookupWidget lookupWidget, final boolean isNavBarEnabled) {
@@ -414,6 +414,8 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
         }
 
         initTable(columns, columnStyles, rowCount);
+
+        mainWidget.setVisible(true);
     }
 
     public void hideLookupWidget() {
