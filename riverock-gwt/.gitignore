@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+riverock-gwt-*.jar
+out
+target
+GWTCompilerOutputgwt
+.settings
