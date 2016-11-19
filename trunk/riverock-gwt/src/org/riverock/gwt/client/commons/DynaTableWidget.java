@@ -107,7 +107,7 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
     private class RowDataAcceptorImpl implements TableDataProvider.RowDataAcceptor {
         public void accept(int startRow, List<TableRow> data) {
 
-            // dynamicly resize table
+            // dynamically resize table
             if (rowCount==0) {
                 grid.resizeRows(data.size()+1);
             }
@@ -171,12 +171,13 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
                 }
             }
 
-            // Synchronize the nav buttons.
-            navbar.gotoFirst.setEnabled(startRow > 0);
-            navbar.gotoPrev.setEnabled(startRow > 0);
-
+            if (isNavBarEnabled) {
+                // Synchronize the nav buttons.
+                navbar.gotoFirst.setEnabled(startRow > 0);
+                navbar.gotoPrev.setEnabled(startRow > 0);
 //            putGlobalError( "getDataRowCount(): "+ getDataRowCount()+", data.size(): " + data.size() );
-            navbar.gotoNext.setEnabled(getDataRowCount() == data.size());
+                navbar.gotoNext.setEnabled(getDataRowCount() == data.size());
+            }
 
             // Update the status message.
             final String statusText = ""+(startRow + (data.size() != 0 ? 1 : 0)) + " - " + (startRow + srcRowCount);
@@ -190,10 +191,10 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
                 throw new Http403ForbiddenException();
             }
             else if (caught instanceof InvocationException) {
-                errorDialog.makeVisible("An server could not be reached", dynaTableConstants.noConnection() );
+                errorDialog.makeVisible("The server could not be reached", dynaTableConstants.noConnection() );
             }
             else {
-                errorDialog.makeVisible("Unexcepted Error processing remote call", caught.getMessage());
+                errorDialog.makeVisible("The unexpected error while processing remote call", caught.getMessage());
             }
         }
     }
