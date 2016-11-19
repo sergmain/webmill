@@ -10,6 +10,7 @@ import com.google.gwt.i18n.client.Constants;
 public interface DynaTableConstants extends Constants {
     String error();
     String back();
+    String backTo();
     String pleaseWait();
     String noConnection();
 }

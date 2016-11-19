@@ -222,10 +222,15 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
 
     protected int startRow = 0;
     protected int rowCount = 0;
+    private String widgetName = null;
 
     public DynaTableWidget() {
+        this(null);
+    }
+    public DynaTableWidget(String widgetName) {
         super();
         initWidget(outer);
+        this.widgetName = widgetName;
     }
 
     public SimpleDialogBox getErrorDialog() {
@@ -370,13 +375,14 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
                     final Hyperlink hyperlink = new Hyperlink();
                     hyperlink.setText(item.getButtonText());
                     hyperlink.setStyleName("asButton");
-                    hyperlink.addClickHandler( sender -> {
+                    hyperlink.addHandler( handler -> {
                                 for (final FieldUpdater fieldUpdater : item.getWidget().getFieldUpdater()) {
                                     fieldUpdater.update();
                                 }
                                 item.getWidget().getDialogBox().center();
                                 item.getWidget().getDialogBox().show();
-                            }
+                            },
+                            ClickEvent.getType()
                     );
                     item.setButton(hyperlink);
                     hp.add(hyperlink);
@@ -396,9 +402,14 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
 
         if (this.lookupWidgets!=null && this.lookupWidgets.length>0) {
             closeLookup = new Hyperlink();
-            closeLookup.setText( dynaTableConstants.back() );
+            if (this.widgetName!=null && this.widgetName.trim().length()>0) {
+                closeLookup.setText(dynaTableConstants.backTo() + ' ' +this.widgetName);
+            }
+            else {
+                closeLookup.setText(dynaTableConstants.back());
+            }
             closeLookup.setStyleName("asButton");
-            closeLookup.addClickHandler( sender -> hideLookupWidget() );
+            closeLookup.addHandler( handler -> hideLookupWidget(), ClickEvent.getType() );
             closeLookup.setVisible(false);
             outer.add(closeLookup);
             
