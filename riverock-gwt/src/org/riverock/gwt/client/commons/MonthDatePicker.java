@@ -1,27 +1,22 @@
 package org.riverock.gwt.client.commons;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
-
-
+import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
-
-import com.google.gwt.user.datepicker.client.*;
-
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 
 import java.util.Date;
 
+@SuppressWarnings({"GWTStyleCheck", "unused"})
 public class MonthDatePicker extends Composite implements HasValue<Date> {
 
 	private PushButton backwards;
@@ -53,13 +48,13 @@ public class MonthDatePicker extends Composite implements HasValue<Date> {
 
 		// Set up backwards.
 		backwards = new PushButton();
-		backwards.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-	    		Date newValue = CalendarUtil.copyDate( value );
-	    		CalendarUtil.addMonthsToDate( newValue, -1 );
-	    		setValue( newValue, true );
-			}
-		});
+        backwards.addHandler( handler -> {
+                    Date newValue = CalendarUtil.copyDate( value );
+                    CalendarUtil.addMonthsToDate( newValue, -1 );
+                    setValue( newValue, true );
+                },
+                ClickEvent.getType()
+        );
 
 		backwards.getUpFace().setHTML("&laquo;");
 		backwards.setStyleName("datePickerPreviousButton");
@@ -67,13 +62,13 @@ public class MonthDatePicker extends Composite implements HasValue<Date> {
 		forwards = new PushButton();
 		forwards.getUpFace().setHTML("&raquo;");
 		forwards.setStyleName("datePickerPreviousButton");
-		forwards.addClickHandler(new ClickHandler() {
-	    	public void onClick(ClickEvent event) {
-	    		Date newValue = CalendarUtil.copyDate( value );
-	    		CalendarUtil.addMonthsToDate( newValue, +1 );
-	    		setValue( newValue, true );
-	    	}
-	    });
+        forwards.addHandler( handler -> {
+                    Date newValue = CalendarUtil.copyDate( value );
+                    CalendarUtil.addMonthsToDate( newValue, +1 );
+                    setValue( newValue, true );
+                },
+                ClickEvent.getType()
+        );
 
 	    // Set up grid.
 	    grid = new Grid(1, 3);

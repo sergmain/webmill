@@ -1,17 +1,17 @@
 package org.riverock.gwt.client.commons;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * User: SergeMaslyukov
  * Date: 19.06.2009
  * Time: 13:22:41
  */
+@SuppressWarnings("GWTStyleCheck")
 public abstract class FilteredDynaTableWidget extends DynaTableWidget {
 	public FilteredDynaTableWidget() {
 	}
@@ -31,14 +31,12 @@ public abstract class FilteredDynaTableWidget extends DynaTableWidget {
         final Hyperlink hyperlink = new Hyperlink();
         hyperlink.setText(filteredDynaTableConstants.hideFilter());
         hyperlink.setStyleName("asButton");
-        hyperlink.addClickHandler(
-                new ClickHandler() {
-                    public void onClick(ClickEvent sender) {
-                        isFilterShowed = !isFilterShowed;
-                        filterWidget.setVisible(isFilterShowed);
-                        hyperlink.setText(isFilterShowed? filteredDynaTableConstants.hideFilter() : filteredDynaTableConstants.showFilter());
-                    }
-                }
+        hyperlink.addHandler( handler -> {
+                    isFilterShowed = !isFilterShowed;
+                    filterWidget.setVisible(isFilterShowed);
+                    hyperlink.setText(isFilterShowed ? filteredDynaTableConstants.hideFilter() : filteredDynaTableConstants.showFilter());
+                },
+                ClickEvent.getType()
         );
         return hyperlink;
     }
