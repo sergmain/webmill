@@ -27,7 +27,6 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="com.google.gwt.eclipse.core.GWT_CONTAINER" level="application" />
     <orderEntry type="library" name="gwt-user" level="project" />
   </component>
 </module>
