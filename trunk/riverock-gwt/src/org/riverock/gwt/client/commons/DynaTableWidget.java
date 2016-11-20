@@ -450,22 +450,28 @@ public abstract class DynaTableWidget extends Composite implements Refreshable {
 
     protected void updateFieldsInDeleteDialogAndShow() {
         if (deleteDialogBox!=null) {
-            for (FieldUpdater fieldUpdater : deleteDialogBox.getFieldUpdater()) {
-                fieldUpdater.update();
+            if (deleteDialogBox.getFieldUpdater()!=null) {
+                for (FieldUpdater fieldUpdater : deleteDialogBox.getFieldUpdater()) {
+                    fieldUpdater.update();
+                }
             }
             deleteDialogBox.getDialogBox().center();
             deleteDialogBox.getDialogBox().show();
         }
+        refresh();
     }
 
     protected void updateFieldsInUpdateDialogAndShow() {
         if (updateDialogBox!=null) {
-            for (FieldUpdater fieldUpdater : updateDialogBox.getFieldUpdater()) {
-                fieldUpdater.update();
+            if (updateDialogBox.getFieldUpdater()!=null) {
+                for (FieldUpdater fieldUpdater : updateDialogBox.getFieldUpdater()) {
+                    fieldUpdater.update();
+                }
             }
             updateDialogBox.getDialogBox().center();
             updateDialogBox.getDialogBox().show();
         }
+        refresh();
     }
 
     protected void hideAllWidget() {
