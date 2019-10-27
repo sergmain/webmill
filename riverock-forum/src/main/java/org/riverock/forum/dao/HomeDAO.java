@@ -41,7 +41,7 @@ import org.riverock.forum.dao.bean.WmForumCategoryItemType;
 import org.riverock.forum.dao.bean.WmForumCategoryListType;
 import org.riverock.forum.dao.bean.WmForumItemType;
 import org.riverock.forum.util.Constants;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.web.url.UrlProvider;
@@ -69,11 +69,11 @@ public class HomeDAO {
         "order by F_ORDER ASC";
 
     public ForumBean execute(UrlProvider urlProvider, Long forumId, boolean isFilterDeleted) throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             WmForumItemType forum = new GetWmForumItem(adapter, forumId).item;
             if (forum==null) {
                 return null;

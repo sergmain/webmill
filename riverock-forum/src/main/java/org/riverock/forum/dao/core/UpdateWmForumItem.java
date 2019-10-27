@@ -35,7 +35,7 @@ public class UpdateWmForumItem
 
      public UpdateWmForumItem(){}
 
-     public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumItemType item)  throws org.riverock.forum.exception.PersistenceException      {
+     public static long process(org.riverock.generic.db.Database db_, WmForumItemType item)  throws org.riverock.forum.exception.PersistenceException      {
 
          String sql_ =
              "update WM_FORUM "+

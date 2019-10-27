@@ -38,7 +38,7 @@ import org.riverock.forum.bean.ForumConcreteBean;
 import org.riverock.forum.bean.Topic;
 import org.riverock.forum.util.CommonUtils;
 import org.riverock.forum.util.Constants;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.web.url.UrlProvider;
@@ -57,11 +57,11 @@ public class ForumDAO {
 
     public ForumConcreteBean execute(long f_id, int messagesPerPage, int topicsPerPage, int start, String keyword, Long forumId, UrlProvider urlProvider)
         throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
 
             if (!CommonUtils.checkForumConcreteId( adapter, forumId, f_id )){
                 return null;

@@ -35,7 +35,7 @@ public class InsertWmForumTopicItem
 
     public InsertWmForumTopicItem(){}
 
-    public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumTopicItemType item)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(org.riverock.generic.db.Database db_, WmForumTopicItemType item)  throws org.riverock.forum.exception.PersistenceException     {
         String sql_ =
             "insert into WM_FORUM_TOPIC"+
              "(T_ORDER, T_LOCKED, T_ICONID, T_F_ID, T_ID, T_NAME, T_U_ID, T_REPLIES, "+
@@ -46,7 +46,7 @@ public class InsertWmForumTopicItem
         return process(db_, item, sql_);
     }
 
-    public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumTopicItemType item, String sql_)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(org.riverock.generic.db.Database db_, WmForumTopicItemType item, String sql_)  throws org.riverock.forum.exception.PersistenceException     {
 
         PreparedStatement ps = null;
         ResultSet rs = null;

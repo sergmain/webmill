@@ -9,13 +9,13 @@ import javax.xml.bind.JAXBException;
 import org.hibernate.Session;
 
 import org.riverock.common.exception.DatabaseException;
+import org.riverock.dbrevision.schema.db.v3.DbSchema;
 import org.riverock.webmill.portal.dao.HibernateUtilsTest;
 import org.riverock.webmill.portal.dao.HibernateUtils;
 import org.riverock.dbrevision.db.DatabaseFactory;
 import org.riverock.dbrevision.db.Database;
 import org.riverock.dbrevision.db.DatabaseManager;
-import org.riverock.dbrevision.annotation.schema.db.DbSchema;
-import org.riverock.dbrevision.annotation.schema.db.DbTable;
+import org.riverock.dbrevision.schema.db.v3.DbTable;
 import org.riverock.dbrevision.utils.Utils;
 
 /**
@@ -37,7 +37,7 @@ public class ExportDbSchemaTest {
         DbSchema schema = DatabaseManager.getDbStructure(adapter, true);
         DbTable t = null;
         for (DbTable dbTable : schema.getTables()) {
-            if (dbTable.getName().equalsIgnoreCase("aaa")) {
+            if (dbTable.getT().equalsIgnoreCase("aaa")) {
                 t = dbTable;
             }
         }

@@ -13,25 +13,22 @@
             <url>http://www.gnu.org/licenses/gpl.txt</url>
         </license>
     </licenses>
-<!--
-    <repositories>
-        <repository>
-            <id>Riverock repo</id>
-            <url>http://riverock.sourceforge.net/repo</url>
-        </repository>
-    </repositories>
--->
+
     <properties>
         <lombok.version>1.18.8</lombok.version>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!--        <maven.compiler.source>11</maven.compiler.source>-->
-        <!--        <maven.compiler.target>11</maven.compiler.target>-->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.riverock</groupId>
+            <artifactId>dbrevision</artifactId>
+            <version>3.0.2</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
@@ -48,11 +45,13 @@
             <artifactId>riverock-module</artifactId>
             <version>1.4-SNAPSHOT</version>
         </dependency>
+<!--
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-generic</artifactId>
             <version>4.0.4</version>
         </dependency>
+-->
 <!--
         <dependency>
             <groupId>org.riverock</groupId>
@@ -180,20 +179,26 @@
             <artifactId>ehcache</artifactId>
             <version>1.3.0</version>
         </dependency>
-
-<!--
-
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>3.2.1.ga</version>
+            <groupId>org.riverock</groupId>
+            <artifactId>dbrevision</artifactId>
+            <version>3.0.2</version>
+            <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.2.1.ga</version>
-        </dependency>
--->
+
+        <!--
+
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate</artifactId>
+                    <version>3.2.1.ga</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-annotations</artifactId>
+                    <version>3.2.1.ga</version>
+                </dependency>
+        -->
     </dependencies>
     <build>
         <finalName>riverock-forum</finalName>
@@ -204,8 +209,7 @@
                 <version>3.8.1</version>
                 <configuration>
                     <compilerArgument>-parameters</compilerArgument>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>11</release>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <showDeprecation>true</showDeprecation>
                 </configuration>

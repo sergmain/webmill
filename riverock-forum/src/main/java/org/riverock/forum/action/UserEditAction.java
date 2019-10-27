@@ -29,11 +29,11 @@ import org.riverock.forum.bean.UserBean;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.UserDAO;
 import org.riverock.forum.util.Constants;
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 
-public class UserEditAction implements Action {
+public class UserEditAction implements ActionInstance {
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {
 
         ForumActionBean forumActionBean = (ForumActionBean)moduleActionRequest;

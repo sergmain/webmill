@@ -30,7 +30,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 import org.riverock.forum.dao.bean.WmForumMessageItemType;
@@ -49,9 +49,9 @@ public class PostPDAO {
 
     public Long post(long f_id, Long userId, String subject, String content,
         String u_lastip, int tm_iconid, Long forumId) throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             Long id = post(adapter, f_id, userId, subject, content, u_lastip, tm_iconid, forumId);
             adapter.commit();
             return id;
@@ -72,7 +72,7 @@ public class PostPDAO {
         }
     }
 
-    public static Long post(DatabaseAdapter adapter, Long f_id, Long userId, String subject, String content,
+    public static Long post(Database adapter, Long f_id, Long userId, String subject, String content,
         String u_lastip, long tm_iconid, Long forumId) throws SQLException, PersistenceException {
 
         if (!CommonUtils.checkForumConcreteId(adapter, forumId, f_id)) {
@@ -143,9 +143,9 @@ public class PostPDAO {
 
     public Long reply(int t_id, Long u_id, String content, String u_lastip, int tm_iconid, Long forumId)
         throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             Long mId = reply(adapter, t_id, u_id, content, u_lastip, tm_iconid, forumId);
             adapter.commit();
             return mId;
@@ -166,7 +166,7 @@ public class PostPDAO {
         }
     }
 
-    public static Long reply(DatabaseAdapter adapter, long tId, Long userId, String content, String u_lastip, long tm_iconid, Long forumId) throws SQLException, PersistenceException {
+    public static Long reply(Database adapter, long tId, Long userId, String content, String u_lastip, long tm_iconid, Long forumId) throws SQLException, PersistenceException {
 
         if (!CommonUtils.checkForumTopicId(adapter, forumId, tId)) {
             return null;

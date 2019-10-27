@@ -32,14 +32,14 @@ import java.util.List;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.forum.bean.ForumSmallBean;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.annotation.schema.db.CustomSequence;
 
 @SuppressWarnings({"UnusedAssignment"})
 public final class CommonDAO {
 
-    public static long getForumID(DatabaseAdapter adapter) throws SQLException {
+    public static long getForumID(Database adapter) throws SQLException {
         CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM" );
         seq.setTableName( "WM_FORUM" );
@@ -47,7 +47,7 @@ public final class CommonDAO {
         return adapter.getSequenceNextValue( seq );
     }
 
-    public static long getForumCategoryID(DatabaseAdapter adapter) throws SQLException {
+    public static long getForumCategoryID(Database adapter) throws SQLException {
         CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM_CATEGORY" );
         seq.setTableName( "WM_FORUM_CATEGORY" );
@@ -55,7 +55,7 @@ public final class CommonDAO {
         return adapter.getSequenceNextValue( seq );
     }
 
-    public static long getForumConcreteID(DatabaseAdapter adapter) throws SQLException {
+    public static long getForumConcreteID(Database adapter) throws SQLException {
         CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM_CONCRETE" );
         seq.setTableName( "WM_FORUM_CONCRETE" );
@@ -63,7 +63,7 @@ public final class CommonDAO {
         return adapter.getSequenceNextValue( seq );
     }
 
-    public static long getTopicID(DatabaseAdapter adapter) throws SQLException {
+    public static long getTopicID(Database adapter) throws SQLException {
         CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM_TOPIC" );
         seq.setTableName( "WM_FORUM_TOPIC" );
@@ -71,7 +71,7 @@ public final class CommonDAO {
         return adapter.getSequenceNextValue( seq );
     }
 
-    public static long getMessageID(DatabaseAdapter adapter) throws SQLException {
+    public static long getMessageID(Database adapter) throws SQLException {
         CustomSequence seq = new CustomSequence();
         seq.setSequenceName( "SEQ_WM_FORUM_MESSAGE" );
         seq.setTableName( "WM_FORUM_MESSAGE" );
@@ -79,7 +79,7 @@ public final class CommonDAO {
         return adapter.getSequenceNextValue( seq );
     }
 
-    public static List getForumsSmall(DatabaseAdapter adapter, Long forumId) throws Exception {
+    public static List getForumsSmall(Database adapter, Long forumId) throws Exception {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -108,7 +108,7 @@ public final class CommonDAO {
         return forums;
     }
 
-    public static void deleteForumConcrete(DatabaseAdapter adapter, Long forumConcreteId) throws SQLException {
+    public static void deleteForumConcrete(Database adapter, Long forumConcreteId) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

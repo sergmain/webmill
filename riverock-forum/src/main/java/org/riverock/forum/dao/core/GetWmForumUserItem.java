@@ -40,7 +40,7 @@ public class GetWmForumUserItem implements Serializable
 
     public GetWmForumUserItem(){}
 
-    public static GetWmForumUserItem getInstance(org.riverock.generic.db.DatabaseAdapter db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
+    public static GetWmForumUserItem getInstance(org.riverock.generic.db.Database db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
         try
         {
         return new GetWmForumUserItem(db__, id__ );
@@ -69,7 +69,7 @@ public class GetWmForumUserItem implements Serializable
         target.setULastip( source.getULastip() );
     }
 
-    public GetWmForumUserItem(org.riverock.generic.db.DatabaseAdapter db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumUserItem(org.riverock.generic.db.Database db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, new Long(id));
     }
 
@@ -77,11 +77,11 @@ public class GetWmForumUserItem implements Serializable
                 "select U_ID, U_AVATAR_ID, U_SIGN, U_POST, U_LASTTIME, U_LASTIP from WM_FORUM_USER where U_ID=?";
 
 
-    public GetWmForumUserItem(org.riverock.generic.db.DatabaseAdapter db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumUserItem(org.riverock.generic.db.Database db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, id, sql_);
     }
 
-    public GetWmForumUserItem(org.riverock.generic.db.DatabaseAdapter db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumUserItem(org.riverock.generic.db.Database db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
 
         if (id==null)
             return;

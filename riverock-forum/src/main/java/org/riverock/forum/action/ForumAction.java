@@ -26,7 +26,7 @@ package org.riverock.forum.action;
 import org.riverock.forum.bean.ForumConcreteBean;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.ForumDAO;
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.forum.ForumPortlet;
 import org.riverock.forum.ForumError;
@@ -34,7 +34,7 @@ import org.riverock.forum.ForumActionBean;
 import org.riverock.forum.util.Constants;
 import org.riverock.module.exception.ActionException;
 
-public class ForumAction implements Action {
+public class ForumAction implements ActionInstance {
 
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {
 

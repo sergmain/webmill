@@ -30,7 +30,7 @@ import java.sql.ResultSet;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
@@ -62,12 +62,12 @@ public class ForumListPerSite implements PortletGetList {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        DatabaseAdapter db_ = null;
+        Database db_ = null;
 
         Long siteId = provider.getPortalCatalogDao().getSiteId(idSiteCtxLangCatalog);
         List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         try {
-            db_ = DatabaseAdapter.getInstance();
+            db_ = Database.getInstance();
             ps = db_.prepareStatement(
                     "select b.FORUM_ID, b.FORUM_NAME, b.SITE_ID "+
                     "from   WM_FORUM b "+

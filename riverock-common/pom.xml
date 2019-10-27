@@ -5,7 +5,7 @@
     <artifactId>riverock-common</artifactId>
     <packaging>jar</packaging>
     <version>1.13</version>
-    <name>Common utilities</name>
+    <name>riverock-common - Common utilities</name>
     <url>http://www.riverock.org</url>
     <licenses>
         <license>
@@ -14,24 +14,21 @@
         </license>
     </licenses>
 
-    <repositories>
-        <repository>
-            <id>Riverock repo</id>
-            <url>http://riverock.sourceforge.net/repo</url>
-        </repository>
-    </repositories>
+    <properties>
+        <lombok.version>1.18.8</lombok.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
 
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/common</url>
-    </site>
-    <repository>
-      <id>riverock-repository</id>
-      <name>Riverock repository</name>
-      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/repo</url>
-    </repository>
-  </distributionManagement>
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/common</url>
+        </site>
+
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -107,11 +104,14 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <compilerArgument>-parameters</compilerArgument>
+                    <release>11</release>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
         </plugins>

@@ -40,7 +40,7 @@ public class GetWmForumCategoryItem implements Serializable
 
     public GetWmForumCategoryItem(){}
 
-    public static GetWmForumCategoryItem getInstance(org.riverock.generic.db.DatabaseAdapter db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
+    public static GetWmForumCategoryItem getInstance(org.riverock.generic.db.Database db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
         try
         {
         return new GetWmForumCategoryItem(db__, id__ );
@@ -68,7 +68,7 @@ public class GetWmForumCategoryItem implements Serializable
         target.setIsDeleted( source.getIsDeleted() );
     }
 
-    public GetWmForumCategoryItem(org.riverock.generic.db.DatabaseAdapter db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumCategoryItem(org.riverock.generic.db.Database db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, new Long(id));
     }
 
@@ -76,11 +76,11 @@ public class GetWmForumCategoryItem implements Serializable
                 "select FORUM_CATEGORY_ID, FORUM_ID, FORUM_CATEGORY_NAME, IS_USE_LOCALE, IS_DELETED from WM_FORUM_CATEGORY where FORUM_CATEGORY_ID=?";
 
 
-    public GetWmForumCategoryItem(org.riverock.generic.db.DatabaseAdapter db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumCategoryItem(org.riverock.generic.db.Database db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, id, sql_);
     }
 
-    public GetWmForumCategoryItem(org.riverock.generic.db.DatabaseAdapter db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumCategoryItem(org.riverock.generic.db.Database db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
 
         if (id==null)
             return;

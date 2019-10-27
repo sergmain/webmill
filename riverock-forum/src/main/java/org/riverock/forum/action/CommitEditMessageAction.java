@@ -33,7 +33,7 @@ import org.riverock.forum.ForumError;
 import org.riverock.forum.dao.CommitEditMessageDAO;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.util.Constants;
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.web.user.ModuleUser;
@@ -44,7 +44,7 @@ import org.riverock.module.web.user.ModuleUser;
  *         Time: 15:05:52
  *         $Id: CommitEditMessageAction.java 1119 2006-12-02 22:35:13Z serg_main $
  */
-public class CommitEditMessageAction  implements Action {
+public class CommitEditMessageAction  implements ActionInstance {
     private final static Logger log = Logger.getLogger(PostPAction.class);
 
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {

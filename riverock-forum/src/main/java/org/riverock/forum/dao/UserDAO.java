@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.forum.bean.UserBean;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 
@@ -46,11 +46,11 @@ public class UserDAO {
         if (u_id==null) {
             return null;
         }
-        DatabaseAdapter connection = null;
+        Database connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DatabaseAdapter.getInstance();
+            connection = Database.getInstance();
             String sql =
                 "SELECT a.u_avatar_id, a.u_sign, a.u_post, a.u_lasttime, a.u_lastip " +
                 "       b.DATE_START_WORK, b.ADDRESS, b.EMAIL, " +

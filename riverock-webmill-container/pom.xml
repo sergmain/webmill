@@ -5,41 +5,21 @@
     <artifactId>riverock-webmill-container</artifactId>
     <packaging>jar</packaging>
     <version>1.6-SNAPSHOT</version>
-    <name>Portlet container for Webmill portal</name>
-    <url>http://webmill.riverock.org</url>
-
-    <repositories>
-        <repository>
-            <id>Riverock repo</id>
-            <url>http://riverock.sourceforge.net/repo</url>
-        </repository>
-    </repositories>
+    <name>riverock-webmill-container - Portlet container for Webmill portal</name>
 
     <properties>
+        <lombok.version>1.18.8</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!--        <maven.compiler.source>11</maven.compiler.source>-->
-        <!--        <maven.compiler.target>11</maven.compiler.target>-->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
-    <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/container</url>
-    </site>
-    <repository>
-      <id>riverock-repository</id>
-      <name>Riverock repository</name>
-      <url>scp://shell.sourceforge.net/home/groups/r/ri/riverock/htdocs/repo</url>
-    </repository>
-  </distributionManagement>
 
     <dependencies>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
-            <version>1.8</version>
+            <version>1.11</version>
         </dependency>
 
         <dependency>
@@ -91,6 +71,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -99,8 +80,7 @@
                 <version>3.8.1</version>
                 <configuration>
                     <compilerArgument>-parameters</compilerArgument>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>11</release>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <showDeprecation>true</showDeprecation>
                 </configuration>

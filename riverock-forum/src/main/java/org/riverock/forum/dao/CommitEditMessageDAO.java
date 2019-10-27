@@ -30,7 +30,7 @@ import java.sql.Timestamp;
 import org.apache.log4j.Logger;
 
 import org.riverock.module.exception.ActionException;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.forum.util.CommonUtils;
 
@@ -46,9 +46,9 @@ public class CommitEditMessageDAO {
     public void commit(Integer messageId, Long u_id, String content,
         String u_lastip, int tm_iconid, Long forumId) throws ActionException {
         log.debug("in commit()");
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             if (!CommonUtils.checkForumMessageId( adapter, forumId, messageId )){
                 return;
             }

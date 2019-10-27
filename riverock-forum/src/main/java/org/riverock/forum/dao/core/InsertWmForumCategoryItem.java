@@ -35,7 +35,7 @@ public class InsertWmForumCategoryItem
 
     public InsertWmForumCategoryItem(){}
 
-    public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumCategoryItemType item)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(org.riverock.generic.db.Database db_, WmForumCategoryItemType item)  throws org.riverock.forum.exception.PersistenceException     {
         String sql_ =
             "insert into WM_FORUM_CATEGORY"+
              "(FORUM_CATEGORY_ID, FORUM_ID, FORUM_CATEGORY_NAME, IS_USE_LOCALE, "+
@@ -46,7 +46,7 @@ public class InsertWmForumCategoryItem
         return process(db_, item, sql_);
     }
 
-    public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumCategoryItemType item, String sql_)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(org.riverock.generic.db.Database db_, WmForumCategoryItemType item, String sql_)  throws org.riverock.forum.exception.PersistenceException     {
 
         PreparedStatement ps = null;
         ResultSet rs = null;

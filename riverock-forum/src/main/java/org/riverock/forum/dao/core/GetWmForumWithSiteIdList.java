@@ -40,7 +40,7 @@ public class GetWmForumWithSiteIdList implements Serializable
 
      public boolean isFound = false;
 
-    public static GetWmForumWithSiteIdList getInstance(org.riverock.generic.db.DatabaseAdapter db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
+    public static GetWmForumWithSiteIdList getInstance(org.riverock.generic.db.Database db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
         try
         {
         return new GetWmForumWithSiteIdList(db__, id__ );
@@ -51,7 +51,7 @@ public class GetWmForumWithSiteIdList implements Serializable
         }
     }
 
-    public GetWmForumWithSiteIdList(org.riverock.generic.db.DatabaseAdapter db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumWithSiteIdList(org.riverock.generic.db.Database db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, new Long(id));
     }
 
@@ -63,11 +63,11 @@ public class GetWmForumWithSiteIdList implements Serializable
         "order by FORUM_ID ASC";
 
 
-    public GetWmForumWithSiteIdList(org.riverock.generic.db.DatabaseAdapter db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumWithSiteIdList(org.riverock.generic.db.Database db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, id, sql_);
     }
 
-    public GetWmForumWithSiteIdList(org.riverock.generic.db.DatabaseAdapter db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumWithSiteIdList(org.riverock.generic.db.Database db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
 
         if (id==null)
             return;

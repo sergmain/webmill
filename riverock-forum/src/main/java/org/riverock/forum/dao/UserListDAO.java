@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.forum.bean.User;
 import org.riverock.forum.bean.UserListBean;
@@ -44,13 +44,13 @@ public class UserListDAO {
     private final static Logger log = Logger.getLogger(UserListDAO.class);
 
     public UserListBean execute(int start, int range, String keyword) throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             UserListBean userListBean = new UserListBean();
             userListBean.setKeyword(keyword);
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
 
             final String searchKeyword = "'%" + keyword + "%'";
             Long countRecord = DatabaseManager.getLongValue(adapter,

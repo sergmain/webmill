@@ -37,12 +37,12 @@ import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.PostPDAO;
 import org.riverock.forum.util.Constants;
 import org.riverock.forum.util.ForumStringUtils;
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.web.user.ModuleUser;
 
-public class PostPAction implements Action {
+public class PostPAction implements ActionInstance {
     private final static Logger log = Logger.getLogger(PostPAction.class);
 
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {

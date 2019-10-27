@@ -41,7 +41,7 @@ import org.riverock.forum.exception.PersistenceException;
 import org.riverock.forum.dao.bean.WmForumItemType;
 import org.riverock.forum.util.CommonUtils;
 import org.riverock.forum.util.Constants;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
@@ -77,9 +77,9 @@ public class ForumListManagerDAO {
             return;
         }
 
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
 
             WmForumItemType forum = getForum(adapter, moduleActionRequest);
 
@@ -110,7 +110,7 @@ public class ForumListManagerDAO {
         log.debug("out execute()");
     }
 
-    private static WmForumItemType getForum(DatabaseAdapter adapter, ModuleActionRequest moduleActionRequest) {
+    private static WmForumItemType getForum(Database adapter, ModuleActionRequest moduleActionRequest) {
         Long forumId = moduleActionRequest.getRequest().getLong("forumId");
         if (forumId == null) {
             return null;
@@ -118,7 +118,7 @@ public class ForumListManagerDAO {
         return CommonUtils.checkForumId(adapter, forumId, moduleActionRequest.getRequest().getServerName());
     }
 
-    private void restoreForum(ModuleUser auth_, ModuleActionRequest forumActionBean, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException {
+    private void restoreForum(ModuleUser auth_, ModuleActionRequest forumActionBean, Database adapter, WmForumItemType forum) throws SQLException {
         log.debug("in restoreForum()");
 
         if (forum == null) {
@@ -176,7 +176,7 @@ public class ForumListManagerDAO {
         log.debug("out createLostUser()");
     }
 
-    private void deleteForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, boolean isPermanent, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException {
+    private void deleteForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, boolean isPermanent, Database adapter, WmForumItemType forum) throws SQLException {
         log.debug("in deleteForum()");
 
         if (forum == null) {
@@ -238,7 +238,7 @@ public class ForumListManagerDAO {
 
     }
 
-    private void addNewForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, DatabaseAdapter adapter) throws SQLException, PersistenceException, ModuleException {
+    private void addNewForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, Database adapter) throws SQLException, PersistenceException, ModuleException {
         log.debug("in addNewForum()");
 
         WmForumItemType forum = new WmForumItemType();
@@ -253,7 +253,7 @@ public class ForumListManagerDAO {
         log.debug("out addNewForum()");
     }
 
-    private void updateForum(ModuleUser auth_, ModuleActionRequest forumActionBean, DatabaseAdapter adapter, WmForumItemType forum) throws PersistenceException {
+    private void updateForum(ModuleUser auth_, ModuleActionRequest forumActionBean, Database adapter, WmForumItemType forum) throws PersistenceException {
         log.debug("in updateForum()");
 
         if (forum == null) {

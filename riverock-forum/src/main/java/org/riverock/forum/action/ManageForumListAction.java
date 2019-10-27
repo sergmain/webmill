@@ -31,13 +31,13 @@ import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.ForumListManagerDAO;
 import org.riverock.forum.dao.TopLevelForumDAO;
 import org.riverock.forum.util.Constants;
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.exception.ModuleException;
 import org.riverock.module.web.user.ModuleUser;
 
-public class ManageForumListAction implements Action {
+public class ManageForumListAction implements ActionInstance {
     private final static Logger log = Logger.getLogger(ManageForumListAction.class);
 
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {

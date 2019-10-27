@@ -25,7 +25,7 @@ package org.riverock.forum.action;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.web.user.ModuleUser;
@@ -37,7 +37,7 @@ import org.riverock.forum.dao.AdminForumDAO;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.HomeDAO;
 
-public class AdminForumAction implements Action {
+public class AdminForumAction implements ActionInstance {
     private final static Logger log = Logger.getLogger(AdminForumAction.class);
 
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {

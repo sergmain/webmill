@@ -36,7 +36,7 @@ public class InsertWmForumConcreteItem
 
     public InsertWmForumConcreteItem(){}
 
-    public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumConcreteItemType item)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(org.riverock.generic.db.Database db_, WmForumConcreteItemType item)  throws org.riverock.forum.exception.PersistenceException     {
         String sql_ =
             "insert into WM_FORUM_CONCRETE"+
              "(F_ORDER, F_ID, F_NAME, F_INFO, F_U_ID, F_TOPICS, F_MESSAGES, F_U_ID2, "+
@@ -47,7 +47,7 @@ public class InsertWmForumConcreteItem
         return process(db_, item, sql_);
     }
 
-    public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumConcreteItemType item, String sql_)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(org.riverock.generic.db.Database db_, WmForumConcreteItemType item, String sql_)  throws org.riverock.forum.exception.PersistenceException     {
 
         PreparedStatement ps = null;
         ResultSet rs = null;

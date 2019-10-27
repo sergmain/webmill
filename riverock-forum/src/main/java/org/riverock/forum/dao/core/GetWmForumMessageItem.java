@@ -40,7 +40,7 @@ public class GetWmForumMessageItem implements Serializable
 
     public GetWmForumMessageItem(){}
 
-    public static GetWmForumMessageItem getInstance(org.riverock.generic.db.DatabaseAdapter db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
+    public static GetWmForumMessageItem getInstance(org.riverock.generic.db.Database db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
         try
         {
         return new GetWmForumMessageItem(db__, id__ );
@@ -69,7 +69,7 @@ public class GetWmForumMessageItem implements Serializable
         target.setMTime( source.getMTime() );
     }
 
-    public GetWmForumMessageItem(org.riverock.generic.db.DatabaseAdapter db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumMessageItem(org.riverock.generic.db.Database db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, new Long(id));
     }
 
@@ -77,11 +77,11 @@ public class GetWmForumMessageItem implements Serializable
                 "select M_ICONID, M_T_ID, M_ID, M_CONTENT, M_U_ID, M_TIME from WM_FORUM_MESSAGE where M_ID=?";
 
 
-    public GetWmForumMessageItem(org.riverock.generic.db.DatabaseAdapter db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumMessageItem(org.riverock.generic.db.Database db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, id, sql_);
     }
 
-    public GetWmForumMessageItem(org.riverock.generic.db.DatabaseAdapter db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumMessageItem(org.riverock.generic.db.Database db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
 
         if (id==null)
             return;

@@ -35,7 +35,7 @@ public class InsertWmForumMessageItem
 
     public InsertWmForumMessageItem(){}
 
-    public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumMessageItemType item)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(org.riverock.generic.db.Database db_, WmForumMessageItemType item)  throws org.riverock.forum.exception.PersistenceException     {
         String sql_ =
             "insert into WM_FORUM_MESSAGE"+
              "(M_ICONID, M_T_ID, M_ID, M_CONTENT, M_U_ID, M_TIME)"+
@@ -45,7 +45,7 @@ public class InsertWmForumMessageItem
         return process(db_, item, sql_);
     }
 
-    public static long process(org.riverock.generic.db.DatabaseAdapter db_, WmForumMessageItemType item, String sql_)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(org.riverock.generic.db.Database db_, WmForumMessageItemType item, String sql_)  throws org.riverock.forum.exception.PersistenceException     {
 
         PreparedStatement ps = null;
         ResultSet rs = null;

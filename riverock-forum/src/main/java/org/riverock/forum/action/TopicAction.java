@@ -23,7 +23,7 @@
  */
 package org.riverock.forum.action;
 
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.forum.ForumActionBean;
@@ -34,7 +34,7 @@ import org.riverock.forum.bean.TopicBean;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.TopicDAO;
 
-public class TopicAction implements Action {
+public class TopicAction implements ActionInstance {
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {
 
         ForumActionBean forumActionBean = (ForumActionBean)moduleActionRequest;

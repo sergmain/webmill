@@ -33,7 +33,7 @@ import org.riverock.forum.bean.ForumTopLevelBean;
 import org.riverock.forum.dao.core.GetWmForumWithSiteIdList;
 import org.riverock.forum.dao.bean.WmForumItemType;
 import org.riverock.forum.dao.bean.WmForumListType;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 
@@ -47,9 +47,9 @@ public class TopLevelForumDAO {
     private final static Logger log = Logger.getLogger(TopLevelForumDAO.class);
 
     public ForumTopLevelBean execute(Long siteId) throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             WmForumListType forumsCore = new GetWmForumWithSiteIdList(adapter, siteId).item;
             ForumTopLevelBean forumTopLevelBean = new ForumTopLevelBean();
             List<ForumBean> forums = new ArrayList<ForumBean>();

@@ -32,7 +32,7 @@ import org.riverock.forum.bean.PostBean;
 import org.riverock.forum.dao.core.GetWmForumConcreteItem;
 import org.riverock.forum.dao.bean.WmForumConcreteItemType;
 import org.riverock.forum.util.CommonUtils;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 
@@ -43,9 +43,9 @@ public class PostDAO {
     private static final Logger log = Logger.getLogger(PostDAO.class);
 
     public PostBean post(Long forumId, long f_id) throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             if (!CommonUtils.checkForumConcreteId( adapter, forumId, f_id )){
                 return null;
             }
@@ -72,11 +72,11 @@ public class PostDAO {
     }
 
     public PostBean reply(Long forumId, long t_id) throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             if (!CommonUtils.checkForumTopicId( adapter, forumId, t_id )){
                 return null;
             }

@@ -27,7 +27,7 @@ import java.sql.Types;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 
@@ -41,9 +41,9 @@ public class UserEditPDAO {
     public void execute(int u_id, int u_avatar_id, String u_password,
         String u_email, String u_address, String u_sign, String u_lastip)
         throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             DatabaseManager.runSQL(adapter,
                 "update WM_FORUM_USER " +
                 "set u_avatar_id=?, u_password=?, u_email=?, u_address=?, u_sign=?, u_lastip=? " +

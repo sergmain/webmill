@@ -31,11 +31,11 @@ import org.riverock.forum.bean.MessageBean;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.EditMessageDAO;
 import org.riverock.forum.util.Constants;
-import org.riverock.module.action.Action;
+import org.riverock.module.action.ActionInstance;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 
-public class EditMessageAction implements Action {
+public class EditMessageAction implements ActionInstance {
     private final static Logger log = Logger.getLogger(EditMessageAction.class);
 
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {

@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.forum.bean.ForumIntegrityBean;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 
 /**
@@ -58,12 +58,12 @@ public class ForumIntegrityDao {
             "(select id_user from wm_list_user)";
 
     public ForumIntegrityBean getIntegrityStatus(Long siteId) {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         ForumIntegrityBean bean = new ForumIntegrityBean();
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
 
             ps = adapter.prepareStatement( sql );
             rs = ps.executeQuery();

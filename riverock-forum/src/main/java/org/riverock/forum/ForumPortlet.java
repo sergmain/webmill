@@ -36,7 +36,7 @@ import org.riverock.forum.bean.GenericBean;
 import org.riverock.forum.dao.bean.WmForumItemType;
 import org.riverock.forum.util.CommonUtils;
 import org.riverock.forum.util.Constants;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.module.action.ActionNameProvider;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.action.WebmillPortletActionNameProviderImpl;
@@ -73,9 +73,9 @@ public class ForumPortlet extends AbstractForumPortlet {
             }
         }
         String forwardPage = null;
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
 
             ModuleRequest request = new WebmillPortletModuleRequestImpl(portletRequest);
             ModuleResponse response = new PortletModuleResponseImpl(actionResponse);
@@ -110,7 +110,7 @@ public class ForumPortlet extends AbstractForumPortlet {
             throw new PortletException(es, e);
         }
         finally {
-            DatabaseAdapter.close( adapter );
+            Database.close( adapter );
             adapter = null;
         }
 

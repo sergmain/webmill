@@ -32,7 +32,7 @@ import org.riverock.forum.bean.MessageBean;
 import org.riverock.forum.dao.core.GetWmForumMessageItem;
 import org.riverock.forum.dao.bean.WmForumMessageItemType;
 import org.riverock.forum.util.CommonUtils;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 
@@ -46,11 +46,11 @@ public class EditMessageDAO {
     private static final Logger log = Logger.getLogger(EditMessageDAO.class);
 
     public MessageBean get(Long forumId, Long topicId, Integer messageId) throws ActionException {
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             if (!CommonUtils.checkForumMessageId( adapter, forumId, messageId )){
                 return null;
             }

@@ -40,7 +40,7 @@ public class GetWmForumConcreteItem implements Serializable
 
     public GetWmForumConcreteItem(){}
 
-    public static GetWmForumConcreteItem getInstance(org.riverock.generic.db.DatabaseAdapter db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
+    public static GetWmForumConcreteItem getInstance(org.riverock.generic.db.Database db__, Long id__)  throws org.riverock.forum.exception.PersistenceException     {
         try
         {
         return new GetWmForumConcreteItem(db__, id__ );
@@ -74,7 +74,7 @@ public class GetWmForumConcreteItem implements Serializable
         target.setIsDeleted( source.getIsDeleted() );
     }
 
-    public GetWmForumConcreteItem(org.riverock.generic.db.DatabaseAdapter db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumConcreteItem(org.riverock.generic.db.Database db_, long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, new Long(id));
     }
 
@@ -82,11 +82,11 @@ public class GetWmForumConcreteItem implements Serializable
                 "select F_ORDER, F_ID, F_NAME, F_INFO, F_U_ID, F_TOPICS, F_MESSAGES, F_U_ID2, F_LASTTIME, FORUM_CATEGORY_ID, IS_DELETED from WM_FORUM_CONCRETE where F_ID=?";
 
 
-    public GetWmForumConcreteItem(org.riverock.generic.db.DatabaseAdapter db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumConcreteItem(org.riverock.generic.db.Database db_, Long id)  throws org.riverock.forum.exception.PersistenceException     {
         this(db_, id, sql_);
     }
 
-    public GetWmForumConcreteItem(org.riverock.generic.db.DatabaseAdapter db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
+    public GetWmForumConcreteItem(org.riverock.generic.db.Database db_, Long id, String sqlString)  throws org.riverock.forum.exception.PersistenceException     {
 
         if (id==null)
             return;

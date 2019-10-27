@@ -23,8 +23,8 @@
  */
 package org.riverock.forum;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
+import org.riverock.dbrevision.db.Database;
+import org.riverock.dbrevision.db.DatabaseManager;
 import org.riverock.module.action.ModuleActionRequestImpl;
 import org.riverock.module.action.ActionNameProvider;
 import org.riverock.module.web.config.ModuleConfig;
@@ -40,11 +40,11 @@ import org.riverock.module.web.url.UrlProvider;
  */
 public class ForumActionBean extends ModuleActionRequestImpl {
     private Long forumId = null;
-    private DatabaseAdapter adapter = null;
+    private Database adapter = null;
 
     public ForumActionBean(ModuleRequest request, ModuleResponse response,
         ModuleConfig moduleConfig, UrlProvider urlProvider,
-        Long forumId, DatabaseAdapter adapter, ActionNameProvider actionNameProvider) {
+        Long forumId, Database adapter, ActionNameProvider actionNameProvider) {
         super(request, response, moduleConfig, urlProvider, actionNameProvider);
         this.forumId = forumId;
         this.adapter = adapter;
@@ -61,7 +61,7 @@ public class ForumActionBean extends ModuleActionRequestImpl {
         return forumId;
     }
 
-    public DatabaseAdapter getAdapter() {
+    public Database getAdapter() {
         return adapter;
     }
 }

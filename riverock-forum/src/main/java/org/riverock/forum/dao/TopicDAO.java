@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.Database;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.web.url.UrlProvider;
@@ -59,12 +59,12 @@ public class TopicDAO {
             log.debug("urlProvider: "+urlProvider);
             log.debug("moduleUser: "+moduleUser);
         }
-        DatabaseAdapter adapter = null;
+        Database adapter = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         String sql = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
+            adapter = Database.getInstance();
             if (!CommonUtils.checkForumTopicId( adapter, forumId, t_id )){
                 log.error("Check for topicId was failed");
                 return null;
