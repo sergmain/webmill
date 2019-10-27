@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.riverock</groupId>
   <version>1.0</version>
-  <artifactId>webmill</artifactId>
+  <artifactId>webmill-current</artifactId>
   <name>All modules</name>
   <packaging>pom</packaging>
   <modules>
