@@ -33,7 +33,7 @@ import org.riverock.interfaces.portal.bean.Xslt;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:24:19
- *         $Id$
+ *         $Id: InternalXsltDao.java 1081 2006-11-24 18:15:45Z serg_main $
  */
 public interface InternalXsltDao {
     /**

@@ -27,7 +27,7 @@ package org.riverock.deploy.test;
  * @author smaslyukov
  *         Date: 02.08.2005
  *         Time: 17:44:20
- *         $Id$
+ *         $Id: OverflowTest.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public class OverflowTest {
     public static void main(String[] args) {

@@ -35,7 +35,7 @@ import org.riverock.common.config.ConfigService;
 import org.riverock.common.config.PropertiesProvider;
 
 /**
- * $Id$
+ * $Id: StartupApplication.java 1492 2009-10-30 14:02:35Z serg_main $
  */
 
 public final class StartupApplication {

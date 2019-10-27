@@ -36,7 +36,7 @@ import org.riverock.interfaces.portal.bean.User;
  * @author SergeMaslyukov
  *         Date: 31.01.2006
  *         Time: 15:28:42
- *         $Id$
+ *         $Id: AuthProvider.java 1056 2006-11-15 19:02:57Z serg_main $
  */
 public interface AuthProvider extends Serializable {
     public boolean isUserInRole( AuthSession authSession, String role_ );

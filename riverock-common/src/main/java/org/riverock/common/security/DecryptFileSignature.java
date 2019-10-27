@@ -39,7 +39,7 @@ import java.security.Security;
 * Date: Aug 21, 2002
 * Time: 10:54:52 PM
 *
- * $Id$
+ * $Id: DecryptFileSignature.java 1493 2009-11-22 19:06:46Z serg_main $
  *
  * Decrypt a file and use signatures MD5 with RSA for message validation and authentication.
  * This class can be used as a command line tool..

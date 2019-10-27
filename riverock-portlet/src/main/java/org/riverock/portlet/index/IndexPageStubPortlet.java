@@ -37,7 +37,7 @@ import javax.portlet.RenderResponse;
  * @author smaslyukov
  *         Date: 06.08.2005
  *         Time: 18:09:57
- *         $Id$
+ *         $Id: IndexPageStubPortlet.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class IndexPageStubPortlet implements Portlet {
 

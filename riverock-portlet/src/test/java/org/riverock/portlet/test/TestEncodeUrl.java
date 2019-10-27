@@ -27,7 +27,7 @@
  * Date: Jan 29, 2003
  * Time: 12:21:44 AM
  *
- * $Id$
+ * $Id: TestEncodeUrl.java 1201 2007-05-21 18:21:51Z serg_main $
  */
 package org.riverock.portlet.test;
 

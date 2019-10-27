@@ -40,7 +40,7 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
  * @author SergeMaslyukov
  *         Date: 31.01.2006
  *         Time: 16:08:54
- *         $Id$
+ *         $Id: RoleBeanImpl.java 1350 2007-08-28 10:08:41Z serg_main $
  */
 @Entity
 @Table(name="WM_AUTH_ACCESS_GROUP")

@@ -41,7 +41,7 @@ import org.riverock.interfaces.generic.InternalResponse;
  * User: SergeMaslyukov
  * Date: 24.01.2005
  * Time: 23:59:02
- * $Id$
+ * $Id: RequestDispatcherImpl.java 1493 2009-11-22 19:06:46Z serg_main $
  */
 public class RequestDispatcherImpl implements RequestDispatcher {
 

@@ -27,7 +27,7 @@ package org.riverock.interfaces.sso.a3.bean;
  * @author SergeMaslyukov
  *         Date: 31.01.2006
  *         Time: 15:02:56
- *         $Id$
+ *         $Id: RoleBean.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface RoleBean {
     public String getName();

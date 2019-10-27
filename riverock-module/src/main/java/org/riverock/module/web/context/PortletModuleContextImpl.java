@@ -32,7 +32,7 @@ import org.riverock.module.web.dispatcher.PortletModuleRequestDispatcherImpl;
  * @author SMaslyukov
  *         Date: 26.04.2005
  *         Time: 15:31:00
- *         $Id$
+ *         $Id: PortletModuleContextImpl.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class PortletModuleContextImpl implements ModuleContext {
     private PortletContext portletContext = null;

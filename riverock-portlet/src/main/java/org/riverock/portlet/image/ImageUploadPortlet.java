@@ -53,7 +53,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 1:32:02 PM
  * <p/>
- * $Id$
+ * $Id: ImageUploadPortlet.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class ImageUploadPortlet implements Portlet {
 

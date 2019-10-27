@@ -29,9 +29,9 @@ import javax.portlet.PortletConfig;
 
 /**
  *
- * $Author$
+ * $Author: serg_main $
  *
- * $Id$
+ * $Id: PortletResultContent.java 1228 2007-06-28 10:08:00Z serg_main $
  *
  */
 public interface PortletResultContent {

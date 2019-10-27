@@ -40,7 +40,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.common.utils.PortletUtils;
 
 /**
- * $Id$
+ * $Id: JobItem.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 public class JobItem {
     private final static Logger log = Logger.getLogger( JobItem.class );
@@ -79,67 +79,67 @@ public class JobItem {
 
     public String getJobNameString()
     {
-        return "Вакансия";
+        return "Р’Р°РєР°РЅСЃРёСЏ";
     }
 
     public String getDatePostString()
     {
-        return "Дата размещения";
+        return "Р”Р°С‚Р° СЂР°Р·РјРµС‰РµРЅРёСЏ";
     }
 
     public String getDateEndString()
     {
-        return "Действительна до";
+        return "Р”РµР№СЃС‚РІРёС‚РµР»СЊРЅР° РґРѕ";
     }
 
     public String getAgeString()
     {
-        return "Возраст";
+        return "Р’РѕР·СЂР°СЃС‚";
     }
 
     public String getAgeFromString()
     {
-        return "от";
+        return "РѕС‚";
     }
 
     public String getAgeTillString()
     {
-        return "до";
+        return "РґРѕ";
     }
 
     public String getGenderString()
     {
-        return "Пол";
+        return "РџРѕР»";
     }
 
     public String getEducationString()
     {
-        return "Образование";
+        return "РћР±СЂР°Р·РѕРІР°РЅРёРµ";
     }
 
     public String getSalaryString()
     {
-        return "Зарплата от";
+        return "Р—Р°СЂРїР»Р°С‚Р° РѕС‚";
     }
 
     public String getCityString()
     {
-        return "Город";
+        return "Р“РѕСЂРѕРґ";
     }
 
     public String getTestPeriodString()
     {
-        return "Испытательный срок";
+        return "РСЃРїС‹С‚Р°С‚РµР»СЊРЅС‹Р№ СЃСЂРѕРє";
     }
 
     public String getContactPersonString()
     {
-        return "Контакт по данной вакансии";
+        return "РљРѕРЅС‚Р°РєС‚ РїРѕ РґР°РЅРЅРѕР№ РІР°РєР°РЅСЃРёРё";
     }
 
     public String getTextJobString()
     {
-        return "Проффесиональные навыки:";
+        return "РџСЂРѕС„С„РµСЃРёРѕРЅР°Р»СЊРЅС‹Рµ РЅР°РІС‹РєРё:";
     }
 
 
@@ -147,43 +147,43 @@ public class JobItem {
 
     public Long idPosition = null;
 
-// Вакансия
+// Р’Р°РєР°РЅСЃРёСЏ
     public String jobName = "";
 
-// Дата размещения
+// Р”Р°С‚Р° СЂР°Р·РјРµС‰РµРЅРёСЏ
     public Calendar datePost = null;
 
-// Действительна до
+// Р”РµР№СЃС‚РІРёС‚РµР»СЊРЅР° РґРѕ
     public Calendar dateEnd = null;
 
-// Возраст от
+// Р’РѕР·СЂР°СЃС‚ РѕС‚
     public Integer ageFrom = null;
 
-// Возраст до
+// Р’РѕР·СЂР°СЃС‚ РґРѕ
     public Integer ageTill = null;
 
-// Пол</td>
+// РџРѕР»</td>
     public String gender = "";
 
-// Образование</td>
+// РћР±СЂР°Р·РѕРІР°РЅРёРµ</td>
     public String nameEducation = "";
 
-// Зарплата от</td>
+// Р—Р°СЂРїР»Р°С‚Р° РѕС‚</td>
     public Float salary = null;
 
-// Зарплата, комментарий
+// Р—Р°СЂРїР»Р°С‚Р°, РєРѕРјРјРµРЅС‚Р°СЂРёР№
     public String salaryComment = "";
 
-// Город</td>
+// Р“РѕСЂРѕРґ</td>
     public String cityPosition = "";
 
-// Испытательный срок</td>
+// РСЃРїС‹С‚Р°С‚РµР»СЊРЅС‹Р№ СЃСЂРѕРє</td>
     public String testPeriod = "";
 
-// Контакт по данной вакансии</td>
+// РљРѕРЅС‚Р°РєС‚ РїРѕ РґР°РЅРЅРѕР№ РІР°РєР°РЅСЃРёРё</td>
     public String contactPerson = "";
 
-//Проффесиональные навыки:
+//РџСЂРѕС„С„РµСЃРёРѕРЅР°Р»СЊРЅС‹Рµ РЅР°РІС‹РєРё:
     public String textJob = "";
 
     private static String sqlJobPosition =

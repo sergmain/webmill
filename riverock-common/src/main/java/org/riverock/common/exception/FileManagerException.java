@@ -30,7 +30,7 @@ package org.riverock.common.exception;
  * Date: 26.01.2004
  * Time: 20:45:56
  * @author Serge Maslyukov
- * $Id$
+ * $Id: FileManagerException.java 1108 2006-11-29 19:12:24Z serg_main $
  */
 public class FileManagerException extends Exception {
     public FileManagerException()

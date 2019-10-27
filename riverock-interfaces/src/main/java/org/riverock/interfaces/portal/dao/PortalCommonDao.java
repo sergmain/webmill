@@ -32,7 +32,7 @@ import org.riverock.interfaces.portal.bean.Template;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 23:31:06
- *         $Id$
+ *         $Id: PortalCommonDao.java 1394 2007-09-02 19:13:28Z serg_main $
  */
 public interface PortalCommonDao {
     Template getTemplate(Long templateId);

@@ -27,7 +27,7 @@ package org.riverock.webmill.container.resource;
  * @author smaslyukov
  *         Date: 27.07.2005
  *         Time: 19:57:09
- *         $Id$
+ *         $Id: ResourceProvider.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public interface ResourceProvider {
 }

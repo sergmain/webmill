@@ -29,7 +29,7 @@ import java.util.Collection;
  * @author SMaslyukov
  *         Date: 19.04.2005
  *         Time: 15:37:48
- *         $Id$
+ *         $Id: ForumBean.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class ForumBean {
     private String forumName = null;

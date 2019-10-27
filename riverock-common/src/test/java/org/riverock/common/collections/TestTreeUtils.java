@@ -36,7 +36,7 @@ import org.riverock.interfaces.common.TreeItem;
  * User: smaslyukov
  * Date: 16.08.2004
  * Time: 16:08:38
- * $Id$
+ * $Id: TestTreeUtils.java 1486 2009-05-30 13:17:42Z serg_main $
  */
 public class TestTreeUtils extends TestCase {
 

@@ -77,7 +77,7 @@ import org.riverock.webmill.utils.PortletUtils;
  * @author smaslyukov
  *         Date: 29.07.2005
  *         Time: 18:00:18
- *         $Id$
+ *         $Id: PortalInstanceImpl.java 1474 2007-10-12 15:01:02Z serg_main $
  */
 public class PortalInstanceImpl implements PortalInstance {
     private final static Logger log = Logger.getLogger(PortalInstanceImpl.class);

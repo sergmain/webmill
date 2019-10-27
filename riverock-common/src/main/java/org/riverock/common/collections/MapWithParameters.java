@@ -32,7 +32,7 @@ import java.util.Arrays;
  * User: SergeMaslyukov
  * Date: 19.12.2004
  * Time: 18:49:30
- * $Id$
+ * $Id: MapWithParameters.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public final class MapWithParameters {
 

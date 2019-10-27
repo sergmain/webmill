@@ -42,7 +42,7 @@ import org.riverock.interfaces.portal.bean.Holding;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:16:22
- *         $Id$
+ *         $Id: HoldingBean.java 1171 2007-02-28 15:50:35Z serg_main $
  */
 @Entity
 @Table(name="WM_LIST_HOLDING")

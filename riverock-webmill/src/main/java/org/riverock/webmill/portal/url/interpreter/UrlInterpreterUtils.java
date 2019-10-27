@@ -40,7 +40,7 @@ import org.riverock.webmill.portal.template.TemplateUtils;
 import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
 
 /**
- * $Id$
+ * $Id: UrlInterpreterUtils.java 1377 2007-08-29 16:09:14Z serg_main $
  */
 public final class UrlInterpreterUtils {
     private final static Logger log = Logger.getLogger( UrlInterpreterUtils.class );

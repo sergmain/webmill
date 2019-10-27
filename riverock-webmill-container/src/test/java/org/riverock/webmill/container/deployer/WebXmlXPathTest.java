@@ -73,7 +73,7 @@ public class WebXmlXPathTest extends TestCase {
         assertNotNull(registerServlet);
         XObject portletTagCount = XPathAPI.eval(document, WebmillWebApplicationRewriter.PORTLET_TAGLIB_COUNT_XPATH);
         int i=0;
-        int countTaglibUril = new Double(portletTagCount.toString()).intValue();
+        int countTaglibUril = (int)Double.parseDouble(portletTagCount.toString());
         assertEquals(countTaglibUril, 1);
 
         Node portletTaglib = XPathAPI.selectSingleNode(document, WebmillWebApplicationRewriter.PORTLET_TAGLIB_XPATH);

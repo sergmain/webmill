@@ -37,7 +37,7 @@ import java.util.Map;
  * @author smaslyukov
  *         Date: 27.07.2005
  *         Time: 19:37:45
- *         $Id$
+ *         $Id: PortletEntry.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 public final class PortletEntry {
     private Portlet portlet = null;

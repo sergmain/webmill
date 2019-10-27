@@ -38,7 +38,7 @@ import org.riverock.common.tools.RsetTools;
  * Date: Dec 19, 2002
  * Time: 3:19:17 PM
  * <p/>
- * $Id$
+ * $Id: PriceItemImage.java 1140 2006-12-14 11:46:52Z serg_main $
  */
 public class PriceItemImage {
     private static Logger log = Logger.getLogger( PriceItemImage.class );

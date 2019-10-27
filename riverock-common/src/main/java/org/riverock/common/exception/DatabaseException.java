@@ -31,7 +31,7 @@ package org.riverock.common.exception;
  * Time: 20:45:56
  *
  * @author Serge Maslyukov
- *         $Id$
+ *         $Id: DatabaseException.java 1108 2006-11-29 19:12:24Z serg_main $
  */
 public class DatabaseException extends RuntimeException {
     public DatabaseException() {

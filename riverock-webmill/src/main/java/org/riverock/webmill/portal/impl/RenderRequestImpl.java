@@ -52,7 +52,7 @@ import org.riverock.webmill.portal.namespace.Namespace;
  * Date: Sep 20, 2003
  * Time: 1:00:05 AM
  *
- * $Id$
+ * $Id: RenderRequestImpl.java 1374 2007-08-28 19:11:15Z serg_main $
  */
 public final class RenderRequestImpl extends WebmillPortletRequest implements RenderRequest, InternalRequest {
     private final static Logger log = Logger.getLogger( RenderRequestImpl.class );

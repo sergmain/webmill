@@ -32,7 +32,7 @@ import java.math.RoundingMode;
  * Date: Dec 14, 2002
  * Time: 1:43:45 PM
  * <p/>
- * $Id$
+ * $Id: NumberTools.java 1492 2009-10-30 14:02:35Z serg_main $
  */
 public class NumberTools {
 

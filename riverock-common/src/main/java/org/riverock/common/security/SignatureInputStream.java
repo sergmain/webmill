@@ -43,7 +43,7 @@ import java.security.SignatureException;
 /**
  * SignatureInputStream. As data is read it updates a MAC
  *
- *  $Id$
+ *  $Id: SignatureInputStream.java 1108 2006-11-29 19:12:24Z serg_main $
  */
 public class SignatureInputStream extends FilterInputStream
 {

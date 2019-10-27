@@ -27,7 +27,7 @@
  * Date: 28.11.2003
  * Time: 19:46:08
  * @author Serge Maslyukov
- * $Id$
+ * $Id: ConfigException.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 
 package org.riverock.common.config;

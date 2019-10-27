@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author SergeMaslyukov
  *         Date: 06.01.2006
  *         Time: 11:26:35
- *         $Id$
+ *         $Id: HoldingSessionBean.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class HoldingSessionBean implements Serializable {
 

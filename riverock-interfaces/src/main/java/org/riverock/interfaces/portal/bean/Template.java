@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 23:41:35
- *         $Id$
+ *         $Id: Template.java 1314 2007-08-18 13:47:36Z serg_main $
  */
 public interface Template extends Serializable {
     public String getTemplateLanguage();

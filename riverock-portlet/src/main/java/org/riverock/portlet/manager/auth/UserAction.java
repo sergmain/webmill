@@ -37,7 +37,7 @@ import org.riverock.portlet.tools.FacesTools;
  * @author SergeMaslyukov
  *         Date: 02.01.2006
  *         Time: 9:26:35
- *         $Id$
+ *         $Id: UserAction.java 1450 2007-10-01 14:50:54Z serg_main $
  */
 public class UserAction implements Serializable {
     private final static Logger log = Logger.getLogger( UserAction.class );

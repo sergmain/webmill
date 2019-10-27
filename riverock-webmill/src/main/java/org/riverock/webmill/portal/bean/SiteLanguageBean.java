@@ -43,7 +43,7 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 14:52:56
- *         $Id$
+ *         $Id: SiteLanguageBean.java 1264 2007-07-20 14:46:18Z serg_main $
  */
 @Entity
 @Table(name="WM_PORTAL_SITE_LANGUAGE")

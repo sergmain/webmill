@@ -32,7 +32,7 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
  * @author SergeMaslyukov
  *         Date: 02.02.2006
  *         Time: 17:23:14
- *         $Id$
+ *         $Id: RoleEditableBeanImpl.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class RoleEditableBeanImpl implements RoleEditableBean, Serializable {
     private static final long serialVersionUID = 2043005512L;

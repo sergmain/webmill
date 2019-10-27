@@ -33,7 +33,7 @@ import org.riverock.webmill.container.tools.ContainertStringUtils;
  * User: SergeMaslyukov
  * Date: 10.02.2005
  * Time: 0:26:44
- * $Id$
+ * $Id: PortletResourceBundleWithLocale.java 1215 2007-06-22 14:41:25Z serg_main $
  */
 public final class PortletResourceBundleWithLocale extends ResourceBundle {
 

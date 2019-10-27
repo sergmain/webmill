@@ -26,7 +26,7 @@ package org.riverock.common.html;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * $Id$
+ * $Id: TypeBrowser.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class TypeBrowser {
     public static final int UNKNOWN = -1;

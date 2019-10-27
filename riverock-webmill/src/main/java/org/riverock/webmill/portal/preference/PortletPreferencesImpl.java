@@ -62,7 +62,7 @@ import org.apache.log4j.Logger;
  * Portlet persistent preference store.
  * Used in: portlet
  *
- * @version $Revision$ $Date$
+ * @version $Revision: 1052 $ $Date: 2006-11-14 16:46:45 +0000 (Tue, 14 Nov 2006) $
  */
 public class PortletPreferencesImpl implements PortletPreferences, Serializable {
     private static final long serialVersionUID = 30434672384237160L;

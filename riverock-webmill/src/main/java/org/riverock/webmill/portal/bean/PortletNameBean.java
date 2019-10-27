@@ -41,7 +41,7 @@ import org.riverock.interfaces.portal.bean.PortletName;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 16:39:36
- *         $Id$
+ *         $Id: PortletNameBean.java 1171 2007-02-28 15:50:35Z serg_main $
  */
 @Entity
 @Table(name="WM_PORTAL_PORTLET_NAME")

@@ -44,9 +44,9 @@ import org.riverock.portlet.tools.ContentTypeTools;
 
 /**
  *
- * $Author$
+ * $Author: serg_main $
  *
- * $Id$
+ * $Id: NewsItemSimple.java 1476 2007-10-14 13:18:52Z serg_main $
  *
  */
 public final class NewsItemSimple implements PortletResultObject, PortletResultContent {

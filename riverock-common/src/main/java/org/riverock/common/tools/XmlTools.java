@@ -51,7 +51,7 @@ import org.apache.commons.lang.StringUtils;
  * Date: Jan 22, 2003
  * Time: 9:33:19 AM
  * <p/>
- * $Id$
+ * $Id: XmlTools.java 1493 2009-11-22 19:06:46Z serg_main $
  */
 public final class XmlTools {
 

@@ -30,7 +30,7 @@ package org.riverock.webmill.portal.namespace;
  * @author SergeMaslyukov
  *         Date: 13.05.2006
  *         Time: 20:44:02
- *         $Id$
+ *         $Id: NamespaceMapperImpl.java 1149 2006-12-20 14:56:06Z serg_main $
  */
 public class NamespaceMapperImpl implements NamespaceMapper {
     private static final String WEBMILL_PREFIX = "Webmill_";

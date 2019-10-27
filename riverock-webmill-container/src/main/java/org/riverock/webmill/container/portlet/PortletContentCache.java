@@ -32,7 +32,7 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  * @author smaslyukov
  *         Date: 11.08.2005
  *         Time: 19:05:42
- *         $Id$
+ *         $Id: PortletContentCache.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public interface PortletContentCache {
     void invalidate(String portletName);

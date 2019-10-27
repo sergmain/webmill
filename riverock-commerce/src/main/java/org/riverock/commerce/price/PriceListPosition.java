@@ -38,9 +38,9 @@ import org.riverock.commerce.schema.shop.PricePositionType;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
- * Построение иерархии категорий товаров начиная от текущей и до корня вверх
+ * РџРѕСЃС‚СЂРѕРµРЅРёРµ РёРµСЂР°СЂС…РёРё РєР°С‚РµРіРѕСЂРёР№ С‚РѕРІР°СЂРѕРІ РЅР°С‡РёРЅР°СЏ РѕС‚ С‚РµРєСѓС‰РµР№ Рё РґРѕ РєРѕСЂРЅСЏ РІРІРµСЂС…
  *
- * $Id$
+ * $Id: PriceListPosition.java 1229 2007-06-28 11:25:40Z serg_main $
  *
  */
 public class PriceListPosition {

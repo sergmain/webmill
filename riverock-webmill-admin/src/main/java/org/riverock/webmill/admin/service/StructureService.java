@@ -36,10 +36,13 @@ public class StructureService implements Serializable {
     }
 
     protected void finalize() throws Throwable {
-        if (manager!=null) {
-            manager.destroy();
+        try {
+            if (manager!=null) {
+                manager.destroy();
+            }
+        } finally {
+            super.finalize();
         }
-        super.finalize();
     }
 
     public void init() {

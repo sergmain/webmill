@@ -27,7 +27,7 @@ package org.riverock.module.action;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 13:24:58
- *         $Id$
+ *         $Id: ActionNameProvider.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public interface ActionNameProvider {
     public String getActionName();

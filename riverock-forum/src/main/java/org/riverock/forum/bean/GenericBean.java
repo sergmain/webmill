@@ -27,7 +27,7 @@ package org.riverock.forum.bean;
  * @author SMaslyukov
  *         Date: 07.04.2005
  *         Time: 17:39:39
- *         $Id$
+ *         $Id: GenericBean.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class GenericBean {
     private String remoteAddr = null;

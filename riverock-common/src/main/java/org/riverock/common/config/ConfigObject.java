@@ -34,7 +34,7 @@ import javax.naming.NamingException;
 import org.riverock.common.tools.XmlTools;
 
 /**
- * $Id$
+ * $Id: ConfigObject.java 1493 2009-11-22 19:06:46Z serg_main $
  */
 public class ConfigObject {
     public static final String LOCAL_CONFIG_PARAM_NAME = "is-local-config";

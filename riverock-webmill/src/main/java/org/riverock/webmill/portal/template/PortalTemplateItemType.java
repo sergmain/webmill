@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author SergeMaslyukov
  *         Date: 01.01.2006
  *         Time: 9:45:11
- *         $Id$
+ *         $Id: PortalTemplateItemType.java 1375 2007-08-28 19:35:44Z serg_main $
  */
 public interface PortalTemplateItemType extends Serializable {
     /**

@@ -155,9 +155,9 @@ public class ParseHtmlFragmentTest {
     }
 
     /**
-     * сортировка аттрибутов ноды
+     * СЃРѕСЂС‚РёСЂРѕРІРєР° Р°С‚С‚СЂРёР±СѓС‚РѕРІ РЅРѕРґС‹
      *
-     * @param attrs мапа с аттрибутами
+     * @param attrs РјР°РїР° СЃ Р°С‚С‚СЂРёР±СѓС‚Р°РјРё
      * @return Attr[]
      */
     private static Attr[] sortAttributes(NamedNodeMap attrs) {

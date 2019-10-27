@@ -36,7 +36,7 @@ import org.riverock.common.tools.DateTools;
  * Date: Jan 24, 2003
  * Time: 10:29:07 AM
  *
- * $Id$
+ * $Id: TestProperties.java 1243 2007-07-12 16:58:42Z serg_main $
  */
 public class TestProperties {
     
@@ -60,7 +60,7 @@ public class TestProperties {
         System.out.println(System.getProperty("java.io.tmpdir"));
         System.out.println(System.getProperty("file.encoding"));
 
-        String i = "»»» “ÂÒÚ";
+        String i = "–ò–ò–ò –¢–µ—Å—Ç";
 
         System.out.println(
             StringTools.convertString(i,

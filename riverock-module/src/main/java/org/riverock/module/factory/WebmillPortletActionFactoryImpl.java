@@ -35,7 +35,7 @@ import java.io.File;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 21:15:01
- *         $Id$
+ *         $Id: WebmillPortletActionFactoryImpl.java 1439 2007-09-27 14:23:59Z serg_main $
  */
 public class WebmillPortletActionFactoryImpl extends PortletActionFactoryImpl {
     private static final Logger log = Logger.getLogger(WebmillPortletActionFactoryImpl.class);

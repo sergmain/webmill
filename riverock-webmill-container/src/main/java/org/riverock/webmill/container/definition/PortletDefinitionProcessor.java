@@ -32,7 +32,7 @@ import org.riverock.webmill.container.portlet.bean.PortletApplication;
  * @author smaslyukov
  *         Date: 05.08.2005
  *         Time: 20:11:35
- *         $Id$
+ *         $Id: PortletDefinitionProcessor.java 1239 2007-07-04 09:05:29Z serg_main $
  */
 public interface PortletDefinitionProcessor {
     public PortletApplication process( File portletFile );

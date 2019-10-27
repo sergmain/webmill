@@ -52,7 +52,7 @@ import org.riverock.common.utils.PortletUtils;
  * @author SMaslyukov
  *         Date: 24.03.2005
  *         Time: 16:03:52
- *         $Id$
+ *         $Id: ForumListManagerPortlet.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public class ForumListManagerPortlet extends AbstractForumPortlet {
     private final static Logger log = Logger.getLogger(ForumListManagerPortlet.class);

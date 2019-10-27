@@ -35,7 +35,7 @@ import org.riverock.portlet.tools.FacesTools;
  * @author SergeMaslyukov
  *         Date: 26.02.2006
  *         Time: 15:55:44
- *         $Id$
+ *         $Id: PortletNameService.java 1411 2007-09-06 20:27:38Z serg_main $
  */
 public class PortletNameService implements Serializable {
     private static final long serialVersionUID = 2055005515L;

@@ -31,7 +31,7 @@ import junit.framework.TestCase;
  * Date: Mar 20, 2003
  * Time: 9:28:58 PM
  * <p/>
- * $Id$
+ * $Id: TestTypeBrowser.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class TestTypeBrowser extends TestCase {
 

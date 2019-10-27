@@ -31,7 +31,7 @@ import org.riverock.module.factory.bean.ActionConfigurationBean;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 20:53:55
- *         $Id$
+ *         $Id: ActionFactory.java 1445 2007-09-28 15:57:11Z serg_main $
  */
 public interface ActionFactory {
     public ActionConfigurationBean getAction(String actionName);

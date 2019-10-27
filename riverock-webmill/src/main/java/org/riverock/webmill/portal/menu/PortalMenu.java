@@ -39,7 +39,7 @@ import org.riverock.interfaces.ContainerConstants;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
- * $Id$
+ * $Id: PortalMenu.java 1339 2007-08-27 13:54:10Z serg_main $
  */
 public final class PortalMenu implements Menu {
     private final static Logger log = Logger.getLogger( PortalMenu.class );

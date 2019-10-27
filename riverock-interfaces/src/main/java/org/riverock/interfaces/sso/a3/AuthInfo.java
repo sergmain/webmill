@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author SergeMaslyukov
  *         Date: 24.01.2006
  *         Time: 12:57:00
- *         $Id$
+ *         $Id: AuthInfo.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface AuthInfo extends Serializable {
     public Long getAuthUserId();

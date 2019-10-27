@@ -40,7 +40,7 @@ import org.riverock.commerce.tools.HibernateUtils;
  * Date: Dec 9, 2002
  * Time: 11:41:02 AM
  * <p/>
- * $Id$
+ * $Id: CurrencyService.java 1138 2006-12-12 18:37:24Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class CurrencyService {

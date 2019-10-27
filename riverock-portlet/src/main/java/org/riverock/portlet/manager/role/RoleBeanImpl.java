@@ -31,7 +31,7 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
  * @author SergeMaslyukov
  *         Date: 06.01.2006
  *         Time: 11:26:35
- *         $Id$
+ *         $Id: RoleBeanImpl.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class RoleBeanImpl implements Serializable, RoleBean {
     private static final long serialVersionUID = 2057005507L;

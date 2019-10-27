@@ -47,7 +47,7 @@ import org.riverock.common.tools.ServletTools;
  * User: SergeMaslyukov
  * Date: 04.02.2005
  * Time: 0:44:53
- * $Id$
+ * $Id: HttpServletRequestWrapperFromString.java 1217 2007-06-26 19:45:31Z serg_main $
  */
 public final class HttpServletRequestWrapperFromString extends HttpServletRequestWrapper {
     Map<String, Object> param = null;

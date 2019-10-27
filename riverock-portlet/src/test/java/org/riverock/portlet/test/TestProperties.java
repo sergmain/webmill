@@ -27,7 +27,7 @@
  * Date: Jan 24, 2003
  * Time: 10:29:07 AM
  *
- * $Id$
+ * $Id: TestProperties.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 
 package org.riverock.portlet.test;
@@ -68,7 +68,7 @@ public class TestProperties {
         System.out.println(System.getProperty("java.io.tmpdir"));
         System.out.println(System.getProperty("file.encoding"));
 
-        String i = "»»» “ÂÒÚ";
+        String i = "–ò–ò–ò –¢–µ—Å—Ç";
 
         System.out.println(
             StringTools.convertString(i,

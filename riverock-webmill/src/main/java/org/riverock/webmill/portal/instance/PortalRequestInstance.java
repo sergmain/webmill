@@ -69,7 +69,7 @@ import org.riverock.webmill.utils.PortletUtils;
  * Date: Aug 26, 2003
  * Time: 4:40:19 PM
  * <p/>
- * $Id$
+ * $Id: PortalRequestInstance.java 1474 2007-10-12 15:01:02Z serg_main $
  */
 public final class PortalRequestInstance implements PortalRequest {
     private final static Logger log = Logger.getLogger(PortalRequestInstance.class);

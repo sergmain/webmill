@@ -31,7 +31,7 @@ import java.util.List;
  * @author SergeMaslyukov
  *         Date: 02.01.2006
  *         Time: 20:53:12
- *         $Id$
+ *         $Id: CompanyBean.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class CompanyBean implements Serializable {
     private static final long serialVersionUID = 2043005504L;

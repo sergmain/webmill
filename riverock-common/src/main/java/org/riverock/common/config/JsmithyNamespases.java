@@ -29,7 +29,7 @@ package org.riverock.common.config;
  * Time: 17:52:58
  *
  * @author Serge Maslyukov
- *         $Id$
+ *         $Id: JsmithyNamespases.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class JsmithyNamespases {
     public final static String[][] namespace = new String[][] {

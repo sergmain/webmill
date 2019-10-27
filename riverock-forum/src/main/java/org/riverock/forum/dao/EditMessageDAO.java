@@ -40,7 +40,7 @@ import org.riverock.module.exception.ActionException;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 13:47:53
- *         $Id$
+ *         $Id: EditMessageDAO.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class EditMessageDAO {
     private static final Logger log = Logger.getLogger(EditMessageDAO.class);

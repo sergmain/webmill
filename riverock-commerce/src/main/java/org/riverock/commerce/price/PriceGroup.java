@@ -36,9 +36,9 @@ import org.riverock.commerce.schema.shop.GroupListType;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
- * $Author$
+ * $Author: serg_main $
  * <p/>
- * $Id$
+ * $Id: PriceGroup.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class PriceGroup {
     private final static Logger log = Logger.getLogger( PriceGroup.class );

@@ -27,7 +27,7 @@ package org.riverock.interfaces;
  * @author smaslyukov
  *         Date: 27.07.2005
  *         Time: 18:42:32
- *         $Id$
+ *         $Id: ContainerConstants.java 1472 2007-10-09 14:06:10Z serg_main $
  */
 public class ContainerConstants {
 

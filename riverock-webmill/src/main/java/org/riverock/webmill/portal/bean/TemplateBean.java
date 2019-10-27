@@ -46,7 +46,7 @@ import org.riverock.interfaces.portal.bean.Template;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 16:32:46
- *         $Id$
+ *         $Id: TemplateBean.java 1338 2007-08-24 16:51:18Z serg_main $
  */
 @Entity
 @Table(name="WM_PORTAL_TEMPLATE")

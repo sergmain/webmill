@@ -31,7 +31,7 @@ import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
  * @author SergeMaslyukov
  *         Date: 01.01.2006
  *         Time: 9:11:56
- *         $Id$
+ *         $Id: PortalTemplate.java 1375 2007-08-28 19:35:44Z serg_main $
  */
 public interface PortalTemplate extends Serializable {
     public Long getTemplateId();

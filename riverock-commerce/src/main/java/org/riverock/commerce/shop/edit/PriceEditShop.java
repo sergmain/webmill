@@ -52,7 +52,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 2:42:04 PM
  *
- * $Id$
+ * $Id: PriceEditShop.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public class PriceEditShop extends HttpServlet
 {
@@ -263,7 +263,7 @@ public class PriceEditShop extends HttpServlet
                     }
 
 // print items from price-list
-                    // используем валюту по умолчанию
+                    // РёСЃРїРѕР»СЊР·СѓРµРј РІР°Р»СЋС‚Сѓ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 //                    if (shopParam.id_currency==0)
 //                        shopParam.id_currency = shop.currencyID;
 
@@ -296,15 +296,15 @@ public class PriceEditShop extends HttpServlet
                             if (headerFlag)
                             {
                                 out.write("<tr align=\"center\">\n");
-                                out.write("<th class=\"priceData\" width=\"7%\">Описание");
+                                out.write("<th class=\"priceData\" width=\"7%\">РћРїРёСЃР°РЅРёРµ");
                                 out.write("</th>\n");
-                                out.write("<th class=\"priceData\" width=\"70%\">Наименование");
+                                out.write("<th class=\"priceData\" width=\"70%\">РќР°РёРјРµРЅРѕРІР°РЅРёРµ");
                                 out.write("</th>\n");
-                                out.write("<th class=\"priceData\" width=\"7%\">Цена");
+                                out.write("<th class=\"priceData\" width=\"7%\">Р¦РµРЅР°");
                                 out.write("</th>\n");
-                                out.write("<th class=\"priceData\" width=\"7%\" align=\"center\">Валюта");
+                                out.write("<th class=\"priceData\" width=\"7%\" align=\"center\">Р’Р°Р»СЋС‚Р°");
                                 out.write("</th>\n");
-                                out.write("<th class=\"priceData\" width=\"7%\" align=\"center\">Спец предло-жение");
+                                out.write("<th class=\"priceData\" width=\"7%\" align=\"center\">РЎРїРµС† РїСЂРµРґР»Рѕ-Р¶РµРЅРёРµ");
                                 out.write("</th>\n");
                                 out.write("</tr>");
 
@@ -314,14 +314,14 @@ public class PriceEditShop extends HttpServlet
 
                             out.write("<tr>\n");
                             out.write("<td>\n");
-                            out.write("<input type=\"button\" value=\"Описание\"\nonclick=\"window.open('");
+                            out.write("<input type=\"button\" value=\"РћРїРёСЃР°РЅРёРµ\"\nonclick=\"window.open('");
                             out.write(
 
                                     PortletUtils.url(renderRequest, response, ctxInstance.page, "mill.price.description") + '&' +
                                     "id_item=" + item.idPK
 
                             );
-                            out.write("', 'Описание',\n'scrollbars=1,status=1,location=1,toolbar=1,menubar=1,resizable=1,height=350,width=700')\">");
+                            out.write("', 'РћРїРёСЃР°РЅРёРµ',\n'scrollbars=1,status=1,location=1,toolbar=1,menubar=1,resizable=1,height=350,width=700')\">");
 //                            out.write("<br>\n");
                             out.write("</td>\n");
                             out.write("<td>");
@@ -366,7 +366,7 @@ public class PriceEditShop extends HttpServlet
                         out.write(""+i);
                         out.write("\">\n");
                         out.write(ctxInstance.getAsForm());
-                        out.write("<input type=\"submit\" value=\"Изменить\">\n");
+                        out.write("<input type=\"submit\" value=\"РР·РјРµРЅРёС‚СЊ\">\n");
                         out.write("</form>\n");
                     }
 */

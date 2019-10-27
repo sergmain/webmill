@@ -32,7 +32,7 @@ import java.util.HashMap;
  * Time: 19:05:41
  *
  * @author Serge Maslyukov
- *         $Id$
+ *         $Id: PropertiesProvider.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class PropertiesProvider {
     private static boolean isServletEnv = false;

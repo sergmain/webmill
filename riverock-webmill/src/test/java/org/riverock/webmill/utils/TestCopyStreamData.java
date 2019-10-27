@@ -34,7 +34,7 @@ import junit.framework.TestCase;
  * @author SergeMaslyukov
  *         Date: 15.01.2006
  *         Time: 13:20:38
- *         $Id$
+ *         $Id: TestCopyStreamData.java 1052 2006-11-14 16:46:45Z serg_main $
  */
 public class TestCopyStreamData extends TestCase {
 

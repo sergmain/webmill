@@ -28,7 +28,7 @@
  * Date: Jan 25, 2003
  * Time: 9:57:52 PM
  *
- * $Id$
+ * $Id: LittleTest.java 1243 2007-07-12 16:58:42Z serg_main $
  */
 package org.riverock.webmill.trash;
 

@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * Date: Sep 9, 2003
  * Time: 8:39:10 PM
  *
- * $Id$
+ * $Id: TestExtractLDAPCanonicalName.java 1051 2006-11-14 16:18:35Z serg_main $
  */
 public class TestExtractLDAPCanonicalName extends TestCase
 {

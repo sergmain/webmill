@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 
 /**
- * $Id$
+ * $Id: IndexUrlInterpreter.java 1430 2007-09-14 14:48:24Z serg_main $
  */
 public class IndexUrlInterpreter implements UrlInterpreter {
     private final static Logger log = Logger.getLogger(IndexUrlInterpreter.class);

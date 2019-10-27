@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
  * @author smaslyukov
  *         Date: 29.07.2005
  *         Time: 19:52:00
- *         $Id$
+ *         $Id: ContentTypeTools.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class ContentTypeTools {
     private final static Logger log = Logger.getLogger(ContentTypeTools.class);

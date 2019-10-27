@@ -53,9 +53,9 @@ import org.riverock.interfaces.portlet.PortletResultObject;
 //import org.riverock.common.utils.PortletUtils;
 
 /**
- * $Author$
+ * $Author: serg_main $
  * 
- * $Id$
+ * $Id: MenuSimple.java 1426 2007-09-13 11:18:09Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class MenuSimple implements PortletResultObject, PortletGetList, PortletResultContent {

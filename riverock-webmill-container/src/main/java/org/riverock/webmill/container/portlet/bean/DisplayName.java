@@ -38,7 +38,7 @@ import java.io.Serializable;
  * RFC 1766 (http://www.ietf.org/rfc/rfc1766.txt). The default
  * value of this attribute is English(“en”).
  *
- * @version $Revision$ $Date$
+ * @version $Revision: 1055 $ $Date: 2006-11-14 17:56:15 +0000 (Tue, 14 Nov 2006) $
  */
 public class DisplayName implements Serializable {
     private static final long serialVersionUID = 30434672384237143L;

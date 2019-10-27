@@ -35,7 +35,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:24:19
- *         $Id$
+ *         $Id: InternalSiteDao.java 1352 2007-08-28 10:09:56Z serg_main $
  */
 public interface InternalSiteDao {
     public List<Site> getSites();

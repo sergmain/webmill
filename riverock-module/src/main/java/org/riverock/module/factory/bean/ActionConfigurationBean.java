@@ -30,7 +30,7 @@ import org.riverock.module.config.schema.Action;
  * @author SMaslyukov
  *         Date: 06.05.2005
  *         Time: 14:23:50
- *         $Id$
+ *         $Id: ActionConfigurationBean.java 1439 2007-09-27 14:23:59Z serg_main $
  */
 public class ActionConfigurationBean {
     private Action actionBean = null;

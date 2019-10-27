@@ -40,7 +40,7 @@ import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
- * $Id$
+ * $Id: PortalXslt.java 1416 2007-09-08 18:12:27Z serg_main $
  */
 public class PortalXslt implements XsltTransformer {
     private final static Logger log = Logger.getLogger(PortalXslt.class);

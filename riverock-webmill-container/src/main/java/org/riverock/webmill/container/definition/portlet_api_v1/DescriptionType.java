@@ -53,7 +53,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 			description. It has an optional attribute xml:lang to indicate 
  * 			which language is used in the description according to 
  * 			RFC 1766 (http://www.ietf.org/rfc/rfc1766.txt). The default
- * 			value of this attribute is English(ìenî).
+ * 			value of this attribute is English(‚Äúen‚Äù).
  * 			Used in: init-param, portlet, portlet-app, security-role
  * 			
  * 

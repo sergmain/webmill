@@ -56,7 +56,7 @@ import org.riverock.webmill.portal.static_content.StaticContent;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
- * $Id$
+ * $Id: PortalFrontController.java 1474 2007-10-12 15:01:02Z serg_main $
  */
 public final class PortalFrontController extends HttpServlet {
     private final static Logger log = Logger.getLogger(PortalFrontController.class);

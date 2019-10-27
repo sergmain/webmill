@@ -27,9 +27,9 @@ import junit.framework.TestSuite;
 
 /**
  *
- * $Author$
+ * $Author: serg_main $
  *
- * $Id$
+ * $Id: SuiteShop.java 1048 2006-11-14 15:28:48Z serg_main $
  *
  */
 public class SuiteShop

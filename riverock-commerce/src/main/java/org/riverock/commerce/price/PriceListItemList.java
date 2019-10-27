@@ -47,9 +47,9 @@ import org.riverock.common.tools.XmlTools;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
- * $Author$
+ * $Author: serg_main $
  * <p/>
- * $Id$
+ * $Id: PriceListItemList.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class PriceListItemList {
@@ -74,9 +74,9 @@ public final class PriceListItemList {
 
         ItemListType items = new ItemListType();
         PriceFieldNameType fieldName = new PriceFieldNameType();
-        fieldName.setNameItem("Наименование");
-        fieldName.setNamePrice("Цена");
-        fieldName.setNameCurrency("Валюта");
+        fieldName.setNameItem("РќР°РёРјРµРЅРѕРІР°РЅРёРµ");
+        fieldName.setNamePrice("Р¦РµРЅР°");
+        fieldName.setNameCurrency("Р’Р°Р»СЋС‚Р°");
         fieldName.setNameToInvoice(bundle.getString("price.to_invoice"));
 
         items.setPriceFieldName(fieldName);

@@ -41,7 +41,7 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Supports;
 
 /**
- * $Id$
+ * $Id: PortletService.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 public final class PortletService {
 

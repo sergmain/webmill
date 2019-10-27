@@ -39,7 +39,7 @@ import javax.servlet.http.HttpSessionContext;
  * Date: Feb 19, 2003
  * Time: 2:36:30 PM
  *
- * $Id$
+ * $Id: HttpSessionApplWrapper.java 1108 2006-11-29 19:12:24Z serg_main $
 */
 @SuppressWarnings({"deprecation"})
 public class HttpSessionApplWrapper implements HttpSession {

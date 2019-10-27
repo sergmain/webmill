@@ -29,7 +29,7 @@ package org.riverock.webmill.portal;
  * Date: 14.05.2004
  * Time: 17:35:15
  * @author Serge Maslyukov
- * $Id$
+ * $Id: PortalConstants.java 1052 2006-11-14 16:46:45Z serg_main $
  */
 public class PortalConstants {
     public static final String WEBMILL_GUEST_ROLE = "webmill.guest";

@@ -34,7 +34,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 
 /**
  *
- * $Id$
+ * $Id: DateTools.java 1040 2006-11-14 13:57:38Z serg_main $
  *
  */
 public final class DateTools {

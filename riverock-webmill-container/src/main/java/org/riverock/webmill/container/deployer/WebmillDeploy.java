@@ -42,7 +42,7 @@ import org.riverock.webmill.container.definition.WebAppDefinition;
  *
  * @author <a href="mailto:taylor@apache.org">Dain Sundstrom </a>
  * @author <a href="mailto:dsundstrom@gluecode.com">David Sean Taylor </a>
- * @version $Id$
+ * @version $Id: WebmillDeploy.java 1458 2007-10-02 17:47:57Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public class WebmillDeploy {

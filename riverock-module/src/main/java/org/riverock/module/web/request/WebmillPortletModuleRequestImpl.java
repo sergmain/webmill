@@ -34,7 +34,7 @@ import org.riverock.common.utils.PortletUtils;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 20:44:52
- *         $Id$
+ *         $Id: WebmillPortletModuleRequestImpl.java 1254 2007-07-18 13:45:32Z serg_main $
  */
 public class WebmillPortletModuleRequestImpl extends PortletModuleRequestImpl {
 

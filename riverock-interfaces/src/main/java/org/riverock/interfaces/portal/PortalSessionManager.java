@@ -27,7 +27,7 @@ package org.riverock.interfaces.portal;
  * @author SergeMaslyukov
  *         Date: 31.01.2006
  *         Time: 14:27:55
- *         $Id$
+ *         $Id: PortalSessionManager.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface PortalSessionManager {
     public boolean createSession( String userLogin, String userPassword );

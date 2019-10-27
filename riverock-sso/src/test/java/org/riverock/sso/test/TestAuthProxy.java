@@ -34,7 +34,7 @@ import java.net.URL;
  * Date: Mar 20, 2003
  * Time: 9:28:58 PM
  * <p/>
- * $Id$
+ * $Id: TestAuthProxy.java 1144 2006-12-16 20:30:13Z serg_main $
  */
 public class TestAuthProxy /* extends TestCase */{
 

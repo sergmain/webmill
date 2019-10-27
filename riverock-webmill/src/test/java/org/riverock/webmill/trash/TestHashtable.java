@@ -28,7 +28,7 @@
  * Date: Mar 8, 2003
  * Time: 1:41:26 PM
  *
- * $Id$
+ * $Id: TestHashtable.java 1243 2007-07-12 16:58:42Z serg_main $
  */
 package org.riverock.webmill.trash;
 

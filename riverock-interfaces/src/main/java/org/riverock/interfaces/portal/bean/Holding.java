@@ -30,7 +30,7 @@ import java.io.Serializable;
  * @author SergeMaslyukov
  *         Date: 02.02.2006
  *         Time: 15:02:39
- *         $Id$
+ *         $Id: Holding.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface Holding extends Serializable {
     public String getName();

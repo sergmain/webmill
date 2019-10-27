@@ -35,7 +35,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:59:09
- *         $Id$
+ *         $Id: PortalHoldingSpiImpl.java 1396 2007-09-02 20:31:22Z serg_main $
  */
 public class PortalHoldingSpiImpl implements PortalHoldingSpi {
     private AuthSession authSession = null;

@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 15:26:22
- *         $Id$
+ *         $Id: PortletModuleResponseImpl.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class PortletModuleResponseImpl implements ModuleResponse {
     private PortletResponse portletResponse = null;

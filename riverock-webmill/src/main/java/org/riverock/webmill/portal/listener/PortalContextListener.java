@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
  * @author smaslyukov
  *         Date: 08.07.2005
  *         Time: 18:56:09
- *         $Id$
+ *         $Id: PortalContextListener.java 1052 2006-11-14 16:46:45Z serg_main $
  */
 public class PortalContextListener implements ServletContextListener {
     private final static Logger log = Logger.getLogger(PortalContextListener.class);

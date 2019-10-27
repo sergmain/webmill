@@ -38,7 +38,7 @@ import org.riverock.commerce.bean.ShopItem;
  * Date: Dec 29, 2002
  * Time: 9:12:53 PM
  * <p/>
- * $Id$
+ * $Id: ImportPriceProcess.java 1136 2006-12-12 14:18:19Z serg_main $
  */
 public class ImportPriceProcess {
 

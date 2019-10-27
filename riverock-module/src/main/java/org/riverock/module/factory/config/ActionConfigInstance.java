@@ -46,7 +46,7 @@ import org.riverock.module.factory.bean.ActionConfigurationBean;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 21:20:58
- *         $Id$
+ *         $Id: ActionConfigInstance.java 1441 2007-09-27 22:11:14Z serg_main $
  */
 public class ActionConfigInstance {
     static private final Logger log = Logger.getLogger(ActionConfigInstance.class);

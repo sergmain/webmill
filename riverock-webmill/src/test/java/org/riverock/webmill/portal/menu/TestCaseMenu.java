@@ -31,7 +31,7 @@ import junit.framework.TestCase;
  * Date: May 9, 2003
  * Time: 10:49:57 AM
  *
- * $Id$
+ * $Id: TestCaseMenu.java 1246 2007-07-12 17:22:46Z serg_main $
  */
 public class TestCaseMenu /*extends TestCase*/ {
 

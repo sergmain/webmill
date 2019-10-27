@@ -29,7 +29,7 @@ import java.io.Serializable;
 /**
  * Class PortletInfoType.
  *
- * @version $Revision$ $Date$
+ * @version $Revision: 1055 $ $Date: 2006-11-14 17:56:15 +0000 (Tue, 14 Nov 2006) $
  */
 public class PortletInfo implements Serializable {
     private static final long serialVersionUID = 30434672384237157L;

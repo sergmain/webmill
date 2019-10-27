@@ -42,7 +42,7 @@ import org.riverock.webmill.container.portlet.bean.InitParam;
  * User: SergeMaslyukov
  * Date: 08.12.2004
  * Time: 0:22:19
- * $Id$
+ * $Id: PortletConfigImpl.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public final class PortletConfigImpl implements PortletConfig {
     

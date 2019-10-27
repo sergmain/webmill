@@ -27,7 +27,7 @@ package org.riverock.interfaces.portlet.member;
  * @author SMaslyukov
  *         Date: 19.04.2005
  *         Time: 14:02:11
- *         $Id$
+ *         $Id: ClassQueryItem.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface ClassQueryItem {
     public boolean isSelected();

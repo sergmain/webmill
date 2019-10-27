@@ -34,7 +34,7 @@ import org.riverock.interfaces.common.TreeItem;
  * Date: 07.10.2004
  * Time: 14:45:47
  * @author Serge Maslyukov
- * $Id$
+ * $Id: MenuItem.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface MenuItem extends TreeItem, Serializable {
     public Long getId();

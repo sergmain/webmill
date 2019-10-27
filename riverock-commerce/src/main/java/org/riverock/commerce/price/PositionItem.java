@@ -25,9 +25,9 @@ package org.riverock.commerce.price;
 
 /**
  *
- * $Author$
+ * $Author: serg_main $
  *
- * $Id$
+ * $Id: PositionItem.java 1048 2006-11-14 15:28:48Z serg_main $
  *
  */
 public class PositionItem

@@ -33,7 +33,7 @@ import org.riverock.webmill.portal.bean.RequestStatisticBean;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 0:59:51
- *         $Id$
+ *         $Id: InternalDao.java 1352 2007-08-28 10:09:56Z serg_main $
  */
 public interface InternalDao {
     public Collection<String> getSupportedLocales();

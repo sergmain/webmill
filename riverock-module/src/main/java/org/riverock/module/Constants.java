@@ -27,7 +27,7 @@ package org.riverock.module;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 13:40:23
- *         $Id$
+ *         $Id: Constants.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class Constants {
     public static final String PRINCIPAL_BEAN = "user";

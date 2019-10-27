@@ -50,7 +50,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 2, 2002
  * Time: 4:10:28 PM
  * 
- * $Id$
+ * $Id: LoginPlainPortlet.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class LoginPlainPortlet implements Portlet {
     private final static Logger log = Logger.getLogger( LoginPlainPortlet.class );

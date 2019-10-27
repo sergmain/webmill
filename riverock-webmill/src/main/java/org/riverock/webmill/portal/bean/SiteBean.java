@@ -44,7 +44,7 @@ import org.riverock.interfaces.portal.bean.Site;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 14:29:04
- *         $Id$
+ *         $Id: SiteBean.java 1315 2007-08-19 20:36:46Z serg_main $
  */
 @Entity
 @Table(name="WM_PORTAL_LIST_SITE")

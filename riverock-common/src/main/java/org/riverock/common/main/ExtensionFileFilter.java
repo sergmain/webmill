@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.FileFilter;
 
 /**
- * $Id$
+ * $Id: ExtensionFileFilter.java 1197 2007-05-16 16:39:27Z serg_main $
  */
 public class ExtensionFileFilter implements FileFilter {
 

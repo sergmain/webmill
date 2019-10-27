@@ -31,7 +31,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 16:56:56
- *         $Id$
+ *         $Id: WebmillModuleUserImpl.java 1056 2006-11-15 19:02:57Z serg_main $
  */
 public class WebmillModuleUserImpl implements ModuleUser {
 

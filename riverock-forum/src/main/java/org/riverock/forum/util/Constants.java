@@ -27,7 +27,7 @@ package org.riverock.forum.util;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 13:12:48
- *         $Id$
+ *         $Id: Constants.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class Constants {
 

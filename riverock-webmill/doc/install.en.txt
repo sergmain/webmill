@@ -1,10 +1,12 @@
 $Id: install.en.txt 155 2005-05-25 08:32:29Z serg_main $
 
-Installation Webmill portal in Tomcat 5.5 
+Installation Webmill portal in Tomcat 9.x
 
 1. Install Tomcat 5.5 
 
 2. Change file %TOMCAT_HOME%\conf\server.xml, configure DataSource and "family" of DB. 
+
+add the follow elements in element <GlobalNamingResources>:
 
 Config of DataSource 
  <Resource name="jdbc/webmill" auth="Container" scope="Shareable"
@@ -22,26 +24,50 @@ Config of DataSource
     <Environment name="dbFamily" type="java.lang.String" value="mysql"/>
     <Environment name="hibernate_family" value="org.hibernate.dialect.MySQLDialect" type="java.lang.String"/>
 
+It should be like this:
+<GlobalNamingResources>
+
+ <Resource name="jdbc/webmill" auth="Container" scope="Shareable"
+    type="javax.sql.DataSource"
+    driverClassName="com.mysql.jdbc.Driver"
+
+    url="jdbc:mysql://localhost:3306/webmill"
+    username="webmill"
+    password="qwe321"
+    maxTotal="100" maxIdle="30" maxWaitMillis="-1"
+    factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"
+    removeAbandoned="true"
+    removeAbandonedTimeout="60"
+    logAbandoned="true"
+/>
+
+    <Environment name="dbFamily" type="java.lang.String" value="mysql"/>
+    <Environment name="hibernate_family" value="org.hibernate.dialect.MySQLDialect" type="java.lang.String"/>
+</GlobalNamingResources>
+
+
 
 3. Add in file %TOMCAT_HOME%/conf/tomcat-users.xml a role 'webmill-init' and bind this role to user. For example: 
 
  
   <role rolename="webmill-init"/>
-  <user username="admin" password="" roles="admin,manager,webmill-init"/>
+  <user username="admin" password="" roles="admin,manager,manager-gui,webmill-init"/>
 
 4. Download file with Webmill portal from sourceforge.net site
 
 File releases on sourceforge.net 
 
-5. Install portlet container. Copy files of portlet container to %TOMCAT_HOME%\shared\lib. Portlet containers files are stored in 'lib' folder in archive webmill-portal-x.x.x.zip 
+5. Install portlet container. Copy files of portlet container to %CATALINA_HOME%\shared\lib. Portlet containers files are stored in 'lib' folder in archive webmill-portal-x.x.x.zip
+5.1 change file \conf\catalina.properties by adding:
+shared.loader="${catalina.base}/shared/*.jar"
 
-6. Delete directory %TOMCAT_HOME%\webapps\ROOT 
+6. Delete directory %CATALINA_HOME%\webapps\ROOT
 
 7. Unpack portal files in %TOMCAT_HOME%\webapps. Portal files there are files *.war and packed in webmill-portal-x.x.x.zip 
 
 8. startup Tomcat 
 
-9. Launch admin console of Webmill portlal http://localhost/webmill-admin 
+9. Launch admin console of Webmill portlal http://localhost:8080/webmill-admin
 
 10. Create DB structure by invoke 'Structure' 
 
@@ -51,4 +77,4 @@ File releases on sourceforge.net
 
 13. Create admin user at 'Portal users' 
 
-14. Launch created site at address http://localhost 
+14. Launch created site at address http://localhost:8080

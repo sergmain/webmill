@@ -31,7 +31,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 1:30:20
- *         $Id$
+ *         $Id: PortalSpiProviderImpl.java 1416 2007-09-08 18:12:27Z serg_main $
  */
 public class PortalSpiProviderImpl implements PortalSpiProvider {
     private PortalAuthSpi portalAuthDao = null;

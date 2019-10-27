@@ -33,7 +33,7 @@ import java.util.Properties;
  * @author SergeMaslyukov
  *         Date: 01.12.2005
  *         Time: 16:25:45
- *         $Id$
+ *         $Id: XmlResourceBundle.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public abstract class XmlResourceBundle extends ListResourceBundle {
 

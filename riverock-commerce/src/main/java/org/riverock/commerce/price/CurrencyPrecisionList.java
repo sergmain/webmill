@@ -36,7 +36,7 @@ import java.util.ArrayList;
  * Date: Dec 12, 2002
  * Time: 5:27:47 PM
  *
- * $Id$
+ * $Id: CurrencyPrecisionList.java 1137 2006-12-12 14:50:55Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public class CurrencyPrecisionList implements Serializable {

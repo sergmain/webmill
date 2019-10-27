@@ -32,7 +32,7 @@ import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
  * Both attributes, 'nameTemplate' and 'name' are deprecated. Must
  * not used
  *
- * @version $Revision$ $Date$
+ * @version $Revision: 1375 $ $Date: 2007-08-28 19:35:44 +0000 (Tue, 28 Aug 2007) $
  */
 public class PortalTemplateImpl implements PortalTemplate, Serializable {
 

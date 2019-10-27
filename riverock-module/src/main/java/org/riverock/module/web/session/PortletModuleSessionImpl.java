@@ -29,7 +29,7 @@ import javax.portlet.PortletSession;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 20:30:32
- *         $Id$
+ *         $Id: PortletModuleSessionImpl.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class PortletModuleSessionImpl implements ModuleSession {
     private PortletSession portletSession = null;

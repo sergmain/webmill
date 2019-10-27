@@ -28,9 +28,9 @@ import junit.framework.TestCase;
 
 /**
  *
- * $Author$
+ * $Author: serg_main $
  *
- * $Id$
+ * $Id: TestMenuSimple.java 1426 2007-09-13 11:18:09Z serg_main $
  *
  */
 public class  TestMenuSimple extends TestCase {

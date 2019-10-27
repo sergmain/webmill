@@ -28,7 +28,7 @@ package org.riverock.webmill.portal.dao;
  * @author SergeMaslyukov
  *         Date: 05.12.2005
  *         Time: 20:21:34
- *         $Id$
+ *         $Id: InternalDaoFactory.java 1419 2007-09-09 21:01:40Z serg_main $
  */
 public class InternalDaoFactory {
     private static InternalCssDao internalCssDao = new HibernateCssDaoImpl();

@@ -39,7 +39,7 @@ import org.riverock.interfaces.portlet.member.PortletGetList;
  * Date: Jan 12, 2003
  * Time: 8:11:48 PM
  * <p/>
- * $Id$
+ * $Id: LanguagePerSite.java 1400 2007-09-04 20:25:29Z serg_main $
  */
 public class LanguagePerSite implements PortletGetList {
     private final static Logger log = Logger.getLogger( LanguagePerSite.class );

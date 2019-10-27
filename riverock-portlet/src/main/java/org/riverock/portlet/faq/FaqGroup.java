@@ -40,7 +40,7 @@ import org.riverock.interfaces.portal.spi.PortalSpiProvider;
  * Date: Aug 24, 2002
  * Time: 2:41:03 AM
  * <p/>
- * $Id$
+ * $Id: FaqGroup.java 1400 2007-09-04 20:25:29Z serg_main $
  */
 public class FaqGroup implements PortletGetList {
     private final static Logger log = Logger.getLogger(FaqGroup.class);

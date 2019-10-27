@@ -28,7 +28,7 @@
  * Date: 10.01.2004
  * Time: 15:03:11
  * @author Serge Maslyukov
- * $Id$
+ * $Id: EncodeString.java 1243 2007-07-12 16:58:42Z serg_main $
  */
 
 package org.riverock.webmill.trash;

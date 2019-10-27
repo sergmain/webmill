@@ -34,7 +34,7 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  * User: SergeMaslyukov
  * Date: 10.02.2005
  * Time: 0:22:19
- * $Id$
+ * $Id: PortletResourceBundle.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public final class PortletResourceBundle {
 

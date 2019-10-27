@@ -39,7 +39,7 @@ import org.riverock.generic.db.DatabaseManager;
  * @author SMaslyukov
  *         Date: 14.04.2005
  *         Time: 19:42:03
- *         $Id$
+ *         $Id: CommonUtils.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public final class CommonUtils {
     private final static Logger log = Logger.getLogger(CommonUtils.class);

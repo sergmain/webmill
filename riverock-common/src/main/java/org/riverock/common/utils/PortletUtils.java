@@ -37,7 +37,7 @@ import javax.portlet.PortletSession;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
- * $Id: PortletService.java 1228 2007-06-28 10:08:00Z serg_main $
+ * $Id: PortletUtils.java 1301 2007-08-09 07:29:34Z serg_main $
  */
 public final class PortletUtils {
 

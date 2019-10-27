@@ -105,7 +105,7 @@ public class CustomClassLoader extends URLClassLoader {
         URL[] urls = new URL[files.length];
         for (int i = 0; i < files.length; i++) {
             try {
-                urls[i] = files[i].toURL();
+                urls[i] = files[i].toURI().toURL();
                 System.out.println(urls[i]);
             }
             catch (MalformedURLException e) {

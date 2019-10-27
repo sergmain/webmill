@@ -46,7 +46,7 @@ import org.riverock.webmill.portal.dao.InternalHoldingDao;
  * Date: Sep 6, 2003
  * Time: 10:33:28 PM
  *
- * $Id$
+ * $Id: InternalAuthProvider.java 1425 2007-09-12 19:44:02Z serg_main $
  */
 public final class InternalAuthProvider implements AuthProvider, Serializable {
     private static final long serialVersionUID = 4055005503L;

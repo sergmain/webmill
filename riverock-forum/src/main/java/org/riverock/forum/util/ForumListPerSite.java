@@ -42,7 +42,7 @@ import org.riverock.interfaces.portal.dao.PortalDaoProvider;
  * @author SMaslyukov
  *         Date: 16.04.2005
  *         Time: 17:47:12
- *         $Id$
+ *         $Id: ForumListPerSite.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class ForumListPerSite implements PortletGetList {
     private static Logger log = Logger.getLogger( ForumListPerSite.class );

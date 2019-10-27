@@ -47,7 +47,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 2, 2002
  * Time: 9:50:27 PM
  *
- * $Id$
+ * $Id: LogoutPortlet.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class LogoutPortlet implements Portlet {
     private final static Logger log = Logger.getLogger( LogoutPortlet.class );

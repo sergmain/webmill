@@ -33,7 +33,7 @@ import org.riverock.webmill.container.portlet.PortletContainer;
  * @author Serge Maslyukov
  *         Created 06.08.2005
  *         The portlet element contains the declarative data of a portlet.
- * @version $Revision$ $Date$
+ * @version $Revision: 1084 $ $Date: 2006-11-26 00:28:25 +0000 (Sun, 26 Nov 2006) $
  */
 public class PortletDefinition implements Serializable {
     private static final long serialVersionUID = 30434672384237154L;

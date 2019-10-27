@@ -27,7 +27,7 @@ package org.riverock.portlet.tools;
  * User: smaslyukov
  * Date: 09.08.2004
  * Time: 19:58:16
- * $Id$
+ * $Id: SiteUtils.java 1301 2007-08-09 07:29:34Z serg_main $
  */
 public final class SiteUtils {
 

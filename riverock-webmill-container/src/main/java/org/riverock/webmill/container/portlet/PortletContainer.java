@@ -326,7 +326,7 @@ public final class PortletContainer implements Serializable {
                     // Todo
 /*
 If a permanent unavailability is indicated by the UnavailableException, the portlet
-container must remove the portlet from service immediately, call the portlet’s destroyContextForName
+container must remove the portlet from service immediately, call the portletâ€™s destroyContextForName
 method, and release the portlet object.xviii A portlet that throws a permanent
 UnavailableException must be considered unavailable until the portlet application
 containing the portlet is restarted.

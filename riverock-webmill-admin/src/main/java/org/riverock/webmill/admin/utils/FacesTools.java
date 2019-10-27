@@ -60,7 +60,7 @@ public class FacesTools {
                 if (c1 instanceof UIParameter) {
                     UIParameter parameter = (UIParameter) c1;
                     if (parameter.getName().equals(name)) {
-                        return new Long(parameter.getValue().toString());
+                        return Long.valueOf(parameter.getValue().toString());
                     }
                 }
             }

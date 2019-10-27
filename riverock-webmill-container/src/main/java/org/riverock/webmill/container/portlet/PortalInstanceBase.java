@@ -27,7 +27,7 @@ package org.riverock.webmill.container.portlet;
  * @author smaslyukov
  *         Date: 29.07.2005
  *         Time: 17:41:20
- *         $Id$
+ *         $Id: PortalInstanceBase.java 1280 2007-07-26 14:59:49Z serg_main $
  */
 public interface PortalInstanceBase {
     

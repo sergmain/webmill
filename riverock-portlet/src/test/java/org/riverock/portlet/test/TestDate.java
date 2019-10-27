@@ -27,7 +27,7 @@
  * Date: Dec 12, 2002
  * Time: 11:07:46 AM
  *
- * $Id$
+ * $Id: TestDate.java 1154 2006-12-21 16:17:58Z serg_main $
  */
 package org.riverock.portlet.test;
 

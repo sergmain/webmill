@@ -35,7 +35,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Tool class for wotk with Servlet's objects
  *
- * $Id$
+ * $Id: ServletTools.java 1497 2010-03-28 21:04:47Z serg_main $
  */
 public final class ServletTools {
 

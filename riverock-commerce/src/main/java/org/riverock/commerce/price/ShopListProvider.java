@@ -33,6 +33,7 @@ import org.riverock.commerce.bean.Shop;
 import org.riverock.commerce.dao.CommerceDaoFactory;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.spi.PortalSpiProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 
@@ -40,7 +41,7 @@ import org.riverock.interfaces.portlet.member.PortletGetList;
  * User: SergeMaslyukov
  * Date: 14.12.2004
  * Time: 13:27:22
- * $Id$
+ * $Id: ShopListProvider.java 1137 2006-12-12 14:50:55Z serg_main $
  * <p/>
  * This class used for select shop and bind it to menu item
  */
@@ -51,7 +52,8 @@ public class ShopListProvider implements PortletGetList {
 
     private PortalDaoProvider provider=null;
 
-    public void setPortalDaoProvider(PortalDaoProvider provider) {
+    @Override
+    public void setPortalDaoProvider(PortalSpiProvider provider) {
         this.provider=provider;
     }
 
@@ -76,5 +78,4 @@ public class ShopListProvider implements PortletGetList {
         }
         return v;
     }
-
 }

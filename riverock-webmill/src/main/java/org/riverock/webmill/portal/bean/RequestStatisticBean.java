@@ -30,7 +30,7 @@ import java.util.Date;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 1:59:12
- *         $Id$
+ *         $Id: RequestStatisticBean.java 1350 2007-08-28 10:08:41Z serg_main $
  */
 public class RequestStatisticBean {
     private String userAgent = null;

@@ -49,7 +49,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 12:32:51 PM
  *
- * $Id$
+ * $Id: ImageSelectFile.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 public class ImageSelectFile extends HttpServlet
 {
@@ -105,7 +105,7 @@ public class ImageSelectFile extends HttpServlet
                     out.write("" + ( ( Long ) sess.getAttribute( "MILL.IMAGE.ID_MAIN" ) ));
                     out.write("<br>\r\n            ");
                     out.write(((String) sess.getAttribute("MILL.IMAGE.DESC_IMAGE")));
-                    out.write("<br>Выберите файл для загрузки");
+                    out.write("<br>Р’С‹Р±РµСЂРёС‚Рµ С„Р°Р№Р» РґР»СЏ Р·Р°РіСЂСѓР·РєРё");
                     out.write("<form method=\"post\" action=\"");
                     out.write(
                         PortletUtils.url("mill.image.upload_image", renderRequest, renderResponse )

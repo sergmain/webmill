@@ -33,7 +33,7 @@ import org.riverock.interfaces.portal.spi.PortalHoldingSpi;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:48:52
- *         $Id$
+ *         $Id: PortalHoldingDao.java 1394 2007-09-02 19:13:28Z serg_main $
  */
 public interface PortalHoldingDao {
     public Holding loadHolding( Long id );

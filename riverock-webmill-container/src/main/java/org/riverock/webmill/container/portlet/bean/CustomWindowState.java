@@ -32,7 +32,7 @@ import java.io.Serializable;
  * portlet application supports.
  * Used in: portlet-app
  *
- * @version $Revision$ $Date$
+ * @version $Revision: 1055 $ $Date: 2006-11-14 17:56:15 +0000 (Tue, 14 Nov 2006) $
  */
 public class CustomWindowState implements Serializable {
     private static final long serialVersionUID = 30434672384237135L;

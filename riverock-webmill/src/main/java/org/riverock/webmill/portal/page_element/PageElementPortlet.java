@@ -70,7 +70,7 @@ import org.riverock.webmill.utils.PortletUtils;
  * User: SergeMaslyukov
  * Date: 09.01.2005
  * Time: 19:29:20
- * $Id$
+ * $Id: PageElementPortlet.java 1476 2007-10-14 13:18:52Z serg_main $
  */
 public final class PageElementPortlet implements PageElement {
     private final static Logger log = Logger.getLogger( PageElementPortlet.class );

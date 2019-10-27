@@ -30,7 +30,7 @@ import java.util.Locale;
  * @author SergeMaslyukov
  *         Date: 15.01.2006
  *         Time: 16:16:12
- *         $Id$
+ *         $Id: ContentTypeManager.java 1492 2009-10-30 14:02:35Z serg_main $
  */
 public class ContentTypeManager {
 

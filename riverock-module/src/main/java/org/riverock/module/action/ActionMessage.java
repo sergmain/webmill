@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 14:26:41
- *         $Id$
+ *         $Id: ActionMessage.java 1450 2007-10-01 14:50:54Z serg_main $
  */
 public class ActionMessage implements Serializable {
     private String value = null;

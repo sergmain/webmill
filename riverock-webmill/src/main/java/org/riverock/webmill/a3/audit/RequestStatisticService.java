@@ -38,7 +38,7 @@ import org.riverock.common.tools.StringTools;
  * @author SergeMaslyukov
  *         Date: 09.02.2006
  *         Time: 23:32:57
- *         $Id$
+ *         $Id: RequestStatisticService.java 1349 2007-08-28 10:06:24Z serg_main $
  */
 public class RequestStatisticService {
     private final static Logger log = Logger.getLogger(RequestStatisticService.class);

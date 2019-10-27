@@ -35,7 +35,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 
 /**
- * $Id$
+ * $Id: AuthTools.java 1327 2007-08-21 17:32:27Z serg_main $
  */
 public final class AuthTools {
     private final static Logger log = Logger.getLogger( AuthTools.class );

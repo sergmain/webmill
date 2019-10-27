@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author SergeMaslyukov
  *         Date: 02.02.2006
  *         Time: 15:24:03
- *         $Id$
+ *         $Id: RoleEditableBean.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface RoleEditableBean extends RoleBean, Serializable {
     public boolean isDelete();

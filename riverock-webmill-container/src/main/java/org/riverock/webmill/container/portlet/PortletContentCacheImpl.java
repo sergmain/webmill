@@ -36,7 +36,7 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  * User: SergeMaslyukov
  * Date: 24.12.2004
  * Time: 1:28:00
- * $Id$
+ * $Id: PortletContentCacheImpl.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 public final class PortletContentCacheImpl implements PortletContentCache {
 

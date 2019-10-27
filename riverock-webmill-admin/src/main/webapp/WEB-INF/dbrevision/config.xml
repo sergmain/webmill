@@ -17,4 +17,11 @@
             <Version>1.0</Version>
         </Versions>
     </Module>
+    <Module>
+        <Description>Webmill commerce portlet</Description>
+        <Name>webmill-commerce-portlet</Name>
+        <Versions>
+            <Version>1.0</Version>
+        </Versions>
+    </Module>
 </DbRevision>

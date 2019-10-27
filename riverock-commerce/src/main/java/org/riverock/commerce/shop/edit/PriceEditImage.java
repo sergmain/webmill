@@ -57,7 +57,7 @@ import org.riverock.interfaces.ContainerConstants;
  * Date: Dec 3, 2002
  * Time: 2:41:25 PM
  * <p/>
- * $Id$
+ * $Id: PriceEditImage.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class PriceEditImage extends HttpServlet {
     private final static Logger log = Logger.getLogger(PriceEditImage.class);

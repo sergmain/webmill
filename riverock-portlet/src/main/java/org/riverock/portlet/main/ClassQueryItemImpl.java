@@ -30,7 +30,7 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
  * Date: Nov 24, 2002
  * Time: 3:16:42 PM
  *
- * $Id$
+ * $Id: ClassQueryItemImpl.java 1068 2006-11-23 18:26:08Z serg_main $
  */
 public class ClassQueryItemImpl implements ClassQueryItem {
     private boolean isSelected = false;

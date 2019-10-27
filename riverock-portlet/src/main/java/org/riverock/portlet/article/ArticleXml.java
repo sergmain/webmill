@@ -51,7 +51,7 @@ import java.util.TimeZone;
  * Date: Jan 10, 2003
  * Time: 9:41:20 AM
  *
- * $Id$
+ * $Id: ArticleXml.java 1435 2007-09-23 17:08:57Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class ArticleXml implements PortletResultObject, PortletGetList, PortletResultContent {

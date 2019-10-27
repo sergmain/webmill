@@ -31,7 +31,7 @@ import java.io.IOException;
 import javax.servlet.ServletOutputStream;
 
 /**
- *  $Id$
+ *  $Id: ServletOutputStreamWithWriter.java 1108 2006-11-29 19:12:24Z serg_main $
  *
  */
 public class ServletOutputStreamWithWriter extends ServletOutputStream {

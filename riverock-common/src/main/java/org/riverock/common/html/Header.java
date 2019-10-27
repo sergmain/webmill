@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * utility class for work with http header
  *
- * $Id$
+ * $Id: Header.java 1220 2007-06-27 07:09:51Z serg_main $
  */
 public final class Header {
 

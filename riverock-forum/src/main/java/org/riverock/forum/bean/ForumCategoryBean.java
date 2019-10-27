@@ -30,7 +30,7 @@ import java.util.LinkedList;
  * @author SMaslyukov
  *         Date: 19.04.2005
  *         Time: 15:35:35
- *         $Id$
+ *         $Id: ForumCategoryBean.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class ForumCategoryBean {
     private boolean isUseLocale = false;

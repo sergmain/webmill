@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * User: SergeMaslyukov
  * Date: 10.02.2005
  * Time: 0:24:14
- * $Id$
+ * $Id: PortletResourceBundleEmpty.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public class PortletResourceBundleEmpty extends ResourceBundle {
 

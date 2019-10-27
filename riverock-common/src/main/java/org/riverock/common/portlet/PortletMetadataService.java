@@ -35,7 +35,7 @@ import org.riverock.interfaces.ContainerConstants;
  * @author smaslyukov
  *         Date: 02.08.2005
  *         Time: 20:50:36
- *         $Id$
+ *         $Id: PortletMetadataService.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public class PortletMetadataService {
     public static boolean getMetadataBoolean( final PortletRequest portletRequest, final String key, final boolean defValue ) {

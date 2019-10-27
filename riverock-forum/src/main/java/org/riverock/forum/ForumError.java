@@ -36,7 +36,7 @@ import org.riverock.forum.util.Constants;
  * @author SMaslyukov
  *         Date: 19.04.2005
  *         Time: 17:59:04
- *         $Id$
+ *         $Id: ForumError.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public final class ForumError {
     private final static Logger log = Logger.getLogger(ForumError.class);

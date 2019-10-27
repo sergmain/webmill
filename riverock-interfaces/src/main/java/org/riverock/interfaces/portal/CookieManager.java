@@ -31,7 +31,7 @@ import javax.servlet.http.Cookie;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 0:44:37
- *         $Id$
+ *         $Id: CookieManager.java 1228 2007-06-28 10:08:00Z serg_main $
  */
 public interface CookieManager {
     public void addCookie( Cookie cookie );

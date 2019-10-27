@@ -42,7 +42,7 @@ import org.riverock.module.web.user.ModuleUser;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 21:31:15
- *         $Id$
+ *         $Id: ActionFactoryImpl.java 1445 2007-09-28 15:57:11Z serg_main $
  */
 public abstract class ActionFactoryImpl implements ActionFactory {
     private static final Logger log = Logger.getLogger(WebmillPortletActionFactoryImpl.class);

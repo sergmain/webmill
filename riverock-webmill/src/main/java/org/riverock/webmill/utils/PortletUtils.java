@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 import org.riverock.webmill.exception.PortalException;
 
 /**
- * $Id$
+ * $Id: PortletUtils.java 1052 2006-11-14 16:46:45Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class PortletUtils {

@@ -40,7 +40,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 2, 2002
  * Time: 9:56:36 PM
  *
- * $Id$
+ * $Id: SwitchLanguagePortlet.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class SwitchLanguagePortlet implements Portlet {
     private final static Logger log = Logger.getLogger( SwitchLanguagePortlet.class );

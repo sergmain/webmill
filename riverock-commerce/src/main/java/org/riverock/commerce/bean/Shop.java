@@ -109,19 +109,19 @@ public class Shop implements Serializable {
     private boolean isDefaultCurrency = true;
 
     /**
-     * Нужен ли интерфейс для проведения финансовых транзакций
+     * РќСѓР¶РµРЅ Р»Рё РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РїСЂРѕРІРµРґРµРЅРёСЏ С„РёРЅР°РЅСЃРѕРІС‹С… С‚СЂР°РЅР·Р°РєС†РёР№
      */
     @Column(name="IS_NEED_PROCESSING")
     private boolean isNeedProcessing = false;  
 
     /**
-     * Нужен ли интерфейс для выписки счетов
+     * РќСѓР¶РµРЅ Р»Рё РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РІС‹РїРёСЃРєРё СЃС‡РµС‚РѕРІ
      */
     @Column(name="IS_PROCESS_INVOICE")
     private boolean isProcessInvoice = false;
 
     /**
-     * Нужен ли интерфейс для пересчета из одной валюты в другую
+     * РќСѓР¶РµРЅ Р»Рё РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РїРµСЂРµСЃС‡РµС‚Р° РёР· РѕРґРЅРѕР№ РІР°Р»СЋС‚С‹ РІ РґСЂСѓРіСѓСЋ
      */
     @Column(name="IS_NEED_RECALC")
     private boolean isNeedRecalc = false;

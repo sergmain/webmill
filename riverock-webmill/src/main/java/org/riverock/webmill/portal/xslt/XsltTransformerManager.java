@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author SergeMaslyukov
  *         Date: 30.12.2005
  *         Time: 15:49:56
- *         $Id$
+ *         $Id: XsltTransformerManager.java 1416 2007-09-08 18:12:27Z serg_main $
  */
 public interface XsltTransformerManager extends Serializable {
     public XsltTransformer getXslt(String lang);

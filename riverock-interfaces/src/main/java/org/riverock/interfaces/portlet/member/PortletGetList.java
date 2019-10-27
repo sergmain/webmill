@@ -31,7 +31,7 @@ import org.riverock.interfaces.portal.spi.PortalSpiProvider;
  * @author SMaslyukov
  *         Date: 19.04.2005
  *         Time: 14:56:10
- *         $Id$
+ *         $Id: PortletGetList.java 1394 2007-09-02 19:13:28Z serg_main $
  */
 public interface PortletGetList {
     public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext);

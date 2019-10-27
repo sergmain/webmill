@@ -35,8 +35,8 @@ import java.util.HashMap;
 import org.riverock.common.tools.LocaleCharset;
 
 /**
- * $Revision$
- * $Date$
+ * $Revision: 1224 $
+ * $Date: 2007-06-27 13:48:09 +0000 (Wed, 27 Jun 2007) $
  * $RCSfile$
  */
 class StringLocaleManager {

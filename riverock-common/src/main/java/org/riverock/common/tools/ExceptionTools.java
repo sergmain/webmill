@@ -31,8 +31,8 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * 
- * $Revision$
- * $Date$
+ * $Revision: 1040 $
+ * $Date: 2006-11-14 13:57:38 +0000 (Tue, 14 Nov 2006) $
  * $RCSfile$
  *
  */

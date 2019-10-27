@@ -30,7 +30,7 @@ import java.io.InputStream;
  * @author Serge Maslyukov
  *         Date: 23.04.2005
  *         Time: 23:44:23
- *         $Id$
+ *         $Id: ClassLoaderTest.java 1243 2007-07-12 16:58:42Z serg_main $
  */
 public class ClassLoaderTest {
     public static void main(String[] s) throws Exception {

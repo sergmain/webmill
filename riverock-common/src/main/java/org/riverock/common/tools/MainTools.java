@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * $Id$
+ * $Id: MainTools.java 1497 2010-03-28 21:04:47Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class MainTools {

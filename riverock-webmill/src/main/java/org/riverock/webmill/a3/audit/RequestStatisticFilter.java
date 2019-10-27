@@ -47,7 +47,7 @@ import org.riverock.common.tools.StringTools;
  * Date: Mar 19, 2003
  * Time: 10:42:41 PM
  * 
- * $Id$
+ * $Id: RequestStatisticFilter.java 1052 2006-11-14 16:46:45Z serg_main $
  */
 public final class RequestStatisticFilter implements Filter {
     private final static Logger log = Logger.getLogger(RequestStatisticFilter.class);

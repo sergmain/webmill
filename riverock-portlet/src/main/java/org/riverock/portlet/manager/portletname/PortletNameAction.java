@@ -36,7 +36,7 @@ import org.riverock.common.utils.PortletUtils;
  * @author SergeMaslyukov
  *         Date: 26.02.2006
  *         Time: 15:55:44
- *         $Id$
+ *         $Id: PortletNameAction.java 1411 2007-09-06 20:27:38Z serg_main $
  */
 public class PortletNameAction implements Serializable {
     private final static Logger log = Logger.getLogger(PortletNameAction.class);

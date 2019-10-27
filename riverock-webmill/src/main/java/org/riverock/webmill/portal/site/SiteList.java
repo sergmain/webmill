@@ -39,7 +39,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 14:01:59
- *         $Id$
+ *         $Id: SiteList.java 1355 2007-08-28 10:11:45Z serg_main $
  */
 public class SiteList implements Observer {
     private final static Logger log = Logger.getLogger(SiteList.class);

@@ -36,7 +36,7 @@ import org.riverock.interfaces.portal.bean.User;
  * @author SergeMaslyukov
  *         Date: 05.11.2005
  *         Time: 1:50:28
- *         $Id$
+ *         $Id: AuthSession.java 1056 2006-11-15 19:02:57Z serg_main $
  */
 public interface AuthSession extends Principal, Serializable {
     public boolean isUserInRole( String roleName );

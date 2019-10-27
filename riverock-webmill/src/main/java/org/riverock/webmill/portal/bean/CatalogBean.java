@@ -46,7 +46,7 @@ import org.riverock.interfaces.common.TreeItem;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 15:52:55
- *         $Id$
+ *         $Id: CatalogBean.java 1337 2007-08-24 16:00:37Z serg_main $
  */
 @Entity
 @Table(name="WM_PORTAL_CATALOG")

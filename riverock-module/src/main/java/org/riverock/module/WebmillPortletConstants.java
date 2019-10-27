@@ -27,7 +27,7 @@ package org.riverock.module;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 14:16:30
- *         $Id$
+ *         $Id: WebmillPortletConstants.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class WebmillPortletConstants {
     public static final String ACTION_NAME_PARAM = "action";

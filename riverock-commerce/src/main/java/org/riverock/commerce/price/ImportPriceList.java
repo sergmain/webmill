@@ -38,7 +38,7 @@ import org.riverock.commerce.tools.HibernateUtils;
 import org.riverock.common.collections.TreeUtils;
 
 /**
- * $Id$
+ * $Id: ImportPriceList.java 1140 2006-12-14 11:46:52Z serg_main $
  */
 public class ImportPriceList {
     private static Logger log = Logger.getLogger(ImportPriceList.class);

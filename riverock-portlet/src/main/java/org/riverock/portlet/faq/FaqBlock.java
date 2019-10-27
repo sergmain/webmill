@@ -50,7 +50,7 @@ import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.interfaces.portlet.PortletResultObject;
 
 /**
- * $Id$
+ * $Id: FaqBlock.java 1435 2007-09-23 17:08:57Z serg_main $
  */
 public final class FaqBlock implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Logger log = Logger.getLogger( FaqBlock.class );

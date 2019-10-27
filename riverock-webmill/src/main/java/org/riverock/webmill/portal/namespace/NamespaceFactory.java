@@ -35,7 +35,7 @@ import org.riverock.webmill.portal.template.parser.ParsedTemplateElement;
  * @author SergeMaslyukov
  *         Date: 08.03.2006
  *         Time: 2:29:58
- *         $Id$
+ *         $Id: NamespaceFactory.java 1375 2007-08-28 19:35:44Z serg_main $
  */
 public class NamespaceFactory {
     private static ConcurrentMap<String, Namespace> namespaces = new ConcurrentHashMap<String, Namespace>();

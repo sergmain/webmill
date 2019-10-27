@@ -31,7 +31,7 @@ import org.riverock.interfaces.portal.bean.User;
  * @author SergeMaslyukov
  *         Date: 26.02.2006
  *         Time: 15:55:44
- *         $Id$
+ *         $Id: PortalUserSessionBean.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class PortalUserSessionBean implements Serializable {
     private static final long serialVersionUID = 2057005504L;

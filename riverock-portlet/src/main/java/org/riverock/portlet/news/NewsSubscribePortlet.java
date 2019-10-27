@@ -39,7 +39,7 @@ import org.riverock.common.portlet.GenericWebmillPortlet;
  * User: SMaslyukov
  * Date: 19.03.2005
  * Time: 15:03:05
- * $Id$
+ * $Id: NewsSubscribePortlet.java 1230 2007-07-02 15:27:45Z serg_main $
  */
 public final class NewsSubscribePortlet extends GenericWebmillPortlet {
 

@@ -35,7 +35,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * $Id$
+ * $Id: RsetTools.java 1492 2009-10-30 14:02:35Z serg_main $
  */
 public final class RsetTools {
 

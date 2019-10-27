@@ -37,7 +37,7 @@ import org.riverock.common.portlet.GenericWebmillPortlet;
  * User: SergeMaslyukov
  * Date: 07.12.2004
  * Time: 15:54:17
- * $Id$
+ * $Id: MenuPortlet.java 1230 2007-07-02 15:27:45Z serg_main $
  */
 public final class MenuPortlet extends GenericWebmillPortlet {
 

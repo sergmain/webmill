@@ -29,7 +29,7 @@ import org.riverock.module.web.dispatcher.ModuleRequestDispatcher;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 14:39:54
- *         $Id$
+ *         $Id: ModuleContext.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public interface ModuleContext {
     public ModuleRequestDispatcher getRequestDispatcher(String url);

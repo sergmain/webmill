@@ -28,7 +28,7 @@ package org.riverock.webmill.portal.namespace;
  * @author SergeMaslyukov
  *         Date: 08.03.2006
  *         Time: 2:29:26
- *         $Id$
+ *         $Id: NamespaceImpl.java 1069 2006-11-23 18:37:19Z serg_main $
  */
 public class NamespaceImpl implements Namespace{
     private String namespace;

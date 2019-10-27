@@ -38,6 +38,8 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -56,10 +58,10 @@ import org.riverock.interfaces.ContainerConstants;
  * Date: Dec 2, 2002
  * Time: 10:22:19 PM
  * <p/>
- * $Id$
+ * $Id: UploadPricePortlet.java 1229 2007-06-28 11:25:40Z serg_main $
  */
+@Log4j
 public final class UploadPricePortlet implements Portlet {
-    private final static Logger log = Logger.getLogger(UploadPricePortlet.class);
 
     public final static String UPLOAD_FILE_PARAM_NAME = "f";
     public static final String ERROR_TEXT = "ERROR_TEXT";
@@ -118,7 +120,7 @@ public final class UploadPricePortlet implements Portlet {
                     ERROR_TEXT,
                     "Exception parse uploaded file with data " + getErrorMessage(e)
                 );
-                actionResponse.setRenderParameter(ERROR_URL, "загрузить повторно");
+                actionResponse.setRenderParameter(ERROR_URL, "Р·Р°РіСЂСѓР·РёС‚СЊ РїРѕРІС‚РѕСЂРЅРѕ");
 
                 return;
             }
@@ -138,7 +140,7 @@ public final class UploadPricePortlet implements Portlet {
                     ERROR_TEXT,
                     "Exception store price data in DB " + getErrorMessage(e)
                 );
-                actionResponse.setRenderParameter(ERROR_URL, "загрузить повторно");
+                actionResponse.setRenderParameter(ERROR_URL, "Р·Р°РіСЂСѓР·РёС‚СЊ РїРѕРІС‚РѕСЂРЅРѕ");
             }
         }
         catch (Throwable e) {
@@ -147,7 +149,7 @@ public final class UploadPricePortlet implements Portlet {
                 ERROR_TEXT,
                 "General exception inport price-list " + getErrorMessage(e)
             );
-            actionResponse.setRenderParameter(ERROR_URL, "загрузить повторно");
+            actionResponse.setRenderParameter(ERROR_URL, "Р·Р°РіСЂСѓР·РёС‚СЊ РїРѕРІС‚РѕСЂРЅРѕ");
         }
     }
 
@@ -162,8 +164,8 @@ public final class UploadPricePortlet implements Portlet {
 
         out.write(
             "<form method=\"POST\" action=\"" + renderResponse.encodeURL(url.toString()) + "\" ENCTYPE=\"multipart/form-data\">" +
-                "Внимание! Файл импорта прайс-листа должен быть в корректном XML формате<br>" +
-                "Если загрузка прайс-листа прошла успешно, то дополнительных сообщений выдано не будет" +
+                "Р’РЅРёРјР°РЅРёРµ! Р¤Р°Р№Р» РёРјРїРѕСЂС‚Р° РїСЂР°Р№СЃ-Р»РёСЃС‚Р° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РєРѕСЂСЂРµРєС‚РЅРѕРј XML С„РѕСЂРјР°С‚Рµ<br>" +
+                "Р•СЃР»Рё Р·Р°РіСЂСѓР·РєР° РїСЂР°Р№СЃ-Р»РёСЃС‚Р° РїСЂРѕС€Р»Р° СѓСЃРїРµС€РЅРѕ, С‚Рѕ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ РІС‹РґР°РЅРѕ РЅРµ Р±СѓРґРµС‚" +
                 "<p>" +
                 "<input type=\"FILE\" name=\"" + UPLOAD_FILE_PARAM_NAME + "\" size=\"50\">" +
                 "<br>" +

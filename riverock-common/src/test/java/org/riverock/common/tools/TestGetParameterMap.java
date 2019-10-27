@@ -32,7 +32,7 @@ import junit.framework.TestCase;
  * User: SergeMaslyukov
  * Date: 04.02.2005
  * Time: 0:44:53
- * $Id$
+ * $Id: TestGetParameterMap.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class TestGetParameterMap extends TestCase {
 

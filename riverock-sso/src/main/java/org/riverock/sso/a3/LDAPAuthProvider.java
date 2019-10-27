@@ -50,7 +50,7 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
  * Date: Sep 6, 2003
  * Time: 10:27:42 PM
  *
- * $Id$
+ * $Id: LDAPAuthProvider.java 1056 2006-11-15 19:02:57Z serg_main $
  */
 public final class LDAPAuthProvider implements AuthProvider, Serializable {
     private static final long serialVersionUID = 20434672384237117L;

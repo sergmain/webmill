@@ -40,7 +40,7 @@ import org.riverock.portlet.tools.FacesTools;
  * @author SergeMaslyukov
  *         Date: 16.05.2006
  *         Time: 20:06:35
- *         $Id$
+ *         $Id: SiteTree.java 1095 2006-11-27 22:47:47Z serg_main $
  */
 @SuppressWarnings("unchecked")
 public class SiteTree implements Serializable {

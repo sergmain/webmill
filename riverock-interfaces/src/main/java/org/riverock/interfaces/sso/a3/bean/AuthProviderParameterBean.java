@@ -29,7 +29,7 @@ import java.util.List;
  * @author SergeMaslyukov
  *         Date: 31.01.2006
  *         Time: 15:34:20
- *         $Id$
+ *         $Id: AuthProviderParameterBean.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface AuthProviderParameterBean {
     public List<List<AuthParameterBean>> getAuthProviderParameterBean();

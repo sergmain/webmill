@@ -38,7 +38,7 @@ import java.security.cert.X509Certificate;
 // OID 1.2.840.113549.1.1.4 - md5WithRSAEncryption
 /**
  *
- *  $Id$
+ *  $Id: SecurityTools.java 1492 2009-10-30 14:02:35Z serg_main $
  *
  */
 

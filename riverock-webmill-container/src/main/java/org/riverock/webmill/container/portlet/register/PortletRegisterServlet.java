@@ -37,7 +37,7 @@ import org.riverock.webmill.container.tools.PortletContainerUtils;
  * @author smaslyukov
  *         Date: 04.08.2005
  *         Time: 22:09:41
- *         $Id$
+ *         $Id: PortletRegisterServlet.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 public class PortletRegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 50434672384237876L;

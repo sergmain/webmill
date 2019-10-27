@@ -32,7 +32,7 @@ import junit.framework.TestCase;
  * Date: Dec 14, 2002
  * Time: 2:22:59 PM
  *
- * $Id$
+ * $Id: TestCaseNumberTools.java 1492 2009-10-30 14:02:35Z serg_main $
  */
 public class TestCaseNumberTools extends TestCase
 {

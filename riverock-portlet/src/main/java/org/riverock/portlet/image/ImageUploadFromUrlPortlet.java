@@ -57,7 +57,7 @@ import org.riverock.interfaces.portal.PortalInfo;
  * Date: Dec 3, 2002
  * Time: 1:31:13 PM
  *
- * $Id$
+ * $Id: ImageUploadFromUrlPortlet.java 1334 2007-08-24 14:47:45Z serg_main $
  */
 public final class ImageUploadFromUrlPortlet implements Portlet {
 
@@ -130,8 +130,8 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
             String desc = PortletUtils.getString(renderRequest, "d", null);
 
 
-            // Todo этот сиквенс просто заглушка, сейчас не работает.
-            // т.к. сиквенс просто использовался чтобы получить уникальное имя файла
+            // Todo СЌС‚РѕС‚ СЃРёРєРІРµРЅСЃ РїСЂРѕСЃС‚Рѕ Р·Р°РіР»СѓС€РєР°, СЃРµР№С‡Р°СЃ РЅРµ СЂР°Р±РѕС‚Р°РµС‚.
+            // С‚.Рє. СЃРёРєРІРµРЅСЃ РїСЂРѕСЃС‚Рѕ РёСЃРїРѕР»СЊР·РѕРІР°Р»СЃСЏ С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ СѓРЅРёРєР°Р»СЊРЅРѕРµ РёРјСЏ С„Р°Р№Р»Р°
 //            CustomSequence seq = new CustomSequence();
 //            seq.setSequenceName( "seq_image_number_file" );
 //            seq.setTableName( "MAIN_FORUM_THREADS" );
@@ -193,16 +193,16 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
             ps.executeUpdate();
 
-            out.write( "Загрузка данных прошла без ошибок<br>" +
-                "Загружен файл " + newFileName + "<br>" +
+            out.write( "Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РїСЂРѕС€Р»Р° Р±РµР· РѕС€РёР±РѕРє<br>" +
+                "Р—Р°РіСЂСѓР¶РµРЅ С„Р°Р№Р» " + newFileName + "<br>" +
                 DateFormatUtils.format(System.currentTimeMillis(), "dd-MMMM-yyyy HH:mm:ss:SS",
                     TimeZone.getTimeZone(portalInfo.getSite().getServerTimeZone()),
                     renderRequest.getLocale() ) + "<br>" +
                 "<br>" +
                 "<p><a href=\"" + PortletUtils.url( "mill.image.index", renderRequest, renderResponse ) +
-                "\">Загрузить данные повторно</a></p><br>" +
+                "\">Р—Р°РіСЂСѓР·РёС‚СЊ РґР°РЅРЅС‹Рµ РїРѕРІС‚РѕСЂРЅРѕ</a></p><br>" +
                 "<p><a href=\"" + PortletUtils.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse ) +
-                "\">На главную страницу</a></p>" );
+                "\">РќР° РіР»Р°РІРЅСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ</a></p>" );
 
         }
         catch( Exception e ) {

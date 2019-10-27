@@ -37,7 +37,7 @@ import org.riverock.common.utils.PortletUtils;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 15:23:20
- *         $Id$
+ *         $Id: PortletModuleRequestImpl.java 1254 2007-07-18 13:45:32Z serg_main $
  */
 public abstract class PortletModuleRequestImpl implements ModuleRequest {
     static private final Logger log = Logger.getLogger(PortletModuleRequestImpl.class);

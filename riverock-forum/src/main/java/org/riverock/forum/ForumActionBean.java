@@ -36,7 +36,7 @@ import org.riverock.module.web.url.UrlProvider;
  * @author SMaslyukov
  *         Date: 26.04.2005
  *         Time: 14:21:58
- *         $Id$
+ *         $Id: ForumActionBean.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class ForumActionBean extends ModuleActionRequestImpl {
     private Long forumId = null;

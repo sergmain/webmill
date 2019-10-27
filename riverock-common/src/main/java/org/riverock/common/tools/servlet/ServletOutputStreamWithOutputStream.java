@@ -34,7 +34,7 @@ import javax.servlet.ServletOutputStream;
  * User: SergeMaslyukov
  * Date: 19.12.2004
  * Time: 2:07:23
- * $Id$
+ * $Id: ServletOutputStreamWithOutputStream.java 1108 2006-11-29 19:12:24Z serg_main $
  */
 public class ServletOutputStreamWithOutputStream extends ServletOutputStream {
     private OutputStream outputStream = null;

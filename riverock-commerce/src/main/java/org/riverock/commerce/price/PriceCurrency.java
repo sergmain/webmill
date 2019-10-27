@@ -35,7 +35,7 @@ import org.riverock.commerce.schema.shop.CurrencyItemType;
 
 /**
  *
- * $Id$
+ * $Id: PriceCurrency.java 1229 2007-06-28 11:25:40Z serg_main $
  *
  */
 public class PriceCurrency {

@@ -34,7 +34,7 @@ import org.riverock.interfaces.portal.bean.Site;
  * @author smaslyukov
  *         Date: 29.07.2005
  *         Time: 21:04:22
- *         $Id$
+ *         $Id: PortalInfo.java 1280 2007-07-26 14:59:49Z serg_main $
  */
 public interface PortalInfo extends Serializable {
     public Long getSiteId();

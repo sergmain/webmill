@@ -27,7 +27,7 @@ package org.riverock.forum.exception;
  * @author SMaslyukov
  *         Date: 24.03.2005
  *         Time: 15:47:59
- *         $Id$
+ *         $Id: PersistenceException.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class PersistenceException extends Exception {
     public PersistenceException() {

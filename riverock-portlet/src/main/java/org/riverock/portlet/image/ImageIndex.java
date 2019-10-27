@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
  * Date: Dec 3, 2002
  * Time: 12:28:19 PM
  *
- * $Id$
+ * $Id: ImageIndex.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class ImageIndex extends HttpServlet {
 
@@ -93,7 +93,7 @@ public final class ImageIndex extends HttpServlet {
                 out.write( "<a href=\"" );
                 out.write( PortletUtils.url( "mill.image.select_url", renderRequest, renderResponse ) + '&' +
                     "id_main=" + id_main_ );
-                out.write( "\">«‡„ÛÁÍ‡ ËÁÓ·‡ÊÂÌËˇ ËÁ URLa" );
+                out.write( "\">–ó–∞–≥—Ä—É–∑–∫–∞ –∏–∑–æ–±—Ä–∞–∂–µ–Ω–∏—è –∏–∑ URLa" );
                 out.write( "</a>" );
                 out.write( "<br>\r\n" );
 

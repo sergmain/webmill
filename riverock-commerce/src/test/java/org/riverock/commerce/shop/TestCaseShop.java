@@ -37,13 +37,13 @@ import org.riverock.commerce.schema.import_price.PricesType;
  * Date: May 9, 2003
  * Time: 10:49:57 AM
  *
- * $Id$
+ * $Id: TestCaseShop.java 1148 2006-12-19 22:25:11Z serg_main $
  */
 public class TestCaseShop extends TestCase {
 
     public final static String TEST_SERVER_NAME = "test-host";
     public final static String TEST_LANGUAGE = "ru_RU";
-    public final static String NAME_TEST_SITE = "Пробный сайт";
+    public final static String NAME_TEST_SITE = "РџСЂРѕР±РЅС‹Р№ СЃР°Р№С‚";
 
     public final static String NAME_DEFAULT_MENU = "DEFAULT_MENU";
 
@@ -67,7 +67,7 @@ public class TestCaseShop extends TestCase {
 
 
     public Long idCurrencyRUB = null;
-    public static final String nameRUB = "Руб";
+    public static final String nameRUB = "Р СѓР±";
     public static Long idCurrencyStdRUB = null;
     public static Double cursRUB = 1.01;
 

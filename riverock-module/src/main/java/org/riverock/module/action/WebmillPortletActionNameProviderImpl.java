@@ -30,7 +30,7 @@ import org.riverock.module.WebmillPortletConstants;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 13:26:15
- *         $Id$
+ *         $Id: WebmillPortletActionNameProviderImpl.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class WebmillPortletActionNameProviderImpl implements ActionNameProvider {
 

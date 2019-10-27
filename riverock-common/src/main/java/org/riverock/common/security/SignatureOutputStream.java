@@ -35,7 +35,7 @@ import java.security.SignatureException;
  * Signature output stream is a stream wrapper that
  * passes data though a Signature object before passing it on.
  *
- *  $Id$
+ *  $Id: SignatureOutputStream.java 1108 2006-11-29 19:12:24Z serg_main $
  *
  *
  * Author: Serg Malyukov

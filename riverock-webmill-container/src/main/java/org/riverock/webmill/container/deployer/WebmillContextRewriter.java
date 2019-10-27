@@ -30,7 +30,7 @@ import org.w3c.dom.Document;
  * Utilities for manipulating the context.xml deployment descriptor
  *
  * @author <a href="mailto:rwatler@apache.org">Randy Watler</a>
- * @version $Id$
+ * @version $Id: WebmillContextRewriter.java 1239 2007-07-04 09:05:29Z serg_main $
  */
 public class WebmillContextRewriter {
     private Document document;

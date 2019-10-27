@@ -25,7 +25,7 @@ package org.riverock.commerce.price;
 
 /**
  *
- *  $Id$
+ *  $Id: PriceException.java 1138 2006-12-12 18:37:24Z serg_main $
  *
  */
 

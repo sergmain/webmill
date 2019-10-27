@@ -33,7 +33,7 @@ import java.io.Serializable;
  * intended security constraints with one or more portlets.
  * Used in: portlet-app
  *
- * @version $Revision$ $Date$
+ * @version $Revision: 1055 $ $Date: 2006-11-14 17:56:15 +0000 (Tue, 14 Nov 2006) $
  */
 public class SecurityConstraint implements Serializable {
     private static final long serialVersionUID = 30434672384237165L;

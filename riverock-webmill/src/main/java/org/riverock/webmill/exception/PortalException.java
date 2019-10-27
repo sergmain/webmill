@@ -29,7 +29,7 @@ package org.riverock.webmill.exception;
  * Date: 11.05.2004
  * Time: 17:46:28
  * @author Serge Maslyukov
- * $Id$
+ * $Id: PortalException.java 1081 2006-11-24 18:15:45Z serg_main $
  */
 public class PortalException extends RuntimeException {
 

@@ -41,7 +41,7 @@ import org.riverock.common.collections.MapWithParameters;
  * Date: Sep 20, 2003
  * Time: 1:02:30 AM
  *
- * $Id$
+ * $Id: ActionResponseImpl.java 1305 2007-08-10 14:56:11Z serg_main $
  */
 public final class ActionResponseImpl implements ActionResponse {
     private final static Logger log = Logger.getLogger( ActionResponseImpl.class );

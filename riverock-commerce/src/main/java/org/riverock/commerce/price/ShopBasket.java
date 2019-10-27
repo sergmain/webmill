@@ -37,9 +37,9 @@ import org.riverock.interfaces.ContainerConstants;
 
 /**
  *
- * $Author$
+ * $Author: serg_main $
  *
- * $Id$
+ * $Id: ShopBasket.java 1229 2007-06-28 11:25:40Z serg_main $
  *
  */
 public final class ShopBasket {

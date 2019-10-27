@@ -35,7 +35,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 20:54:12
- *         $Id$
+ *         $Id: PortletActionFactoryImpl.java 1439 2007-09-27 14:23:59Z serg_main $
  */
 public abstract class PortletActionFactoryImpl extends ActionFactoryImpl {
 

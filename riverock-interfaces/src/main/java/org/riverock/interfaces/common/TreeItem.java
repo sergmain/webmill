@@ -31,7 +31,7 @@ import java.io.Serializable;
  * Date: 07.10.2004
  * Time: 14:45:47
  * @author Serge Maslyukov
- * $Id$
+ * $Id: TreeItem.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface TreeItem extends Serializable {
     public Long getTopId();

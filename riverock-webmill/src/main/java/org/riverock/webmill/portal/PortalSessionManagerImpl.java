@@ -38,7 +38,7 @@ import org.riverock.sso.a3.AuthSessionImpl;
  * @author SergeMaslyukov
  *         Date: 31.01.2006
  *         Time: 14:31:31
- *         $Id$
+ *         $Id: PortalSessionManagerImpl.java 1434 2007-09-17 20:33:33Z serg_main $
  */
 public class PortalSessionManagerImpl implements PortalSessionManager {
     private final static Logger log = Logger.getLogger( PortalSessionManagerImpl.class );

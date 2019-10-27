@@ -45,7 +45,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
- * $Id$
+ * $Id: CtxUrlInterpreter.java 1430 2007-09-14 14:48:24Z serg_main $
  */
 public final class CtxUrlInterpreter implements UrlInterpreter {
     private final static Logger log = Logger.getLogger(CtxUrlInterpreter.class);

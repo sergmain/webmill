@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:12:01
- *         $Id$
+ *         $Id: Company.java 1043 2006-11-14 14:29:22Z serg_main $
  */
 public interface Company extends Serializable {
     public String getName();

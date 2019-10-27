@@ -29,7 +29,7 @@ import org.riverock.module.exception.ModuleException;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 16:50:32
- *         $Id$
+ *         $Id: ModuleUser.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public interface ModuleUser {
     public String getName();

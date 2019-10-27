@@ -35,7 +35,7 @@ import junit.framework.TestCase;
  * Date: 30.10.2003
  * Time: 12:52:36
  * @author Serge Maslyukov
- * $Id$
+ * $Id: TestDateTools.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class TestDateTools extends TestCase {
 

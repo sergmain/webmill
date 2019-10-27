@@ -27,7 +27,7 @@ package org.riverock.portlet.test;
  * @author smaslyukov
  *         Date: 27.07.2005
  *         Time: 15:01:48
- *         $Id$
+ *         $Id: IntegerBoxingTest.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class IntegerBoxingTest {
     public static void main( String[] args ) {

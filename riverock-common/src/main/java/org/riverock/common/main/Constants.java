@@ -27,7 +27,7 @@ package org.riverock.common.main;
 
 /**
  *
- * $Id$
+ * $Id: Constants.java 1108 2006-11-29 19:12:24Z serg_main $
  *
  */
 public class Constants

@@ -50,7 +50,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 3:15:26 PM
  * <p/>
- * $Id$
+ * $Id: ShopSearch.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public class ShopSearch extends HttpServlet {
     private static Logger log = Logger.getLogger(ShopSearch.class);
@@ -128,11 +128,11 @@ public class ShopSearch extends HttpServlet {
     }
 
     private String process_request(
-        String s, //       in string default '', -- строка поиска
-        String s1, //      in string default '', -- строка поиска
-        String s2, //      in string default '', -- строка поиска
-        String bool1, //   in string default '', -- строка поиска
-        String bool2, //   in string default '', -- строка поиска
+        String s, //       in string default '', -- СЃС‚СЂРѕРєР° РїРѕРёСЃРєР°
+        String s1, //      in string default '', -- СЃС‚СЂРѕРєР° РїРѕРёСЃРєР°
+        String s2, //      in string default '', -- СЃС‚СЂРѕРєР° РїРѕРёСЃРєР°
+        String bool1, //   in string default '', -- СЃС‚СЂРѕРєР° РїРѕРёСЃРєР°
+        String bool2, //   in string default '', -- СЃС‚СЂРѕРєР° РїРѕРёСЃРєР°
         String minp, //    in string default '',
         String maxp //    in string default '',
     )
@@ -142,7 +142,7 @@ public class ShopSearch extends HttpServlet {
         String v_result = ""; //     varchar2(1000)  := '';
         String v_bool; //   varchar2(15);
         boolean v_flag = true;
-        boolean v_multi = false; // -- Участвует ли в выражении больше 1 условия
+        boolean v_multi = false; // -- РЈС‡Р°СЃС‚РІСѓРµС‚ Р»Рё РІ РІС‹СЂР°Р¶РµРЅРёРё Р±РѕР»СЊС€Рµ 1 СѓСЃР»РѕРІРёСЏ
         boolean v_df;
         String v_max = ""; //    varchar2(30);
         String v_min = ""; //   varchar2(30);
@@ -155,7 +155,7 @@ public class ShopSearch extends HttpServlet {
             if (maxp == null)
                 maxp = "";
 
-//        -- Проверка, что бы "мин" был меньше "макс"
+//        -- РџСЂРѕРІРµСЂРєР°, С‡С‚Рѕ Р±С‹ "РјРёРЅ" Р±С‹Р» РјРµРЅСЊС€Рµ "РјР°РєСЃ"
             if ((minp.length() != 0) && (maxp.length() != 0)) {
                 if (to_digit(minp) > to_digit(maxp)) {
                     v_min = maxp;
@@ -276,7 +276,7 @@ public class ShopSearch extends HttpServlet {
             out.write("<tr>\r\n");
             out.write("<td colspan=3 >");
             out.write("<font size=\"2\">");
-            out.write("<strong>Строки для поиска:");
+            out.write("<strong>РЎС‚СЂРѕРєРё РґР»СЏ РїРѕРёСЃРєР°:");
             out.write("</strong>");
             out.write("</font>");
             out.write("</td>\r\n");
@@ -287,22 +287,22 @@ public class ShopSearch extends HttpServlet {
             out.write("<select name=\"bool1\" size=\"1\">\r\n");
             out.write("<option selected value=\"0\">--");
             out.write("</option>\r\n");
-            out.write("<option value=\"1\">И");
+            out.write("<option value=\"1\">Р");
             out.write("</option>\r\n");
-            out.write("<option value=\"2\">ИЛИ");
+            out.write("<option value=\"2\">РР›Р");
             out.write("</option>\r\n");
-            out.write("<option value=\"3\">НЕ");
+            out.write("<option value=\"3\">РќР•");
             out.write("</option>\r\n");
             out.write("</select>");
             out.write("<input type=\"text\" size=\"15\" maxlength=20  name=\"s1\">");
             out.write("<select name=\"bool2\" size=\"1\">\r\n");
             out.write("<option selected value=\"0\">--");
             out.write("</option>\r\n");
-            out.write("<option value=\"1\">И");
+            out.write("<option value=\"1\">Р");
             out.write("</option>\r\n");
-            out.write("<option value=\"2\">ИЛИ");
+            out.write("<option value=\"2\">РР›Р");
             out.write("</option>\r\n");
-            out.write("<option value=\"3\">НЕ");
+            out.write("<option value=\"3\">РќР•");
             out.write("</option>\r\n");
             out.write("</select>");
             out.write("<input type=\"text\" size=\"15\" maxlength=20  name=\"s2\">\r\n");
@@ -311,7 +311,7 @@ public class ShopSearch extends HttpServlet {
             out.write("<tr>\r\n");
             out.write("<td>");
             out.write("<small>");
-            out.write("<strong>Стоимость от:");
+            out.write("<strong>РЎС‚РѕРёРјРѕСЃС‚СЊ РѕС‚:");
             out.write("</strong>");
             out.write("</small>");
             out.write("</td>\r\n");
@@ -319,13 +319,13 @@ public class ShopSearch extends HttpServlet {
             out.write("<input type=\"text\" size=\"15\" maxlength=20  name=\"minPrice\">");
             out.write("</td>\r\n");
             out.write("<td valign=\"bottom\" align=\"right\">\r\n");
-            out.write("<input type=\"submit\" name=\"button\" value=\"Найти\">");
+            out.write("<input type=\"submit\" name=\"button\" value=\"РќР°Р№С‚Рё\">");
             out.write("<br>");
             out.write("</td>\r\n");
             out.write("</tr>\r\n");
             out.write("<tr>\r\n");
             out.write("<td>");
-            out.write("<small><strong>Стоимость до:</strong></small>");
+            out.write("<small><strong>РЎС‚РѕРёРјРѕСЃС‚СЊ РґРѕ:</strong></small>");
             out.write("</td>\r\n");
             out.write("<td>");
             out.write("<input type=\"text\" size=\"15\" maxlength=20  name=\"maxPrice\">");
@@ -408,7 +408,7 @@ public class ShopSearch extends HttpServlet {
 
                 if (v_len < 3) {
                     out.write("\r\n");
-                    out.write("<center>Строка поиска должна быть больше 2 символов");
+                    out.write("<center>РЎС‚СЂРѕРєР° РїРѕРёСЃРєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 2 СЃРёРјРІРѕР»РѕРІ");
                     out.write("</center>\r\n            ");
 
                 }
@@ -422,7 +422,7 @@ WHERE id_query = v_id_query;
 */
                     int v_count_item = 0;
 
-//<!--p align="center">Результат поиска: найдено '|| TO_CHAR(v_count_search)||'</p-->
+//<!--p align="center">Р РµР·СѓР»СЊС‚Р°С‚ РїРѕРёСЃРєР°: РЅР°Р№РґРµРЅРѕ '|| TO_CHAR(v_count_search)||'</p-->
 
                     sql_ =
                         "select distinct b.ID_FIRM, b.full_name, b.is_work " +
@@ -446,7 +446,7 @@ WHERE id_query = v_id_query;
                         boolean v_flag = false;
                         boolean v_flag_firm = true;
 
-                        String v_str_firm = "Предприятие: <i><a href=\"/firm/info.jsp?i=" + sclient_rec_id_client + "\">" + sclient_rec_full_name + "</a></i>";
+                        String v_str_firm = "РџСЂРµРґРїСЂРёСЏС‚РёРµ: <i><a href=\"/firm/info.jsp?i=" + sclient_rec_id_client + "\">" + sclient_rec_full_name + "</a></i>";
 
 //    shop s = new shop(ora_, sclient_rec_id_client);
 
@@ -485,7 +485,7 @@ WHERE id_query = v_id_query;
                             boolean v_flag_shop = true;
 
                             String v_str_shop = "<br><b><a href=\"/price/price.jsp?id=" + RsetTools.getString(rs_item, "id_shop") +
-                                "\"  target=\"blank\">Перейти на прайс-лист " + RsetTools.getString(rs_item, "name_shop_for_price_list") + "</a></b>";
+                                "\"  target=\"blank\">РџРµСЂРµР№С‚Рё РЅР° РїСЂР°Р№СЃ-Р»РёСЃС‚ " + RsetTools.getString(rs_item, "name_shop_for_price_list") + "</a></b>";
 
                             boolean v_first_step_shop = true;
 
@@ -516,7 +516,7 @@ WHERE id_query = v_id_query;
 
                                 v_count_item++;
 
-// эту страницу надо выводить?
+// СЌС‚Сѓ СЃС‚СЂР°РЅРёС†Сѓ РЅР°РґРѕ РІС‹РІРѕРґРёС‚СЊ?
 
                                 if ((v_count_item > v_number_page * v_display_item)
                                     && (v_count_item <= ((v_number_page + 1) * v_display_item))
@@ -558,7 +558,7 @@ WHERE id_query = v_id_query;
                                         out.write("<td  width=\"5%\" align=\"center\">" + RsetTools.getString(rs_detail, "currency", "&nbsp") + "</td>");
                                     }
                                     out.write("</tr>");
-                                } //-- конец условия вывода страницы
+                                } //-- РєРѕРЅРµС† СѓСЃР»РѕРІРёСЏ РІС‹РІРѕРґР° СЃС‚СЂР°РЅРёС†С‹
 
                             }
                             if (!is_exists)
@@ -589,7 +589,7 @@ WHERE id_query = v_id_query;
                 if (v_number_page > 0) {
                     out.write("<a href=\"search_in_shop.jsp?s=");
                     out.write(PortletUtils.getString(renderRequest, "s", null) + "&p=" + (v_number_page - 1));
-                    out.write("\">Предыдущая страница");
+                    out.write("\">РџСЂРµРґС‹РґСѓС‰Р°СЏ СЃС‚СЂР°РЅРёС†Р°");
                     out.write("</a>\"");
 
                 }
@@ -603,7 +603,7 @@ WHERE id_query = v_id_query;
                 if ((v_count_search - ((v_number_page + 1) * v_display_item)) >= 0) {
                     out.write("<a href=\"search_in_shop.jsp?s=");
                     out.write(PortletUtils.getString(renderRequest, "s", null) + "&p=" + (v_number_page + 1));
-                    out.write("\">Следующая страница");
+                    out.write("\">РЎР»РµРґСѓСЋС‰Р°СЏ СЃС‚СЂР°РЅРёС†Р°");
                     out.write("</a>");
 
                 }

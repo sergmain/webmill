@@ -25,12 +25,12 @@ package org.riverock.commerce.resource;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.resource.CustomXmlResourceBundle;
+import org.riverock.common.resource.XmlResourceBundle;
 
 /**
  * @author Serge Maslyukov
  */
-public class PriceList_ru extends CustomXmlResourceBundle {
+public class PriceList_ru extends XmlResourceBundle {
     private final static Logger log = Logger.getLogger( PriceList_ru.class );
 
     public void logError( String msg, Throwable th ) {

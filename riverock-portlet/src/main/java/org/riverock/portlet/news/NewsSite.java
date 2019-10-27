@@ -51,7 +51,7 @@ import org.riverock.interfaces.portlet.PortletResultContent;
 import org.riverock.interfaces.portlet.PortletResultObject;
 
 /**
- * $Id$
+ * $Id: NewsSite.java 1400 2007-09-04 20:25:29Z serg_main $
  */
 public final class NewsSite implements PortletGetList, PortletResultObject {
     private final static Logger log = Logger.getLogger( NewsSite.class );

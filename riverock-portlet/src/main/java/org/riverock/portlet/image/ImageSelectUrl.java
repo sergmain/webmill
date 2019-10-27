@@ -47,7 +47,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 12:32:13 PM
  *
- * $Id$
+ * $Id: ImageSelectUrl.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 public class ImageSelectUrl extends HttpServlet
 {
@@ -102,14 +102,14 @@ public class ImageSelectUrl extends HttpServlet
                     out.write("\">\r\n");
                     out.write("<table border=\"0\">\r\n");
                     out.write("<tr>\r\n");
-                    out.write("<td width=\"20%\">URL, откуда забрать файл");
+                    out.write("<td width=\"20%\">URL, РѕС‚РєСѓРґР° Р·Р°Р±СЂР°С‚СЊ С„Р°Р№Р»");
                     out.write("</td>\r\n");
                     out.write("<td>");
                     out.write("<INPUT TYPE=\"text\" NAME=\"url_download\" SIZE=\"50\" MAXLENGTH=\"150\" value=\"\">");
                     out.write("</td>\r\n");
                     out.write("</tr>\r\n");
                     out.write("<tr>\r\n");
-                    out.write("<td width=\"20%\">Введите краткое описание загружаемого файла (до 300 символов)");
+                    out.write("<td width=\"20%\">Р’РІРµРґРёС‚Рµ РєСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ Р·Р°РіСЂСѓР¶Р°РµРјРѕРіРѕ С„Р°Р№Р»Р° (РґРѕ 300 СЃРёРјРІРѕР»РѕРІ)");
                     out.write("</td>\r\n");
                     out.write("<td>");
                     out.write("<textarea name=\"d\" cols=\"50\" rows=\"10\">");
@@ -117,7 +117,7 @@ public class ImageSelectUrl extends HttpServlet
                     out.write("</td>\r\n");
                     out.write("</tr>\r\n");
                     out.write("</table>\r\n");
-                    out.write("<input type=\"submit\" value=\"Загрузить\">\r\n");
+                    out.write("<input type=\"submit\" value=\"Р—Р°РіСЂСѓР·РёС‚СЊ\">\r\n");
                     out.write("</form>\r\n\r\n            ");
                 }
         }

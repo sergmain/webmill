@@ -42,7 +42,7 @@ import org.riverock.interfaces.ContainerConstants;
  * @author SergeMaslyukov
  *         Date: 02.01.2006
  *         Time: 9:32:20
- *         $Id$
+ *         $Id: FacesTools.java 1411 2007-09-06 20:27:38Z serg_main $
  */
 public class FacesTools {
     public static PortalSpiProvider getPortalSpiProvider() {

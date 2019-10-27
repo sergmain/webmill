@@ -29,7 +29,7 @@ import java.util.Map;
  * User: SergeMaslyukov
  * Date: 12.01.2005
  * Time: 10:08:39
- * $Id$
+ * $Id: MapTools.java 1492 2009-10-30 14:02:35Z serg_main $
  */
 public class MapTools {
 

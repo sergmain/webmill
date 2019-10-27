@@ -32,7 +32,7 @@ import org.riverock.interfaces.portal.bean.Company;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:48:52
- *         $Id$
+ *         $Id: PortalCompanyDao.java 1394 2007-09-02 19:13:28Z serg_main $
  */
 public interface PortalCompanyDao {
     public Company getCompany( Long id );

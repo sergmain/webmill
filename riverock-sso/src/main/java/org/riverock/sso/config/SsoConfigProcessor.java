@@ -34,7 +34,7 @@ import org.riverock.sso.annotation.schema.config.SsoConfig;
  * Date: 28.11.2003
  * Time: 22:38:10
  * @author Serge Maslyukov
- * $Id$
+ * $Id: SsoConfigProcessor.java 1391 2007-09-01 22:59:49Z serg_main $
  */
 public class SsoConfigProcessor {
     private static Logger log = Logger.getLogger(SsoConfigProcessor.class );

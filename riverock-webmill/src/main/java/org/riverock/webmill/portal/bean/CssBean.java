@@ -43,7 +43,7 @@ import org.riverock.interfaces.portal.bean.Css;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 3:11:20
- *         $Id$
+ *         $Id: CssBean.java 1351 2007-08-28 10:09:30Z serg_main $
  */
 @Entity
 @Table(name="WM_PORTAL_CSS")

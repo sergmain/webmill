@@ -30,7 +30,7 @@ package org.riverock.webmill.portal.namespace;
  * @author SergeMaslyukov
  *         Date: 13.05.2006
  *         Time: 20:42:21
- *         $Id$
+ *         $Id: NamespaceMapper.java 1052 2006-11-14 16:46:45Z serg_main $
  */
 public interface NamespaceMapper {
 

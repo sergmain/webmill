@@ -46,7 +46,7 @@ import javax.crypto.spec.IvParameterSpec;
  * Date: Aug 21, 2002
  * Time: 10:58:19 PM
  *
- * $Id$
+ * $Id: EncryptSignature.java 1493 2009-11-22 19:06:46Z serg_main $
  *
  * Class housing methods to encrypt files with signatures.
  */

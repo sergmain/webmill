@@ -50,7 +50,7 @@ import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.site.SiteList;
 
 /**
- * $Id$
+ * $Id: PortalInfoImpl.java 1416 2007-09-08 18:12:27Z serg_main $
  */
 public final class PortalInfoImpl implements Serializable, PortalInfo, Observer {
     private static final long serialVersionUID = 438274672384237876L;

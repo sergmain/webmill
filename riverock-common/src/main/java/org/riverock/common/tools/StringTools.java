@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Public tools for work with strings.
  *
- * $Id$
+ * $Id: StringTools.java 1493 2009-11-22 19:06:46Z serg_main $
  */
 public class StringTools {
 

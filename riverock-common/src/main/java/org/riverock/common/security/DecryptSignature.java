@@ -49,7 +49,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Date: Aug 21, 2002
  * Time: 10:28:41 PM
  *
- * $Id$
+ * $Id: DecryptSignature.java 1492 2009-10-30 14:02:35Z serg_main $
  *
  * Class housing methods to decrypt files with signatures.
  */

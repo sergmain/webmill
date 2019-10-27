@@ -27,7 +27,7 @@ package org.riverock.module.web.session;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 20:27:53
- *         $Id$
+ *         $Id: ModuleSession.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public interface ModuleSession {
     public Object getAttribute(String key);

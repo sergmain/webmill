@@ -27,7 +27,7 @@
  * Date: Feb 22, 2003
  * Time: 11:37:50 PM
  *
- * $Id$
+ * $Id: TestNewsSimpleItem.java 1111 2006-11-30 00:18:47Z serg_main $
  */
 package org.riverock.portlet.test;
 
@@ -45,7 +45,7 @@ public class TestNewsSimpleItem
 
     private final static String TEST_SERVER_NAME = "test-host";
     private final static String TEST_LANGUAGE = "ru_RU";
-    private final static String NAME_TEST_SITE = "Пробный сайт";
+    private final static String NAME_TEST_SITE = "РџСЂРѕР±РЅС‹Р№ СЃР°Р№С‚";
 */
     public static void main(String[] s)
     throws Exception
@@ -79,7 +79,7 @@ public class TestNewsSimpleItem
 
         PortletDescriptionType desc = PortletManager.getPortletDescription( "mill.news" );
 
-        // localePackage надо брать из файла описателя портлетов
+        // localePackage РЅР°РґРѕ Р±СЂР°С‚СЊ РёР· С„Р°Р№Р»Р° РѕРїРёСЃР°С‚РµР»СЏ РїРѕСЂС‚Р»РµС‚РѕРІ
         PortletParameter portletParameter =
             new PortletParameter(request, response, jspPage, desc.getLocaleNamePackage());
 

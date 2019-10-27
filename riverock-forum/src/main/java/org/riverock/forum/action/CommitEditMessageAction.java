@@ -42,7 +42,7 @@ import org.riverock.module.web.user.ModuleUser;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 15:05:52
- *         $Id$
+ *         $Id: CommitEditMessageAction.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class CommitEditMessageAction  implements Action {
     private final static Logger log = Logger.getLogger(PostPAction.class);

@@ -29,7 +29,7 @@ import java.nio.charset.Charset;
  * @author SergeMaslyukov
  *         Date: 15.01.2006
  *         Time: 16:15:39
- *         $Id$
+ *         $Id: ContentType.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class ContentType {
 

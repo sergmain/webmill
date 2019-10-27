@@ -57,7 +57,7 @@ import org.riverock.interfaces.ContainerConstants;
  * @author SMaslyukov
  *         Date: 21.04.2005
  *         Time: 11:25:39
- *         $Id$
+ *         $Id: ForumListManagerDAO.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public class ForumListManagerDAO {

@@ -33,7 +33,7 @@ import org.riverock.webmill.container.portlet.bean.Preferences;
  * @author smaslyukov
  *         Date: 08.08.2005
  *         Time: 19:01:23
- *         $Id$
+ *         $Id: PortletDefinitionProcessorTest.java 1237 2007-07-03 14:40:35Z serg_main $
  */
 public class PortletDefinitionProcessorTest {
 

@@ -50,7 +50,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 2:41:47 PM
  *
- * $Id$
+ * $Id: PriceEditIndex.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class PriceEditIndex extends HttpServlet {
     private final static Logger log = Logger.getLogger(PriceEditIndex.class);

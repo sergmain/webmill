@@ -47,7 +47,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 12:31:38 PM
  *
- * $Id$
+ * $Id: ImageDescription.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 public class ImageDescription extends HttpServlet
 {
@@ -105,7 +105,7 @@ public class ImageDescription extends HttpServlet
                     else
                         out.write("is null");
 
-                    out.write("Введите краткое описание загружаемого файла (до 300 символов)<br>");
+                    out.write("Р’РІРµРґРёС‚Рµ РєСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ Р·Р°РіСЂСѓР¶Р°РµРјРѕРіРѕ С„Р°Р№Р»Р° (РґРѕ 300 СЃРёРјРІРѕР»РѕРІ)<br>");
                     out.write("<br>\r\n");
                     out.write("<form method=\"POST\" action=\"");
                     out.write(
@@ -115,7 +115,7 @@ public class ImageDescription extends HttpServlet
                     );
                     out.write("\">\r\n");
                     out.write("<p>\r\n");
-                    out.write("<input type=\"submit\" value=\"Далее\">\r\n");
+                    out.write("<input type=\"submit\" value=\"Р”Р°Р»РµРµ\">\r\n");
                     out.write("<br>\r\n");
                     out.write("<textarea name=\"d\" cols=\"50\" rows=\"10\">");
                     out.write("</textarea>\r\n");

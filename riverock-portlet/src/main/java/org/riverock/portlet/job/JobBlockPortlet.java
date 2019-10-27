@@ -37,7 +37,7 @@ import org.riverock.common.portlet.GenericWebmillPortlet;
  * User: SergeMaslyukov
  * Date: 11.01.2005
  * Time: 11:39:28
- * $Id$
+ * $Id: JobBlockPortlet.java 1230 2007-07-02 15:27:45Z serg_main $
  */
 public class JobBlockPortlet  extends GenericWebmillPortlet {
     public final static String CTX_TYPE_JOB = "mill.job";

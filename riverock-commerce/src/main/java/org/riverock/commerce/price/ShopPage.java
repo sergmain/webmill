@@ -49,9 +49,9 @@ import org.riverock.common.utils.PortletUtils;
 
 /**
  *
- * $Author$
+ * $Author: serg_main $
  *
- * $Id$
+ * $Id: ShopPage.java 1229 2007-06-28 11:25:40Z serg_main $
  *
  */
 public final class ShopPage implements PortletResultObject, PortletResultContent {

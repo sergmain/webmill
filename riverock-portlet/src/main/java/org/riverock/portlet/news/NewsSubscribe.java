@@ -52,7 +52,7 @@ import org.riverock.interfaces.portlet.PortletResultObject;
  * @author SMaslyukov
  *         Date: 19.03.2005
  *         Time: 15:05:33
- *         $Id$
+ *         $Id: NewsSubscribe.java 1228 2007-06-28 10:08:00Z serg_main $
  */
 public class NewsSubscribe implements PortletResultObject, PortletResultContent {
     private final static Logger log = Logger.getLogger( NewsSubscribe.class );

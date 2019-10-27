@@ -27,7 +27,7 @@
  * Date: Mar 20, 2003
  * Time: 9:28:58 PM
  *
- * $Id$
+ * $Id: TestAuthProxy.java 1145 2006-12-18 18:50:57Z serg_main $
  */
 package org.riverock.portlet.test;
 

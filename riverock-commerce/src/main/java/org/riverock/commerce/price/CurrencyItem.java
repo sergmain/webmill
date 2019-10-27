@@ -40,7 +40,7 @@ import org.riverock.common.tools.DateTools;
  * Date: Dec 12, 2002
  * Time: 9:01:05 PM
  * <p/>
- * $Id$
+ * $Id: CurrencyItem.java 1140 2006-12-14 11:46:52Z serg_main $
  */
 public class CurrencyItem {
     private static Logger log = Logger.getLogger(CurrencyItem.class);

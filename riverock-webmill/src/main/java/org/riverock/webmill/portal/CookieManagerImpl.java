@@ -36,7 +36,7 @@ import org.riverock.interfaces.portal.CookieManager;
  * User: SergeMaslyukov
  * Date: 07.01.2005
  * Time: 17:58:10
- * $Id$
+ * $Id: CookieManagerImpl.java 1416 2007-09-08 18:12:27Z serg_main $
  */
 public final class CookieManagerImpl implements CookieManager {
     private List<Cookie> list = new ArrayList<Cookie>();

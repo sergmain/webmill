@@ -51,7 +51,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 12:31:59 PM
  *
- * $Id$
+ * $Id: ImageList.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class ImageList extends HttpServlet {
 

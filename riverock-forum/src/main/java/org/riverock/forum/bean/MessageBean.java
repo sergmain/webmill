@@ -27,7 +27,7 @@ package org.riverock.forum.bean;
  * @author SMaslyukov
  *         Date: 29.04.2005
  *         Time: 21:09:21
- *         $Id$
+ *         $Id: MessageBean.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class MessageBean {
     private String content = null;

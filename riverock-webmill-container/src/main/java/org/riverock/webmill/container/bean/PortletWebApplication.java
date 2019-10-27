@@ -33,7 +33,7 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  * @author smaslyukov
  *         Date: 29.07.2005
  *         Time: 16:31:19
- *         $Id$
+ *         $Id: PortletWebApplication.java 1118 2006-12-02 22:27:38Z serg_main $
  */
 public class PortletWebApplication implements Serializable {
     private static final long serialVersionUID = 30430072384237876L;

@@ -37,7 +37,7 @@ import org.riverock.commerce.dao.CommerceDaoFactory;
  * Time: 17:07:00
  *
  * @author Serge Maslyukov
- *         $Id$
+ *         $Id: CurrencyManager.java 1138 2006-12-12 18:37:24Z serg_main $
  */
 public class CurrencyManager {
     private static Logger log = Logger.getLogger(CurrencyManager.class);

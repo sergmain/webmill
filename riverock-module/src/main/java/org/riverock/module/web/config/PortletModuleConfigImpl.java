@@ -34,7 +34,7 @@ import org.riverock.module.web.context.PortletModuleContextImpl;
  * @author Serge Maslyukov
  *         Date: 24.04.2005
  *         Time: 14:49:25
- *         $Id$
+ *         $Id: PortletModuleConfigImpl.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class PortletModuleConfigImpl implements ModuleConfig {
     private PortletConfig portletConfig = null;

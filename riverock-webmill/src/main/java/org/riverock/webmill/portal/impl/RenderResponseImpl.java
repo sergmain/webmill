@@ -56,7 +56,7 @@ import org.riverock.webmill.portal.url.interpreter.RequestState;
  * Date: Sep 20, 2003
  * Time: 1:00:54 AM
  *
- * $Id$
+ * $Id: RenderResponseImpl.java 1466 2007-10-03 14:40:00Z serg_main $
  */
 public final class RenderResponseImpl extends HttpServletResponseWrapper implements RenderResponse, InternalResponse {
     private final static Logger log = Logger.getLogger( RenderResponseImpl.class );

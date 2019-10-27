@@ -41,7 +41,7 @@ import org.riverock.portlet.tools.FacesTools;
  * @author SergeMaslyukov
  *         Date: 26.02.2006
  *         Time: 15:55:44
- *         $Id$
+ *         $Id: PortalUserService.java 1424 2007-09-12 16:01:46Z serg_main $
  */
 public class PortalUserService implements Serializable {
     private static final long serialVersionUID = 2055006515L;

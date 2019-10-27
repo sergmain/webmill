@@ -53,7 +53,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 3, 2002
  * Time: 3:14:51 PM
  *
- * $Id$
+ * $Id: InvoicePortlet.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 
 @SuppressWarnings({"UnusedAssignment"})
@@ -185,7 +185,7 @@ public final class InvoicePortlet implements Portlet {
                 if ( s != null ) {
                     str = MessageFormat.format( s, args1 );
                 } else {
-                    str = "Ваш заказ N" + userOrderId + " успешно отослан. " + shopUrl + "Продолжить</a>";
+                    str = "Р’Р°С€ Р·Р°РєР°Р· N" + userOrderId + " СѓСЃРїРµС€РЅРѕ РѕС‚РѕСЃР»Р°РЅ. " + shopUrl + "РџСЂРѕРґРѕР»Р¶РёС‚СЊ</a>";
                 }
 
                 args1 = null;
@@ -420,7 +420,7 @@ public final class InvoicePortlet implements Portlet {
 
         User ui = authSession.getUser();
         String orderAdminString =
-            "Заказчик: " + StringTools.getUserName(ui.getMiddleName(), ui.getFirstName(), ui.getLastName()) +
+            "Р—Р°РєР°Р·С‡РёРє: " + StringTools.getUserName(ui.getMiddleName(), ui.getFirstName(), ui.getLastName()) +
              "\n\n" + orderCustomString;
 
         List<ShopOrder> shopOrders = CommerceDaoFactory.getOrderDao().getShopOrders(userOrderId);

@@ -24,7 +24,7 @@
 package org.riverock.sso.main;
 
 /**
- * $Id$
+ * $Id: Constants.java 1051 2006-11-14 16:18:35Z serg_main $
  */
 public class Constants {
     public final static String CTX_TYPE_LOGIN_CHECK = "mill.login_check";

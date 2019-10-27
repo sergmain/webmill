@@ -36,11 +36,11 @@
         <managed-bean-scope>session</managed-bean-scope>
         <managed-property>
             <property-name>currencyPrecisionService</property-name>
-            <value>#{articleService}</value>
+            <value>#{currencyPrecisionService}</value>
         </managed-property>
         <managed-property>
             <property-name>currencyPrecisionSessionBean</property-name>
-            <value>#{articleSessionBean}</value>
+            <value>#{currencyPrecisionSessionBean}</value>
         </managed-property>
     </managed-bean>
     <managed-bean>

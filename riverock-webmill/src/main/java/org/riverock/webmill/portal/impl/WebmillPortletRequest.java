@@ -72,7 +72,7 @@ import org.riverock.webmill.portal.utils.PortalUtils;
  * User: SergeMaslyukov
  * Date: 24.12.2004
  * Time: 1:47:18
- * $Id$
+ * $Id: WebmillPortletRequest.java 1473 2007-10-09 17:04:40Z serg_main $
  */
 public class WebmillPortletRequest extends ServletRequestWrapper implements HttpServletRequest, PortletRequest {
     private final static Logger log = Logger.getLogger( WebmillPortletRequest.class );

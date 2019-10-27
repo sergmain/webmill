@@ -46,7 +46,7 @@ import javax.servlet.http.HttpSession;
  * Date: Feb 19, 2003
  * Time: 9:04:25 AM
  * <p/>
- * $Id$
+ * $Id: HttpServletRequestApplWrapper.java 1108 2006-11-29 19:12:24Z serg_main $
  */
 
 public class HttpServletRequestApplWrapper implements HttpServletRequest {

@@ -32,7 +32,7 @@ public class TestPortalIndexer extends TestCase {
 
     private File lucenePath;
     private static final String PAGE_ABOUT_TEST_URL_1 = "/page/about/test-1";
-    private static final String TITLE_1 = "#1 title ÚÂÒÚ »»» test";
+    private static final String TITLE_1 = "#1 title —Ç–µ—Å—Ç –ò–ò–ò test";
     private static final String DESCRIPTION_1 = "#1 description desc";
     private static final String CONTENT_1 = "#1 content abc qwe 123 proba";
 

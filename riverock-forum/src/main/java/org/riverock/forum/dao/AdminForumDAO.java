@@ -52,7 +52,7 @@ import org.riverock.module.web.user.ModuleUser;
  * @author SMaslyukov
  *         Date: 21.04.2005
  *         Time: 11:25:39
- *         $Id$
+ *         $Id: AdminForumDAO.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public class AdminForumDAO {

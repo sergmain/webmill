@@ -37,7 +37,7 @@ import org.riverock.module.exception.ModuleException;
  * @author SMaslyukov
  *         Date: 26.04.2005
  *         Time: 15:33:49
- *         $Id$
+ *         $Id: ModuleRequestDispatcher.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public interface ModuleRequestDispatcher {
 

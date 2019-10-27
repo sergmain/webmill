@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
  * Date: Mar 21, 2003
  * Time: 11:52:05 AM
  *
- * $Id$
+ * $Id: TestAuthenticator.java 1145 2006-12-18 18:50:57Z serg_main $
  */
 public class TestAuthenticator extends Authenticator {
 

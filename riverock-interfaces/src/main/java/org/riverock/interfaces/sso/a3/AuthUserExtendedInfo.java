@@ -32,7 +32,7 @@ import org.riverock.interfaces.portal.bean.User;
  * @author SergeMaslyukov
  *         Date: 02.02.2006
  *         Time: 15:05:31
- *         $Id$
+ *         $Id: AuthUserExtendedInfo.java 1056 2006-11-15 19:02:57Z serg_main $
  */
 public interface AuthUserExtendedInfo {
     public AuthInfo getAuthInfo();

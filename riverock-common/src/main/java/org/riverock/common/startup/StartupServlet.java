@@ -48,7 +48,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.LogManager;
 
 /**
- * $Id$
+ * $Id: StartupServlet.java 1493 2009-11-22 19:06:46Z serg_main $
  */
 public final class StartupServlet extends HttpServlet {
     private static final String LOG_CONFIG_FILE_PARAM_NAME = "log-config-file";

@@ -31,7 +31,7 @@ import javax.xml.transform.Transformer;
  * @author SergeMaslyukov
  *         Date: 30.12.2005
  *         Time: 15:47:12
- *         $Id$
+ *         $Id: XsltTransformer.java 1416 2007-09-08 18:12:27Z serg_main $
  */
 public interface XsltTransformer extends Serializable {
     public Transformer getTransformer();

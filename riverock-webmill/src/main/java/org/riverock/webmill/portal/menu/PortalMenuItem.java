@@ -44,7 +44,7 @@ import org.riverock.webmill.portal.template.PortalTemplateManagerFactory;
 
 /**
  *
- * $Id$
+ * $Id: PortalMenuItem.java 1375 2007-08-28 19:35:44Z serg_main $
  *
  */
 public final class PortalMenuItem implements MenuItem {

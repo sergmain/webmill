@@ -40,7 +40,7 @@ import org.riverock.interfaces.portal.bean.Company;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:16:22
- *         $Id$
+ *         $Id: CompanyBean.java 1380 2007-08-30 17:27:50Z serg_main $
  */
 @Entity
 @Table(name="WM_LIST_COMPANY")

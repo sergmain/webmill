@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * @author SMaslyukov
  *         Date: 06.05.2005
  *         Time: 18:32:41
- *         $Id$
+ *         $Id: ForumTopLevelBean.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class ForumTopLevelBean {
     private List forums = new ArrayList();

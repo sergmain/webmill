@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * @author SergeMaslyukov
  *         Date: 08.11.2005
  *         Time: 14:12:35
- *         $Id$
+ *         $Id: ArrayTest.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public class ArrayTest {
     public static void main(String[] args) {

@@ -32,7 +32,7 @@ import org.riverock.common.tools.StringTools;
  * Date: Apr 2, 2003
  * Time: 4:23:10 PM
  *
- * $Id$
+ * $Id: AcceptLanguageWithLevel.java 1493 2009-11-22 19:06:46Z serg_main $
  */
 public class AcceptLanguageWithLevel
 {

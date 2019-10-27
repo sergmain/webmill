@@ -44,7 +44,7 @@ import org.riverock.interfaces.portlet.PortletResultObject;
 import org.riverock.interfaces.portlet.PortletResultContent;
 
 /**
- * $Id$
+ * $Id: FaqItem.java 1400 2007-09-04 20:25:29Z serg_main $
  */
 public final class FaqItem implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Logger log = Logger.getLogger( FaqItem.class );

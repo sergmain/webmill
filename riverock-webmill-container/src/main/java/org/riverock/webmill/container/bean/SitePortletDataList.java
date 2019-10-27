@@ -31,7 +31,7 @@ import java.io.Serializable;
  * @author smaslyukov
  *         Date: 29.07.2005
  *         Time: 15:41:40
- *         $Id$
+ *         $Id: SitePortletDataList.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public class SitePortletDataList implements Serializable {
     private static final long serialVersionUID = 30434672384237709L;

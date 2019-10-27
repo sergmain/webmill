@@ -31,7 +31,7 @@ import java.nio.charset.CharsetDecoder;
  * User: SergeMaslyukov
  * Date: 31.12.2004
  * Time: 13:01:44
- * $Id$
+ * $Id: CharsetTest.java 1243 2007-07-12 16:58:42Z serg_main $
  */
 public class CharsetTest {
 

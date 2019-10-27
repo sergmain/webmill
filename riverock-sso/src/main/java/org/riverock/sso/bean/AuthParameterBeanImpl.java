@@ -29,7 +29,7 @@ import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
  * @author SergeMaslyukov
  *         Date: 31.01.2006
  *         Time: 15:49:45
- *         $Id$
+ *         $Id: AuthParameterBeanImpl.java 1051 2006-11-14 16:18:35Z serg_main $
  */
 public class AuthParameterBeanImpl implements AuthParameterBean {
     private String name = null;

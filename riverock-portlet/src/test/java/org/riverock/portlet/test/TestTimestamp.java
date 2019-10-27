@@ -27,7 +27,7 @@
  * Date: Mar 31, 2003
  * Time: 10:41:57 AM
  *
- * $Id$
+ * $Id: TestTimestamp.java 1309 2007-08-16 10:10:59Z serg_main $
  */
 
 package org.riverock.portlet.test;

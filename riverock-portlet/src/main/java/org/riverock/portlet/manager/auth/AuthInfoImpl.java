@@ -31,7 +31,7 @@ import org.riverock.interfaces.sso.a3.AuthInfo;
  * @author SergeMaslyukov
  *         Date: 02.02.2006
  *         Time: 17:12:12
- *         $Id$
+ *         $Id: AuthInfoImpl.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class AuthInfoImpl implements AuthInfo, Serializable {
 

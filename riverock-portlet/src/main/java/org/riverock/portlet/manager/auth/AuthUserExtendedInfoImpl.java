@@ -36,7 +36,7 @@ import org.riverock.interfaces.portal.bean.User;
  * @author SMaslyukov
  *         Date: 22.05.2005
  *         Time: 16:35:58
- *         $Id$
+ *         $Id: AuthUserExtendedInfoImpl.java 1056 2006-11-15 19:02:57Z serg_main $
  */
 public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializable {
     private static final long serialVersionUID = 2043005502L;

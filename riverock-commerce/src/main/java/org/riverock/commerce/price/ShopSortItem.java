@@ -28,7 +28,7 @@ package org.riverock.commerce.price;
  * Date: Nov 26, 2002
  * Time: 4:07:21 PM
  *
- * $Id$
+ * $Id: ShopSortItem.java 1048 2006-11-14 15:28:48Z serg_main $
  */
 public class ShopSortItem
 {

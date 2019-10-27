@@ -48,7 +48,7 @@ import org.riverock.sso.annotation.schema.config.AuthProviderParameters;
 import org.riverock.sso.annotation.schema.config.Auth;
 
 /**
- * $Id$
+ * $Id: AuthSessionImpl.java 1084 2006-11-26 00:28:25Z serg_main $
  */
 public final class AuthSessionImpl implements AuthSession, Serializable {
     private static final long serialVersionUID = 20434672384237876L;

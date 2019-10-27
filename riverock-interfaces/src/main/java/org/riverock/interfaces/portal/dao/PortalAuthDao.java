@@ -30,7 +30,7 @@ import org.riverock.interfaces.portal.spi.PortalAuthSpi;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:49:07
- *         $Id$
+ *         $Id: PortalAuthDao.java 1394 2007-09-02 19:13:28Z serg_main $
  */
 public interface PortalAuthDao {
 }

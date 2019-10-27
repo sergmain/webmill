@@ -27,7 +27,7 @@ package org.riverock.webmill.container.test;
  * @author SergeMaslyukov
  *         Date: 20.11.2005
  *         Time: 1:45:02
- *         $Id$
+ *         $Id: StringBufferTest.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public class StringBufferTest {
 

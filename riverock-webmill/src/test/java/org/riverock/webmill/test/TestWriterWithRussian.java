@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * User: SergeMaslyukov
  * Date: 19.12.2004
  * Time: 13:46:46
- * $Id$
+ * $Id: TestWriterWithRussian.java 1416 2007-09-08 18:12:27Z serg_main $
  */
 public class TestWriterWithRussian extends TestCase {
 

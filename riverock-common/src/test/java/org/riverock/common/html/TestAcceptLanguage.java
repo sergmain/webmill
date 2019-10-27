@@ -33,7 +33,7 @@ import org.riverock.common.tools.StringTools;
  * Date: Apr 2, 2003
  * Time: 4:37:39 PM
  *
- * $Id$
+ * $Id: TestAcceptLanguage.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class TestAcceptLanguage extends TestCase
 {

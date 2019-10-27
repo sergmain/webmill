@@ -36,7 +36,7 @@ import org.riverock.common.utils.PortletUtils;
  * @author SergeMaslyukov
  *         Date: 02.01.2006
  *         Time: 9:26:35
- *         $Id$
+ *         $Id: HoldingAction.java 1411 2007-09-06 20:27:38Z serg_main $
  */
 public class HoldingAction implements Serializable {
     private final static Logger log = Logger.getLogger( HoldingAction.class );

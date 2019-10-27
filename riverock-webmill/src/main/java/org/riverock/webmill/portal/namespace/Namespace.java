@@ -28,7 +28,7 @@ package org.riverock.webmill.portal.namespace;
  * @author SergeMaslyukov
  *         Date: 08.03.2006
  *         Time: 2:28:29
- *         $Id$
+ *         $Id: Namespace.java 1052 2006-11-14 16:46:45Z serg_main $
  */
 public interface Namespace {
     public String getNamespace();

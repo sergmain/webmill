@@ -42,7 +42,7 @@ import org.riverock.interfaces.portal.bean.User;
  * Date: Sep 9, 2003
  * Time: 2:55:25 PM
  *
- * $Id$
+ * $Id: ConfigFileAuthProvider.java 1056 2006-11-15 19:02:57Z serg_main $
  */
 public final class ConfigFileAuthProvider implements AuthProvider, Serializable {
     private static final long serialVersionUID = 20434672384237105L;

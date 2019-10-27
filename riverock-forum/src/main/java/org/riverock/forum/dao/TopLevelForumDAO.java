@@ -41,7 +41,7 @@ import org.riverock.module.exception.ActionException;
  * @author SMaslyukov
  *         Date: 06.05.2005
  *         Time: 18:52:15
- *         $Id$
+ *         $Id: TopLevelForumDAO.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class TopLevelForumDAO {
     private final static Logger log = Logger.getLogger(TopLevelForumDAO.class);

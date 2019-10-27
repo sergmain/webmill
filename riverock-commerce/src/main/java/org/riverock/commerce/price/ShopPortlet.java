@@ -38,7 +38,7 @@ import org.riverock.common.portlet.GenericWebmillPortlet;
  * User: SergeMaslyukov
  * Date: 07.12.2004
  * Time: 12:22:43
- * $Id$
+ * $Id: ShopPortlet.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class ShopPortlet extends GenericWebmillPortlet {
     public final static String CTX_TYPE_SHOP = "mill.shop";

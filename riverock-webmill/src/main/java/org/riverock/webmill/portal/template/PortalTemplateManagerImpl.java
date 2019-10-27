@@ -35,7 +35,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.template.parser.TemplateParserFactory;
 
 /**
- * $Id$
+ * $Id: PortalTemplateManagerImpl.java 1377 2007-08-29 16:09:14Z serg_main $
  */
 public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     private final static Logger log = Logger.getLogger( PortalTemplateManagerImpl.class );

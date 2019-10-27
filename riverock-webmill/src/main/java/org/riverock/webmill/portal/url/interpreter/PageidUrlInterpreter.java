@@ -35,7 +35,7 @@ import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 import org.riverock.interfaces.ContainerConstants;
 
 /**
- * $Id$
+ * $Id: PageidUrlInterpreter.java 1362 2007-08-28 10:17:16Z serg_main $
  */
 public final class PageidUrlInterpreter implements UrlInterpreter {
     private final static Logger log = Logger.getLogger(PageidUrlInterpreter.class);

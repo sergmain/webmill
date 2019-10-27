@@ -46,7 +46,7 @@ import org.riverock.portlet.main.AuthSessionBean;
  * @author SergeMaslyukov
  *         Date: 02.01.2006
  *         Time: 9:26:35
- *         $Id$
+ *         $Id: DataProvider.java 1450 2007-10-01 14:50:54Z serg_main $
  */
 public class DataProvider implements Serializable {
     private final static Logger log = Logger.getLogger( DataProvider.class );

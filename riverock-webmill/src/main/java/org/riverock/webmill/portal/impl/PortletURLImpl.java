@@ -59,7 +59,7 @@ import org.riverock.webmill.portal.PortalRequest;
  * Date: 20.05.2004
  * Time: 21:14:18
  * @author Serge Maslyukov
- * $Id$
+ * $Id: PortletURLImpl.java 1374 2007-08-28 19:11:15Z serg_main $
  */
 public final class PortletURLImpl implements PortletURL {
     private final static Logger log = Logger.getLogger( PortletURLImpl.class );

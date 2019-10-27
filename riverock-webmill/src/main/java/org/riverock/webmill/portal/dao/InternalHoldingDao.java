@@ -34,7 +34,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 1:24:19
- *         $Id$
+ *         $Id: InternalHoldingDao.java 1056 2006-11-15 19:02:57Z serg_main $
  */
 public interface InternalHoldingDao extends Serializable {
     

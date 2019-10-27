@@ -27,7 +27,7 @@ package org.riverock.portlet.test;
  * @author SMaslyukov
  *         Date: 20.05.2005
  *         Time: 13:51:58
- *         $Id$
+ *         $Id: InstanceofNull.java 1049 2006-11-14 15:56:05Z serg_main $
  */
 public class InstanceofNull {
     public static void main(String s[]) throws Exception {

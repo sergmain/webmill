@@ -28,9 +28,9 @@ import java.util.HashMap;
 
 /**
  *
- * $Author$
+ * $Author: serg_main $
  *
- * $Id$
+ * $Id: ShopPageParam.java 1137 2006-12-12 14:50:55Z serg_main $
  *
  */
 public class ShopPageParam {

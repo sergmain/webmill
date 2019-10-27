@@ -40,7 +40,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 2, 2002
  * Time: 4:42:13 PM
  * 
- * $Id$
+ * $Id: LoginUtils.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 public final class LoginUtils {
     private final static Logger log = Logger.getLogger( LoginUtils.class );

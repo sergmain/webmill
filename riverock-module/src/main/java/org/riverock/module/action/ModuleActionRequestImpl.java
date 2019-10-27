@@ -34,7 +34,7 @@ import org.riverock.module.web.url.UrlProvider;
  * @author SMaslyukov
  *         Date: 26.04.2005
  *         Time: 14:25:43
- *         $Id$
+ *         $Id: ModuleActionRequestImpl.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class ModuleActionRequestImpl implements ModuleActionRequest {
     private ModuleConfig moduleConfig = null;

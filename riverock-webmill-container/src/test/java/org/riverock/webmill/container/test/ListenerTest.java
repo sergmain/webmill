@@ -27,7 +27,7 @@ package org.riverock.webmill.container.test;
  * @author smaslyukov
  *         Date: 26.07.2005
  *         Time: 20:10:14
- *         $Id$
+ *         $Id: ListenerTest.java 1055 2006-11-14 17:56:15Z serg_main $
  */
 public class ListenerTest {
     public static void test(){

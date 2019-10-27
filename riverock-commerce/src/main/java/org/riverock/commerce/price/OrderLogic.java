@@ -45,7 +45,7 @@ import org.riverock.common.utils.PortletUtils;
  * Date: Dec 11, 2002
  * Time: 8:28:58 AM
  * <p/>
- * $Id$
+ * $Id: OrderLogic.java 1229 2007-06-28 11:25:40Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class OrderLogic {
@@ -62,8 +62,8 @@ public final class OrderLogic {
 
     private static void prepareInvoice(Shop shop, PortletSession session, RenderRequest renderRequest, AuthSession authSession) {
         Long userOrderId = null;
-        // если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
-        // если заказа в сессии нет, то создаем
+        // РµСЃР»Рё С‚РµРєСѓС‰РёР№ РјР°РіР°Р· РѕРїСЂРµРґРµР»РµРЅ, С‚Рѕ РёС‰РµРј РІ СЃРµСЃСЃРёРё Р·Р°РєР°Р·, СЃРІСЏР·Р°РЅРЅС‹Р№ СЃ СЌС‚РёРј РјР°РіР°Р·РѕРј.
+        // РµСЃР»Рё Р·Р°РєР°Р·Р° РІ СЃРµСЃСЃРёРё РЅРµС‚, С‚Рѕ СЃРѕР·РґР°РµРј
         if( shop != null && shop.getShopId() != null ) {
             userOrderId = (Long) getFromSession(session, ShopPortlet.USER_ORDER_ID);
 
@@ -82,8 +82,8 @@ public final class OrderLogic {
                 userOrderId = createUserOrder(( AuthSession ) renderRequest.getUserPrincipal() );
             }
 
-            // если заказ создан ранее и юзер прошел авторизацию,
-            // помещаем авторизационные данные в заказ
+            // РµСЃР»Рё Р·Р°РєР°Р· СЃРѕР·РґР°РЅ СЂР°РЅРµРµ Рё СЋР·РµСЂ РїСЂРѕС€РµР» Р°РІС‚РѕСЂРёР·Р°С†РёСЋ,
+            // РїРѕРјРµС‰Р°РµРј Р°РІС‚РѕСЂРёР·Р°С†РёРѕРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ РІ Р·Р°РєР°Р·
             if ( userOrderId != null && authSession != null ) {
                 if( authSession.checkAccess( renderRequest.getServerName() ) ) {
                     if( log.isDebugEnabled() ) {
@@ -97,8 +97,8 @@ public final class OrderLogic {
             Long id_item = PortletUtils.getLong( renderRequest, ShopPortlet.NAME_ADD_ID_ITEM );
             int count = PortletUtils.getInt( renderRequest, ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP, 0 );
 
-            // если при вызове было указано какое либо количество определенного наименования,
-            // то помещаем это наименование в заказ
+            // РµСЃР»Рё РїСЂРё РІС‹Р·РѕРІРµ Р±С‹Р»Рѕ СѓРєР°Р·Р°РЅРѕ РєР°РєРѕРµ Р»РёР±Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ,
+            // С‚Рѕ РїРѕРјРµС‰Р°РµРј СЌС‚Рѕ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РІ Р·Р°РєР°Р·
             if( log.isDebugEnabled() )
                 log.debug( "set new count of item. id_item - " + id_item + " count - " + count );
 
@@ -136,9 +136,9 @@ public final class OrderLogic {
 
             shop = CommerceDaoFactory.getShopDao().getShop(shopId);
         }
-        // если в сессии есть текущий магазин и
-        // код вызванного магазина совпадает с кодом мкгаза в сессии,
-        // юзаем его (тот, который в сессии)
+        // РµСЃР»Рё РІ СЃРµСЃСЃРёРё РµСЃС‚СЊ С‚РµРєСѓС‰РёР№ РјР°РіР°Р·РёРЅ Рё
+        // РєРѕРґ РІС‹Р·РІР°РЅРЅРѕРіРѕ РјР°РіР°Р·РёРЅР° СЃРѕРІРїР°РґР°РµС‚ СЃ РєРѕРґРѕРј РјРєРіР°Р·Р° РІ СЃРµСЃСЃРёРё,
+        // СЋР·Р°РµРј РµРіРѕ (С‚РѕС‚, РєРѕС‚РѕСЂС‹Р№ РІ СЃРµСЃСЃРёРё)
         else {
             if ( currentShop != null && currentShop.getShopId().equals(shopId)) {
                 if( log.isDebugEnabled() ) {
@@ -146,9 +146,9 @@ public final class OrderLogic {
                 }
                 shop = currentShop;
             }
-            // если в сессии есть текущий магазин и
-            // код вызванного магазина не совпадает с кодом магаза в сессии,
-            // заменяем магаз в сессии на магаз с вызываемым кодом
+            // РµСЃР»Рё РІ СЃРµСЃСЃРёРё РµСЃС‚СЊ С‚РµРєСѓС‰РёР№ РјР°РіР°Р·РёРЅ Рё
+            // РєРѕРґ РІС‹Р·РІР°РЅРЅРѕРіРѕ РјР°РіР°Р·РёРЅР° РЅРµ СЃРѕРІРїР°РґР°РµС‚ СЃ РєРѕРґРѕРј РјР°РіР°Р·Р° РІ СЃРµСЃСЃРёРё,
+            // Р·Р°РјРµРЅСЏРµРј РјР°РіР°Р· РІ СЃРµСЃСЃРёРё РЅР° РјР°РіР°Р· СЃ РІС‹Р·С‹РІР°РµРјС‹Рј РєРѕРґРѕРј
             else {
                 if( currentShop!=null && !currentShop.getShopId().equals(shopId) ) {
                     if( log.isDebugEnabled() ) {
@@ -166,9 +166,9 @@ public final class OrderLogic {
             removeFromSession(session, ShopPortlet.CURRENT_SHOP_ID);
         }
 
-        // теперь в shop находится текущий магаз ( тот который в сессии )
-        // если его создание прошло успешно - магаз с вызываемым кодом действительно есть,
-        // иначе shop == null
+        // С‚РµРїРµСЂСЊ РІ shop РЅР°С…РѕРґРёС‚СЃСЏ С‚РµРєСѓС‰РёР№ РјР°РіР°Р· ( С‚РѕС‚ РєРѕС‚РѕСЂС‹Р№ РІ СЃРµСЃСЃРёРё )
+        // РµСЃР»Рё РµРіРѕ СЃРѕР·РґР°РЅРёРµ РїСЂРѕС€Р»Рѕ СѓСЃРїРµС€РЅРѕ - РјР°РіР°Р· СЃ РІС‹Р·С‹РІР°РµРјС‹Рј РєРѕРґРѕРј РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ РµСЃС‚СЊ,
+        // РёРЅР°С‡Рµ shop == null
 
         if( log.isDebugEnabled() ) {
             log.debug( "Current shop: " + shop);
@@ -296,11 +296,11 @@ public final class OrderLogic {
                         log.debug( "shop idShop - " + shop.getShopId() );
                         log.debug( "currencyItem.getCurrencyId: " + currencyItem.getCurrencyId() );
                         log.debug( "shop idOrderCurrency - " + shop.getInvoiceCurrencyId() );
-                        log.debug( "код валюты наименования совпадает с валютой в которой выводить заказ - " +
+                        log.debug( "РєРѕРґ РІР°Р»СЋС‚С‹ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ СЃРѕРІРїР°РґР°РµС‚ СЃ РІР°Р»СЋС‚РѕР№ РІ РєРѕС‚РѕСЂРѕР№ РІС‹РІРѕРґРёС‚СЊ Р·Р°РєР°Р· - " +
                             ( currencyItem.getCurrencyId().equals( shop.getInvoiceCurrencyId() )) );
                     }
 
-                    // если код валюты наименования совпадает с валютой в которой выводить заказ
+                    // РµСЃР»Рё РєРѕРґ РІР°Р»СЋС‚С‹ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ СЃРѕРІРїР°РґР°РµС‚ СЃ РІР°Р»СЋС‚РѕР№ РІ РєРѕС‚РѕСЂРѕР№ РІС‹РІРѕРґРёС‚СЊ Р·Р°РєР°Р·
                     int precisionValue = 2;
                     CurrencyPrecision precision = null;
 

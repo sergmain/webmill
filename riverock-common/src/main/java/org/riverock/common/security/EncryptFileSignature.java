@@ -45,7 +45,7 @@ import java.security.cert.X509Certificate;
  *
  * origin source - www.bouncycastle.org
  *
- * $Id$
+ * $Id: EncryptFileSignature.java 1492 2009-10-30 14:02:35Z serg_main $
  */
 public class EncryptFileSignature
 {

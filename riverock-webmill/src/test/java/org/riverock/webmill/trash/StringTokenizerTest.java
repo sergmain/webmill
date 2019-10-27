@@ -30,7 +30,7 @@ import java.util.StringTokenizer;
  * @author SMaslyukov
  *         Date: 29.05.2005
  *         Time: 16:05:11
- *         $Id$
+ *         $Id: StringTokenizerTest.java 1243 2007-07-12 16:58:42Z serg_main $
  */
 public class StringTokenizerTest {
     public static void main(String[] args) {

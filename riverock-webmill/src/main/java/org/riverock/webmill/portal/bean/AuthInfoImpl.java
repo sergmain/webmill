@@ -38,7 +38,7 @@ import org.riverock.interfaces.sso.a3.AuthInfo;
 
 /**
  *
- *  $Id$
+ *  $Id: AuthInfoImpl.java 1350 2007-08-28 10:08:41Z serg_main $
  */
 @Entity
 @Table(name="WM_AUTH_USER")

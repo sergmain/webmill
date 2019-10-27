@@ -37,7 +37,7 @@ import org.xml.sax.EntityResolver;
  * @author SMaslyukov
  *         Date: 26.04.2005
  *         Time: 14:35:01
- *         $Id$
+ *         $Id: EntityResolverImpl.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class EntityResolverImpl implements EntityResolver {
     public static final String IBM_PORTLET_DTD_PUBLIC_ID = "-//IBM//DTD Portlet Application 1.1//EN";

@@ -52,7 +52,7 @@ import org.riverock.portlet.tools.ContentTypeTools;
  * Date: Jan 10, 2003
  * Time: 9:45:31 AM
  *
- * $Id$
+ * $Id: ArticlePlain.java 1400 2007-09-04 20:25:29Z serg_main $
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class ArticlePlain implements PortletResultObject, PortletGetList, PortletResultContent {

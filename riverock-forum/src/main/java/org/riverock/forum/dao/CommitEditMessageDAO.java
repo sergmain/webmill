@@ -38,7 +38,7 @@ import org.riverock.forum.util.CommonUtils;
  * @author SMaslyukov
  *         Date: 04.05.2005
  *         Time: 15:16:08
- *         $Id$
+ *         $Id: CommitEditMessageDAO.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class CommitEditMessageDAO {
     private static Logger log = Logger.getLogger(CommitEditMessageDAO.class);

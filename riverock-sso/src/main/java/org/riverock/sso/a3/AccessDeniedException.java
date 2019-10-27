@@ -31,7 +31,7 @@ package org.riverock.sso.a3;
  * Date: Mar 12, 2003
  * Time: 3:26:06 PM
  *
- * $Id$
+ * $Id: AccessDeniedException.java 1051 2006-11-14 16:18:35Z serg_main $
  */
 public class AccessDeniedException extends Exception
 {

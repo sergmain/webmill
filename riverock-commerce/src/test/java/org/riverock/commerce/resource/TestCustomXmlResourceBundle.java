@@ -27,8 +27,6 @@ import java.io.InputStream;
 
 import junit.framework.TestCase;
 
-import org.riverock.common.resource.CustomXmlResourceBundle;
-
 /**
  * @author Sergei Maslyukov
  *         Date: 21.12.2006

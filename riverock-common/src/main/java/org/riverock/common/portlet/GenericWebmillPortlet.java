@@ -43,7 +43,7 @@ import org.riverock.interfaces.portlet.PortletResultObject;
  * User: SergeMaslyukov
  * Date: 07.12.2004
  * Time: 15:54:17
- * $Id$
+ * $Id: GenericWebmillPortlet.java 1230 2007-07-02 15:27:45Z serg_main $
  */
 public abstract class GenericWebmillPortlet implements Portlet {
 

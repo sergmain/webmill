@@ -56,7 +56,7 @@ import org.riverock.module.web.response.PortletModuleResponseImpl;
  * @author SMaslyukov
  *         Date: 24.03.2005
  *         Time: 16:03:52
- *         $Id$
+ *         $Id: AbstractForumPortlet.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public abstract class AbstractForumPortlet implements Portlet {
     private final static Logger log = Logger.getLogger(AbstractForumPortlet.class);

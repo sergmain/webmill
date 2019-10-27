@@ -28,7 +28,7 @@ import org.riverock.webmill.portal.url.interpreter.UrlInterpreterResult;
 import org.riverock.webmill.portal.url.interpreter.UrlInterpreterParameter;
 
 /**
- * $Id$
+ * $Id: UrlInterpreter.java 1362 2007-08-28 10:17:16Z serg_main $
  */
 public interface UrlInterpreter {
     public UrlInterpreterResult interpret( UrlInterpreterParameter factoryParameter );

@@ -43,7 +43,7 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 15:39:41
- *         $Id$
+ *         $Id: CatalogLanguageBean.java 1377 2007-08-29 16:09:14Z serg_main $
  */
 @Entity
 @Table(name="WM_PORTAL_CATALOG_LANGUAGE")

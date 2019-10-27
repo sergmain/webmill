@@ -37,7 +37,7 @@ import org.riverock.common.portlet.GenericWebmillPortlet;
  * User: SergeMaslyukov
  * Date: 11.01.2005
  * Time: 10:46:00
- * $Id$
+ * $Id: FaqBlockPortlet.java 1230 2007-07-02 15:27:45Z serg_main $
  */
 public class FaqBlockPortlet extends GenericWebmillPortlet {
 

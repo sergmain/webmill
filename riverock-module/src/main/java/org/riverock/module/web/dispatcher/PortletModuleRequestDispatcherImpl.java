@@ -40,7 +40,7 @@ import org.riverock.module.exception.ModuleException;
  * @author SMaslyukov
  *         Date: 26.04.2005
  *         Time: 15:37:08
- *         $Id$
+ *         $Id: PortletModuleRequestDispatcherImpl.java 1044 2006-11-14 14:36:43Z serg_main $
  */
 public class PortletModuleRequestDispatcherImpl implements ModuleRequestDispatcher {
     static private final Logger log = Logger.getLogger(PortletModuleRequestDispatcherImpl.class);

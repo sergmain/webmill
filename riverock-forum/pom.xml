@@ -13,62 +13,61 @@
             <url>http://www.gnu.org/licenses/gpl.txt</url>
         </license>
     </licenses>
-    <repositories>
 <!--
-        <repository>
-            <id>Riverock repo local</id>
-            <url>http://test.askmore/repo</url>
-        </repository>
--->
+    <repositories>
         <repository>
             <id>Riverock repo</id>
             <url>http://riverock.sourceforge.net/repo</url>
         </repository>
-        <repository>
-            <id>ibiblio.org</id>
-            <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-        </repository>
-        <repository>
-            <id>snapshots</id>
-            <name>Maven Snapshot Development Repository</name>
-            <url>http://snapshots.maven.codehaus.org/maven2</url>
-        </repository>
     </repositories>
+-->
+    <properties>
+        <lombok.version>1.18.8</lombok.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!--        <maven.compiler.source>11</maven.compiler.source>-->
+        <!--        <maven.compiler.target>11</maven.compiler.target>-->
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-interfaces</artifactId>
-            <version>1.2</version>
+            <version>1.11</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-common</artifactId>
-            <version>1.4</version>
+            <version>1.13</version>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-module</artifactId>
-            <version>1.0</version>
+            <version>1.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-generic</artifactId>
             <version>4.0.4</version>
         </dependency>
+<!--
         <dependency>
             <groupId>org.riverock</groupId>
             <artifactId>riverock-sql-parser</artifactId>
             <version>1.1.6</version>
         </dependency>
+-->
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
@@ -143,7 +142,7 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>logkit</groupId>
@@ -162,7 +161,7 @@
         <dependency>
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>
-            <version>1.7</version>
+            <version>1.8.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>xml-apis</groupId>
@@ -173,7 +172,7 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.1</version>
+            <version>2.6</version>
         </dependency>
         
         <dependency>
@@ -200,11 +199,15 @@
         <finalName>riverock-forum</finalName>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <compilerArgument>-parameters</compilerArgument>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
         </plugins>

@@ -53,7 +53,7 @@ import org.riverock.webmill.portal.namespace.Namespace;
  * Date: Sep 20, 2003
  * Time: 1:02:01 AM
  * <p/>
- * $Id$
+ * $Id: ActionRequestImpl.java 1374 2007-08-28 19:11:15Z serg_main $
  */
 public final class ActionRequestImpl extends WebmillPortletRequest implements ActionRequest {
     private final static Logger log = Logger.getLogger(ActionRequestImpl.class);

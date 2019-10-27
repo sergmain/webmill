@@ -40,7 +40,7 @@ import org.riverock.interfaces.portal.bean.User;
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 19:33:27
- *         $Id$
+ *         $Id: InternalAuthDao.java 1434 2007-09-17 20:33:33Z serg_main $
  */
 public interface InternalAuthDao extends Serializable {
     public List<Long> getGrantedUserIdList(String userLogin);

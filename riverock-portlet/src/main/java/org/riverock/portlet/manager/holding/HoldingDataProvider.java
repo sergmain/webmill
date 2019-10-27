@@ -41,7 +41,7 @@ import org.riverock.portlet.tools.FacesTools;
  * @author SergeMaslyukov
  *         Date: 02.01.2006
  *         Time: 9:26:35
- *         $Id$
+ *         $Id: HoldingDataProvider.java 1411 2007-09-06 20:27:38Z serg_main $
  */
 public class HoldingDataProvider implements Serializable {
     private static final long serialVersionUID = 2043005511L;

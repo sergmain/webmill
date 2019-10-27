@@ -46,7 +46,7 @@ import org.riverock.common.utils.PortletUtils;
  * @author SMaslyukov
  *         Date: 26.04.2005
  *         Time: 17:03:09
- *         $Id$
+ *         $Id: WebmillPortletUrlProviderImpl.java 1254 2007-07-18 13:45:32Z serg_main $
  */
 public class WebmillPortletUrlProviderImpl implements UrlProvider {
     private static final Logger log = Logger.getLogger(WebmillPortletUrlProviderImpl.class);

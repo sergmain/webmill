@@ -27,7 +27,7 @@ package org.riverock.forum.bean;
  * @author SMaslyukov
  *         Date: 07.04.2005
  *         Time: 18:28:58
- *         $Id$
+ *         $Id: ForumSmallBean.java 1119 2006-12-02 22:35:13Z serg_main $
  */
 public class ForumSmallBean {
     private String forumName = null;

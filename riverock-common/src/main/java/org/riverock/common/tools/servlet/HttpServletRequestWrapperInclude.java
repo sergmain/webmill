@@ -43,7 +43,7 @@ import org.riverock.common.tools.MainTools;
  * Date: 13.05.2004
  * Time: 17:55:24
  * @author Serge Maslyukov
- * $Id$
+ * $Id: HttpServletRequestWrapperInclude.java 1108 2006-11-29 19:12:24Z serg_main $
  */
 public final class HttpServletRequestWrapperInclude extends HttpServletRequestWrapper {
     Map<String, Object> param = null;

@@ -38,7 +38,7 @@ import java.util.Date;
 
 /**
  *
- * $Id$
+ * $Id: NewsBlock.java 1228 2007-06-28 10:08:00Z serg_main $
  *
  */
 public final class NewsBlock implements PortletResultContent {

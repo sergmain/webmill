@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author smaslyukov
  *         Date: 27.07.2005
  *         Time: 19:51:54
- *         $Id$
+ *         $Id: PortletContainerException.java 1239 2007-07-04 09:05:29Z serg_main $
  */
 public class PortletContainerException extends RuntimeException implements Serializable {
     private static final long serialVersionUID = 50434672384237127L;

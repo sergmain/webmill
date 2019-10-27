@@ -38,7 +38,7 @@ import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
- * $Id$
+ * $Id: SiteMenu.java 1416 2007-09-08 18:12:27Z serg_main $
  *
  *
  * return menu for all supported languages for this site

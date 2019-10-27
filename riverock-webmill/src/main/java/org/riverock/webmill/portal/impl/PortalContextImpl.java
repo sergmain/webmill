@@ -43,7 +43,7 @@ import org.riverock.interfaces.portal.PortalInfo;
  * @author SergeMaslyukov
  *         Date: 20.11.2005
  *         Time: 15:42:59
- *         $Id$
+ *         $Id: PortalContextImpl.java 1248 2007-07-13 17:19:28Z serg_main $
  */
 public class PortalContextImpl implements PortalContext {
     private final static Logger log = Logger.getLogger( PortalContextImpl.class );

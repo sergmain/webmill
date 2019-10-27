@@ -29,7 +29,7 @@ import junit.framework.TestCase;
  * User: SergeMaslyukov
  * Date: 31.12.2004
  * Time: 01:09:38
- * $Id$
+ * $Id: TestContentType.java 1040 2006-11-14 13:57:38Z serg_main $
  */
 public class TestContentType extends TestCase {
 

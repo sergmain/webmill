@@ -33,7 +33,7 @@ import org.apache.myfaces.custom.tree2.*;
  * @author SergeMaslyukov
  *         Date: 02.01.2006
  *         Time: 9:26:35
- *         $Id$
+ *         $Id: UserTreeBean.java 1095 2006-11-27 22:47:47Z serg_main $
  */
 @SuppressWarnings({"unchecked"})
 public class UserTreeBean implements Serializable {

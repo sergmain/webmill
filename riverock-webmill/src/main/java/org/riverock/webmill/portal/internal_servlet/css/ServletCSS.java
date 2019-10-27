@@ -48,7 +48,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  * Date: Nov 22, 2002
  * Time: 3:13:52 PM
  *
- * $Id$
+ * $Id: ServletCSS.java 1412 2007-09-07 17:43:10Z serg_main $
  */
 public final class ServletCSS {
     private final static Logger log = Logger.getLogger( ServletCSS.class );
