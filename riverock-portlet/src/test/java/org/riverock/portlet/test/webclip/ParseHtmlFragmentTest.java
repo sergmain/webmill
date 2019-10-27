@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.html.dom.HTMLDocumentImpl;
 import org.apache.commons.lang.CharEncoding;
@@ -37,7 +38,7 @@ public class ParseHtmlFragmentTest {
         fragment = document.createDocumentFragment();
 
         InputSource inputSource = new InputSource(ParseHtmlFragmentTest.class.getResourceAsStream("/xml/webclip/test.html"));
-        inputSource.setEncoding(CharEncoding.UTF_8);
+        inputSource.setEncoding(StandardCharsets.UTF_8.toString());
         parser.parse(inputSource, fragment);
 
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
@@ -46,12 +47,12 @@ public class ParseHtmlFragmentTest {
 
         print(fragment, os);
 
-        String s = new String(os.toByteArray(), CharEncoding.UTF_8);
+        String s = new String(os.toByteArray(), StandardCharsets.UTF_8);
         System.out.println("s = " + s);
 
         FileOutputStream out = new FileOutputStream(File.createTempFile("parse-test", ".xml", tempDir));
 //        out.write(os.toByteArray());
-        out.write(s.getBytes(CharEncoding.UTF_8));
+        out.write(s.getBytes(StandardCharsets.UTF_8));
         out.flush();
         out.close();
         out = null;
@@ -87,13 +88,13 @@ public class ParseHtmlFragmentTest {
 
             case Node.ELEMENT_NODE: {
                     out.write('<');
-                    out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                    out.write(node.getNodeName().getBytes(StandardCharsets.UTF_8));
                     Attr attrs[] = sortAttributes(node.getAttributes());
                     for (Attr attr : attrs) {
                         out.write(' ');
-                        out.write(attr.getNodeName().getBytes(CharEncoding.UTF_8));
-                        out.write("=\"".getBytes(CharEncoding.UTF_8));
-                        out.write(attr.getNodeValue().getBytes(CharEncoding.UTF_8));
+                        out.write(attr.getNodeName().getBytes(StandardCharsets.UTF_8));
+                        out.write("=\"".getBytes(StandardCharsets.UTF_8));
+                        out.write(attr.getNodeValue().getBytes(StandardCharsets.UTF_8));
                         out.write('"');
                     }
                     out.write('>');
@@ -111,42 +112,42 @@ public class ParseHtmlFragmentTest {
             // handle entity reference nodes
             case Node.ENTITY_REFERENCE_NODE: {
                 out.write(SEPARATOR_HTTP_REQUEST_PARAM);
-                out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                out.write(node.getNodeName().getBytes(StandardCharsets.UTF_8));
                 out.write(';');
                 break;
             }
 
             // print cdata sections
             case Node.CDATA_SECTION_NODE: {
-                out.write("<![CDATA[".getBytes(CharEncoding.UTF_8));
-                out.write(node.getNodeValue().getBytes(CharEncoding.UTF_8));
-                out.write("]]>".getBytes(CharEncoding.UTF_8));
+                out.write("<![CDATA[".getBytes(StandardCharsets.UTF_8));
+                out.write(node.getNodeValue().getBytes(StandardCharsets.UTF_8));
+                out.write("]]>".getBytes(StandardCharsets.UTF_8));
                 break;
             }
 
             // print text
             case Node.TEXT_NODE: {
-                out.write(node.getNodeValue().getBytes(CharEncoding.UTF_8));
+                out.write(node.getNodeValue().getBytes(StandardCharsets.UTF_8));
                 break;
             }
 
             // print processing instruction
             case Node.PROCESSING_INSTRUCTION_NODE: {
-                out.write("<?".getBytes(CharEncoding.UTF_8));
-                out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                out.write("<?".getBytes(StandardCharsets.UTF_8));
+                out.write(node.getNodeName().getBytes(StandardCharsets.UTF_8));
                 String data = node.getNodeValue();
                 if (data != null && data.length() > 0) {
                     out.write(' ');
-                    out.write(data.getBytes(CharEncoding.UTF_8));
+                    out.write(data.getBytes(StandardCharsets.UTF_8));
                 }
-                out.write("?>".getBytes(CharEncoding.UTF_8));
+                out.write("?>".getBytes(StandardCharsets.UTF_8));
                 break;
             }
         }
 
         if (type == Node.ELEMENT_NODE) {
-            out.write("</".getBytes(CharEncoding.UTF_8));
-            out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+            out.write("</".getBytes(StandardCharsets.UTF_8));
+            out.write(node.getNodeName().getBytes(StandardCharsets.UTF_8));
             out.write('>');
         }
 

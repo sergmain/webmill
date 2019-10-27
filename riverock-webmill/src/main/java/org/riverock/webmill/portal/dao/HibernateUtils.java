@@ -34,7 +34,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
-import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.bean.*;
@@ -119,11 +119,11 @@ public class HibernateUtils {
             }
             System.out.println("Hibernate family: "+hibernateFamily);
 
-            AnnotationConfiguration cfg = new AnnotationConfiguration();
+            Configuration cfg = new Configuration();
 
             cfg.setProperty("hibernate.dialect", hibernateFamily )
                 .setProperty("hibernate.connection.release_mode", "after_transaction" )
-                .setProperty("hibernate.transaction.factory_class", org.hibernate.transaction.JDBCTransactionFactory.class.getName() )
+                .setProperty("hibernate.transaction.factory_class", "jdbc" )
                 .setProperty("hibernate.current_session_context_class", "thread" )
                 .setProperty("hibernate.transaction.flush_before_completion", "false" )
                 .setProperty("hibernate.cache.provider_class", net.sf.ehcache.hibernate.EhCacheProvider.class.getName() )
@@ -152,7 +152,7 @@ public class HibernateUtils {
         }
     }
 
-    static void setAnnotatedClasses(AnnotationConfiguration cfg) {
+    static void setAnnotatedClasses(Configuration cfg) {
         for (Class clazz : CLASSES) {
             cfg.addAnnotatedClass(clazz);
         }

@@ -23,6 +23,7 @@
  */
 package org.riverock.portlet.dao;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
@@ -80,12 +81,7 @@ public class WebclipDaoImpl implements WebclipDao {
                     Blob blob = bean.getWebclipBlob();
                     if (blob!=null) {
                         try {
-                            bean.setWebclipData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                        }
-                        catch (UnsupportedEncodingException e) {
-                            String es = "Error get Webclip";
-                            log.error(es, e);
-                            throw new DatabaseException(es, e);
+                            bean.setWebclipData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                         }
                         catch (SQLException e) {
                             String es = "Error get Webclip";
@@ -162,15 +158,10 @@ public class WebclipDaoImpl implements WebclipDao {
             if (bean!=null) {
                 if (StringUtils.isNotBlank(resultContent)) {
                     byte[] bytes;
-                    try {
-                        bytes = resultContent.getBytes(CharEncoding.UTF_8);
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        String es = "Error convert webclip data to array of bytes";
-                        log.error(es, e);
-                        throw new RuntimeException(es, e);
-                    }
-                    bean.setWebclipBlob( Hibernate.createBlob(bytes));
+                    bytes = resultContent.getBytes(StandardCharsets.UTF_8);
+                    Blob blob = Hibernate.getLobCreator(session).createBlob(bytes);
+                    bean.setWebclipBlob(blob);
+//                    bean.setWebclipBlob( Hibernate.getLobCreator(session).createBlob(bytes));
                 }
                 else {
                     bean.setWebclipBlob(null);
@@ -199,7 +190,7 @@ public class WebclipDaoImpl implements WebclipDao {
                 .setLong("siteId", webclip.getSiteId())
                 .uniqueResult();
             if (bean!=null) {
-                bean.setZipOriginContent( Hibernate.createBlob(bytes) );
+                bean.setZipOriginContent( Hibernate.getLobCreator(session).createBlob(bytes) );
                 bean.setLoadContent(false);
                 bean.setProcessContent(true);
             }
@@ -393,12 +384,7 @@ public class WebclipDaoImpl implements WebclipDao {
                 Blob blob = bean.getWebclipBlob();
                 if (blob!=null) {
                     try {
-                        bean.setWebclipData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        String es = "Error get Webclip";
-                        log.error(es, e);
-                        throw new DatabaseException(es, e);
+                        bean.setWebclipData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                     }
                     catch (SQLException e) {
                         String es = "Error get Webclip";

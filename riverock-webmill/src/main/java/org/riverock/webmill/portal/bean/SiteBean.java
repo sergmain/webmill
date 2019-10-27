@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import javax.persistence.Entity;
@@ -102,7 +103,7 @@ public class SiteBean implements Serializable, Site {
     private String serverTimeZone;
 
     @Transient
-    private String portalCharset = CharEncoding.UTF_8;
+    private String portalCharset = StandardCharsets.UTF_8.toString();
 
     public SiteBean() {
     }
@@ -125,7 +126,7 @@ public class SiteBean implements Serializable, Site {
 
     public String getPortalCharset() {
         if (portalCharset==null) {
-            portalCharset=CharEncoding.UTF_8;
+            portalCharset=StandardCharsets.UTF_8.toString();
         }
         
         return portalCharset;

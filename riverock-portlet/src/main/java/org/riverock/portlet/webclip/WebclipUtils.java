@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -88,7 +89,7 @@ public class WebclipUtils {
         os = new ByteArrayOutputStream();
 
         processor.modify(os);
-        String webclipData = os.toString(CharEncoding.UTF_8);
+        String webclipData = os.toString(StandardCharsets.UTF_8);
         PortletDaoFactory.getWebclipDao().updateWebclip(webclip, webclipData);
     }
 

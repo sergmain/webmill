@@ -24,6 +24,7 @@
  */
 package org.riverock.webmill.admin.utils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.security.Principal;
 import java.io.UnsupportedEncodingException;
@@ -120,7 +121,7 @@ public class FacesTools {
             return null;
         }
         try {
-            String s = new String(parameter.getBytes(CharEncoding.ISO_8859_1), CharEncoding.UTF_8);
+            String s = new String(parameter.getBytes(CharEncoding.ISO_8859_1), StandardCharsets.UTF_8);
             if (log.isDebugEnabled()) {
                 log.debug("old parameter: " + parameter);
                 log.debug("new parameter: " + s);

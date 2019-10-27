@@ -72,7 +72,9 @@ public class DbExportServlet extends HttpServlet {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        Connection connection = session.connection();
+//            session.doWork(connection -> doSomething(connection));
+//            Connection connection = session.connection();
+        Connection connection = null;
         Database db  = DatabaseFactory.getInstance(connection, family);
 
         File tempDir = (File) getServletConfig().getServletContext().getAttribute("javax.servlet.context.tempdir");

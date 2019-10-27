@@ -33,6 +33,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 
+import org.hibernate.type.LongType;
 import org.riverock.interfaces.portal.bean.User;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -108,7 +109,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         try {
             List<Long> list = session
                 .createSQLQuery(sql_)
-                .addScalar("id_firm", Hibernate.LONG)
+                .addScalar("id_firm", LongType.INSTANCE)
                 .setString(0, username)
                 .setString(1, username)
                 .setString(2, username)
@@ -152,7 +153,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
         StatelessSession session = HibernateUtils.getStatelessSession();
         try {
             List<Long> list = session.createSQLQuery( sql_ )
-                .addScalar("ID_HOLDING", Hibernate.LONG)
+                .addScalar("ID_HOLDING", LongType.INSTANCE)
                 .setString(0, username)
                 .setString(1, username)
                 .list();
@@ -400,7 +401,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
                 "where   a04.is_root = 1 and b04.ID_FIRM = f04.ID_FIRM and f04.ID_SITE=? and " +
                 "        a04.id_user=? ";
             List ids = session.createSQLQuery( sql )
-                .addScalar("id_auth_user", Hibernate.LONG)
+                .addScalar("id_auth_user", LongType.INSTANCE)
                 .setLong(0, siteId)
                 .setLong(1, userId)
                 .setLong(2, siteId)
@@ -482,7 +483,7 @@ public class HibernateAuthDaoImpl implements InternalAuthDao {
 
         List ids = session.createSQLQuery(
             "select ID_AUTH_USER from WM_AUTH_USER where ID_USER=? " )
-            .addScalar("ID_AUTH_USER", Hibernate.LONG)
+            .addScalar("ID_AUTH_USER", LongType.INSTANCE)
             .setLong(0, userId)
             .list();
 

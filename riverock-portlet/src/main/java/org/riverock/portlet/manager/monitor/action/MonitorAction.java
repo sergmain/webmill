@@ -3,6 +3,7 @@ package org.riverock.portlet.manager.monitor.action;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
@@ -81,7 +82,7 @@ public class MonitorAction {
         log.debug("Done getDirectories()");
 
         log.debug("Start XmlTools.getXml()");
-        byte[] bytes = XmlTools.getXml(d, ServerMonitorConstants.ROOT_ELEMENT_NAME, CharEncoding.UTF_8);
+        byte[] bytes = XmlTools.getXml(d, ServerMonitorConstants.ROOT_ELEMENT_NAME, StandardCharsets.UTF_8.toString());
         log.debug("Done XmlTools.getXml()");
         
         ByteArrayInputStream is = new ByteArrayInputStream(bytes);

@@ -24,6 +24,7 @@
  */
 package org.riverock.webmill.portal.dao;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
@@ -74,12 +75,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             Blob blob = bean.getTemplateBlob();
             if (blob!=null) {
                 try {
-                    bean.setTemplateData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error prepare Template";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
+                    bean.setTemplateData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                 }
                 catch (SQLException e) {
                     String es = "Error get template";
@@ -209,14 +205,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
             bean.setSiteLanguageId(template.getSiteLanguageId());
             bean.setTemplateName(template.getTemplateName());
             if (StringUtils.isNotBlank(template.getTemplateData())) {
-                try {
-                    bean.setTemplateBlob( Hibernate.createBlob(template.getTemplateData().getBytes(CharEncoding.UTF_8)));
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error create Template";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
+                bean.setTemplateBlob( Hibernate.getLobCreator(session).createBlob(template.getTemplateData().getBytes(StandardCharsets.UTF_8)));
             }
             else {
                 bean.setTemplateBlob(null);
@@ -309,14 +298,7 @@ public class HibernateTemplateDaoImpl implements InternalTemplateDao {
                 bean.setSiteLanguageId(template.getSiteLanguageId());
                 bean.setTemplateName(template.getTemplateName());
                 if (StringUtils.isNotBlank(template.getTemplateData())) {
-                    try {
-                        bean.setTemplateBlob( Hibernate.createBlob(template.getTemplateData().getBytes(CharEncoding.UTF_8)));
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        String es = "Error update Template";
-                        log.error(es, e);
-                        throw new DatabaseException(es, e);
-                    }
+                    bean.setTemplateBlob( Hibernate.getLobCreator(session).createBlob(template.getTemplateData().getBytes(StandardCharsets.UTF_8)));
                 }
                 else {
                     bean.setTemplateBlob(null);

@@ -34,8 +34,7 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
-
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Sergei Maslyukov

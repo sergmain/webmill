@@ -61,7 +61,9 @@ public class StructureService implements Serializable {
         Session session = HibernateUtils.getSession();
         session.beginTransaction();
 
-        Connection connection = session.connection();
+//            session.doWork(connection -> doSomething(connection));
+//            Connection connection = session.connection();
+        Connection connection = null;
         Database database = DatabaseFactory.getInstance(connection, family);
 
         String dbrevisionPath = PropertiesProvider.getApplicationPath() + AdminConstants.DBREVISION_PATH;

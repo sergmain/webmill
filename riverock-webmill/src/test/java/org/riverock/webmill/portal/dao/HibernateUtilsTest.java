@@ -24,7 +24,7 @@
  */
 package org.riverock.webmill.portal.dao;
 
-import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.MySQL5InnoDBDialect;
 
 /**
@@ -37,11 +37,11 @@ import org.hibernate.dialect.MySQL5InnoDBDialect;
 public class HibernateUtilsTest {
 
     public static void prepareSession() {
-        AnnotationConfiguration cfg = new AnnotationConfiguration();
+        Configuration cfg = new Configuration();
         cfg.setProperty("hibernate.dialect", MySQL5InnoDBDialect.class.getName() );
         cfg.setProperty("hibernate.connection.release_mode", "after_transaction" );
 //        cfg.setProperty("hibernate.connection.release_mode", "on_close" );
-        cfg.setProperty("hibernate.transaction.factory_class", org.hibernate.transaction.JDBCTransactionFactory.class.getName() );
+        cfg.setProperty("hibernate.transaction.factory_class", "jdbc" );
         cfg.setProperty("hibernate.current_session_context_class", "thread" );
         cfg.setProperty("hibernate.transaction.flush_before_completion", "false" );
 //        cfg.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.EhCacheProvider" );

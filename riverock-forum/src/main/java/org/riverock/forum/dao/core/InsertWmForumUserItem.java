@@ -23,6 +23,7 @@
  */
 package org.riverock.forum.dao.core;
 
+import org.riverock.dbrevision.db.Database;
 import org.riverock.forum.dao.bean.WmForumUserItemType;
 
 import java.sql.PreparedStatement;
@@ -35,7 +36,7 @@ public class InsertWmForumUserItem
 
     public InsertWmForumUserItem(){}
 
-    public static long process(org.riverock.generic.db.Database db_, WmForumUserItemType item)  throws org.riverock.forum.exception.PersistenceException     {
+    public static long process(Database db_, WmForumUserItemType item)  throws org.riverock.forum.exception.PersistenceException     {
         String sql_ =
             "insert into WM_FORUM_USER"+
              "(U_ID, U_AVATAR_ID, U_SIGN, U_POST, U_LASTTIME, U_LASTIP)"+

@@ -26,6 +26,7 @@ package org.riverock.portlet.webclip;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.httpclient.NameValuePair;
@@ -180,7 +181,7 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
         fragment = document.createDocumentFragment();
 
         try {
-            inputSource.setEncoding(CharEncoding.UTF_8);
+            inputSource.setEncoding(StandardCharsets.UTF_8.toString());
             parser.parse(inputSource, fragment);
             fragmentNode = searchNode(fragment, elementType, elementId);
         }
@@ -308,17 +309,17 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
                     }
                     if (linkStatus!= UrlStatus.ONLY_TEXT_URI_STATUS) {
                         out.write('<');
-                        out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                        out.write(node.getNodeName().getBytes(StandardCharsets.UTF_8));
                         Attr attrs[] = sortAttributes(node.getAttributes());
                         for (Attr attr : attrs) {
                             out.write(' ');
-                            out.write(attr.getNodeName().getBytes(CharEncoding.UTF_8));
-                            out.write("=\"".getBytes(CharEncoding.UTF_8));
-                            out.write(attr.getNodeValue().getBytes(CharEncoding.UTF_8));
+                            out.write(attr.getNodeName().getBytes(StandardCharsets.UTF_8));
+                            out.write("=\"".getBytes(StandardCharsets.UTF_8));
+                            out.write(attr.getNodeValue().getBytes(StandardCharsets.UTF_8));
                             out.write('"');
                         }
                         if (linkStatus== UrlStatus.EXTERNAL_URI_STATUS && !isNoFollowAttr) {
-                            out.write( (' ' +REL_ATTR+"=\""+ NOFOLLOW_VALUE +"\" ").getBytes(CharEncoding.UTF_8));
+                            out.write( (' ' +REL_ATTR+"=\""+ NOFOLLOW_VALUE +"\" ").getBytes(StandardCharsets.UTF_8));
                         }
                         out.write('>');
                     }
@@ -333,8 +334,8 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
 
                     if (linkStatus!=UrlStatus.ONLY_TEXT_URI_STATUS) {
                         // Put closed element
-                        out.write("</".getBytes(CharEncoding.UTF_8));
-                        out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                        out.write("</".getBytes(StandardCharsets.UTF_8));
+                        out.write(node.getNodeName().getBytes(StandardCharsets.UTF_8));
                         out.write('>');
                     }
                 }
@@ -354,35 +355,35 @@ public class WebclipDataProcessorImpl implements WebclipDataProcessor {
             // handle entity reference nodes
             case Node.ENTITY_REFERENCE_NODE: {
                 out.write(SEPARATOR_HTTP_REQUEST_PARAM);
-                out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                out.write(node.getNodeName().getBytes(StandardCharsets.UTF_8));
                 out.write(';');
                 break;
             }
 
             // print cdata sections
             case Node.CDATA_SECTION_NODE: {
-                out.write("<![CDATA[".getBytes(CharEncoding.UTF_8));
-                out.write(node.getNodeValue().getBytes(CharEncoding.UTF_8));
-                out.write("]]>".getBytes(CharEncoding.UTF_8));
+                out.write("<![CDATA[".getBytes(StandardCharsets.UTF_8));
+                out.write(node.getNodeValue().getBytes(StandardCharsets.UTF_8));
+                out.write("]]>".getBytes(StandardCharsets.UTF_8));
                 break;
             }
 
             // print text
             case Node.TEXT_NODE: {
-                out.write(node.getNodeValue().getBytes(CharEncoding.UTF_8));
+                out.write(node.getNodeValue().getBytes(StandardCharsets.UTF_8));
                 break;
             }
 
             // print processing instruction
             case Node.PROCESSING_INSTRUCTION_NODE: {
-                out.write("<?".getBytes(CharEncoding.UTF_8));
-                out.write(node.getNodeName().getBytes(CharEncoding.UTF_8));
+                out.write("<?".getBytes(StandardCharsets.UTF_8));
+                out.write(node.getNodeName().getBytes(StandardCharsets.UTF_8));
                 String data = node.getNodeValue();
                 if (data != null && data.length() > 0) {
                     out.write(' ');
-                    out.write(data.getBytes(CharEncoding.UTF_8));
+                    out.write(data.getBytes(StandardCharsets.UTF_8));
                 }
-                out.write("?>".getBytes(CharEncoding.UTF_8));
+                out.write("?>".getBytes(StandardCharsets.UTF_8));
                 break;
             }
         }

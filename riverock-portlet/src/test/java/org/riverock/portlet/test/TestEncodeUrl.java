@@ -33,6 +33,7 @@ package org.riverock.portlet.test;
 
 import java.net.URL;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.codec.net.URLCodec;
@@ -56,7 +57,7 @@ public class TestEncodeUrl {
 //        URL url = new URL(s2);
 //        System.out.println("url:" + url.toURI().toString());
 
-        URLCodec codec = new URLCodec(CharEncoding.UTF_8);
+        URLCodec codec = new URLCodec(StandardCharsets.UTF_8.toString());
         System.out.println(codec.decode(s2));
         System.out.println(URIUtil.decode(s2));
         s2 = URIUtil.decode(s2);

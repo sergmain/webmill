@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -81,12 +82,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 Blob blob = xslt.getXsltBlob();
                 if (blob!=null) {
                     try {
-                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        String es = "Error get XSLT";
-                        log.error(es, e);
-                        throw new DatabaseException(es, e);
+                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                     }
                     catch (SQLException e) {
                         String es = "Error get XSLT";
@@ -129,7 +125,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                     Blob blob = xslt.getXsltBlob();
                     if (blob!=null) {
                         try {
-                            xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                            xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                         }
                         catch (UnsupportedEncodingException e) {
                             String es = "Error get XSLT";
@@ -173,14 +169,9 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 Blob blob = xslt.getXsltBlob();
                 if (blob!=null) {
                     try {
-                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
+                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                     }
                     catch (SQLException e) {
-                        String es = "Error get XSLT";
-                        log.error(es, e);
-                        throw new DatabaseException(es, e);
-                    }
-                    catch (UnsupportedEncodingException e) {
                         String es = "Error get XSLT";
                         log.error(es, e);
                         throw new DatabaseException(es, e);
@@ -211,12 +202,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 Blob blob = xslt.getXsltBlob();
                 if (blob!=null) {
                     try {
-                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        String es = "Error get XSLT";
-                        log.error(es, e);
-                        throw new DatabaseException(es, e);
+                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                     }
                     catch (SQLException e) {
                         String es = "Error get XSLT";
@@ -249,12 +235,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 Blob blob = xslt.getXsltBlob();
                 if (blob!=null) {
                     try {
-                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        String es = "Error get XSLT";
-                        log.error(es, e);
-                        throw new DatabaseException(es, e);
+                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                     }
                     catch (SQLException e) {
                         String es = "Error get XSLT";
@@ -284,14 +265,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
             bean.setCurrent(xslt.isCurrent());
             bean.setSiteLanguageId(xslt.getSiteLanguageId());
             if (StringUtils.isNotBlank(xslt.getXsltData())) {
-                try {
-                    bean.setXsltBlob( Hibernate.createBlob(xslt.getXsltData().getBytes(CharEncoding.UTF_8)));
-                }
-                catch (UnsupportedEncodingException e) {
-                    String es = "Error create XSLT";
-                    log.error(es, e);
-                    throw new DatabaseException(es, e);
-                }
+                bean.setXsltBlob( Hibernate.getLobCreator(session).createBlob(xslt.getXsltData().getBytes(StandardCharsets.UTF_8)));
             }
             else {
                 bean.setXsltBlob(null);
@@ -321,12 +295,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 Blob blob = xslt.getXsltBlob();
                 if (blob!=null) {
                     try {
-                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), CharEncoding.UTF_8) );
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        String es = "Error get XSLT";
-                        log.error(es, e);
-                        throw new DatabaseException(es, e);
+                        xslt.setXsltData( new String(blob.getBytes(1, (int)blob.length()), StandardCharsets.UTF_8) );
                     }
                     catch (SQLException e) {
                         String es = "Error get XSLT";
@@ -428,14 +397,7 @@ public class HibernateXsltDaoImpl implements InternalXsltDao {
                 bean.setCurrent(xslt.isCurrent());
                 bean.setSiteLanguageId(xslt.getSiteLanguageId());
                 if (StringUtils.isNotBlank(xslt.getXsltData())) {
-                    try {
-                        bean.setXsltBlob( Hibernate.createBlob(xslt.getXsltData().getBytes(CharEncoding.UTF_8)));
-                    }
-                    catch (UnsupportedEncodingException e) {
-                        String es = "Error update XSLT";
-                        log.error(es, e);
-                        throw new DatabaseException(es, e);
-                    }
+                    bean.setXsltBlob( Hibernate.getLobCreator(session).createBlob(xslt.getXsltData().getBytes(StandardCharsets.UTF_8)));
                 }
                 else {
                     bean.setXsltBlob(null);

@@ -19,7 +19,7 @@
     <module>riverock-webmill-admin</module>
     <module>riverock-module</module>
     <module>riverock-portlet</module>
-    <module>riverock-forum</module>
     <module>riverock-commerce</module>
+<!--    <module>riverock-forum</module>-->
   </modules>
 </project>

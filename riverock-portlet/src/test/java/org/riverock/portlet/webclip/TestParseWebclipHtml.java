@@ -1,6 +1,7 @@
 package org.riverock.portlet.webclip;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 import junit.framework.TestCase;
 import org.apache.commons.lang.CharEncoding;
@@ -33,7 +34,7 @@ public class TestParseWebclipHtml extends TestCase {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         processor.modify(os);
-        String webclipData = os.toString(CharEncoding.UTF_8);
+        String webclipData = os.toString(StandardCharsets.UTF_8);
 
     }
 }

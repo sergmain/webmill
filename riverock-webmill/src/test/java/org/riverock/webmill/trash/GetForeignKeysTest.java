@@ -29,15 +29,15 @@ public class GetForeignKeysTest {
     public static void main(String[] args) throws DatabaseException, SQLException, FileNotFoundException, JAXBException {
 
         HibernateUtilsTest.prepareSession();
-
-
         Session session = HibernateUtils.getSession();
+
+/*
         Database adapter = DatabaseFactory.getInstance(session.connection(), Database.Family.MYSQL);
         DatabaseMetaData metaData = adapter.getConnection().getMetaData();
         String dbSchema = metaData.getUserName();
         System.out.println("dbSchema = " + dbSchema);
 
-        List<DbForeignKey> fks = DatabaseStructureManager.getForeignKeys(adapter, dbSchema, "aaa");
+        List<DbForeignKey> fks = DatabaseStructureManager.getDataTable()getForeignKeys(adapter, dbSchema, "aaa");
 
         if (fks.isEmpty()) {
             throw new RuntimeException("fk is empty");
@@ -50,6 +50,7 @@ public class GetForeignKeysTest {
         FileOutputStream outputStream = new FileOutputStream("fk.xml");
 
         Utils.writeObjectAsXml(fks.get(0), outputStream, "DbForeignKey", "utf-8");
+*/
 
         session.close();
         

@@ -1,6 +1,7 @@
 package org.riverock.portlet.trash.monitor;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang.CharEncoding;
 
@@ -21,7 +22,7 @@ public class DirectoryXmlTest {
 
         File f = new File(args.length==0?File.separator:args[0]);
         Directory d = ServerMonitorUtils.getDirectories(f);
-        byte[] bytes = XmlTools.getXml(d, "Directory", CharEncoding.UTF_8);
+        byte[] bytes = XmlTools.getXml(d, "Directory", StandardCharsets.UTF_8.toString());
         System.out.println("xml = " + new String(bytes) );
         System.out.println("Processed for "+ (System.currentTimeMillis()-startMills)/1000+" seconds.");
     }

@@ -27,6 +27,7 @@ package org.riverock.webmill.portal.instance;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -319,7 +320,7 @@ public class PortalInstanceImpl implements PortalInstance {
             final byte[] bytes = portalResponse.getByteArrayOutputStream().toByteArray();
 
             if (log.isDebugEnabled()) {
-                final String pageContent = new String(bytes, CharEncoding.UTF_8);
+                final String pageContent = new String(bytes, StandardCharsets.UTF_8);
                 log.debug("ContentLength: " + bytes.length);
                 log.debug("pageContent:\n" + pageContent);
             }

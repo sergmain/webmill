@@ -68,7 +68,9 @@ public class DbAction  implements Serializable {
             session = HibernateUtils.getSession();
             session.beginTransaction();
 
-            Connection connection = session.connection();
+//            session.doWork(connection -> doSomething(connection));
+//            Connection connection = session.connection();
+            Connection connection = null;
             Database db  = DatabaseFactory.getInstance(connection, family);
 
             log.debug("Start loop with zipEntry for search db structure file.");

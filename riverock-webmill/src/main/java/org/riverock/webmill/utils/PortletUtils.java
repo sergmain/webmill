@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +57,7 @@ public final class PortletUtils {
     }
 
     public static String getString( final HttpServletRequest request, final String f, final String def) {
-        return org.riverock.common.tools.ServletTools.getString( request, f, def, CharEncoding.ISO_8859_1, CharEncoding.UTF_8);
+        return org.riverock.common.tools.ServletTools.getString( request, f, def, CharEncoding.ISO_8859_1, StandardCharsets.UTF_8.toString());
     }
 
     public static File storeBodyRequest( final HttpServletRequest request, int maxLength ) {
@@ -110,7 +111,7 @@ public final class PortletUtils {
     }
 
     public static void setContentType(HttpServletResponse response) throws PortalException {
-        setContentType(response, CharEncoding.UTF_8);
+        setContentType(response, StandardCharsets.UTF_8.toString());
     }
 
     public static void setContentType(HttpServletResponse response, String charset) throws PortalException {

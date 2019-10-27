@@ -29,9 +29,9 @@ public class ExportDbSchemaTest {
     public static void main(String[] args) throws DatabaseException, SQLException, FileNotFoundException, JAXBException {
 
         HibernateUtilsTest.prepareSession();
-
-
         Session session = HibernateUtils.getSession();
+
+/*
         Database adapter = DatabaseFactory.getInstance(session.connection(), Database.Family.MYSQL);
 
         DbSchema schema = DatabaseManager.getDbStructure(adapter, true);
@@ -44,6 +44,7 @@ public class ExportDbSchemaTest {
 
         FileOutputStream outputStream = new FileOutputStream("table.xml");
         Utils.writeObjectAsXml(t, outputStream, "Table", "utf-8");
+*/
 
         session.close();
         
