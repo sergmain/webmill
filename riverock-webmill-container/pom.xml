@@ -8,7 +8,6 @@
     <name>riverock-webmill-container - Portlet container for Webmill portal</name>
 
     <properties>
-        <lombok.version>1.18.8</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>11</maven.compiler.source>
